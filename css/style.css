@@ -21,7 +21,6 @@ nav ul {
     justify-content: center;
 }
 nav ul li {
-    float: left;
     position: relative;
 }
 nav ul li a {
@@ -40,7 +39,7 @@ nav ul li ul {
     top: 100%;
     left: 0;
     background-color: #444;
-    min-width: 160px;
+    min-width: 200px;
     z-index: 1;
 }
 nav ul li:hover ul {
@@ -55,7 +54,26 @@ main {
 footer {
     background-color: #eee;
     padding: 2em;
-    text-align: center;
     font-size: 0.9em;
-    margin-top: 2em;
+}
+footer h2 {
+    text-transform: uppercase;
+    font-size: 1.2em;
+    margin-bottom: 1em;
+}
+.footer-columns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    text-align: left;
+}
+.footer-column {
+    flex: 1;
+    min-width: 200px;
+    padding: 0 1em;
+}
+.footer-column h3 {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
 }
