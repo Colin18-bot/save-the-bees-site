@@ -1,0 +1,115 @@
+CSS SCRIPT:::::
+
+/* Sidebar dropdown structure */
+.side-nav ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.side-nav .dropdown {
+  position: relative;
+}
+
+.side-nav .dropdown > a {
+  display: block;
+  padding: 8px 0;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+}
+
+.side-nav .submenu {
+  display: none;
+  position: relative;
+  padding-left: 10px;
+  margin-top: 5px;
+}
+
+.side-nav .dropdown:hover .submenu {
+  display: block;
+}
+
+.side-nav .submenu li {
+  margin-bottom: 6px;
+}
+
+.side-nav .submenu a {
+  font-weight: normal;
+  color: #555;
+  text-decoration: none;
+}
+
+.side-nav .submenu a:hover {
+  color: #8b6f00;
+  text-decoration: underline;
+}
+
+
+
+HTML SCRIPT::::
+
+<!-- Full layout with side navigation for Bee Diseases categories with dropdowns -->
+<section class="disease-layout">
+  <aside class="side-nav">
+    <h3>Bee Disease Categories</h3>
+    <ul>
+      <li class="dropdown">
+        <a href="bacterial-diseases.html">Bacterial Diseases</a>
+        <ul class="submenu">
+          <li><a href="european-foulbrood.html">European Foulbrood</a></li>
+          <li><a href="melissococcus-plutonis.html">Melissococcus Plutonis</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="fungal-diseases.html">Fungal Diseases</a>
+        <ul class="submenu">
+          <li><a href="chalkbrood.html">Chalkbrood</a></li>
+          <li><a href="stonebrood.html">Stonebrood</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="viral-diseases.html">Viral Diseases</a>
+        <ul class="submenu">
+          <li><a href="deformed-wing-virus.html">Deformed Wing Virus</a></li>
+          <li><a href="acute-bee-paralysis.html">Acute Bee Paralysis Virus</a></li>
+          <li><a href="chronic-bee-paralysis.html">Chronic Bee Paralysis Virus</a></li>
+          <li><a href="sacbrood.html">Sacbrood Virus</a></li>
+          <li><a href="black-queen-cell-virus.html">Black Queen Cell Virus</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="parasitic-pathogens.html">Parasitic Pathogens</a>
+        <ul class="submenu">
+          <li><a href="nosema.html">Nosema Disease</a></li>
+          <li><a href="amoeba-disease.html">Amoeba Disease</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="parasitic-pests.html">Parasitic Pests</a>
+        <ul class="submenu">
+          <li><a href="varroa-mites.html">Varroa Mites</a></li>
+          <li><a href="tropilaelaps.html">Tropilaelaps Mite</a></li>
+          <li><a href="tracheal-mites.html">Tracheal Mites</a></li>
+          <li><a href="braula-coeca.html">Braula Coeca</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <a href="environmental-threats.html">Environmental & Other Threats</a>
+        <ul class="submenu">
+          <li><a href="colony-collapse.html">Colony Collapse Disorder</a></li>
+          <li><a href="malnutrition.html">Malnutrition</a></li>
+          <li><a href="baldbrood.html">Baldbrood</a></li>
+          <li><a href="mice.html">Mice</a></li>
+          <li><a href="ants.html">Ants</a></li>
+          <li><a href="asian-hornet.html">Asian Hornet</a></li>
+        </ul>
+      </li>
+    </ul>
+  </aside>
+
+  <div class="main-content">
+    <h2>Welcome to the Bee Diseases Section</h2>
+    <p>Select a disease category from the left to explore specific conditions that affect honeybee health, including viruses, bacteria, parasites, and environmental challenges.</p>
+  </div>
+</section>

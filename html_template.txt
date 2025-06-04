@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Save the Honeybee | Beekeeping, Hive Health & Conservation</title>
+  <meta name="description" content="Join the mission to save honeybees. Learn about beekeeping, swarm control, hive management, and how you can protect pollinators.">
+  <meta name="keywords" content="honeybee, save the bees, beekeeping, pollinators, swarm control, apiary tips, hive health, varroa mite, colony collapse, bee diseases">
+  <meta name="author" content="C. Chorley">
+
+  <!-- Open Graph for Facebook and LinkedIn -->
+  <meta property="og:title" content="Save the Honeybee | Beekeeping & Conservation">
+  <meta property="og:description" content="Beekeeping tips, hive health, swarm control, and ways to help honeybees survive.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yourdomain.com">
+  <meta property="og:image" content="https://yourdomain.com/images/honey-bee-on-flower.jpg">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Save the Honeybee">
+  <meta name="twitter:description" content="Beekeeping, hive health, and tips to save honeybees.">
+  <meta name="twitter:image" content="https://yourdomain.com/images/honey-bee-on-flower.jpg">
+
+  <!-- Schema.org JSON-LD Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Save the Honeybee",
+    "url": "https://yourdomain.com",
+    "logo": "https://yourdomain.com/images/logo.png",
+    "sameAs": [],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+447393285838",
+      "contactType": "Customer Support",
+      "email": "cchorley19@gmail.com"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "80 Cardiff Road",
+      "addressLocality": "Barry",
+      "postalCode": "CF63 2NW",
+      "addressRegion": "Vale of Glamorgan",
+      "addressCountry": "GB"
+    }
+  }
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+ </head>
+<body>
+  <header>
+  <!-- Header title: style this separately in CSS using either 'header h1' or '.site-title' -->
+  <h1 class="site-title">SAVE THE HONEYBEE POPULATION | BEEKEEPING, HIVE HEALTH & CONSERVATION</h1>
+  </header>
+
+  <nav>
+    <ul>
+      <li><a href="index.html">HOME</a></li>
+      <li><a href="about.html">ABOUT</a></li>
+      <li><a href="honeybees.html">HONEYBEE</a>
+        <ul>
+          <li><a href="facts.html">Facts</a></li>
+          <li><a href="how-you-can-help.html">How You Can Help</a></li>
+          <li><a href="swarms.html">Swarms</a></li>
+        </ul>
+      </li>
+      <li><a href="a-year-in-the-apiary.html">A YEAR IN THE APIARY</a>
+        <ul>
+          <li><a href="apiary-january.html">January</a></li>
+          <li><a href="apiary-february.html">February</a></li>
+          <li><a href="apiary-march.html">March</a></li>
+          <li><a href="apiary-april.html">April</a></li>
+          <li><a href="apiary-may.html">May</a></li>
+          <li><a href="apiary-june.html">June</a></li>
+          <li><a href="apiary-july.html">July</a></li>
+          <li><a href="apiary-august.html">August</a></li>
+          <li><a href="apiary-september.html">September</a></li>
+          <li><a href="apiary-october.html">October</a></li>
+          <li><a href="apiary-november.html">November</a></li>
+          <li><a href="apiary-december.html">December</a></li>
+        </ul>
+      </li>
+      <li><a href="beekeeping.html">BEEKEEPING</a>
+        <ul>
+          <li><a href="hygiene.html">Hygiene</a></li>
+          <li><a href="making-splits.html">Making Splits</a></li>
+          <li><a href="demaree-split.html">Demaree Split</a></li>
+          <li><a href="swarm-control.html">Swarm Control</a></li>
+          <li><a href="varroa-management.html">Varroa Management</a></li>
+          <li><a href="feeding.html">Feeding</a></li>
+        </ul>
+      </li>
+      <li><a href="bee-diseases.html">BEE DISEASES</a>
+        <ul>
+          <li><a href="american-foulbrood.html">American Foulbrood</a></li>
+          <li><a href="european-foulbrood.html">European Foulbrood</a></li>
+          <li><a href="foulbrood.html">Foulbrood</a></li>
+          <li><a href="colony-collapse-disorder.html">Colony Collapse Disorder</a></li>
+          <li><a href="Melissococcus-Plutonis.html">Melissococcus Plutonis</a></li>
+          <li><a href="Deformed-wing-virus.html">Deformed Wing Virus</a></li>
+          <li><a href="Acute-bee-paralysis-virus.html">Acute Bee Paralysis</a></li>
+          <li><a href="Chronic-bee-paralysis-virus.html">Bee Paralysis Virus</a></li>
+          <li><a href="Israeli-Acute-Paralysis-Virus.html">Israeli Acute Paralysis</a></li>
+          <li><a href="Kashmir-Bee-Virus.html">Kashmir Bee Virus</a></li>
+          <li><a href="Nosema-Disease.html">Nosema Disease</a></li>
+          <li><a href="Chalkbrood.html">Chalkbrood</a></li>
+          <li><a href="Ascospaera-Apis-Infection.html">Ascospaera Apis</a></li>
+          <li><a href="Stonebrood.html">Stonebrood</a></li>
+          <li><a href="Varroa-Mites.html">Varroe Mites</a></li>
+          <li><a href="Wax-Moths.html">Wax Moth</a></li>
+          <li><a href="Small-Hive-Beetle.html">Small Hivre Beetle</a></li>
+          <li><a href="Braula-Coece.html">Braula Coece</a></li>
+          <li><a href="Tropilaelaps-Mite.html">Tropilaelaps Mite</a></li>
+          <li><a href="Amoeba-Disease.html">Amoeba Disease</a></li>
+          <li><a href="Malnutrition.html">Malnutrition</a></li>
+          <li><a href="Parasitic-Mites.html">Parasitic Mites</a></li>
+          <li><a href="Sacbrood.html">Sacbrood</a></li>
+          <li><a href="Baldbrood.html">Baldbrood</a></li>
+          <li><a href="Tracheal-Mites.html">Tracheal Mites</a></li>
+          <li><a href="Black-Queen-Cell-Virus.html">Black Queen Cell Virus</a></li>
+          <li><a href="Mice.html">Mice</a></li>
+          <li><a href="Asian-Hornet.html">Asian Hornet</a></li>
+          <li><a href="Ants.html">Ants</a></li>
+        </ul>
+      </li>
+      <li><a href="swarm.html">SWARM</a></li>
+    </ul>
+  </nav>
+
+  <!-- AMENDED: Slideshow Carousel -->
+  <div class="slideshow-container">
+    <div class="slide fade">
+      <img src="images/honey-bee-on-flower.jpg" alt="Honeybee on flower">
+    </div>
+    <div class="slide fade">
+      <img src="images/bee-hives.jpg" alt="Beehives">
+    </div>
+    <div class="slide fade">
+      <img src="images/honey-frames.jpg" alt="Frame of honey">
+    </div>
+
+    <!-- NEW: Text overlay box -->
+    <div class="slide-text-box">
+      <p>Welcome to my website dedicated to the incredible honeybee. These small but mighty creatures play an incredibly important role in our world.</p>
+    </div>
+  </div>
+
+  <main>
+    <section>
+      <h2>WELCOME</h2>
+      <p>Our mission is to raise awareness about the vital role that honeybees play in our ecosystem, and to provide resources and opportunities for individuals to support their local beekeepers and contribute to bee conservation efforts. Pollinators are animals that play a critical role in fertilizing flowers and plants, facilitating their reproduction by moving pollen from one flower to another. This process of pollination is essential for the production of seeds and fruits and the maintenance of plant diversity.</p>
+
+​<p>While there are many different types of pollinators, including birds, bats, butterflies, and beetles, bees are perhaps the most well-known and important. Honeybees, bumblebees, and solitary bees are all important pollinators that help to fertilize plants and crops, including fruits, vegetables, and nuts.</p>
+<p>​Pollinators are essential to our food system and play a critical role in ensuring that we have a diverse and healthy food supply. In fact, it's estimated that pollinators contribute to the production of over 75% of the world's crops. Without pollinators, we would lose many of our favourite foods, such as apples, strawberries, and almonds, and our diets would be far less nutritious and diverse.</p>
+​<p>In addition to their importance to food production, pollinators also help to maintain the health and diversity of our natural ecosystems. By facilitating plant reproduction, they contribute to the growth of new plant species and help to maintain a healthy balance of plant and animal life.</p>
+​<p>Unfortunately, many pollinator species are facing threats such as habitat loss, climate change, and pesticide exposure, which have led to declines in their populations. It's crucial that we take action to protect and conserve these important creatures and the vital role they play in our world.</p>
+
+  </section>
+
+  <section>
+      <h2>PURPOSE</h2>
+      <p>The purpose of this website is to educate and inform visitors about the importance of honeybees, and to provide a platform for them to get involved in supporting bee conservation efforts. Through this website, visitors can learn about the threats that honeybees are facing and what they can do to help, including adopting a hive, sponsoring a bee, and supporting their local beekeepers. We provide resources for beginner beekeepers and facts about honeybees to help visitors learn more about these amazing creatures. Ultimately, our goal is to inspire and empower people to take action to protect honeybees and ensure their continued existence for generations to come.</p>
+    </section>
+
+    <section>
+      <h2>ABOUT US</h2>
+      <p>Our priority is the health and safety of my bees. We are dedicated to promoting the conservation and protection of these essential creatures. Join us in supporting the health and well-being of honeybees. Together, we can make a difference and ensure that these amazing creatures continue to thrive for generations to come.</p>
+    </section>
+
+    <section>
+      <h2>A YEAR IN THE APIARY</h2>
+      <p>A beekeeper is responsible for managing and maintaining a healthy colony of bees in an apiary. This includes tasks such as inspecting the hive, monitoring for diseases and pests, providing food and water as needed, and harvesting honey. Beekeeping is not only a rewarding hobby, but it also plays a crucial role in pollination and preserving the health of bee populations worldwide.</p>
+      </section>
+
+    <section>
+    <h2>HOW YOU CAN HELP</h2>
+    <p>There are many ways that you can get involved and ways to protect the honeybee, click on the link to find out more.</p>
+    </section>
+
+    <section></section>
+    <h2>BEE FACTS</h2>
+    <p>Click the link below to find out some facts about honeybees.</p>
+    </section>
+
+  </main>
+
+  <footer>
+  <h2 class="footer-title">CONTACT US</h2>
+  <div class="footer-columns">
+    <div class="footer-box">
+      <h3>Address</h3>
+      <p>
+        80 Cardiff Road<br>
+        Barry<br>
+        CF63 2NW<br>
+        Vale of Glamorgan<br>
+        Wales<br>
+        United Kingdom
+      </p>
+    </div>
+    <div class="footer-box">
+      <h3>Contact Information</h3>
+      <p>
+        Phone: 07393 285838<br>
+        Email: cchorley19@gmail.com
+      </p>
+    </div>
+    <div class="footer-box">
+      <h3>Useful Links</h3>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="how-you-can-help.html">How You Can Help</a></li>
+        <li><a href="beekeeping.html">Beekeeping</a></li>
+      </ul>
+    </div>
+    <div class="footer-box">
+      <h3>Bee Diseases</h3>
+      <ul>
+          <li><a href="american-foulbrood.html">American Foulbrood</a></li>
+          <li><a href="european-foulbrood.html">European Foulbrood</a></li>
+          <li><a href="foulbrood.html">Foulbrood</a></li>
+          <li><a href="colony-collapse-disorder.html">Colony Collapse Disorder</a></li>
+          <li><a href="Melissococcus-Plutonis.html">Melissococcus Plutonis</a></li>
+          <li><a href="Deformed-wing-virus.html">Deformed Wing Virus</a></li>
+          <li><a href="Acute-bee-paralysis-virus.html">Acute Bee Paralysis</a></li>
+          <li><a href="Chronic-bee-paralysis-virus.html">Bee Paralysis Virus</a></li>
+          <li><a href="Israeli-Acute-Paralysis-Virus.html">Israeli Acute Paralysis</a></li>
+          <li><a href="Kashmir-Bee-Virus.html">Kashmir Bee Virus</a></li>
+          <li><a href="Nosema-Disease.html">Nosema Disease</a></li>
+          <li><a href="Chalkbrood.html">Chalkbrood</a></li>
+          <li><a href="Ascospaera-Apis-Infection.html">Ascospaera Apis</a></li>
+          <li><a href="Stonebrood.html">Stonebrood</a></li>
+          <li><a href="Varroa-Mites.html">Varroe Mites</a></li>
+          <li><a href="Wax-Moths.html">Wax Moth</a></li>
+          <li><a href="Small-Hive-Beetle.html">Small Hivre Beetle</a></li>
+          <li><a href="Braula-Coece.html">Braula Coece</a></li>
+          <li><a href="Tropilaelaps-Mite.html">Tropilaelaps Mite</a></li>
+          <li><a href="Amoeba-Disease.html">Amoeba Disease</a></li>
+          <li><a href="Malnutrition.html">Malnutrition</a></li>
+          <li><a href="Parasitic-Mites.html">Parasitic Mites</a></li>
+          <li><a href="Sacbrood.html">Sacbrood</a></li>
+          <li><a href="Baldbrood.html">Baldbrood</a></li>
+          <li><a href="Tracheal-Mites.html">Tracheal Mites</a></li>
+          <li><a href="Black-Queen-Cell-Virus.html">Black Queen Cell Virus</a></li>
+          <li><a href="Mice.html">Mice</a></li>
+          <li><a href="Asian-Hornet.html">Asian Hornet</a></li>
+          <li><a href="Ants.html">Ants</a></li>
+      </ul>
+    </div>
+  </div>
+  
+<div class="footer-bottom">
+  <p>&copy; 2025 Save the Honeybee | Built with ❤️ in Wales | <a href="privacy.html">Privacy Policy</a></p>
+</div>
+
+</footer>
+
+
+  <!-- Slideshow Script -->
+  <script>
+    let slideIndex = 0;
+    showSlides();
+
+    function showSlides() {
+      const slides = document.getElementsByClassName("slide");
+      for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+      }
+      slideIndex++;
+      if (slideIndex > slides.length) { slideIndex = 1; }
+      slides[slideIndex - 1].style.display = "block";
+      setTimeout(showSlides, 4000);
+    }
+  </script>
+</body>
+</html>
