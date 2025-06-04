@@ -1,57 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Explore beekeeping guides, tips, and honeybee health." />
-  <meta name="keywords" content="beekeeping, bee health, apiary, honeybee, disease prevention" />
-  <meta name="author" content="Colin Chorley" />
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-  <title>Home - Save the Honeybee</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Save the Honeybee</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header class="page-heading">
-    <h1>Save the Honeybee</h1>
-  </header>
 
-  <div class="carousel">
-    <div class="carousel-track">
-      <img src="images/carousel1.jpg" alt="Bee close-up" />
-      <img src="images/carousel2.jpg" alt="Beekeeper inspecting hive" />
-      <img src="images/carousel3.jpg" alt="Honeycomb with bees" />
-      <img src="images/carousel4.jpg" alt="Bee on flower" />
-    </div>
-    <div class="carousel-text">
-      <p>Welcome to your beekeeping resource hub.</p>
-    </div>
-  </div>
+  <!-- Main Navigation Bar -->
+  <nav class="navbar">
 
-  <section class="highlight-section">
-    Learn best practices to support the well-being of your bees.
-  </section>
+    <!-- Hamburger Menu Button (mobile only) -->
+    <button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
 
-  <section class="container image-row">
-    <img src="images/row1.jpg" alt="Bee with pollen">
-    <img src="images/row2.jpg" alt="Beekeeper in suit">
-    <img src="images/row3.jpg" alt="Swarm of bees">
-    <img src="images/row4.jpg" alt="Bees on lavender">
-  </section>
+    <!-- Navigation Links -->
+    <ul class="nav-menu">
+      <!-- Header 1 (No Dropdown) -->
+      <li class="nav-item"><a href="#">Home</a></li>
 
-  <section class="container two-column">
-    <img src="images/row1.jpg" alt="Bee macro">
-    <div class="text">
-      <h2>Hive Hygiene</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    </div>
-  </section>
+      <!-- Header 2 with Dropdown -->
+      <li class="nav-item dropdown">
+        <a href="#">Beekeeping</a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Getting Started</a></li>
+          <li><a href="#">Equipment</a></li>
+          <li><a href="#">Seasonal Tasks</a></li>
+          <li><a href="#">Hive Types</a></li>
+          <li><a href="#">Honey Harvest</a></li>
+          <li><a href="#">Safety Tips</a></li>
+        </ul>
+      </li>
 
-  <section class="container two-column reverse">
-    <img src="images/row2.jpg" alt="Hive inspection">
-    <div class="text">
-      <h2>Recognizing Disease</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-    </div>
-  </section>
+      <!-- Header 3 with Dropdown -->
+      <li class="nav-item dropdown">
+        <a href="#">Hive Health</a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Common Pests</a></li>
+          <li><a href="#">Diseases</a></li>
+          <li><a href="#">Inspections</a></li>
+          <li><a href="#">Treatment Methods</a></li>
+          <li><a href="#">Natural Remedies</a></li>
+          <li><a href="#">Vet Contact</a></li>
+        </ul>
+      </li>
+
+      <!-- Header 4 with Dropdown -->
+      <li class="nav-item dropdown">
+        <a href="#">Conservation</a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Why Bees Matter</a></li>
+          <li><a href="#">Planting for Bees</a></li>
+          <li><a href="#">Community Projects</a></li>
+          <li><a href="#">Bee Habitats</a></li>
+          <li><a href="#">Pesticide Impact</a></li>
+          <li><a href="#">Policy & Action</a></li>
+        </ul>
+      </li>
+
+      <!-- Header 5 with Dropdown -->
+      <li class="nav-item dropdown">
+        <a href="#">Learn</a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Courses</a></li>
+          <li><a href="#">Books</a></li>
+          <li><a href="#">Videos</a></li>
+          <li><a href="#">PDF Guides</a></li>
+          <li><a href="#">Quizzes</a></li>
+          <li><a href="#">Events</a></li>
+        </ul>
+      </li>
+
+      <!-- Header 6 (No Dropdown) -->
+      <li class="nav-item"><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page Content Placeholder -->
+  <main>
+    <h1>Welcome to Save the Honeybee</h1>
+    <p>This is a placeholder for your homepage content.</p>
+  </main>
+
+  <!-- JavaScript for Menu Toggle -->
+  <script>
+    function toggleMenu() {
+      const menu = document.querySelector('.nav-menu');
+      menu.classList.toggle('active');
+    }
+  </script>
+
 </body>
 </html>

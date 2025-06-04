@@ -1,1 +1,131 @@
-/* CSS content from previous message */
+/* style.css */
+
+/* General body styling */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #FFF9E5; /* Cream background */
+}
+
+/* Main navigation bar */
+.navbar {
+  background-color: #1A1A1A; /* Bee black */
+  overflow: hidden;
+  position: relative;
+}
+
+/* Hamburger menu button (hidden by default) */
+.menu-toggle {
+  display: none;
+  background-color: #1A1A1A;
+  border: none;
+  color: #F2C94C;
+  font-size: 24px;
+  padding: 15px 20px;
+  cursor: pointer;
+}
+
+/* Container for menu items */
+.nav-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;              /* forces horizontal layout */
+  flex-direction: row;        /* ensures items are in a row */
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;                /* full width of nav */
+}
+
+/* Individual navigation item container */
+.nav-item {
+  position: relative; /* Needed for dropdown positioning */
+}
+
+/* Navigation link styling */
+.nav-item a {
+  display: block;
+  padding: 15px 20px;
+  color: #F2C94C; /* Honey yellow */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Hover effect on nav links */
+.nav-item:hover a {
+  background-color: #E58E26; /* Pollen orange on hover */
+  color: white;
+}
+
+/* Dropdown container (hidden by default) */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #FFF9E5; /* Same cream background */
+  min-width: 160px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Slight shadow */
+  z-index: 1; /* Makes dropdown appear above other content */
+}
+
+/* Dropdown link styling */
+.dropdown-menu li a {
+  color: #1A1A1A;
+  padding: 12px 16px;
+  display: block;
+  text-align: left;
+}
+
+/* Hover effect on dropdown links */
+.dropdown-menu li a:hover {
+  background-color: #F2C94C;
+  color: #1A1A1A;
+}
+
+/* Show dropdown when parent is hovered */
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* ---------------------------- */
+/* Responsive layout support */
+/* ---------------------------- */
+@media (max-width: 768px) {
+  /* Show hamburger button */
+  .menu-toggle {
+    display: block;
+  }
+
+  /* Hide nav menu by default on small screens */
+  .nav-menu {
+    display: none;
+    flex-direction: column;     /* vertical layout on mobile */
+    align-items: flex-start;
+    background-color: #1A1A1A;
+    width: 100%;
+  }
+
+  /* Show nav when active */
+  .nav-menu.active {
+    display: flex;
+  }
+
+  /* Make links take full width */
+  .nav-item a {
+    padding: 10px 15px;
+    width: 100%;
+  }
+
+  /* Position dropdowns relative instead of absolute */
+  .dropdown-menu {
+    position: static;
+    box-shadow: none;
+    background-color: #FFF9E5;
+  }
+
+  /* Make dropdown links easier to tap */
+  .dropdown-menu li a {
+    padding: 10px 15px;
+  }
+}
+
+/* On screens larger than 768px, normal horizontal layout will be used automatically */
