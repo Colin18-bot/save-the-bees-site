@@ -460,15 +460,6 @@ main.not-found {
 }
 
 /* Desktop: re-enable float for layout and wrap */
-@media (min-width: 769px) {
-  .content img.float-left-img {
-    float: left;
-    max-width: 500px;
-    margin-right: 1.5rem;
-    margin-left: 0;
-    margin-bottom: 1rem;
-  }
-
   .content img.float-right-img {
     float: right;
     max-width: 500px;
@@ -476,6 +467,20 @@ main.not-found {
     margin-right: 0;
     margin-bottom: 1rem;
   }
+
+
+
+/* Stack floated images on small screens */
+@media (max-width: 768px) {
+  .float-left,
+  .float-right {
+    float: none;
+    display: block;
+    margin: 1rem auto;
+    max-width: 100%;
+  }
+}
+
 
 /* 📞 CONTACT CONTAINER                               */
 /* -------------------------------------------------- */
