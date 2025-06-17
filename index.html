@@ -97,6 +97,78 @@
       </button>
       </div>
 
+    <!-- Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+    <li><a href="/index.html">Home</a></li>
+
+    <li class="dropdown">
+      <a href="/about-us.html">About</a>
+    </li>
+
+    <li class="dropdown">
+      <a href="/beekeeping-guides.html">Beekeeping</a>
+      <ul class="dropdown-menu">
+        <li><a href="/getting-started.html">Getting Started</a></li>
+        <li><a href="/equipment.html">Equipment</a></li>
+        <li><a href="/hive-management.html">Hive Management</a></li>
+        <li><a href="/varroa-management.html">Varroa Management</a></li>    
+        <li><a href="/hygiene.html">Hygiene</a></li>
+        <li><a href="/bee-stings.html">Bee Stings</a></li>
+      </ul>
+    </li>
+
+    <li class="dropdown">
+      <a href="/year-in-the-apiary.html">Apiary Calendar</a>
+      <ul class="dropdown-menu">
+        <li><a href="/january.html">January</a></li>
+        <li><a href="/february.html">February</a></li>
+        <li><a href="/march.html">March</a></li>
+        <li><a href="/april.html">April</a></li>
+        <li><a href="/may.html">May</a></li>
+        <li><a href="/june.html">June</a></li>
+        <li><a href="/july.html">July</a></li>
+        <li><a href="/august.html">August</a></li>
+        <li><a href="/september.html">September</a></li>
+        <li><a href="/october.html">October</a></li>
+        <li><a href="/november.html">November</a></li>
+        <li><a href="/december.html">December</a></li>
+      </ul>
+    </li>
+
+    <li class="dropdown">
+      <a href="/bee-diseases.html">Diseases & Pests</a>
+      <ul class="dropdown-menu">
+        <li><a href="/bacterial-diseases.html">Bacterial</a></li>
+        <li><a href="/viral-diseases.html">Viral</a></li>
+        <li><a href="/bee-pests.html">Pests</a></li>
+        <li><a href="/parasitic-mites.html">Mites</a></li>
+        <li><a href="/other-conditions.html">Other Conditions</a></li>
+      </ul>
+    </li>
+
+    <li class="dropdown">
+      <a href="/honeybee-facts.html">Honeybee Facts</a>
+      <ul class="dropdown-menu">
+        <li><a href="/anatomy.html">Anatomy</a></li>
+        <li><a href="/behaviour.html">Behaviour</a></li>
+        <li><a href="/how-bees-make-honey.html">Make Honey</a></li>
+        <li><a href="/pollination.html">Pollination</a></li>
+      </ul>
+    </li>
+
+    <li class="dropdown">
+      <a href="/help-the-bees.html">Help Bees</a>
+      <ul class="dropdown-menu">
+        <li><a href="/bee-gardening.html">Gardening</a></li>
+        <li><a href="/donate.html">Donate</a></li>
+        <li><a href="/report-a-swarm.html">Report a Swarm</a></li>
+      </ul>
+    </li>
+
+  </ul>
+</nav>
+
 <!-- Hero Banner with Image and Alt Fallback -->
 <section role="region" aria-label="Homepage Banner">
   <div class="banner">
@@ -121,8 +193,7 @@
         <img src="images/Lavendar-Field.jpg" alt="Picture of Spring Flowers">
       </div>
       <div class="text-box">
-        <h1>Website Coming Soon</h1>
-        <h2>Welcome to BeezKnees</h2>
+        <h1>Welcome to BeezKnees</h1>
         <p>
           We offer practical guides to honeybee conservation and beginner-friendly beekeeping. Our mission is to raise awareness about the vital 
           role bees play in pollination and food production, while offering tips and tools to help you care for your hives, support pollinators, 
@@ -132,7 +203,65 @@
     </div>
   </section>
 
-  
+  <!-- Purpose Section: Text Left, Image Right (reverse layout) -->
+  <section class="container" role="region" aria-label="Purpose Section">
+    <div class="row reverse">
+      <div class="img-box">
+        <img src="images/hive_1.jpg" alt="Inside the Hive">
+      </div>
+      <div class="text-box">
+        <h2>Our Purpose</h2>
+        <p>
+          BeezKnees exists to help you care for your hives and protect pollinators.
+          We combine practical knowledge with conservation to make beekeeping easier, smarter, and more impactful.
+          Whether you're a beginner or an experienced keeper,
+          we provide expert tips, seasonal tasks, and disease awareness to support your journey — and the bees.
+          Our goal is to build confidence, inform beekeepers and inspire action to safeguard our pollinators for future generations.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Card Grid Section -->
+  <section class="container" role="region" aria-label="Explore Section">
+    <h2>Explore More.....</h2>
+    <div class="grid">
+      <div class="card">
+        <img src="images/bees-in-hive.jpg" alt="Honeybees Inside Hive">
+        <div class="card-content">
+          <h3>About Us</h3>
+          <p>BeezKnees is a friendly guide to beekeeping and pollinator protection. Created by hobbyist beekeeper Colin Chorley, our goal is to 
+            make beekeeping simple, accessible, and rewarding. Whether you're starting your first hive or curious about bees, we’re here to 
+            help.</p>
+          <a href="/about-us.html" class="read-more">Learn More</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="images/flowers.jpg" alt="Spring Flowers">
+        <div class="card-content">
+          <h3>How You Can Help</h3>
+          <p>You don’t need to be a beekeeper to support honeybees. Simple actions like planting 
+            seasonal flowers, avoiding pesticides, and offering water or nesting sites can make a 
+            big difference. You can also support local beekeepers and raise awareness to help 
+            protect pollinators.</p>
+          <a href="/help-the-bees.html" class="read-more">Get Involved</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="images/Apiary.jpg" alt="Typical Apiary">
+        <div class="card-content">
+          <h3>An Apiary Year</h3>
+          <p>Beekeeping changes with the seasons. From winter checks and early spring feeding
+            to swarm control in summer and preparing hives for autumn, each month brings key tasks. 
+            Our calendar guides you through seasonal jobs to keep your bees healthy all year.</p>
+          <a href="/year-in-the-apiary.html" class="read-more">Explore More</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
 </main>
   <script>
     const toggleBtn = document.getElementById('menuToggle');
@@ -150,15 +279,15 @@
     <div class="footer-column" role="region" aria-label="Contact Information">
       <h3>Contact</h3>
       <address>
-        <p>Email: <a href="/contact.html">Contact</a></p>           
+        <p>Email: <a href="/contact.html">Contact</a></p>             
       </address>
     </div>
 
     <div class="footer-column" role="region" aria-label="Useful Site Links">
       <h3>Useful Links</h3>
       <ul>
-        <li></li>
-        <li></li>
+        <li><a href="/privacy.html">Privacy Policy</a></li>
+        <li><a href="/site-map.html">Site Map</a></li>
       </ul>
     </div>
 
