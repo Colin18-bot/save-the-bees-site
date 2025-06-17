@@ -141,16 +141,8 @@ a {
     padding: 0.75rem 1rem;
     display: block;
   }
+
 }
-
-
-
-
-
-
-
-
-
 /* -------------------------------------------------- */
 /* 🐝 SITE HEADER + LOGO STYLES                       */
 /* -------------------------------------------------- */
@@ -285,7 +277,20 @@ a {
   border-radius: 8px;
 }
 
+/* 📱 Donation QR Code Resize */
+.qr-code {
+  max-width: 250px;   /* You can adjust this value */
+  height: auto;
+  display: block;
+}
 
+/* 📱 OPTIONAL QR RESPONSIVE TWEAK FOR MOBILE */
+
+@media (max-width: 600px) {
+  .qr-code {
+    max-width: 180px;
+  }
+}
 
 /* ---------- MAIN LAYOUT WRAPPERS FOR PAGE STRUCTURE---------- */
 
