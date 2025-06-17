@@ -1,0 +1,10 @@
+{
+    "workbench.editor.pinnedTabsOnSeparateRow": true,
+    "workbench.editor.wrapTabs": true,
+    "workbench.editor.enablePreviewFromCodeNavigation": true,
+    "workbench.editor.enablePreviewFromQuickOpen": true,
+    "workbench.preferredDarkColorTheme": "Default Dark Modern",
+    "workbench.commandPalette.experimental.askChatLocation": "chatView",
+    "workbench.commandPalette.experimental.suggestCommands": false,
+    "workbench.secondarySideBar.defaultVisibility": "visible"
+}

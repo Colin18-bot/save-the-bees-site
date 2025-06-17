@@ -1,131 +1,765 @@
-/* style.css */
-
-/* General body styling */
-body {
+/* -------------------------------------------------- */
+/* 🌐 GLOBAL RESET + BASE STYLES                      */
+/* -------------------------------------------------- */
+* {
+  box-sizing: border-box;
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #FFF9E5; /* Cream background */
+  padding: 0;
 }
 
-/* Main navigation bar */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fdf6ec;
+  color: #333;
+  line-height: 1.6;
+  font-size: clamp(1rem, 1vw + 0.5rem, 1.125rem);  
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ---------- BANNER ----------*/
+.banner img {
+  width: 100%;
+  height: 450px;        /* Set your desired height */
+  object-fit: cover;    /* Keeps image filling the space and crops excess */
+}
+
+/* -------------------------------------------------- */
+/* 🔗 MAIN NAVIGATION (Header, Nav, Dropdowns)        */
+/* -------------------------------------------------- */
 .navbar {
-  background-color: #1A1A1A; /* Bee black */
-  overflow: hidden;
+  background-color: #000;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   position: relative;
 }
 
-/* Hamburger menu button (hidden by default) */
-.menu-toggle {
-  display: none;
-  background-color: #1A1A1A;
-  border: none;
-  color: #F2C94C;
-  font-size: 24px;
-  padding: 15px 20px;
-  cursor: pointer;
-}
-
-/* Container for menu items */
 .nav-menu {
   list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;              /* forces horizontal layout */
-  flex-direction: row;        /* ensures items are in a row */
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;                /* full width of nav */
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  flex-direction: row;
+  transition: max-height 0.3s ease;
 }
 
-/* Individual navigation item container */
-.nav-item {
-  position: relative; /* Needed for dropdown positioning */
+.nav-menu > li {
+  position: relative;
 }
 
-/* Navigation link styling */
-.nav-item a {
+.nav-menu a {
   display: block;
-  padding: 15px 20px;
-  color: #F2C94C; /* Honey yellow */
-  text-decoration: none;
+  color: #D4A017; 
+  padding: 1rem 1.5rem;
   font-weight: bold;
+  transition: all 0.3s ease;
 }
 
-/* Hover effect on nav links */
-.nav-item:hover a {
-  background-color: #E58E26; /* Pollen orange on hover */
-  color: white;
+.nav-menu a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-radius: 6px;
 }
 
-/* Dropdown container (hidden by default) */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #D4A017; 
+  font-size: 1.8rem;
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  top: 1.2rem;
+  z-index: 1000;
+}
+
+.menu-toggle i {
+  font-size: 1.5rem;
+  display: inline-block;
+  color: #D4A017; 
+}
+
 .dropdown-menu {
   display: none;
   position: absolute;
-  background-color: #FFF9E5; /* Same cream background */
-  min-width: 160px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Slight shadow */
-  z-index: 1; /* Makes dropdown appear above other content */
+  top: 100%;
+  left: 0;
+  background-color: #000;
+  min-width: 200px;
+  z-index: 10;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
-/* Dropdown link styling */
 .dropdown-menu li a {
-  color: #1A1A1A;
-  padding: 12px 16px;
-  display: block;
-  text-align: left;
+  padding: 0.75rem 1rem;
+  white-space: nowrap;
 }
 
-/* Hover effect on dropdown links */
-.dropdown-menu li a:hover {
-  background-color: #F2C94C;
-  color: #1A1A1A;
-}
-
-/* Show dropdown when parent is hovered */
 .dropdown:hover .dropdown-menu {
   display: block;
 }
 
-/* ---------------------------- */
-/* Responsive layout support */
-/* ---------------------------- */
+/* -------------------------------------------------- */
+/* 🐝 SITE HEADER + LOGO STYLES                       */
+/* -------------------------------------------------- */
+.site-header {
+  background-color: #000;
+  padding: 1rem 2rem;
+  color: white;
+}
+
+.header-container {
+  display: flex;
+  align-items: left;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.site-logo {
+  height: 60px;
+  width: auto;
+}
+
+.site-title {
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);  
+  font-weight: bold;
+  color: #D4A017;  
+}
+
+/* -------------------------------------------------- */
+/* 🎞️ CAROUSEL STYLES                                */
+/* -------------------------------------------------- */
+.carousel {
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+}
+
+.slides {
+  display: flex;
+  width: calc(100% * 8);
+  animation: scrollBanner 30s linear infinite;
+}
+
+.slide {
+  flex: 0 0 25%;
+  height: 400px;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes scrollBanner {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.carousel-caption {
+  position: absolute;
+  bottom: 160px;          /* ⬆ Push it up slightly */
+  left: 30px;            /* Fine-tune for padding from edge */
+  transform: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  max-width: 90%;
+  text-align: left;
+  z-index: 2;
+}
+
+.carousel-caption h2 {
+  margin: 0;
+  font-size: clamp(1.25rem, 1.5vw + 1rem, 2rem);  
+  color: #D4A017; 
+}
+
+.carousel-caption p {
+  margin-top: 0.25rem;
+  font-size: clamp(0.875rem, 1vw, 1.125rem);  
+}
+
+/* -------------------------------------------------- */
+/* 📦 CONTENT CONTAINERS + LAYOUTS                   */
+/* -------------------------------------------------- */
+
+
+/* 📦 CONTENT CONTAINERS + LAYOUTS */
+.content {
+  padding: 2rem;
+}
+
+.content h1 {
+  margin-bottom: 1.5rem;
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);  
+}
+
+.content h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: clamp(1.25rem, 1.5vw + 0.75rem, 2rem); 
+}
+
+.content h3 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-size: clamp(1.1rem, 1.25vw + 0.5rem, 1.5rem); 
+}
+
+.content p {
+  margin-bottom: 1rem; /* Adjust to control the spacing */
+}
+
+
+/* --- ADDING AN IMAGE IN MAIN CONTENT AREA (LEFT) --- */
+.content img.float-left-img {
+  float: left;
+  max-width: 500px;
+  margin-right: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+/* --- ADDING AN IMAGE IN MAIN CONTENT AREA (RIGHT) --- */
+.content img.float-right-img {
+  float: right;
+  max-width: 500px;
+  margin-right: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+
+
+/* ---------- MAIN LAYOUT WRAPPERS FOR PAGE STRUCTURE---------- */
+
+
+.container {
+  max-width: 1200px;       /* Keeps content from stretching too wide on large screens */
+  margin: 0 auto;          /* Horizontally centers the container */
+  padding: 0 1rem;         /* Adds horizontal padding inside */
+}
+
+.content {
+  padding: 2rem;           /* Adds vertical padding for sections inside <main> */
+}
+
+/* ---------- CARD GRID SYSTEM: IMAGE, HEADING & READ MORE LINK ---------- */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Grid layout inside the centered container */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Responsive cards */
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+/* Individual card styling */
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-5px); /* Hover effect */
+}
+
+.card img {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Read more link */
+.read-more {
+  text-align: right;
+  margin-top: 1rem;
+  color: #D4A017; 
+  font-weight: bold;
+  font-size: clamp(0.9rem, 1vw, 1.125rem); 
+}
+
+/* ---------- CLEAN 50/50 IMAGE + TEXT LAYOUT SIDE BY SIDE---------- */
+.row {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 2rem;               /* Space between the two boxes */
+  margin: 2rem 0;
+}
+
+/* Optional: reverse the layout */
+.row.reverse {
+  flex-direction: row-reverse;
+}
+
+.img-box,
+.text-box {
+  flex: 1 1 50%;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;        /* Stretch to match row height */
+}
+
+/* ✅ Image box styles */
+.img-box {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background-color: #fff;
+}
+
+.img-box img {
+  width: 100%;
+  height: 100%;            /* 👈 Fills full height of the image box */
+  object-fit: cover;       /* 👈 Scales and crops to fill space */
+  display: block;
+}
+
+/* ✅ Text box styles */
+.text-box {
+  background-color: #fff;
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- RESPONSIVE STACKING ON MOBILE ---------- */
 @media (max-width: 768px) {
-  /* Show hamburger button */
-  .menu-toggle {
-    display: block;
+  .row {
+    flex-direction: column;
+    max-height: wrap;
   }
 
-  /* Hide nav menu by default on small screens */
-  .nav-menu {
-    display: none;
-    flex-direction: column;     /* vertical layout on mobile */
-    align-items: flex-start;
-    background-color: #1A1A1A;
-    width: 100%;
+  .row.reverse {
+    flex-direction: column; /* 🔁 Fixes image stacking on mobile */
   }
 
-  /* Show nav when active */
-  .nav-menu.active {
-    display: flex;
+  .grid {
+    grid-template-columns: 1fr;
   }
 
-  /* Make links take full width */
-  .nav-item a {
-    padding: 10px 15px;
-    width: 100%;
-  }
+  .img-box,
+.text-box {
+  flex: 1 1 50%;
+  max-width: 50%;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
 
-  /* Position dropdowns relative instead of absolute */
-  .dropdown-menu {
-    position: static;
-    box-shadow: none;
-    background-color: #FFF9E5;
-  }
-
-  /* Make dropdown links easier to tap */
-  .dropdown-menu li a {
-    padding: 10px 15px;
+  .img-box img {
+    height: auto;
   }
 }
 
-/* On screens larger than 768px, normal horizontal layout will be used automatically */
+/* -------------------------------------------------- */
+/* 📹 VIDEO SECTION (Video Page Only)                */
+/* -------------------------------------------------- */
+.video {
+  max-width: 960px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: #fff8e1;
+  border: 2px solid #f4ca64;
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 25px rgba(244, 202, 100, 0.3);
+  text-align: center;
+}
+
+.video:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(244, 202, 100, 0.45);
+}
+
+.video h2 {
+  font-family: 'Georgia', serif;
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem); 
+  color: #5a420d;
+  margin-bottom: 1.5rem;
+  text-shadow: 1px 1px #fff3b0;
+}
+
+.video iframe {
+  width: 100%;
+  height: 480px;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+}
+
+/* -------------------------------------------------- */
+/* ❓ 404 PAGE STYLES (Not Found)                    */
+/* -------------------------------------------------- */
+.not-found {
+  padding-top: 0.25rem;
+  text-align: center;
+}
+
+
+main.not-found {
+  padding: 200px 0;
+}
+
+
+/* -------------------------------------------------- */
+/* 📃 INDENTED LISTS                                 */
+/* -------------------------------------------------- */
+.indented-list {
+  margin-left: 2em;
+  padding-left: 1em;
+  list-style-type: disc;
+}
+
+.indented-list li {
+  line-height: 1.6;
+  margin-bottom: 0.5em;
+}
+
+/* ---------- FLOATING IMAGES ---------- */
+/* ---------- IMAGE POSITIONING UTILITIES ---------- */
+.float-left {
+  float: left;
+  margin-right: 1.5rem;
+  margin-bottom: 1rem;
+  max-width: 50%;
+}
+
+.float-right {
+  float: right;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  max-width: 50%;
+}
+
+/* Stack floated images on small screens */
+@media (max-width: 768px) {
+  .float-left,
+  .float-right {
+    float: none;
+    display: block;
+    margin: 1rem auto;
+    max-width: 100%;
+  }
+}
+
+* -------------------------------------------------- */
+/* 📞 CONTACT CONTAINER                                         */
+/* -------------------------------------------------- */
+/* Contact Form Wrapper */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Contact Form Styling */
+.contact-container {
+  background-color: #fffdf4;
+  padding: 2rem;
+  margin-top: 2rem;
+  margin-bottom: 5rem; /* Space between form and footer */
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Structure */
+.contact-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Labels */
+.contact-container label {
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+/* Inputs and Textareas */
+.contact-container input,
+.contact-container textarea {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+/* Send Button */
+.contact-container button {
+  align-self: flex-start;
+  padding: 0.75rem 1.5rem;
+  background-color: #D4A017;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.contact-container button:hover {
+  background-color: #b88c14;
+}
+
+/* Accessibility: Hide bot field */
+.contact-container .hidden {
+  display: none;
+}
+
+/* Responsive Improvements */
+@media (max-width: 600px) {
+  .contact-container {
+    padding: 1.5rem;
+  }
+
+  .contact-container button {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* -------------------------------------------------- */
+/* 📞 FOOTER                                         */
+/* -------------------------------------------------- */
+.site-footer {
+  background-color: #000;
+  color: #F4C542;
+  padding: 2rem 1rem 0;
+  font-size: 0.95rem;
+}
+
+.footer-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 1rem;
+  justify-content: space-between;
+}
+
+.footer-column {
+  flex: 1 1 200px;
+  min-width: 200px;
+}
+
+.footer-column h3 {
+  color: #D4A017; 
+  font-size: clamp(1rem, 1.25vw + 0.5rem, 1.2rem);
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-column li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-column a {
+  color: #D4A017; 
+}
+
+.footer-column a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  background-color:#000;
+  color: #D4A017;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.85rem;
+  border-top: 1px solid #000;
+}
+
+/* -------------------------------------------------- */
+/* 📱 RESPONSIVE NAVIGATION                          */
+/* -------------------------------------------------- */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+    background-color: #000;
+    padding: 0.25rem;
+    border-radius: 6px;
+    z-index: 1001;
+  }
+
+  .nav-menu {
+    max-height: 0;
+    overflow: hidden;
+    flex-direction: column;
+    background-color: #000;
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 999;
+  }
+
+  .nav-menu.active {
+    max-height: 1000px;
+  }
+
+  .nav-menu li {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .dropdown:hover .dropdown-menu,
+  .dropdown-menu {
+    position: relative;
+    box-shadow: none;
+  }
+
+  .header-container {
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 1rem;
+  }
+
+  .image-text-section {
+    flex-direction: column;
+  }
+
+  .image-text-section img,
+  .image-text-section .text {
+    width: 100%;
+  }
+
+  .image-text-section img {
+    max-height: 300px;
+    object-fit: contain;
+  }
+
+  .menu-toggle i {
+    font-size: 1.5rem;
+    display: inline-block;
+    color: #F4C542;
+  }
+} 
+
+/* -------------------------------------------------- */
+/* ♿ ACCESSIBILITY                                   */
+/* -------------------------------------------------- */
+.sr-only {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ---------------------------------- */
+/* ✨ ACCESSIBILITY: Focus Outlines   */
+/* ---------------------------------- */
+
+a:focus,
+button:focus,
+.menu-toggle:focus,
+.nav-menu a:focus {
+  outline: 2px dashed #D4A017;  
+  outline-offset: 4px;
+  background-color: rgba(212,160,23, 0.15);
+  border-radius: 4px;
+}
+
+/* ---------------------------- */
+/* 🍪 Cookie Consent Styles     */
+/* ---------------------------- */
+.cookie-popup {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  max-width: 420px;
+  margin: auto;
+  background: #fffbea;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  padding: 1.5rem;
+  z-index: 9999;
+  border-radius: 12px;
+  display: none;
+  font-family: system-ui, sans-serif;
+}
+
+.cookie-popup h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+}
+
+.cookie-popup p {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.cookie-popup label {
+  display: block;
+  margin: 0.4rem 0;
+  font-size: 0.9rem;
+}
+
+.cookie-buttons {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.cookie-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #D4A017; 
+  color: #000;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.cookie-buttons button:hover {
+  background: #C4970B ; 
+}
+
+
+
