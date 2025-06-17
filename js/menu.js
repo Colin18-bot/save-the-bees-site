@@ -26,3 +26,19 @@ document.addEventListener('click', (e) => {
     navMenu.classList.remove('active');
   }
 });
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  const toggles = document.querySelectorAll('.dropdown-toggle');
+
+  toggles.forEach(toggle => {
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      const parent = this.closest('.dropdown');
+      parent.classList.toggle('open');
+    });
+  });
+});
+
+
