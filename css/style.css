@@ -154,10 +154,11 @@ a {
 
 .header-container {
   display: flex;
-  align-items: Left;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-start;
   gap: 1rem;
   width: 100%;
+  position: relative;
 }
 
 .site-logo {
