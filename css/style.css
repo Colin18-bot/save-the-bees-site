@@ -360,12 +360,11 @@ a {
 /* ---------- RESPONSIVE STACKING ON MOBILE ---------- */
 @media (max-width: 768px) {
   .row {
-    flex-direction: column;
-    max-height: wrap;
+    flex-direction: column; /* 🔁 Fixes image stacking on mobile */
   }
 
   .row.reverse {
-    flex-direction: column; /* 🔁 Fixes image stacking on mobile */
+    flex-direction: column; 
   }
 
   .grid {
@@ -373,13 +372,10 @@ a {
   }
 
   .img-box,
-.text-box {
-  flex: 1 1 50%;
-  max-width: 50%;
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
+  .text-box {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
 
   .img-box img {
     height: auto;
