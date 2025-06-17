@@ -468,12 +468,10 @@ main.not-found {
     margin-bottom: 1rem;
   }
 
-
-
-/* Stack floated images on small screens */
+/* Responsive floated images: stack on small screens */
 @media (max-width: 768px) {
-  .float-left,
-  .float-right {
+  .float-left-img,
+  .float-right-img {
     float: none;
     display: block;
     margin: 1rem auto;
@@ -481,6 +479,17 @@ main.not-found {
   }
 }
 
+@media (min-width: 769px) {
+  .float-left-img {
+    float: left;
+    margin-right: 1.5rem;
+  }
+
+  .float-right-img {
+    float: right;
+    margin-left: 1.5rem;
+  }
+}
 
 /* 📞 CONTACT CONTAINER                               */
 /* -------------------------------------------------- */
