@@ -154,7 +154,7 @@ a {
 
 .header-container {
   display: flex;
-  align-items: center;
+  align-items: Left;
   justify-content: space-between;
   gap: 1rem;
   width: 100%;
