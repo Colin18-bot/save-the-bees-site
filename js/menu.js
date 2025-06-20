@@ -1,6 +1,5 @@
-document.addEventListener('DOMContentLoaded', function () {
-  // ✅ Toggle hamburger menu
-  const menuToggle = document.getElementById('menuToggle');
+document.addEventListener("DOMContentLoaded", function () {
+  const menuToggle = document.querySelector('.menu-toggle');
   const navMenu = document.querySelector('.nav-menu');
 
   if (menuToggle && navMenu) {
@@ -9,9 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // ✅ Toggle dropdowns (on small screens only)
-  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-  dropdownToggles.forEach(toggle => {
+  document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
     toggle.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -23,12 +20,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // ✅ Close dropdowns when clicking outside
   document.addEventListener('click', function (e) {
     if (!e.target.closest('.dropdown')) {
-      document.querySelectorAll('.dropdown.open').forEach(d => {
-        d.classList.remove('open');
-      });
+      document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
     }
   });
 });
