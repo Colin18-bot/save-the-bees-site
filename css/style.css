@@ -68,7 +68,7 @@ a {
 }
 
 .menu-toggle {
-  display: none;
+  display: block; /* ✅ FIXED: Make sure it's visible */
   background: none;
   border: none;
   color: #D4A017;
