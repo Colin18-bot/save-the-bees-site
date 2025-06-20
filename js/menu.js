@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
   const menuToggle = document.getElementById('menuToggle');
-  const navMenu = document.getElementById('navMenu');
+  const navMenu = document.getElementById('navMenu'); // Refers to the main nav <ul>
 
+  // ✅ Hamburger toggle
   if (menuToggle && navMenu) {
     menuToggle.addEventListener('click', () => {
       navMenu.classList.toggle('active');
@@ -10,27 +11,31 @@ document.addEventListener('DOMContentLoaded', function () {
     console.error('menuToggle or navMenu not found.');
   }
 
-  // Dropdown toggle with toggle state support
+  // ✅ Dropdown toggle (expand/collapse)
   document.querySelectorAll('.dropdown-toggle').forEach(button => {
     button.addEventListener('click', e => {
       e.preventDefault();
       e.stopPropagation();
       const dropdown = button.closest('.dropdown');
 
-      // ✅ Toggle only the current dropdown
-      if (dropdown.classList.contains('open')) {
+      // Toggle open state
+      const isOpen = dropdown.classList.contains('open');
+      
+      // Close all others
+      document.querySelectorAll('.dropdown.open').forEach(dd => {
+        if (dd !== dropdown) dd.classList.remove('open');
+      });
+
+      // Toggle current
+      if (isOpen) {
         dropdown.classList.remove('open');
       } else {
-        // Optionally close all others:
-        document.querySelectorAll('.dropdown.open').forEach(dd => {
-          if (dd !== dropdown) dd.classList.remove('open');
-        });
         dropdown.classList.add('open');
       }
     });
   });
 
-  // ✅ Close dropdowns on outside click
+  // ✅ Close dropdowns when clicking outside
   document.addEventListener('click', e => {
     if (!e.target.closest('.dropdown')) {
       document.querySelectorAll('.dropdown.open').forEach(dd => dd.classList.remove('open'));
