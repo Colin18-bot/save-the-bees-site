@@ -744,7 +744,6 @@ address {
 
 /* -------------------------------------------------- */
 /* 📱 RESPONSIVE NAVIGATION                          */
-/* -------------------------------------------------- */
 @media (max-width: 768px) {
   .dropdown {
     position: relative;
@@ -759,7 +758,7 @@ address {
     padding: 1rem 1.5rem 0.25rem;
     color: #D4A017;
     font-weight: bold;
-    pointer-events: none; /* Prevent default navigation on mobile */
+    pointer-events: none;
   }
 
   .dropdown-toggle {
@@ -829,6 +828,8 @@ address {
     overflow-y: auto;
   }
 }
+
+
 /* -------------------------------------------------- */
 /* ♿ ACCESSIBILITY                                   */
 /* -------------------------------------------------- */
