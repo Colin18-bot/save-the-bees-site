@@ -1,15 +1,15 @@
 document.addEventListener('DOMContentLoaded', function () {
-  // ✅ Hamburger toggle
-  const menuToggle = document.getElementById('menuToggle');
+  // ✅ Hamburger menu toggle
+  const toggleBtn = document.getElementById('menuToggle');
   const navMenu = document.querySelector('.nav-menu');
 
-  if (menuToggle && navMenu) {
-    menuToggle.addEventListener('click', () => {
+  if (toggleBtn && navMenu) {
+    toggleBtn.addEventListener('click', () => {
       navMenu.classList.toggle('active');
     });
   }
 
-  // ✅ Dropdown toggles
+  // ✅ Dropdown toggle
   const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
 
   dropdownToggles.forEach(toggle => {
@@ -20,19 +20,19 @@ document.addEventListener('DOMContentLoaded', function () {
       const dropdown = this.closest('.dropdown');
       dropdown.classList.toggle('open');
 
-      // Make sure dropdown is fully in view
-      const dropdownMenu = dropdown.querySelector('.dropdown-menu');
-      if (dropdownMenu) {
-        dropdownMenu.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      // Scroll dropdown into view when opened
+      const menu = dropdown.querySelector('.dropdown-menu');
+      if (menu && dropdown.classList.contains('open')) {
+        menu.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     });
   });
 
-  // ✅ Close dropdowns if clicked outside
+  // ✅ Close dropdowns when clicking outside
   document.addEventListener('click', function (e) {
     if (!e.target.closest('.dropdown')) {
-      document.querySelectorAll('.dropdown.open').forEach(drop => {
-        drop.classList.remove('open');
+      document.querySelectorAll('.dropdown.open').forEach(openItem => {
+        openItem.classList.remove('open');
       });
     }
   });
