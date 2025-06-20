@@ -1,49 +1,46 @@
-// ✅ Toggle dropdowns on small screens
-document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
-  toggle.addEventListener('click', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
+document.addEventListener('DOMContentLoaded', function () {
+  // ✅ Hamburger menu toggle
+  const menuToggle = document.querySelector('.menu-toggle');
+  const navMenu = document.querySelector('.nav-menu');
 
-    const dropdown = this.closest('.dropdown');
-    const isOpening = !dropdown.classList.contains('open');
-
-    // Close other open dropdowns
-    document.querySelectorAll('.dropdown.open').forEach(d => {
-      if (d !== dropdown) d.classList.remove('open');
+  if (menuToggle && navMenu) {
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
     });
+  }
 
-    dropdown.classList.toggle('open');
+  // ✅ Toggle dropdowns on small screens
+  document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
 
-    // 👉 Scroll into view only if opening
-    if (isOpening) {
-      dropdown.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest'
+      const dropdown = this.closest('.dropdown');
+      const isOpening = !dropdown.classList.contains('open');
+
+      // Close other open dropdowns (optional)
+      document.querySelectorAll('.dropdown.open').forEach(d => {
+        if (d !== dropdown) d.classList.remove('open');
       });
+
+      dropdown.classList.toggle('open');
+
+      // Scroll into view if opening
+      if (isOpening) {
+        setTimeout(() => {
+          dropdown.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest'
+          });
+        }, 100); // slight delay ensures dropdown is open before scrolling
+      }
+    });
+  });
+
+  // ✅ Close dropdowns if clicking outside
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.dropdown')) {
+      document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
     }
   });
-});
-
-// ✅ Close dropdowns when clicking outside
-document.addEventListener('click', function () {
-  document.querySelectorAll('.dropdown.open').forEach(dropdown => {
-    dropdown.classList.remove('open');
-  });
-});
-
-// ✅ Hamburger menu toggle
-const menuToggle = document.getElementById('menuToggle');
-const navMenu = document.querySelector('.nav-menu');
-
-menuToggle.addEventListener('click', function () {
-  navMenu.classList.toggle('active');
-
-  // ✅ Prevent background scroll when menu is open
-  if (navMenu.classList.contains('active')) {
-    document.body.classList.add('menu-open');
-    document.documentElement.classList.add('menu-open');
-  } else {
-    document.body.classList.remove('menu-open');
-    document.documentElement.classList.remove('menu-open');
-  }
 });
