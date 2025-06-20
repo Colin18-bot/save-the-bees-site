@@ -1,5 +1,6 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const menuToggle = document.querySelector('.menu-toggle');
+document.addEventListener('DOMContentLoaded', function () {
+  // ✅ Hamburger toggle
+  const menuToggle = document.getElementById('menuToggle');
   const navMenu = document.querySelector('.nav-menu');
 
   if (menuToggle && navMenu) {
@@ -8,21 +9,31 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+  // ✅ Dropdown toggles
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+
+  dropdownToggles.forEach(toggle => {
     toggle.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
 
       const dropdown = this.closest('.dropdown');
-      if (dropdown) {
-        dropdown.classList.toggle('open');
+      dropdown.classList.toggle('open');
+
+      // Make sure dropdown is fully in view
+      const dropdownMenu = dropdown.querySelector('.dropdown-menu');
+      if (dropdownMenu) {
+        dropdownMenu.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     });
   });
 
+  // ✅ Close dropdowns if clicked outside
   document.addEventListener('click', function (e) {
     if (!e.target.closest('.dropdown')) {
-      document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.dropdown.open').forEach(drop => {
+        drop.classList.remove('open');
+      });
     }
   });
 });
