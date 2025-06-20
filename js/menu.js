@@ -15,8 +15,29 @@ document.addEventListener('DOMContentLoaded', function () {
     toggle.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
+
       const dropdown = this.closest('.dropdown');
-      dropdown?.classList.toggle('open');
+      const isOpening = !dropdown.classList.contains('open');
+
+      // Optional: Close other open dropdowns
+      document.querySelectorAll('.dropdown.open').forEach(d => {
+        if (d !== dropdown) d.classList.remove('open');
+      });
+
+      dropdown.classList.toggle('open');
+
+      // Scroll into view when opened (helps when submenu is off-screen)
+      if (isOpening) {
+        const menuRect = dropdown.getBoundingClientRect();
+        const isOffScreen = menuRect.bottom > window.innerHeight;
+
+        if (isOffScreen) {
+          dropdown.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end'
+          });
+        }
+      }
     });
   });
 
