@@ -163,9 +163,9 @@ a {
     display: none; /* Prevent hover glitch */
   }
 
-  .dropdown > a {
-    pointer-events: none; /* Prevent accidental taps */
-  }
+  .dropdown-toggle {
+  pointer-events: auto;
+}
 }
 
 /* -------------------------------------------------- */
