@@ -141,23 +141,6 @@ a {
     padding: 0.75rem 1rem;
     display: block;
   }
-
-  .header-container {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .site-title {
-    flex: 1 1 100%;
-    text-align: left;
-    margin-top: 0.5rem;
-  }
-
-  .menu-toggle {
-    margin-left: auto;
-  }
-
 }
 
 
@@ -176,8 +159,20 @@ a {
 
 /* Optional: shrink site title size on mobile */
 @media (max-width: 768px) {
+  .header-container {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .site-title {
-    font-size: 1.4rem;
+    flex: none;
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .menu-toggle {
+    margin-left: auto;
   }
 }
 
@@ -270,6 +265,7 @@ a {
 /* -------------------------------------------------- */
 /* 📦 CONTENT CONTAINERS + LAYOUTS                   */
 /* -------------------------------------------------- */
+
 
 /* 📦 CONTENT CONTAINERS + LAYOUTS */
 .content {
