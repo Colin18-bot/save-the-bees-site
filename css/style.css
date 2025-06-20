@@ -805,6 +805,12 @@ address {
   }
 }
 
+/* ✅ Allow scrolling when mobile menu is open */
+body.menu-open,
+html.menu-open {
+  overflow-y: scroll;
+  height: auto;
+}
 
 /* -------------------------------------------------- */
 /* ♿ ACCESSIBILITY                                   */
