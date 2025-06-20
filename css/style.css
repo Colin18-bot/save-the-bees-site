@@ -147,38 +147,6 @@ a {
   }
 }
 
-/* HEADER CONTAINER FOR MOBILE RESPONSE */
-.header-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1rem;
-}
-
-.site-title {
-  color: #D4A017;
-  font-weight: bold;
-}
-
-/* Optional: shrink site title size on mobile */
-@media (max-width: 768px) {
-  .header-container {
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .site-title {
-    flex: none;
-    margin: 0;
-    font-size: 1.2rem;
-  }
-
-  .menu-toggle {
-    margin-left: auto;
-  }
-}
-
 /* -------------------------------------------------- */
 /* ✅ MOBILE HEADER ALIGNMENT FIX                    */
 /* -------------------------------------------------- */
@@ -222,6 +190,7 @@ a {
   gap: 1rem;
   width: 100%;
   position: relative;
+  padding: 0 1rem; /* ✅ Moved here from the deleted block */
 }
 
 .site-logo {
@@ -269,7 +238,6 @@ a {
 /* 📦 CONTENT CONTAINERS + LAYOUTS                   */
 /* -------------------------------------------------- */
 
-/* 📦 CONTENT CONTAINERS + LAYOUTS */
 .content {
   padding: 2rem;
 }
@@ -338,11 +306,6 @@ a {
   /* Horizontally centers the container */
   padding: 0 1rem;
   /* Adds horizontal padding inside */
-}
-
-.content {
-  padding: 2rem;
-  /* Adds vertical padding for sections inside <main> */
 }
 
 /* Grid layout inside the centered container */
@@ -584,7 +547,11 @@ main.not-found {
 /* 📞 CONTACT CONTAINER                               */
 /* -------------------------------------------------- */
 /* Contact Form Wrapper */
-
+.contact-wrapper {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
 
 /* Contact Form Styling */
 .contact-container {
