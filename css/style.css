@@ -777,13 +777,16 @@ address {
   }
 
   .dropdown-menu {
-    display: none;
+    max-height: 0;
+    overflow: hidden;
+    display: flex;
     flex-direction: column;
     background-color: #000;
+    transition: max-height 0.4s ease;
   }
 
   .dropdown.open .dropdown-menu {
-    display: block;
+    max-height: 500px; /* enough height for submenu items */
   }
 
   .dropdown-menu li a {
