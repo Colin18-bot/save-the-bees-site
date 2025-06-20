@@ -771,12 +771,17 @@ address {
   }
 
   .dropdown-menu {
-    flex-direction: column;
-    background-color: #000;
-    transition: max-height 0.3s ease;
-    max-height: 350;          /* ✅ FIX */
-    overflow-y: auto;          /* ✅ FIX */
-  }
+  flex-direction: column;
+  background-color: #000;
+  max-height: none;              /* ✅ Allow it to grow as needed */
+  overflow-y: auto;              /* ✅ Enable scrolling */
+  position: relative;            /* ✅ Ensure stacking works */
+}
+
+.nav-menu.active {
+  max-height: 100vh;             /* ✅ Prevents going beyond screen */
+  overflow-y: auto;              /* ✅ Entire menu scrolls if too tall */
+}
 
   .dropdown.open .dropdown-menu {
     display: block;            /* ✅ FIX */
