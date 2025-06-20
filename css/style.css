@@ -760,7 +760,6 @@ address {
     padding: 1rem 1.5rem 0.25rem;
     color: #D4A017;
     font-weight: bold;
-    pointer-events: none;
   }
 
   .dropdown-toggle {
