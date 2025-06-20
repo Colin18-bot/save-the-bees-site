@@ -27,8 +27,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-
-
 document.addEventListener('DOMContentLoaded', function () {
   const toggles = document.querySelectorAll('.dropdown-toggle');
 
