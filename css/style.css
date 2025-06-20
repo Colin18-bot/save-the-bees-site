@@ -147,10 +147,10 @@ a {
   }
 
   .dropdown-menu li a {
-    display: block;
-    padding: 1.25rem 1rem; /* Bigger tap area */
-    font-size: 1.1rem;
-  }
+  padding: 1.25rem 1rem;
+  font-size: 1.1rem;
+  display: block;
+}
 
   .dropdown-menu li a::after {
     content: " ▸";
