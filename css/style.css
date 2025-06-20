@@ -774,7 +774,7 @@ address {
     flex-direction: column;
     background-color: #000;
     transition: max-height 0.3s ease;
-    max-height: 300;          /* ✅ FIX */
+    max-height: 350;          /* ✅ FIX */
     overflow-y: auto;          /* ✅ FIX */
   }
 
