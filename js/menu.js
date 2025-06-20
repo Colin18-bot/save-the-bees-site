@@ -6,7 +6,7 @@ menuToggle?.addEventListener('click', () => {
   navMenu.classList.toggle('active');
 });
 
-// Toggle dropdown submenus on arrow click only
+// Submenu toggle ONLY via the arrow (dropdown-toggle)
 document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
   toggle.addEventListener('click', function (e) {
     e.preventDefault();
@@ -16,7 +16,7 @@ document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
   });
 });
 
-// Optional: Close dropdowns when clicking elsewhere
+// Close submenus if you click outside
 document.addEventListener('click', function (e) {
   if (!e.target.closest('.dropdown')) {
     document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
