@@ -9,18 +9,17 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // ✅ Toggle dropdowns on small screens
-  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-  dropdownToggles.forEach(toggle => {
-    toggle.addEventListener('click', function (e) {
+  // ✅ Toggle entire dropdown (not just the ▼ button)
+  const dropdowns = document.querySelectorAll('.dropdown');
+  dropdowns.forEach(dropdown => {
+    dropdown.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
-      const dropdown = this.closest('.dropdown');
-      dropdown?.classList.toggle('open');
+      this.classList.toggle('open');
     });
   });
 
-  // ✅ Close dropdowns on outside click
+  // ✅ Close all dropdowns if clicking outside
   document.addEventListener('click', function (e) {
     if (!e.target.closest('.dropdown')) {
       document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
