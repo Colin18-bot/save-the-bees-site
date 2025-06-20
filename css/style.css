@@ -120,20 +120,24 @@ a {
   }
 
   .nav-menu {
-    flex-direction: column;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    background-color: #000;
-    width: 100%;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 999;
-  }
+  flex-direction: column;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background-color: #000;
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 999;
+
+  /* ✅ Allow scrolling when expanded */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
 
   .nav-menu.active {
-    max-height: 80vh;
+    max-height: 90vh;
     overflow-y: auto;
   }
 
@@ -203,10 +207,6 @@ a {
     z-index: 10;
   }
 }
-
-
-
-
 
 /* -------------------------------------------------- */
 /* ✅ MOBILE HEADER ALIGNMENT FIX                    */
