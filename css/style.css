@@ -97,11 +97,6 @@ a {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-.dropdown-menu li {
-  list-style: none;
-  padding-left: 0;
-}
-
 .dropdown-menu li a {
   padding: 0.75rem 1rem;
   white-space: nowrap;
@@ -147,25 +142,9 @@ a {
   }
 
   .dropdown-menu li a {
-  padding: 1.25rem 1rem;
-  font-size: 1.1rem;
-  display: block;
-}
-
-  .dropdown-menu li a::after {
-    content: " ▸";
-    float: right;
-    color: #D4A017;
-    font-size: 0.9rem;
+    padding: 0.75rem 1rem;
+    display: block;
   }
-
-  .dropdown:hover .dropdown-menu {
-    display: none; /* Prevent hover glitch */
-  }
-
-  .dropdown-toggle {
-  pointer-events: auto;
-}
 }
 
 /* -------------------------------------------------- */
