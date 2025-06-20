@@ -33,23 +33,16 @@ document.addEventListener('DOMContentLoaded', function () {
   toggles.forEach(toggle => {
     toggle.addEventListener('click', function (e) {
       e.preventDefault();
-      e.stopPropagation(); // Stop accidental link clicks
+      e.stopPropagation(); // Prevent clicking the parent <a>
 
       const parent = this.closest('.dropdown');
 
-      // Optionally close other open dropdowns
-      document.querySelectorAll('.dropdown.open').forEach(drop => {
-        if (drop !== parent) {
-          drop.classList.remove('open');
-        }
-      });
-
-      // Toggle current dropdown
+      // Toggle only this one — open if closed, close if open
       parent.classList.toggle('open');
     });
   });
 
-  // Close dropdowns when clicking anywhere else
+  // Close all dropdowns if clicking outside
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.dropdown')) {
       document.querySelectorAll('.dropdown.open').forEach(drop => {
@@ -58,6 +51,5 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
-
 
 

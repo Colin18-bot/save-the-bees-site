@@ -707,9 +707,10 @@ address {
     z-index: 999;
   }
 
-  .nav-menu.active {
-    max-height: 1000px;
-  }
+ .nav-menu.active {
+  max-height: 80vh;
+  overflow-y: auto;
+}
 
   .nav-menu li {
     text-align: center;
@@ -740,6 +741,29 @@ address {
     font-size: 1.5rem;
     display: inline-block;
     color: #D4A017;
+  }
+}
+
+/* -------------------------------------------------- */
+/* 📱 MOBILE NAVIGATION USABILITY IMPROVEMENTS        */
+/* -------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .dropdown {
+    position: relative;
+  }
+
+  .dropdown-toggle {
+    padding: 0.5rem 1rem;
+    font-size: 1.2rem;
+    line-height: 1;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+  }
+
+  .nav-menu > li > a {
+    padding-right: 2.5rem; /* Makes room for the arrow */
   }
 }
 
@@ -826,27 +850,3 @@ button:focus,
 .cookie-buttons button:hover {
   background: #C4970B;
 }
-
-/* -------------------------------------------------- */
-/* 📱 MOBILE NAVIGATION USABILITY IMPROVEMENTS        */
-/* -------------------------------------------------- */
-
-@media (max-width: 768px) {
-  .dropdown {
-    position: relative;
-  }
-
-  .dropdown-toggle {
-    padding: 0.5rem 1rem;
-    font-size: 1.2rem;
-    line-height: 1;
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-  }
-
-  .nav-menu > li > a {
-    padding-right: 2.5rem; /* Makes room for the arrow */
-  }
-}
-
