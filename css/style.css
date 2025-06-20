@@ -746,47 +746,30 @@ address {
 /* 📱 RESPONSIVE NAVIGATION                          */
 /* -------------------------------------------------- */
 @media (max-width: 768px) {
-  .nav-menu {
-    flex-direction: column;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    background-color: #000;
-    width: 100%;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 999;
-  }
-
-  .nav-menu.active {
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-
   .dropdown {
-    width: 100%;
     position: relative;
+    display: block;
+    width: 100%;
   }
 
   .dropdown > a {
     display: block;
     padding: 1rem 1.5rem;
-    font-weight: bold;
     color: #D4A017;
+    font-weight: bold;
+    text-align: center;
   }
 
   .dropdown-toggle {
+    display: block;
     background: none;
     border: none;
     color: #D4A017;
     font-size: 1rem;
+    margin: 0 auto;
     cursor: pointer;
-    margin-left: 0.5rem;
     transition: transform 0.3s ease;
-    position: absolute;
-    right: 1rem;
-    top: 1.25rem;
+    text-align: center;
   }
 
   .dropdown.open .dropdown-toggle {
@@ -795,9 +778,8 @@ address {
 
   .dropdown-menu {
     display: none;
-    background-color: #000;
     flex-direction: column;
-    width: 100%;
+    background-color: #000;
   }
 
   .dropdown.open .dropdown-menu {
@@ -806,13 +788,18 @@ address {
 
   .dropdown-menu li a {
     display: block;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1rem;
     color: #D4A017;
   }
 
   .dropdown-menu li a:hover {
     background-color: #222;
     color: #fff;
+  }
+
+  .nav-menu.active {
+    max-height: 80vh;
+    overflow-y: auto;
   }
 }
 
