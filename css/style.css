@@ -754,7 +754,7 @@ address {
 
   .dropdown > a {
     display: block;
-    padding: 1rem 1.5rem;
+    padding: 1rem 1.5rem 0.25rem;
     color: #D4A017;
     font-weight: bold;
     text-align: center;
@@ -765,8 +765,8 @@ address {
     background: none;
     border: none;
     color: #D4A017;
-    font-size: 1rem;
-    margin: 0 auto;
+    font-size: 1.2rem;
+    margin: 0 auto 0.5rem;
     cursor: pointer;
     transition: transform 0.3s ease;
     text-align: center;
@@ -786,7 +786,7 @@ address {
   }
 
   .dropdown.open .dropdown-menu {
-    max-height: 500px; /* enough height for submenu items */
+    max-height: 500px;
   }
 
   .dropdown-menu li a {
