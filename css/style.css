@@ -111,21 +111,38 @@ a {
   transition: transform 0.3s ease;
 }
 
-/* ------------------------------ */
-/* 🍔 MOBILE NAVIGATION FIX       */
-/* ------------------------------ */
+/* ✅ ONLY affect mobile nav */
 @media (max-width: 768px) {
-  .dropdown {
-    position: relative;
+  .menu-toggle {
     display: block;
+  }
+
+  .nav-menu {
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background-color: #000;
     width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 999;
+  }
+
+  .nav-menu.active {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .nav-menu > li {
+    text-align: center;
   }
 
   .dropdown > a {
-    display: block;
-    padding: 1rem 1.5rem;
-    color: #D4A017;
-    font-weight: bold;
+    padding: 1rem;
+    display: inline-block;
+    width: 100%;
   }
 
   .dropdown-toggle {
@@ -134,7 +151,7 @@ a {
     border: none;
     color: #D4A017;
     font-size: 1rem;
-    margin-left: 1rem;
+    margin-left: 0.5rem;
     cursor: pointer;
     transition: transform 0.3s ease;
   }
@@ -145,7 +162,6 @@ a {
 
   .dropdown-menu {
     display: none;
-    flex-direction: column;
     background-color: #000;
   }
 
@@ -163,12 +179,32 @@ a {
     background-color: #222;
     color: #fff;
   }
+}
 
-  .nav-menu.active {
-    max-height: 80vh;
-    overflow-y: auto;
+/* ✅ DESKTOP: hide hamburger and dropdown toggle */
+@media (min-width: 769px) {
+  .menu-toggle {
+    display: none !important;
+  }
+
+  .dropdown-toggle {
+    display: none !important;
+  }
+
+  .dropdown:hover .dropdown-menu {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #000;
+    min-width: 200px;
+    z-index: 10;
   }
 }
+
+
+
+
 
 /* -------------------------------------------------- */
 /* ✅ MOBILE HEADER ALIGNMENT FIX                    */
