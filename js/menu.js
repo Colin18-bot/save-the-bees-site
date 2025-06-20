@@ -33,10 +33,31 @@ document.addEventListener('DOMContentLoaded', function () {
   toggles.forEach(toggle => {
     toggle.addEventListener('click', function (e) {
       e.preventDefault();
+      e.stopPropagation(); // Stop accidental link clicks
+
       const parent = this.closest('.dropdown');
+
+      // Optionally close other open dropdowns
+      document.querySelectorAll('.dropdown.open').forEach(drop => {
+        if (drop !== parent) {
+          drop.classList.remove('open');
+        }
+      });
+
+      // Toggle current dropdown
       parent.classList.toggle('open');
     });
   });
+
+  // Close dropdowns when clicking anywhere else
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown')) {
+      document.querySelectorAll('.dropdown.open').forEach(drop => {
+        drop.classList.remove('open');
+      });
+    }
+  });
 });
+
 
 
