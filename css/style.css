@@ -770,14 +770,12 @@ address {
   }
 }
 
-.dropdown-toggle::after {
-  content: '▼';
-  display: inline-block;
-  margin-left: 0.5rem;
+/* 🔄 Dropdown Arrow Rotation */
+.dropdown-toggle {
   transition: transform 0.3s ease;
 }
 
-.dropdown.open .dropdown-toggle::after {
+.dropdown.open .dropdown-toggle {
   transform: rotate(180deg);
 }
 
