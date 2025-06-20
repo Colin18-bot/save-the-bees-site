@@ -12,7 +12,7 @@ body {
   background-color: #fdf6ec;
   color: #333;
   line-height: 1.6;
-  font-size: clamp(1rem, 1vw + 0.5rem, 1.125rem);  
+  font-size: clamp(1rem, 1vw + 0.5rem, 1.125rem);
 }
 
 a {
@@ -23,8 +23,10 @@ a {
 /* ---------- BANNER ----------*/
 .banner img {
   width: 100%;
-  height: 450px;        /* Set your desired height */
-  object-fit: cover;    /* Keeps image filling the space and crops excess */
+  height: 450px;
+  /* Set your desired height */
+  object-fit: cover;
+  /* Keeps image filling the space and crops excess */
 }
 
 /* -------------------------------------------------- */
@@ -47,13 +49,13 @@ a {
   transition: max-height 0.3s ease;
 }
 
-.nav-menu > li {
+.nav-menu>li {
   position: relative;
 }
 
 .nav-menu a {
   display: block;
-  color: #D4A017; 
+  color: #D4A017;
   padding: 1rem 1.5rem;
   font-weight: bold;
   transition: all 0.3s ease;
@@ -69,7 +71,7 @@ a {
   display: none;
   background: none;
   border: none;
-  color: #D4A017; 
+  color: #D4A017;
   font-size: 1.8rem;
   cursor: pointer;
   position: absolute;
@@ -81,7 +83,7 @@ a {
 .menu-toggle i {
   font-size: 1.5rem;
   display: inline-block;
-  color: #D4A017; 
+  color: #D4A017;
 }
 
 .dropdown-menu {
@@ -92,7 +94,7 @@ a {
   background-color: #000;
   min-width: 200px;
   z-index: 10;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 .dropdown-menu li a {
@@ -117,12 +119,14 @@ a {
   font-size: 1rem;
   margin-left: 0.3rem;
   cursor: pointer;
-  display: none; /* Hidden on desktop */
+  display: none;
+  /* Hidden on desktop */
 }
 
 @media (max-width: 768px) {
   .dropdown-toggle {
-    display: inline; /* Show on mobile */
+    display: inline;
+    /* Show on mobile */
   }
 
   .dropdown-menu {
@@ -142,7 +146,6 @@ a {
     display: block;
   }
 }
-
 
 /* HEADER CONTAINER FOR MOBILE RESPONSE */
 .header-container {
@@ -177,6 +180,33 @@ a {
 }
 
 /* -------------------------------------------------- */
+/* ✅ MOBILE HEADER ALIGNMENT FIX                    */
+/* -------------------------------------------------- */
+@media (max-width: 768px) {
+  .header-container {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .site-logo {
+    height: 50px;
+  }
+
+  .site-title {
+    text-align: center;
+    justify-self: center;
+    font-size: 1.3rem;
+    white-space: nowrap;
+  }
+
+  .menu-toggle {
+    justify-self: end;
+  }
+}
+
+/* -------------------------------------------------- */
 /* 🐝 SITE HEADER + LOGO STYLES                       */
 /* -------------------------------------------------- */
 .site-header {
@@ -200,9 +230,9 @@ a {
 }
 
 .site-title {
-  font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);  
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
   font-weight: bold;
-  color: #D4A017;  
+  color: #D4A017;
 }
 
 /* -------------------------------------------------- */
@@ -233,14 +263,21 @@ a {
 }
 
 @keyframes scrollBanner {
-  0% { transform: translateX(0%); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .carousel-caption {
   position: absolute;
-  bottom: 160px;          /* ⬆ Push it up slightly */
-  left: 30px;            /* Fine-tune for padding from edge */
+  bottom: 160px;
+  /* ⬆ Push it up slightly */
+  left: 30px;
+  /* Fine-tune for padding from edge */
   transform: none;
   background-color: rgba(0, 0, 0, 0.5);
   color: #fff;
@@ -253,19 +290,18 @@ a {
 
 .carousel-caption h2 {
   margin: 0;
-  font-size: clamp(1.25rem, 1.5vw + 1rem, 2rem);  
-  color: #D4A017; 
+  font-size: clamp(1.25rem, 1.5vw + 1rem, 2rem);
+  color: #D4A017;
 }
 
 .carousel-caption p {
   margin-top: 0.25rem;
-  font-size: clamp(0.875rem, 1vw, 1.125rem);  
+  font-size: clamp(0.875rem, 1vw, 1.125rem);
 }
 
 /* -------------------------------------------------- */
 /* 📦 CONTENT CONTAINERS + LAYOUTS                   */
 /* -------------------------------------------------- */
-
 
 /* 📦 CONTENT CONTAINERS + LAYOUTS */
 .content {
@@ -274,25 +310,25 @@ a {
 
 .content h1 {
   margin-bottom: 1.5rem;
-  font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);  
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.25rem);
 }
 
 .content h2 {
   margin-top: 2rem;
   margin-bottom: 1rem;
-  font-size: clamp(1.25rem, 1.5vw + 0.75rem, 2rem); 
+  font-size: clamp(1.25rem, 1.5vw + 0.75rem, 2rem);
 }
 
 .content h3 {
   margin-top: 2rem;
   margin-bottom: 1rem;
-  font-size: clamp(1.1rem, 1.25vw + 0.5rem, 1.5rem); 
+  font-size: clamp(1.1rem, 1.25vw + 0.5rem, 1.5rem);
 }
 
 .content p {
-  margin-bottom: 1rem; /* Adjust to control the spacing */
+  margin-bottom: 1rem;
+  /* Adjust to control the spacing */
 }
-
 
 /* --- ADDING AN IMAGE IN MAIN CONTENT AREA (LEFT) --- */
 .content img.float-left-img {
@@ -314,7 +350,8 @@ a {
 
 /* 📱 Donation QR Code Resize */
 .qr-code {
-  max-width: 250px;   /* You can adjust this value */
+  max-width: 250px;
+  /* You can adjust this value */
   height: auto;
   display: block;
 }
@@ -329,15 +366,18 @@ a {
 
 /* ---------- MAIN LAYOUT WRAPPERS FOR PAGE STRUCTURE---------- */
 
-
 .container {
-  max-width: 1200px;       /* Keeps content from stretching too wide on large screens */
-  margin: 0 auto;          /* Horizontally centers the container */
-  padding: 0 1rem;         /* Adds horizontal padding inside */
+  max-width: 1200px;
+  /* Keeps content from stretching too wide on large screens */
+  margin: 0 auto;
+  /* Horizontally centers the container */
+  padding: 0 1rem;
+  /* Adds horizontal padding inside */
 }
 
 .content {
-  padding: 2rem;           /* Adds vertical padding for sections inside <main> */
+  padding: 2rem;
+  /* Adds vertical padding for sections inside <main> */
 }
 
 /* ---------- CARD GRID SYSTEM: IMAGE, HEADING & READ MORE LINK ---------- */
@@ -351,7 +391,8 @@ a {
 /* Grid layout inside the centered container */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Responsive cards */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  /* Responsive cards */
   gap: 1.5rem;
   margin: 2rem 0;
 }
@@ -360,7 +401,7 @@ a {
 .card {
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.3s ease;
   display: flex;
@@ -368,7 +409,8 @@ a {
 }
 
 .card:hover {
-  transform: translateY(-5px); /* Hover effect */
+  transform: translateY(-5px);
+  /* Hover effect */
 }
 
 .card img {
@@ -389,9 +431,9 @@ a {
 .read-more {
   text-align: right;
   margin-top: 1rem;
-  color: #D4A017; 
+  color: #D4A017;
   font-weight: bold;
-  font-size: clamp(0.9rem, 1vw, 1.125rem); 
+  font-size: clamp(0.9rem, 1vw, 1.125rem);
 }
 
 /* ---------- CLEAN 50/50 IMAGE + TEXT LAYOUT SIDE BY SIDE---------- */
@@ -399,7 +441,8 @@ a {
   display: flex;
   flex-wrap: nowrap;
   align-items: stretch;
-  gap: 2rem;               /* Space between the two boxes */
+  gap: 2rem;
+  /* Space between the two boxes */
   margin: 2rem 0;
 }
 
@@ -414,7 +457,8 @@ a {
   max-width: 50%;
   display: flex;
   flex-direction: column;
-  min-height: 100%;        /* Stretch to match row height */
+  min-height: 100%;
+  /* Stretch to match row height */
 }
 
 /* ✅ Image box styles */
@@ -427,8 +471,10 @@ a {
 
 .img-box img {
   width: 100%;
-  height: 100%;            /* 👈 Fills full height of the image box */
-  object-fit: cover;       /* 👈 Scales and crops to fill space */
+  height: 100%;
+  /* 👈 Fills full height of the image box */
+  object-fit: cover;
+  /* 👈 Scales and crops to fill space */
   display: block;
 }
 
@@ -447,11 +493,12 @@ a {
 /* ---------- RESPONSIVE STACKING ON MOBILE ---------- */
 @media (max-width: 768px) {
   .row {
-    flex-direction: column; /* 🔁 Fixes image stacking on mobile */
+    flex-direction: column;
+    /* 🔁 Fixes image stacking on mobile */
   }
 
   .row.reverse {
-    flex-direction: column; 
+    flex-direction: column;
   }
 
   .grid {
@@ -490,7 +537,7 @@ a {
 
 .video h2 {
   font-family: 'Georgia', serif;
-  font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem); 
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
   color: #5a420d;
   margin-bottom: 1.5rem;
   text-shadow: 1px 1px #fff3b0;
@@ -512,11 +559,9 @@ a {
   text-align: center;
 }
 
-
 main.not-found {
   padding: 200px 0;
 }
-
 
 /* -------------------------------------------------- */
 /* 📃 INDENTED LISTS                                 */
@@ -547,16 +592,17 @@ main.not-found {
 }
 
 /* Desktop: re-enable float for layout and wrap */
-  .content img.float-right-img {
-    float: right;
-    max-width: 500px;
-    margin-left: 1.5rem;
-    margin-right: 0;
-    margin-bottom: 1rem;
-  }
+.content img.float-right-img {
+  float: right;
+  max-width: 500px;
+  margin-left: 1.5rem;
+  margin-right: 0;
+  margin-bottom: 1rem;
+}
 
 /* Responsive floated images: stack on small screens */
 @media (max-width: 768px) {
+
   .float-left-img,
   .float-right-img {
     float: none;
@@ -592,7 +638,8 @@ main.not-found {
   background-color: #fffdf4;
   padding: 2rem;
   margin-top: 2rem;
-  margin-bottom: 5rem; /* Space between form and footer */
+  margin-bottom: 5rem;
+  /* Space between form and footer */
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
@@ -682,7 +729,7 @@ main.not-found {
 }
 
 .footer-column h3 {
-  color: #D4A017; 
+  color: #D4A017;
   font-size: clamp(1rem, 1.25vw + 0.5rem, 1.2rem);
 }
 
@@ -696,7 +743,7 @@ main.not-found {
 }
 
 .footer-column a {
-  color: #D4A017; 
+  color: #D4A017;
 }
 
 .footer-column a:hover {
@@ -704,7 +751,7 @@ main.not-found {
 }
 
 .footer-bottom {
-  background-color:#000;
+  background-color: #000;
   color: #D4A017;
   text-align: center;
   padding: 1rem;
@@ -776,7 +823,7 @@ main.not-found {
     display: inline-block;
     color: #F4C542;
   }
-} 
+}
 
 /* -------------------------------------------------- */
 /* ♿ ACCESSIBILITY                                   */
@@ -798,9 +845,9 @@ a:focus,
 button:focus,
 .menu-toggle:focus,
 .nav-menu a:focus {
-  outline: 2px dashed #D4A017;  
+  outline: 2px dashed #D4A017;
   outline-offset: 4px;
-  background-color: rgba(212,160,23, 0.15);
+  background-color: rgba(212, 160, 23, 0.15);
   border-radius: 4px;
 }
 
@@ -816,7 +863,7 @@ button:focus,
   margin: auto;
   background: #fffbea;
   border: 1px solid #ccc;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   padding: 1.5rem;
   z-index: 9999;
   border-radius: 12px;
@@ -850,7 +897,7 @@ button:focus,
 .cookie-buttons button {
   padding: 0.5rem 1rem;
   border: none;
-  background: #D4A017; 
+  background: #D4A017;
   color: #000;
   font-weight: bold;
   border-radius: 6px;
@@ -859,8 +906,5 @@ button:focus,
 }
 
 .cookie-buttons button:hover {
-  background: #C4970B ; 
+  background: #C4970B;
 }
-
-
-
