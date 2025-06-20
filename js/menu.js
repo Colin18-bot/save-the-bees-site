@@ -1,25 +1,29 @@
 document.addEventListener('DOMContentLoaded', function () {
-  // Toggle hamburger menu
-  const menuToggle = document.querySelector('.menu-toggle');
-  const navMenu = document.querySelector('.nav-menu');
-  menuToggle?.addEventListener('click', () => {
-    navMenu?.classList.toggle('active');
-  });
+  const menuToggle = document.getElementById('menuToggle');
+  const navMenu = document.getElementById('navMenu'); // 💡 Fix: use ID instead of class
 
-  // Toggle dropdowns
-  document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
-    toggle.addEventListener('click', function (e) {
+  if (menuToggle && navMenu) {
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('active');
+    });
+  } else {
+    console.error('menuToggle or navMenu not found.');
+  }
+
+  // Dropdown toggle
+  document.querySelectorAll('.dropdown-toggle').forEach(button => {
+    button.addEventListener('click', e => {
       e.preventDefault();
       e.stopPropagation();
-      const dropdown = this.closest('.dropdown');
-      dropdown?.classList.toggle('open');
+      const dropdown = button.closest('.dropdown');
+      dropdown.classList.toggle('open');
     });
   });
 
-  // Close dropdowns on outside click
-  document.addEventListener('click', function (e) {
+  // Close dropdown on outside click
+  document.addEventListener('click', e => {
     if (!e.target.closest('.dropdown')) {
-      document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+      document.querySelectorAll('.dropdown.open').forEach(dd => dd.classList.remove('open'));
     }
   });
 });
