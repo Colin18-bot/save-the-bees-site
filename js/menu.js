@@ -6,11 +6,11 @@ menuToggle.addEventListener('click', () => {
   navMenu.classList.toggle('active');
 });
 
-// Toggle dropdowns via arrow buttons only
+// Toggle dropdown submenus via arrow buttons
 document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
   toggle.addEventListener('click', function (e) {
     e.preventDefault();
-    e.stopPropagation();
+    e.stopPropagation(); // prevent bubbling to parent
     const dropdown = this.closest('.dropdown');
     dropdown.classList.toggle('open');
   });
