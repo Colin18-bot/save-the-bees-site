@@ -770,11 +770,6 @@ address {
     z-index: 999;
   }
 
-  .nav-menu.active {
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-
   .dropdown-menu {
     max-height: 0;
     overflow: hidden;
