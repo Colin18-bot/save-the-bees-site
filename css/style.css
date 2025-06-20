@@ -749,7 +749,6 @@ address {
 @media (max-width: 768px) {
   .dropdown {
     position: relative;
-    display: block;
     width: 100%;
   }
 
@@ -766,7 +765,7 @@ address {
     border: none;
     color: #D4A017;
     font-size: 1rem;
-    margin-left: 1rem;
+    margin-left: 0.5rem;
     cursor: pointer;
     transition: transform 0.3s ease;
   }
@@ -786,8 +785,8 @@ address {
   }
 
   .dropdown-menu li a {
-    display: block;
     padding: 0.75rem 1rem;
+    display: block;
     color: #D4A017;
   }
 
@@ -796,9 +795,26 @@ address {
     color: #fff;
   }
 
+  .nav-menu {
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background-color: #000;
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 999;
+  }
+
   .nav-menu.active {
     max-height: 80vh;
     overflow-y: auto;
+  }
+
+  .menu-toggle {
+    display: block;
   }
 }
 
