@@ -95,6 +95,8 @@ a {
   min-width: 200px;
   z-index: 10;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  list-style: none;     
+  padding-left: 0;   
 }
 
 .dropdown-menu li a {
