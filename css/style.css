@@ -142,15 +142,26 @@ a {
     display: block;
   }
 
+  .header-container {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .site-title {
+    flex: 1 1 100%;
+    text-align: left;
+    margin-top: 0.5rem;
+  }
+
+  .menu-toggle {
+    margin-left: auto;
+  }
+
 }
 
+
 /* HEADER CONTAINER FOR MOBILE RESPONSE */
-
-
-
-
-
-
 .header-container {
   display: flex;
   align-items: center;
@@ -169,11 +180,6 @@ a {
     font-size: 1.4rem;
   }
 }
-
-
-
-
-
 
 /* -------------------------------------------------- */
 /* 🐝 SITE HEADER + LOGO STYLES                       */
@@ -264,7 +270,6 @@ a {
 /* -------------------------------------------------- */
 /* 📦 CONTENT CONTAINERS + LAYOUTS                   */
 /* -------------------------------------------------- */
-
 
 /* 📦 CONTENT CONTAINERS + LAYOUTS */
 .content {
