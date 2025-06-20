@@ -754,25 +754,31 @@ address {
 
   .dropdown > a {
     display: block;
-    padding: 1rem 1.5rem 0.25rem;
+    padding: 1rem 1.5rem 0.5rem;
     color: #D4A017;
     font-weight: bold;
     text-align: center;
   }
 
   .dropdown-toggle {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: none;
     border: none;
     color: #D4A017;
-    font-size: 1.2rem;
-    margin: 0 auto 0.5rem;
+    font-size: 1rem;
+    margin: 0 auto 0.75rem;
     cursor: pointer;
     transition: transform 0.3s ease;
-    text-align: center;
   }
 
-  .dropdown.open .dropdown-toggle {
+  .dropdown-toggle i {
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+
+  .dropdown.open .dropdown-toggle i {
     transform: rotate(180deg);
   }
 
@@ -793,6 +799,7 @@ address {
     display: block;
     padding: 0.75rem 1rem;
     color: #D4A017;
+    text-align: center;
   }
 
   .dropdown-menu li a:hover {
