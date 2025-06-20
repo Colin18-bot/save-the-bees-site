@@ -137,7 +137,7 @@ a {
 }
 
   .nav-menu.active {
-    max-height: 90vh;
+    max-height: none;
     overflow-y: auto;
   }
 
