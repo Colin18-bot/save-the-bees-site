@@ -26,30 +26,28 @@ document.addEventListener('click', (e) => {
     navMenu.classList.remove('active');
   }
 });
+// Toggle dropdown submenus on mobile
+document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+  toggle.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
 
-document.addEventListener('DOMContentLoaded', function () {
-  const toggles = document.querySelectorAll('.dropdown-toggle');
+    const dropdown = this.closest('.dropdown');
 
-  toggles.forEach(toggle => {
-    toggle.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation(); // Prevent clicking the parent <a>
-
-      const parent = this.closest('.dropdown');
-
-      // Toggle only this one — open if closed, close if open
-      parent.classList.toggle('open');
-    });
-  });
-
-  // Close all dropdowns if clicking outside
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.dropdown')) {
-      document.querySelectorAll('.dropdown.open').forEach(drop => {
-        drop.classList.remove('open');
-      });
+    // Toggle open/closed
+    if (dropdown.classList.contains('open')) {
+      dropdown.classList.remove('open');
+    } else {
+      document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+      dropdown.classList.add('open');
     }
   });
 });
 
+// Close dropdowns if user taps outside
+document.addEventListener('click', function (e) {
+  if (!e.target.closest('.dropdown')) {
+    document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+  }
+});
 
