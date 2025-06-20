@@ -1,29 +1,25 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const menuToggle = document.getElementById('menuToggle');
-  const navMenu = document.getElementById('navMenu'); // 💡 Fix: use ID instead of class
+// ✅ Toggle dropdowns on small screens
+document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+  toggle.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
 
-  if (menuToggle && navMenu) {
-    menuToggle.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
+    const dropdown = this.closest('.dropdown');
+    const isOpening = !dropdown.classList.contains('open');
+
+    // Close other open dropdowns (optional)
+    document.querySelectorAll('.dropdown.open').forEach(d => {
+      if (d !== dropdown) d.classList.remove('open');
     });
-  } else {
-    console.error('menuToggle or navMenu not found.');
-  }
 
-  // Dropdown toggle
-  document.querySelectorAll('.dropdown-toggle').forEach(button => {
-    button.addEventListener('click', e => {
-      e.preventDefault();
-      e.stopPropagation();
-      const dropdown = button.closest('.dropdown');
-      dropdown.classList.toggle('open');
-    });
-  });
+    dropdown.classList.toggle('open');
 
-  // Close dropdown on outside click
-  document.addEventListener('click', e => {
-    if (!e.target.closest('.dropdown')) {
-      document.querySelectorAll('.dropdown.open').forEach(dd => dd.classList.remove('open'));
+    // 👉 Scroll into view only if opening
+    if (isOpening) {
+      dropdown.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
     }
   });
 });
