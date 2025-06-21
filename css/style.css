@@ -527,8 +527,19 @@ a {
   .container {
     padding: 0; /* 🔁 Remove default side padding */
   }
+
+/* ---------- FLOATING IMAGES: MOBILE FIRST ---------- */
+.content img.float-left-img,
+.content img.float-right-img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  float: none;
+  margin: 1rem auto;
+  border-radius: 8px;
 }
 
+}
 
 /* -------------------------------------------------- */
 /* 📹 VIDEO SECTION (Video Page Only)                */
@@ -601,17 +612,6 @@ main.not-found {
   .indented-list li {
     padding-left: 0;
   }
-}
-
-/* ---------- FLOATING IMAGES: MOBILE FIRST ---------- */
-.content img.float-left-img,
-.content img.float-right-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  float: none;
-  margin: 1rem auto;
-  border-radius: 8px;
 }
 
 /* ---------- DESKTOP FLOATS: LEFT / RIGHT IMAGE WRAP ---------- */
