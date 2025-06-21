@@ -591,6 +591,18 @@ main.not-found {
   margin-bottom: 0.5em;
 }
 
+@media (max-width: 600px) {
+  .indented-list {
+    margin-left: 1em;
+    padding-left: 0.5em;
+    list-style-position: outside; /* 🔁 ensures the dot is outside */
+  }
+
+  .indented-list li {
+    padding-left: 0;
+  }
+}
+
 /* ---------- FLOATING IMAGES: MOBILE FIRST ---------- */
 .content img.float-left-img,
 .content img.float-right-img {
