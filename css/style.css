@@ -569,10 +569,7 @@ main.not-found {
   margin-bottom: 0.5em;
 }
 
-/* ---------- FLOATING IMAGES ---------- */
-/* ---------- IMAGE POSITIONING UTILITIES ---------- */
-
-/* Base: mobile-first — stacked, centered image */
+/* ---------- FLOATING IMAGES: MOBILE FIRST ---------- */
 .content img.float-left-img,
 .content img.float-right-img {
   display: block;
@@ -583,36 +580,20 @@ main.not-found {
   border-radius: 8px;
 }
 
-/* Desktop: re-enable float for layout and wrap */
-.content img.float-right-img {
-  float: right;
-  max-width: 500px;
-  margin-left: 1.5rem;
-  margin-right: 0;
-  margin-bottom: 1rem;
-}
-
-/* Responsive floated images: stack on small screens */
-@media (max-width: 768px) {
-
-  .float-left-img,
-  .float-right-img {
-    float: none;
-    display: block;
-    margin: 1rem auto;
-    max-width: 100%;
-  }
-}
-
+/* ---------- DESKTOP FLOATS: LEFT / RIGHT IMAGE WRAP ---------- */
 @media (min-width: 769px) {
-  .float-left-img {
+  .content img.float-left-img {
     float: left;
     margin-right: 1.5rem;
+    margin-left: 0;
+    margin-bottom: 1rem;
   }
 
-  .float-right-img {
+  .content img.float-right-img {
     float: right;
     margin-left: 1.5rem;
+    margin-right: 0;
+    margin-bottom: 1rem;
   }
 }
 
