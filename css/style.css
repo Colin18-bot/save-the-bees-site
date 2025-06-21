@@ -42,7 +42,7 @@ a {
 
 .nav-menu {
   list-style: none;
-  display: none;
+  display: flex; /* ✅ Make visible on desktop */
   width: 100%;
   justify-content: center;
   flex-direction: row;
