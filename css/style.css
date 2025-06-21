@@ -215,7 +215,22 @@ a {
     gap: 0.5rem;
   }
 
-  .site-logo {
+  .dropdown-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.dropdown.open .dropdown-menu {
+  max-height: 500px; /* Adjust based on your submenu length */
+}
+
+
+.dropdown.open .dropdown-menu {
+  background-color: #111; /* Darker shade for contrast */
+}
+
+.site-logo {
     height: 50px;
   }
 
