@@ -34,7 +34,7 @@ a {
 /* -------------------------------------------------- */
 .navbar {
   background-color: #000;
-  display: flex;
+  display: none; /* ✅ Hide by default */
   flex-wrap: wrap;
   justify-content: center;
   position: relative;
@@ -42,7 +42,7 @@ a {
 
 .nav-menu {
   list-style: none;
-  display: flex;
+  display: none;
   width: 100%;
   justify-content: center;
   flex-direction: row;
@@ -102,10 +102,6 @@ a {
 .dropdown-menu li a {
   padding: 0.75rem 1rem;
   white-space: nowrap;
-}
-
-.dropdown:hover .dropdown-menu {
-  display: block;
 }
 
 .dropdown.open .dropdown-toggle {
