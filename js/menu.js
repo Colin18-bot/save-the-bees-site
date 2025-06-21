@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // ✅ Toggle dropdown menus (open/collapse)
+  // ✅ Toggle dropdown menus (only one open at a time)
   document.querySelectorAll('.dropdown-toggle').forEach(button => {
     button.addEventListener('click', function (e) {
       e.preventDefault();
@@ -18,17 +18,21 @@ document.addEventListener('DOMContentLoaded', function () {
       const dropdown = this.closest('.dropdown');
       const isOpen = dropdown.classList.contains('open');
 
-      // Close all open dropdowns
-      document.querySelectorAll('.dropdown.open').forEach(dd => dd.classList.remove('open'));
+      // ✅ Close all other open dropdowns
+      document.querySelectorAll('.dropdown.open').forEach(dd => {
+        if (dd !== dropdown) dd.classList.remove('open');
+      });
 
-      // Toggle this one (re-open if not the one just closed)
+      // ✅ Toggle this dropdown
       if (!isOpen) {
         dropdown.classList.add('open');
+      } else {
+        dropdown.classList.remove('open'); // ✅ Allow collapse when clicked again
       }
     });
   });
 
-  // ✅ Close any open dropdown when clicking outside
+  // ✅ Close dropdowns when clicking outside
   document.addEventListener('click', e => {
     if (!e.target.closest('.dropdown')) {
       document.querySelectorAll('.dropdown.open').forEach(dd => dd.classList.remove('open'));
