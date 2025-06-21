@@ -34,7 +34,7 @@ a {
 /* -------------------------------------------------- */
 .navbar {
   background-color: #000;
-  display: none; /* ✅ Hide by default */
+  display: flex; /* ✅ Hide by default */
   flex-wrap: wrap;
   justify-content: center;
   position: relative;
