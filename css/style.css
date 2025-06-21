@@ -755,8 +755,8 @@ address {
   .nav-menu {
     display: flex;
     flex-direction: column;
-    max-height: none;          /* ✅ FIXED */
-    overflow-y: auto;          /* ✅ FIXED */
+    max-height: 0;          /* ✅ FIXED */
+    overflow-y: hidden;          /* ✅ FIXED */
     background-color: #000;
     position: absolute;
     top: 100%;
@@ -775,8 +775,9 @@ address {
 }
 
 .nav-menu.active {
-  max-height: 100vh;             /* ✅ Prevents going beyond screen */
-  overflow-y: auto;              /* ✅ Entire menu scrolls if too tall */
+  max-height: 100vh;
+  display: flex;             /* ✅ Make sure this is present */
+  overflow-y: auto;
 }
 
   .dropdown.open .dropdown-menu {
