@@ -511,7 +511,9 @@ a {
 
 @media (max-width: 600px) {
   .text-box {
-    padding: 1.25rem; /* ✅ less padding for smaller screens */
+    padding: 1rem; /* 🔁 Reduced padding */
+    margin: 0 0.5rem; /* ➕ Small margin to center */
+    box-sizing: border-box;
     align-items: center;
     text-align: center;
   }
@@ -521,8 +523,11 @@ a {
   .text-box h3 {
     text-align: center;
   }
-}
 
+  .container {
+    padding: 0; /* 🔁 Remove default side padding */
+  }
+}
 
 /* -------------------------------------------------- */
 /* 📹 VIDEO SECTION (Video Page Only)                */
