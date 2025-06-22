@@ -1,509 +1,561 @@
 <!DOCTYPE html>
-<html lang="en">  
-  <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Bacterial Diseases of Honeybees – Foulbrood, Melissococcus & More</title>
-
-  <!-- Hamburger button -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
-  
-
-  <!-- Your CSS file -->
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/diseases.css" />
-
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Learn about common bacterial diseases in honeybees including American foulbrood, European foulbrood, 
-  and Melissococcus plutonius. Find symptoms, treatments, and prevention tips for maintaining healthy hives." />
-  <meta name="keywords" content="honeybee diseases, foulbrood, American foulbrood, European foulbrood, Melissococcus plutonius, bee disease 
-  symptoms, bee disease treatment, hive infections, beekeeping hygiene, bee health" />
-  <meta name="author" content="Colin Chorley" />
-
-  <!-- Favicon -->
-  <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-  <!-- 16x16 and 32x32 for classic tabs -->
-  <link rel="icon" type="image/favicon-16x16.png" sizes="16x16" href="favicon-16x16.png" />
-  <link rel="icon" type="image/favicon-32x32.png" sizes="32x32" href="favicon-32x32.png" />
-  <!-- Apple touch icon for iOS -->
-  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-  <!-- Android home screen icons -->
-  <link rel="icon" type="image/android-chrome-192x192.png" sizes="192x192" href="android-chrome-192x192.png" />
-  <link rel="icon" type="image/android-chrome-512x512.png" sizes="512x512" href="android-chrome-512x512.png" />
-  <!-- PWA manifest (optional but helpful) -->
-  <link rel="manifest" href="site.webmanifest" />
-
-  <!-- Schema.org Structured Data -->
- <script type="application/ld+json">
-[
-  {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
-    "headline": "Bacterial Diseases of Honeybees – Foulbrood, Melissococcus & More",
-    "author": {
-      "@type": "Person",
-      "name": "Colin Chorley"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "BeezKnees",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://www.beezknees.co.uk/images/BeezKnees-Logo.png"
-      }
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "https://www.beezknees.co.uk/bacterial-diseases.html"
-    },
-    "datePublished": "2024-06-01",
-    "dateModified": "2024-06-01",
-    "description": "Learn about common bacterial diseases in honeybees including American foulbrood, European foulbrood, and Melissococcus plutonius. Find symptoms, treatments, and prevention tips for maintaining healthy hives."
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://www.beezknees.co.uk/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Bacterial Diseases",
-        "item": "https://www.beezknees.co.uk/bacterial-diseases.html"
-      }
-    ]
-  }
-]
-</script>
-</head>
-<body>
-
-   <!-- Fixed Header and Nav Container -->
-    <div class="fixed-header">
-    <header class="site-header" role="region" aria-label="Site Header">
-      <div class="header-container" role="region" aria-label="Site Branding">
-        
-        <a href="https://www.beezknees.co.uk">  
-          <img src="images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
-        </a>
-        
-        <h1 class="site-title">BeezKnees</h1>
-        <!-- ✅ WORKING HAMBURGER ICON BUTTON -->
-        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-          <i class="fas fa-bars"></i>
-        </button>
-      </div>
-  </header>
-    </div>
-
- <!-- Navigation Bar -->
-    <nav class="navbar" role="navigation" aria-label="Main navigation">
-    <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
-    <li><a href="/index.html" title="Visit the homepage">Home</a></li>
-
-    <li class="dropdown">
-      <a href="/about-us.html" title="Learn more about us">About</a>
-    </li>
-
-    <li class="dropdown">
-      <a href="/donate.html" title="Support out mission">Donate</a>
-    </li>
-
-    <li class="dropdown">
-      <a href="/beekeeping-guides.html" title="Explore our beekeeping guides">Beekeeping</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/getting-started.html" title="Begin your beekeeping journey">Getting Started</a></li>
-        <li><a href="/equipment.html" title="Essential beekeeping equipment">Equipment</a></li>
-        <li><a href="/hive-management.html" title="Manage your hive effectively">Hive Management</a></li>
-        <li><a href="/varroa-management.html" title="control varroa mite infestations">Varroa Management</a></li>    
-        <li><a href="/hygiene.html" title="Keep your hive clean and healthy">Hygiene</a></li>
-        <li><a href="/bee-stings.html" title="Understand and treat bee stings">Bee Stings</a></li>
-      </ul>
-    </li>
-
-    <li class="dropdown">
-      <a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary">Apiary Calendar</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/january.html" title="January beekeeping tasks">January</a></li>
-        <li><a href="/february.html" title="February beekeeping tasks">February</a></li>
-        <li><a href="/march.html" title="March beekeeping tasks">March</a></li>
-        <li><a href="/april.html" title="April beekeeping tasks">April</a></li>
-        <li><a href="/may.html" title="May beekeeping tasks">May</a></li>
-        <li><a href="/june.html" title="June beekeeping tasks">June</a></li>
-        <li><a href="/july.html" title="July beekeeping tasks">July</a></li>
-        <li><a href="/august.html" title="August beekeeping tasks">August</a></li>
-        <li><a href="/september.html" title="September beekeeping tasks">September</a></li>
-        <li><a href="/october.html" title="October beekeeping tasks">October</a></li>
-        <li><a href="/november.html" title="November beekeeping tasks">November</a></li>
-        <li><a href="/december.html" title="December beekeeping tasks">December</a></li>
-      </ul>
-    </li>
-
-    <li class="dropdown">
-      <a href="/bee-diseases.html" title="Bee diseases and pests overview">Diseases & Pests</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/bacterial-diseases.html" title="Learn about bacterial bee diseases">Bacterial</a></li>
-        <li><a href="/viral-diseases.html" title="Learn about viral bee diseases">Viral</a></li>
-        <li><a href="/bee-pests.html" title="Common pests affecting bees">Pests</a></li>
-        <li><a href="/parasitic-mites.html" title="Parasitic mites in bee colonies">Mites</a></li>
-        <li><a href="/other-conditions.html" title="Other bee health conditions">Other Conditions</a></li>
-      </ul>
-    </li>
-
-    <li class="dropdown">
-      <a href="/honeybee-facts.html" title="Interesting facts about honeybees">Honeybee Facts</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/anatomy.html" title="Honeybee anatomy explained">Anatomy</a></li>
-        <li><a href="/behaviour.html" title="Learn about honeybee behaviour">Behaviour</a></li>
-        <li><a href="/how-bees-make-honey.html" title="How bees make honey">Make Honey</a></li>
-        <li><a href="/pollination.html" title="Honeybee role in pollination">Pollination</a></li>
-      </ul>
-    </li>
-
-    <li class="dropdown">
-      <a href="/help-the-bees.html" title="How you can help save the bees">Help Bees</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/bee-gardening.html" title="Make your garden bee friendly">Gardening</a></li>
-        <li><a href="/donate.html" title="Make a donation to support bees">Donate</a></li>
-        <li><a href="/report-a-swarm.html" title="Report a bee swarm">Report a Swarm</a></li>
-      </ul>
-    </li>
-
-  </ul>
-</nav>
-
-  </div>
-
-    <!-- Hero Banner with Image and Alt Fallback -->
-  <section role="region" aria-label="Homepage Banner">
-  <div class="banner">
-  <img src="images/distant-beekeepers.jpg" alt="banner showing beekeepers attending a hive"  />
-  </div>
-  
-  
-  <!-- Main Content -->
-    <main class="content">
-
-    <h1>🦠 Bacterial Diseases of Honeybees</h1>
-    <p>Below are the major bacterial threats to bee colonies. Click each disease to expand details.</p>
-
-    <h2>Contents</h2>
-    <ul class="anchor-list">
-      <li><a href="#american-foulbrood" title="Learn about american-foulbrood">American Foulbrood</a></li>
-      <li><a href="#european-foulbrood" title="Learn about EFB">European Foulbrood</a></li>
-      <li><a href="#melissococcus" title="Learn about Melissococcus Plutonius">Melissococcus Plutonius</a></li>
-      <li><a href="#foulbrood" title="Learn about Foulbrood">Foulbrood (General)</a></li>
-    </ul>
-
-    <h3 id="american-foulbrood">American Foulbrood</h3>
-    <details>
-      <summary>Learn about American Foulbrood</summary>
-      <p><strong>American Foulbrood (AFB)</strong> is a bacterial disease that affects honeybee brood. It is one of the most severe and 
-        contagious diseases that honeybees can face. If left untreated, it can lead to the death of an entire colony. If you do suspect 
-        foulbrood contact your National Bee Unit Inspector for further advice — this is a <em><a href="https://www.nationalbeeunit.com/" 
-          target="_blank" rel="noopener noreferrer">reportable</a></em> disease.</p>
-
-      <p><strong>Symptoms:</strong> AFB affects bee larvae in the early stages of development. The larvae infected with AFB will turn 
-        brown and emit a foul odour. As the disease progresses, the infected larvae will die and form a hard, black scale at the bottom 
-        of the cell. The scale is highly infectious and can infect other larvae in the colony. Infected bees may also have sunken and 
-        perforated cappings, and the colony may have a weak or queenless appearance.</p>
-
-      <p><strong>Treatments:</strong> There is no cure for AFB once a colony is infected. The only effective treatment is to destroy 
-        the infected hive and equipment to prevent the spread of the disease. This is necessary because AFB spores can survive for a 
-        long time and can be easily spread by contaminated equipment, such as frames and hives. Beekeepers must contact their local 
-        beekeeping association or state apiary inspector to report a suspected AFB outbreak.</p>
-
-      <p><strong>Prevention Measures:</strong> Preventing AFB is the best strategy to avoid losing entire colonies to the disease.</p>
-
-      <p><strong>Use Clean Equipment:</strong> Ensure that all equipment used in beekeeping, including frames and hives, are clean and 
-        free from any AFB spores. The use of irradiation, flaming, or chemical treatments can help eliminate spores.</p>
-
-      <p><strong>Practice Good Hygiene:</strong> Proper hygiene practices such as hand washing, and wearing clean protective clothing 
-        can help prevent the spread of AFB.</p>
-
-      <p><strong>Monitor Colonies:</strong> Regular inspections of colonies can help beekeepers detect early signs of AFB. If an infection 
-        is detected early, it is easier to contain and prevent the spread of the disease.</p>
-
-      <p><strong>Re-queen:</strong> Re-queening can help prevent AFB, as a new queen can introduce a stronger genetic strain that is more 
-        resistant to the disease.</p>
-
-      <p><strong>Educate Beekeepers:</strong> Educating beekeepers on AFB, its symptoms, and the importance 
-        of <em><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer">reporting</a></em> any suspected 
-        outbreaks can help prevent the spread of the disease.</p>
-
-      <p><strong>Summary:</strong> American Foulbrood is a severe disease that can have devastating effects on honeybee colonies. 
-        Prevention measures such as good hygiene practices, the use of clean equipment, and regular monitoring of colonies can help 
-        reduce the risk of an outbreak. In the event of an outbreak, it is essential to report it to the local beekeeping association or 
-        state apiary inspector to prevent the spread of the disease.</p>
-
-    </details>
-
-    <p class="back-to-top"><a href="#top">↑ Back to top</a></p>
-
-    <h3 id="european-foulbrood">European Foulbrood</h3>
-    <details>
-      <summary>Learn about European Foulbrood</summary>
-      <p><strong>European Foulbrood (EFB)</strong> is a bacterial disease that affects honeybee brood. While not as severe as 
-        American Foulbrood, EFB can weaken colonies and impact honey production. If you do suspect foulbrood contact your National 
-        Bee Unit Inspector for further advice — this is a reportable disease.</p>
-
-      <p><strong>Symptoms:</strong> EFB primarily affects bee larvae in the early stages of development. The infected larvae will 
-        turn yellowish-brown and twist into a characteristic \"S\" shape. As the disease progresses, the larvae will die and form a 
-        dried-out, brown scale at the bottom of the cell. Unlike AFB, the scale is not hard and can be easily removed. The infected 
-        bees may also have perforated cappings and a spotty brood pattern.</p>
-
-      <p><strong>Treatments:</strong> There is no cure for EFB once a colony is infected. However, unlike AFB, EFB-infected colonies 
-        can sometimes recover on their own. The best treatment for EFB is to support the colony's immune system by providing proper 
-        nutrition, minimizing stress, and ensuring the hive has adequate ventilation. In severe cases, antibiotics such as 
-        oxytetracycline or tylosin may be prescribed by a veterinarian or licensed beekeeper.</p>
-
-      <p><strong>Prevention Measures:</strong> Preventing EFB is the best strategy to avoid the disease.</p>
-
-      <p><strong>Use Clean Equipment:</strong> Ensure that all equipment used in beekeeping, including frames and hives, are clean and 
-        free from any EFB spores. The use of irradiation, flaming, or chemical treatments can help eliminate spores.</p>
-
-      <p><strong>Practice Good Hygiene:</strong> Proper hygiene practices such as hand washing, and wearing clean protective clothing 
-        can help prevent the spread of EFB.</p>
-
-      <p><strong>Monitor Colonies:</strong> Regular inspections of colonies can help beekeepers detect early signs of EFB. If an infection 
-        is detected early, it is easier to contain and prevent the spread of the disease.</p>
-
-      <p><strong>Re-queen:</strong> Re-queening can help prevent EFB, as a new queen can introduce a stronger genetic strain that is more 
-        resistant to the disease.</p>
-
-      <p><strong>Educate Beekeepers:</strong> Educating beekeepers on EFB, its symptoms, and the importance of reporting any suspected 
-        outbreaks can help prevent the spread of the disease.</p>
-
-      <p><strong>Summary:</strong> European Foulbrood is a bacterial disease that can weaken honeybee colonies and impact honey production. 
-        While there is no cure for EFB, infected colonies can sometimes recover on their own with proper support. Prevention measures such 
-        as good hygiene practices, the use of clean equipment, and regular monitoring of colonies can help reduce the risk of an outbreak.</p>
-
-    </details>
-
-    <p class="back-to-top"><a href="#top">↑ Back to top</a></p>
-
-    <h3 id="melissococcus">Melissococcus Plutonius</h3>
-    <details>
-      <summary>Learn about Melissococcus Plutonius</summary>
-      <p><strong>Foulbrood</strong> is a general term used to describe bacterial infections that affect honeybee larvae. The two main 
-        types are American Foulbrood (AFB) and European Foulbrood (EFB), each caused by different bacterial pathogens.</p>
-
-      <p><strong>Symptoms:</strong> In general, foulbrood-infected larvae exhibit discoloration, unusual positioning within cells, 
-        a foul smell, and cell cappings that may appear sunken or perforated. Infected colonies may show a spotty brood pattern, weakened 
-        bee numbers, or even queenlessness.</p>
-
-      <p><strong>Treatments:</strong> Treatment depends on the specific foulbrood type. AFB often requires the destruction of affected 
-        colonies and equipment, while EFB may sometimes be managed through supportive care and antibiotic treatment under veterinary guidance. 
-        Early diagnosis is critical.</p>
-
-      <p><strong>Prevention Measures:</strong></p>
-
-        <div class="indented-list">
-            <ul>
-              <li><strong>Sanitation:</strong> Regularly sterilise tools and avoid sharing equipment between colonies.</li>
-              <li><strong>Inspection:</strong> Conduct routine hive inspections to identify symptoms early.</li>
-              <li><strong>Record-Keeping:</strong> Track colony health to notice patterns over time and isolate issues quickly.</li>
-              <li><strong>Education:</strong> Ensure all beekeepers in your association or apiary group are aware of the signs, 
-                reporting requirements, and management procedures.</li>
-            </ul>
-        </div>
-
-      <p><strong>Summary:</strong> Foulbrood is a serious threat to colony health. Early identification, appropriate treatment, 
-        and consistent hygienic practices are key to preventing its spread and maintaining healthy, productive hives.</p>
-
-    </details>
-
-    <p class="back-to-top"><a href="#top">↑ Back to top</a></p>
-
-    <h3 id="foulbrood">Foulbrood (General)</h3>
-    <details>
-      <summary>Learn about General Foulbrood Infections</summary>
-      <p><strong>Foulbrood</strong> is a bacterial disease that affects honeybees, and it is considered one of the most serious threats 
-        to honeybee colonies. There are two types of foulbrood: American foulbrood (AFB) and European foulbrood (EFB). Both types are 
-        caused by different bacteria and have different symptoms, treatments, and prevention measures.</p>
-
-      <p><strong>American foulbrood (AFB):</strong></p>
-      <p><strong>Symptoms:</strong> Sunken, greasy, and perforated brood cells that are brown or black in colour. Larvae die before they 
-        reach the pupal stage, leaving behind a foul-smelling, ropy, and light-brown liquid. As the disease progresses, the scales of the 
-        affected brood cells become dark and hard, and they can stick to the bottom of the cell.</p>
-
-      <p><strong>Treatments:</strong> If a hive is suspected of having AFB, the infected colony should be destroyed by fire or a method 
-        approved by local authorities to prevent the spread of the disease. Preventing the spread of AFB is the best course of action. 
-        Beekeepers can use a variety of methods to prevent the disease, including practicing good hygiene, replacing old comb, using 
-        antibiotics, and re-queening.</p>
-
-      <p><strong>Prevention measures:</strong> Regular hive inspections and maintaining good hygiene are crucial in preventing AFB. 
-        Beekeepers should avoid feeding honey or pollen that has not been treated to prevent the spread of AFB. Replacing old comb 
-        with new frames can also help prevent the spread of AFB.</p>
-
-      <p><strong>European foulbrood (EFB):</strong></p>
-      <p><strong>Symptoms:</strong> Larvae in EFB-infected cells turn yellow, then brown, before dying. Unlike AFB, the larvae die after 
-        they are capped. The affected cells are twisted or curled, and the caps may be sunken.</p>
-
-      <p><strong>Treatments:</strong> EFB can be treated with antibiotics, such as oxytetracycline, which can be given to the bees in the 
-        form of medicated syrup or dust. In severe cases, the colony may need to be re-queened.</p>
-
-      <p><strong>Prevention measures:</strong> Maintaining good hygiene in the hive, such as regularly cleaning and disinfecting equipment, 
-        can help prevent EFB. Beekeepers should also replace old comb with new frames to prevent the spread of the disease.</p>
-
-      <p><strong>Summary:</strong> Foulbrood is a serious threat to honeybee colonies, and prevention measures are the best course of 
-        action. Early detection and treatment are essential to preventing the spread of the disease. Beekeepers should practice good hygiene and regularly inspect their hives to catch any signs of foulbrood early.</p>
-    </details>
-    
-    <p class="back-to-top"><a href="#top">↑ Back to top</a></p>
- 
-    </main>
-
-    <script>
-    const toggleBtn = document.getElementById('menuToggle');
-    const navMenu = document.querySelector('.nav-menu');
-
-    toggleBtn.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-    });
-  </script>    
-
-  <!-- Footer -->
-  <footer class="site-footer" role="region" aria-label="Site Footer">
-  <div class="footer-columns">
-    
-    <div class="footer-column" role="region" aria-label="Contact Information">
-      <h3>Contact</h3>
-      <address>
-      <p>Email: <a href="/contact.html" title="Send us a message via our contact page">Contact</a></p>      
-      </address>
-    </div>
-
-    <div class="footer-column" role="region" aria-label="Useful Site Links">
-      <h3>Useful Links</h3>
-      <ul>
-        <li><a href="/privacy.html" title="Read our privacy policy">Privacy Policy</a></li>
-        <li><a href="/site-map.html" title="View a map of our entire website">Site Map</a></li>
-      </ul>
-    </div>
-
-    <div class="footer-column" role="region" aria-label="Beekeeping Resources">
-      <h3>Resources</h3>
-        <ul>
-          <li><a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer" title="Visit the British Beekeepers Association 
-            website">British Beekeepers Association</a></li>
-          <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer" title="Visit the Cardiff Beekeepers 
-            Association site">Cardiff, Vale and Valleys Beekeepers Association</a></li>
-          <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true" target="_blank" rel="noopener 
-            noreferrer" title="Read the Honey (Wales) Regulations 2015">The Honey (Wales) Regulations 2015</a></li>
-          <li><a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer" title="Explore 
-            Bee-Friendly programme by Wales Biodiversity Partnership">Wales Biodiversity Partnership</a></li>
-        <li><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title="Access BeeBase for beekeeping 
-          information">BeeBase</a></li>
-        </ul>
-    </div>
-
-  </div>
-
-  <div class="footer-bottom" role="region" aria-label="Copyright">
-    &copy; 2023 Practical Beekeeping. All rights reserved.
-  </div>
-</footer>
-
- <!-- Cookie Consent Popup -->
-<div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
-  <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
-    <h2>🍪 We Use Cookies</h2>
-    <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
-
-    <form id="cookie-options">
-      <label><input type="checkbox" checked disabled> Essential (always active)</label><br>
-      <label><input type="checkbox" id="analytics"> Analytics</label><br>
-      <label><input type="checkbox" id="marketing"> Marketing</label><br>
-    </form>
-
-    <div class="cookie-buttons">
-      <button id="accept-selected">Accept Selected</button>
-      <button id="accept-all">Accept All</button>
-    </div>
-  </div>
-</div>
-
-<!-- Back to Top Button -->
-<button id="backToTop" title="Back to top" aria-label="Back to top">
-  ⬆ Top
-</button>
-
-<!-- ============================================
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Bacterial Diseases of Honeybees – Foulbrood, Melissococcus and More</title>
+
+		<!-- Hamburger button -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
+
+		<!-- Your CSS file -->
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/diseases.css" />
+
+		<!-- SEO Meta Tags -->
+		<meta
+			name="description"
+			content="Learn about common bacterial diseases in honeybees including American foulbrood, European foulbrood, 
+  and Melissococcus plutonius. Find symptoms, treatments, and prevention tips for maintaining healthy hives."
+		/>
+		<meta
+			name="keywords"
+			content="honeybee diseases, foulbrood, American foulbrood, European foulbrood, Melissococcus plutonius, bee disease 
+  symptoms, bee disease treatment, hive infections, beekeeping hygiene, bee health"
+		/>
+		<meta name="author" content="Colin Chorley" />
+
+		<!-- Favicon -->
+		<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+		<!-- 16x16 and 32x32 for classic tabs -->
+		<link rel="icon" type="image/favicon-16x16.png" sizes="16x16" href="favicon-16x16.png" />
+		<link rel="icon" type="image/favicon-32x32.png" sizes="32x32" href="favicon-32x32.png" />
+		<!-- Apple touch icon for iOS -->
+		<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+		<!-- Android home screen icons -->
+		<link rel="icon" type="image/android-chrome-192x192.png" sizes="192x192" href="android-chrome-192x192.png" />
+		<link rel="icon" type="image/android-chrome-512x512.png" sizes="512x512" href="android-chrome-512x512.png" />
+		<!-- PWA manifest (optional but helpful) -->
+		<link rel="manifest" href="site.webmanifest" />
+
+		<!-- Schema.org Structured Data -->
+		<script type="application/ld+json">
+			[
+			  {
+			    "@context": "https://schema.org",
+			    "@type": "TechArticle",
+			    "headline": "Bacterial Diseases of Honeybees – Foulbrood, Melissococcus & More",
+			    "author": {
+			      "@type": "Person",
+			      "name": "Colin Chorley"
+			    },
+			    "publisher": {
+			      "@type": "Organization",
+			      "name": "BeezKnees",
+			      "logo": {
+			        "@type": "ImageObject",
+			        "url": "https://www.beezknees.co.uk/images/BeezKnees-Logo.png"
+			      }
+			    },
+			    "mainEntityOfPage": {
+			      "@type": "WebPage",
+			      "@id": "https://www.beezknees.co.uk/bacterial-diseases.html"
+			    },
+			    "datePublished": "2024-06-01",
+			    "dateModified": "2024-06-01",
+			    "description": "Learn about common bacterial diseases in honeybees including American foulbrood, European foulbrood, and Melissococcus plutonius. Find symptoms, treatments, and prevention tips for maintaining healthy hives."
+			  },
+			  {
+			    "@context": "https://schema.org",
+			    "@type": "BreadcrumbList",
+			    "itemListElement": [
+			      {
+			        "@type": "ListItem",
+			        "position": 1,
+			        "name": "Home",
+			        "item": "https://www.beezknees.co.uk/"
+			      },
+			      {
+			        "@type": "ListItem",
+			        "position": 2,
+			        "name": "Bacterial Diseases",
+			        "item": "https://www.beezknees.co.uk/bacterial-diseases.html"
+			      }
+			    ]
+			  }
+			]
+		</script>
+	</head>
+	<body>
+		<!-- Fixed Header and Nav Container -->
+		<div class="fixed-header">
+			<header class="site-header" role="region" aria-label="Site Header">
+				<div class="header-container" role="region" aria-label="Site Branding">
+					<a href="https://www.beezknees.co.uk">
+						<img src="images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
+					</a>
+
+					<h1 class="site-title">BeezKnees</h1>
+					<!-- WORKING HAMBURGER ICON BUTTON -->
+					<button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+						<i class="fas fa-bars"></i>
+					</button>
+				</div>
+			</header>
+		</div>
+
+		<!-- Navigation Bar -->
+		<nav class="navbar" role="navigation" aria-label="Main navigation">
+			<ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+				<li><a href="/index.html" title="Visit the homepage">Home</a></li>
+
+				<li class="dropdown">
+					<a href="/about-us.html" title="Learn more about us">About</a>
+				</li>
+
+				<li class="dropdown">
+					<a href="/donate.html" title="Support out mission">Donate</a>
+				</li>
+
+				<li class="dropdown">
+					<a href="/beekeeping-guides.html" title="Explore our beekeeping guides">Beekeeping</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/getting-started.html" title="Begin your beekeeping journey">Getting Started</a></li>
+						<li><a href="/equipment.html" title="Essential beekeeping equipment">Equipment</a></li>
+						<li><a href="/hive-management.html" title="Manage your hive effectively">Hive Management</a></li>
+						<li><a href="/varroa-management.html" title="control varroa mite infestations">Varroa Management</a></li>
+						<li><a href="/hygiene.html" title="Keep your hive clean and healthy">Hygiene</a></li>
+						<li><a href="/bee-stings.html" title="Understand and treat bee stings">Bee Stings</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary">Apiary Calendar</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/january.html" title="January beekeeping tasks">January</a></li>
+						<li><a href="/february.html" title="February beekeeping tasks">February</a></li>
+						<li><a href="/march.html" title="March beekeeping tasks">March</a></li>
+						<li><a href="/april.html" title="April beekeeping tasks">April</a></li>
+						<li><a href="/may.html" title="May beekeeping tasks">May</a></li>
+						<li><a href="/june.html" title="June beekeeping tasks">June</a></li>
+						<li><a href="/july.html" title="July beekeeping tasks">July</a></li>
+						<li><a href="/august.html" title="August beekeeping tasks">August</a></li>
+						<li><a href="/september.html" title="September beekeeping tasks">September</a></li>
+						<li><a href="/october.html" title="October beekeeping tasks">October</a></li>
+						<li><a href="/november.html" title="November beekeeping tasks">November</a></li>
+						<li><a href="/december.html" title="December beekeeping tasks">December</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="/bee-diseases.html" title="Bee diseases and pests overview">Diseases and Pests</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/bacterial-diseases.html" title="Learn about bacterial bee diseases">Bacterial</a></li>
+						<li><a href="/viral-diseases.html" title="Learn about viral bee diseases">Viral</a></li>
+						<li><a href="/bee-pests.html" title="Common pests affecting bees">Pests</a></li>
+						<li><a href="/parasitic-mites.html" title="Parasitic mites in bee colonies">Mites</a></li>
+						<li><a href="/other-conditions.html" title="Other bee health conditions">Other Conditions</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="/honeybee-facts.html" title="Interesting facts about honeybees">Honeybee Facts</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/anatomy.html" title="Honeybee anatomy explained">Anatomy</a></li>
+						<li><a href="/behaviour.html" title="Learn about honeybee behaviour">Behaviour</a></li>
+						<li><a href="/how-bees-make-honey.html" title="How bees make honey">Make Honey</a></li>
+						<li><a href="/pollination.html" title="Honeybee role in pollination">Pollination</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="/help-the-bees.html" title="How you can help save the bees">Help Bees</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/bee-gardening.html" title="Make your garden bee friendly">Gardening</a></li>
+						<li><a href="/donate.html" title="Make a donation to support bees">Donate</a></li>
+						<li><a href="/report-a-swarm.html" title="Report a bee swarm">Report a Swarm</a></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+
+		<!-- Hero Banner with Image and Alt Fallback -->
+		<section role="region" aria-label="Homepage Banner">
+			<div class="banner">
+				<img src="images/distant-beekeepers.jpg" alt="banner showing beekeepers attending a hive" />
+			</div>
+		</section>
+
+		<!-- Main Content -->
+		<main class="content">
+			<h1>🦠 Bacterial Diseases of Honeybees</h1>
+			<p>Below are the major bacterial threats to bee colonies. Click each disease to expand details.</p>
+
+			<h2>Contents</h2>
+			<ul class="anchor-list">
+				<li><a href="#american-foulbrood" title="Learn about american-foulbrood">American Foulbrood</a></li>
+				<li><a href="#european-foulbrood" title="Learn about EFB">European Foulbrood</a></li>
+				<li><a href="#melissococcus" title="Learn about Melissococcus Plutonius">Melissococcus Plutonius</a></li>
+				<li><a href="#foulbrood" title="Learn about Foulbrood">Foulbrood (General)</a></li>
+			</ul>
+
+			<h3 id="american-foulbrood">American Foulbrood</h3>
+			<details>
+				<summary>Learn about American Foulbrood</summary>
+				<p>
+					<strong>American Foulbrood (AFB)</strong> is a bacterial disease that affects honeybee brood. It is one of the most severe and contagious diseases that honeybees can face. If left untreated, it can lead to the death of
+					an entire colony. If you do suspect foulbrood contact your National Bee Unit Inspector for further advice — this is a
+					<em><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer">reportable</a></em> disease.
+				</p>
+
+				<p>
+					<strong>Symptoms:</strong> AFB affects bee larvae in the early stages of development. The larvae infected with AFB will turn brown and emit a foul odour. As the disease progresses, the infected larvae will die and form a
+					hard, black scale at the bottom of the cell. The scale is highly infectious and can infect other larvae in the colony. Infected bees may also have sunken and perforated cappings, and the colony may have a weak or
+					queenless appearance.
+				</p>
+
+				<p>
+					<strong>Treatments:</strong> There is no cure for AFB once a colony is infected. The only effective treatment is to destroy the infected hive and equipment to prevent the spread of the disease. This is necessary because
+					AFB spores can survive for a long time and can be easily spread by contaminated equipment, such as frames and hives. Beekeepers must contact their local beekeeping association or state apiary inspector to report a
+					suspected AFB outbreak.
+				</p>
+
+				<p><strong>Prevention Measures:</strong> Preventing AFB is the best strategy to avoid losing entire colonies to the disease.</p>
+
+				<p>
+					<strong>Use Clean Equipment:</strong> Ensure that all equipment used in beekeeping, including frames and hives, are clean and free from any AFB spores. The use of irradiation, flaming, or chemical treatments can help
+					eliminate spores.
+				</p>
+
+				<p><strong>Practice Good Hygiene:</strong> Proper hygiene practices such as hand washing, and wearing clean protective clothing can help prevent the spread of AFB.</p>
+
+				<p><strong>Monitor Colonies:</strong> Regular inspections of colonies can help beekeepers detect early signs of AFB. If an infection is detected early, it is easier to contain and prevent the spread of the disease.</p>
+
+				<p><strong>Re-queen:</strong> Re-queening can help prevent AFB, as a new queen can introduce a stronger genetic strain that is more resistant to the disease.</p>
+
+				<p>
+					<strong>Educate Beekeepers:</strong> Educating beekeepers on AFB, its symptoms, and the importance of <em><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer">reporting</a></em> any
+					suspected outbreaks can help prevent the spread of the disease.
+				</p>
+
+				<p>
+					<strong>Summary:</strong> American Foulbrood is a severe disease that can have devastating effects on honeybee colonies. Prevention measures such as good hygiene practices, the use of clean equipment, and regular
+					monitoring of colonies can help reduce the risk of an outbreak. In the event of an outbreak, it is essential to report it to the local beekeeping association or state apiary inspector to prevent the spread of the
+					disease.
+				</p>
+			</details>
+
+			<p class="back-to-top"><a href="#top">↑ Back to top</a></p>
+
+			<h3 id="european-foulbrood">European Foulbrood</h3>
+			<details>
+				<summary>Learn about European Foulbrood</summary>
+				<p>
+					<strong>European Foulbrood (EFB)</strong> is a bacterial disease that affects honeybee brood. While not as severe as American Foulbrood, EFB can weaken colonies and impact honey production. If you do suspect foulbrood
+					contact your National Bee Unit Inspector for further advice — this is a reportable disease.
+				</p>
+
+				<p>
+					<strong>Symptoms:</strong> EFB primarily affects bee larvae in the early stages of development. The infected larvae will turn yellowish-brown and twist into a characteristic \"S\" shape. As the disease progresses, the
+					larvae will die and form a dried-out, brown scale at the bottom of the cell. Unlike AFB, the scale is not hard and can be easily removed. The infected bees may also have perforated cappings and a spotty brood pattern.
+				</p>
+
+				<p>
+					<strong>Treatments:</strong> There is no cure for EFB once a colony is infected. However, unlike AFB, EFB-infected colonies can sometimes recover on their own. The best treatment for EFB is to support the colony's immune
+					system by providing proper nutrition, minimizing stress, and ensuring the hive has adequate ventilation. In severe cases, antibiotics such as oxytetracycline or tylosin may be prescribed by a veterinarian or licensed
+					beekeeper.
+				</p>
+
+				<p><strong>Prevention Measures:</strong> Preventing EFB is the best strategy to avoid the disease.</p>
+
+				<p>
+					<strong>Use Clean Equipment:</strong> Ensure that all equipment used in beekeeping, including frames and hives, are clean and free from any EFB spores. The use of irradiation, flaming, or chemical treatments can help
+					eliminate spores.
+				</p>
+
+				<p><strong>Practice Good Hygiene:</strong> Proper hygiene practices such as hand washing, and wearing clean protective clothing can help prevent the spread of EFB.</p>
+
+				<p><strong>Monitor Colonies:</strong> Regular inspections of colonies can help beekeepers detect early signs of EFB. If an infection is detected early, it is easier to contain and prevent the spread of the disease.</p>
+
+				<p><strong>Re-queen:</strong> Re-queening can help prevent EFB, as a new queen can introduce a stronger genetic strain that is more resistant to the disease.</p>
+
+				<p><strong>Educate Beekeepers:</strong> Educating beekeepers on EFB, its symptoms, and the importance of reporting any suspected outbreaks can help prevent the spread of the disease.</p>
+
+				<p>
+					<strong>Summary:</strong> European Foulbrood is a bacterial disease that can weaken honeybee colonies and impact honey production. While there is no cure for EFB, infected colonies can sometimes recover on their own with
+					proper support. Prevention measures such as good hygiene practices, the use of clean equipment, and regular monitoring of colonies can help reduce the risk of an outbreak.
+				</p>
+			</details>
+
+			<p class="back-to-top"><a href="#top">↑ Back to top</a></p>
+
+			<h3 id="melissococcus">Melissococcus Plutonius</h3>
+			<details>
+				<summary>Learn about Melissococcus Plutonius</summary>
+				<p>
+					<strong>Foulbrood</strong> is a general term used to describe bacterial infections that affect honeybee larvae. The two main types are American Foulbrood (AFB) and European Foulbrood (EFB), each caused by different
+					bacterial pathogens.
+				</p>
+
+				<p>
+					<strong>Symptoms:</strong> In general, foulbrood-infected larvae exhibit discoloration, unusual positioning within cells, a foul smell, and cell cappings that may appear sunken or perforated. Infected colonies may show a
+					spotty brood pattern, weakened bee numbers, or even queenlessness.
+				</p>
+
+				<p>
+					<strong>Treatments:</strong> Treatment depends on the specific foulbrood type. AFB often requires the destruction of affected colonies and equipment, while EFB may sometimes be managed through supportive care and
+					antibiotic treatment under veterinary guidance. Early diagnosis is critical.
+				</p>
+
+				<p><strong>Prevention Measures:</strong></p>
+
+				<div class="indented-list">
+					<ul>
+						<li><strong>Sanitation:</strong> Regularly sterilise tools and avoid sharing equipment between colonies.</li>
+						<li><strong>Inspection:</strong> Conduct routine hive inspections to identify symptoms early.</li>
+						<li><strong>Record-Keeping:</strong> Track colony health to notice patterns over time and isolate issues quickly.</li>
+						<li><strong>Education:</strong> Ensure all beekeepers in your association or apiary group are aware of the signs, reporting requirements, and management procedures.</li>
+					</ul>
+				</div>
+
+				<p>
+					<strong>Summary:</strong> Foulbrood is a serious threat to colony health. Early identification, appropriate treatment, and consistent hygienic practices are key to preventing its spread and maintaining healthy,
+					productive hives.
+				</p>
+			</details>
+
+			<p class="back-to-top"><a href="#top">↑ Back to top</a></p>
+
+			<h3 id="foulbrood">Foulbrood (General)</h3>
+			<details>
+				<summary>Learn about General Foulbrood Infections</summary>
+				<p>
+					<strong>Foulbrood</strong> is a bacterial disease that affects honeybees, and it is considered one of the most serious threats to honeybee colonies. There are two types of foulbrood: American foulbrood (AFB) and European
+					foulbrood (EFB). Both types are caused by different bacteria and have different symptoms, treatments, and prevention measures.
+				</p>
+
+				<p><strong>American foulbrood (AFB):</strong></p>
+				<p>
+					<strong>Symptoms:</strong> Sunken, greasy, and perforated brood cells that are brown or black in colour. Larvae die before they reach the pupal stage, leaving behind a foul-smelling, ropy, and light-brown liquid. As the
+					disease progresses, the scales of the affected brood cells become dark and hard, and they can stick to the bottom of the cell.
+				</p>
+
+				<p>
+					<strong>Treatments:</strong> If a hive is suspected of having AFB, the infected colony should be destroyed by fire or a method approved by local authorities to prevent the spread of the disease. Preventing the spread of
+					AFB is the best course of action. Beekeepers can use a variety of methods to prevent the disease, including practicing good hygiene, replacing old comb, using antibiotics, and re-queening.
+				</p>
+
+				<p>
+					<strong>Prevention measures:</strong> Regular hive inspections and maintaining good hygiene are crucial in preventing AFB. Beekeepers should avoid feeding honey or pollen that has not been treated to prevent the spread
+					of AFB. Replacing old comb with new frames can also help prevent the spread of AFB.
+				</p>
+
+				<p><strong>European foulbrood (EFB):</strong></p>
+				<p><strong>Symptoms:</strong> Larvae in EFB-infected cells turn yellow, then brown, before dying. Unlike AFB, the larvae die after they are capped. The affected cells are twisted or curled, and the caps may be sunken.</p>
+
+				<p><strong>Treatments:</strong> EFB can be treated with antibiotics, such as oxytetracycline, which can be given to the bees in the form of medicated syrup or dust. In severe cases, the colony may need to be re-queened.</p>
+
+				<p>
+					<strong>Prevention measures:</strong> Maintaining good hygiene in the hive, such as regularly cleaning and disinfecting equipment, can help prevent EFB. Beekeepers should also replace old comb with new frames to prevent
+					the spread of the disease.
+				</p>
+
+				<p>
+					<strong>Summary:</strong> Foulbrood is a serious threat to honeybee colonies, and prevention measures are the best course of action. Early detection and treatment are essential to preventing the spread of the disease.
+					Beekeepers should practice good hygiene and regularly inspect their hives to catch any signs of foulbrood early.
+				</p>
+			</details>
+
+			<p class="back-to-top"><a href="#top">↑ Back to top</a></p>
+		</main>
+
+		<script>
+			const toggleBtn = document.getElementById('menuToggle');
+			const navMenu = document.querySelector('.nav-menu');
+
+			toggleBtn.addEventListener('click', () => {
+			  navMenu.classList.toggle('active');
+			});
+		</script>
+
+		<!-- Footer -->
+		<footer class="site-footer" role="region" aria-label="Site Footer">
+			<div class="footer-columns">
+				<div class="footer-column" role="region" aria-label="Contact Information">
+					<h3>Contact</h3>
+					<address>
+						<p>Email: <a href="/contact.html" title="Send us a message via our contact page">Contact</a></p>
+					</address>
+				</div>
+
+				<div class="footer-column" role="region" aria-label="Useful Site Links">
+					<h3>Useful Links</h3>
+					<ul>
+						<li><a href="/privacy.html" title="Read our privacy policy">Privacy Policy</a></li>
+						<li><a href="/site-map.html" title="View a map of our entire website">Site Map</a></li>
+					</ul>
+				</div>
+
+				<div class="footer-column" role="region" aria-label="Beekeeping Resources">
+					<h3>Resources</h3>
+					<ul>
+						<li>
+							<a
+								href="https://www.bbka.org.uk/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Visit the British Beekeepers Association 
+            website"
+							>
+								British Beekeepers Association
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.cardiffbeekeepers.co.uk/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Visit the Cardiff Beekeepers 
+            Association site"
+							>
+								Cardiff, Vale and Valleys Beekeepers Association
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
+								target="_blank"
+								rel="noopener 
+            noreferrer"
+								title="Read the Honey (Wales) Regulations 2015"
+							>
+								The Honey (Wales) Regulations 2015
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.biodiversitywales.org.uk/Bee-Friendly"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Explore 
+            Bee-Friendly programme by Wales Biodiversity Partnership"
+							>
+								Wales Biodiversity Partnership
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.nationalbeeunit.com/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Access BeeBase for beekeeping 
+          information"
+							>
+								BeeBase
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="footer-bottom" role="region" aria-label="Copyright">
+				&copy; 2023 Practical Beekeeping. All rights reserved.
+			</div>
+		</footer>
+
+		<!-- Cookie Consent Popup -->
+		<div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
+			<div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+				<h2>🍪 We Use Cookies</h2>
+				<p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
+
+				<form id="cookie-options">
+					<label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
+					<label><input type="checkbox" id="analytics" /> Analytics</label><br />
+					<label><input type="checkbox" id="marketing" /> Marketing</label><br />
+				</form>
+
+				<div class="cookie-buttons">
+					<button id="accept-selected">Accept Selected</button>
+					<button id="accept-all">Accept All</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Back to Top Button -->
+		<button id="backToTop" title="Back to top" aria-label="Back to top">
+			⬆ Top
+		</button>
+
+		<!-- ============================================
      📁 JavaScript: Mobile Menu Interactions
      - Toggles hamburger menu on mobile
      - Closes menu on link click or outside click
      ============================================ -->
-<script src="js/menu.js"></script>
+		<script src="js/menu.js"></script>
 
-<!-- Google Analytics with Cookie Consent -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const popup = document.getElementById('cookie-consent');
-    const acceptAllBtn = document.getElementById('accept-all');
-    const acceptSelectedBtn = document.getElementById('accept-selected');
-    const analyticsCheckbox = document.getElementById('analytics');
-    const marketingCheckbox = document.getElementById('marketing');
+		<!-- Google Analytics with Cookie Consent -->
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+			  const popup = document.getElementById('cookie-consent');
+			  const acceptAllBtn = document.getElementById('accept-all');
+			  const acceptSelectedBtn = document.getElementById('accept-selected');
+			  const analyticsCheckbox = document.getElementById('analytics');
+			  const marketingCheckbox = document.getElementById('marketing');
 
-    if (!localStorage.getItem('cookieConsent')) {
-      popup.style.display = 'block';
-    }
+			  if (!localStorage.getItem('cookieConsent')) {
+			    popup.style.display = 'block';
+			  }
 
-    function savePreferences(analytics, marketing) {
-      const consent = {
-        essential: true,
-        analytics: analytics,
-        marketing: marketing
-      };
-      localStorage.setItem('cookieConsent', JSON.stringify(consent));
-      popup.style.display = 'none';
-      applyConsent(consent);
-    }
+			  function savePreferences(analytics, marketing) {
+			    const consent = {
+			      essential: true,
+			      analytics: analytics,
+			      marketing: marketing
+			    };
+			    localStorage.setItem('cookieConsent', JSON.stringify(consent));
+			    popup.style.display = 'none';
+			    applyConsent(consent);
+			  }
 
-    acceptAllBtn.addEventListener('click', () => {
-      savePreferences(true, true);
-    });
+			  acceptAllBtn.addEventListener('click', () => {
+			    savePreferences(true, true);
+			  });
 
-    acceptSelectedBtn.addEventListener('click', () => {
-      savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
-    });
+			  acceptSelectedBtn.addEventListener('click', () => {
+			    savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
+			  });
 
-    function applyConsent(consent) {
-      if (consent.analytics) {
-        const gaScript = document.createElement('script');
-        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
-        gaScript.async = true;
-        document.head.appendChild(gaScript);
+			  function applyConsent(consent) {
+			    if (consent.analytics) {
+			      const gaScript = document.createElement('script');
+			      gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
+			      gaScript.async = true;
+			      document.head.appendChild(gaScript);
 
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-7C99K0XQKV');
-      }
+			      window.dataLayer = window.dataLayer || [];
+			      function gtag(){dataLayer.push(arguments);}
+			      gtag('js', new Date());
+			      gtag('config', 'G-7C99K0XQKV');
+			    }
 
-      if (consent.marketing) {
-        // Load marketing scripts here
-      }
-    }
+			    if (consent.marketing) {
+			      // Load marketing scripts here
+			    }
+			  }
 
-    const stored = localStorage.getItem('cookieConsent');
-    if (stored) {
-      const consent = JSON.parse(stored);
-      applyConsent(consent);
-    }
-  });
-</script>
-
-</body>
+			  const stored = localStorage.getItem('cookieConsent');
+			  if (stored) {
+			    const consent = JSON.parse(stored);
+			    applyConsent(consent);
+			  }
+			});
+		</script>
+	</body>
 </html>

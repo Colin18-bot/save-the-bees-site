@@ -1,383 +1,433 @@
 <!DOCTYPE html>
-<html lang="en">  
-  <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Understanding Honeybee Behaviour – Communication, Swarming, and Foraging</title>
+		<title>Understanding Honeybee Behaviour – Communication, Swarming, and Foraging</title>
 
-  <!-- Hamburger button -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
-  
-  <!-- Your CSS file -->
-  <link rel="stylesheet" href="css/style.css" />
+		<!-- Hamburger button -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
 
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Explore the fascinating behaviour of honeybees, including waggle dancing, hive defence, swarming, and foraging. 
-  Learn how their social roles and communication help the hive thrive." />
-  <meta name="keywords" content="honeybee behaviour, bee communication, waggle dance, swarming bees, hive defence, bee foraging, worker bee roles, 
-  honeybee colony, hygienic bees, temperature regulation in hives" />
-  <meta name="author" content="Colin Chorley" />
-  
-  <!-- Favicon -->
-  <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-  <!-- 16x16 and 32x32 for classic tabs -->
-  <link rel="icon" type="image/favicon-16x16.png" sizes="16x16" href="favicon-16x16.png" />
-  <link rel="icon" type="image/favicon-32x32.png" sizes="32x32" href="favicon-32x32.png" />
-  <!-- Apple touch icon for iOS -->
-  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-  <!-- Android home screen icons -->
-  <link rel="icon" type="image/android-chrome-192x192.png" sizes="192x192" href="android-chrome-192x192.png" />
-  <link rel="icon" type="image/android-chrome-512x512.png" sizes="512x512" href="android-chrome-512x512.png" />
-  <!-- PWA manifest (optional but helpful) -->
-  <link rel="manifest" href="site.webmanifest" />
+		<!-- Your CSS file -->
+		<link rel="stylesheet" href="css/style.css" />
 
-  <!-- Schema.org Structured Data -->
-  <script type="application/ld+json">
-[
-  {
-    "@context": "https://schema.org",
-    "@type": "TechArticle",
-    "headline": "Honeybee Behaviour",
-    "author": {
-      "@type": "Person",
-      "name": "Colin Chorley",
-      "sameAs": ["https://www.tiktok.com/@colinchorley"]
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "BeezKnees",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://www.beezknees.co.uk/images/BeezKnees-Logo.png"
-      }
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "https://www.beezknees.co.uk/behaviour.html"
-    },
-    "image": "https://www.beezknees.co.uk/images/beehives_8.jpg",
-    "datePublished": "2024-06-01",
-    "dateModified": "2024-06-01",
-    "description": "Insights into the social and survival behaviours of honeybees, including waggle dancing, swarming, and foraging."
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://www.beezknees.co.uk/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Honeybee Behaviour",
-        "item": "https://www.beezknees.co.uk/behaviour.html"
-      }
-    ]
-  }
-]
-</script>
-</head>
-<body>
+		<!-- SEO Meta Tags -->
+		<meta
+			name="description"
+			content="Explore the fascinating behaviour of honeybees, including waggle dancing, hive defence, swarming, and foraging. 
+  Learn how their social roles and communication help the hive thrive."
+		/>
+		<meta
+			name="keywords"
+			content="honeybee behaviour, bee communication, waggle dance, swarming bees, hive defence, bee foraging, worker bee roles, 
+  honeybee colony, hygienic bees, temperature regulation in hives"
+		/>
+		<meta name="author" content="Colin Chorley" />
 
-  <!-- Fixed Header and Nav Container -->
-    <div class="fixed-header">
-    <header class="site-header" role="region" aria-label="Site Header">
-      <div class="header-container" role="region" aria-label="Site Branding">
-        
-        <a href="https://www.beezknees.co.uk">  
-          <img src="images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
-        </a>
-        
-        <h1 class="site-title">BeezKnees</h1>
-        
-        <!-- ✅ WORKING HAMBURGER ICON BUTTON -->
-        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-          <i class="fas fa-bars"></i>
-        </button>
-      </div>
-  </header>
-    </div>
+		<!-- Favicon -->
+		<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+		<!-- 16x16 and 32x32 for classic tabs -->
+		<link rel="icon" type="image/favicon-16x16.png" sizes="16x16" href="favicon-16x16.png" />
+		<link rel="icon" type="image/favicon-32x32.png" sizes="32x32" href="favicon-32x32.png" />
+		<!-- Apple touch icon for iOS -->
+		<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+		<!-- Android home screen icons -->
+		<link rel="icon" type="image/android-chrome-192x192.png" sizes="192x192" href="android-chrome-192x192.png" />
+		<link rel="icon" type="image/android-chrome-512x512.png" sizes="512x512" href="android-chrome-512x512.png" />
+		<!-- PWA manifest (optional but helpful) -->
+		<link rel="manifest" href="site.webmanifest" />
 
-   <!-- Navigation Bar -->
-    <nav class="navbar" role="navigation" aria-label="Main navigation">
-    <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
-    <li><a href="/index.html" title="Visit the homepage">Home</a></li>
+		<!-- Schema.org Structured Data -->
+		<script type="application/ld+json">
+			[
+			  {
+			    "@context": "https://schema.org",
+			    "@type": "TechArticle",
+			    "headline": "Honeybee Behaviour",
+			    "author": {
+			      "@type": "Person",
+			      "name": "Colin Chorley",
+			      "sameAs": ["https://www.tiktok.com/@colinchorley"]
+			    },
+			    "publisher": {
+			      "@type": "Organization",
+			      "name": "BeezKnees",
+			      "logo": {
+			        "@type": "ImageObject",
+			        "url": "https://www.beezknees.co.uk/images/BeezKnees-Logo.png"
+			      }
+			    },
+			    "mainEntityOfPage": {
+			      "@type": "WebPage",
+			      "@id": "https://www.beezknees.co.uk/behaviour.html"
+			    },
+			    "image": "https://www.beezknees.co.uk/images/beehives_8.jpg",
+			    "datePublished": "2024-06-01",
+			    "dateModified": "2024-06-01",
+			    "description": "Insights into the social and survival behaviours of honeybees, including waggle dancing, swarming, and foraging."
+			  },
+			  {
+			    "@context": "https://schema.org",
+			    "@type": "BreadcrumbList",
+			    "itemListElement": [
+			      {
+			        "@type": "ListItem",
+			        "position": 1,
+			        "name": "Home",
+			        "item": "https://www.beezknees.co.uk/"
+			      },
+			      {
+			        "@type": "ListItem",
+			        "position": 2,
+			        "name": "Honeybee Behaviour",
+			        "item": "https://www.beezknees.co.uk/behaviour.html"
+			      }
+			    ]
+			  }
+			]
+		</script>
+	</head>
+	<body>
+		<!-- Fixed Header and Nav Container -->
+		<div class="fixed-header">
+			<header class="site-header" role="region" aria-label="Site Header">
+				<div class="header-container" role="region" aria-label="Site Branding">
+					<a href="https://www.beezknees.co.uk">
+						<img src="images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
+					</a>
 
-    <li class="dropdown">
-      <a href="/about-us.html" title="Learn more about us">About</a>
-    </li>
+					<h1 class="site-title">BeezKnees</h1>
 
-    <li class="dropdown">
-      <a href="/donate.html" title="Support out mission">Donate</a>
-    </li>
+					<!-- ✅ WORKING HAMBURGER ICON BUTTON -->
+					<button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+						<i class="fas fa-bars"></i>
+					</button>
+				</div>
+			</header>
+		</div>
 
-    <li class="dropdown">
-      <a href="/beekeeping-guides.html" title="Explore our beekeeping guides">Beekeeping</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/getting-started.html" title="Begin your beekeeping journey">Getting Started</a></li>
-        <li><a href="/equipment.html" title="Essential beekeeping equipment">Equipment</a></li>
-        <li><a href="/hive-management.html" title="Manage your hive effectively">Hive Management</a></li>
-        <li><a href="/varroa-management.html" title="control varroa mite infestations">Varroa Management</a></li>    
-        <li><a href="/hygiene.html" title="Keep your hive clean and healthy">Hygiene</a></li>
-        <li><a href="/bee-stings.html" title="Understand and treat bee stings">Bee Stings</a></li>
-      </ul>
-    </li>
+		<!-- Navigation Bar -->
+		<nav class="navbar" role="navigation" aria-label="Main navigation">
+			<ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+				<li><a href="/index.html" title="Visit the homepage">Home</a></li>
 
-    <li class="dropdown">
-      <a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary">Apiary Calendar</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/january.html" title="January beekeeping tasks">January</a></li>
-        <li><a href="/february.html" title="February beekeeping tasks">February</a></li>
-        <li><a href="/march.html" title="March beekeeping tasks">March</a></li>
-        <li><a href="/april.html" title="April beekeeping tasks">April</a></li>
-        <li><a href="/may.html" title="May beekeeping tasks">May</a></li>
-        <li><a href="/june.html" title="June beekeeping tasks">June</a></li>
-        <li><a href="/july.html" title="July beekeeping tasks">July</a></li>
-        <li><a href="/august.html" title="August beekeeping tasks">August</a></li>
-        <li><a href="/september.html" title="September beekeeping tasks">September</a></li>
-        <li><a href="/october.html" title="October beekeeping tasks">October</a></li>
-        <li><a href="/november.html" title="November beekeeping tasks">November</a></li>
-        <li><a href="/december.html" title="December beekeeping tasks">December</a></li>
-      </ul>
-    </li>
+				<li class="dropdown">
+					<a href="/about-us.html" title="Learn more about us">About</a>
+				</li>
 
-    <li class="dropdown">
-      <a href="/bee-diseases.html" title="Bee diseases and pests overview">Diseases & Pests</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/bacterial-diseases.html" title="Learn about bacterial bee diseases">Bacterial</a></li>
-        <li><a href="/viral-diseases.html" title="Learn about viral bee diseases">Viral</a></li>
-        <li><a href="/bee-pests.html" title="Common pests affecting bees">Pests</a></li>
-        <li><a href="/parasitic-mites.html" title="Parasitic mites in bee colonies">Mites</a></li>
-        <li><a href="/other-conditions.html" title="Other bee health conditions">Other Conditions</a></li>
-      </ul>
-    </li>
+				<li class="dropdown">
+					<a href="/donate.html" title="Support out mission">Donate</a>
+				</li>
 
-    <li class="dropdown">
-      <a href="/honeybee-facts.html" title="Interesting facts about honeybees">Honeybee Facts</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/anatomy.html" title="Honeybee anatomy explained">Anatomy</a></li>
-        <li><a href="/behaviour.html" title="Learn about honeybee behaviour">Behaviour</a></li>
-        <li><a href="/how-bees-make-honey.html" title="How bees make honey">Make Honey</a></li>
-        <li><a href="/pollination.html" title="Honeybee role in pollination">Pollination</a></li>
-      </ul>
-    </li>
+				<li class="dropdown">
+					<a href="/beekeeping-guides.html" title="Explore our beekeeping guides">Beekeeping</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/getting-started.html" title="Begin your beekeeping journey">Getting Started</a></li>
+						<li><a href="/equipment.html" title="Essential beekeeping equipment">Equipment</a></li>
+						<li><a href="/hive-management.html" title="Manage your hive effectively">Hive Management</a></li>
+						<li><a href="/varroa-management.html" title="control varroa mite infestations">Varroa Management</a></li>
+						<li><a href="/hygiene.html" title="Keep your hive clean and healthy">Hygiene</a></li>
+						<li><a href="/bee-stings.html" title="Understand and treat bee stings">Bee Stings</a></li>
+					</ul>
+				</li>
 
-    <li class="dropdown">
-      <a href="/help-the-bees.html" title="How you can help save the bees">Help Bees</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/bee-gardening.html" title="Make your garden bee friendly">Gardening</a></li>
-        <li><a href="/donate.html" title="Make a donation to support bees">Donate</a></li>
-        <li><a href="/report-a-swarm.html" title="Report a bee swarm">Report a Swarm</a></li>
-      </ul>
-    </li>
+				<li class="dropdown">
+					<a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary">Apiary Calendar</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/january.html" title="January beekeeping tasks">January</a></li>
+						<li><a href="/february.html" title="February beekeeping tasks">February</a></li>
+						<li><a href="/march.html" title="March beekeeping tasks">March</a></li>
+						<li><a href="/april.html" title="April beekeeping tasks">April</a></li>
+						<li><a href="/may.html" title="May beekeeping tasks">May</a></li>
+						<li><a href="/june.html" title="June beekeeping tasks">June</a></li>
+						<li><a href="/july.html" title="July beekeeping tasks">July</a></li>
+						<li><a href="/august.html" title="August beekeeping tasks">August</a></li>
+						<li><a href="/september.html" title="September beekeeping tasks">September</a></li>
+						<li><a href="/october.html" title="October beekeeping tasks">October</a></li>
+						<li><a href="/november.html" title="November beekeeping tasks">November</a></li>
+						<li><a href="/december.html" title="December beekeeping tasks">December</a></li>
+					</ul>
+				</li>
 
-  </ul>
-</nav>
+				<li class="dropdown">
+					<a href="/bee-diseases.html" title="Bee diseases and pests overview">Diseases and Pests</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/bacterial-diseases.html" title="Learn about bacterial bee diseases">Bacterial</a></li>
+						<li><a href="/viral-diseases.html" title="Learn about viral bee diseases">Viral</a></li>
+						<li><a href="/bee-pests.html" title="Common pests affecting bees">Pests</a></li>
+						<li><a href="/parasitic-mites.html" title="Parasitic mites in bee colonies">Mites</a></li>
+						<li><a href="/other-conditions.html" title="Other bee health conditions">Other Conditions</a></li>
+					</ul>
+				</li>
 
-  </div>
+				<li class="dropdown">
+					<a href="/honeybee-facts.html" title="Interesting facts about honeybees">Honeybee Facts</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/anatomy.html" title="Honeybee anatomy explained">Anatomy</a></li>
+						<li><a href="/behaviour.html" title="Learn about honeybee behaviour">Behaviour</a></li>
+						<li><a href="/how-bees-make-honey.html" title="How bees make honey">Make Honey</a></li>
+						<li><a href="/pollination.html" title="Honeybee role in pollination">Pollination</a></li>
+					</ul>
+				</li>
 
-  <!-- Hero Banner with Image and Alt Fallback -->
-  <section role="region" aria-label="Homepage Banner">
-  <div class="banner">
-  <img src="images/beehives_8.jpg" alt="Photo of Beehives" />
-  </div>
-  </section>
-  
-  <!-- Main Content -->
-    <main class="content">
-    <h2>Honeybee Behaviour</h2>
+				<li class="dropdown">
+					<a href="/help-the-bees.html" title="How you can help save the bees">Help Bees</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/bee-gardening.html" title="Make your garden bee friendly">Gardening</a></li>
+						<li><a href="/donate.html" title="Make a donation to support bees">Donate</a></li>
+						<li><a href="/report-a-swarm.html" title="Report a bee swarm">Report a Swarm</a></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
 
-    <p>Honeybees exhibit some of the most complex and fascinating behaviours found in the insect world. As social insects, they live in 
-      highly structured colonies where each individual bee has specific roles and responsibilities. This division of labour and communication is 
-      key to the survival and productivity of the hive.</p>
+		<!-- Hero Banner with Image and Alt Fallback -->
+		<section role="region" aria-label="Homepage Banner">
+			<div class="banner">
+				<img src="images/beehives_8.jpg" alt="Photo of Beehives" />
+			</div>
+		</section>
 
-    <p>One of the most well-known behaviours is the waggle dance, a unique method of communication used by forager bees to share information 
-      about food sources. Through a series of movements, the bee indicates the direction and distance of nectar or pollen in relation to the sun’s 
-      position. This behaviour showcases an extraordinary level of spatial awareness and cooperative intelligence.</p>
+		<!-- Main Content -->
+		<main class="content">
+			<h2>Honeybee Behaviour</h2>
 
-    <p><b>Division of labour</b> is age-based in honeybees. Young worker bees typically start their lives performing tasks inside the hive, such as 
-      cleaning cells, feeding larvae, and producing wax. As they age, their duties shift to guarding the entrance and eventually foraging for 
-      nectar, pollen, water, and propolis. This progression is known as age polyethism.</p>
+			<p>
+				Honeybees exhibit some of the most complex and fascinating behaviours found in the insect world. As social insects, they live in highly structured colonies where each individual bee has specific roles and responsibilities.
+				This division of labour and communication is key to the survival and productivity of the hive.
+			</p>
 
-    <p><b>Defensive behaviour</b> is also critical in honeybee colonies. Worker bees are equipped with a barbed stinger and will defend their 
-      hive from intruders, including animals and humans. They release an alarm pheromone when they sting, alerting other bees to the threat. 
-      While this helps protect the hive, the stinging bee will die shortly after due to the stinger becoming lodged in the target.</p>
+			<p>
+				One of the most well-known behaviours is the waggle dance, a unique method of communication used by forager bees to share information about food sources. Through a series of movements, the bee indicates the direction and
+				distance of nectar or pollen in relation to the sun’s position. This behaviour showcases an extraordinary level of spatial awareness and cooperative intelligence.
+			</p>
 
-    <p><b>Swarming</b> is another natural behaviour, representing the colony’s method of reproduction. When a hive becomes overcrowded, the queen 
-      and about half the worker bees will leave to form a new colony. A new queen is reared by the remaining bees. Though swarming may seem chaotic, 
-      it is a highly coordinated event that ensures the survival and expansion of honeybee populations. For tips on managing this, see 
-      <em><a href="/hive-management.html" title="Manage your hive effectively">Hive Management</a></em>.</p>
+			<p>
+				<b>Division of labour</b> is age-based in honeybees. Young worker bees typically start their lives performing tasks inside the hive, such as cleaning cells, feeding larvae, and producing wax. As they age, their duties shift
+				to guarding the entrance and eventually foraging for nectar, pollen, water, and propolis. This progression is known as age polyethism.
+			</p>
 
-    <p>Honeybees are also known for their temperature regulation abilities. They work together to keep the hive at a stable temperature of 
-      around 35°C (95°F), essential for brood development. In hot weather, bees will fan their wings at the hive entrance to circulate air, and in 
-      colder months, they form a cluster and vibrate their wing muscles to generate heat.</p>
+			<p>
+				<b>Defensive behaviour</b> is also critical in honeybee colonies. Worker bees are equipped with a barbed stinger and will defend their hive from intruders, including animals and humans. They release an alarm pheromone when
+				they sting, alerting other bees to the threat. While this helps protect the hive, the stinging bee will die shortly after due to the stinger becoming lodged in the target.
+			</p>
 
-    <p><b>Foraging behaviour</b> is remarkably efficient. Bees can remember flower locations and even prefer flowers that offer the highest reward. 
-      They use visual cues and floral scents to find and distinguish between plant species. A single forager may visit hundreds of flowers on a 
-      single trip, collecting nectar and pollen with extraordinary speed and precision. Learn more 
-      in <em><a href="/pollination.html" title="Honeybee role in pollination">Pollination</a></em>.</p>
+			<p>
+				<b>Swarming</b> is another natural behaviour, representing the colony’s method of reproduction. When a hive becomes overcrowded, the queen and about half the worker bees will leave to form a new colony. A new queen is reared
+				by the remaining bees. Though swarming may seem chaotic, it is a highly coordinated event that ensures the survival and expansion of honeybee populations. For tips on managing this, see
+				<em><a href="/hive-management.html" title="Manage your hive effectively">Hive Management</a></em>.
+			</p>
 
-    <p>Finally, honeybees display hygienic behaviour, an evolutionary trait that helps prevent disease. Some bees are genetically predisposed 
-      to detect and remove diseased or dead brood from the hive, helping maintain colony health. This behaviour is especially important in the fight 
-      against pests like the varroa mite and diseases such as foulbrood. For more information, visit 
-      <em><a href="/varroa-management.html" title="control varroa mite infestations">Varroa 
-        Management</a></em>and <em><a href="/bee-diseases.html" title="Bee diseases and pests overview">Diseases & Pests</a></em>.</p>
+			<p>
+				Honeybees are also known for their temperature regulation abilities. They work together to keep the hive at a stable temperature of around 35°C (95°F), essential for brood development. In hot weather, bees will fan their
+				wings at the hive entrance to circulate air, and in colder months, they form a cluster and vibrate their wing muscles to generate heat.
+			</p>
 
-    <p>The behavioural complexity of honeybees is a testament to their evolutionary success. Every action—whether it be guarding the hive, gathering 
-      food, or communicating—is part of a greater system that allows the colony to function as a single, unified superorganism.</p>
+			<p>
+				<b>Foraging behaviour</b> is remarkably efficient. Bees can remember flower locations and even prefer flowers that offer the highest reward. They use visual cues and floral scents to find and distinguish between plant
+				species. A single forager may visit hundreds of flowers on a single trip, collecting nectar and pollen with extraordinary speed and precision. Learn more in
+				<em><a href="/pollination.html" title="Honeybee role in pollination">Pollination</a></em>.
+			</p>
 
-</main>
+			<p>
+				Finally, honeybees display hygienic behaviour, an evolutionary trait that helps prevent disease. Some bees are genetically predisposed to detect and remove diseased or dead brood from the hive, helping maintain colony
+				health. This behaviour is especially important in the fight against pests like the varroa mite and diseases such as foulbrood. For more information, visit
+				<em><a href="/varroa-management.html" title="control varroa mite infestations">Varroa Management</a></em>and <em><a href="/bee-diseases.html" title="Bee diseases and pests overview">Diseases and Pests</a></em>.
+			</p>
 
-    <script>
-    const toggleBtn = document.getElementById('menuToggle');
-    const navMenu = document.querySelector('.nav-menu');
+			<p>
+				The behavioural complexity of honeybees is a testament to their evolutionary success. Every action—whether it be guarding the hive, gathering food, or communicating—is part of a greater system that allows the colony to
+				function as a single, unified superorganism.
+			</p>
+		</main>
 
-    toggleBtn.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-    });
-  </script>    
+		<script>
+			const toggleBtn = document.getElementById('menuToggle');
+			const navMenu = document.querySelector('.nav-menu');
 
-<!-- Footer -->
-  <footer class="site-footer" role="region" aria-label="Site Footer">
-  <div class="footer-columns">
-    
-    <div class="footer-column" role="region" aria-label="Contact Information">
-      <h3>Contact</h3>
-      <address>
-      <p>Email: <a href="/contact.html" title="Send us a message via our contact page">Contact</a></p>      
-      </address>
-    </div>
+			toggleBtn.addEventListener('click', () => {
+			  navMenu.classList.toggle('active');
+			});
+		</script>
 
-    <div class="footer-column" role="region" aria-label="Useful Site Links">
-      <h3>Useful Links</h3>
-      <ul>
-        <li><a href="/privacy.html" title="Read our privacy policy">Privacy Policy</a></li>
-        <li><a href="/site-map.html" title="View a map of our entire website">Site Map</a></li>
-      </ul>
-    </div>
+		<!-- Footer -->
+		<footer class="site-footer" role="region" aria-label="Site Footer">
+			<div class="footer-columns">
+				<div class="footer-column" role="region" aria-label="Contact Information">
+					<h3>Contact</h3>
+					<address>
+						<p>Email: <a href="/contact.html" title="Send us a message via our contact page">Contact</a></p>
+					</address>
+				</div>
 
-    <div class="footer-column" role="region" aria-label="Beekeeping Resources">
-      <h3>Resources</h3>
-        <ul>
-          <li><a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer" title="Visit the British Beekeepers Association 
-            website">British Beekeepers Association</a></li>
-          <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer" title="Visit the Cardiff Beekeepers 
-            Association site">Cardiff, Vale and Valleys Beekeepers Association</a></li>
-          <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true" target="_blank" rel="noopener 
-            noreferrer" title="Read the Honey (Wales) Regulations 2015">The Honey (Wales) Regulations 2015</a></li>
-          <li><a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer" title="Explore 
-            Bee-Friendly programme by Wales Biodiversity Partnership">Wales Biodiversity Partnership</a></li>
-        <li><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title="Access BeeBase for beekeeping 
-          information">BeeBase</a></li>
-        </ul>
-    </div>
+				<div class="footer-column" role="region" aria-label="Useful Site Links">
+					<h3>Useful Links</h3>
+					<ul>
+						<li><a href="/privacy.html" title="Read our privacy policy">Privacy Policy</a></li>
+						<li><a href="/site-map.html" title="View a map of our entire website">Site Map</a></li>
+					</ul>
+				</div>
 
-  </div>
+				<div class="footer-column" role="region" aria-label="Beekeeping Resources">
+					<h3>Resources</h3>
+					<ul>
+						<li>
+							<a
+								href="https://www.bbka.org.uk/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Visit the British Beekeepers Association 
+            website"
+							>
+								British Beekeepers Association
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.cardiffbeekeepers.co.uk/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Visit the Cardiff Beekeepers 
+            Association site"
+							>
+								Cardiff, Vale and Valleys Beekeepers Association
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
+								target="_blank"
+								rel="noopener 
+            noreferrer"
+								title="Read the Honey (Wales) Regulations 2015"
+							>
+								The Honey (Wales) Regulations 2015
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.biodiversitywales.org.uk/Bee-Friendly"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Explore 
+            Bee-Friendly programme by Wales Biodiversity Partnership"
+							>
+								Wales Biodiversity Partnership
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.nationalbeeunit.com/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Access BeeBase for beekeeping 
+          information"
+							>
+								BeeBase
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
 
-  <div class="footer-bottom" role="region" aria-label="Copyright">
-    &copy; 2023 Practical Beekeeping. All rights reserved.
-  </div>
-</footer>
+			<div class="footer-bottom" role="region" aria-label="Copyright">
+				&copy; 2023 Practical Beekeeping. All rights reserved.
+			</div>
+		</footer>
 
-<!-- Cookie Consent Popup -->
-<div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
-  <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
-    <h2>🍪 We Use Cookies</h2>
-    <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
+		<!-- Cookie Consent Popup -->
+		<div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
+			<div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+				<h2>🍪 We Use Cookies</h2>
+				<p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
 
-    <form id="cookie-options">
-      <label><input type="checkbox" checked disabled> Essential (always active)</label><br>
-      <label><input type="checkbox" id="analytics"> Analytics</label><br>
-      <label><input type="checkbox" id="marketing"> Marketing</label><br>
-    </form>
+				<form id="cookie-options">
+					<label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
+					<label><input type="checkbox" id="analytics" /> Analytics</label><br />
+					<label><input type="checkbox" id="marketing" /> Marketing</label><br />
+				</form>
 
-    <div class="cookie-buttons">
-      <button id="accept-selected">Accept Selected</button>
-      <button id="accept-all">Accept All</button>
-    </div>
-  </div>
-</div>
+				<div class="cookie-buttons">
+					<button id="accept-selected">Accept Selected</button>
+					<button id="accept-all">Accept All</button>
+				</div>
+			</div>
+		</div>
 
-<!-- Back to Top Button -->
-<button id="backToTop" title="Back to top" aria-label="Back to top">
-  ⬆ Top
-</button>
+		<!-- Back to Top Button -->
+		<button id="backToTop" title="Back to top" aria-label="Back to top">
+			⬆ Top
+		</button>
 
-<!-- ============================================
+		<!-- ============================================
      📁 JavaScript: Mobile Menu Interactions
      - Toggles hamburger menu on mobile
      - Closes menu on link click or outside click
      ============================================ -->
-<script src="js/menu.js"></script>
+		<script src="js/menu.js"></script>
 
-<!-- Google Analytics with Cookie Consent -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const popup = document.getElementById('cookie-consent');
-    const acceptAllBtn = document.getElementById('accept-all');
-    const acceptSelectedBtn = document.getElementById('accept-selected');
-    const analyticsCheckbox = document.getElementById('analytics');
-    const marketingCheckbox = document.getElementById('marketing');
+		<!-- Google Analytics with Cookie Consent -->
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+			  const popup = document.getElementById('cookie-consent');
+			  const acceptAllBtn = document.getElementById('accept-all');
+			  const acceptSelectedBtn = document.getElementById('accept-selected');
+			  const analyticsCheckbox = document.getElementById('analytics');
+			  const marketingCheckbox = document.getElementById('marketing');
 
-    if (!localStorage.getItem('cookieConsent')) {
-      popup.style.display = 'block';
-    }
+			  if (!localStorage.getItem('cookieConsent')) {
+			    popup.style.display = 'block';
+			  }
 
-    function savePreferences(analytics, marketing) {
-      const consent = {
-        essential: true,
-        analytics: analytics,
-        marketing: marketing
-      };
-      localStorage.setItem('cookieConsent', JSON.stringify(consent));
-      popup.style.display = 'none';
-      applyConsent(consent);
-    }
+			  function savePreferences(analytics, marketing) {
+			    const consent = {
+			      essential: true,
+			      analytics: analytics,
+			      marketing: marketing
+			    };
+			    localStorage.setItem('cookieConsent', JSON.stringify(consent));
+			    popup.style.display = 'none';
+			    applyConsent(consent);
+			  }
 
-    acceptAllBtn.addEventListener('click', () => {
-      savePreferences(true, true);
-    });
+			  acceptAllBtn.addEventListener('click', () => {
+			    savePreferences(true, true);
+			  });
 
-    acceptSelectedBtn.addEventListener('click', () => {
-      savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
-    });
+			  acceptSelectedBtn.addEventListener('click', () => {
+			    savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
+			  });
 
-    function applyConsent(consent) {
-      if (consent.analytics) {
-        const gaScript = document.createElement('script');
-        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
-        gaScript.async = true;
-        document.head.appendChild(gaScript);
+			  function applyConsent(consent) {
+			    if (consent.analytics) {
+			      const gaScript = document.createElement('script');
+			      gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
+			      gaScript.async = true;
+			      document.head.appendChild(gaScript);
 
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-7C99K0XQKV');
-      }
+			      window.dataLayer = window.dataLayer || [];
+			      function gtag(){dataLayer.push(arguments);}
+			      gtag('js', new Date());
+			      gtag('config', 'G-7C99K0XQKV');
+			    }
 
-      if (consent.marketing) {
-        // Load marketing scripts here
-      }
-    }
+			    if (consent.marketing) {
+			      // Load marketing scripts here
+			    }
+			  }
 
-    const stored = localStorage.getItem('cookieConsent');
-    if (stored) {
-      const consent = JSON.parse(stored);
-      applyConsent(consent);
-    }
-  });
-</script>
-
-
-</body>
+			  const stored = localStorage.getItem('cookieConsent');
+			  if (stored) {
+			    const consent = JSON.parse(stored);
+			    applyConsent(consent);
+			  }
+			});
+		</script>
+	</body>
 </html>
