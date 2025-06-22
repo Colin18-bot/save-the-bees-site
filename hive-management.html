@@ -1,415 +1,482 @@
 <!DOCTYPE html>
-<html lang="en">  
-  <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Hive Management | Practical Beekeeping Tips UK | BeezKnees</title>
+		<title>Hive Management | Practical Beekeeping Tips UK | BeezKnees</title>
 
-  <!-- Hamburger button -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
-  
-  <!-- Your CSS file -->
-  <link rel="stylesheet" href="css/style.css" />
+		<!-- Hamburger button -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
 
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="Master the art of hive management with BeezKnees. Learn how to inspect hives, control swarming, maintain hive 
-  health, and manage colonies through every season in the UK." />
-  <meta name="keywords" content="hive management, beekeeping UK, seasonal beekeeping tasks, swarming prevention, queen health, colony inspection, 
-  Varroa control, beekeeping checklist, sustainable beekeeping, BeezKnees guide, Colin Chorley" />
-  <meta name="author" content="Colin Chorley" />
-  
-  <!-- Favicon -->
-  <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-  <!-- 16x16 and 32x32 for classic tabs -->
-  <link rel="icon" type="image/favicon-16x16.png" sizes="16x16" href="favicon-16x16.png" />
-  <link rel="icon" type="image/favicon-32x32.png" sizes="32x32" href="favicon-32x32.png" />
-  <!-- Apple touch icon for iOS -->
-  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-  <!-- Android home screen icons -->
-  <link rel="icon" type="image/android-chrome-192x192.png" sizes="192x192" href="android-chrome-192x192.png" />
-  <link rel="icon" type="image/android-chrome-512x512.png" sizes="512x512" href="android-chrome-512x512.png" />
-  <!-- PWA manifest (optional but helpful) -->
-  <link rel="manifest" href="site.webmanifest" />
+		<!-- Your CSS file -->
+		<link rel="stylesheet" href="css/style.css" />
 
-  <!-- Schema.org Structured Data -->
-  <script type="application/ld+json">
-[
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Hive Management for Beekeepers – UK Seasonal Tips & Tools",
-    "description": "Master hive management with tips on inspections, swarming, queen health, feeding, and seasonal beekeeping in the UK.",
-    "author": {
-      "@type": "Person",
-      "name": "Colin Chorley"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "BeezKnees",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://www.beezknees.co.uk/images/BeezKnees-Logo.png"
-      }
-    },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "https://www.beezknees.co.uk/hive-management.html"
-    },
-    "image": "https://www.beezknees.co.uk/images/beekeeper-inspecting-frames.jpg",
-    "datePublished": "2024-06-01T00:00:00+00:00",
-    "dateModified": "2024-06-01T00:00:00+00:00"
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How often should I inspect my hive?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Every 7–10 days during the active season is recommended to check for queen activity and signs of disease."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What should I look for during inspections?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Check for eggs, larvae, capped brood, queen presence, space, honey stores, and pests."
-        }
-      }
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://www.beezknees.co.uk/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Hive Management",
-        "item": "https://www.beezknees.co.uk/hive-management.html"
-      }
-    ]
-  }
-]
-</script>
-</head>
-<body>
+		<!-- SEO Meta Tags -->
+		<meta
+			name="description"
+			content="Master the art of hive management with BeezKnees. Learn how to inspect hives, control swarming, maintain hive 
+  health, and manage colonies through every season in the UK."
+		/>
+		<meta
+			name="keywords"
+			content="hive management, beekeeping UK, seasonal beekeeping tasks, swarming prevention, queen health, colony inspection, 
+  Varroa control, beekeeping checklist, sustainable beekeeping, BeezKnees guide, Colin Chorley"
+		/>
+		<meta name="author" content="Colin Chorley" />
 
-   <!-- Fixed Header and Nav Container -->
-    <div class="fixed-header">
-    <header class="site-header" role="region" aria-label="Site Header">
-      <div class="header-container" role="region" aria-label="Site Branding">
-        
-        <a href="https://www.beezknees.co.uk">  
-          <img src="images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
-        </a>
-        
-        <h1 class="site-title">BeezKnees</h1>
-        
-        <!-- ✅ WORKING HAMBURGER ICON BUTTON -->
-        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-          <i class="fas fa-bars"></i>
-        </button>
-      </div>
-  </header>
-    </div>
-      
-   <!-- Navigation Bar -->
-    <nav class="navbar" role="navigation" aria-label="Main navigation">
-    <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
-    <li><a href="/index.html" title="Visit the homepage">Home</a></li>
+		<!-- Favicon -->
+		<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+		<!-- 16x16 and 32x32 for classic tabs -->
+		<link rel="icon" type="image/favicon-16x16.png" sizes="16x16" href="favicon-16x16.png" />
+		<link rel="icon" type="image/favicon-32x32.png" sizes="32x32" href="favicon-32x32.png" />
+		<!-- Apple touch icon for iOS -->
+		<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+		<!-- Android home screen icons -->
+		<link rel="icon" type="image/android-chrome-192x192.png" sizes="192x192" href="android-chrome-192x192.png" />
+		<link rel="icon" type="image/android-chrome-512x512.png" sizes="512x512" href="android-chrome-512x512.png" />
+		<!-- PWA manifest (optional but helpful) -->
+		<link rel="manifest" href="site.webmanifest" />
 
-    <li class="dropdown">
-      <a href="/about-us.html" title="Learn more about us">About</a>
-    </li>
+		<!-- Schema.org Structured Data -->
+		<script type="application/ld+json">
+			[
+			  {
+			    "@context": "https://schema.org",
+			    "@type": "Article",
+			    "headline": "Hive Management for Beekeepers – UK Seasonal Tips & Tools",
+			    "description": "Master hive management with tips on inspections, swarming, queen health, feeding, and seasonal beekeeping in the UK.",
+			    "author": {
+			      "@type": "Person",
+			      "name": "Colin Chorley"
+			    },
+			    "publisher": {
+			      "@type": "Organization",
+			      "name": "BeezKnees",
+			      "logo": {
+			        "@type": "ImageObject",
+			        "url": "https://www.beezknees.co.uk/images/BeezKnees-Logo.png"
+			      }
+			    },
+			    "mainEntityOfPage": {
+			      "@type": "WebPage",
+			      "@id": "https://www.beezknees.co.uk/hive-management.html"
+			    },
+			    "image": "https://www.beezknees.co.uk/images/beekeeper-inspecting-frames.jpg",
+			    "datePublished": "2024-06-01T00:00:00+00:00",
+			    "dateModified": "2024-06-01T00:00:00+00:00"
+			  },
+			  {
+			    "@context": "https://schema.org",
+			    "@type": "FAQPage",
+			    "mainEntity": [
+			      {
+			        "@type": "Question",
+			        "name": "How often should I inspect my hive?",
+			        "acceptedAnswer": {
+			          "@type": "Answer",
+			          "text": "Every 7–10 days during the active season is recommended to check for queen activity and signs of disease."
+			        }
+			      },
+			      {
+			        "@type": "Question",
+			        "name": "What should I look for during inspections?",
+			        "acceptedAnswer": {
+			          "@type": "Answer",
+			          "text": "Check for eggs, larvae, capped brood, queen presence, space, honey stores, and pests."
+			        }
+			      }
+			    ]
+			  },
+			  {
+			    "@context": "https://schema.org",
+			    "@type": "BreadcrumbList",
+			    "itemListElement": [
+			      {
+			        "@type": "ListItem",
+			        "position": 1,
+			        "name": "Home",
+			        "item": "https://www.beezknees.co.uk/"
+			      },
+			      {
+			        "@type": "ListItem",
+			        "position": 2,
+			        "name": "Hive Management",
+			        "item": "https://www.beezknees.co.uk/hive-management.html"
+			      }
+			    ]
+			  }
+			]
+		</script>
+	</head>
+	<body>
+		<!-- Fixed Header and Nav Container -->
+		<div class="fixed-header">
+			<header class="site-header" role="region" aria-label="Site Header">
+				<div class="header-container" role="region" aria-label="Site Branding">
+					<a href="https://www.beezknees.co.uk">
+						<img src="images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
+					</a>
 
-    <li class="dropdown">
-      <a href="/donate.html" title="Support out mission">Donate</a>
-    </li>
+					<h1 class="site-title">BeezKnees</h1>
 
-    <li class="dropdown">
-      <a href="/beekeeping-guides.html" title="Explore our beekeeping guides">Beekeeping</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/getting-started.html" title="Begin your beekeeping journey">Getting Started</a></li>
-        <li><a href="/equipment.html" title="Essential beekeeping equipment">Equipment</a></li>
-        <li><a href="/hive-management.html" title="Manage your hive effectively">Hive Management</a></li>
-        <li><a href="/varroa-management.html" title="control varroa mite infestations">Varroa Management</a></li>    
-        <li><a href="/hygiene.html" title="Keep your hive clean and healthy">Hygiene</a></li>
-        <li><a href="/bee-stings.html" title="Understand and treat bee stings">Bee Stings</a></li>
-      </ul>
-    </li>
+					<!-- ✅ WORKING HAMBURGER ICON BUTTON -->
+					<button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+						<i class="fas fa-bars"></i>
+					</button>
+				</div>
+			</header>
+		</div>
 
-    <li class="dropdown">
-      <a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary">Apiary Calendar</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/january.html" title="January beekeeping tasks">January</a></li>
-        <li><a href="/february.html" title="February beekeeping tasks">February</a></li>
-        <li><a href="/march.html" title="March beekeeping tasks">March</a></li>
-        <li><a href="/april.html" title="April beekeeping tasks">April</a></li>
-        <li><a href="/may.html" title="May beekeeping tasks">May</a></li>
-        <li><a href="/june.html" title="June beekeeping tasks">June</a></li>
-        <li><a href="/july.html" title="July beekeeping tasks">July</a></li>
-        <li><a href="/august.html" title="August beekeeping tasks">August</a></li>
-        <li><a href="/september.html" title="September beekeeping tasks">September</a></li>
-        <li><a href="/october.html" title="October beekeeping tasks">October</a></li>
-        <li><a href="/november.html" title="November beekeeping tasks">November</a></li>
-        <li><a href="/december.html" title="December beekeeping tasks">December</a></li>
-      </ul>
-    </li>
+		<!-- Navigation Bar -->
+		<nav class="navbar" role="navigation" aria-label="Main navigation">
+			<ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+				<li><a href="/index.html" title="Visit the homepage">Home</a></li>
 
-    <li class="dropdown">
-      <a href="/bee-diseases.html" title="Bee diseases and pests overview">Diseases & Pests</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/bacterial-diseases.html" title="Learn about bacterial bee diseases">Bacterial</a></li>
-        <li><a href="/viral-diseases.html" title="Learn about viral bee diseases">Viral</a></li>
-        <li><a href="/bee-pests.html" title="Common pests affecting bees">Pests</a></li>
-        <li><a href="/parasitic-mites.html" title="Parasitic mites in bee colonies">Mites</a></li>
-        <li><a href="/other-conditions.html" title="Other bee health conditions">Other Conditions</a></li>
-      </ul>
-    </li>
+				<li class="dropdown">
+					<a href="/about-us.html" title="Learn more about us">About</a>
+				</li>
 
-    <li class="dropdown">
-      <a href="/honeybee-facts.html" title="Interesting facts about honeybees">Honeybee Facts</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/anatomy.html" title="Honeybee anatomy explained">Anatomy</a></li>
-        <li><a href="/behaviour.html" title="Learn about honeybee behaviour">Behaviour</a></li>
-        <li><a href="/how-bees-make-honey.html" title="How bees make honey">Make Honey</a></li>
-        <li><a href="/pollination.html" title="Honeybee role in pollination">Pollination</a></li>
-      </ul>
-    </li>
+				<li class="dropdown">
+					<a href="/donate.html" title="Support out mission">Donate</a>
+				</li>
 
-    <li class="dropdown">
-      <a href="/help-the-bees.html" title="How you can help save the bees">Help Bees</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/bee-gardening.html" title="Make your garden bee friendly">Gardening</a></li>
-        <li><a href="/donate.html" title="Make a donation to support bees">Donate</a></li>
-        <li><a href="/report-a-swarm.html" title="Report a bee swarm">Report a Swarm</a></li>
-      </ul>
-    </li>
+				<li class="dropdown">
+					<a href="/beekeeping-guides.html" title="Explore our beekeeping guides">Beekeeping</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/getting-started.html" title="Begin your beekeeping journey">Getting Started</a></li>
+						<li><a href="/equipment.html" title="Essential beekeeping equipment">Equipment</a></li>
+						<li><a href="/hive-management.html" title="Manage your hive effectively">Hive Management</a></li>
+						<li><a href="/varroa-management.html" title="control varroa mite infestations">Varroa Management</a></li>
+						<li><a href="/hygiene.html" title="Keep your hive clean and healthy">Hygiene</a></li>
+						<li><a href="/bee-stings.html" title="Understand and treat bee stings">Bee Stings</a></li>
+					</ul>
+				</li>
 
-  </ul>
-</nav>
+				<li class="dropdown">
+					<a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary">Apiary Calendar</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/january.html" title="January beekeeping tasks">January</a></li>
+						<li><a href="/february.html" title="February beekeeping tasks">February</a></li>
+						<li><a href="/march.html" title="March beekeeping tasks">March</a></li>
+						<li><a href="/april.html" title="April beekeeping tasks">April</a></li>
+						<li><a href="/may.html" title="May beekeeping tasks">May</a></li>
+						<li><a href="/june.html" title="June beekeeping tasks">June</a></li>
+						<li><a href="/july.html" title="July beekeeping tasks">July</a></li>
+						<li><a href="/august.html" title="August beekeeping tasks">August</a></li>
+						<li><a href="/september.html" title="September beekeeping tasks">September</a></li>
+						<li><a href="/october.html" title="October beekeeping tasks">October</a></li>
+						<li><a href="/november.html" title="November beekeeping tasks">November</a></li>
+						<li><a href="/december.html" title="December beekeeping tasks">December</a></li>
+					</ul>
+				</li>
 
-  </div>
+				<li class="dropdown">
+					<a href="/bee-diseases.html" title="Bee diseases and pests overview">Diseases and Pests</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/bacterial-diseases.html" title="Learn about bacterial bee diseases">Bacterial</a></li>
+						<li><a href="/viral-diseases.html" title="Learn about viral bee diseases">Viral</a></li>
+						<li><a href="/bee-pests.html" title="Common pests affecting bees">Pests</a></li>
+						<li><a href="/parasitic-mites.html" title="Parasitic mites in bee colonies">Mites</a></li>
+						<li><a href="/other-conditions.html" title="Other bee health conditions">Other Conditions</a></li>
+					</ul>
+				</li>
 
-  <!-- Hero Banner with Image and Alt Fallback -->
-  <section role="region" aria-label="Homepage Banner">
-  <div class="banner">
-  <img src="images/beekeeper-inspecting-frames.jpg" alt="Beekeeper Inspecting Frames" />
-  </div>
-  </section>
-  
-<!-- Main Content -->
-<main class="content">
-  <h1>Hive Management for Beekeepers</h1>
+				<li class="dropdown">
+					<a href="/honeybee-facts.html" title="Interesting facts about honeybees">Honeybee Facts</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/anatomy.html" title="Honeybee anatomy explained">Anatomy</a></li>
+						<li><a href="/behaviour.html" title="Learn about honeybee behaviour">Behaviour</a></li>
+						<li><a href="/how-bees-make-honey.html" title="How bees make honey">Make Honey</a></li>
+						<li><a href="/pollination.html" title="Honeybee role in pollination">Pollination</a></li>
+					</ul>
+				</li>
 
- <p>Effective hive management is at the heart of successful beekeeping. By monitoring colony health, preventing swarming, and maintaining 
-    <em><a href="/hygiene.html" title="Keep your hive clean and healthy">hive hygiene</a></em>, beekeepers can ensure strong, 
-    productive colonies throughout the year.</p>
+				<li class="dropdown">
+					<a href="/help-the-bees.html" title="How you can help save the bees">Help Bees</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/bee-gardening.html" title="Make your garden bee friendly">Gardening</a></li>
+						<li><a href="/donate.html" title="Make a donation to support bees">Donate</a></li>
+						<li><a href="/report-a-swarm.html" title="Report a bee swarm">Report a Swarm</a></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
 
-  <strong><p>What Is Hive Management?</p></strong>
-  <p><em><a href="/hive-management.html" title="Manage your hive effectively">Hive management</a></em> involves regular inspections, 
-    feeding when necessary, disease prevention, swarm control, and maintaining optimal conditions within the hive. It’s a continuous process that adapts to the seasons and the needs of your 
-    bees.</p>
+		<!-- Hero Banner with Image and Alt Fallback -->
+		<section role="region" aria-label="Homepage Banner">
+			<div class="banner">
+				<img src="images/beekeeper-inspecting-frames.jpg" alt="Beekeeper Inspecting Frames" />
+			</div>
+		</section>
 
-  <strong><p>Key Hive Management Tasks</p></strong>
-  
-      <div class="indented-list">
-        <ul>
-          <li><p><strong>Regular Inspections:</strong> Check your hives every 7–10 days during the active season (spring to autumn). Look for 
-            signs of a healthy queen, brood pattern, food stores, and any potential problems such as pests or disease.</p></li>
-          <li><p><strong>Swarm Prevention:</strong> Watch for queen cells and overcrowding. Techniques such as splitting the hive or using a 
-            Demaree method can help prevent swarming. Learn more in our <em><a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary">seasonal 
-              beekeeping calendar</a></em>.</p></li>
-          <li><p><strong>Feeding Bees:</strong> Provide sugar syrup in spring to support growth, and fondant in winter if food stores are low. 
-            Ensure your bees have access to clean water. <em><a href="/equipment.html" title="Essential beekeeping equipment">Feeders and other tools</a></em> can make this task easier.</p></li>
-          <li><p><strong>Monitoring Queen Health:</strong> A strong queen means a strong colony. Replace failing queens if you see spotty brood 
-            patterns or reduced activity.</p></li>
-          <li><p><strong>Disease Management:</strong> Stay vigilant for signs of <em><a href="/varroa-management.html" title="control varroa mite infestations">Varroa 
-            mites</a></em>, foulbrood, chalkbrood, and other diseases. 
-            Implement IPM (Integrated Pest Management) practices when necessary. Visit our <em><a href="/bee-diseases.html" title="Bee diseases and pest overview">disease and 
-              pest section</a></em> for more info.</p></li>
-        </ul>
-      </div>
+		<!-- Main Content -->
+		<main class="content">
+			<h1>Hive Management for Beekeepers</h1>
 
-  <strong><p>Seasonal Hive Management</p></strong>
-  
-      <div class="indented-list">
-        <ul>
-          <li><p><strong>Spring:</strong> Build colony strength, check for queen activity, feed if needed, and prepare for swarming season.</p></li>
-          <li><p><strong>Summer:</strong> Monitor swarming, harvest honey, and maintain ventilation in hot weather.</p></li>
-          <li><p><strong>Autumn:</strong> Reduce hive entrances, combine weak colonies, and ensure enough honey stores for winter.</p></li>
-          <li><p><strong>Winter:</strong> Avoid disturbing the hive, insulate if necessary, and provide emergency feeding if needed.</p></li>
-        </ul>
-      </div>
+			<p>
+				Effective hive management is at the heart of successful beekeeping. By monitoring colony health, preventing swarming, and maintaining
+				<em><a href="/hygiene.html" title="Keep your hive clean and healthy">hive hygiene</a></em>, beekeepers can ensure strong, productive colonies throughout the year.
+			</p>
 
-  <strong><p>Keeping Accurate Records</p></strong>
-  <p>Good hive records help you track colony progress, identify patterns, and manage tasks efficiently. Record inspection dates, queen status, 
-    treatments applied, and honey yields.</p>
+			<strong><p>What Is Hive Management?</p></strong>
+			<p>
+				<em><a href="/hive-management.html" title="Manage your hive effectively">Hive management</a></em> involves regular inspections, feeding when necessary, disease prevention, swarm control, and maintaining optimal conditions
+				within the hive. It’s a continuous process that adapts to the seasons and the needs of your bees.
+			</p>
 
-  <strong><p>Tools for Hive Management</p></strong>
-  <p>In addition to <em><a href="/equipment.html" title="Essential beekeeping equipment">basic equipment</a></em>, consider using hive scales, 
-    inspection checklists, and a hive diary or digital app to streamline your beekeeping practices.</p>
+			<strong><p>Key Hive Management Tasks</p></strong>
 
-  <strong><p>Why Hive Management Matters</p></strong>
-  <p>Proper hive management promotes healthy colonies, maximizes honey production, reduces the risk of disease, and supports pollination in 
-    your local environment.</p>
-</main>
+			<div class="indented-list">
+				<ul>
+					<li>
+						<p>
+							<strong>Regular Inspections:</strong> Check your hives every 7–10 days during the active season (spring to autumn). Look for signs of a healthy queen, brood pattern, food stores, and any potential problems such
+							as pests or disease.
+						</p>
+					</li>
+					<li>
+						<p>
+							<strong>Swarm Prevention:</strong> Watch for queen cells and overcrowding. Techniques such as splitting the hive or using a Demaree method can help prevent swarming. Learn more in our
+							<em><a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary">seasonal beekeeping calendar</a></em>.
+						</p>
+					</li>
+					<li>
+						<p>
+							<strong>Feeding Bees:</strong> Provide sugar syrup in spring to support growth, and fondant in winter if food stores are low. Ensure your bees have access to clean water.
+							<em><a href="/equipment.html" title="Essential beekeeping equipment">Feeders and other tools</a></em> can make this task easier.
+						</p>
+					</li>
+					<li>
+						<p><strong>Monitoring Queen Health:</strong> A strong queen means a strong colony. Replace failing queens if you see spotty brood patterns or reduced activity.</p>
+					</li>
+					<li>
+						<p>
+							<strong>Disease Management:</strong> Stay vigilant for signs of <em><a href="/varroa-management.html" title="control varroa mite infestations">Varroa mites</a></em>, foulbrood, chalkbrood, and other diseases.
+							Implement IPM (Integrated Pest Management) practices when necessary. Visit our <em><a href="/bee-diseases.html" title="Bee diseases and pest overview">disease and pest section</a></em> for more info.
+						</p>
+					</li>
+				</ul>
+			</div>
 
-    <script>
-    const toggleBtn = document.getElementById('menuToggle');
-    const navMenu = document.querySelector('.nav-menu');
+			<strong><p>Seasonal Hive Management</p></strong>
 
-    toggleBtn.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-    });
-  </script>    
+			<div class="indented-list">
+				<ul>
+					<li>
+						<p><strong>Spring:</strong> Build colony strength, check for queen activity, feed if needed, and prepare for swarming season.</p>
+					</li>
+					<li>
+						<p><strong>Summer:</strong> Monitor swarming, harvest honey, and maintain ventilation in hot weather.</p>
+					</li>
+					<li>
+						<p><strong>Autumn:</strong> Reduce hive entrances, combine weak colonies, and ensure enough honey stores for winter.</p>
+					</li>
+					<li>
+						<p><strong>Winter:</strong> Avoid disturbing the hive, insulate if necessary, and provide emergency feeding if needed.</p>
+					</li>
+				</ul>
+			</div>
 
-<!-- Footer -->
-  <footer class="site-footer" role="region" aria-label="Site Footer">
-  <div class="footer-columns">
-    
-    <div class="footer-column" role="region" aria-label="Contact Information">
-      <h3>Contact</h3>
-      <address>
-      <p>Email: <a href="/contact.html" title="Send us a message via our contact page">Contact</a></p>      
-      </address>
-    </div>
+			<strong><p>Keeping Accurate Records</p></strong>
+			<p>Good hive records help you track colony progress, identify patterns, and manage tasks efficiently. Record inspection dates, queen status, treatments applied, and honey yields.</p>
 
-    <div class="footer-column" role="region" aria-label="Useful Site Links">
-      <h3>Useful Links</h3>
-      <ul>
-        <li><a href="/privacy.html" title="Read our privacy policy">Privacy Policy</a></li>
-        <li><a href="/site-map.html" title="View a map of our entire website">Site Map</a></li>
-      </ul>
-    </div>
+			<strong><p>Tools for Hive Management</p></strong>
+			<p>
+				In addition to <em><a href="/equipment.html" title="Essential beekeeping equipment">basic equipment</a></em>, consider using hive scales, inspection checklists, and a hive diary or digital app to streamline your beekeeping
+				practices.
+			</p>
 
-    <div class="footer-column" role="region" aria-label="Beekeeping Resources">
-      <h3>Resources</h3>
-        <ul>
-          <li><a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer" title="Visit the British Beekeepers Association 
-            website">British Beekeepers Association</a></li>
-          <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer" title="Visit the Cardiff Beekeepers 
-            Association site">Cardiff, Vale and Valleys Beekeepers Association</a></li>
-          <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true" target="_blank" rel="noopener 
-            noreferrer" title="Read the Honey (Wales) Regulations 2015">The Honey (Wales) Regulations 2015</a></li>
-          <li><a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer" title="Explore 
-            Bee-Friendly programme by Wales Biodiversity Partnership">Wales Biodiversity Partnership</a></li>
-        <li><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title="Access BeeBase for beekeeping 
-          information">BeeBase</a></li>
-        </ul>
-    </div>
+			<strong><p>Why Hive Management Matters</p></strong>
+			<p>Proper hive management promotes healthy colonies, maximizes honey production, reduces the risk of disease, and supports pollination in your local environment.</p>
+		</main>
 
-  </div>
+		<script>
+			const toggleBtn = document.getElementById('menuToggle');
+			const navMenu = document.querySelector('.nav-menu');
 
-  <div class="footer-bottom" role="region" aria-label="Copyright">
-    &copy; 2023 Practical Beekeeping. All rights reserved.
-  </div>
-</footer>
+			toggleBtn.addEventListener('click', () => {
+			  navMenu.classList.toggle('active');
+			});
+		</script>
 
-<!-- Cookie Consent Popup -->
-<div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
-  <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
-    <h2>🍪 We Use Cookies</h2>
-    <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
+		<!-- Footer -->
+		<footer class="site-footer" role="region" aria-label="Site Footer">
+			<div class="footer-columns">
+				<div class="footer-column" role="region" aria-label="Contact Information">
+					<h3>Contact</h3>
+					<address>
+						<p>Email: <a href="/contact.html" title="Send us a message via our contact page">Contact</a></p>
+					</address>
+				</div>
 
-    <form id="cookie-options">
-      <label><input type="checkbox" checked disabled> Essential (always active)</label><br>
-      <label><input type="checkbox" id="analytics"> Analytics</label><br>
-      <label><input type="checkbox" id="marketing"> Marketing</label><br>
-    </form>
+				<div class="footer-column" role="region" aria-label="Useful Site Links">
+					<h3>Useful Links</h3>
+					<ul>
+						<li><a href="/privacy.html" title="Read our privacy policy">Privacy Policy</a></li>
+						<li><a href="/site-map.html" title="View a map of our entire website">Site Map</a></li>
+					</ul>
+				</div>
 
-    <div class="cookie-buttons">
-      <button id="accept-selected">Accept Selected</button>
-      <button id="accept-all">Accept All</button>
-    </div>
-  </div>
-</div>
+				<div class="footer-column" role="region" aria-label="Beekeeping Resources">
+					<h3>Resources</h3>
+					<ul>
+						<li>
+							<a
+								href="https://www.bbka.org.uk/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Visit the British Beekeepers Association 
+            website"
+							>
+								British Beekeepers Association
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.cardiffbeekeepers.co.uk/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Visit the Cardiff Beekeepers 
+            Association site"
+							>
+								Cardiff, Vale and Valleys Beekeepers Association
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
+								target="_blank"
+								rel="noopener 
+            noreferrer"
+								title="Read the Honey (Wales) Regulations 2015"
+							>
+								The Honey (Wales) Regulations 2015
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.biodiversitywales.org.uk/Bee-Friendly"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Explore 
+            Bee-Friendly programme by Wales Biodiversity Partnership"
+							>
+								Wales Biodiversity Partnership
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.nationalbeeunit.com/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Access BeeBase for beekeeping 
+          information"
+							>
+								BeeBase
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
 
-<!-- Back to Top Button -->
-<button id="backToTop" title="Back to top" aria-label="Back to top">
-  ⬆ Top
-</button>
+			<div class="footer-bottom" role="region" aria-label="Copyright">
+				&copy; 2023 Practical Beekeeping. All rights reserved.
+			</div>
+		</footer>
 
-<!-- ============================================
+		<!-- Cookie Consent Popup -->
+		<div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
+			<div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+				<h2>🍪 We Use Cookies</h2>
+				<p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
+
+				<form id="cookie-options">
+					<label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
+					<label><input type="checkbox" id="analytics" /> Analytics</label><br />
+					<label><input type="checkbox" id="marketing" /> Marketing</label><br />
+				</form>
+
+				<div class="cookie-buttons">
+					<button id="accept-selected">Accept Selected</button>
+					<button id="accept-all">Accept All</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Back to Top Button -->
+		<button id="backToTop" title="Back to top" aria-label="Back to top">
+			⬆ Top
+		</button>
+
+		<!-- ============================================
      📁 JavaScript: Mobile Menu Interactions
      - Toggles hamburger menu on mobile
      - Closes menu on link click or outside click
      ============================================ -->
-<script src="js/menu.js"></script>
+		<script src="js/menu.js"></script>
 
-<!-- Google Analytics with Cookie Consent -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const popup = document.getElementById('cookie-consent');
-    const acceptAllBtn = document.getElementById('accept-all');
-    const acceptSelectedBtn = document.getElementById('accept-selected');
-    const analyticsCheckbox = document.getElementById('analytics');
-    const marketingCheckbox = document.getElementById('marketing');
+		<!-- Google Analytics with Cookie Consent -->
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+			  const popup = document.getElementById('cookie-consent');
+			  const acceptAllBtn = document.getElementById('accept-all');
+			  const acceptSelectedBtn = document.getElementById('accept-selected');
+			  const analyticsCheckbox = document.getElementById('analytics');
+			  const marketingCheckbox = document.getElementById('marketing');
 
-    if (!localStorage.getItem('cookieConsent')) {
-      popup.style.display = 'block';
-    }
+			  if (!localStorage.getItem('cookieConsent')) {
+			    popup.style.display = 'block';
+			  }
 
-    function savePreferences(analytics, marketing) {
-      const consent = {
-        essential: true,
-        analytics: analytics,
-        marketing: marketing
-      };
-      localStorage.setItem('cookieConsent', JSON.stringify(consent));
-      popup.style.display = 'none';
-      applyConsent(consent);
-    }
+			  function savePreferences(analytics, marketing) {
+			    const consent = {
+			      essential: true,
+			      analytics: analytics,
+			      marketing: marketing
+			    };
+			    localStorage.setItem('cookieConsent', JSON.stringify(consent));
+			    popup.style.display = 'none';
+			    applyConsent(consent);
+			  }
 
-    acceptAllBtn.addEventListener('click', () => {
-      savePreferences(true, true);
-    });
+			  acceptAllBtn.addEventListener('click', () => {
+			    savePreferences(true, true);
+			  });
 
-    acceptSelectedBtn.addEventListener('click', () => {
-      savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
-    });
+			  acceptSelectedBtn.addEventListener('click', () => {
+			    savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
+			  });
 
-    function applyConsent(consent) {
-      if (consent.analytics) {
-        const gaScript = document.createElement('script');
-        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
-        gaScript.async = true;
-        document.head.appendChild(gaScript);
+			  function applyConsent(consent) {
+			    if (consent.analytics) {
+			      const gaScript = document.createElement('script');
+			      gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
+			      gaScript.async = true;
+			      document.head.appendChild(gaScript);
 
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-7C99K0XQKV');
-      }
+			      window.dataLayer = window.dataLayer || [];
+			      function gtag(){dataLayer.push(arguments);}
+			      gtag('js', new Date());
+			      gtag('config', 'G-7C99K0XQKV');
+			    }
 
-      if (consent.marketing) {
-        // Load marketing scripts here
-      }
-    }
+			    if (consent.marketing) {
+			      // Load marketing scripts here
+			    }
+			  }
 
-    const stored = localStorage.getItem('cookieConsent');
-    if (stored) {
-      const consent = JSON.parse(stored);
-      applyConsent(consent);
-    }
-  });
-</script>
-
-</body>
+			  const stored = localStorage.getItem('cookieConsent');
+			  if (stored) {
+			    const consent = JSON.parse(stored);
+			    applyConsent(consent);
+			  }
+			});
+		</script>
+	</body>
 </html>

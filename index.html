@@ -1,421 +1,460 @@
 <!DOCTYPE html>
-<html lang="en">  
-  <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>BeezKnees | Practical Beekeeping Guide & Tips</title>
+		<title>BeezKnees | Practical Beekeeping Guide and Tips</title>
 
-  <!-- Hamburger button -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
-  
-  <!-- Your CSS file -->
-  <link rel="stylesheet" href="css/style.css" />
+		<!-- Hamburger button -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
 
-  <!-- SEO Meta Tags -->
-  <meta name="description" content="BeezKnees is your practical beekeeping guide, offering seasonal tips, hive health advice, and pollinator 
-  protection resources for beginners and experienced keepers alike." />
-  <meta name="keywords" content="beekeeping guide, practical beekeeping, hive care, pollinator protection, apiary tips, seasonal hive tasks, 
-  queen rearing, swarm control, beekeeping for beginners, beekeeping resources" />
-  <meta name="author" content="Colin Chorley" />
+		<!-- Your CSS file -->
+		<link rel="stylesheet" href="css/style.css" />
 
+		<!-- SEO Meta Tags -->
+		<meta
+			name="description"
+			content="BeezKnees is your practical beekeeping guide, offering seasonal tips, hive health advice, and pollinator 
+  protection resources for beginners and experienced keepers alike."
+		/>
+		<meta
+			name="keywords"
+			content="beekeeping guide, practical beekeeping, hive care, pollinator protection, apiary tips, seasonal hive tasks, 
+  queen rearing, swarm control, beekeeping for beginners, beekeeping resources"
+		/>
+		<meta name="author" content="Colin Chorley" />
 
-  <!-- Favicon -->
-  <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-  <!-- 16x16 and 32x32 for classic tabs -->
-  <link rel="icon" type="image/favicon-16x16.png" sizes="16x16" href="favicon-16x16.png" />
-  <link rel="icon" type="image/favicon-32x32.png" sizes="32x32" href="favicon-32x32.png" />
-  <!-- Apple touch icon for iOS -->
-  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-  <!-- Android home screen icons -->
-  <link rel="icon" type="image/android-chrome-192x192.png" sizes="192x192" href="android-chrome-192x192.png" />
-  <link rel="icon" type="image/android-chrome-512x512.png" sizes="512x512" href="android-chrome-512x512.png" />
-  <!-- PWA manifest (optional but helpful) -->
-  <link rel="manifest" href="site.webmanifest" />
+		<!-- Favicon -->
+		<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+		<!-- 16x16 and 32x32 for classic tabs -->
+		<link rel="icon" type="image/favicon-16x16.png" sizes="16x16" href="favicon-16x16.png" />
+		<link rel="icon" type="image/favicon-32x32.png" sizes="32x32" href="favicon-32x32.png" />
+		<!-- Apple touch icon for iOS -->
+		<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+		<!-- Android home screen icons -->
+		<link rel="icon" type="image/android-chrome-192x192.png" sizes="192x192" href="android-chrome-192x192.png" />
+		<link rel="icon" type="image/android-chrome-512x512.png" sizes="512x512" href="android-chrome-512x512.png" />
+		<!-- PWA manifest (optional but helpful) -->
+		<link rel="manifest" href="site.webmanifest" />
 
-  <!-- Schema.org Structured Data -->
-  <script type="application/ld+json">
-[
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "BeezKnees",
-    "url": "https://www.beezknees.co.uk",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://www.beezknees.co.uk/search?q={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "BeezKnees",
-    "url": "https://www.beezknees.co.uk",
-    "logo": "https://www.beezknees.co.uk/images/BeezKnees-Logo.png",
-    "sameAs": [
-      "https://www.tiktok.com/@colinchorley"
-    ],
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "Customer Service",
-      "email": "info@beezknees.co.uk"
-    }
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "BeezKnees | Practical Beekeeping Guide & Tips",
-    "url": "https://www.beezknees.co.uk",
-    "description": "BeezKnees offers seasonal beekeeping tips, hive health advice, and beginner-friendly guides to help you support your 
-    bees and protect pollinators.",
-    "publisher": {
-      "@type": "Organization",
-      "name": "BeezKnees",
-      "url": "https://www.beezknees.co.uk"
-    }
-  }
-]
-</script>
-</head>
+		<!-- Schema.org Structured Data -->
+		<script type="application/ld+json">
+			[
+			  {
+			    "@context": "https://schema.org",
+			    "@type": "WebSite",
+			    "name": "BeezKnees",
+			    "url": "https://www.beezknees.co.uk",
+			    "potentialAction": {
+			      "@type": "SearchAction",
+			      "target": "https://www.beezknees.co.uk/search?q={search_term_string}",
+			      "query-input": "required name=search_term_string"
+			    }
+			  },
+			  {
+			    "@context": "https://schema.org",
+			    "@type": "Organization",
+			    "name": "BeezKnees",
+			    "url": "https://www.beezknees.co.uk",
+			    "logo": "https://www.beezknees.co.uk/images/BeezKnees-Logo.png",
+			    "sameAs": [
+			      "https://www.tiktok.com/@colinchorley"
+			    ],
+			    "contactPoint": {
+			      "@type": "ContactPoint",
+			      "contactType": "Customer Service",
+			      "email": "info@beezknees.co.uk"
+			    }
+			  },
+			  {
+			    "@context": "https://schema.org",
+			    "@type": "WebPage",
+			    "name": "BeezKnees | Practical Beekeeping Guide & Tips",
+			    "url": "https://www.beezknees.co.uk",
+			    "description": "BeezKnees offers seasonal beekeeping tips, hive health advice, and beginner-friendly guides to help you support your
+			    bees and protect pollinators.",
+			    "publisher": {
+			      "@type": "Organization",
+			      "name": "BeezKnees",
+			      "url": "https://www.beezknees.co.uk"
+			    }
+			  }
+			]
+		</script>
+	</head>
 
-  <body>
-     <!-- Fixed Header and Nav Container -->
-    <div class="fixed-header">
-    <header class="site-header" role="region" aria-label="Site Header">
-      <div class="header-container" role="region" aria-label="Site Branding">
-        
-        <a href="https://www.beezknees.co.uk">  
-          <img src="images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
-        </a>
-        
-        <h1 class="site-title">BeezKnees</h1>
+	<body>
+		<!-- Fixed Header and Nav Container -->
+		<div class="fixed-header">
+			<header class="site-header" role="region" aria-label="Site Header">
+				<div class="header-container" role="region" aria-label="Site Branding">
+					<a href="https://www.beezknees.co.uk">
+						<img src="images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
+					</a>
 
-        <!-- ✅ WORKING HAMBURGER ICON BUTTON -->
-        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-          <i class="fas fa-bars"></i>
-        </button>
+					<h1 class="site-title">BeezKnees</h1>
 
-    </div>
-  </header>
-    </div>
-  
- <!-- Navigation Bar -->
-    <nav class="navbar" role="navigation" aria-label="Main navigation">
-    <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
-    <li><a href="/index.html" title="Visit the homepage">Home</a></li>
+					<!-- ✅ WORKING HAMBURGER ICON BUTTON -->
+					<button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+						<i class="fas fa-bars"></i>
+					</button>
+				</div>
+			</header>
+		</div>
 
-    <li class="dropdown">
-      <a href="/about-us.html" title="Learn more about us">About</a>
-    </li>
+		<!-- Navigation Bar -->
+		<nav class="navbar" role="navigation" aria-label="Main navigation">
+			<ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+				<li><a href="/index.html" title="Visit the homepage">Home</a></li>
 
-    <li class="dropdown">
-      <a href="/donate.html" title="Support out mission">Donate</a>
-    </li>
+				<li class="dropdown">
+					<a href="/about-us.html" title="Learn more about us">About</a>
+				</li>
 
-    <li class="dropdown">
-      <a href="/beekeeping-guides.html" title="Explore our beekeeping guides">Beekeeping</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/getting-started.html" title="Begin your beekeeping journey">Getting Started</a></li>
-        <li><a href="/equipment.html" title="Essential beekeeping equipment">Equipment</a></li>
-        <li><a href="/hive-management.html" title="Manage your hive effectively">Hive Management</a></li>
-        <li><a href="/varroa-management.html" title="control varroa mite infestations">Varroa Management</a></li>    
-        <li><a href="/hygiene.html" title="Keep your hive clean and healthy">Hygiene</a></li>
-        <li><a href="/bee-stings.html" title="Understand and treat bee stings">Bee Stings</a></li>
-      </ul>
-    </li>
+				<li class="dropdown">
+					<a href="/donate.html" title="Support out mission">Donate</a>
+				</li>
 
-    <li class="dropdown">
-      <a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary">Apiary Calendar</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/january.html" title="January beekeeping tasks">January</a></li>
-        <li><a href="/february.html" title="February beekeeping tasks">February</a></li>
-        <li><a href="/march.html" title="March beekeeping tasks">March</a></li>
-        <li><a href="/april.html" title="April beekeeping tasks">April</a></li>
-        <li><a href="/may.html" title="May beekeeping tasks">May</a></li>
-        <li><a href="/june.html" title="June beekeeping tasks">June</a></li>
-        <li><a href="/july.html" title="July beekeeping tasks">July</a></li>
-        <li><a href="/august.html" title="August beekeeping tasks">August</a></li>
-        <li><a href="/september.html" title="September beekeeping tasks">September</a></li>
-        <li><a href="/october.html" title="October beekeeping tasks">October</a></li>
-        <li><a href="/november.html" title="November beekeeping tasks">November</a></li>
-        <li><a href="/december.html" title="December beekeeping tasks">December</a></li>
-      </ul>
-    </li>
+				<li class="dropdown">
+					<a href="/beekeeping-guides.html" title="Explore our beekeeping guides">Beekeeping</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/getting-started.html" title="Begin your beekeeping journey">Getting Started</a></li>
+						<li><a href="/equipment.html" title="Essential beekeeping equipment">Equipment</a></li>
+						<li><a href="/hive-management.html" title="Manage your hive effectively">Hive Management</a></li>
+						<li><a href="/varroa-management.html" title="control varroa mite infestations">Varroa Management</a></li>
+						<li><a href="/hygiene.html" title="Keep your hive clean and healthy">Hygiene</a></li>
+						<li><a href="/bee-stings.html" title="Understand and treat bee stings">Bee Stings</a></li>
+					</ul>
+				</li>
 
-    <li class="dropdown">
-      <a href="/bee-diseases.html" title="Bee diseases and pests overview">Diseases & Pests</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/bacterial-diseases.html" title="Learn about bacterial bee diseases">Bacterial</a></li>
-        <li><a href="/viral-diseases.html" title="Learn about viral bee diseases">Viral</a></li>
-        <li><a href="/bee-pests.html" title="Common pests affecting bees">Pests</a></li>
-        <li><a href="/parasitic-mites.html" title="Parasitic mites in bee colonies">Mites</a></li>
-        <li><a href="/other-conditions.html" title="Other bee health conditions">Other Conditions</a></li>
-      </ul>
-    </li>
+				<li class="dropdown">
+					<a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary">Apiary Calendar</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/january.html" title="January beekeeping tasks">January</a></li>
+						<li><a href="/february.html" title="February beekeeping tasks">February</a></li>
+						<li><a href="/march.html" title="March beekeeping tasks">March</a></li>
+						<li><a href="/april.html" title="April beekeeping tasks">April</a></li>
+						<li><a href="/may.html" title="May beekeeping tasks">May</a></li>
+						<li><a href="/june.html" title="June beekeeping tasks">June</a></li>
+						<li><a href="/july.html" title="July beekeeping tasks">July</a></li>
+						<li><a href="/august.html" title="August beekeeping tasks">August</a></li>
+						<li><a href="/september.html" title="September beekeeping tasks">September</a></li>
+						<li><a href="/october.html" title="October beekeeping tasks">October</a></li>
+						<li><a href="/november.html" title="November beekeeping tasks">November</a></li>
+						<li><a href="/december.html" title="December beekeeping tasks">December</a></li>
+					</ul>
+				</li>
 
-    <li class="dropdown">
-      <a href="/honeybee-facts.html" title="Interesting facts about honeybees">Honeybee Facts</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/anatomy.html" title="Honeybee anatomy explained">Anatomy</a></li>
-        <li><a href="/behaviour.html" title="Learn about honeybee behaviour">Behaviour</a></li>
-        <li><a href="/how-bees-make-honey.html" title="How bees make honey">Make Honey</a></li>
-        <li><a href="/pollination.html" title="Honeybee role in pollination">Pollination</a></li>
-      </ul>
-    </li>
+				<li class="dropdown">
+					<a href="/bee-diseases.html" title="Bee diseases and pests overview">Diseases and Pests</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/bacterial-diseases.html" title="Learn about bacterial bee diseases">Bacterial</a></li>
+						<li><a href="/viral-diseases.html" title="Learn about viral bee diseases">Viral</a></li>
+						<li><a href="/bee-pests.html" title="Common pests affecting bees">Pests</a></li>
+						<li><a href="/parasitic-mites.html" title="Parasitic mites in bee colonies">Mites</a></li>
+						<li><a href="/other-conditions.html" title="Other bee health conditions">Other Conditions</a></li>
+					</ul>
+				</li>
 
-    <li class="dropdown">
-      <a href="/help-the-bees.html" title="How you can help save the bees">Help Bees</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/bee-gardening.html" title="Make your garden bee friendly">Gardening</a></li>
-        <li><a href="/donate.html" title="Make a donation to support bees">Donate</a></li>
-        <li><a href="/report-a-swarm.html" title="Report a bee swarm">Report a Swarm</a></li>
-      </ul>
-    </li>
+				<li class="dropdown">
+					<a href="/honeybee-facts.html" title="Interesting facts about honeybees">Honeybee Facts</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/anatomy.html" title="Honeybee anatomy explained">Anatomy</a></li>
+						<li><a href="/behaviour.html" title="Learn about honeybee behaviour">Behaviour</a></li>
+						<li><a href="/how-bees-make-honey.html" title="How bees make honey">Make Honey</a></li>
+						<li><a href="/pollination.html" title="Honeybee role in pollination">Pollination</a></li>
+					</ul>
+				</li>
 
-  </ul>
-</nav>
+				<li class="dropdown">
+					<a href="/help-the-bees.html" title="How you can help save the bees">Help Bees</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/bee-gardening.html" title="Make your garden bee friendly">Gardening</a></li>
+						<li><a href="/donate.html" title="Make a donation to support bees">Donate</a></li>
+						<li><a href="/report-a-swarm.html" title="Report a bee swarm">Report a Swarm</a></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
 
-  </div>
+		<!-- Hero Banner with Image and Alt Fallback -->
+		<section role="region" aria-label="Homepage Banner">
+			<div class="banner">
+				<img src="images/honeybee-on-orange-flower.jpg" alt="Image of a Honeybee on an Orange Flower" />
+			</div>
 
-<!-- Hero Banner with Image and Alt Fallback -->
-<section role="region" aria-label="Homepage Banner">
-  <div class="banner">
-    <img src="images/honeybee-on-orange-flower.jpg" alt="Image of a Honeybee on an Orange Flower" />
-  </div>
+			<!-- Static Text Box -->
+			<div class="carousel-caption">
+				<h2>Welcome to BeezKnees</h2>
+				<p>A hands-on resource for modern beekeepers who care</p>
+				<p>about their hives — and the planet.</p>
+			</div>
+		</section>
 
-  <!-- Static Text Box -->
-  <div class="carousel-caption">
-    <h2>Welcome to BeezKnees</h2>
-    <p>A hands-on resource for modern beekeepers who care</p>
-    <p>about their hives — and the planet.</p>
-  </div>
-</section>
+		<!-- Main Content -->
+		<main class="content" aria-label="Main Beekeeping Content">
+			<!-- Welcome Section: Image Left, Text Right -->
+			<section class="container" role="region" aria-label="Welcome Section">
+				<div class="row">
+					<div class="img-box">
+						<img src="images/Lavendar-Field.jpg" alt="Picture of Spring Flowers" />
+					</div>
+					<div class="text-box">
+						<h1>Welcome to BeezKnees</h1>
+						<p>
+							We offer practical guides to honeybee conservation and beginner-friendly beekeeping. Our mission is to raise awareness about the vital role bees play in pollination and food production, while offering tips and
+							tools to help you care for your hives, support pollinators, and learn the basics of beekeeping — one hive at a time.
+						</p>
+					</div>
+				</div>
+			</section>
 
-<!-- Main Content -->
-<main class="content" aria-label="Main Beekeeping Content">
+			<!-- Purpose Section: Text Left, Image Right (reverse layout) -->
+			<section class="container" role="region" aria-label="Purpose Section">
+				<div class="row reverse">
+					<div class="img-box">
+						<img src="images/hive_1.jpg" alt="Inside the Hive" />
+					</div>
+					<div class="text-box">
+						<h2>Our Purpose</h2>
+						<p>
+							BeezKnees exists to help you care for your hives and protect pollinators. We combine practical knowledge with conservation to make beekeeping easier, smarter, and more impactful. Whether you're a beginner or an
+							experienced keeper, we provide expert tips, seasonal tasks, and disease awareness to support your journey — and the bees. Our goal is to build confidence, inform beekeepers and inspire action to safeguard our
+							pollinators for future generations.
+						</p>
+					</div>
+				</div>
+			</section>
 
-  <!-- Welcome Section: Image Left, Text Right -->
-  <section class="container" role="region" aria-label="Welcome Section">
-    <div class="row">
-      <div class="img-box">
-        <img src="images/Lavendar-Field.jpg" alt="Picture of Spring Flowers">
-      </div>
-      <div class="text-box">
-        <h1>Welcome to BeezKnees</h1>
-        <p>
-          We offer practical guides to honeybee conservation and beginner-friendly beekeeping. Our mission is to raise awareness about the vital 
-          role bees play in pollination and food production, while offering tips and tools to help you care for your hives, support pollinators, 
-          and learn the basics of beekeeping — one hive at a time.
-        </p>
-      </div>
-    </div>
-  </section>
+			<!-- Card Grid Section -->
+			<section class="container" role="region" aria-label="Explore Section">
+				<h2>Explore More.....</h2>
+				<div class="grid">
+					<div class="card">
+						<img src="images/bees-in-hive.jpg" alt="Honeybees Inside Hive" />
+						<div class="card-content">
+							<h3>About Us</h3>
+							<p>
+								BeezKnees is a friendly guide to beekeeping and pollinator protection. Created by hobbyist beekeeper Colin Chorley, our goal is to make beekeeping simple, accessible, and rewarding. Whether you're starting
+								your first hive or curious about bees, we’re here to help.
+							</p>
+							<a href="/about-us.html" title="Learn more about us" class="read-more">Learn More</a>
+						</div>
+					</div>
 
-  <!-- Purpose Section: Text Left, Image Right (reverse layout) -->
-  <section class="container" role="region" aria-label="Purpose Section">
-    <div class="row reverse">
-      <div class="img-box">
-        <img src="images/hive_1.jpg" alt="Inside the Hive">
-      </div>
-      <div class="text-box">
-        <h2>Our Purpose</h2>
-        <p>
-          BeezKnees exists to help you care for your hives and protect pollinators.
-          We combine practical knowledge with conservation to make beekeeping easier, smarter, and more impactful.
-          Whether you're a beginner or an experienced keeper,
-          we provide expert tips, seasonal tasks, and disease awareness to support your journey — and the bees.
-          Our goal is to build confidence, inform beekeepers and inspire action to safeguard our pollinators for future generations.
-        </p>
-      </div>
-    </div>
-  </section>
+					<div class="card">
+						<img src="images/flowers.jpg" alt="Spring Flowers" />
+						<div class="card-content">
+							<h3>How You Can Help</h3>
+							<p>
+								You don’t need to be a beekeeper to support honeybees. Simple actions like planting seasonal flowers, avoiding pesticides, and offering water or nesting sites can make a big difference. You can also support
+								local beekeepers and raise awareness to help protect pollinators.
+							</p>
+							<a href="/help-the-bees.html" title="How you can help save the bees" class="read-more">Get Involved</a>
+						</div>
+					</div>
 
-  <!-- Card Grid Section -->
-  <section class="container" role="region" aria-label="Explore Section">
-    <h2>Explore More.....</h2>
-    <div class="grid">
-      <div class="card">
-        <img src="images/bees-in-hive.jpg" alt="Honeybees Inside Hive">
-        <div class="card-content">
-          <h3>About Us</h3>
-          <p>BeezKnees is a friendly guide to beekeeping and pollinator protection. Created by hobbyist beekeeper Colin Chorley, our goal is to 
-            make beekeeping simple, accessible, and rewarding. Whether you're starting your first hive or curious about bees, we’re here to 
-            help.</p>
-          <a href="/about-us.html" title="Learn more about us" class="read-more">Learn More</a>
-        </div>
-      </div>
+					<div class="card">
+						<img src="images/Apiary.jpg" alt="Typical Apiary" />
+						<div class="card-content">
+							<h3>An Apiary Year</h3>
+							<p>
+								Beekeeping changes with the seasons. From winter checks and early spring feeding to swarm control in summer and preparing hives for autumn, each month brings key tasks. Our calendar guides you through
+								seasonal jobs to keep your bees healthy all year.
+							</p>
+							<a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary" class="read-more">Explore More</a>
+						</div>
+					</div>
+				</div>
+			</section>
+		</main>
+		<script>
+			const toggleBtn = document.getElementById('menuToggle');
+			const navMenu = document.querySelector('.nav-menu');
 
-      <div class="card">
-        <img src="images/flowers.jpg" alt="Spring Flowers">
-        <div class="card-content">
-          <h3>How You Can Help</h3>
-          <p>You don’t need to be a beekeeper to support honeybees. Simple actions like planting 
-            seasonal flowers, avoiding pesticides, and offering water or nesting sites can make a 
-            big difference. You can also support local beekeepers and raise awareness to help 
-            protect pollinators.</p>
-          <a href="/help-the-bees.html" title="How you can help save the bees" class="read-more">Get Involved</a>
-        </div>
-      </div>
+			toggleBtn.addEventListener('click', () => {
+			  navMenu.classList.toggle('active');
+			});
+		</script>
 
-      <div class="card">
-        <img src="images/Apiary.jpg" alt="Typical Apiary">
-        <div class="card-content">
-          <h3>An Apiary Year</h3>
-          <p>Beekeeping changes with the seasons. From winter checks and early spring feeding
-            to swarm control in summer and preparing hives for autumn, each month brings key tasks. 
-            Our calendar guides you through seasonal jobs to keep your bees healthy all year.</p>
-          <a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary" class="read-more">Explore More</a>
-        </div>
-      </div>
-    </div>
-  </section>
+		<!-- Footer -->
+		<footer class="site-footer" role="region" aria-label="Site Footer">
+			<div class="footer-columns">
+				<div class="footer-column" role="region" aria-label="Contact Information">
+					<h3>Contact</h3>
+					<address>
+						<p>Email: <a href="/contact.html" title="Send us a message via our contact page">Contact</a></p>
+					</address>
+				</div>
 
-</main>
-  <script>
-    const toggleBtn = document.getElementById('menuToggle');
-    const navMenu = document.querySelector('.nav-menu');
+				<div class="footer-column" role="region" aria-label="Useful Site Links">
+					<h3>Useful Links</h3>
+					<ul>
+						<li><a href="/privacy.html" title="Read our privacy policy">Privacy Policy</a></li>
+						<li><a href="/site-map.html" title="View a map of our entire website">Site Map</a></li>
+					</ul>
+				</div>
 
-    toggleBtn.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-    });
-  </script>    
+				<div class="footer-column" role="region" aria-label="Beekeeping Resources">
+					<h3>Resources</h3>
+					<ul>
+						<li>
+							<a
+								href="https://www.bbka.org.uk/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Visit the British Beekeepers Association 
+            website"
+							>
+								British Beekeepers Association
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.cardiffbeekeepers.co.uk/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Visit the Cardiff Beekeepers 
+            Association site"
+							>
+								Cardiff, Vale and Valleys Beekeepers Association
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
+								target="_blank"
+								rel="noopener 
+            noreferrer"
+								title="Read the Honey (Wales) Regulations 2015"
+							>
+								The Honey (Wales) Regulations 2015
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.biodiversitywales.org.uk/Bee-Friendly"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Explore 
+            Bee-Friendly programme by Wales Biodiversity Partnership"
+							>
+								Wales Biodiversity Partnership
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.nationalbeeunit.com/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Access BeeBase for beekeeping 
+          information"
+							>
+								BeeBase
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
 
-<!-- Footer -->
-  <footer class="site-footer" role="region" aria-label="Site Footer">
-  <div class="footer-columns">
-    
-    <div class="footer-column" role="region" aria-label="Contact Information">
-      <h3>Contact</h3>
-      <address>
-      <p>Email: <a href="/contact.html" title="Send us a message via our contact page">Contact</a></p>      
-      </address>
-    </div>
+			<div class="footer-bottom" role="region" aria-label="Copyright">
+				&copy; 2023 Practical Beekeeping. All rights reserved.
+			</div>
+		</footer>
 
-    <div class="footer-column" role="region" aria-label="Useful Site Links">
-      <h3>Useful Links</h3>
-      <ul>
-        <li><a href="/privacy.html" title="Read our privacy policy">Privacy Policy</a></li>
-        <li><a href="/site-map.html" title="View a map of our entire website">Site Map</a></li>
-      </ul>
-    </div>
+		<!-- Cookie Consent Popup -->
+		<div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
+			<div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+				<h2>🍪 We Use Cookies</h2>
+				<p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
 
-    <div class="footer-column" role="region" aria-label="Beekeeping Resources">
-      <h3>Resources</h3>
-        <ul>
-          <li><a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer" title="Visit the British Beekeepers Association 
-            website">British Beekeepers Association</a></li>
-          <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer" title="Visit the Cardiff Beekeepers 
-            Association site">Cardiff, Vale and Valleys Beekeepers Association</a></li>
-          <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true" target="_blank" rel="noopener 
-            noreferrer" title="Read the Honey (Wales) Regulations 2015">The Honey (Wales) Regulations 2015</a></li>
-          <li><a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer" title="Explore 
-            Bee-Friendly programme by Wales Biodiversity Partnership">Wales Biodiversity Partnership</a></li>
-        <li><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title="Access BeeBase for beekeeping 
-          information">BeeBase</a></li>
-        </ul>
-    </div>
+				<form id="cookie-options">
+					<label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
+					<label><input type="checkbox" id="analytics" /> Analytics</label><br />
+					<label><input type="checkbox" id="marketing" /> Marketing</label><br />
+				</form>
 
-  </div>
+				<div class="cookie-buttons">
+					<button id="accept-selected">Accept Selected</button>
+					<button id="accept-all">Accept All</button>
+				</div>
+			</div>
+		</div>
 
-  <div class="footer-bottom" role="region" aria-label="Copyright">
-    &copy; 2023 Practical Beekeeping. All rights reserved.
-  </div>
-</footer>
+		<!-- Back to Top Button -->
+		<button id="backToTop" title="Back to top" aria-label="Back to top">
+			⬆ Top
+		</button>
 
-<!-- Cookie Consent Popup -->
-<div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
-  <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
-    <h2>🍪 We Use Cookies</h2>
-    <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
-
-    <form id="cookie-options">
-      <label><input type="checkbox" checked disabled> Essential (always active)</label><br>
-      <label><input type="checkbox" id="analytics"> Analytics</label><br>
-      <label><input type="checkbox" id="marketing"> Marketing</label><br>
-    </form>
-
-    <div class="cookie-buttons">
-      <button id="accept-selected">Accept Selected</button>
-      <button id="accept-all">Accept All</button>
-    </div>
-  </div>
-</div>
-
-<!-- Back to Top Button -->
-<button id="backToTop" title="Back to top" aria-label="Back to top">
-  ⬆ Top
-</button>
-
-<!-- ============================================
+		<!-- ============================================
      📁 JavaScript: Mobile Menu Interactions
      - Toggles hamburger menu on mobile
      - Closes menu on link click or outside click
      ============================================ -->
-<script src="js/menu.js"></script>
+		<script src="js/menu.js"></script>
 
+		<!-- Google Analytics with Cookie Consent -->
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+			  const popup = document.getElementById('cookie-consent');
+			  const acceptAllBtn = document.getElementById('accept-all');
+			  const acceptSelectedBtn = document.getElementById('accept-selected');
+			  const analyticsCheckbox = document.getElementById('analytics');
+			  const marketingCheckbox = document.getElementById('marketing');
 
-<!-- Google Analytics with Cookie Consent -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const popup = document.getElementById('cookie-consent');
-    const acceptAllBtn = document.getElementById('accept-all');
-    const acceptSelectedBtn = document.getElementById('accept-selected');
-    const analyticsCheckbox = document.getElementById('analytics');
-    const marketingCheckbox = document.getElementById('marketing');
+			  if (!localStorage.getItem('cookieConsent')) {
+			    popup.style.display = 'block';
+			  }
 
-    if (!localStorage.getItem('cookieConsent')) {
-      popup.style.display = 'block';
-    }
+			  function savePreferences(analytics, marketing) {
+			    const consent = {
+			      essential: true,
+			      analytics: analytics,
+			      marketing: marketing
+			    };
+			    localStorage.setItem('cookieConsent', JSON.stringify(consent));
+			    popup.style.display = 'none';
+			    applyConsent(consent);
+			  }
 
-    function savePreferences(analytics, marketing) {
-      const consent = {
-        essential: true,
-        analytics: analytics,
-        marketing: marketing
-      };
-      localStorage.setItem('cookieConsent', JSON.stringify(consent));
-      popup.style.display = 'none';
-      applyConsent(consent);
-    }
+			  acceptAllBtn.addEventListener('click', () => {
+			    savePreferences(true, true);
+			  });
 
-    acceptAllBtn.addEventListener('click', () => {
-      savePreferences(true, true);
-    });
+			  acceptSelectedBtn.addEventListener('click', () => {
+			    savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
+			  });
 
-    acceptSelectedBtn.addEventListener('click', () => {
-      savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
-    });
+			  function applyConsent(consent) {
+			    if (consent.analytics) {
+			      const gaScript = document.createElement('script');
+			      gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
+			      gaScript.async = true;
+			      document.head.appendChild(gaScript);
 
-    function applyConsent(consent) {
-      if (consent.analytics) {
-        const gaScript = document.createElement('script');
-        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
-        gaScript.async = true;
-        document.head.appendChild(gaScript);
+			      window.dataLayer = window.dataLayer || [];
+			      function gtag(){dataLayer.push(arguments);}
+			      gtag('js', new Date());
+			      gtag('config', 'G-7C99K0XQKV');
+			    }
 
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-7C99K0XQKV');
-      }
+			    if (consent.marketing) {
+			      // Load marketing scripts here
+			    }
+			  }
 
-      if (consent.marketing) {
-        // Load marketing scripts here
-      }
-    }
-
-    const stored = localStorage.getItem('cookieConsent');
-    if (stored) {
-      const consent = JSON.parse(stored);
-      applyConsent(consent);
-    }
-  });
-</script>
-
-</body></html>
+			  const stored = localStorage.getItem('cookieConsent');
+			  if (stored) {
+			    const consent = JSON.parse(stored);
+			    applyConsent(consent);
+			  }
+			});
+		</script>
+	</body>
+</html>
