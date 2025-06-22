@@ -24,17 +24,13 @@ a {
 .banner img {
   width: 100%;
   height: 450px;
-  /* Set your desired height */
   object-fit: cover;
-  /* Keeps image filling the space and crops excess */
 }
 
-/* -------------------------------------------------- */
-/* 🔗 MAIN NAVIGATION (Header, Nav, Dropdowns)        */
-/* -------------------------------------------------- */
+/* Navigation, Dropdowns, Header */
 .navbar {
   background-color: #000;
-  display: flex; /* ✅ Hide by default */
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
   position: relative;
@@ -42,14 +38,14 @@ a {
 
 .nav-menu {
   list-style: none;
-  display: flex; /* ✅ Make visible on desktop */
+  display: flex;
   width: 100%;
   justify-content: center;
   flex-direction: row;
   transition: max-height 0.3s ease;
 }
 
-.nav-menu>li {
+.nav-menu > li {
   position: relative;
 }
 
@@ -68,7 +64,7 @@ a {
 }
 
 .menu-toggle {
-  display: block; /* ✅ FIXED: Make sure it's visible */
+  display: block;
   background: none;
   border: none;
   color: #D4A017;
@@ -82,7 +78,6 @@ a {
 
 .menu-toggle i {
   font-size: 1.5rem;
-  display: inline-block;
   color: #D4A017;
 }
 
@@ -95,8 +90,8 @@ a {
   min-width: 200px;
   z-index: 10;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  list-style: none;     
-  padding-left: 0;   
+  list-style: none;
+  padding-left: 0;
 }
 
 .dropdown-menu li a {
@@ -109,28 +104,24 @@ a {
   transition: transform 0.3s ease;
 }
 
-/* ✅ ONLY affect mobile nav */
+/* Mobile styles */
 @media (max-width: 768px) {
   .menu-toggle {
     display: block;
   }
 
   .nav-menu {
-  flex-direction: column;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  background-color: #000;
-  width: 100%;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 999;
-
-  /* ✅ Allow scrolling when expanded */
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    background-color: #000;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 999;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
 
   .nav-menu.active {
     max-height: 100vh;
@@ -183,72 +174,19 @@ a {
   }
 }
 
-/* ✅ DESKTOP: hide hamburger and dropdown toggle */
+/* Desktop menu rules */
 @media (min-width: 769px) {
-  .menu-toggle {
-    display: none !important;
-  }
-
+  .menu-toggle,
   .dropdown-toggle {
     display: none !important;
   }
 
   .dropdown:hover .dropdown-menu {
     display: block;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: #000;
-    min-width: 200px;
-    z-index: 10;
   }
 }
 
-/* -------------------------------------------------- */
-/* ✅ MOBILE HEADER ALIGNMENT FIX                    */
-/* -------------------------------------------------- */
-@media (max-width: 768px) {
-  .header-container {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .dropdown-menu {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease;
-}
-
-.dropdown.open .dropdown-menu {
-  max-height: 500px; /* Adjust based on your submenu length */
-}
-
-
-.dropdown.open .dropdown-menu {
-  background-color: #222; /* Darker shade for contrast */
-}
-
-.site-logo {
-    height: 50px;
-  }
-
-  .site-title {
-    text-align: center;
-    justify-self: center;
-    font-size: 1.3rem;
-    white-space: nowrap;
-  }
-
-  .menu-toggle {
-    justify-self: end;
-  }
-}
-
-/* -------------------------------------------------- */
-/* 🐝 SITE HEADER + LOGO STYLES                       */
-/* -------------------------------------------------- */
+/* Header + Logo */
 .site-header {
   background-color: #000;
   padding: 1rem 2rem;
@@ -262,7 +200,7 @@ a {
   gap: 1rem;
   width: 100%;
   position: relative;
-  padding: 0 1rem; /* ✅ Moved here from the deleted block */
+  padding: 0 1rem;
 }
 
 .site-logo {
@@ -276,34 +214,40 @@ a {
   color: #D4A017;
 }
 
-/* -------------------------------------------------- */
-/* 🎞️ CAROUSEL STYLES                                */
-/* -------------------------------------------------- */
-.carousel-caption {
-  position: absolute;
-  bottom: 160px;
-  /* ⬆ Push it up slightly */
-  left: 30px;
-  /* Fine-tune for padding from edge */
-  transform: none;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #fff;
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  max-width: 90%;
-  text-align: left;
-  z-index: 2;
-}
+/* Mobile Header Fix */
+@media (max-width: 768px) {
+  .header-container {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-.carousel-caption h2 {
-  margin: 0;
-  font-size: clamp(1.25rem, 1.5vw + 1rem, 2rem);
-  color: #D4A017;
-}
+  .site-logo {
+    height: 50px;
+  }
 
-.carousel-caption p {
-  margin-top: 0.25rem;
-  font-size: clamp(0.875rem, 1vw, 1.125rem);
+  .site-title {
+    text-align: center;
+    justify-self: center;
+    font-size: 1.3rem;
+    white-space: nowrap;
+  }
+
+  .menu-toggle {
+    justify-self: end;
+  }
+
+  .dropdown-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+    background-color: #222;
+  }
+
+  .dropdown.open .dropdown-menu {
+    max-height: 500px;
+  }
 }
 
 /* -------------------------------------------------- */
@@ -333,10 +277,8 @@ a {
 
 .content p {
   margin-bottom: 1rem;
-  /* Adjust to control the spacing */
 }
 
-/* --- ADDING AN IMAGE IN MAIN CONTENT AREA (LEFT) --- */
 .content img.float-left-img {
   float: left;
   max-width: 500px;
@@ -345,7 +287,6 @@ a {
   border-radius: 8px;
 }
 
-/* --- ADDING AN IMAGE IN MAIN CONTENT AREA (RIGHT) --- */
 .content img.float-right-img {
   float: right;
   max-width: 500px;
@@ -354,41 +295,31 @@ a {
   border-radius: 8px;
 }
 
-/* 📱 Donation QR Code Resize */
 .qr-code {
   max-width: 250px;
-  /* You can adjust this value */
   height: auto;
   display: block;
 }
 
-/* 📱 OPTIONAL QR RESPONSIVE TWEAK FOR MOBILE */
 @media (max-width: 600px) {
   .qr-code {
     margin: 0 auto;
   }
 }
 
-/* ---------- MAIN LAYOUT WRAPPERS FOR PAGE STRUCTURE---------- */
 .container {
   max-width: 1200px;
-  /* Keeps content from stretching too wide on large screens */
   margin: 0 auto;
-  /* Horizontally centers the container */
   padding: 0 1rem;
-  /* Adds horizontal padding inside */
 }
 
-/* Grid layout inside the centered container */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  /* Responsive cards */
   gap: 1.5rem;
   margin: 2rem 0;
 }
 
-/* Individual card styling */
 .card {
   background: #fff;
   border-radius: 10px;
@@ -401,7 +332,6 @@ a {
 
 .card:hover {
   transform: translateY(-5px);
-  /* Hover effect */
 }
 
 .card img {
@@ -418,7 +348,6 @@ a {
   justify-content: space-between;
 }
 
-/* Read more link */
 .read-more {
   text-align: right;
   margin-top: 1rem;
@@ -427,17 +356,65 @@ a {
   font-size: clamp(0.9rem, 1vw, 1.125rem);
 }
 
-/* ---------- CLEAN 50/50 IMAGE + TEXT LAYOUT SIDE BY SIDE---------- */
+/* ---------- MAIN LAYOUT WRAPPERS FOR PAGE STRUCTURE ---------- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.read-more {
+  text-align: right;
+  margin-top: 1rem;
+  color: #D4A017;
+  font-weight: bold;
+  font-size: clamp(0.9rem, 1vw, 1.125rem);
+}
+
+/* ---------- CLEAN 50/50 IMAGE + TEXT LAYOUT SIDE BY SIDE ---------- */
 .row {
   display: flex;
   flex-wrap: nowrap;
   align-items: stretch;
   gap: 2rem;
-  /* Space between the two boxes */
   margin: 2rem 0;
 }
 
-/* Optional: reverse the layout */
 .row.reverse {
   flex-direction: row-reverse;
 }
@@ -449,10 +426,8 @@ a {
   display: flex;
   flex-direction: column;
   min-height: 100%;
-  /* Stretch to match row height */
 }
 
-/* ✅ Image box styles */
 .img-box {
   border-radius: 16px;
   overflow: hidden;
@@ -462,12 +437,11 @@ a {
 
 .img-box img {
   width: 100%;
-  height: auto; /* NEW: allows image to resize naturally */
+  height: auto;
   object-fit: cover;
   display: block;
 }
 
-/* ✅ Text box styles */
 .text-box {
   background-color: #fff;
   border-radius: 16px;
@@ -481,11 +455,7 @@ a {
 
 /* ---------- RESPONSIVE STACKING ON MOBILE ---------- */
 @media (max-width: 768px) {
-  .row {
-    flex-direction: column;
-    /* 🔁 Fixes image stacking on mobile */
-  }
-
+  .row,
   .row.reverse {
     flex-direction: column;
   }
@@ -505,14 +475,14 @@ a {
   }
 
   .img-box {
-    margin-bottom: 1rem; /* ✅ adds space between image and text */
+    margin-bottom: 1rem;
   }
 }
 
 @media (max-width: 600px) {
   .text-box {
-    padding: 1rem; /* 🔁 Reduced padding */
-    margin: 0 0.5rem; /* ➕ Small margin to center */
+    padding: 1rem;
+    margin: 0 0.5rem;
     box-sizing: border-box;
     align-items: center;
     text-align: center;
@@ -525,20 +495,18 @@ a {
   }
 
   .container {
-    padding: 0; /* 🔁 Remove default side padding */
+    padding: 0;
   }
 
-/* ---------- FLOATING IMAGES: MOBILE FIRST ---------- */
-.content img.float-left-img,
-.content img.float-right-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  float: none;
-  margin: 1rem auto;
-  border-radius: 8px;
-}
-
+  .content img.float-left-img,
+  .content img.float-right-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    float: none;
+    margin: 1rem auto;
+    border-radius: 8px;
+  }
 }
 
 /* -------------------------------------------------- */
@@ -606,7 +574,7 @@ main.not-found {
   .indented-list {
     margin-left: 1em;
     padding-left: 0.5em;
-    list-style-position: outside; /* 🔁 ensures the dot is outside */
+    list-style-position: outside;
   }
 
   .indented-list li {
@@ -614,7 +582,9 @@ main.not-found {
   }
 }
 
-/* ---------- DESKTOP FLOATS: LEFT / RIGHT IMAGE WRAP ---------- */
+/* -------------------------------------------------- */
+/* 🖼️ DESKTOP FLOATS: LEFT / RIGHT IMAGE WRAP        */
+/* -------------------------------------------------- */
 @media (min-width: 769px) {
   .content img.float-left-img {
     float: left;
@@ -631,27 +601,24 @@ main.not-found {
   }
 }
 
+/* -------------------------------------------------- */
 /* 📞 CONTACT CONTAINER                               */
 /* -------------------------------------------------- */
-/* Contact Form Wrapper */
 .contact-wrapper {
   max-width: 960px;
   margin: 0 auto;
   padding: 0 1rem;
 }
 
-/* Contact Form Styling */
 .contact-container {
   background-color: #fffdf4;
   padding: 2rem;
   margin-top: 2rem;
   margin-bottom: 5rem;
-  /* Space between form and footer */
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Form Structure */
 .contact-container form {
   display: flex;
   flex-direction: column;
@@ -659,13 +626,11 @@ main.not-found {
   margin-top: 1.5rem;
 }
 
-/* Labels */
 .contact-container label {
   font-weight: bold;
   margin-top: 0.5rem;
 }
 
-/* Inputs and Textareas */
 .contact-container input,
 .contact-container textarea {
   width: 100%;
@@ -676,7 +641,6 @@ main.not-found {
   background-color: #fff;
 }
 
-/* Send Button */
 .contact-container button {
   align-self: flex-start;
   padding: 0.75rem 1.5rem;
@@ -693,12 +657,10 @@ main.not-found {
   background-color: #b88c14;
 }
 
-/* Accessibility: Hide bot field */
 .contact-container .hidden {
   display: none;
 }
 
-/* Responsive Improvements */
 @media (max-width: 600px) {
   .contact-container {
     padding: 1.5rem;
@@ -711,7 +673,7 @@ main.not-found {
 }
 
 /* -------------------------------------------------- */
-/* 📞 FOOTER                                         */
+/* 📞 FOOTER                                          */
 /* -------------------------------------------------- */
 .site-footer {
   background-color: #000;
@@ -771,186 +733,120 @@ address {
 }
 
 /* -------------------------------------------------- */
-/* 📱 Responsive Mobile Menu */
+/* 📱 MOBILE NAV: CLEANED + RESPONSIVE               */
+/* -------------------------------------------------- */
 @media (max-width: 768px) {
-  .menu-toggle {
+  .nav-menu.active {
     display: block;
-    background: none;
-    border: none;
-    font-size: 2rem;
-    color: #D4A017;
-    cursor: pointer;
   }
 
-  .nav-menu {
-    display: flex;
+  .dropdown.open .dropdown-menu {
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .nav-toggle {
+    display: block;
+  }
+
+  nav ul {
     flex-direction: column;
-    max-height: 0;          /* ✅ FIXED */
-    overflow-y: hidden;          /* ✅ FIXED */
-    background-color: #000;
-    position: absolute;
-    top: 100%;
-    left: 0;
+    gap: 0.5rem;
+  }
+
+  nav li {
     width: 100%;
-    transition: max-height 0.3s ease;
-    z-index: 999;
   }
 
   .dropdown-menu {
-  flex-direction: column;
-  background-color: #000;
-  max-height: none;              /* ✅ Allow it to grow as needed */
-  overflow-y: auto;              /* ✅ Enable scrolling */
-  position: relative;            /* ✅ Ensure stacking works */
-}
-
-.nav-menu.active {
-  max-height: 100vh;
-  display: flex;             /* ✅ Make sure this is present */
-  overflow-y: auto;
-}
-
-  .dropdown.open .dropdown-menu {
-    display: block;            /* ✅ FIX */
+    display: none;
+    flex-direction: column;
   }
-
-  .dropdown-toggle {
-    display: inline-block;
-    background: none;
-    border: none;
-    color: #D4A017;
-    font-size: 1rem;
-    cursor: pointer;
-    padding: 0.25rem 0.5rem;
-  }
-
-  .dropdown-menu li a {
-    display: block;
-    padding: 0.75rem 1rem;
-    color: #D4A017;
-    text-align: center;
-  }
-
-  .dropdown-menu li a:hover {
-    background-color: #222;
-    color: #fff;
-  }
-}
-
-/* ✅ Allow scrolling when mobile menu is open */
-body.menu-open,
-html.menu-open {
-  overflow-y: scroll;
-  height: auto;
 }
 
 /* -------------------------------------------------- */
-/* ♿ ACCESSIBILITY                                   */
+/* ♿ ACCESSIBILITY + UTILITIES                       */
 /* -------------------------------------------------- */
-.sr-only {
+.visually-hidden {
   position: absolute;
-  left: -10000px;
-  top: auto;
   width: 1px;
   height: 1px;
+  padding: 0;
   overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-/* ---------------------------------- */
-/* ✨ ACCESSIBILITY: Focus Outlines   */
-/* ---------------------------------- */
-
-a:focus,
-button:focus,
-.menu-toggle:focus,
-.nav-menu a:focus {
-  outline: 2px dashed #D4A017;
-  outline-offset: 4px;
-  background-color: rgba(212, 160, 23, 0.15);
-  border-radius: 4px;
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #D4A017;
+  color: #000;
+  padding: 8px 16px;
+  z-index: 100;
+  transition: top 0.3s ease;
 }
 
-/* ---------------------------- */
-/* 🍪 Cookie Consent Styles     */
-/* ---------------------------- */
+.skip-link:focus {
+  top: 0;
+}
+
+/* -------------------------------------------------- */
+/* 🍪 COOKIE POPUP                                   */
+/* -------------------------------------------------- */
 .cookie-popup {
   position: fixed;
-  bottom: 1rem;
-  left: 1rem;
-  right: 1rem;
-  max-width: 420px;
-  margin: auto;
-  background: #fffbea;
-  border: 1px solid #ccc;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  padding: 1.5rem;
-  z-index: 9999;
-  border-radius: 12px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(212, 160, 23, 0.15);
+  color: #000;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.95rem;
+  z-index: 1000;
   display: none;
-  font-family: system-ui, sans-serif;
 }
 
 .cookie-popup h2 {
-  margin-top: 0;
-  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
 }
 
-.cookie-popup p {
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-}
-
-.cookie-popup label {
-  display: block;
-  margin: 0.4rem 0;
-  font-size: 0.9rem;
-}
-
-.cookie-buttons {
-  margin-top: 1rem;
-  display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-}
-
-.cookie-buttons button {
-  padding: 0.5rem 1rem;
+.cookie-popup button {
+  background-color: #D4A017;
+  color: #fff;
   border: none;
-  background: #D4A017;
-  color: #000;
-  font-weight: bold;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
   border-radius: 6px;
   cursor: pointer;
-  transition: background 0.3s ease;
 }
 
-.cookie-buttons button:hover {
-  background: #C4970B;
+.cookie-popup button:hover {
+  background-color: #b88c14;
 }
 
 /* -------------------------------------------------- */
-/* 🎨 VISUAL UTILITIES / BUTTONS                      */
-/* -------------------------------------------------- */
-/* -------------------------------------------------- */
-/* 🔝 BACK TO TOP BUTTON                              */
+/* 🔝 BACK TO TOP                                    */
 /* -------------------------------------------------- */
 #backToTop {
   position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  display: none;
-  background-color: #f4b400;
-  color: white;
+  bottom: 20px;
+  right: 20px;
+  background-color: #D4A017;
+  color: #000;
   border: none;
+  padding: 0.75rem 1.25rem;
   border-radius: 50%;
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
+  font-size: 1.25rem;
   cursor: pointer;
+  display: none;
   z-index: 999;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  transition: opacity 0.3s ease-in-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 #backToTop:hover {
-  background-color: #e09f00;
+  background-color: #b88c14;
 }
