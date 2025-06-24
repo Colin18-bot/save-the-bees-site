@@ -1,1 +1,80 @@
-<!-- Supabase Dashboard -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BeezKnees Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+    <header class="site-header">
+    <div class="header-container">
+        <a href="https://www.beezknees.co.uk">
+        <img src="/images/Beezknees-logo.png" alt="BeezKnees Logo" class="site-logo"/>
+        </a>
+        <h1 class="site-title">BeezKnees Dashboard</h1>
+        <div class="logout-wrapper">
+        <button id="logout-btn" class="logout-button">Logout</button>
+        </div>
+    </div>
+    </header>
+
+  <!-- Hero Banner -->
+  <section role="region" aria-label="Dashboard Banner">
+    <div class="banner">
+      <img src="/images/hives.jpg" alt="Beehive image in apiary" />
+    </div>
+  </section>
+
+  <main class="content">
+    <div class="container contact-container" style="max-width: 700px;">
+      <h2>Welcome to Your Hive Dashboard</h2>
+      <p>You are now logged in. From here, you can inspect hives, update your data, and manage your apiaries.</p>
+      
+      <!-- Example call-to-action -->
+      <div style="margin-top: 2rem;">
+        <a href="/hivetag-netlify/hivetag/hive-form.html" class="button-link">Inspect a Hive</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer" role="region" aria-label="Site Footer">
+    <div class="footer-columns">
+      <div class="footer-column">
+        <h3>Contact</h3>
+        <address>
+          <p>Email: <a href="/contact.html">Contact</a></p>
+        </address>
+      </div>
+
+      <div class="footer-column">
+        <h3>Useful Links</h3>
+        <ul>
+          <li><a href="/privacy.html">Privacy Policy</a></li>
+          <li><a href="/site-map.html">Site Map</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-column">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="https://www.bbka.org.uk/" target="_blank">British Beekeepers Association</a></li>
+          <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank">Cardiff, Vale & Valleys Beekeepers</a></li>
+          <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht" target="_blank">Honey (Wales) Regulations</a></li>
+          <li><a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank">Wales Biodiversity Partnership</a></li>
+          <li><a href="https://www.nationalbeeunit.com/" target="_blank">BeeBase</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      &copy; 2023 Practical Beekeeping. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="/hivetag-netlify/hivetag/dashboard.js"></script>
+</body>
+</html>
