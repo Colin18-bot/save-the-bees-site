@@ -1,120 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login / Register</title>
-  <link rel="stylesheet" href="../css/style.css" />
-  <style>
-    .auth-container {
-      max-width: 400px;
-      margin: 4rem auto;
-      padding: 2rem;
-      background: #fff;
-      border-radius: 1rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .auth-container h2 {
-      text-align: center;
-    }
-    .auth-form {
-      display: none;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .auth-form.active {
-      display: flex;
-    }
-    .toggle-buttons {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 1rem;
-    }
-    .toggle-buttons button {
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-    }
-    input[type="email"], input[type="password"] {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #ccc;
-      border-radius: 0.5rem;
-    }
-    button[type="submit"] {
-      background: #fbbf24;
-      border: none;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    #message {
-      text-align: center;
-      margin-top: 1rem;
-      color: green;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BeezKnees Login / Register</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
-  <div class="auth-container">
-    <h2>BeezKnees HiveTag Access</h2>
-    <div class="toggle-buttons">
-      <button onclick="toggleForm('login')">Login</button>
-      <button onclick="toggleForm('register')">Register</button>
+
+  <header class="site-header">
+    <div class="header-container">
+      <a href="https://www.beezknees.co.uk">
+      <img src="/images/Beezknees-logo.png" alt="BeezKnees Logo" class="site-logo"></a>
+      <h1 class="site-title">BeezKnees Account</h1>
     </div>
+  </header>
 
-    <form id="login-form" class="auth-form">
-      <input type="email" id="login-email" placeholder="Email" required />
-      <input type="password" id="login-password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
+<!-- Hero Banner with Image and Alt Fallback -->
+		<section role="region" aria-label="Homepage Banner">
+			<div class="banner">
+				<img src="/images/swarm.jpg" alt="Picture of Honeybees Swarming" />
+			</div>
+		</section>
 
-    <form id="register-form" class="auth-form">
-      <input type="email" id="register-email" placeholder="Email" required />
-      <input type="password" id="register-password" placeholder="Password" required />
-      <button type="submit">Register</button>
-    </form>
+  <main class="content">
+    <div class="container contact-container" style="max-width: 500px;">
+      <h2>Sign In or Register</h2>
+      <form id="auth-form">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@example.com" required>
 
-    <p id="message"></p>
-  </div>
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" required>
 
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+          <button type="button" id="login-btn">Login</button>
+          <button type="button" id="register-btn">Register</button>
+        </div>
+      </form>
 
-    const supabase = createClient(
-      import.meta.env.VITE_SUPABASE_URL || "SUPABASE_URL_HERE",
-      import.meta.env.VITE_SUPABASE_KEY || "SUPABASE_ANON_KEY_HERE"
+    <p id="auth-message" style="margin-top: 1rem; font-weight: bold;"></p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+		<footer class="site-footer" role="region" aria-label="Site Footer">
+			<div class="footer-columns">
+				<div class="footer-column" role="region" aria-label="Contact Information">
+					<h3>Contact</h3>
+					<address>
+						<p>Email: <a href="/contact.html" title="Send us a message via our contact page">Contact</a></p>
+					</address>
+				</div>
+
+				<div class="footer-column" role="region" aria-label="Useful Site Links">
+					<h3>Useful Links</h3>
+					<ul>
+						<li><a href="/privacy.html" title="Read our privacy policy">Privacy Policy</a></li>
+						<li><a href="/site-map.html" title="View a map of our entire website">Site Map</a></li>
+					</ul>
+				</div>
+
+				<div class="footer-column" role="region" aria-label="Beekeeping Resources">
+					<h3>Resources</h3>
+					<ul>
+						<li>
+							<a
+								href="https://www.bbka.org.uk/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Visit the British Beekeepers Association 
+            website"
+							>
+								British Beekeepers Association
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.cardiffbeekeepers.co.uk/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Visit the Cardiff Beekeepers 
+            Association site"
+							>
+								Cardiff, Vale and Valleys Beekeepers Association
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
+								target="_blank"
+								rel="noopener 
+            noreferrer"
+								title="Read the Honey (Wales) Regulations 2015"
+							>
+								The Honey (Wales) Regulations 2015
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.biodiversitywales.org.uk/Bee-Friendly"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Explore 
+            Bee-Friendly programme by Wales Biodiversity Partnership"
+							>
+								Wales Biodiversity Partnership
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.nationalbeeunit.com/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Access BeeBase for beekeeping 
+          information"
+							>
+								BeeBase
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="footer-bottom" role="region" aria-label="Copyright">
+				&copy; 2023 Practical Beekeeping. All rights reserved.
+			</div>
+		</footer>
+
+  <script>
+    const supabase = supabase.createClient(
+      'https://YOUR-SUPABASE-PROJECT.supabase.co',
+      'YOUR_PUBLIC_ANON_KEY'
     );
 
-    const msg = document.getElementById('message');
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const messageBox = document.getElementById("auth-message");
 
-    document.getElementById('register-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('register-email').value;
-      const password = document.getElementById('register-password').value;
-      const { error } = await supabase.auth.signUp({ email, password });
-      msg.textContent = error ? error.message : 'Check your email to confirm registration.';
-    });
-
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('login-email').value;
-      const password = document.getElementById('login-password').value;
-      const { error, data } = await supabase.auth.signInWithPassword({ email, password });
+    document.getElementById("login-btn").addEventListener("click", async () => {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: emailInput.value,
+        password: passwordInput.value
+      });
       if (error) {
-        msg.textContent = error.message;
+        messageBox.textContent = "Login failed: " + error.message;
+        messageBox.style.color = "red";
       } else {
-        localStorage.setItem('supabase_token', data.session.access_token);
-        window.location.href = 'dashboard.html';
+        messageBox.textContent = "Login successful! Redirecting...";
+        messageBox.style.color = "green";
+        window.location.href = "/dashboard.html";
       }
     });
 
-    function toggleForm(form) {
-      document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
-      document.getElementById(`${form}-form`).classList.add('active');
-    }
-
-    toggleForm('login');
+    document.getElementById("signup-btn").addEventListener("click", async () => {
+      const { data, error } = await supabase.auth.signUp({
+        email: emailInput.value,
+        password: passwordInput.value
+      });
+      if (error) {
+        messageBox.textContent = "Registration failed: " + error.message;
+        messageBox.style.color = "red";
+      } else {
+        messageBox.textContent = "Registration successful! Check your email to verify.";
+        messageBox.style.color = "green";
+      }
+    });
   </script>
+
+		
+  <script src="/js/auth.js"></script>
+
 </body>
 </html>
