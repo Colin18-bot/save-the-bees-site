@@ -1,10 +1,12 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   console.log("Auth script loaded.");
 
+  // ✅ Correct public Supabase credentials
   const SUPABASE_URL = 'https://ijgkmgvtaqtipslmscjq.supabase.co';
-  const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlqZ2ttZ3Z0YXF0aXBzbG1zY2pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTkxMDY4NjcsImV4cCI6MjAzNDY4Mjg2N30.-FJgXZ9WvORnuwGHc7LOmQeqUbWWcdRtA2Dr92i0nqM';
+  const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlqZ2ttZ3Z0YXF0aXBzbG1zY2pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3ODQzNjEsImV4cCI6MjA2NjM2MDM2MX0.TOWVE8-l4pm8iajr3zyq8h5s205B1aBuXf0AzUuya68';
 
-  const client = supabase.createClient(SUPABASE_URL, SUPABASE_API_KEY);
+  // ✅ Create client
+  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_API_KEY);
 
   const loginBtn = document.getElementById('login-btn');
   const registerBtn = document.getElementById('register-btn');
@@ -12,11 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const passwordInput = document.getElementById('password');
   const messageBox = document.getElementById('auth-message');
 
+  // ✅ Login
   if (loginBtn) {
     loginBtn.addEventListener('click', async () => {
       const { data, error } = await client.auth.signInWithPassword({
         email: emailInput.value,
-        password: passwordInput.value,
+        password: passwordInput.value
       });
 
       if (error) {
@@ -32,18 +35,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ✅ Register
   if (registerBtn) {
     registerBtn.addEventListener('click', async () => {
       const { data, error } = await client.auth.signUp({
         email: emailInput.value,
-        password: passwordInput.value,
+        password: passwordInput.value
       });
 
       if (error) {
         messageBox.textContent = "Registration failed: " + error.message;
         messageBox.style.color = "red";
       } else {
-        messageBox.textContent = "Registration successful! Check your email.";
+        messageBox.textContent = "Registration successful! Please check your email to verify your account.";
         messageBox.style.color = "green";
       }
     });
