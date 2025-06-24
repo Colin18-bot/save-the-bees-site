@@ -1,5 +1,17 @@
 // Supabase integration JS// File: /js/auth.js
 
+document.addEventListener("DOMContentLoaded", async () => {
+  const {
+    data: { session },
+    error
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    // Redirect to login page
+    window.location.href = "/hivetag-netlify/hivetag/auth.html";
+  }
+});
+
 (async () => {
   const {
     data: { session }
