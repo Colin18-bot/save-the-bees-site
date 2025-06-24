@@ -1,4 +1,5 @@
 // Supabase integration JS// File: /js/auth.js
+
 // Initialize Supabase
 const SUPABASE_URL = 'https://ijgkmgvtaqtipslmscjq.supabase.co';
 const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlqZ2ttZ3Z0YXF0aXBzbG1zY2pxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MDc4NDM2MSwiZXhwIjoyMDY2MzYwMzYxfQ.PCp8AJYS-zSMXNb8VK-2QXF6QRnyw0OEMKj7v8j4sAs';
