@@ -1,1 +1,0 @@
-// Netlify Function: Submit Inspection
