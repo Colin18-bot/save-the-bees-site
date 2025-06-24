@@ -131,47 +131,7 @@
 			</div>
 		</footer>
 
-  <script>
-    const supabase = supabase.createClient(
-      'https://YOUR-SUPABASE-PROJECT.supabase.co',
-      'YOUR_PUBLIC_ANON_KEY'
-    );
-
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const messageBox = document.getElementById("auth-message");
-
-    document.getElementById("login-btn").addEventListener("click", async () => {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: emailInput.value,
-        password: passwordInput.value
-      });
-      if (error) {
-        messageBox.textContent = "Login failed: " + error.message;
-        messageBox.style.color = "red";
-      } else {
-        messageBox.textContent = "Login successful! Redirecting...";
-        messageBox.style.color = "green";
-        window.location.href = "/dashboard.html";
-      }
-    });
-
-    document.getElementById("signup-btn").addEventListener("click", async () => {
-      const { data, error } = await supabase.auth.signUp({
-        email: emailInput.value,
-        password: passwordInput.value
-      });
-      if (error) {
-        messageBox.textContent = "Registration failed: " + error.message;
-        messageBox.style.color = "red";
-      } else {
-        messageBox.textContent = "Registration successful! Check your email to verify.";
-        messageBox.style.color = "green";
-      }
-    });
-
-  </script>
-
+		
   	<!-- Load Supabase SDK -->
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
