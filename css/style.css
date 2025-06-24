@@ -995,3 +995,15 @@ button:focus,
   }
 }
 
+
+
+
+.logout-button#delete-account-btn {
+  background-color: #444;
+}
+
+.logout-button#delete-account-btn:hover {
+  background-color: #222;
+}
+
+

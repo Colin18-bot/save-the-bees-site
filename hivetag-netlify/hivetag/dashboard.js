@@ -21,3 +21,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const SUPABASE_URL = 'https://ijgkmgvtaqtipslmscjq.supabase.co';
+  const SUPABASE_KEY = 'YOUR_PUBLIC_ANON_KEY'; // ✅ Use your ANON key
+
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const logoutBtn = document.getElementById('logout-btn');
+  const deleteBtn = document.getElementById('delete-account-btn');
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        alert("Logout failed: " + error.message);
+      } else {
+        window.location.href = "/hivetag-netlify/hivetag/auth.html";
+      }
+    });
+  }
+
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', async () => {
+      const confirmDelete = confirm("Are you sure you want to permanently delete your account?");
+      if (!confirmDelete) return;
+
+      const user = (await supabase.auth.getUser()).data.user;
+      if (!user) {
+        alert("No user found.");
+        return;
+      }
+
+      // Send request to Supabase Admin API to delete the user (via your backend)
+      alert("For security, direct user deletion must be handled via backend admin API.");
+    });
+  }
+});
+
