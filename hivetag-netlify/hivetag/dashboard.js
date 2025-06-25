@@ -1,10 +1,9 @@
 console.log("Dashboard script loaded.");
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // ✅ Setup Supabase client
+  // ✅ Setup Supabase client using public anon key
   const SUPABASE_URL = 'https://ijgkmgvtaqtipslmscjq.supabase.co';
   const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlqZ2ttZ3Z0YXF0aXBzbG1zY2pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3ODQzNjEsImV4cCI6MjA2NjM2MDM2MX0.TOWVE8-l4pm8iajr3zyq8h5s205B1aBuXf0AzUuya68';
-  const DELETION_API_KEY = 'DEL_95X8z!Dk3vQh6rTg';
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_API_KEY);
 
@@ -28,9 +27,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const confirmDelete = confirm("⚠️ Are you sure you want to permanently delete your account?");
       if (!confirmDelete) return;
 
-      const { data: { user }, error } = await supabase.auth.getUser();
-      if (error || !user) {
-        alert("User not found or not logged in.");
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        alert("No user found or not logged in.");
         return;
       }
 
@@ -40,22 +39,16 @@ document.addEventListener("DOMContentLoaded", async () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             user_id: user.id,
-            api_key: DELETION_API_KEY
+            api_key: 'DEL_95X8z!Dk3vQh6rTg' // Must match Netlify secret
           })
         });
 
-        const result = await response.json();
-
-        if (response.ok) {
-          alert("✅ Account deleted successfully.");
-          await supabase.auth.signOut();
-          window.location.href = "/hivetag-netlify/hivetag/auth.html";
-        } else {
-          alert("❌ Delete failed: " + result.error);
+        const text = await response.text();
+        let result = {};
+        try {
+          result = JSON.parse(text);
+        } catch (e) {
+          throw new Error("Server returned invalid JSON: " + text);
         }
-      } catch (err) {
-        alert("❌ Network error: " + err.message);
-      }
-    });
-  }
-});
+
+        if

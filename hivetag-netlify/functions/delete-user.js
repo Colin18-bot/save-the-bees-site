@@ -1,4 +1,4 @@
-// File: netlify/functions/delete-user.js
+// File: hivetag-netlify/functions/delete-user.js
 
 import { createClient } from '@supabase/supabase-js';
 
@@ -7,30 +7,49 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-export default async (req, res) => {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+// Netlify handler format
+export const handler = async (event, context) => {
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: 'Method not allowed' }),
+    };
   }
 
-  const { user_id, api_key } = req.body;
+  const { user_id, api_key } = JSON.parse(event.body || '{}');
 
+  // Validate API key
   if (api_key !== process.env.DELETION_API_KEY) {
-    return res.status(403).json({ error: 'Unauthorized' });
+    return {
+      statusCode: 403,
+      body: JSON.stringify({ error: 'Unauthorized request' }),
+    };
   }
 
   if (!user_id) {
-    return res.status(400).json({ error: 'User ID is required' });
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: 'Missing user_id' }),
+    };
   }
 
   try {
     const { error } = await supabase.auth.admin.deleteUser(user_id);
-
     if (error) {
-      return res.status(500).json({ error: error.message });
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: error.message }),
+      };
     }
 
-    return res.status(200).json({ message: 'User deleted successfully' });
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: 'User deleted successfully' }),
+    };
   } catch (err) {
-    return res.status(500).json({ error: 'Unexpected server error' });
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Unexpected error occurred' }),
+    };
   }
 };
