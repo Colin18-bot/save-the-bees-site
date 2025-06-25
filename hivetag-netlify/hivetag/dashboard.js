@@ -1,20 +1,26 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const supabaseUrl = 'https://hivetag.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ...4sAS'; // your real ANON key
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdmV0YWc...4sAS'; // Replace with full ANON key
+const deletionApiKey = 'DEL_95X8z!Dk3vQh6rTg'; // Must match Netlify env var
 
-// ✅ LOGOUT BUTTON
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// 🔓 Logout button
 document.getElementById('logout-btn')?.addEventListener('click', async () => {
-  await supabase.auth.signOut();
-  window.location.href = '/hivetag/login.html';
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    alert('Logout failed: ' + error.message);
+  } else {
+    window.location.href = '/hivetag/auth.html';
+  }
 });
 
-// ✅ DELETE ACCOUNT BUTTON
+// 🗑️ Delete account button
 document.getElementById('delete-account-btn')?.addEventListener('click', async () => {
   const {
     data: { user },
-    error
+    error,
   } = await supabase.auth.getUser();
 
   if (error || !user) {
@@ -22,7 +28,7 @@ document.getElementById('delete-account-btn')?.addEventListener('click', async (
     return;
   }
 
-  const confirmDelete = confirm('Are you sure you want to permanently delete your account?');
+  const confirmDelete = confirm('⚠️ Are you sure you want to permanently delete your account?');
   if (!confirmDelete) return;
 
   try {
@@ -31,8 +37,8 @@ document.getElementById('delete-account-btn')?.addEventListener('click', async (
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         user_id: user.id,
-        api_key: 'DEL_95X8z!Dk3vQh6rTg' // 🔐 must match your Netlify DELETION_API_KEY
-      })
+        api_key: deletionApiKey,
+      }),
     });
 
     const contentType = response.headers.get('content-type');
@@ -42,11 +48,11 @@ document.getElementById('delete-account-btn')?.addEventListener('click', async (
     }
 
     const result = await response.json();
-    if (!response.ok) throw new Error(result.error || 'Unknown error');
+    if (!response.ok) throw new Error(result.error || 'Failed to delete account.');
 
     alert('✅ Account deleted successfully.');
     await supabase.auth.signOut();
-    window.location.href = '/hivetag/login.html';
+    window.location.href = '/hivetag/auth.html';
   } catch (err) {
     alert(`❌ ${err.message}`);
   }
