@@ -39,11 +39,17 @@ document.addEventListener("DOMContentLoaded", async () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             user_id: user.id,
-            api_key: 'DEL_95X8z!Dk3vQh6rTg' // ✅ Must match Netlify DELETION_API_KEY exactly
+            api_key: 'DEL_95X8z!Dk3vQh6rTg' // ✅ Must match Netlify DELETION_API_KEY
           })
         });
 
-        const result = await response.json();
+        let result;
+        try {
+          result = await response.json();
+        } catch {
+          alert("❌ Server returned an invalid response.");
+          return;
+        }
 
         if (response.ok) {
           alert("✅ Account deleted successfully.");
@@ -52,6 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
           alert("❌ Error deleting account: " + result.error);
         }
+
       } catch (err) {
         alert("❌ Network error: " + err.message);
       }
