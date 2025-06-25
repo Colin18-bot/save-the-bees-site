@@ -36,19 +36,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       try {
         const response = await fetch('/.netlify/functions/delete-user', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
             user_id: user.id,
-            api_key: 'DEL_95X8z!Dk3vQh6rTg' // ✅ Must match Netlify DELETION_API_KEY
+            api_key: 'DEL_95X8z!Dk3vQh6rTg' // ✅ must match Netlify env var
           })
         });
 
+        const text = await response.text(); // ✅ Handle unexpected HTML
         let result;
         try {
-          result = await response.json();
-        } catch {
-          alert("❌ Server returned an invalid response.");
-          return;
+          result = JSON.parse(text);
+        } catch (err) {
+          throw new Error("Server returned an invalid response.");
         }
 
         if (response.ok) {
@@ -56,7 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           await supabase.auth.signOut();
           window.location.href = "/hivetag-netlify/hivetag/auth.html";
         } else {
-          alert("❌ Error deleting account: " + result.error);
+          alert("❌ Error deleting account: " + (result?.error || "Unknown error"));
         }
 
       } catch (err) {
