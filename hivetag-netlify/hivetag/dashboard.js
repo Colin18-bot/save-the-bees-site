@@ -1,22 +1,23 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// ✅ YOUR real Supabase project URL and ANON API key
 const supabaseUrl = 'https://hivetag.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdmV0YWc...4sAS'; // truncated anon key
-
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ...4sAS'; // your real ANON key
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // ✅ LOGOUT BUTTON
-document.getElementById('logout')?.addEventListener('click', async () => {
+document.getElementById('logout-btn')?.addEventListener('click', async () => {
   await supabase.auth.signOut();
   window.location.href = '/hivetag/login.html';
 });
 
 // ✅ DELETE ACCOUNT BUTTON
-document.getElementById('delete-account')?.addEventListener('click', async () => {
-  const user = supabase.auth.user();
+document.getElementById('delete-account-btn')?.addEventListener('click', async () => {
+  const {
+    data: { user },
+    error
+  } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (error || !user) {
     alert('❌ You are not logged in.');
     return;
   }
@@ -28,7 +29,10 @@ document.getElementById('delete-account')?.addEventListener('click', async () =>
     const response = await fetch('/.netlify/functions/delete-user', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: user.id })
+      body: JSON.stringify({
+        user_id: user.id,
+        api_key: 'DEL_95X8z!Dk3vQh6rTg' // 🔐 must match your Netlify DELETION_API_KEY
+      })
     });
 
     const contentType = response.headers.get('content-type');
@@ -37,8 +41,8 @@ document.getElementById('delete-account')?.addEventListener('click', async () =>
       throw new Error(`Invalid server response: ${text}`);
     }
 
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || 'Error deleting account.');
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Unknown error');
 
     alert('✅ Account deleted successfully.');
     await supabase.auth.signOut();
