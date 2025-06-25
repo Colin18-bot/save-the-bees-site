@@ -1,7 +1,7 @@
 console.log("Dashboard script loaded.");
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // ✅ Setup Supabase client using public anon key
+  // ✅ Setup Supabase client
   const SUPABASE_URL = 'https://ijgkmgvtaqtipslmscjq.supabase.co';
   const SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlqZ2ttZ3Z0YXF0aXBzbG1zY2pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3ODQzNjEsImV4cCI6MjA2NjM2MDM2MX0.TOWVE8-l4pm8iajr3zyq8h5s205B1aBuXf0AzUuya68';
 
@@ -39,16 +39,29 @@ document.addEventListener("DOMContentLoaded", async () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             user_id: user.id,
-            api_key: 'DEL_95X8z!Dk3vQh6rTg' // Must match Netlify secret
+            api_key: 'DEL_95X8z!Dk3vQh6rTg' // ✅ Must match Netlify function check
           })
         });
 
         const text = await response.text();
-        let result = {};
+        let result;
         try {
           result = JSON.parse(text);
-        } catch (e) {
-          throw new Error("Server returned invalid JSON: " + text);
+        } catch (jsonError) {
+          alert("❌ Invalid response from server:\n" + text);
+          return;
         }
 
-        if
+        if (response.ok) {
+          alert("✅ Account deleted successfully.");
+          await supabase.auth.signOut();
+          window.location.href = "/hivetag-netlify/hivetag/auth.html";
+        } else {
+          alert("❌ Error deleting account: " + result.error);
+        }
+      } catch (err) {
+        alert("❌ Network error: " + err.message);
+      }
+    });
+  }
+});
