@@ -26,26 +26,33 @@
 		</section>
 
 
-  <main class="content">
-    <div class="container contact-container" style="max-width: 500px;">
-      <h2>Sign In or Register</h2>
-      <form id="auth-form">
-        <label for="email">Email</label>
-        <input type="email" id="email" placeholder="you@example.com" required>
+ <main class="content">
+  <div class="container contact-container" style="max-width: 500px;">
+    <h2>Sign In or Register</h2>
+    <form id="auth-form">
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="you@example.com" required>
 
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="••••••••" required>
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="••••••••" required>
 
-        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-          <button type="button" id="login-btn">Login</button>
-          <button type="button" id="register-btn">Register</button>
-        </div>
-      </form>
+      <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+        <button type="button" id="login-btn">Login</button>
+        <button type="button" id="register-btn">Register</button>
+      </div>
 
+      <!-- ✅ Forgot Password link -->
+      <p style="margin-top: 1rem;">
+        <a href="#" id="forgot-password" style="color: #007bff;">Forgot your password?</a>
+      </p>
+    </form>
+
+    <!-- ✅ Message display -->
     <p id="message" style="margin-top: 1rem; font-weight: bold;"></p>
 
-    </div>
-  </main>
+  </div>
+</main>
+
 
   <!-- Footer -->
 		<footer class="site-footer" role="region" aria-label="Site Footer">
@@ -135,9 +142,8 @@
 		
   	<!-- Load Supabase SDK -->
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 	<!-- Load your custom script AFTER Supabase is available -->
 	<script src="/hivetag-netlify/hivetag/auth.js"></script>
-
+	
 </body>
 </html>
