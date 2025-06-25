@@ -1,2 +1,6 @@
-[functions]
-  directory = "hivetag-netlify/functions"
+[build]
+  functions = "hivetag-netlify/functions"
+  publish = "hivetag-netlify"
+
+[dev]
+  functions = "hivetag-netlify/functions"
