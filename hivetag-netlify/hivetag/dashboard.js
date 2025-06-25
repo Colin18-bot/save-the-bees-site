@@ -37,7 +37,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch('/.netlify/functions/delete-user', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ user_id: user.id })
+          body: JSON.stringify({ 
+            user_id: user.id,
+            api_key: 'DEL_95X8z!Dk3vQh6rTg' // ✅ Must match Netlify DELETION_API_KEY exactly
+          })
         });
 
         const result = await response.json();
