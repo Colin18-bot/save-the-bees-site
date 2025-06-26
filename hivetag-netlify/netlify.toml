@@ -1,0 +1,3 @@
+[build]
+  publish = "."          # your root contains index.html
+  functions = "functions"
