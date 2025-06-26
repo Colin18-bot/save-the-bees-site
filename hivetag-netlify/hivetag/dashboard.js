@@ -2,11 +2,21 @@ console.log("✅ Dashboard script loaded");
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// ✅ Full Supabase config – DO NOT TRUNCATE THESE
+// ✅ Full Supabase project settings
 const supabaseUrl = 'https://hivetag.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdmV0YWciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY4ODAwMDAwMCwiZXhwIjoyMDAzNTc2MDAwfQ.ANKeNgxM7XfwtAv-9dFgN8Zq5X5JSZzPtwtAoRyq4sAS';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// ✅ Check session on load
+supabase.auth.getUser().then(({ data, error }) => {
+  if (error || !data.user) {
+    alert("⚠️ You are not logged in. Redirecting to login page.");
+    window.location.href = '/hivetag-netlify/hivetag/auth.html';
+  } else {
+    console.log("✅ Logged in as:", data.user.email);
+  }
+});
 
 // ✅ LOGOUT
 document.getElementById('logout-btn')?.addEventListener('click', async () => {
