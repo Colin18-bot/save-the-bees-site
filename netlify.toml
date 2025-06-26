@@ -1,0 +1,6 @@
+[build]
+  functions = "hivetag-netlify/functions"
+  publish = "hivetag-netlify"
+
+[functions]
+  node_bundler = "esbuild"
