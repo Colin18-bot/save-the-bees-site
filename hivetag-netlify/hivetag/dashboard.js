@@ -6,7 +6,7 @@ const supabase = window.supabase.createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlqZ2ttZ3Z0YXF0aXBzbG1zY2pxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3ODQzNjEsImV4cCI6MjA2NjM2MDM2MX0.TOWVE8-l4pm8iajr3zyq8h5s205B1aBuXf0AzUuya68'
 );
 
-// ✅ Check session on load
+// ✅ Check session on initial page load
 supabase.auth.getSession().then(({ data, error }) => {
   if (error || !data.session) {
     console.warn("⚠️ No session:", error);
@@ -14,5 +14,33 @@ supabase.auth.getSession().then(({ data, error }) => {
     window.location.href = '/hivetag-netlify/hivetag/auth.html';
   } else {
     console.log("✅ Logged in as:", data.session.user.email);
+  }
+});
+
+// ✅ Silent cookie check + user-friendly warning
+if (!navigator.cookieEnabled) {
+  console.warn("⚠️ Cookies are disabled. Session may not persist.");
+
+  const warning = document.createElement('p');
+  warning.textContent = "⚠️ Your browser has cookies disabled. Login won't work correctly.";
+  warning.style.color = "red";
+  warning.style.fontWeight = "bold";
+  warning.style.backgroundColor = "#fff3cd";
+  warning.style.padding = "1rem";
+  warning.style.border = "2px solid #ffcc00";
+  warning.style.borderRadius = "6px";
+  warning.style.margin = "1rem auto";
+  warning.style.maxWidth = "600px";
+  warning.style.textAlign = "center";
+
+  document.body.prepend(warning);
+}
+
+// ✅ Session auto-expiry handling — watch for logout or session expiry
+supabase.auth.onAuthStateChange((event, session) => {
+  if (!session) {
+    console.warn("⚠️ Session expired or user signed out.");
+    alert("⚠️ Your session has expired. Please log in again.");
+    window.location.href = '/hivetag-netlify/hivetag/auth.html';
   }
 });
