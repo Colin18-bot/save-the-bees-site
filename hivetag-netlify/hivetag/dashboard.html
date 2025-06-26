@@ -80,70 +80,9 @@
     </div>
   </footer>
 
-<!-- ✅ Supabase ESM Module and Dashboard Script -->
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+<!-- Load Supabase SDK as a module -->
+<script type="module" src="/hivetag-netlify/hivetag/dashboard.js"></script>
 
-  const supabaseUrl = 'https://hivetag.supabase.co';
-  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...4sAS'; // full key here
 
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-  console.log("✅ Dashboard script running");
-
-  // ✅ Check session
-  const { data, error } = await supabase.auth.getSession();
-
-  if (error || !data.session) {
-    alert("⚠️ You are not logged in. Redirecting to login page.");
-    window.location.href = '/hivetag-netlify/hivetag/auth.html';
-  } else {
-    console.log("👤 Logged in as:", data.session.user.email);
-  }
-
-  // ✅ Logout
-  document.getElementById('logout-btn')?.addEventListener('click', async () => {
-    await supabase.auth.signOut();
-    window.location.href = '/hivetag-netlify/hivetag/auth.html';
-  });
-
-  // ✅ Delete account
-  document.getElementById('delete-account-btn')?.addEventListener('click', async () => {
-    const confirmDelete = confirm("⚠️ Are you sure you want to permanently delete your account?");
-    if (!confirmDelete) return;
-
-    const { data: { user }, error } = await supabase.auth.getUser();
-    if (error || !user) {
-      alert("❌ No user is currently logged in.");
-      return;
-    }
-
-    try {
-      const response = await fetch('/.netlify/functions/delete-user', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: user.id,
-          api_key: 'DEL_95X8z!Dk3vQh6rTg'
-        })
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        alert("✅ Account deleted successfully.");
-        await supabase.auth.signOut();
-        window.location.href = '/hivetag-netlify/hivetag/auth.html';
-      } else {
-        throw new Error(result.error || "Unknown error deleting account.");
-      }
-
-    } catch (err) {
-      console.error("❌ Delete Error:", err);
-      alert(`❌ ${err.message}`);
-    }
-  });
-</script>
-  
 </body>
 </html>

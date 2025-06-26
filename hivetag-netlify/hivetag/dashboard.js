@@ -1,34 +1,32 @@
 console.log("✅ Dashboard script loaded");
 
-// ✅ Step 1: Import Supabase and Initialize First
+// ✅ Import Supabase Client
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
+// ✅ Full Supabase project config
 const supabaseUrl = 'https://hivetag.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdmV0YWciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY4ODAwMDAwMCwiZXhwIjoyMDAzNTc2MDAwfQ.ANKeNgxM7XfwtAv-9dFgN8Zq5X5JSZzPtwtAoRyq4sAS';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// ✅ Step 2: Confirm User Is Logged In
-const checkSession = async () => {
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user) {
-    alert("⚠️ You are not logged in. Redirecting to login page.");
-    window.location.href = '/hivetag-netlify/hivetag/auth.html';
-  } else {
-    console.log("👤 Logged in as:", data.user.email);
-  }
-};
+// ✅ Session check
+const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
 
-checkSession();
+if (sessionError || !sessionData.session) {
+  alert("⚠️ You are not logged in. Redirecting to login page.");
+  window.location.href = '/hivetag-netlify/hivetag/auth.html';
+} else {
+  console.log("👤 Logged in as:", sessionData.session.user.email);
+}
 
-// ✅ Step 3: Logout Button
+// ✅ LOGOUT button handler
 document.getElementById('logout-btn')?.addEventListener('click', async () => {
   console.log("🔌 Logging out...");
   await supabase.auth.signOut();
   window.location.href = '/hivetag-netlify/hivetag/auth.html';
 });
 
-// ✅ Step 4: Delete Account Button
+// ✅ DELETE ACCOUNT button handler
 document.getElementById('delete-account-btn')?.addEventListener('click', async () => {
   const confirmDelete = confirm("⚠️ Are you sure you want to permanently delete your account?");
   if (!confirmDelete) return;
@@ -48,12 +46,6 @@ document.getElementById('delete-account-btn')?.addEventListener('click', async (
         api_key: 'DEL_95X8z!Dk3vQh6rTg'
       })
     });
-
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-      const raw = await response.text();
-      throw new Error(`Server error: ${raw}`);
-    }
 
     const result = await response.json();
 
