@@ -26,6 +26,7 @@ export default async (req, res) => {
     return res.status(400).json({ error: 'User ID is required' });
   }
 
+  
   try {
     const { error } = await supabase.auth.admin.deleteUser(user_id);
     if (error) {
