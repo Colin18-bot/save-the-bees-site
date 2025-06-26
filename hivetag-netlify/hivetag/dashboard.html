@@ -86,6 +86,26 @@
   <!-- ✅ Your custom logic (runs after SDK is loaded) -->
   <script src="/hivetag-netlify/hivetag/dashboard.js" type="text/javascript"></script>
 
+  <!-- ✅ Load Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+  // ✅ Create Supabase client
+  const supabase = window.supabase.createClient(
+    'https://hivetag.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdmV0YWciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY4ODAwMDAwMCwiZXhwIjoyMDAzNTc2MDAwfQ.ANKeNgxM7XfwtAv-9dFgN8Zq5X5JSZzPtwtAoRyq4sAS'
+  );
+
+  // ✅ Check if logged in
+  supabase.auth.getSession().then(({ data, error }) => {
+    if (error || !data.session) {
+      alert("⚠️ You are not logged in. Redirecting to login page.");
+      window.location.href = "/hivetag-netlify/hivetag/auth.html";
+    } else {
+      console.log("✅ Logged in as:", data.session.user.email);
+    }
+  });
+  </script>
 
   
 </body>
