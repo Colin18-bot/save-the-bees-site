@@ -38,7 +38,7 @@ if (!navigator.cookieEnabled) {
 supabase.auth.onAuthStateChange((event, session) => {
   if (!session) {
     console.warn("⚠️ Session expired or user signed out.");
-    alert("⚠️ Your session has expired. Please log in again.");
+    alert("✅ You’ve been logged out successfully.");
     window.location.href = '/hivetag-netlify/hivetag/auth.html';
   }
 });
