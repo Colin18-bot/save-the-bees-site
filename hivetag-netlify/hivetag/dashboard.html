@@ -80,7 +80,23 @@
     </div>
   </footer>
 
-<!-- Load Supabase SDK as a module -->
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+  const supabase = createClient(
+    'https://hivetag.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdmV0YWciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY4ODAwMDAwMCwiZXhwIjoyMDAzNTc2MDAwfQ.ANKeNgxM7XfwtAv-9dFgN8Zq5X5JSZzPtwtAoRyq4sAS'
+  );
+
+  const { data, error } = await supabase.auth.getSession();
+  console.log("✅ Session Data:", data);
+  console.log("❌ Session Error:", error);
+</script>
+
+<!-- ✅ Load Supabase SDK first -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- ✅ Then load your custom dashboard code -->
 <script type="module" src="/hivetag-netlify/hivetag/dashboard.js"></script>
 
 
