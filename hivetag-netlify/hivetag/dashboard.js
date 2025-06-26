@@ -1,43 +1,35 @@
+console.log("✅ Dashboard script loaded");
+
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// ✅ Your actual Supabase project values
+// ✅ Full Supabase config – DO NOT TRUNCATE THESE
 const supabaseUrl = 'https://hivetag.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdmV0YWciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY4NjQzMjkzMiwiZXhwIjoyMDAyMDE4NTMyfQ.Ng1sjNT-8HxKZrkFVw5pTFG_xx3SasGIRZnW6pqF4sAS';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdmV0YWciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY4ODAwMDAwMCwiZXhwIjoyMDAzNTc2MDAwfQ.ANKeNgxM7XfwtAv-9dFgN8Zq5X5JSZzPtwtAoRyq4sAS';
 
-// ✅ Initialize Supabase
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// ✅ Logout button
+// ✅ LOGOUT
 document.getElementById('logout-btn')?.addEventListener('click', async () => {
-  const { error } = await supabase.auth.signOut();
-  if (error) {
-    alert('❌ Logout failed: ' + error.message);
-  } else {
-    window.location.href = '/hivetag/auth.html';
-  }
+  console.log("🔌 Logging out...");
+  await supabase.auth.signOut();
+  window.location.href = '/hivetag-netlify/hivetag/auth.html';
 });
 
-// ✅ Delete account button
+// ✅ DELETE ACCOUNT
 document.getElementById('delete-account-btn')?.addEventListener('click', async () => {
-  const {
-    data: { user },
-    error: userError
-  } = await supabase.auth.getUser();
+  const confirmDelete = confirm("⚠️ Are you sure you want to permanently delete your account?");
+  if (!confirmDelete) return;
 
-  if (userError || !user) {
-    alert('❌ You are not logged in.');
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error || !user) {
+    alert("❌ No user is currently logged in.");
     return;
   }
-
-  const confirmDelete = confirm('⚠️ Are you sure you want to permanently delete your account?');
-  if (!confirmDelete) return;
 
   try {
     const response = await fetch('/.netlify/functions/delete-user', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         user_id: user.id,
         api_key: 'DEL_95X8z!Dk3vQh6rTg'
@@ -46,20 +38,22 @@ document.getElementById('delete-account-btn')?.addEventListener('click', async (
 
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-      const text = await response.text();
-      throw new Error(`Invalid server response: ${text}`);
+      const raw = await response.text();
+      throw new Error(`Server error: ${raw}`);
     }
 
-    const data = await response.json();
+    const result = await response.json();
 
-    if (!response.ok) {
-      throw new Error(data.error || 'Error deleting account.');
+    if (response.ok) {
+      alert("✅ Account deleted successfully.");
+      await supabase.auth.signOut();
+      window.location.href = '/hivetag-netlify/hivetag/auth.html';
+    } else {
+      throw new Error(result.error || "Unknown error deleting account.");
     }
 
-    alert('✅ Account deleted successfully.');
-    await supabase.auth.signOut();
-    window.location.href = '/hivetag/auth.html';
   } catch (err) {
+    console.error("❌ Delete Error:", err);
     alert(`❌ ${err.message}`);
   }
 });
