@@ -2,6 +2,16 @@ console.log("✅ Dashboard script loaded");
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
+// ✅ Check if user is logged in on page load
+supabase.auth.getUser().then(({ data: { user }, error }) => {
+  if (error || !user) {
+    alert("⚠️ You are not logged in. Redirecting to login page.");
+    window.location.href = '/hivetag-netlify/hivetag/auth.html';
+  } else {
+    console.log("👤 Logged in as:", user.email);
+  }
+});
+
 // ✅ Full Supabase project settings
 const supabaseUrl = 'https://hivetag.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdmV0YWciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY4ODAwMDAwMCwiZXhwIjoyMDAzNTc2MDAwfQ.ANKeNgxM7XfwtAv-9dFgN8Zq5X5JSZzPtwtAoRyq4sAS';
