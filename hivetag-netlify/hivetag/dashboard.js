@@ -1,31 +1,34 @@
 console.log("✅ Dashboard script loaded");
 
+// ✅ Step 1: Import Supabase and Initialize First
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// ✅ Full Supabase project settings
 const supabaseUrl = 'https://hivetag.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpdmV0YWciLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY4ODAwMDAwMCwiZXhwIjoyMDAzNTc2MDAwfQ.ANKeNgxM7XfwtAv-9dFgN8Zq5X5JSZzPtwtAoRyq4sAS';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-// ✅ Check session on load
-supabase.auth.getUser().then(({ data, error }) => {
+// ✅ Step 2: Confirm User Is Logged In
+const checkSession = async () => {
+  const { data, error } = await supabase.auth.getUser();
   if (error || !data.user) {
     alert("⚠️ You are not logged in. Redirecting to login page.");
     window.location.href = '/hivetag-netlify/hivetag/auth.html';
   } else {
     console.log("👤 Logged in as:", data.user.email);
   }
-});
+};
 
-// ✅ LOGOUT
+checkSession();
+
+// ✅ Step 3: Logout Button
 document.getElementById('logout-btn')?.addEventListener('click', async () => {
   console.log("🔌 Logging out...");
   await supabase.auth.signOut();
   window.location.href = '/hivetag-netlify/hivetag/auth.html';
 });
 
-// ✅ DELETE ACCOUNT
+// ✅ Step 4: Delete Account Button
 document.getElementById('delete-account-btn')?.addEventListener('click', async () => {
   const confirmDelete = confirm("⚠️ Are you sure you want to permanently delete your account?");
   if (!confirmDelete) return;
