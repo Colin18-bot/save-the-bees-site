@@ -1,64 +1,41 @@
-// ✅ Import Supabase client using CommonJS
-const { createClient } = require('@supabase/supabase-js');
+import { createClient } from '@supabase/supabase-js';
 
-// ✅ Create Supabase client using Service Role Key
+// ✅ Use server-level keys from Netlify environment
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-// ✅ Export handler in CommonJS format
-exports.handler = async function (event, context) {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: 'Method not allowed' }),
-    };
+export default async (req, res) => {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  let body;
-  try {
-    body = JSON.parse(event.body);
-  } catch (err) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: 'Invalid JSON in request body' }),
-    };
-  }
+  const { user_id, api_key } = req.body;
 
-  const { user_id, api_key } = body;
+  console.log("🔍 Received user_id:", user_id);
+  console.log("🔑 Provided API key:", api_key);
 
   if (api_key !== process.env.DELETION_API_KEY) {
-    return {
-      statusCode: 403,
-      body: JSON.stringify({ error: 'Unauthorized' }),
-    };
+    console.warn("❌ Unauthorized request");
+    return res.status(403).json({ error: 'Unauthorized' });
   }
 
   if (!user_id) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: 'User ID is required' }),
-    };
+    console.warn("⚠️ No user ID provided");
+    return res.status(400).json({ error: 'User ID is required' });
   }
 
   try {
     const { error } = await supabase.auth.admin.deleteUser(user_id);
     if (error) {
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: error.message }),
-      };
+      console.error("❌ Supabase error:", error);
+      return res.status(500).json({ error: error.message });
     }
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ message: 'User deleted successfully' }),
-    };
+    return res.status(200).json({ message: 'User deleted successfully' });
   } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Unexpected server error.' }),
-    };
+    console.error("🔥 Unexpected error:", err);
+    return res.status(500).json({ error: 'Unexpected server error.' });
   }
 };
