@@ -811,7 +811,6 @@ address {
   overflow-y: auto;
 }
 
-
   .dropdown.open .dropdown-menu {
     display: block;            /* ✅ FIX */
   }
