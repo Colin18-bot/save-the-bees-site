@@ -133,10 +133,9 @@ a {
 }
 
   .nav-menu.active {
-  max-height: none; /* Remove restriction */
-  height: auto;     /* Let content grow */
-  overflow-y: auto; /* Scroll when needed */
-}  
+    max-height: 100vh;
+    overflow-y: auto;
+  }
 
   .nav-menu > li {
     text-align: center;
@@ -805,11 +804,13 @@ address {
   position: relative;            /* ✅ Ensure stacking works */
 }
 
-.nav-menu.active {
-  max-height: 100vh;
-  display: flex;             /* ✅ Make sure this is present */
+  .nav-menu.active {
+  max-height: none;
+  height: auto;
+  display: flex;
   overflow-y: auto;
 }
+
 
   .dropdown.open .dropdown-menu {
     display: block;            /* ✅ FIX */
