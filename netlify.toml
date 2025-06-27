@@ -1,5 +1,5 @@
 [build]
-  publish = "."
+  publish = "."  # this is fine if deploying from /beezknees
   functions = "hivetag-netlify/functions"
 
 [functions]
