@@ -1,8 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://ijgkmgvtaqtipslmscjq.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; // ✅ This must be set in Netlify
-
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 exports.handler = async (event, context) => {
@@ -10,41 +9,34 @@ exports.handler = async (event, context) => {
     console.log('⚙️ delete-user.js triggered');
 
     if (event.httpMethod !== 'POST') {
-      console.log('❌ Invalid method:', event.httpMethod);
       return {
         statusCode: 405,
         body: JSON.stringify({ error: 'Method Not Allowed' }),
       };
     }
 
-    const { user_id } = JSON.parse(event.body || '{}'); // ✅ matches dashboard.js
+    const { user_id } = JSON.parse(event.body || '{}');
     if (!user_id) {
-      console.log('❌ No user_id provided');
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: 'Missing user_id in request body' }),
+        body: JSON.stringify({ error: 'Missing user_id' }),
       };
     }
 
-    console.log('🔐 Deleting user:', user_id);
     const { error } = await supabase.auth.admin.deleteUser(user_id);
-
     if (error) {
-      console.error('🔥 Supabase error:', error.message);
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: 'Supabase deletion failed: ' + error.message }),
+        body: JSON.stringify({ error: 'Supabase error: ' + error.message }),
       };
     }
 
-    console.log('✅ User deleted successfully');
     return {
       statusCode: 200,
       body: JSON.stringify({ message: 'User deleted successfully' }),
     };
 
   } catch (err) {
-    console.error('🔥 Unhandled crash:', err);
     return {
       statusCode: 500,
       body: JSON.stringify({ error: 'Function crashed: ' + err.message }),
