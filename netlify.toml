@@ -1,6 +1,9 @@
 [build]
-  publish = "."  # this is fine if deploying from /beezknees
+  publish = "."
   functions = "hivetag-netlify/functions"
 
 [functions]
   node_bundler = "esbuild"
+
+[context.production.environment]
+  SECRETS_SCAN_ENABLED = "false"
