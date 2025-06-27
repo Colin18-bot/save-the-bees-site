@@ -1,5 +1,5 @@
 [build]
-  publish = "hivetag-netlify/hivetag"
+  publish = "."
   functions = "hivetag-netlify/functions"
 
 [functions]
