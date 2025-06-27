@@ -1,10 +1,10 @@
-const { createClient } = require('@supabase/supabase-js');
+import { createClient } from '@supabase/supabase-js'
 
 // Use environment variables or fallback for testing
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = 'https://ijgkmgvtaqtipslmscjq.supabase.co'
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY // ✅ MATCH THIS
 
-const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 exports.handler = async (event, context) => {
   try {
