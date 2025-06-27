@@ -133,9 +133,10 @@ a {
 }
 
   .nav-menu.active {
-    max-height: 100vh;
-    overflow-y: auto;
-  }
+  max-height: none; /* Remove restriction */
+  height: auto;     /* Let content grow */
+  overflow-y: auto; /* Scroll when needed */
+}  
 
   .nav-menu > li {
     text-align: center;
@@ -994,9 +995,6 @@ button:focus,
     margin-top: 0.5rem;
   }
 }
-
-
-
 
 .logout-button#delete-account-btn {
   background-color: #444;
