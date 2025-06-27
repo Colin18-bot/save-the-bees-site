@@ -139,8 +139,96 @@
 			</div>
 		</footer>
 
-		
-  	<!-- Load Supabase SDK -->
+		<!-- Cookie Consent Popup -->
+		<div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
+			<div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+				<h2>🍪 We Use Cookies</h2>
+				<p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
+
+				<form id="cookie-options">
+					<label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
+					<label><input type="checkbox" id="analytics" /> Analytics</label><br />
+					<label><input type="checkbox" id="marketing" /> Marketing</label><br />
+				</form>
+
+				<div class="cookie-buttons">
+					<button id="accept-selected">Accept Selected</button>
+					<button id="accept-all">Accept All</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Back to Top Button -->
+		<button id="backToTop" title="Back to top" aria-label="Back to top">
+			⬆ Top
+		</button>
+
+		<!-- ============================================
+     📁 JavaScript: Mobile Menu Interactions
+     - Toggles hamburger menu on mobile
+     - Closes menu on link click or outside click
+     ============================================ -->
+		<script src="js/menu.js"></script>
+
+		<!-- Google Analytics with Cookie Consent -->
+		<script>
+			document.addEventListener('DOMContentLoaded', function () {
+			  const popup = document.getElementById('cookie-consent');
+			  const acceptAllBtn = document.getElementById('accept-all');
+			  const acceptSelectedBtn = document.getElementById('accept-selected');
+			  const analyticsCheckbox = document.getElementById('analytics');
+			  const marketingCheckbox = document.getElementById('marketing');
+
+			  if (!localStorage.getItem('cookieConsent')) {
+			    popup.style.display = 'block';
+			  }
+
+			  function savePreferences(analytics, marketing) {
+			    const consent = {
+			      essential: true,
+			      analytics: analytics,
+			      marketing: marketing
+			    };
+			    localStorage.setItem('cookieConsent', JSON.stringify(consent));
+			    popup.style.display = 'none';
+			    applyConsent(consent);
+			  }
+
+			  acceptAllBtn.addEventListener('click', () => {
+			    savePreferences(true, true);
+			  });
+
+			  acceptSelectedBtn.addEventListener('click', () => {
+			    savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
+			  });
+
+			  function applyConsent(consent) {
+			    if (consent.analytics) {
+			      const gaScript = document.createElement('script');
+			      gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
+			      gaScript.async = true;
+			      document.head.appendChild(gaScript);
+
+			      window.dataLayer = window.dataLayer || [];
+			      function gtag(){dataLayer.push(arguments);}
+			      gtag('js', new Date());
+			      gtag('config', 'G-7C99K0XQKV');
+			    }
+
+			    if (consent.marketing) {
+			      // Load marketing scripts here
+			    }
+			  }
+
+			  const stored = localStorage.getItem('cookieConsent');
+			  if (stored) {
+			    const consent = JSON.parse(stored);
+			    applyConsent(consent);
+			  }
+			});
+		</script>
+
+	<!-- Load Supabase SDK -->
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 	<!-- Load your custom script AFTER Supabase is available -->
 	<script src="/hivetag-netlify/hivetag/auth.js"></script>
