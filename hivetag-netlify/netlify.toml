@@ -1,7 +1,6 @@
-# ✅ netlify.toml (must be inside the hivetag-netlify folder)
 [build]
-  functions = "functions"
-  publish = "hivetag"
+  publish = "hivetag-netlify/hivetag"
+  functions = "hivetag-netlify/functions"
 
 [functions]
   node_bundler = "esbuild"
