@@ -7,7 +7,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 exports.handler = async (event, context) => {
   try {
-    console.log('⚙️ delete-user-v2.js triggered');
+    console.log('⚙️ delete-user.js triggered');
 
     if (event.httpMethod !== 'POST') {
       console.log('❌ Invalid method:', event.httpMethod);
