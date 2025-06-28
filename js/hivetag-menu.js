@@ -1,66 +1,27 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const memberNav = document.getElementById('member-navbar');
+// Toggle hamburger menu
+const toggleBtn = document.getElementById('menuToggle');
+const navMenu = document.querySelector('.nav-menu');
 
-  // ✅ Toggle dropdowns on click (mobile only)
-  document.querySelectorAll('#member-navbar .dropdown-toggle').forEach(button => {
-    button.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const dropdown = this.closest('.dropdown');
-      const isOpen = dropdown.classList.contains('open');
-
-      // Close other open dropdowns
-      document.querySelectorAll('#member-navbar .dropdown.open').forEach(dd => {
-        if (dd !== dropdown) dd.classList.remove('open');
-      });
-
-      dropdown.classList.toggle('open', !isOpen);
-    });
+if (toggleBtn && navMenu) {
+  toggleBtn.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
   });
+}
 
-  // ✅ Close dropdown if clicking outside
-  document.addEventListener('click', e => {
-    if (!e.target.closest('#member-navbar')) {
-      document.querySelectorAll('#member-navbar .dropdown.open').forEach(dd => dd.classList.remove('open'));
-    }
+// Dropdown toggle (desktop + mobile)
+const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+
+dropdownToggles.forEach(button => {
+  button.addEventListener('click', e => {
+    e.preventDefault();
+    const parent = button.closest('.dropdown');
+    parent.classList.toggle('open');
   });
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-  const memberNav = document.getElementById('member-navbar');
-
-  // ✅ Toggle hamburger menu (mobile)
-  const menuToggle = document.getElementById('menuToggle');
-  if (menuToggle) {
-    menuToggle.addEventListener('click', function () {
-      memberNav.classList.toggle('active');
-    });
-  }
-
-  // ✅ Toggle dropdowns on click (mobile)
-  document.querySelectorAll('#member-navbar .dropdown-toggle').forEach(button => {
-    button.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const dropdown = this.closest('.dropdown');
-      const isOpen = dropdown.classList.contains('open');
-
-      // Close other open dropdowns
-      document.querySelectorAll('#member-navbar .dropdown.open').forEach(dd => {
-        if (dd !== dropdown) dd.classList.remove('open');
-      });
-
-      dropdown.classList.toggle('open', !isOpen);
-    });
-  });
-
-  // ✅ Close dropdowns if clicking outside
-  document.addEventListener('click', e => {
-    if (!e.target.closest('#member-navbar')) {
-      document.querySelectorAll('#member-navbar .dropdown.open').forEach(dd => dd.classList.remove('open'));
-    }
+// Optional: close dropdown if clicking outside
+document.addEventListener('click', e => {
+  document.querySelectorAll('.dropdown').forEach(drop => {
+    if (!drop.contains(e.target)) drop.classList.remove('open');
   });
 });
-
