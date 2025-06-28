@@ -22,7 +22,6 @@
 
 .member-nav-menu > li {
   position: relative;
-  flex: 1 1 200px;
 }
 
 .member-nav-menu .dropdown-toggle {
@@ -33,19 +32,20 @@
   text-align: center;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s ease;
   border-radius: 6px;
+  transition: background 0.3s ease;
 }
 
 .member-nav-menu .dropdown-toggle:hover {
   background-color: #222;
 }
 
+/* Hide dropdown menus by default */
 .member-nav-menu .dropdown-menu {
   display: none;
   position: absolute;
-  left: 0;
   top: 100%;
+  left: 0;
   background-color: #222;
   border-radius: 0 0 6px 6px;
   padding: 0.5rem 0;
@@ -62,7 +62,6 @@
   padding: 0.6rem 1rem;
   color: #D4A017;
   text-decoration: none;
-  transition: background 0.3s ease;
 }
 
 .member-nav-menu .dropdown-menu a:hover {
@@ -70,19 +69,19 @@
   color: #fff;
 }
 
-/* Show dropdown on .open class (JS-controlled) */
+/* Show dropdown on .open (JS) */
 .member-nav-menu .dropdown.open .dropdown-menu {
   display: block;
 }
 
-/* Desktop: show dropdown on hover too */
+/* Enable dropdowns on hover for desktop */
 @media (min-width: 768px) {
   .member-nav-menu .dropdown:hover .dropdown-menu {
     display: block;
   }
 }
 
-/* Mobile Menu: Stack vertically (optional future hamburger) */
+/* Mobile View: stack menus */
 @media (max-width: 767px) {
   .member-nav-menu {
     flex-direction: column;
@@ -90,7 +89,7 @@
   }
 
   .member-nav-menu > li {
-    flex: 1 1 auto;
+    width: 100%;
   }
 
   .member-nav-menu .dropdown-menu {
