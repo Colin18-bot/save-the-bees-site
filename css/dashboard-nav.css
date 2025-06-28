@@ -1,99 +1,98 @@
-/* ------------------------------------------- */
-/* HiveTag Dashboard Navigation Styles         */
-/* ------------------------------------------- */
-
-#member-navbar {
-  background-color: #111;
-  padding: 1rem 0;
-  z-index: 1000;
-  position: relative;
+/* RESET DEFAULTS */
+#member-navbar,
+.member-nav-menu,
+.member-nav-menu li,
+.dropdown-menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
+/* Top-level navbar container */
+#member-navbar {
+  background-color: #111;
+  font-family: Arial, sans-serif;
+}
+
+/* Main nav menu */
 .member-nav-menu {
-  list-style: none;
   display: flex;
+  justify-content: space-around;
+  background-color: #111;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 2rem;
-  margin: 0 auto;
-  padding: 0;
-  max-width: 1200px;
 }
 
 .member-nav-menu > li {
   position: relative;
+  flex-grow: 1;
+  text-align: center;
 }
 
-.member-nav-menu .dropdown-toggle {
-  display: block;
-  background-color: #000;
+/* Dropdown toggle button */
+.dropdown-toggle {
+  background: #111;
   color: #fff;
-  padding: 0.8rem 1rem;
-  text-align: center;
-  font-weight: bold;
+  padding: 1rem;
+  font-size: 1rem;
+  border: none;
+  width: 100%;
   cursor: pointer;
-  border-radius: 6px;
+  font-weight: bold;
   transition: background 0.3s ease;
 }
 
-.member-nav-menu .dropdown-toggle:hover {
-  background-color: #222;
+.dropdown-toggle:hover {
+  background: #222;
 }
 
-/* Hide dropdown menus by default */
-.member-nav-menu .dropdown-menu {
+/* Dropdown menu hidden by default */
+.dropdown-menu {
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: #222;
-  border-radius: 0 0 6px 6px;
-  padding: 0.5rem 0;
-  min-width: 200px;
-  z-index: 1001;
+  background: #222;
+  width: 100%;
+  z-index: 999;
 }
 
-.member-nav-menu .dropdown-menu li {
-  text-align: left;
-}
-
-.member-nav-menu .dropdown-menu a {
+/* Menu item styles */
+.dropdown-menu li a {
   display: block;
-  padding: 0.6rem 1rem;
-  color: #D4A017;
+  padding: 0.75rem;
+  color: gold;
   text-decoration: none;
+  transition: background 0.3s ease;
 }
 
-.member-nav-menu .dropdown-menu a:hover {
+.dropdown-menu li a:hover {
   background-color: #333;
-  color: #fff;
 }
 
-/* Show dropdown on .open (JS) */
-.member-nav-menu .dropdown.open .dropdown-menu {
-  display: block;
-}
-
-/* Enable dropdowns on hover for desktop */
+/* Desktop hover behavior */
 @media (min-width: 768px) {
-  .member-nav-menu .dropdown:hover .dropdown-menu {
+  .dropdown:hover .dropdown-menu {
     display: block;
   }
 }
 
-/* Mobile View: stack menus */
+/* Mobile stacking behavior */
 @media (max-width: 767px) {
   .member-nav-menu {
     flex-direction: column;
-    gap: 0;
   }
 
-  .member-nav-menu > li {
-    width: 100%;
-  }
-
-  .member-nav-menu .dropdown-menu {
+  .dropdown-menu {
     position: static;
-    border-radius: 0;
   }
+
+  .dropdown-toggle {
+    text-align: left;
+    padding-left: 1rem;
+  }
+}
+
+/* Prevent accidental transforms or flipped text */
+.dropdown-toggle {
+  transform: none !important;
 }
