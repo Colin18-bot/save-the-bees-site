@@ -6,7 +6,7 @@
   position: relative;
   z-index: 3000;
   display: block;
-  padding: 0.5rem 0;
+  padding: 1rem 0; /* add vertical spacing */
 }
 
 /* Ensure it's not overlapped */
@@ -16,9 +16,7 @@
   position: relative;
 }
 
-/* -------------------------
-   Navigation Menu Styles
-------------------------- */
+/* Top-Level Menu */
 .member-nav-menu {
   display: flex;
   flex-wrap: wrap;
@@ -35,7 +33,6 @@
   align-items: center;
 }
 
-/* Top-level Buttons */
 .member-nav-menu > li > .dropdown-toggle {
   background: none;
   border: none;
@@ -51,7 +48,7 @@
   color: #fff;
 }
 
-/* Dropdown Container */
+/* Dropdown Containers */
 .dropdown {
   position: relative;
 }
@@ -69,13 +66,11 @@
   flex-direction: column;
 }
 
-/* Show Dropdown */
 .dropdown:hover .dropdown-menu,
 .dropdown.open .dropdown-menu {
   display: block;
 }
 
-/* Submenu Links */
 .dropdown-menu li a {
   color: #D4A017;
   padding: 0.75rem 1rem;
@@ -92,12 +87,16 @@
 /* -------------------------
    Hero Banner Fixes
 ------------------------- */
-section[aria-label="Dashboard Banner"],
+section[aria-label="Dashboard Banner"] {
+  background-color: #000 !important;
+  padding-top: 2rem; /* push image down from nav */
+}
+
 .banner {
   background-color: #000 !important;
-  min-height: 200px;
+  min-height: 300px; /* make it visible */
   position: relative;
-  z-index: 1000; /* BELOW nav */
+  z-index: 1000;
 }
 
 .banner img {
@@ -122,7 +121,7 @@ section[aria-label="Dashboard Banner"],
 }
 
 /* -------------------------
-   Mobile Styles
+   Responsive Styles
 ------------------------- */
 @media (max-width: 768px) {
   .member-nav-menu {
