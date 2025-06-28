@@ -1,81 +1,124 @@
-/* Reset default styles */
-#member-navbar,
-#member-navbar ul {
-  list-style: none;
+/* MEMBER DASHBOARD NAVIGATION - BEEZKNEES STYLE */
+
+/* Base Reset */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-#member-navbar {
-  background-color: #222;
-  font-family: 'Segoe UI', sans-serif;
-  position: relative;
-  z-index: 1000;
+/* Fixed Header */
+.fixed-header {
+  background-color: #000; /* Black */
+  padding: 10px 20px;
+  color: #f2b705; /* Gold text */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
 }
 
+/* Logo */
+.fixed-header img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.fixed-header h1 {
+  font-size: 1.5rem;
+  color: #f2b705;
+  font-weight: bold;
+}
+
+/* Member Navbar Container */
+#member-navbar {
+  background-color: #111;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  margin-top: 80px; /* Push content below fixed header */
+  z-index: 11;
+}
+
+/* Main Navigation List */
 .member-nav-menu {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  list-style: none;
+  gap: 20px;
 }
 
-#member-navbar .dropdown {
+/* Each Dropdown Item */
+.dropdown {
   position: relative;
 }
 
-#member-navbar .dropdown-toggle {
-  background: none;
+/* Top-Level Buttons */
+.dropdown-toggle {
+  background-color: #222;
+  color: #fff;
+  padding: 12px 20px;
   border: none;
-  color: white;
-  padding: 1rem 1.5rem;
-  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.3s ease;
-  transform: none !important; /* Prevent unwanted rotation */
+  font-size: 1rem;
+  width: 160px;
+  text-align: center;
 }
 
-#member-navbar .dropdown-toggle:hover {
-  background-color: #444;
+.dropdown-toggle:hover {
+  background-color: #f2b705;
+  color: #000;
 }
 
-#member-navbar .dropdown-menu {
+/* Dropdown Menu List */
+.dropdown-menu {
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
-  background: #fff;
+  background-color: #000;
   min-width: 200px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  z-index: 2000;
+  list-style: none;
+  padding: 0;
+  z-index: 9999;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
-#member-navbar .dropdown-menu li a {
+.dropdown:hover .dropdown-menu {
   display: block;
-  padding: 0.75rem 1rem;
-  color: #333;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 10px 15px;
+  color: #fff;
   text-decoration: none;
-  transition: background 0.3s;
+  background-color: #000;
 }
 
-#member-navbar .dropdown-menu li a:hover {
-  background-color: #f0f0f0;
+.dropdown-menu li a:hover {
+  background-color: #f2b705;
+  color: #000;
 }
 
-/* Mobile toggle (JS-controlled) */
-#member-navbar .dropdown.open .dropdown-menu {
-  display: block;
-}
-
-/* Desktop: show dropdown on hover */
-@media screen and (min-width: 768px) {
-  #member-navbar .dropdown:hover .dropdown-menu {
-    display: block;
+/* Responsive - Hamburger Style */
+@media (max-width: 768px) {
+  .member-nav-menu {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  /* Ensure all dropdowns are visible on hover, even without JS */
-  #member-navbar .dropdown-toggle::after {
-    content: " ▼";
-    font-size: 0.8em;
-    vertical-align: middle;
+  .dropdown-menu {
+    position: relative;
+    max-height: none;
+    overflow-y: auto;
+  }
+
+  .dropdown-toggle {
+    width: 100%;
   }
 }
