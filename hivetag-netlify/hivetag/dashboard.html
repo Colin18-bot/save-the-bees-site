@@ -12,7 +12,13 @@
 </head>
 
 <body>
- 
+<!-- Loading Screen -->
+<div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+  background: #fff; color: #333; z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+  Please wait, checking login status...
+</div>
+
+
 <!-- Fixed Header and Nav Container -->
 		<div class="fixed-header">
 			<header class="site-header" role="region" aria-label="Site Header">
@@ -142,14 +148,7 @@
 			⬆ Top
 		</button>
 
-    <!-- ============================================
-     📁 JavaScript: Mobile Menu Interactions
-     - Toggles hamburger menu on mobile
-     - Closes menu on link click or outside click
-     ============================================ -->
-      <script src="../../js/hivetag-menu.js"></script>
-      
-  	<!-- Google Analytics with Cookie Consent -->
+   	<!-- Google Analytics with Cookie Consent -->
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
 			  const popup = document.getElementById('cookie-consent');
@@ -206,12 +205,15 @@
 			  }
 			});
 		</script>
-
-<!-- ✅ Use UMD version -->
+  
+<!-- Use UMD version -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
-
-<!-- ✅ Load your dashboard logic -->
+<!-- Load your dashboard logic -->
 <script src="/hivetag-netlify/hivetag/dashboard.js"></script>
+<!-- Auth check with loading screen -->
+<script src="../../js/auth-check.js"></script>
+<!-- Hivetag-navigation menu -->
+<script src="../../js/hivetag-menu.js"></script>
 
 </body>
 </html>
