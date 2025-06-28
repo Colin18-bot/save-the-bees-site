@@ -3,12 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BeezKnees Dashboard</title>
+  
+  <title>BeezKnees | Member Dashboard</title>
+ 
+  <!-- Hamburger button -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
   <!-- Global site styles -->
   <link rel="stylesheet" href="../../css/style.css" />
   <!-- Member area nav and link styles -->
   <link rel="stylesheet" href="../../css/member-nav.css" />
-  </head>
+  
+  <!-- SEO Meta Tags -->
+		<meta
+			name="description"
+			content="BeezKnees is your practical beekeeping guide, offering seasonal tips, hive health advice, and pollinator 
+  protection resources for beginners and experienced keepers alike."
+		/>
+		<meta
+			name="keywords"
+			content="beekeeping guide, practical beekeeping, hive care, pollinator protection, apiary tips, seasonal hive tasks, 
+  queen rearing, swarm control, beekeeping for beginners, beekeeping resources"
+		/>
+		<meta name="author" content="Colin Chorley" />
+
+		<!-- Favicon -->
+		<link rel="icon" href="../../images/favicon.ico" type="image/x-icon" />
+		<!-- 16x16 and 32x32 for classic tabs -->
+		<link rel="icon" type="../../image/favicon-16x16.png" sizes="16x16" href="favicon-16x16.png" />
+		<link rel="icon" type="../../image/favicon-32x32.png" sizes="32x32" href="favicon-32x32.png" />
+		<!-- Apple touch icon for iOS -->
+		<link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+		<!-- Android home screen icons -->
+		<link rel="icon" type="../../image/android-chrome-192x192.png" sizes="192x192" href="android-chrome-192x192.png" />
+		<link rel="icon" type="../image/android-chrome-512x512.png" sizes="512x512" href="android-chrome-512x512.png" />
+		<!-- PWA manifest (optional but helpful) -->
+		<link rel="manifest" href="site.webmanifest" />
+
+</head>
 
 <body>
 <!-- Loading Screen -->
@@ -34,8 +65,8 @@
 			</header>
 		</div>
 
-<nav class="member-navbar">
-  <ul class="member-nav-menu">
+  <nav class="member-navbar" role="navigation" aria-label="Member Navigation">
+  <ul id="navMenu" class="member-nav-menu">
     <li class="dropdown">
       <button class="dropdown-toggle">Apiary</button>
       <ul class="dropdown-menu">
