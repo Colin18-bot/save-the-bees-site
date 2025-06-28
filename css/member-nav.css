@@ -1,0 +1,109 @@
+/* Member Dashboard Navigation - BeezKnees Theme */
+
+/* Reset */
+.member-nav-menu, .member-nav-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Main Nav Container */
+#member-navbar {
+  background-color: #000;
+  padding: 0.5rem 1rem;
+  border-bottom: 2px solid gold;
+  z-index: 999;
+  position: relative;
+}
+
+/* Nav Items */
+.member-nav-menu {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 2rem;
+}
+
+/* Dropdown Trigger Buttons */
+.member-nav-menu .dropdown-toggle {
+  background: none;
+  border: none;
+  color: gold;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.member-nav-menu .dropdown-toggle:hover {
+  color: white;
+}
+
+/* Dropdown Menus */
+.member-nav-menu .dropdown {
+  position: relative;
+}
+
+.member-nav-menu .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: black;
+  border: 1px solid gold;
+  padding: 0.5rem 0;
+  min-width: 200px;
+  z-index: 1000;
+}
+
+.member-nav-menu .dropdown-menu li a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: white;
+  text-decoration: none;
+}
+
+.member-nav-menu .dropdown-menu li a:hover {
+  background-color: gold;
+  color: black;
+}
+
+/* Show dropdown on hover (desktop) */
+.member-nav-menu .dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* Responsive: Mobile Stacking */
+@media (max-width: 768px) {
+  .member-nav-menu {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .member-nav-menu .dropdown {
+    width: 100%;
+  }
+
+  .member-nav-menu .dropdown-toggle {
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 1rem;
+    border-top: 1px solid gold;
+  }
+
+  .member-nav-menu .dropdown-menu {
+    position: static;
+    border: none;
+    padding: 0;
+    background-color: #111;
+    width: 100%;
+  }
+
+  .member-nav-menu .dropdown-menu li a {
+    padding: 0.5rem 1rem;
+  }
+
+  #member-navbar {
+    padding-bottom: 1rem;
+  }
+}
