@@ -1,27 +1,33 @@
+// hivetag-menu.js
+
 document.addEventListener('DOMContentLoaded', function () {
-  // Toggle dropdowns in member nav
-  document.querySelectorAll('#member-navbar .dropdown-toggle').forEach(button => {
-    button.addEventListener('click', function (e) {
+  // Toggle dropdowns when a top-level item is clicked
+  document.querySelectorAll('#member-navbar .dropdown-toggle').forEach(toggle => {
+    toggle.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
 
-      const dropdown = this.closest('.dropdown');
-      const isOpen = dropdown.classList.contains('open');
+      const parentDropdown = this.closest('.dropdown');
+      const isOpen = parentDropdown.classList.contains('open');
 
-      // Close all others
-      document.querySelectorAll('#member-navbar .dropdown.open').forEach(d => {
-        if (d !== dropdown) d.classList.remove('open');
+      // Close all other open dropdowns
+      document.querySelectorAll('#member-navbar .dropdown.open').forEach(drop => {
+        if (drop !== parentDropdown) {
+          drop.classList.remove('open');
+        }
       });
 
-      // Toggle this
-      dropdown.classList.toggle('open', !isOpen);
+      // Toggle current dropdown
+      parentDropdown.classList.toggle('open', !isOpen);
     });
   });
 
-  // Close when clicking outside
+  // Close dropdowns when clicking outside the nav
   document.addEventListener('click', function (e) {
-    if (!e.target.closest('#member-navbar .dropdown')) {
-      document.querySelectorAll('#member-navbar .dropdown.open').forEach(d => d.classList.remove('open'));
+    if (!e.target.closest('#member-navbar')) {
+      document.querySelectorAll('#member-navbar .dropdown.open').forEach(drop => {
+        drop.classList.remove('open');
+      });
     }
   });
 });
