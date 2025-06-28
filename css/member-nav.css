@@ -1,7 +1,6 @@
-/* member-nav.css */
-/* This file overrides global styles (from style.css) specifically for the member area navigation */
+/* MEMBER NAVIGATION STYLES */
 
-/* Reset global list styles and font inheritance */
+/* Reset and layout */
 #member-navbar .member-nav-menu,
 #member-navbar .member-nav-menu ul,
 #member-navbar .member-nav-menu li {
@@ -14,7 +13,6 @@
   line-height: 1.4;
 }
 
-/* Restore layout display */
 #member-navbar {
   background: #fff9e6;
   padding: 1rem;
@@ -23,6 +21,7 @@
   z-index: 100;
 }
 
+/* Flex layout desktop */
 #member-navbar .member-nav-menu {
   display: flex;
   gap: 2rem;
@@ -34,6 +33,7 @@
   position: relative;
 }
 
+/* Toggle button */
 #member-navbar .dropdown-toggle {
   background: none;
   border: none;
@@ -44,6 +44,7 @@
   color: #2f2f2f;
 }
 
+/* Dropdown menu hidden by default */
 #member-navbar .dropdown-menu {
   display: none;
   position: absolute;
@@ -56,7 +57,13 @@
   z-index: 10;
 }
 
+/* Show on hover (desktop) */
 #member-navbar .dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* Show on click (mobile with JS) */
+#member-navbar .dropdown.open .dropdown-menu {
   display: block;
 }
 
@@ -72,4 +79,37 @@
 #member-navbar .dropdown-menu li a:hover {
   background-color: #fff3cc;
   color: #000;
+}
+
+/* ✅ Responsive Mobile Menu */
+@media (max-width: 768px) {
+  #member-navbar .member-nav-menu {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    background: #fff9e6;
+    padding: 1rem;
+  }
+
+  #member-navbar.active .member-nav-menu {
+    display: flex;
+  }
+
+  #member-navbar .dropdown {
+    width: 100%;
+  }
+
+  #member-navbar .dropdown-toggle {
+    width: 100%;
+    text-align: left;
+    padding-left: 0;
+  }
+
+  #member-navbar .dropdown-menu {
+    position: static;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    padding-left: 1rem;
+  }
 }
