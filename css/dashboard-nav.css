@@ -24,60 +24,56 @@
   flex: 1 1 200px;
 }
 
-.member-nav-menu > li > a.dropdown-toggle {
-  display: block;
+.dropdown-toggle {
   background-color: #111;
   color: #D4A017;
   padding: 0.6rem 1rem;
-  margin-bottom: 0.4rem;
   border-radius: 6px;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  text-align: center;
-  text-decoration: none;
   cursor: pointer;
+  text-align: center;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.member-nav-menu > li > a.dropdown-toggle:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.dropdown-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.15);
   color: #fff;
 }
 
-/* Dropdown list (sub-menu) */
-.member-nav-menu .dropdown ul {
+/* Submenu hidden by default */
+#member-navbar .dropdown ul {
   display: none;
   position: absolute;
-  background-color: #111;
-  list-style: none;
-  margin: 0;
-  padding: 0.5rem 0;
   top: 100%;
   left: 0;
+  background-color: #111;
+  padding: 0.5rem 0;
+  list-style: none;
+  z-index: 10;
   border-radius: 6px;
   min-width: 180px;
-  z-index: 1000;
 }
 
-/* Show dropdown on hover */
-.member-nav-menu .dropdown:hover ul {
+/* Show on .open toggle */
+#member-navbar .dropdown.open ul {
   display: block;
 }
 
 /* Submenu links */
-.member-nav-menu .dropdown ul li a {
+#member-navbar .dropdown ul li a {
   display: block;
-  padding: 0.5rem 1rem;
+  background-color: #111;
   color: #D4A017;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
   text-decoration: none;
   font-size: 0.95rem;
-  white-space: nowrap;
-  background-color: #111;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.member-nav-menu .dropdown ul li a:hover {
+#member-navbar .dropdown ul li a:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
