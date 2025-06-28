@@ -1,21 +1,24 @@
-/* Member Navigation Bar */
+/* -------------------------
+   Member Navigation Bar
+------------------------- */
 .member-navbar {
   background-color: #000;
   position: relative;
   z-index: 3000;
   display: block;
   padding: 0.5rem 0;
-  min-height: 3rem;
 }
 
-/* Dropdown menu styling */
-.member-nav-menu .dropdown-menu {
-  background-color: #111;
-  border: 1px solid #333;
-  z-index: 1100;
+/* Ensure it's not overlapped */
+.member-navbar,
+.member-nav-menu,
+.dropdown-menu {
+  position: relative;
 }
 
-/* Top-Level Menu */
+/* -------------------------
+   Navigation Menu Styles
+------------------------- */
 .member-nav-menu {
   display: flex;
   flex-wrap: wrap;
@@ -24,6 +27,7 @@
   margin: 0;
   padding: 0;
   gap: 1.5rem;
+  z-index: 3001;
 }
 
 .member-nav-menu > li {
@@ -31,7 +35,7 @@
   align-items: center;
 }
 
-/* Dropdown Items (Top Level Buttons) */
+/* Top-level Buttons */
 .member-nav-menu > li > .dropdown-toggle {
   background: none;
   border: none;
@@ -47,7 +51,7 @@
   color: #fff;
 }
 
-/* Dropdown Containers */
+/* Dropdown Container */
 .dropdown {
   position: relative;
 }
@@ -61,11 +65,11 @@
   background-color: #111;
   border: 1px solid #333;
   min-width: 200px;
-  z-index: 999;
+  z-index: 3002;
   flex-direction: column;
 }
 
-/* Show dropdown on hover (desktop) or JS toggle (mobile) */
+/* Show Dropdown */
 .dropdown:hover .dropdown-menu,
 .dropdown.open .dropdown-menu {
   display: block;
@@ -85,22 +89,28 @@
   color: #fff;
 }
 
-/* Force Black Background on Banner */
+/* -------------------------
+   Hero Banner Fixes
+------------------------- */
 section[aria-label="Dashboard Banner"],
 .banner {
   background-color: #000 !important;
   min-height: 200px;
+  position: relative;
+  z-index: 1000; /* BELOW nav */
 }
 
-/* Ensure the banner image is visible and responsive */
 .banner img {
   width: 100%;
   height: auto;
   max-height: 400px;
   display: block;
+  object-fit: cover;
 }
 
-/* Hamburger (mobile only) */
+/* -------------------------
+   Hamburger (Mobile Only)
+------------------------- */
 .menu-toggle {
   display: none;
   background: none;
@@ -111,7 +121,9 @@ section[aria-label="Dashboard Banner"],
   cursor: pointer;
 }
 
-/* Responsive Styles */
+/* -------------------------
+   Mobile Styles
+------------------------- */
 @media (max-width: 768px) {
   .member-nav-menu {
     display: none;
