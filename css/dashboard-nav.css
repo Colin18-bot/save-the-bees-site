@@ -1,6 +1,6 @@
-/* -------------------------------------------------- */
-/* 🧭 HiveTag Member Navigation Styles                */
-/* -------------------------------------------------- */
+/* -------------------------------------- */
+/* ✅ HiveTag Member Navigation Styles    */
+/* -------------------------------------- */
 
 #member-navbar {
   background-color: #000;
@@ -24,6 +24,7 @@
   flex: 1 1 200px;
 }
 
+/* Top-level toggle buttons */
 .dropdown-toggle {
   background-color: #111;
   color: #D4A017;
@@ -32,8 +33,8 @@
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  cursor: pointer;
   text-align: center;
+  cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -42,34 +43,34 @@
   color: #fff;
 }
 
-/* Submenu hidden by default */
+/* Hide dropdowns by default */
 #member-navbar .dropdown ul {
   display: none;
   position: absolute;
-  top: 100%;
-  left: 0;
   background-color: #111;
   padding: 0.5rem 0;
-  list-style: none;
-  z-index: 10;
   border-radius: 6px;
+  top: 100%;
+  left: 0;
+  z-index: 100;
   min-width: 180px;
+  list-style: none;
 }
 
-/* Show on .open toggle */
+/* Show dropdown when .open class is applied */
 #member-navbar .dropdown.open ul {
   display: block;
 }
 
-/* Submenu links */
+/* Dropdown links */
 #member-navbar .dropdown ul li a {
   display: block;
   background-color: #111;
   color: #D4A017;
   padding: 0.5rem 1rem;
+  font-size: 0.95rem;
   border-radius: 4px;
   text-decoration: none;
-  font-size: 0.95rem;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
