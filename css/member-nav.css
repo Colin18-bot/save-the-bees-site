@@ -2,8 +2,10 @@
 .member-navbar {
   background-color: #000;
   position: relative;
-  z-index: 3000; /* Increased to stay above banner */
+  z-index: 3000;
   display: block;
+  padding: 0.5rem 0;
+  min-height: 3rem;
 }
 
 /* Dropdown menu styling */
@@ -22,6 +24,11 @@
   margin: 0;
   padding: 0;
   gap: 1.5rem;
+}
+
+.member-nav-menu > li {
+  display: flex;
+  align-items: center;
 }
 
 /* Dropdown Items (Top Level Buttons) */
@@ -78,12 +85,19 @@
   color: #fff;
 }
 
-/* Dashboard Banner Fix */
+/* Force Black Background on Banner */
 section[aria-label="Dashboard Banner"],
 .banner {
   background-color: #000 !important;
-  position: relative;
-  z-index: 1000; /* Ensure it's under the nav */
+  min-height: 200px;
+}
+
+/* Ensure the banner image is visible and responsive */
+.banner img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  display: block;
 }
 
 /* Hamburger (mobile only) */
