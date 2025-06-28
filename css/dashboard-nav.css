@@ -1,82 +1,81 @@
-/* RESET DEFAULTS */
-#member-navbar,
-.member-nav-menu,
-.member-nav-menu li,
-.dropdown-menu {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-/* Top-level navbar container */
+/* --- NAVIGATION BASE --- */
 #member-navbar {
   background-color: #111;
   font-family: Arial, sans-serif;
 }
 
-/* Main nav menu */
 .member-nav-menu {
   display: flex;
-  justify-content: space-around;
-  background-color: #111;
   flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 .member-nav-menu > li {
   position: relative;
-  flex-grow: 1;
   text-align: center;
 }
 
-/* Dropdown toggle button */
 .dropdown-toggle {
-  background: #111;
-  color: #fff;
-  padding: 1rem;
-  font-size: 1rem;
-  border: none;
-  width: 100%;
-  cursor: pointer;
+  background: none;
+  color: white;
+  font-size: 1.1rem;
   font-weight: bold;
-  transition: background 0.3s ease;
+  padding: 1rem;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: transform 0.3s ease;
 }
 
-.dropdown-toggle:hover {
-  background: #222;
+/* 🔧 Fix: prevent rotation */
+.dropdown.open .dropdown-toggle {
+  transform: none !important;
 }
 
-/* Dropdown menu hidden by default */
+/* Submenu hidden by default */
 .dropdown-menu {
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
+  min-width: 180px;
   background: #222;
-  width: 100%;
-  z-index: 999;
+  z-index: 1000;
+  text-align: left;
+  padding: 0;
 }
 
-/* Menu item styles */
+.dropdown-menu li {
+  border-bottom: 1px solid #333;
+}
+
 .dropdown-menu li a {
   display: block;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
   color: gold;
   text-decoration: none;
   transition: background 0.3s ease;
 }
 
 .dropdown-menu li a:hover {
-  background-color: #333;
+  background-color: #444;
 }
 
-/* Desktop hover behavior */
+/* --- DESKTOP: Show on hover --- */
 @media (min-width: 768px) {
   .dropdown:hover .dropdown-menu {
     display: block;
   }
+
+  .dropdown-toggle {
+    pointer-events: none; /* Disable click; use hover only */
+  }
 }
 
-/* Mobile stacking behavior */
+/* --- MOBILE: Expand manually --- */
 @media (max-width: 767px) {
   .member-nav-menu {
     flex-direction: column;
@@ -86,13 +85,12 @@
     position: static;
   }
 
-  .dropdown-toggle {
-    text-align: left;
-    padding-left: 1rem;
+  .dropdown.open .dropdown-menu {
+    display: block;
   }
-}
 
-/* Prevent accidental transforms or flipped text */
-.dropdown-toggle {
-  transform: none !important;
+  .dropdown-toggle {
+    pointer-events: auto;
+    text-align: left;
+  }
 }
