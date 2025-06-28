@@ -1,76 +1,81 @@
-/* === Member Nav Base === */
-#member-navbar {
-  background-color: #333;
-  padding: 0;
+/* Reset default styles */
+#member-navbar,
+#member-navbar ul {
+  list-style: none;
   margin: 0;
-  font-family: sans-serif;
+  padding: 0;
+}
+
+#member-navbar {
+  background-color: #222;
+  font-family: 'Segoe UI', sans-serif;
+  position: relative;
+  z-index: 1000;
 }
 
 .member-nav-menu {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
 }
 
-.member-nav-menu .dropdown {
+#member-navbar .dropdown {
   position: relative;
 }
 
-.member-nav-menu .dropdown-toggle {
+#member-navbar .dropdown-toggle {
   background: none;
-  color: #fff;
-  padding: 1rem 1.5rem;
   border: none;
-  cursor: pointer;
+  color: white;
+  padding: 1rem 1.5rem;
   font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  transform: none !important; /* Prevent unwanted rotation */
 }
 
-.member-nav-menu .dropdown-toggle:hover {
+#member-navbar .dropdown-toggle:hover {
   background-color: #444;
 }
 
-/* === Dropdown Menu === */
-.dropdown-menu {
+#member-navbar .dropdown-menu {
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: #444;
+  background: #fff;
   min-width: 200px;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  z-index: 10;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 2000;
 }
 
-.dropdown-menu li a {
+#member-navbar .dropdown-menu li a {
   display: block;
   padding: 0.75rem 1rem;
-  color: #fff;
+  color: #333;
   text-decoration: none;
-  white-space: nowrap;
+  transition: background 0.3s;
 }
 
-.dropdown-menu li a:hover {
-  background-color: #555;
+#member-navbar .dropdown-menu li a:hover {
+  background-color: #f0f0f0;
 }
 
-/* === JS Toggle: Dropdown Open === */
-.dropdown.open .dropdown-menu {
+/* Mobile toggle (JS-controlled) */
+#member-navbar .dropdown.open .dropdown-menu {
   display: block;
 }
 
-/* === DESKTOP: Show on hover too === */
-@media (min-width: 768px) {
+/* Desktop: show dropdown on hover */
+@media screen and (min-width: 768px) {
   #member-navbar .dropdown:hover .dropdown-menu {
     display: block;
   }
-}
 
-/* === Remove Top Margin from Main Content === */
-main.content {
-  margin-top: 0;
-  padding-top: 0;
+  /* Ensure all dropdowns are visible on hover, even without JS */
+  #member-navbar .dropdown-toggle::after {
+    content: " ▼";
+    font-size: 0.8em;
+    vertical-align: middle;
+  }
 }
