@@ -24,75 +24,64 @@
   flex: 1 1 200px;
 }
 
-/* Top-level section label (Apiary, Hives, etc.) */
-.member-nav-menu > li .dropdown-toggle {
+/* Top-level links */
+.member-nav-menu > li > .dropdown-toggle {
   display: block;
-  font-size: clamp(1rem, 1vw + 0.4rem, 1.2rem);
-  color: #D4A017;
   background-color: #111;
+  color: #D4A017;
   padding: 0.6rem 1rem;
-  margin-bottom: 0.4rem;
   border-radius: 6px;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-align: center;
-  cursor: default;
-}
-
-/* Submenu links (Register Hive, View Map, etc.) */
-.member-nav-menu a {
-  display: block;
-  background-color: #111;
-  color: #D4A017;
-  padding: 0.6rem 1rem;
-  margin-bottom: 0.4rem;
-  border-radius: 6px;
-  font-weight: bold;
   text-decoration: none;
+  cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.member-nav-menu a:hover {
-  background-color: rgba(255, 255, 255, 0.15);
+.member-nav-menu > li > .dropdown-toggle:hover {
+  background-color: #222;
   color: #fff;
 }
 
-/* Dropdown submenu - hidden by default */
-#member-navbar .dropdown ul {
+/* Dropdown menus */
+.member-nav-menu .dropdown ul {
   display: none;
   position: absolute;
   background-color: #111;
   padding: 0.5rem 0;
   list-style: none;
+  z-index: 10;
+  min-width: 180px;
   border-radius: 6px;
   top: 100%;
   left: 0;
-  z-index: 100;
-  min-width: 180px;
 }
 
-/* Show submenu on hover */
-#member-navbar .dropdown:hover ul {
+/* Show dropdown on hover */
+.member-nav-menu .dropdown:hover ul {
   display: block;
 }
 
-/* Submenu link styling */
-#member-navbar .dropdown ul li a {
+/* Dropdown links */
+.member-nav-menu .dropdown ul li a {
+  display: block;
   background-color: #111;
-  padding: 0.5rem 1rem;
   color: #D4A017;
-  font-weight: normal;
+  padding: 0.5rem 1rem;
   font-size: 0.95rem;
+  text-decoration: none;
   white-space: nowrap;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-#member-navbar .dropdown ul li a:hover {
+.member-nav-menu .dropdown ul li a:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
 
-/* Responsive fallback */
+/* Responsive tweaks */
 @media (max-width: 768px) {
   .member-nav-menu {
     flex-direction: column;
@@ -100,17 +89,13 @@
   }
 
   .member-nav-menu > li {
+    flex: none;
     width: 100%;
     text-align: center;
   }
 
-  #member-navbar .dropdown ul {
+  .member-nav-menu .dropdown ul {
     position: static;
-    min-width: 100%;
-    border-radius: 0;
-  }
-
-  #member-navbar .dropdown:hover ul {
-    display: block;
+    margin-top: 0.5rem;
   }
 }
