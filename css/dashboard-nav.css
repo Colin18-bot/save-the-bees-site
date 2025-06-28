@@ -27,7 +27,7 @@
 .member-nav-menu > li strong {
   display: block;
   font-size: clamp(1rem, 1vw + 0.4rem, 1.2rem);
-  color: #fff;
+  color: #D4A017;
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -83,4 +83,36 @@
 #member-navbar .dropdown ul li a:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: #fff;
+}
+
+/* Hide dropdowns by default */
+#member-navbar .dropdown ul {
+  display: none;
+  position: absolute;
+  background-color: #111;
+  padding: 0.5rem 0;
+  border-radius: 6px;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  min-width: 180px;
+}
+
+/* Show on hover */
+#member-navbar .dropdown:hover ul {
+  display: block;
+}
+
+/* Style top-level toggle */
+#member-navbar .dropdown-toggle {
+  background-color: #111;
+  color: #D4A017;
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.4rem;
+  border-radius: 6px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  cursor: default;
 }
