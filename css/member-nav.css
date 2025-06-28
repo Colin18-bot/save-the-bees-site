@@ -1,8 +1,16 @@
 /* Member Navigation Bar */
+/* Make sure nav stays on top and visible */
 .member-navbar {
-  background-color: #000;
-  padding: 1rem;
+  position: relative;
   z-index: 1000;
+  background-color: #000; /* ensure nav itself has a black background */
+}
+
+/* Dropdown menu styling */
+.member-nav-menu .dropdown-menu {
+  background-color: #111; /* ensure dropdown is darker than banner */
+  border: 1px solid #333;
+  z-index: 1100; /* sits above nav */
 }
 
 /* Top-Level Menu */
