@@ -1,12 +1,14 @@
-const hamburger = document.getElementById('hamburger');
-const navMenu = document.querySelector('.member-nav-menu');
+// Toggle hamburger menu
+const toggleBtn = document.getElementById('menuToggle');
+const navMenu = document.querySelector('.nav-menu');
 
-if (hamburger && navMenu) {
-  hamburger.addEventListener('click', () => {
-    navMenu.classList.toggle('show');
+if (toggleBtn && navMenu) {
+  toggleBtn.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
   });
 }
 
+// Dropdown toggle (desktop + mobile)
 const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
 
 dropdownToggles.forEach(button => {
@@ -17,6 +19,7 @@ dropdownToggles.forEach(button => {
   });
 });
 
+// Optional: close dropdown if clicking outside
 document.addEventListener('click', e => {
   document.querySelectorAll('.dropdown').forEach(drop => {
     if (!drop.contains(e.target)) drop.classList.remove('open');
