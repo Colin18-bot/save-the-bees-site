@@ -70,6 +70,11 @@
   color: #fff;
 }
 
+section[aria-label="Dashboard Banner"],
+.banner {
+  background-color: #000 !important;
+}
+
 /* Hamburger (mobile only) */
 .menu-toggle {
   display: none;
