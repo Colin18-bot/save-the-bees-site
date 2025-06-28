@@ -24,16 +24,23 @@
   flex: 1 1 200px;
 }
 
-.member-nav-menu > li strong {
+/* Top-level section label (Apiary, Hives, etc.) */
+.member-nav-menu > li .dropdown-toggle {
   display: block;
   font-size: clamp(1rem, 1vw + 0.4rem, 1.2rem);
   color: #D4A017;
-  margin-bottom: 0.5rem;
+  background-color: #111;
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.4rem;
+  border-radius: 6px;
+  font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  text-align: center;
+  cursor: default;
 }
 
-/* Standard nav links */
+/* Submenu links (Register Hive, View Map, etc.) */
 .member-nav-menu a {
   display: block;
   background-color: #111;
@@ -51,26 +58,26 @@
   color: #fff;
 }
 
-/* Dropdown menus - hidden by default */
+/* Dropdown submenu - hidden by default */
 #member-navbar .dropdown ul {
   display: none;
   position: absolute;
   background-color: #111;
   padding: 0.5rem 0;
   list-style: none;
-  z-index: 10;
-  min-width: 180px;
   border-radius: 6px;
   top: 100%;
   left: 0;
+  z-index: 100;
+  min-width: 180px;
 }
 
-/* Show dropdown when .open is toggled */
-#member-navbar .dropdown.open ul {
+/* Show submenu on hover */
+#member-navbar .dropdown:hover ul {
   display: block;
 }
 
-/* Dropdown links */
+/* Submenu link styling */
 #member-navbar .dropdown ul li a {
   background-color: #111;
   padding: 0.5rem 1rem;
@@ -85,34 +92,25 @@
   color: #fff;
 }
 
-/* Hide dropdowns by default */
-#member-navbar .dropdown ul {
-  display: none;
-  position: absolute;
-  background-color: #111;
-  padding: 0.5rem 0;
-  border-radius: 6px;
-  top: 100%;
-  left: 0;
-  z-index: 100;
-  min-width: 180px;
-}
+/* Responsive fallback */
+@media (max-width: 768px) {
+  .member-nav-menu {
+    flex-direction: column;
+    align-items: center;
+  }
 
-/* Show on hover */
-#member-navbar .dropdown:hover ul {
-  display: block;
-}
+  .member-nav-menu > li {
+    width: 100%;
+    text-align: center;
+  }
 
-/* Style top-level toggle */
-#member-navbar .dropdown-toggle {
-  background-color: #111;
-  color: #D4A017;
-  padding: 0.6rem 1rem;
-  margin-bottom: 0.4rem;
-  border-radius: 6px;
-  font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  text-align: center;
-  cursor: default;
+  #member-navbar .dropdown ul {
+    position: static;
+    min-width: 100%;
+    border-radius: 0;
+  }
+
+  #member-navbar .dropdown:hover ul {
+    display: block;
+  }
 }
