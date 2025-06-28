@@ -1,12 +1,10 @@
 // Toggle hamburger menu
-const toggleBtn = document.getElementById('menuToggle');
-const navMenu = document.querySelector('.nav-menu');
+const hamburger = document.getElementById('hamburger');
+const navMenu = document.querySelector('.member-nav-menu');
 
-if (toggleBtn && navMenu) {
-  toggleBtn.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-  });
-}
+hamburger.addEventListener('click', () => {
+  navMenu.classList.toggle('show');
+});
 
 // Dropdown toggle (desktop + mobile)
 const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
