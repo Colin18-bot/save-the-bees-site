@@ -1,7 +1,9 @@
-/* --- NAVIGATION BASE --- */
+/* === MEMBER NAVIGATION STYLES === */
+
 #member-navbar {
   background-color: #111;
   font-family: Arial, sans-serif;
+  margin-bottom: 1rem;
 }
 
 .member-nav-menu {
@@ -15,7 +17,6 @@
 
 .member-nav-menu > li {
   position: relative;
-  text-align: center;
 }
 
 .dropdown-toggle {
@@ -27,15 +28,9 @@
   border: none;
   cursor: pointer;
   width: 100%;
-  transition: transform 0.3s ease;
+  text-align: center;
 }
 
-/* 🔧 Fix: prevent rotation */
-.dropdown.open .dropdown-toggle {
-  transform: none !important;
-}
-
-/* Submenu hidden by default */
 .dropdown-menu {
   display: none;
   position: absolute;
@@ -43,7 +38,7 @@
   left: 0;
   min-width: 180px;
   background: #222;
-  z-index: 1000;
+  z-index: 999;
   text-align: left;
   padding: 0;
 }
@@ -64,18 +59,18 @@
   background-color: #444;
 }
 
-/* --- DESKTOP: Show on hover --- */
+/* === DESKTOP: Show submenu on hover === */
 @media (min-width: 768px) {
   .dropdown:hover .dropdown-menu {
     display: block;
   }
 
   .dropdown-toggle {
-    pointer-events: none; /* Disable click; use hover only */
+    pointer-events: none;
   }
 }
 
-/* --- MOBILE: Expand manually --- */
+/* === MOBILE: Use JS to toggle submenu === */
 @media (max-width: 767px) {
   .member-nav-menu {
     flex-direction: column;
