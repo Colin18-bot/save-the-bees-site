@@ -1,8 +1,9 @@
 /* Base Navigation Layout */
 .navbar {
   background-color: #000;
-  padding: 1rem;
-  z-index: 1000;
+  padding: 0.5rem 1rem;
+  z-index: 999;
+  border-bottom: 2px solid #d4a017;
 }
 
 .nav-menu {
@@ -17,11 +18,12 @@
 
 /* Links */
 .nav-menu > li > a {
-  color: #d6ae60;
+  color: #d4a017;
+  font-weight: 600;
   text-decoration: none;
-  font-weight: bold;
-  padding: 0.75rem 1rem;
-  display: inline-block;
+  padding: 1rem 1rem;
+  display: block;
+  transition: color 0.3s ease;
 }
 
 .nav-menu > li > a:hover {
@@ -29,6 +31,17 @@
 }
 
 /* Dropdown Containers */
+
+
+
+
+
+
+
+
+
+
+
 .dropdown {
   position: relative;
 }
@@ -66,16 +79,15 @@
 }
 
 .dropdown-menu li a {
-  color: #eee;
+  color: #d4a017;
   padding: 0.75rem 1rem;
-  display: block;
   text-decoration: none;
-  white-space: nowrap;
+  display: block;
 }
 
 .dropdown-menu li a:hover {
-  background-color: #222;
   color: #fff;
+  background-color: #222;
 }
 
 /* Hamburger Button */
