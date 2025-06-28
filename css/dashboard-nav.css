@@ -1,0 +1,113 @@
+/* -------------------------------------------------- */
+/* 🧭 HiveTag Member Area Navigation Styles           */
+/* -------------------------------------------------- */
+
+#member-navbar {
+  background-color: #000;
+  padding: 1rem 0;
+  z-index: 900;
+}
+
+.member-nav-menu {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+  max-width: 1200px;
+}
+
+.member-nav-menu > li {
+  position: relative;
+  flex: 1 1 200px;
+}
+
+.member-nav-menu > li strong {
+  display: block;
+  font-size: clamp(1rem, 1vw + 0.4rem, 1.2rem);
+  color: #fff;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Individual navigation links */
+.member-nav-menu a {
+  display: block;
+  background-color: #111;
+  color: #D4A017;
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.4rem;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.member-nav-menu a:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+/* -------------------------------------------------- */
+/* 🔐 Logout + Delete Account Buttons                 */
+/* -------------------------------------------------- */
+.logout-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem;
+}
+
+.logout-button {
+  background-color: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.logout-button:hover {
+  background-color: #c0392b;
+}
+
+.logout-button#delete-account-btn {
+  background-color: #555;
+}
+
+.logout-button#delete-account-btn:hover {
+  background-color: #222;
+}
+
+/* -------------------------------------------------- */
+/* 📱 Responsive Mobile Adjustments                   */
+/* -------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .member-nav-menu {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+  }
+
+  .logout-wrapper {
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+
+  .member-nav-menu a {
+    text-align: center;
+    width: 100%;
+    max-width: 300px;
+  }
+}
