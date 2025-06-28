@@ -1,16 +1,16 @@
 /* Member Navigation Bar */
-/* Make sure nav stays on top and visible */
 .member-navbar {
+  background-color: #000;
   position: relative;
-  z-index: 1000;
-  background-color: #000; /* ensure nav itself has a black background */
+  z-index: 3000; /* Increased to stay above banner */
+  display: block;
 }
 
 /* Dropdown menu styling */
 .member-nav-menu .dropdown-menu {
-  background-color: #111; /* ensure dropdown is darker than banner */
+  background-color: #111;
   border: 1px solid #333;
-  z-index: 1100; /* sits above nav */
+  z-index: 1100;
 }
 
 /* Top-Level Menu */
@@ -78,9 +78,12 @@
   color: #fff;
 }
 
+/* Dashboard Banner Fix */
 section[aria-label="Dashboard Banner"],
 .banner {
   background-color: #000 !important;
+  position: relative;
+  z-index: 1000; /* Ensure it's under the nav */
 }
 
 /* Hamburger (mobile only) */
