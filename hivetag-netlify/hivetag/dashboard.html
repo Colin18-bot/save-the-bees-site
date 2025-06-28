@@ -23,48 +23,27 @@
     </div>
   </header>
 
-<!-- Member Navigation -->
-<nav id="member-navbar">
-  <ul class="member-nav-menu">
-
-    <li class="dropdown">
-      <a href="#" class="dropdown-toggle">Apiary</a>
-      <ul>
-        <li><a href="register-apiary.html">Register New Apiary</a></li>
-        <li><a href="map.html">View Apiary Map</a></li>
-      </ul>
-    </li>
-
-    <li class="dropdown">
-      <a href="#" class="dropdown-toggle">Hives</a>
-      <ul>
-        <li><a href="register-hive.html">Register New Hive</a></li>
-        <li><a href="materials.html">Hive Material Tracker</a></li>
-        <li><a href="inspection.html">Start New Inspection</a></li>
-        <li><a href="inspections.html">Past Inspections</a></li>
-      </ul>
-    </li>
-
-    <li class="dropdown">
-      <a href="#" class="dropdown-toggle">Analytics</a>
-      <ul>
-        <li><a href="calendar.html">Inspection Calendar</a></li>
-        <li><a href="analytics.html">Trends & Analytics</a></li>
-      </ul>
-    </li>
-
-    <li class="dropdown">
-      <a href="#" class="dropdown-toggle">Team & Account</a>
-      <ul>
-        <li><a href="team.html">Manage Team Members</a></li>
-        <li><a href="account.html">Account Settings</a></li>
-        <li><a href="#" id="logout-btn">Log Out</a></li>
-        <li><a href="#" id="delete-account-btn">Delete Account</a></li>
-      </ul>
-    </li>
-
-  </ul>
-</nav>
+ <!-- ✅ MEMBER NAVIGATION -->
+  <nav id="member-navbar">
+    <ul class="member-nav-menu">
+      <li class="dropdown">
+        <div class="dropdown-toggle">Apiary</div>
+        <ul>
+          <li><a href="register-apiary.html">Register New Apiary</a></li>
+          <li><a href="map.html">View Apiary Map</a></li>
+        </ul>
+      </li>
+      <li class="dropdown">
+        <div class="dropdown-toggle">Hives</div>
+        <ul>
+          <li><a href="register-hive.html">Register New Hive</a></li>
+          <li><a href="materials.html">Hive Material Tracker</a></li>
+          <li><a href="inspection.html">Start New Inspection</a></li>
+          <li><a href="inspections.html">Past Inspections</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
 
 <!-- Hero Banner -->
   <section role="region" aria-label="Dashboard Banner">
@@ -151,7 +130,7 @@
      ============================================ -->
 		<script src="../../js/hivetag-menu.js"></script>
 
-		<!-- Google Analytics with Cookie Consent -->
+  	<!-- Google Analytics with Cookie Consent -->
 		<script>
 			document.addEventListener('DOMContentLoaded', function () {
 			  const popup = document.getElementById('cookie-consent');
