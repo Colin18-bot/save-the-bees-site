@@ -1,39 +1,49 @@
-/* MEMBER LAYOUT ONLY — Safe from conflicts */
+/* ========== MEMBERS AREA NAVIGATION ONLY ========== */
 
-/* Fixes padding issue above header */
+/* 1. HEADER FIX (No white gap and visible on all viewports) */
 body.member-layout {
+  padding-top: 140px;
   margin: 0;
-  padding: 0;
 }
 
-/* Member Header */
 .member-header {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
   background-color: #000;
   z-index: 9999;
-  width: 100%;
-  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
 }
 
-/* Nav container */
+.member-header .logo {
+  display: flex;
+  align-items: center;
+}
+
+.member-header .logo img {
+  height: 48px;
+  margin-right: 1rem;
+}
+
+/* 2. NAVIGATION BAR */
 .member-navbar {
   position: relative;
-  z-index: 999;
   background-color: #000;
-  display: block;
-  margin: 0 auto;
+  z-index: 999;
   width: 100%;
 }
 
-/* Top-level menu */
 .member-nav-menu {
-  list-style: none;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  padding: 0;
+  list-style: none;
   margin: 0;
-  background-color: #000;
+  padding: 0;
 }
 
 .member-nav-menu li {
@@ -42,31 +52,32 @@ body.member-layout {
 
 .member-nav-menu .dropdown-toggle {
   all: unset;
+  cursor: pointer;
   display: flex;
   align-items: center;
   padding: 1rem 1.5rem;
   font-size: 1rem;
-  font-weight: bold;
   color: #D4A017;
+  font-weight: bold;
   text-transform: uppercase;
-  cursor: pointer;
 }
 
-/* Arrow (only arrow rotates) */
+/* Only the arrow rotates */
 .member-nav-menu .arrow {
   margin-left: 0.5rem;
   transition: transform 0.3s ease;
+  display: inline-block;
 }
 
-/* Dropdown menu hidden */
+/* Dropdown hidden by default */
 .member-nav-menu .dropdown-menu {
   display: none;
   position: absolute;
   top: 100%;
   background-color: #111;
-  min-width: 220px;
-  z-index: 1000;
   padding: 0.5rem 0;
+  min-width: 220px;
+  z-index: 999;
   border: 1px solid #444;
 }
 
@@ -83,14 +94,14 @@ body.member-layout {
   color: #fff;
 }
 
-/* Desktop: hover shows dropdown */
+/* 3. DESKTOP HOVER FUNCTIONALITY */
 @media (min-width: 768px) {
-  .menu-toggle {
-    display: none;
-  }
-
   .member-nav-menu {
     display: flex !important;
+  }
+
+  .menu-toggle {
+    display: none;
   }
 
   .member-nav-menu li:hover > .dropdown-menu {
@@ -102,24 +113,15 @@ body.member-layout {
   }
 }
 
-/* Mobile */
+/* 4. MOBILE MENU STYLING */
 @media (max-width: 767px) {
-  .menu-toggle {
-    display: block;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    color: #D4A017;
-    cursor: pointer;
-    padding: 1rem;
-    margin-left: auto;
-    margin-right: 1rem;
+  .member-navbar {
+    margin-top: 60px;
   }
 
   .member-nav-menu {
-    flex-direction: column;
     display: none;
-    width: 100%;
+    flex-direction: column;
     background-color: #000;
   }
 
@@ -132,12 +134,32 @@ body.member-layout {
     border-top: 1px solid #333;
   }
 
+  .member-nav-menu .dropdown-menu {
+    display: none;
+    position: static;
+    background-color: #111;
+    flex-direction: column;
+  }
+
   .member-nav-menu .dropdown.open .dropdown-menu {
     display: flex;
-    flex-direction: column;
   }
 
   .member-nav-menu .dropdown.open .arrow {
     transform: rotate(180deg);
+  }
+
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #D4A017;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+  }
+
+  .menu-toggle i {
+    pointer-events: none;
   }
 }
