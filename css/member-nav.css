@@ -1,32 +1,31 @@
-/* --------------------
-   Member Dashboard Navigation Styles
--------------------- */
-
-/* Ensure style.css does not override member layout */
-body.member-layout {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-}
-
-/* Fixed header spacing buffer */
-.member-navbar {
-  margin-top: 80px; /* height of fixed header */
-  z-index: 999;
-  position: relative;
-  background: #000;
-  color: #fff;
-}
-
-/* Main nav menu */
-.member-nav-menu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* Reset any conflicting button styles from global CSS */
+.member-navbar button,
+.member-navbar .dropdown-toggle {
+  all: unset;
+  cursor: pointer;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Main container styles */
+.member-navbar {
   background-color: #000;
+  color: #fff;
+  padding: 0;
+  position: relative;
+  z-index: 1000;
+  margin-top: 70px; /* Adjust if your header height differs */
+}
+
+/* Horizontal nav layout */
+.member-nav-menu {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .member-nav-menu li {
@@ -34,78 +33,67 @@ body.member-layout {
 }
 
 .member-nav-menu .dropdown-toggle {
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  color: gold;
   background: none;
   border: none;
-  color: gold;
-  font-size: 1rem;
-  padding: 15px 20px;
-  cursor: pointer;
   font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  text-transform: uppercase;
 }
 
 .member-nav-menu .dropdown-toggle .arrow {
+  margin-left: 0.5rem;
   transition: transform 0.3s ease;
+  display: inline-block;
 }
 
-/* Active dropdown arrow */
-.dropdown.open .dropdown-toggle .arrow {
-  transform: rotate(180deg);
-}
-
-/* Submenu styles */
-.dropdown-menu {
+/* Dropdown menu (desktop) */
+.member-nav-menu .dropdown-menu {
   display: none;
   position: absolute;
-  background-color: #111;
   top: 100%;
-  left: 0;
-  min-width: 180px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+  background-color: #111;
+  padding: 0.5rem 0;
+  min-width: 220px;
   z-index: 999;
+  border: 1px solid #444;
 }
 
-.dropdown.open .dropdown-menu {
+.member-nav-menu .dropdown-menu li a {
   display: block;
-}
-
-.dropdown-menu li a {
-  display: block;
+  padding: 0.75rem 1rem;
   color: #fff;
   text-decoration: none;
-  padding: 12px 18px;
   font-size: 0.95rem;
-  border-bottom: 1px solid #222;
 }
 
-.dropdown-menu li a:hover {
-  background-color: #333;
+.member-nav-menu .dropdown-menu li a:hover {
+  background-color: #222;
   color: gold;
 }
 
-/* Hamburger menu */
-.menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: gold;
-  font-size: 1.5rem;
-  padding: 10px;
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 1001;
+/* Desktop hover effect */
+@media (min-width: 768px) {
+  .member-nav-menu li:hover > .dropdown-menu {
+    display: block;
+  }
+
+  .member-nav-menu .dropdown:hover .arrow {
+    transform: rotate(180deg);
+  }
 }
 
-/* Responsive layout */
-@media (max-width: 768px) {
+/* Mobile styles */
+@media (max-width: 767px) {
+  .member-navbar {
+    margin-top: 60px;
+  }
+
   .member-nav-menu {
     flex-direction: column;
-    display: none;
-    width: 100%;
     background-color: #000;
+    display: none;
   }
 
   .member-nav-menu.active {
@@ -114,38 +102,27 @@ body.member-layout {
 
   .member-nav-menu li {
     width: 100%;
-    text-align: left;
+    border-top: 1px solid #333;
   }
 
-  .dropdown-menu {
-    position: static;
-    box-shadow: none;
+  .member-nav-menu .dropdown-toggle {
     width: 100%;
-  }
-
-  .dropdown-toggle {
-    width: 100%;
+    padding: 1rem;
     justify-content: space-between;
-    padding: 15px;
-    border-top: 1px solid #222;
   }
 
-  .dropdown-menu li a {
-    padding-left: 25px;
+  .member-nav-menu .dropdown-menu {
+    display: none;
+    flex-direction: column;
+    position: static;
+    background-color: #111;
   }
 
-  .menu-toggle {
-    display: block;
+  .member-nav-menu .dropdown.open .dropdown-menu {
+    display: flex;
   }
-}
 
-/* Prevent unwanted inherited transforms */
-.dropdown-toggle {
-  transform: none !important;
-}
-
-/* Ensure arrow remains upright unless toggled */
-.dropdown-toggle .arrow {
-  display: inline-block;
-  transform: rotate(0deg);
+  .member-nav-menu .dropdown.open .arrow {
+    transform: rotate(180deg);
+  }
 }
