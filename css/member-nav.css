@@ -6,6 +6,34 @@
   width: 100%;
 }
 
+/* Fixed header for member area */
+.member-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  background-color: #000;
+  z-index: 9999;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Ensure content below doesn't get hidden under fixed header */
+body.member-layout {
+  padding-top: 120px; /* Adjust to match .member-header total height */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 /* Member nav wrapper */
 .member-navbar {
   position: relative;
