@@ -1,6 +1,9 @@
-/* Ensure space for fixed header */
-body.member-layout {
-  padding-top: 140px;
+/* Override global fixed-header for members area */
+.member-header {
+  position: relative;
+  background-color: #000;
+  z-index: 9999;
+  width: 100%;
 }
 
 /* Member nav wrapper */
@@ -39,7 +42,7 @@ body.member-layout {
 .member-nav-menu .dropdown-toggle {
   padding: 1rem 1.5rem;
   font-size: 1rem;
-  color: gold;
+  color: #D4A017;
   background: none;
   border: none;
   font-weight: bold;
@@ -68,14 +71,14 @@ body.member-layout {
 .member-nav-menu .dropdown-menu li a {
   display: block;
   padding: 0.75rem 1rem;
-  color: #fff;
+  color: #D4A017;
   text-decoration: none;
   font-size: 0.95rem;
 }
 
 .member-nav-menu .dropdown-menu li a:hover {
   background-color: #222;
-  color: gold;
+  color: #fff;
 }
 
 /* Desktop hover dropdown */
@@ -129,5 +132,27 @@ body.member-layout {
 
   .member-nav-menu .dropdown.open .arrow {
     transform: rotate(180deg);
+  }
+}
+
+/* Default: hide hamburger on desktop */
+.menu-toggle {
+  display: none;
+}
+
+/* Show hamburger on smaller screens */
+@media (max-width: 767px) {
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #D4A017;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+  }
+
+  .menu-toggle i {
+    pointer-events: none;
   }
 }
