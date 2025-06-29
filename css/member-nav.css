@@ -1,44 +1,38 @@
-/* === MEMBER AREA STYLES ONLY === */
+/* MEMBER LAYOUT ONLY — Safe from conflicts */
 
-/* Header fix */
+/* Fixes padding issue above header */
+body.member-layout {
+  margin: 0;
+  padding: 0;
+}
+
+/* Member Header */
 .member-header {
   position: relative;
   background-color: #000;
   z-index: 9999;
   width: 100%;
+  margin: 0;
 }
 
-/* Member navbar wrapper */
+/* Nav container */
 .member-navbar {
   position: relative;
   z-index: 999;
   background-color: #000;
-  margin-top: 0;
+  display: block;
+  margin: 0 auto;
+  width: 100%;
 }
 
-/* Layout padding to push below fixed headers */
-body.member-layout {
-  padding-top: 140px; /* Adjust this if your header is taller */
-}
-
-/* Reset any inherited button styles */
-.member-navbar button,
-.member-navbar .dropdown-toggle {
-  all: unset;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Main nav container */
+/* Top-level menu */
 .member-nav-menu {
+  list-style: none;
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  list-style: none;
-  margin: 0;
   padding: 0;
+  margin: 0;
   background-color: #000;
 }
 
@@ -46,23 +40,25 @@ body.member-layout {
   position: relative;
 }
 
-/* Top-level buttons */
 .member-nav-menu .dropdown-toggle {
+  all: unset;
+  display: flex;
+  align-items: center;
   padding: 1rem 1.5rem;
   font-size: 1rem;
-  color: #D4A017;
   font-weight: bold;
+  color: #D4A017;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
-/* Arrow icon (only this rotates) */
+/* Arrow (only arrow rotates) */
 .member-nav-menu .arrow {
   margin-left: 0.5rem;
   transition: transform 0.3s ease;
-  display: inline-block;
 }
 
-/* Submenu styles */
+/* Dropdown menu hidden */
 .member-nav-menu .dropdown-menu {
   display: none;
   position: absolute;
@@ -70,8 +66,8 @@ body.member-layout {
   background-color: #111;
   min-width: 220px;
   z-index: 1000;
-  border: 1px solid #444;
   padding: 0.5rem 0;
+  border: 1px solid #444;
 }
 
 .member-nav-menu .dropdown-menu li a {
@@ -87,8 +83,16 @@ body.member-layout {
   color: #fff;
 }
 
-/* DESKTOP ONLY DROPDOWNS */
+/* Desktop: hover shows dropdown */
 @media (min-width: 768px) {
+  .menu-toggle {
+    display: none;
+  }
+
+  .member-nav-menu {
+    display: flex !important;
+  }
+
   .member-nav-menu li:hover > .dropdown-menu {
     display: block;
   }
@@ -96,17 +100,27 @@ body.member-layout {
   .member-nav-menu li:hover > .dropdown-toggle .arrow {
     transform: rotate(180deg);
   }
-
-  .menu-toggle {
-    display: none !important;
-  }
 }
 
-/* MOBILE STYLES */
+/* Mobile */
 @media (max-width: 767px) {
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #D4A017;
+    cursor: pointer;
+    padding: 1rem;
+    margin-left: auto;
+    margin-right: 1rem;
+  }
+
   .member-nav-menu {
     flex-direction: column;
     display: none;
+    width: 100%;
+    background-color: #000;
   }
 
   .member-nav-menu.active {
@@ -118,37 +132,12 @@ body.member-layout {
     border-top: 1px solid #333;
   }
 
-  .member-nav-menu .dropdown-toggle {
-    width: 100%;
-    padding: 1rem;
-    justify-content: space-between;
-  }
-
-  .member-nav-menu .dropdown-menu {
-    display: none;
-    flex-direction: column;
-    position: static;
-  }
-
   .member-nav-menu .dropdown.open .dropdown-menu {
     display: flex;
+    flex-direction: column;
   }
 
   .member-nav-menu .dropdown.open .arrow {
     transform: rotate(180deg);
-  }
-
-  .menu-toggle {
-    display: block;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    color: #D4A017;
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-  }
-
-  .menu-toggle i {
-    pointer-events: none;
   }
 }
