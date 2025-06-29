@@ -1,39 +1,42 @@
-// Member Navigation Toggle Script – from original site
-document.addEventListener("DOMContentLoaded", function () {
-  const toggleBtn = document.getElementById("menuToggle");
-  const navMenu = document.getElementById("navMenu");
-  const dropdownToggles = document.querySelectorAll(".member-navbar .dropdown-toggle");
+document.addEventListener('DOMContentLoaded', () => {
+  const menuToggle = document.getElementById('menuToggle');
+  const navMenu = document.getElementById('navMenu');
 
-  if (toggleBtn && navMenu) {
-    toggleBtn.addEventListener("click", () => {
-      navMenu.classList.toggle("show");
-    });
-  }
+  // Toggle hamburger menu
+  menuToggle.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+  });
 
-  dropdownToggles.forEach((toggle) => {
-    toggle.addEventListener("click", function () {
-      const parent = this.parentElement;
-      const isOpen = parent.classList.contains("show");
+  // Dropdown functionality for each top-level link
+  const dropdownToggles = document.querySelectorAll('.member-dropdown-toggle');
 
-      // Close all other dropdowns
-      document.querySelectorAll(".member-navbar .dropdown").forEach((item) => {
-        item.classList.remove("show");
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener('click', function () {
+      const dropdownMenu = this.nextElementSibling;
+      const arrow = this.querySelector('.member-arrow');
+
+      // Close all other dropdowns first
+      document.querySelectorAll('.dropdown-menu').forEach(menu => {
+        if (menu !== dropdownMenu) {
+          menu.style.display = 'none';
+        }
+      });
+
+      // Reset all other arrows
+      document.querySelectorAll('.member-arrow').forEach(arw => {
+        if (arw !== arrow) {
+          arw.style.transform = 'rotate(0deg)';
+        }
       });
 
       // Toggle current dropdown
-      if (!isOpen) {
-        parent.classList.add("show");
+      if (dropdownMenu.style.display === 'block') {
+        dropdownMenu.style.display = 'none';
+        arrow.style.transform = 'rotate(0deg)';
+      } else {
+        dropdownMenu.style.display = 'block';
+        arrow.style.transform = 'rotate(180deg)';
       }
     });
-  });
-
-  // Close dropdowns when clicking outside
-  document.addEventListener("click", function (e) {
-    const isClickInside = e.target.closest(".member-navbar");
-    if (!isClickInside) {
-      document.querySelectorAll(".member-navbar .dropdown").forEach((item) => {
-        item.classList.remove("show");
-      });
-    }
   });
 });
