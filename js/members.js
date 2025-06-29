@@ -83,16 +83,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* -------------------- 📱 Hamburger Menu Toggle -------------------- */
-  const menuToggle = document.getElementById('menuToggle');
-  const navMenu = document.getElementById('navMenu');
+ /* -------------------- 📱 Hamburger Menu Toggle -------------------- */
+const menuToggle = document.getElementById('menuToggle');
+const navMenu = document.getElementById('navMenu');
 
-  if (menuToggle && navMenu) {
-    menuToggle.addEventListener('click', () => {
-      navMenu.classList.toggle('active');
-    });
-  }
-});
+if (menuToggle && navMenu) {
+  menuToggle.addEventListener('click', () => {
+    navMenu.classList.toggle('show'); // ✅ use 'show', not 'active'
+  });
+}
+
 
 /* -------------------- ⏱️ Final Loading Fail-Safe -------------------- */
 setTimeout(() => {

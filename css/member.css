@@ -23,6 +23,8 @@ a {
   background-color: #000;
   padding: 1rem 2rem;
   color: white;
+  position: relative;
+  z-index: 10;
 }
 
 .member-header-container {
@@ -45,13 +47,14 @@ a {
   color: #D4A017;
 }
 
-/* 🧭 NAVIGATION */
 .member-navbar {
   background-color: #000;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   position: relative;
+  z-index: 5; /* Ensure it's above the hero image */
+  padding-top: 0.5rem;
 }
 
 .member-nav-menu {
@@ -120,7 +123,10 @@ a {
 /* 📱 MOBILE NAV */
 @media (max-width: 768px) {
   .member-nav-menu {
+    display: none;
     flex-direction: column;
+    gap: 10px;
+    padding: 10px;
     max-height: 0;
     overflow: hidden;
     background-color: #000;
@@ -131,6 +137,10 @@ a {
     z-index: 999;
     overflow-y: auto;
     overscroll-behavior: contain;
+  }
+
+    .member-nav-menu.show {
+    display: flex;
   }
 
   .member-nav-menu.active {
@@ -172,16 +182,55 @@ a {
 
 /* 🖥️ DESKTOP NAV */
 @media (min-width: 769px) {
-  .member-menu-toggle {
-    display: none !important;
+  .member-navbar {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    z-index: 999;
+  }
+
+  .member-nav-menu {
+    display: none;
+    flex-direction: row !important;
+    justify-content: center;
+    width: 100%;
+  }
+
+.member-nav-menu.show {
+  display: block;
+  }
+
+  .member-nav-menu > li {
+    position: relative;
+  }
+
+  .member-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 200px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  .member-dropdown:hover .member-dropdown-menu {
+    display: block;
+  }
+
+  .member-dropdown-menu li a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
   }
 
   .member-dropdown-toggle {
     display: none !important;
   }
 
-  .member-dropdown:hover .member-dropdown-menu {
-    display: block;
+  .member-menu-toggle {
+    display: none !important;
   }
 }
 
@@ -336,3 +385,8 @@ a {
   display: none;
   background-color: #f4b400;
   color: white;
+}
+
+.hero-image {
+  margin-top: 0; /* Or adjust to create spacing */
+}
