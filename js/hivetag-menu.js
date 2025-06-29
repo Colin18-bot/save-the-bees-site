@@ -1,37 +1,19 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const menuToggle = document.getElementById('menuToggle');
-  const memberNavbar = document.querySelector('.member-navbar');
-  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+// Toggle the hamburger menu
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('menuToggle');
+  const navMenu = document.getElementById('navMenu');
 
-  // Toggle mobile menu visibility
-  if (menuToggle) {
-    menuToggle.addEventListener('click', function () {
-      memberNavbar.classList.toggle('active');
+  if (toggle && navMenu) {
+    toggle.addEventListener('click', () => {
+      navMenu.classList.toggle('show');
     });
   }
 
-  // Dropdown toggles
-  dropdownToggles.forEach(toggle => {
-    toggle.addEventListener('click', function (e) {
-      const parent = toggle.parentElement;
-      const currentlyOpen = document.querySelector('.dropdown.open');
-
-      // Close other open dropdowns
-      if (currentlyOpen && currentlyOpen !== parent) {
-        currentlyOpen.classList.remove('open');
-      }
-
-      // Toggle this dropdown
+  // Dropdown menu toggle
+  document.querySelectorAll('.dropdown-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const parent = btn.closest('.dropdown');
       parent.classList.toggle('open');
     });
-  });
-
-  // Close dropdowns when clicking outside
-  document.addEventListener('click', function (e) {
-    if (!e.target.closest('.dropdown')) {
-      document.querySelectorAll('.dropdown.open').forEach(drop => {
-        drop.classList.remove('open');
-      });
-    }
   });
 });
