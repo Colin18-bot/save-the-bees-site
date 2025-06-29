@@ -1,3 +1,14 @@
+
+
+
+body.member-layout {
+  padding-top: 480px; /* or whatever your fixed header height is */
+}
+
+
+
+
+
 /* Reset any conflicting button styles from global CSS */
 .member-navbar button,
 .member-navbar .dropdown-toggle {
