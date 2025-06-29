@@ -1,109 +1,151 @@
-/* Member Dashboard Navigation – Isolated Stylesheet */
+/* --------------------
+   Member Dashboard Navigation Styles
+-------------------- */
 
-/* Root navbar layout */
-.member-navbar {
-  background-color: #000; /* Black background */
-  color: #ffd700; /* Gold text */
+/* Ensure style.css does not override member layout */
+body.member-layout {
+  margin: 0;
   padding: 0;
-  position: relative;
-  z-index: 1000;
   font-family: 'Segoe UI', sans-serif;
 }
 
-/* Main nav list */
+/* Fixed header spacing buffer */
+.member-navbar {
+  margin-top: 80px; /* height of fixed header */
+  z-index: 999;
+  position: relative;
+  background: #000;
+  color: #fff;
+}
+
+/* Main nav menu */
 .member-nav-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-wrap: wrap;
-  list-style: none;
-  margin: 0;
-  padding: 0 1rem;
-  align-items: center;
+  justify-content: center;
+  background-color: #000;
 }
 
-/* Each top-level dropdown item */
-.member-nav-menu .dropdown {
+.member-nav-menu li {
   position: relative;
-  margin: 0;
 }
 
-/* Top-level buttons */
 .member-nav-menu .dropdown-toggle {
   background: none;
   border: none;
-  color: #ffd700;
-  padding: 1rem;
+  color: gold;
   font-size: 1rem;
-  font-weight: bold;
+  padding: 15px 20px;
   cursor: pointer;
+  font-weight: bold;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 6px;
 }
 
-.member-nav-menu .dropdown-toggle:hover {
-  background-color: #222;
-}
-
-/* Arrow styling */
 .member-nav-menu .dropdown-toggle .arrow {
   transition: transform 0.3s ease;
-  display: inline-block;
 }
 
-/* Rotate arrow when dropdown is open */
-.member-nav-menu .dropdown.open .arrow {
+/* Active dropdown arrow */
+.dropdown.open .dropdown-toggle .arrow {
   transform: rotate(180deg);
 }
 
-/* Dropdown menu container */
-.member-nav-menu .dropdown-menu {
+/* Submenu styles */
+.dropdown-menu {
+  display: none;
   position: absolute;
+  background-color: #111;
   top: 100%;
   left: 0;
-  background-color: #111;
-  border: 1px solid #333;
-  min-width: 220px;
-  display: none;
-  flex-direction: column;
+  min-width: 180px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
   z-index: 999;
-  padding: 0;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.4);
 }
 
-/* Show dropdown when open */
-.member-nav-menu .dropdown.open .dropdown-menu {
-  display: flex;
-}
-
-/* Dropdown links */
-.member-nav-menu .dropdown-menu li a {
-  padding: 0.75rem 1rem;
-  color: #ffd700;
-  text-decoration: none;
+.dropdown.open .dropdown-menu {
   display: block;
 }
 
-.member-nav-menu .dropdown-menu li a:hover {
-  background-color: #222;
+.dropdown-menu li a {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 18px;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #222;
 }
 
-/* Responsive styles */
+.dropdown-menu li a:hover {
+  background-color: #333;
+  color: gold;
+}
+
+/* Hamburger menu */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: gold;
+  font-size: 1.5rem;
+  padding: 10px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1001;
+}
+
+/* Responsive layout */
 @media (max-width: 768px) {
   .member-nav-menu {
     flex-direction: column;
-    align-items: stretch;
+    display: none;
+    width: 100%;
+    background-color: #000;
   }
 
-  .member-nav-menu .dropdown-toggle {
+  .member-nav-menu.active {
+    display: flex;
+  }
+
+  .member-nav-menu li {
     width: 100%;
     text-align: left;
   }
 
-  .member-nav-menu .dropdown-menu {
-    position: relative;
-    top: auto;
-    left: auto;
-    border: none;
+  .dropdown-menu {
+    position: static;
     box-shadow: none;
+    width: 100%;
   }
+
+  .dropdown-toggle {
+    width: 100%;
+    justify-content: space-between;
+    padding: 15px;
+    border-top: 1px solid #222;
+  }
+
+  .dropdown-menu li a {
+    padding-left: 25px;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+}
+
+/* Prevent unwanted inherited transforms */
+.dropdown-toggle {
+  transform: none !important;
+}
+
+/* Ensure arrow remains upright unless toggled */
+.dropdown-toggle .arrow {
+  display: inline-block;
+  transform: rotate(0deg);
 }
