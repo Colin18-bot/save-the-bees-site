@@ -1,11 +1,8 @@
-/* ========== MEMBERS AREA NAVIGATION ONLY ========== */
+/* ===============================
+   MEMBER AREA NAVIGATION STYLES
+   =============================== */
 
-/* 1. HEADER FIX (No white gap and visible on all viewports) */
-body.member-layout {
-  padding-top: 140px;
-  margin: 0;
-}
-
+/* Override global fixed-header for members area */
 .member-header {
   position: fixed;
   top: 0;
@@ -13,30 +10,37 @@ body.member-layout {
   width: 100%;
   background-color: #000;
   z-index: 9999;
+  border-bottom: 1px solid #444;
+}
+
+.site-header .header-container {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
-}
-
-.member-header .logo {
-  display: flex;
   align-items: center;
+  padding: 0.8rem 1.5rem;
 }
 
-.member-header .logo img {
+.site-header .site-logo {
   height: 48px;
-  margin-right: 1rem;
+  width: auto;
 }
 
-/* 2. NAVIGATION BAR */
+.site-title {
+  font-size: 1.5rem;
+  color: #D4A017;
+  margin-left: 1rem;
+}
+
+/* Navigation Bar Wrapper */
 .member-navbar {
   position: relative;
+  top: 80px;
+  width: 100%;
   background-color: #000;
   z-index: 999;
-  width: 100%;
 }
 
+/* Top-Level Navigation List */
 .member-nav-menu {
   display: flex;
   justify-content: center;
@@ -50,30 +54,33 @@ body.member-layout {
   position: relative;
 }
 
+/* Navigation Buttons */
 .member-nav-menu .dropdown-toggle {
   all: unset;
-  cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 1rem 1.5rem;
   font-size: 1rem;
   color: #D4A017;
   font-weight: bold;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
-/* Only the arrow rotates */
+/* Arrow Only — rotates on toggle */
 .member-nav-menu .arrow {
   margin-left: 0.5rem;
   transition: transform 0.3s ease;
   display: inline-block;
 }
 
-/* Dropdown hidden by default */
+/* Dropdown Menu */
 .member-nav-menu .dropdown-menu {
   display: none;
   position: absolute;
   top: 100%;
+  left: 0;
   background-color: #111;
   padding: 0.5rem 0;
   min-width: 220px;
@@ -94,16 +101,8 @@ body.member-layout {
   color: #fff;
 }
 
-/* 3. DESKTOP HOVER FUNCTIONALITY */
+/* Desktop Dropdown Hover */
 @media (min-width: 768px) {
-  .member-nav-menu {
-    display: flex !important;
-  }
-
-  .menu-toggle {
-    display: none;
-  }
-
   .member-nav-menu li:hover > .dropdown-menu {
     display: block;
   }
@@ -113,16 +112,30 @@ body.member-layout {
   }
 }
 
-/* 4. MOBILE MENU STYLING */
+/* ================
+   MOBILE STYLES
+   ================ */
+.menu-toggle {
+  display: none;
+}
+
 @media (max-width: 767px) {
-  .member-navbar {
-    margin-top: 60px;
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #D4A017;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    margin-left: auto;
   }
 
   .member-nav-menu {
     display: none;
     flex-direction: column;
     background-color: #000;
+    padding: 0;
   }
 
   .member-nav-menu.active {
@@ -136,9 +149,9 @@ body.member-layout {
 
   .member-nav-menu .dropdown-menu {
     display: none;
+    flex-direction: column;
     position: static;
     background-color: #111;
-    flex-direction: column;
   }
 
   .member-nav-menu .dropdown.open .dropdown-menu {
@@ -148,18 +161,34 @@ body.member-layout {
   .member-nav-menu .dropdown.open .arrow {
     transform: rotate(180deg);
   }
+}
 
-  .menu-toggle {
-    display: block;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    color: #D4A017;
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-  }
+/* ================
+   MEMBER BANNER
+   ================ */
+.member-banner {
+  margin-top: 160px; /* ensures it appears below fixed header + nav */
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
 
-  .menu-toggle i {
-    pointer-events: none;
-  }
+.member-banner img {
+  width: 100%;
+  max-height: 450px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Fix for white gap below fixed header */
+body.member-layout {
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+}
+
+/* Padding for content below banner */
+.content {
+  padding: 2rem 1rem;
+  margin-top: 0;
 }

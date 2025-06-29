@@ -3,121 +3,109 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  
+
   <title>BeezKnees | Member Dashboard</title>
- 
+
   <!-- Hamburger button -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
+
   <!-- Global site styles -->
   <link rel="stylesheet" href="../../css/style.css" />
+
   <!-- Member area nav and link styles -->
   <link rel="stylesheet" href="../../css/member-nav.css" />
-  
+
   <!-- SEO Meta Tags -->
-		<meta
-			name="description"
-			content="BeezKnees is your practical beekeeping guide, offering seasonal tips, hive health advice, and pollinator 
-  protection resources for beginners and experienced keepers alike."
-		/>
-		<meta
-			name="keywords"
-			content="beekeeping guide, practical beekeeping, hive care, pollinator protection, apiary tips, seasonal hive tasks, 
-  queen rearing, swarm control, beekeeping for beginners, beekeeping resources"
-		/>
-		<meta name="author" content="Colin Chorley" />
+  <meta name="description" content="BeezKnees is your practical beekeeping guide, offering seasonal tips, hive health advice, and pollinator protection resources for beginners and experienced keepers alike." />
+  <meta name="keywords" content="beekeeping guide, practical beekeeping, hive care, pollinator protection, apiary tips, seasonal hive tasks, queen rearing, swarm control, beekeeping for beginners, beekeeping resources" />
+  <meta name="author" content="Colin Chorley" />
 
-		<!-- Favicon -->
-		<link rel="icon" href="../../images/favicon.ico" type="image/x-icon" />
-		<!-- 16x16 and 32x32 for classic tabs -->
-	  <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16.png" />
-		<link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32.png" />
-		<!-- Apple touch icon for iOS -->
-		<link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
-		<!-- Android home screen icons -->
-		<link rel="icon" type="image/png" sizes="192x192" href="../../images/android-chrome-192x192.png" />
-		<link rel="icon" type="image/png" sizes="512x512" href="../../images/android-chrome-512x512.png" />
-		<!-- PWA manifest (optional but helpful) -->
-		<link rel="manifest" href="site.webmanifest" />
-
+  <!-- Favicon -->
+  <link rel="icon" href="../../images/favicon.ico" type="image/x-icon" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="../../images/android-chrome-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="../../images/android-chrome-512x512.png" />
+  <link rel="manifest" href="site.webmanifest" />
 </head>
 
 <body class="member-layout">
-<!-- Loading Screen -->
-<div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-  background: #fff; color: #333; z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
-  Please wait, checking login status...
-</div>
+  <!-- Loading Screen -->
+  <div id="loading-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #fff; color: #333; z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+    Please wait, checking login status...
+  </div>
 
-<!-- Fixed Header and Nav Container -->
-		<div class="member-header">
-			<header class="site-header" role="banner" aria-label="Site Header">
-				<div class="header-container" role="region" aria-label="Site Branding">
-					<a href="https://www.beezknees.co.uk">
-						<img src="../../images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
-					</a>
+  <!-- Fixed Header and Nav Container -->
+  <div class="member-header">
+    <header class="site-header" role="banner" aria-label="Site Header">
+      <div class="header-container" role="region" aria-label="Site Branding">
+        <a href="https://www.beezknees.co.uk">
+          <img src="../../images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
+        </a>
 
-					<h1 class="site-title">BeezKnees Dashboard</h1>
-					<!-- WORKING HAMBURGER ICON BUTTON -->
-				  <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-						<i class="fas fa-bars"></i>
-					</button>
-				</div>
-			</header>
-		</div>
+        <h1 class="site-title">BeezKnees Dashboard</h1>
 
- <nav class="member-navbar" role="navigation" aria-label="Member Navigation">
-  <ul id="navMenu" class="member-nav-menu">
-    
-    <li class="dropdown">
-      <button class="dropdown-toggle" aria-label="Toggle Apiary Submenu">
-        Apiary <span class="arrow">▼</span>
-      </button>
-      <ul class="dropdown-menu">
-        <li><a href="register-apiary.html">Register New Apiary</a></li>
-        <li><a href="map.html">View Apiary Map</a></li>
-      </ul>
-    </li>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </header>
+  </div>
 
-    <li class="dropdown">
-      <button class="dropdown-toggle" aria-label="Toggle Hives Submenu">
-        Hives <span class="arrow">▼</span>
-      </button>
-      <ul class="dropdown-menu">
-        <li><a href="register-hive.html">Register New Hive</a></li>
-        <li><a href="materials.html">Hive Material Tracker</a></li>
-        <li><a href="inspection.html">Start New Inspection</a></li>
-        <li><a href="inspections.html">Past Inspections</a></li>
-      </ul>
-    </li>
+  <nav class="member-navbar" role="navigation" aria-label="Member Navigation">
+    <ul id="navMenu" class="member-nav-menu">
 
-    <li class="dropdown">
-      <button class="dropdown-toggle" aria-label="Toggle Analytics Submenu">
-        Analytics <span class="arrow">▼</span>
-      </button>
-      <ul class="dropdown-menu">
-        <li><a href="calendar.html">Inspection Calendar</a></li>
-        <li><a href="analytics.html">Trends & Analytics</a></li>
-      </ul>
-    </li>
+      <li class="dropdown">
+        <button class="dropdown-toggle" aria-label="Toggle Apiary Submenu">
+          Apiary <span class="arrow">▼</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="register-apiary.html">Register New Apiary</a></li>
+          <li><a href="map.html">View Apiary Map</a></li>
+        </ul>
+      </li>
 
-    <li class="dropdown">
-      <button class="dropdown-toggle" aria-label="Toggle Team and Account Submenu">
-        Team & Account <span class="arrow">▼</span>
-      </button>
-      <ul class="dropdown-menu">
-        <li><a href="team.html">Manage Team Members</a></li>
-        <li><a href="account.html">Account Settings</a></li>
-        <li><a href="#" id="logout-btn">Log Out</a></li>
-        <li><a href="#" id="delete-account-btn">Delete Account</a></li>
-      </ul>
-    </li>
+      <li class="dropdown">
+        <button class="dropdown-toggle" aria-label="Toggle Hives Submenu">
+          Hives <span class="arrow">▼</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="register-hive.html">Register New Hive</a></li>
+          <li><a href="materials.html">Hive Material Tracker</a></li>
+          <li><a href="inspection.html">Start New Inspection</a></li>
+          <li><a href="inspections.html">Past Inspections</a></li>
+        </ul>
+      </li>
 
-  </ul>
-</nav>
+      <li class="dropdown">
+        <button class="dropdown-toggle" aria-label="Toggle Analytics Submenu">
+          Analytics <span class="arrow">▼</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="calendar.html">Inspection Calendar</a></li>
+          <li><a href="analytics.html">Trends & Analytics</a></li>
+        </ul>
+      </li>
 
-<!-- Hero Banner -->
+      <li class="dropdown">
+        <button class="dropdown-toggle" aria-label="Toggle Team and Account Submenu">
+          Team & Account <span class="arrow">▼</span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="team.html">Manage Team Members</a></li>
+          <li><a href="account.html">Account Settings</a></li>
+          <li><a href="#" id="logout-btn">Log Out</a></li>
+          <li><a href="#" id="delete-account-btn">Delete Account</a></li>
+        </ul>
+      </li>
+
+    </ul>
+  </nav>
+
+  <!-- Hero Banner -->
   <section role="region" aria-label="Dashboard Banner">
-    <div class="banner">
+    <div class="member-banner">
       <img src="../../images/hives.jpg" alt="Beehive image in apiary" />
     </div>
   </section>
@@ -166,95 +154,91 @@
   </footer>
 
   <!-- Cookie Consent Popup -->
-		<div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
-			<div class="cookie-content" role="region" aria-label="Cookie Consent Options">
-				<h2>🍪 We Use Cookies</h2>
-				<p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
+  <div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
+    <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+      <h2>🍪 We Use Cookies</h2>
+      <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
 
-				<form id="cookie-options">
-					<label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
-					<label><input type="checkbox" id="analytics" /> Analytics</label><br />
-					<label><input type="checkbox" id="marketing" /> Marketing</label><br />
-				</form>
+      <form id="cookie-options">
+        <label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
+        <label><input type="checkbox" id="analytics" /> Analytics</label><br />
+        <label><input type="checkbox" id="marketing" /> Marketing</label><br />
+      </form>
 
-				<div class="cookie-buttons">
-					<button id="accept-selected">Accept Selected</button>
-					<button id="accept-all">Accept All</button>
-				</div>
-			</div>
-		</div>
+      <div class="cookie-buttons">
+        <button id="accept-selected">Accept Selected</button>
+        <button id="accept-all">Accept All</button>
+      </div>
+    </div>
+  </div>
 
-		<!-- Back to Top Button -->
-		<button id="backToTop" title="Back to top" aria-label="Back to top">
-			⬆ Top
-		</button>
+  <!-- Back to Top Button -->
+  <button id="backToTop" title="Back to top" aria-label="Back to top">
+    ⬆ Top
+  </button>
 
-   	<!-- Google Analytics with Cookie Consent -->
-		<script>
-			document.addEventListener('DOMContentLoaded', function () {
-			  const popup = document.getElementById('cookie-consent');
-			  const acceptAllBtn = document.getElementById('accept-all');
-			  const acceptSelectedBtn = document.getElementById('accept-selected');
-			  const analyticsCheckbox = document.getElementById('analytics');
-			  const marketingCheckbox = document.getElementById('marketing');
+  <!-- Google Analytics with Cookie Consent -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const popup = document.getElementById('cookie-consent');
+      const acceptAllBtn = document.getElementById('accept-all');
+      const acceptSelectedBtn = document.getElementById('accept-selected');
+      const analyticsCheckbox = document.getElementById('analytics');
+      const marketingCheckbox = document.getElementById('marketing');
 
-			  if (!localStorage.getItem('cookieConsent')) {
-			    popup.style.display = 'block';
-			  }
+      if (!localStorage.getItem('cookieConsent')) {
+        popup.style.display = 'block';
+      }
 
-			  function savePreferences(analytics, marketing) {
-			    const consent = {
-			      essential: true,
-			      analytics: analytics,
-			      marketing: marketing
-			    };
-			    localStorage.setItem('cookieConsent', JSON.stringify(consent));
-			    popup.style.display = 'none';
-			    applyConsent(consent);
-			  }
+      function savePreferences(analytics, marketing) {
+        const consent = {
+          essential: true,
+          analytics: analytics,
+          marketing: marketing
+        };
+        localStorage.setItem('cookieConsent', JSON.stringify(consent));
+        popup.style.display = 'none';
+        applyConsent(consent);
+      }
 
-			  acceptAllBtn.addEventListener('click', () => {
-			    savePreferences(true, true);
-			  });
+      acceptAllBtn.addEventListener('click', () => {
+        savePreferences(true, true);
+      });
 
-			  acceptSelectedBtn.addEventListener('click', () => {
-			    savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
-			  });
+      acceptSelectedBtn.addEventListener('click', () => {
+        savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
+      });
 
-			  function applyConsent(consent) {
-			    if (consent.analytics) {
-			      const gaScript = document.createElement('script');
-			      gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
-			      gaScript.async = true;
-			      document.head.appendChild(gaScript);
+      function applyConsent(consent) {
+        if (consent.analytics) {
+          const gaScript = document.createElement('script');
+          gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
+          gaScript.async = true;
+          document.head.appendChild(gaScript);
 
-			      window.dataLayer = window.dataLayer || [];
-			      function gtag(){dataLayer.push(arguments);}
-			      gtag('js', new Date());
-			      gtag('config', 'G-7C99K0XQKV');
-			    }
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-7C99K0XQKV');
+        }
 
-			    if (consent.marketing) {
-			  
-        // Load marketing scripts here
-			    }
-			  }
-			  const stored = localStorage.getItem('cookieConsent');
-			  if (stored) {
-			    const consent = JSON.parse(stored);
-			    applyConsent(consent);
-			  }
-			});
-		</script>
-  
-      <!-- Use UMD version -->
-      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
-      <!-- Load your dashboard logic -->
-      <script src="/hivetag-netlify/hivetag/dashboard.js"></script>
-      <!-- Auth check with loading screen -->
-      <script src="../../js/auth-check.js"></script>
-      <!-- Hivetag-navigation menu -->
-      <script src="../../js/hivetag-menu.js"></script>
-        
+        if (consent.marketing) {
+          // Load marketing scripts here
+        }
+      }
+
+      const stored = localStorage.getItem('cookieConsent');
+      if (stored) {
+        const consent = JSON.parse(stored);
+        applyConsent(consent);
+      }
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
+  <script src="/hivetag-netlify/hivetag/dashboard.js"></script>
+  <script src="../../js/auth-check.js"></script>
+  <script src="../../js/hivetag-menu.js"></script>
 </body>
 </html>
+
