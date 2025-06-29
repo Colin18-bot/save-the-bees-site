@@ -1,31 +1,37 @@
-/* ========== Member Dashboard NAVIGATION & HEADER STYLES ONLY ========== */
-
-/* Prevent layout clash */
-.member-layout {
+/* Reset */
+.member-header,
+.member-navbar,
+.member-header-container,
+.member-site-logo,
+.member-site-title,
+.member-menu-toggle,
+.member-nav-menu,
+.dropdown,
+.dropdown-toggle,
+.dropdown-menu,
+.arrow,
+.member-banner {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Fixed header */
+/* Header + Logo */
 .member-header {
-  background: #000;
+  background-color: #000;
   color: #fff;
   position: fixed;
   top: 0;
   width: 100%;
   z-index: 1000;
-}
-
-/* Header content container */
-.member-site-header {
-  padding: 10px 20px;
+  border-bottom: 3px solid #d4af37;
 }
 
 .member-header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 10px 20px;
 }
 
 .member-site-logo {
@@ -34,134 +40,122 @@
 }
 
 .member-site-title {
-  font-size: 1.5rem;
-  color: #e0b347; /* Gold */
-  margin: 0;
-  flex-grow: 1;
-  text-align: center;
+  font-size: 2rem;
+  color: #d4af37;
+  margin-left: 20px;
 }
 
-/* Hamburger toggle button */
+/* Hamburger Button */
 .member-menu-toggle {
   background: none;
   border: none;
-  font-size: 1.5rem;
   color: #fff;
-  cursor: pointer;
+  font-size: 1.8rem;
   display: none;
 }
 
-/* NAVIGATION MENU */
+/* Navigation Bar */
 .member-navbar {
   background-color: #000;
-  padding-top: 70px; /* ensures it appears below header */
+  margin-top: 90px;
+  border-top: 2px solid #d4af37;
+  border-bottom: 2px solid #d4af37;
 }
 
 .member-nav-menu {
+  list-style: none;
   display: flex;
   justify-content: center;
-  list-style: none;
-  padding: 0;
-  margin: 0;
   flex-wrap: wrap;
 }
 
 .member-nav-menu li {
   position: relative;
-  margin: 0 15px;
 }
 
-/* Top-level button style */
-.member-dropdown-toggle {
+.dropdown-toggle {
   background: none;
   border: none;
-  color: #e0b347;
-  font-size: 1rem;
+  color: #d4af37;
+  font-size: 1.1rem;
+  padding: 14px 20px;
   cursor: pointer;
-  padding: 10px;
-  display: flex;
-  align-items: center;
+  font-weight: bold;
 }
 
-.member-dropdown-toggle:hover,
-.member-dropdown-toggle:focus {
-  text-decoration: underline;
+.dropdown-toggle:hover,
+.dropdown-menu li a:hover {
+  background-color: #222;
 }
 
-/* Arrow next to button */
-.member-arrow {
+.arrow {
   margin-left: 5px;
   transition: transform 0.3s ease;
 }
 
-/* Dropdown menu hidden by default */
+.dropdown.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
 .dropdown-menu {
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: #111;
-  padding: 10px;
-  min-width: 180px;
-  z-index: 1001;
+  background-color: #000;
+  border: 1px solid #d4af37;
+  min-width: 200px;
+  z-index: 999;
 }
 
 .dropdown-menu li {
-  margin: 0;
+  width: 100%;
 }
 
-.dropdown-menu a {
-  color: #fff;
+.dropdown-menu li a {
+  color: #d4af37;
+  padding: 12px 16px;
   text-decoration: none;
   display: block;
-  padding: 8px 12px;
+  font-size: 1rem;
 }
 
-.dropdown-menu a:hover {
-  background-color: #222;
+.dropdown.open .dropdown-menu {
+  display: block;
 }
 
 /* Hero Banner */
 .member-banner img {
   width: 100%;
   height: auto;
-  max-height: 400px;
-  object-fit: cover;
   display: block;
-  margin-top: 140px; /* accounts for header + nav */
+  margin-top: 160px;
 }
 
-/* Responsive Styles */
-@media screen and (max-width: 768px) {
+/* Responsive */
+@media (max-width: 768px) {
   .member-menu-toggle {
     display: block;
   }
 
   .member-nav-menu {
-    display: none;
     flex-direction: column;
-    background-color: #000;
+    display: none;
   }
 
-  .member-nav-menu.active {
+  .member-navbar.active .member-nav-menu {
     display: flex;
   }
 
   .dropdown-menu {
     position: static;
+    border: none;
+    background-color: #111;
   }
 
-  .member-site-title {
-    font-size: 1.2rem;
-    text-align: right;
-  }
-
-  .member-header-container {
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  .member-nav-menu li {
-    margin: 0;
+  .dropdown-toggle {
+    width: 100%;
+    text-align: left;
   }
 }

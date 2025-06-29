@@ -1,42 +1,37 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
   const menuToggle = document.getElementById('menuToggle');
-  const navMenu = document.getElementById('navMenu');
+  const memberNavbar = document.querySelector('.member-navbar');
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
 
-  // Toggle hamburger menu
-  menuToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
+  // Toggle mobile menu visibility
+  if (menuToggle) {
+    menuToggle.addEventListener('click', function () {
+      memberNavbar.classList.toggle('active');
+    });
+  }
+
+  // Dropdown toggles
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener('click', function (e) {
+      const parent = toggle.parentElement;
+      const currentlyOpen = document.querySelector('.dropdown.open');
+
+      // Close other open dropdowns
+      if (currentlyOpen && currentlyOpen !== parent) {
+        currentlyOpen.classList.remove('open');
+      }
+
+      // Toggle this dropdown
+      parent.classList.toggle('open');
+    });
   });
 
-  // Dropdown functionality for each top-level link
-  const dropdownToggles = document.querySelectorAll('.member-dropdown-toggle');
-
-  dropdownToggles.forEach(toggle => {
-    toggle.addEventListener('click', function () {
-      const dropdownMenu = this.nextElementSibling;
-      const arrow = this.querySelector('.member-arrow');
-
-      // Close all other dropdowns first
-      document.querySelectorAll('.dropdown-menu').forEach(menu => {
-        if (menu !== dropdownMenu) {
-          menu.style.display = 'none';
-        }
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.dropdown')) {
+      document.querySelectorAll('.dropdown.open').forEach(drop => {
+        drop.classList.remove('open');
       });
-
-      // Reset all other arrows
-      document.querySelectorAll('.member-arrow').forEach(arw => {
-        if (arw !== arrow) {
-          arw.style.transform = 'rotate(0deg)';
-        }
-      });
-
-      // Toggle current dropdown
-      if (dropdownMenu.style.display === 'block') {
-        dropdownMenu.style.display = 'none';
-        arrow.style.transform = 'rotate(0deg)';
-      } else {
-        dropdownMenu.style.display = 'block';
-        arrow.style.transform = 'rotate(180deg)';
-      }
-    });
+    }
   });
 });
