@@ -1,194 +1,186 @@
-/* ===============================
-   MEMBER AREA NAVIGATION STYLES
-   =============================== */
+/* Reset and base styles */
+body.member-layout {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+}
 
-/* Override global fixed-header for members area */
+/* Header and logo */
 .member-header {
+  background-color: #000;
+  color: #fff;
   position: fixed;
+  width: 100%;
+  z-index: 1000;
   top: 0;
   left: 0;
-  width: 100%;
-  background-color: #000;
-  z-index: 9999;
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid #333;
 }
 
-.site-header .header-container {
+.member-header .site-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0.8rem 1.5rem;
+  justify-content: space-between;
+  padding: 0.6rem 1rem;
 }
 
-.site-header .site-logo {
+.member-header .site-logo {
   height: 48px;
   width: auto;
 }
 
-.site-title {
+.member-header .site-title {
+  color: #f5b700;
   font-size: 1.5rem;
-  color: #D4A017;
-  margin-left: 1rem;
+  margin: 0;
+  padding-left: 1rem;
+  flex-grow: 1;
+  text-align: left;
 }
 
-/* Navigation Bar Wrapper */
+/* NAVIGATION BAR */
 .member-navbar {
-  position: relative;
-  top: 80px;
-  width: 100%;
   background-color: #000;
-  z-index: 999;
+  color: #fff;
+  padding: 0.3rem 0;
+  margin-top: 76px; /* Offset for fixed header */
 }
 
-/* Top-Level Navigation List */
 .member-nav-menu {
+  list-style: none;
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
-  list-style: none;
-  margin: 0;
   padding: 0;
+  margin: 0;
+  flex-wrap: wrap;
 }
 
 .member-nav-menu li {
   position: relative;
 }
 
-/* Navigation Buttons */
-.member-nav-menu .dropdown-toggle {
-  all: unset;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.5rem;
+.member-nav-menu a,
+.member-nav-menu button.dropdown-toggle {
+  display: block;
+  padding: 0.75rem 1.2rem;
+  color: #f5b700;
+  background: none;
+  border: none;
   font-size: 1rem;
-  color: #D4A017;
-  font-weight: bold;
-  text-transform: uppercase;
   cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.2s ease-in-out;
 }
 
-/* Arrow Only — rotates on toggle */
+.member-nav-menu button.dropdown-toggle:hover,
+.member-nav-menu a:hover {
+  background-color: #222;
+}
+
+/* ARROWS — FIXED: NO ROTATION */
 .member-nav-menu .arrow {
-  margin-left: 0.5rem;
-  transition: transform 0.3s ease;
-  display: inline-block;
+  margin-left: 6px;
+  transition: transform 0.3s ease-in-out;
 }
 
-/* Dropdown Menu */
+.member-nav-menu .dropdown.open .arrow {
+  transform: rotate(180deg);
+}
+
+/* DROPDOWNS */
 .member-nav-menu .dropdown-menu {
-  display: none;
   position: absolute;
   top: 100%;
   left: 0;
   background-color: #111;
-  padding: 0.5rem 0;
-  min-width: 220px;
+  min-width: 200px;
+  display: none;
+  flex-direction: column;
+  border: 1px solid #333;
   z-index: 999;
-  border: 1px solid #444;
 }
 
-.member-nav-menu .dropdown-menu li a {
-  display: block;
-  padding: 0.75rem 1rem;
-  color: #D4A017;
-  text-decoration: none;
-  font-size: 0.95rem;
+.member-nav-menu .dropdown:hover .dropdown-menu,
+.member-nav-menu .dropdown.open .dropdown-menu {
+  display: flex;
 }
 
-.member-nav-menu .dropdown-menu li a:hover {
+.member-nav-menu .dropdown-menu li {
+  width: 100%;
+}
+
+.member-nav-menu .dropdown-menu a {
+  padding: 0.7rem 1rem;
+  color: #f5b700;
+  font-weight: normal;
+  background-color: #111;
+}
+
+.member-nav-menu .dropdown-menu a:hover {
   background-color: #222;
-  color: #fff;
 }
 
-/* Desktop Dropdown Hover */
-@media (min-width: 768px) {
-  .member-nav-menu li:hover > .dropdown-menu {
-    display: block;
-  }
-
-  .member-nav-menu li:hover > .dropdown-toggle .arrow {
-    transform: rotate(180deg);
-  }
-}
-
-/* ================
-   MOBILE STYLES
-   ================ */
+/* HAMBURGER MENU — DESKTOP HIDDEN */
 .menu-toggle {
   display: none;
+  background: none;
+  border: none;
+  color: #f5b700;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 1001;
 }
 
-@media (max-width: 767px) {
-  .menu-toggle {
-    display: block;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    color: #D4A017;
-    cursor: pointer;
-    padding: 0.5rem 1rem;
-    margin-left: auto;
-  }
-
-  .member-nav-menu {
-    display: none;
-    flex-direction: column;
-    background-color: #000;
-    padding: 0;
-  }
-
-  .member-nav-menu.active {
-    display: flex;
-  }
-
-  .member-nav-menu li {
-    width: 100%;
-    border-top: 1px solid #333;
-  }
-
-  .member-nav-menu .dropdown-menu {
-    display: none;
-    flex-direction: column;
-    position: static;
-    background-color: #111;
-  }
-
-  .member-nav-menu .dropdown.open .dropdown-menu {
-    display: flex;
-  }
-
-  .member-nav-menu .dropdown.open .arrow {
-    transform: rotate(180deg);
-  }
-}
-
-/* ================
-   MEMBER BANNER
-   ================ */
+/* HERO BANNER BELOW NAVIGATION */
 .member-banner {
-  margin-top: 160px; /* ensures it appears below fixed header + nav */
+  margin-top: 136px; /* Header + navbar height */
   width: 100%;
-  height: auto;
+  max-height: 380px;
   overflow: hidden;
 }
 
 .member-banner img {
   width: 100%;
-  max-height: 450px;
-  object-fit: cover;
+  height: auto;
   display: block;
 }
 
-/* Fix for white gap below fixed header */
-body.member-layout {
-  margin: 0;
-  padding: 0;
-  background-color: #000;
-}
+/* MEDIA QUERIES FOR MOBILE */
+@media (max-width: 768px) {
+  .member-header .site-title {
+    text-align: right;
+    padding-right: 1rem;
+    font-size: 1.3rem;
+  }
 
-/* Padding for content below banner */
-.content {
-  padding: 2rem 1rem;
-  margin-top: 0;
+  .menu-toggle {
+    display: block;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .member-nav-menu {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: #000;
+    padding: 1rem;
+  }
+
+  .member-nav-menu.show {
+    display: flex;
+  }
+
+  .member-nav-menu .dropdown-menu {
+    position: static;
+    border: none;
+    background-color: #111;
+  }
+
+  .member-nav-menu .dropdown-menu a {
+    padding-left: 2rem;
+  }
 }
