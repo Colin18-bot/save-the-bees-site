@@ -1,15 +1,19 @@
-
-
-
+/* Ensure body respects header space */
 body.member-layout {
-  padding-top: 480px; /* or whatever your fixed header height is */
+  padding-top: 140px;
 }
 
+/* Navigation wrapper */
+.member-navbar {
+  position: relative;
+  z-index: 999;
+  background-color: #000;
+  color: #fff;
+  padding: 0;
+  margin-top: 0;
+}
 
-
-
-
-/* Reset any conflicting button styles from global CSS */
+/* Reset any conflicting button styles */
 .member-navbar button,
 .member-navbar .dropdown-toggle {
   all: unset;
@@ -19,17 +23,7 @@ body.member-layout {
   justify-content: space-between;
 }
 
-/* Main container styles */
-.member-navbar {
-  background-color: #000;
-  color: #fff;
-  padding: 0;
-  position: relative;
-  z-index: 1000;
-  margin-top: 70px; /* Adjust if your header height differs */
-}
-
-/* Horizontal nav layout */
+/* Horizontal layout for desktop */
 .member-nav-menu {
   display: flex;
   justify-content: center;
@@ -43,6 +37,7 @@ body.member-layout {
   position: relative;
 }
 
+/* Top-level nav buttons */
 .member-nav-menu .dropdown-toggle {
   padding: 1rem 1.5rem;
   font-size: 1rem;
@@ -53,13 +48,14 @@ body.member-layout {
   text-transform: uppercase;
 }
 
+/* Arrow next to top-level items */
 .member-nav-menu .dropdown-toggle .arrow {
   margin-left: 0.5rem;
   transition: transform 0.3s ease;
   display: inline-block;
 }
 
-/* Dropdown menu (desktop) */
+/* Submenu */
 .member-nav-menu .dropdown-menu {
   display: none;
   position: absolute;
@@ -133,6 +129,7 @@ body.member-layout {
     display: flex;
   }
 
+  /* ✅ Rotate ONLY the arrow */
   .member-nav-menu .dropdown.open .arrow {
     transform: rotate(180deg);
   }
