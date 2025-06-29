@@ -1,19 +1,17 @@
-/* Space for fixed header */
+/* Ensure space for fixed header */
 body.member-layout {
   padding-top: 140px;
 }
 
-/* Navigation wrapper */
+/* Member nav wrapper */
 .member-navbar {
   position: relative;
   z-index: 999;
-  background-color: #000;
-  color: #fff;
-  padding: 0;
   margin-top: 0;
+  background-color: #000;
 }
 
-/* Reset conflicting button styles */
+/* Reset any conflicting button styles */
 .member-navbar button,
 .member-navbar .dropdown-toggle {
   all: unset;
@@ -23,7 +21,7 @@ body.member-layout {
   justify-content: space-between;
 }
 
-/* Main nav layout */
+/* Top-level nav menu */
 .member-nav-menu {
   display: flex;
   justify-content: center;
@@ -37,7 +35,7 @@ body.member-layout {
   position: relative;
 }
 
-/* Top-level nav items */
+/* Top-level buttons */
 .member-nav-menu .dropdown-toggle {
   padding: 1rem 1.5rem;
   font-size: 1rem;
@@ -48,14 +46,14 @@ body.member-layout {
   text-transform: uppercase;
 }
 
-/* Arrow (ONLY this rotates) */
-.member-nav-menu .dropdown-toggle .arrow {
+/* Arrow ONLY — this is the only thing that should rotate */
+.member-nav-menu .arrow {
   margin-left: 0.5rem;
   transition: transform 0.3s ease;
   display: inline-block;
 }
 
-/* Dropdown menu */
+/* Dropdown menu (hidden by default) */
 .member-nav-menu .dropdown-menu {
   display: none;
   position: absolute;
@@ -80,14 +78,13 @@ body.member-layout {
   color: gold;
 }
 
-/* Desktop dropdown hover */
+/* Desktop hover dropdown */
 @media (min-width: 768px) {
   .member-nav-menu li:hover > .dropdown-menu {
     display: block;
   }
 
-  /* ✅ Only rotate arrow */
-  .member-nav-menu .dropdown:hover .arrow {
+  .member-nav-menu li:hover > .dropdown-toggle .arrow {
     transform: rotate(180deg);
   }
 }
@@ -130,7 +127,6 @@ body.member-layout {
     display: flex;
   }
 
-  /* ✅ Rotate only arrow on mobile */
   .member-nav-menu .dropdown.open .arrow {
     transform: rotate(180deg);
   }
