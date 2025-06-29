@@ -1,125 +1,130 @@
-/* ========== Member Navigation and Header (Isolated) ========== */
+/* MEMBER NAVIGATION + HEADER STYLES */
 
-/* Reset for member area only */
-.member-header,
-.member-navbar,
-.member-banner {
-  box-sizing: border-box;
+/* Reset basics */
+.member-header-bar, .member-navbar, .member-banner {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-/* Member Fixed Header */
-.member-header {
+/* Fixed Header */
+.member-header-bar {
+  background-color: #000;
   position: fixed;
-  top: 0;
   width: 100%;
-  background: #000;
-  color: #fff;
-  z-index: 9999;
-  border-bottom: 2px solid gold;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.member-header .site-header {
+.member-header-bar .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.8rem 2%;
-  flex-wrap: wrap;
+  padding: 0.5rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.member-header .site-logo {
-  height: 50px;
+.member-logo {
+  height: 80px;
   width: auto;
 }
 
-.member-header .site-title {
-  font-size: 1.6rem;
-  font-weight: bold;
-  color: gold;
+.member-title {
+  font-size: 1.8rem;
+  color: #ffd700;
   margin-left: 1rem;
+  flex: 1;
+  text-align: left;
 }
 
-/* Member Nav Bar (Desktop Default) */
+/* Navigation */
 .member-navbar {
   background-color: #000;
-  color: #fff;
-  padding: 0;
-  margin-top: 100px; /* Ensures nav is below fixed header */
+  margin-top: 100px; /* allows for fixed header height */
 }
 
 .member-nav-menu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
   display: flex;
   justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
   flex-wrap: wrap;
-  font-size: 1rem;
 }
 
-.member-nav-menu li {
+.member-nav-menu > li {
   position: relative;
 }
 
-.member-nav-menu a,
-.member-nav-menu .dropdown-toggle {
-  display: block;
-  padding: 1rem 1.5rem;
-  color: gold;
-  text-decoration: none;
-  background: transparent;
+.member-nav-menu > li > .dropdown-toggle {
+  background: none;
   border: none;
+  color: #ffd700;
+  font-size: 1.1rem;
+  padding: 1rem;
   cursor: pointer;
   font-weight: bold;
+  display: flex;
+  align-items: center;
 }
 
-.member-nav-menu a:hover,
-.member-nav-menu .dropdown-toggle:hover {
-  background-color: #333;
-}
-
-/* Arrows */
 .member-nav-menu .arrow {
-  margin-left: 0.5rem;
+  margin-left: 5px;
   transition: transform 0.3s ease;
 }
 
+/* Rotate only when open */
 .member-nav-menu .dropdown.open .arrow {
   transform: rotate(180deg);
 }
 
-/* Dropdown Menu */
 .dropdown-menu {
-  position: absolute;
-  left: 0;
-  top: 100%;
-  background-color: #111;
-  min-width: 200px;
   display: none;
-  z-index: 9999;
-}
-
-.dropdown.open .dropdown-menu {
-  display: block;
+  position: absolute;
+  background-color: #111;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  top: 100%;
+  left: 0;
+  min-width: 180px;
+  border: 1px solid #222;
+  z-index: 1000;
 }
 
 .dropdown-menu li a {
-  padding: 0.8rem 1rem;
+  color: #ffd700;
+  text-decoration: none;
   display: block;
-  color: #fff;
-  background-color: #111;
+  padding: 0.75rem 1rem;
+  transition: background 0.3s;
 }
 
 .dropdown-menu li a:hover {
   background-color: #222;
 }
 
-/* Member Hero Banner */
+/* Show menu on open */
+.dropdown.open .dropdown-menu {
+  display: block;
+}
+
+/* Hamburger for mobile */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  color: #ffd700;
+  cursor: pointer;
+}
+
+/* Hero Banner */
 .member-banner {
-  margin-top: 160px; /* Push down to clear header/nav */
   width: 100%;
-  max-height: 400px;
+  margin-top: 160px; /* allows for fixed nav/header */
   overflow: hidden;
 }
 
@@ -127,14 +132,13 @@
   width: 100%;
   height: auto;
   display: block;
-  object-fit: cover;
 }
 
-/* Responsive Navigation */
-@media (max-width: 900px) {
+/* RESPONSIVE */
+@media screen and (max-width: 768px) {
   .member-nav-menu {
-    display: none;
     flex-direction: column;
+    display: none;
     background-color: #000;
     width: 100%;
   }
@@ -143,35 +147,17 @@
     display: flex;
   }
 
+  .member-title {
+    text-align: center;
+    font-size: 1.5rem;
+  }
+
   .menu-toggle {
     display: block;
-    font-size: 1.5rem;
-    background: none;
-    border: none;
-    color: gold;
-    cursor: pointer;
-    margin-left: auto;
   }
 
   .dropdown-menu {
-    position: relative;
-    top: 0;
-    left: 0;
-    background: #111;
-  }
-
-  .dropdown.open .arrow {
-    transform: rotate(180deg);
-  }
-}
-
-/* Hide hamburger on desktop */
-.menu-toggle {
-  display: none;
-}
-
-@media (max-width: 900px) {
-  .menu-toggle {
-    display: block;
+    position: static;
+    border: none;
   }
 }
