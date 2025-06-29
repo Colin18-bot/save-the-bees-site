@@ -1,0 +1,154 @@
+/* === MEMBER AREA STYLES ONLY === */
+
+/* Header fix */
+.member-header {
+  position: relative;
+  background-color: #000;
+  z-index: 9999;
+  width: 100%;
+}
+
+/* Member navbar wrapper */
+.member-navbar {
+  position: relative;
+  z-index: 999;
+  background-color: #000;
+  margin-top: 0;
+}
+
+/* Layout padding to push below fixed headers */
+body.member-layout {
+  padding-top: 140px; /* Adjust this if your header is taller */
+}
+
+/* Reset any inherited button styles */
+.member-navbar button,
+.member-navbar .dropdown-toggle {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Main nav container */
+.member-nav-menu {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+}
+
+.member-nav-menu li {
+  position: relative;
+}
+
+/* Top-level buttons */
+.member-nav-menu .dropdown-toggle {
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  color: #D4A017;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Arrow icon (only this rotates) */
+.member-nav-menu .arrow {
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+/* Submenu styles */
+.member-nav-menu .dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  background-color: #111;
+  min-width: 220px;
+  z-index: 1000;
+  border: 1px solid #444;
+  padding: 0.5rem 0;
+}
+
+.member-nav-menu .dropdown-menu li a {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #D4A017;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.member-nav-menu .dropdown-menu li a:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+/* DESKTOP ONLY DROPDOWNS */
+@media (min-width: 768px) {
+  .member-nav-menu li:hover > .dropdown-menu {
+    display: block;
+  }
+
+  .member-nav-menu li:hover > .dropdown-toggle .arrow {
+    transform: rotate(180deg);
+  }
+
+  .menu-toggle {
+    display: none !important;
+  }
+}
+
+/* MOBILE STYLES */
+@media (max-width: 767px) {
+  .member-nav-menu {
+    flex-direction: column;
+    display: none;
+  }
+
+  .member-nav-menu.active {
+    display: flex;
+  }
+
+  .member-nav-menu li {
+    width: 100%;
+    border-top: 1px solid #333;
+  }
+
+  .member-nav-menu .dropdown-toggle {
+    width: 100%;
+    padding: 1rem;
+    justify-content: space-between;
+  }
+
+  .member-nav-menu .dropdown-menu {
+    display: none;
+    flex-direction: column;
+    position: static;
+  }
+
+  .member-nav-menu .dropdown.open .dropdown-menu {
+    display: flex;
+  }
+
+  .member-nav-menu .dropdown.open .arrow {
+    transform: rotate(180deg);
+  }
+
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #D4A017;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+  }
+
+  .menu-toggle i {
+    pointer-events: none;
+  }
+}
