@@ -1,1 +1,0 @@
-// Supabase: Register User Function

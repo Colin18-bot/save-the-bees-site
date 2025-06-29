@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-  /* -------------------- 🕒 Loading Screen Fallback (5s) -------------------- */
+  /* -------------------- 🕒 Loading Fallback -------------------- */
   setTimeout(() => {
     const loading = document.getElementById('member-loading-screen');
     if (loading) loading.style.display = 'none';
@@ -17,26 +17,11 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* -------------------- 🍪 Cookie Consent -------------------- */
-  const popup = document.getElementById('member-cookie-consent');
+  const popup = document.getElementById('cookie-consent');
   const acceptAllBtn = document.getElementById('accept-all');
   const acceptSelectedBtn = document.getElementById('accept-selected');
   const analyticsCheckbox = document.getElementById('analytics');
   const marketingCheckbox = document.getElementById('marketing');
-
-  if (popup && !localStorage.getItem('cookieConsent')) {
-    popup.style.display = 'block';
-  }
-
-  function savePreferences(analytics, marketing) {
-    const consent = {
-      essential: true,
-      analytics: analytics,
-      marketing: marketing
-    };
-    localStorage.setItem('cookieConsent', JSON.stringify(consent));
-    if (popup) popup.style.display = 'none';
-    applyConsent(consent);
-  }
 
   function applyConsent(consent) {
     if (consent.analytics) {
@@ -52,10 +37,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (consent.marketing) {
-      // Load marketing scripts here if needed
+      // Add future marketing scripts here
     }
   }
 
+  function savePreferences(analytics, marketing) {
+    const consent = {
+      essential: true,
+      analytics: analytics,
+      marketing: marketing
+    };
+    localStorage.setItem('cookieConsent', JSON.stringify(consent));
+    if (popup) popup.style.display = 'none';
+    applyConsent(consent);
+  }
+
+  // Show popup if not previously set
+  if (popup && !localStorage.getItem('cookieConsent')) {
+    popup.style.display = 'block';
+  }
+
+  // Handle button clicks
   if (acceptAllBtn && acceptSelectedBtn) {
     acceptAllBtn.addEventListener('click', () => {
       savePreferences(true, true);
@@ -66,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Apply saved preferences
   const stored = localStorage.getItem('cookieConsent');
   if (stored) {
     const consent = JSON.parse(stored);
@@ -91,10 +94,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
-/* -------------------- ⏳ Safety Timeout Fallback (10s) -------------------- */
+/* -------------------- ⏱️ Final Loading Fail-Safe -------------------- */
 setTimeout(() => {
-  const loadingScreen = document.getElementById("member-loading-screen");
-  if (loadingScreen && loadingScreen.style.display !== "none") {
-    loadingScreen.style.display = "none";
+  const loading = document.getElementById('member-loading-screen');
+  if (loading && loading.style.display !== 'none') {
+    loading.style.display = 'none';
   }
 }, 10000);

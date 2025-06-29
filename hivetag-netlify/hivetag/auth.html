@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BeezKnees Login / Register</title>
+  <!-- Hamburger button -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
   <!-- Global styles -->
   <link rel="stylesheet" href="../../css/style.css" />
   <!-- Member navigation and logout styles -->
   <link rel="stylesheet" href="../../css/dashboard-nav.css" />
-  <!-- Supabase SDK --> 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
-
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="BeezKnees is your practical beekeeping guide, offering seasonal tips, hive health advice, and pollinator protection resources for beginners and experienced keepers alike." />
+  <meta name="keywords" content="beekeeping guide, practical beekeeping, hive care, pollinator protection, apiary tips, seasonal hive tasks, queen rearing, swarm control, beekeeping for beginners, beekeeping resources" />
+  <meta name="author" content="Colin Chorley" />
+  <!-- Favicon -->
+  <link rel="icon" href="../../images/favicon.ico" type="image/x-icon" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../../images/favicon-16x16.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../../images/favicon-32x32.png" />
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png" />2
+  <link rel="icon" type="image/png" sizes="192x192" href="../../images/android-chrome-192x192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="../../images/android-chrome-512x512.png" />
+  <link rel="manifest" href="../../site.webmanifest" />
 </head>
 
 <body>
@@ -19,7 +30,7 @@
     <div class="header-container">
       <a href="https://www.beezknees.co.uk">
       <img src="/images/Beezknees-logo.png" alt="BeezKnees Logo" class="site-logo"></a>
-      <h1 class="site-title">BeezKnees Account</h1>
+      <h1 class="site-title">Login / Register</h1>
     </div>
   </header>
 
@@ -29,7 +40,6 @@
 				<img src="/images/swarm.jpg" alt="Picture of Honeybees Swarming" />
 			</div>
 		</section>
-
 
  <main class="content">
   <div class="container contact-container" style="max-width: 500px;">
@@ -168,75 +178,14 @@
 			⬆ Top
 		</button>
 
-		<!-- ============================================
-     📁 JavaScript: Mobile Menu Interactions
-     - Toggles hamburger menu on mobile
-     - Closes menu on link click or outside click
-     ============================================ -->
-		 <script src="../../js/menu.js"></script>
-
-		<!-- Google Analytics with Cookie Consent -->
-		<script>
-			document.addEventListener('DOMContentLoaded', function () {
-			  const popup = document.getElementById('cookie-consent');
-			  const acceptAllBtn = document.getElementById('accept-all');
-			  const acceptSelectedBtn = document.getElementById('accept-selected');
-			  const analyticsCheckbox = document.getElementById('analytics');
-			  const marketingCheckbox = document.getElementById('marketing');
-
-			  if (!localStorage.getItem('cookieConsent')) {
-			    popup.style.display = 'block';
-			  }
-
-			  function savePreferences(analytics, marketing) {
-			    const consent = {
-			      essential: true,
-			      analytics: analytics,
-			      marketing: marketing
-			    };
-			    localStorage.setItem('cookieConsent', JSON.stringify(consent));
-			    popup.style.display = 'none';
-			    applyConsent(consent);
-			  }
-
-			  acceptAllBtn.addEventListener('click', () => {
-			    savePreferences(true, true);
-			  });
-
-			  acceptSelectedBtn.addEventListener('click', () => {
-			    savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
-			  });
-
-			  function applyConsent(consent) {
-			    if (consent.analytics) {
-			      const gaScript = document.createElement('script');
-			      gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
-			      gaScript.async = true;
-			      document.head.appendChild(gaScript);
-
-			      window.dataLayer = window.dataLayer || [];
-			      function gtag(){dataLayer.push(arguments);}
-			      gtag('js', new Date());
-			      gtag('config', 'G-7C99K0XQKV');
-			    }
-
-			    if (consent.marketing) {
-			      // Load marketing scripts here
-			    }
-			  }
-
-			  const stored = localStorage.getItem('cookieConsent');
-			  if (stored) {
-			    const consent = JSON.parse(stored);
-			    applyConsent(consent);
-			  }
-			});
-		</script>
-
-	<!-- Load Supabase SDK -->
-	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-	<!-- Load your custom script AFTER Supabase is available -->
-	<script src="/hivetag-netlify/hivetag/auth.js"></script>
+		<!-- Mobile menu logic (if needed for this page) -->
+		<script src="../../js/menu.js"></script>
+		<!-- Supabase SDK -->
+		<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
+		<!-- Your custom login/register logic -->
+		<script src="/hivetag-netlify/hivetag/auth.js"></script>
+		<!-- Shared logic like cookie consent, back to top, etc. -->
+		<script src="../../js/member.js"></script>
 	
 </body>
 </html>

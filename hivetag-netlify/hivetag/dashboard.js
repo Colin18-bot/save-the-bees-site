@@ -8,12 +8,15 @@ const supabase = window.supabase.createClient(
 
 // ✅ Session check on load
 supabase.auth.getSession().then(({ data, error }) => {
+  const loadingScreen = document.getElementById('member-loading-screen');
+
   if (error || !data.session) {
     console.warn("⚠️ No session:", error);
     alert("⚠️ You are not logged in. Redirecting...");
     window.location.href = '/hivetag-netlify/hivetag/auth.html';
   } else {
     console.log("✅ Logged in as:", data.session.user.email);
+    if (loadingScreen) loadingScreen.style.display = 'none';
   }
 });
 
