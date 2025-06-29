@@ -1,4 +1,4 @@
-/* Ensure body respects header space */
+/* Space for fixed header */
 body.member-layout {
   padding-top: 140px;
 }
@@ -13,7 +13,7 @@ body.member-layout {
   margin-top: 0;
 }
 
-/* Reset any conflicting button styles */
+/* Reset conflicting button styles */
 .member-navbar button,
 .member-navbar .dropdown-toggle {
   all: unset;
@@ -23,7 +23,7 @@ body.member-layout {
   justify-content: space-between;
 }
 
-/* Horizontal layout for desktop */
+/* Main nav layout */
 .member-nav-menu {
   display: flex;
   justify-content: center;
@@ -37,7 +37,7 @@ body.member-layout {
   position: relative;
 }
 
-/* Top-level nav buttons */
+/* Top-level nav items */
 .member-nav-menu .dropdown-toggle {
   padding: 1rem 1.5rem;
   font-size: 1rem;
@@ -48,14 +48,14 @@ body.member-layout {
   text-transform: uppercase;
 }
 
-/* Arrow next to top-level items */
+/* Arrow (ONLY this rotates) */
 .member-nav-menu .dropdown-toggle .arrow {
   margin-left: 0.5rem;
   transition: transform 0.3s ease;
   display: inline-block;
 }
 
-/* Submenu */
+/* Dropdown menu */
 .member-nav-menu .dropdown-menu {
   display: none;
   position: absolute;
@@ -80,12 +80,13 @@ body.member-layout {
   color: gold;
 }
 
-/* Desktop hover effect */
+/* Desktop dropdown hover */
 @media (min-width: 768px) {
   .member-nav-menu li:hover > .dropdown-menu {
     display: block;
   }
 
+  /* ✅ Only rotate arrow */
   .member-nav-menu .dropdown:hover .arrow {
     transform: rotate(180deg);
   }
@@ -129,7 +130,7 @@ body.member-layout {
     display: flex;
   }
 
-  /* ✅ Rotate ONLY the arrow */
+  /* ✅ Rotate only arrow on mobile */
   .member-nav-menu .dropdown.open .arrow {
     transform: rotate(180deg);
   }
