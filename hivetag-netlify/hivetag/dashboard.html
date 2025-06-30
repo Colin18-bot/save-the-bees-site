@@ -6,10 +6,10 @@
 
   <title>BeezKnees | Member Dashboard</title>
 
-  <!-- Hamburger button -->
+  <!-- Font Awesome (Correct class will be used below) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
 
-  <!-- Member-only styles (renamed from member-nav.css) -->
+  <!-- Member-only styles -->
   <link rel="stylesheet" href="../../css/member.css" />
 
   <!-- SEO Meta Tags -->
@@ -33,74 +33,72 @@
     Please wait, checking login status...
   </div>
 
-  <!-- Fixed Header and Nav Container -->
-<div class="member-header">
-  <header class="member-header-container" role="banner" aria-label="BeezKnees Member Header">
-    <div class="member-header-inner" role="region" aria-label="Site Branding">
-      <a href="https://www.beezknees.co.uk" aria-label="Visit BeezKnees Home">
-        <img src="../../images/BeezKnees-Logo.png" alt="BeezKnees Logo" class="member-logo" />
-      </a>
+  <!-- Fixed Header -->
+  <div class="member-header">
+    <header class="member-header-container" role="banner" aria-label="BeezKnees Member Header">
+      <div class="member-header-inner" role="region" aria-label="Site Branding">
+        <a href="https://www.beezknees.co.uk" aria-label="Visit BeezKnees Home">
+          <img src="../../images/BeezKnees-Logo.png" alt="BeezKnees Logo" class="member-logo" />
+        </a>
 
-      <h1 class="member-title">BeezKnees Dashboard</h1>
+        <h1 class="member-title">Dashboard</h1>
 
-      <!-- 🍔 Mobile Menu Toggle -->
-      <button class="member-menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
-        <i class="fas fa-bars" aria-hidden="true"></i>
-      </button>
-    </div>
-  </header>
-</div>
+        <!-- 🍔 Hamburger Toggle -->
+        <button class="member-menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+          <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
+      </div>
+    </header>
+  </div>
 
-<!-- 🧭 Navigation Menu -->
-<nav class="member-navbar" role="navigation" aria-label="Member Navigation Menu">
-  <ul id="navMenu" class="member-nav-menu">
+  <!-- Navigation -->
+  <nav class="member-navbar" role="navigation" aria-label="Member Navigation Menu">
+    <ul id="navMenu" class="member-nav-menu">
+      <li class="member-dropdown">
+        <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="apiary-menu">
+          Apiary <span class="member-arrow">▼</span>
+        </button>
+        <ul id="apiary-menu" class="member-dropdown-menu">
+          <li><a href="register-apiary.html">Register New Apiary</a></li>
+          <li><a href="map.html">View Apiary Map</a></li>
+        </ul>
+      </li>
 
-    <li class="member-dropdown">
-      <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="apiary-menu">
-        Apiary <span class="member-arrow">▼</span>
-      </button>
-      <ul id="apiary-menu" class="member-dropdown-menu">
-        <li><a href="register-apiary.html">Register New Apiary</a></li>
-        <li><a href="map.html">View Apiary Map</a></li>
-      </ul>
-    </li>
+      <li class="member-dropdown">
+        <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="hives-menu">
+          Hives <span class="member-arrow">▼</span>
+        </button>
+        <ul id="hives-menu" class="member-dropdown-menu">
+          <li><a href="register-hive.html">Register New Hive</a></li>
+          <li><a href="materials.html">Hive Material Tracker</a></li>
+          <li><a href="inspection.html">Start New Inspection</a></li>
+          <li><a href="inspections.html">Past Inspections</a></li>
+        </ul>
+      </li>
 
-    <li class="member-dropdown">
-      <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="hives-menu">
-        Hives <span class="member-arrow">▼</span>
-      </button>
-      <ul id="hives-menu" class="member-dropdown-menu">
-        <li><a href="register-hive.html">Register New Hive</a></li>
-        <li><a href="materials.html">Hive Material Tracker</a></li>
-        <li><a href="inspection.html">Start New Inspection</a></li>
-        <li><a href="inspections.html">Past Inspections</a></li>
-      </ul>
-    </li>
+      <li class="member-dropdown">
+        <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="analytics-menu">
+          Analytics <span class="member-arrow">▼</span>
+        </button>
+        <ul id="analytics-menu" class="member-dropdown-menu">
+          <li><a href="calendar.html">Inspection Calendar</a></li>
+          <li><a href="analytics.html">Trends & Analytics</a></li>
+        </ul>
+      </li>
 
-    <li class="member-dropdown">
-      <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="analytics-menu">
-        Analytics <span class="member-arrow">▼</span>
-      </button>
-      <ul id="analytics-menu" class="member-dropdown-menu">
-        <li><a href="calendar.html">Inspection Calendar</a></li>
-        <li><a href="analytics.html">Trends & Analytics</a></li>
-      </ul>
-    </li>
-
-    <li class="member-dropdown">
-      <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="team-menu">
-        Team & Account <span class="member-arrow">▼</span>
-      </button>
-      <ul id="team-menu" class="member-dropdown-menu">
-        <li><a href="team.html">Manage Team Members</a></li>
-        <li><a href="account.html">Account Settings</a></li>
-        <li><a href="#" id="logout-btn">Log Out</a></li>
-        <li><a href="#" id="delete-account-btn">Delete Account</a></li>
-      </ul>
-    </li>
-
-  </ul>
-</nav>
+      <li class="member-dropdown">
+        <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="team-menu">
+          Team & Account <span class="member-arrow">▼</span>
+        </button>
+        <ul id="team-menu" class="member-dropdown-menu">
+          <li><a href="team.html">Manage Team Members</a></li>
+          <li><a href="account.html">Account Settings</a></li>
+          <li><a href="#" id="logout-btn">Log Out</a></li>
+          <li><a href="#" id="delete-account-btn">Delete Account</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
 
   <!-- Hero Banner -->
   <section role="region" aria-label="Dashboard Banner">
@@ -109,7 +107,7 @@
     </div>
   </section>
 
-  <!-- Main Dashboard Welcome -->
+  <!-- Main Content -->
   <main class="member-content">
     <div class="member-container member-contact-container" style="max-width: 700px;">
       <h2>Welcome to Your Hive Dashboard</h2>
@@ -154,7 +152,7 @@
 
   <!-- Cookie Consent Popup -->
   <div id="member-cookie-consent" class="member-cookie-popup" role="region" aria-label="Cookie Consent Settings">
-    <div class="member-cookie-content" role="region" aria-label="Cookie Consent Options">
+    <div class="member-cookie-content">
       <h2>🍪 We Use Cookies</h2>
       <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
 
@@ -171,16 +169,13 @@
     </div>
   </div>
 
-  <!-- Back to Top Button -->
-  <button id="member-backToTop" title="Back to top" aria-label="Back to top">
-    ⬆ Top
-  </button>
+  <!-- Back to Top -->
+  <button id="member-backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
   <script src="../../js/member.js" defer></script>
   <script src="/hivetag-netlify/hivetag/dashboard.js"></script>
-  <!--<script src="../../js/auth-check.js"></script>-->
-  <!--<script src="../../js/hivetag-menu.js"></script>-->
 
 </body>
 </html>
