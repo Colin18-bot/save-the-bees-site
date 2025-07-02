@@ -710,9 +710,7 @@ main.not-found {
   }
 }
 
-/* -------------------------------------------------- */
-/* 📞 FOOTER                                         */
-/* -------------------------------------------------- */
+/* ==== 📞 FOOTER ==== */
 .site-footer {
   background-color: #000;
   color: #D4A017;
@@ -871,9 +869,7 @@ button:focus,
   border-radius: 4px;
 }
 
-/* ---------------------------- */
-/* 🍪 Cookie Consent Styles     */
-/* ---------------------------- */
+/* ==== 🍪 Cookie Consent Styles ====*/
 .cookie-popup {
   position: fixed;
   bottom: 1rem;
@@ -929,12 +925,8 @@ button:focus,
   background: #C4970B;
 }
 
-/* -------------------------------------------------- */
-/* 🎨 VISUAL UTILITIES / BUTTONS                      */
-/* -------------------------------------------------- */
-/* -------------------------------------------------- */
-/* 🔝 BACK TO TOP BUTTON                              */
-/* -------------------------------------------------- */
+/* ==== 🎨 VISUAL UTILITIES / BUTTONS ====*/
+/* ==== 🔝 BACK TO TOP BUTTON ====*/
 #backToTop {
   position: fixed;
   bottom: 1.5rem;

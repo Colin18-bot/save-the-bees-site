@@ -1,0 +1,454 @@
+/* ==== GLOBAL RESET + BASE ==== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fdf6ec;
+  color: #333;
+  line-height: 1.6;
+  font-size: clamp(1rem, 1vw + 0.5rem, 1.125rem);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ==== MEMBER-CONTENT ====*/
+.member-content {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background-color: #f9f9f9; /* Light page background */
+}
+
+.member-container {
+  background-color: #fff;         /* White background */
+  border-radius: 12px;            /* Rounded corners */
+  padding: 2rem;
+  width: 100%;
+  max-width: 90%;                 /* Fill ~70% of the page */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  font-family: system-ui, sans-serif;
+}
+
+.member-container h2 {
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.member-container p {
+  font-size: 1rem;
+  color: #444;
+  line-height: 1.6;
+}
+
+/* ==== MEMBER SITE HEADER ==== */
+.member-header {
+  background-color: #000;
+  color: white;
+  padding: 1rem 2rem;
+  width: 100%;
+}
+
+.member-header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.member-logo {
+  height: 60px;
+  width: auto;
+}
+
+.member-title {
+  font-size: clamp(1.5rem, 2vw + 1rem, 2.5rem);
+  font-weight: bold;
+  color: #D4A017;
+  flex-grow: 1;
+}
+
+.member-menu-toggle {
+  background: none;
+  border: none;
+  color: #D4A017;
+  font-size: 1.8rem;
+  cursor: pointer;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .member-header-container {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
+
+/* ==== HERO BANNER ==== */
+.member-banner img {
+  width: 100%;
+  height: 450px;
+  object-fit: cover;
+}
+
+/* ===== RESET ===== */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  background-color: #fef6ea;
+  color: #000;
+}
+
+/* ===== HEADER CONTAINER ===== */
+.member-header {
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  position: relative;
+  z-index: 999;
+}
+
+/* ===== LOGO ===== */
+.member-logo img {
+  height: 50px;
+  width: auto;
+}
+
+/* ===== SITE TITLE ===== */
+.member-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #D4A017;
+  margin-left: 1rem;
+}
+
+/* ===== HAMBURGER TOGGLE BUTTON ===== */
+.member-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #D4A017;
+  font-size: 1.8rem;
+  cursor: pointer;
+  position: absolute;
+  right: 1rem;
+  top: 1.2rem;
+  z-index: 1000;
+}
+
+/* ===== NAVIGATION BAR ===== */
+.member-navbar {
+  background-color: #000;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  z-index: 998;
+}
+
+/* ===== NAV MENU ===== */
+.member-nav-menu {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.member-nav-menu > li {
+  position: relative;
+}
+
+.member-nav-menu a,
+.member-dropdown-toggle {
+  display: block;
+  color: #D4A017;
+  padding: 1rem 1.5rem;
+  font-weight: bold;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+}
+
+.member-nav-menu a:hover,
+.member-dropdown-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  border-radius: 6px;
+}
+
+/* ===== DROPDOWN MENU ===== */
+.member-dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #000;
+  min-width: 200px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  z-index: 99;
+}
+
+.member-dropdown-menu li a {
+  padding: 0.75rem 1rem;
+  white-space: nowrap;
+  display: block;
+  color: #D4A017;
+}
+
+.member-dropdown-menu li a:hover {
+  background-color: #222;
+  color: #fff;
+}
+
+/* ===== ARROW ICONS ===== */
+.member-dropdown-toggle .member-arrow {
+  margin-left: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.member-dropdown.open .member-dropdown-toggle .member-arrow {
+  transform: rotate(180deg);
+}
+
+/* ===== MOBILE FIRST ===== */
+@media (max-width: 768px) {
+  .member-nav-menu {
+    flex-direction: column;
+    max-height: 0;
+    overflow: hidden;
+    background-color: #000;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    transition: max-height 0.3s ease;
+  }
+
+  .member-nav-menu.active {
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+
+
+  .member-nav-menu.show {
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+
+  .member-dropdown-menu {
+    position: relative;
+    display: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .member-dropdown.open .member-dropdown-menu {
+    max-height: 500px;
+    display: block;
+     background-color: #222; /* Darker shade for contrast */
+  }
+
+  .member-menu-toggle {
+    display: block;
+  }
+}
+
+/* ===== DESKTOP HOVER NAV ===== */
+@media (min-width: 769px) {
+  .member-menu-toggle {
+    display: none !important;
+  }
+
+  .member-dropdown-toggle {
+    background: none;
+    border: none;
+    color: #D4A017;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .member-dropdown:hover .member-dropdown-menu {
+    display: block;
+  }
+
+  .member-dropdown-toggle .member-arrow {
+    display: none;
+  }
+}
+
+/* ===== HERO BANNER ===== */
+.member-banner img {
+  width: 100%;
+  height: 450px;
+  object-fit: cover;
+}
+
+/* ==== ❓ 404 PAGE STYLES (NOT FOUND) ==== */
+.not-found {
+  padding-top: 0.25rem;
+  text-align: center;
+}
+
+main.not-found {
+  padding: 200px 0;
+}
+
+/* ==== 📞 MEMBER FOOTER ==== */
+.member-footer {
+  background-color: #000;
+  color: #D4A017;
+  padding: 2rem 1rem 0;
+  font-size: 0.95rem;
+}
+
+.member-footer-columns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 1rem;
+  justify-content: space-between;
+}
+
+.member-footer-column {
+  flex: 1 1 200px;
+  min-width: 200px;
+}
+
+.member-footer-column h3 {
+  color: #D4A017;
+  font-size: clamp(1rem, 1.25vw + 0.5rem, 1.2rem);
+}
+
+.member-footer-column ul {
+  list-style: none;
+  padding: 0;
+}
+
+.member-footer-column li {
+  margin-bottom: 0.5rem;
+}
+
+.member-footer-column a {
+  color: #D4A017;
+}
+
+.member-footer-column a:hover {
+  color: #fff;
+}
+
+.member-footer-bottom {
+  background-color: #000;
+  color: #D4A017;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.85rem;
+  border-top: 1px solid #000;
+}
+
+address {
+  font-style: normal;
+}
+
+/* ==== 🍪 MEMBER COOKIE CONSENT ==== */
+.member-cookie-popup {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  max-width: 420px;
+  margin: auto;
+  background: #fffbea;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  z-index: 9999;
+  border-radius: 12px;
+  display: none; /* Show with JS */
+  font-family: system-ui, sans-serif;
+}
+
+.member-cookie-content h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+}
+
+.member-cookie-content p {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+#member-cookie-options label {
+  display: block;
+  margin: 0.4rem 0;
+  font-size: 0.9rem;
+}
+
+.member-cookie-buttons {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.member-cookie-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #D4A017;
+  color: #000;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.member-cookie-buttons button:hover {
+  background: #C4970B;
+}
+
+/* ==== 🔝 MEMBER BACK TO TOP BUTTON ==== */
+#member-backToTop {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: none;
+  background-color: #f4b400;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 999;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease-in-out;
+}
+
+#member-backToTop:hover {
+  background-color: #e09f00;
+}
+

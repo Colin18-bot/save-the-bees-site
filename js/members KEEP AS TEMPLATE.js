@@ -1,8 +1,4 @@
-// -------------------- BeezKnees Member Dashboard JS --------------------
-// Handles: Loading screen, Cookie consent, Google Analytics, Back to top, Dropdowns, Hamburger menu
-
 document.addEventListener('DOMContentLoaded', function () {
-
   /* -------------------- 🕒 Loading Fallback -------------------- */
   setTimeout(() => {
     const loading = document.getElementById('member-loading-screen');
@@ -20,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* -------------------- 🍪 Cookie Consent + GA4 -------------------- */
-  const popup = document.getElementById('member-cookie-consent');
+  /* -------------------- 🍪 Cookie Consent -------------------- */
+  const popup = document.getElementById('cookie-consent');
   const acceptAllBtn = document.getElementById('accept-all');
   const acceptSelectedBtn = document.getElementById('accept-selected');
   const analyticsCheckbox = document.getElementById('analytics');
@@ -41,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (consent.marketing) {
-      // Add any future marketing scripts here
+      // Add future marketing scripts here
     }
   }
 
@@ -56,10 +52,12 @@ document.addEventListener('DOMContentLoaded', function () {
     applyConsent(consent);
   }
 
+  // Show popup if not previously set
   if (popup && !localStorage.getItem('cookieConsent')) {
     popup.style.display = 'block';
   }
 
+  // Handle button clicks
   if (acceptAllBtn && acceptSelectedBtn) {
     acceptAllBtn.addEventListener('click', () => {
       savePreferences(true, true);
@@ -70,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  // Apply saved preferences
   const stored = localStorage.getItem('cookieConsent');
   if (stored) {
     const consent = JSON.parse(stored);
@@ -84,21 +83,21 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  /* -------------------- 🍔 Hamburger Menu Toggle -------------------- */
-  const toggleBtn = document.getElementById('menuToggle');
-  const navMenu = document.querySelector('.member-nav-menu');
+ /* -------------------- 📱 Hamburger Menu Toggle -------------------- */
+const menuToggle = document.getElementById('menuToggle');
+const navMenu = document.getElementById('navMenu');
 
-  if (toggleBtn && navMenu) {
-    toggleBtn.addEventListener('click', () => {
-      navMenu.classList.toggle('show');
-    });
+if (menuToggle && navMenu) {
+  menuToggle.addEventListener('click', () => {
+    navMenu.classList.toggle('show'); // ✅ use 'show', not 'active'
+  });
+}
+
+
+/* -------------------- ⏱️ Final Loading Fail-Safe -------------------- */
+setTimeout(() => {
+  const loading = document.getElementById('member-loading-screen');
+  if (loading && loading.style.display !== 'none') {
+    loading.style.display = 'none';
   }
-
-  /* -------------------- ⏱️ Final Loading Fail-Safe -------------------- */
-  setTimeout(() => {
-    const loading = document.getElementById('member-loading-screen');
-    if (loading && loading.style.display !== 'none') {
-      loading.style.display = 'none';
-    }
-  }, 10000);
-});
+}, 10000);

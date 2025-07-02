@@ -6,11 +6,11 @@
 
   <title>BeezKnees | Member Dashboard</title>
 
-  <!-- Font Awesome (Correct class will be used below) -->
+  <!-- Font Awesome (Hamburger Button - Correct class will be used below) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
 
   <!-- Member-only styles -->
-  <link rel="stylesheet" href="../../css/member.css" />
+  <link rel="stylesheet" href="../../css/members.css" />
 
   <!-- SEO Meta Tags -->
   <meta name="description" content="BeezKnees is your practical beekeeping guide, offering seasonal tips, hive health advice, and pollinator protection resources for beginners and experienced keepers alike." />
@@ -34,26 +34,22 @@
   </div>
 
   <!-- Fixed Header -->
-  <div class="member-header">
-    <header class="member-header-container" role="banner" aria-label="BeezKnees Member Header">
-      <div class="member-header-inner" role="region" aria-label="Site Branding">
-        <a href="https://www.beezknees.co.uk" aria-label="Visit BeezKnees Home">
-          <img src="../../images/BeezKnees-Logo.png" alt="BeezKnees Logo" class="member-logo" />
-        </a>
+  <header class="member-header" role="banner" aria-label="BeezKnees Member Header">
+    <div class="member-header-container" role="region" aria-label="Site Branding">
+      <a href="https://www.beezknees.co.uk" aria-label="Visit BeezKnees Home">
+        <img src="../../images/BeezKnees-Logo.png" alt="BeezKnees Logo" class="member-logo" /></a>
+          <h1 class="member-title">Dashboard</h1>
 
-        <h1 class="member-title">Dashboard</h1>
+      <!-- 🍔 Hamburger Toggle -->
+      <button class="member-menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
 
-        <!-- 🍔 Hamburger Toggle -->
-        <button class="member-menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
-          <i class="fa-solid fa-bars" aria-hidden="true"></i>
-        </button>
-      </div>
-    </header>
-  </div>
-
-  <!-- Navigation -->
+  <!-- NAVIGATION -->
   <nav class="member-navbar" role="navigation" aria-label="Member Navigation Menu">
-    <ul id="navMenu" class="member-nav-menu">
+    <ul class="member-nav-menu">
       <li class="member-dropdown">
         <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="apiary-menu">
           Apiary <span class="member-arrow">▼</span>
@@ -105,77 +101,78 @@
     <div class="member-banner">
       <img src="../../images/hives.jpg" alt="Beehive image in apiary" />
     </div>
-  </section>
+  </section>  
 
-  <!-- Main Content -->
-  <main class="member-content">
-    <div class="member-container member-contact-container" style="max-width: 700px;">
-      <h2>Welcome to Your Hive Dashboard</h2>
-      <p>You are now logged in. From here, you can inspect hives, update your data, and manage your apiaries and team members.</p>
-    </div>
-  </main>
+    <!-- Main Content -->
+    <main class="member-content">
+      <div class="member-container member-contact-container" style="max-width: 700px;">
+        <h2>Welcome to Your Hive Dashboard</h2>
+        <p>You are now logged in. From here, you can inspect hives, update your data, and manage your apiaries and team members.</p>
+      </div>
+    </main>
 
-  <!-- Footer -->
-  <footer class="member-footer" role="region" aria-label="Site Footer">
-    <div class="member-footer-columns">
-      <div class="member-footer-column">
-        <h3>Contact</h3>
-        <address>
-          <p>Email: <a href="/contact.html">Contact</a></p>
-        </address>
+    <!-- Footer -->
+    <footer class="member-footer" role="region" aria-label="Site Footer">
+      <div class="member-footer-columns">
+        <div class="member-footer-column">
+          <h3>Contact</h3>
+          <address>
+            <p>Email: <a href="/contact.html">Contact</a></p>
+          </address>
+        </div>
+
+        <div class="member-footer-column">
+          <h3>Useful Links</h3>
+          <ul>
+            <li><a href="/privacy.html">Privacy Policy</a></li>
+            <li><a href="/site-map.html">Site Map</a></li>
+          </ul>
+        </div>
+
+        <div class="member-footer-column">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="https://www.bbka.org.uk/" target="_blank">British Beekeepers Association</a></li>
+            <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank">Cardiff, Vale & Valleys Beekeepers</a></li>
+            <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht" target="_blank">Honey (Wales) Regulations</a></li>
+            <li><a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank">Wales Biodiversity Partnership</a></li>
+            <li><a href="https://www.nationalbeeunit.com/" target="_blank">BeeBase</a></li>
+          </ul>
+        </div>
       </div>
 
-      <div class="member-footer-column">
-        <h3>Useful Links</h3>
-        <ul>
-          <li><a href="/privacy.html">Privacy Policy</a></li>
-          <li><a href="/site-map.html">Site Map</a></li>
-        </ul>
+      <div class="member-footer-bottom">
+        &copy; 2023 Practical Beekeeping. All rights reserved.
       </div>
+    </footer>
 
-      <div class="member-footer-column">
-        <h3>Resources</h3>
-        <ul>
-          <li><a href="https://www.bbka.org.uk/" target="_blank">British Beekeepers Association</a></li>
-          <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank">Cardiff, Vale & Valleys Beekeepers</a></li>
-          <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht" target="_blank">Honey (Wales) Regulations</a></li>
-          <li><a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank">Wales Biodiversity Partnership</a></li>
-          <li><a href="https://www.nationalbeeunit.com/" target="_blank">BeeBase</a></li>
-        </ul>
-      </div>
-    </div>
+    <!-- Cookie Consent Popup -->
+    <div id="member-cookie-consent" class="member-cookie-popup" role="region" aria-label="Cookie Consent Settings">
+      <div class="member-cookie-content">
+        <h2>🍪 We Use Cookies</h2>
+        <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
 
-    <div class="member-footer-bottom">
-      &copy; 2023 Practical Beekeeping. All rights reserved.
-    </div>
-  </footer>
+        <form id="member-cookie-options">
+          <label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
+          <label><input type="checkbox" id="analytics" /> Analytics</label><br />
+          <label><input type="checkbox" id="marketing" /> Marketing</label><br />
+        </form>
 
-  <!-- Cookie Consent Popup -->
-  <div id="member-cookie-consent" class="member-cookie-popup" role="region" aria-label="Cookie Consent Settings">
-    <div class="member-cookie-content">
-      <h2>🍪 We Use Cookies</h2>
-      <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
-
-      <form id="member-cookie-options">
-        <label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
-        <label><input type="checkbox" id="analytics" /> Analytics</label><br />
-        <label><input type="checkbox" id="marketing" /> Marketing</label><br />
-      </form>
-
-      <div class="member-cookie-buttons">
-        <button id="accept-selected">Accept Selected</button>
-        <button id="accept-all">Accept All</button>
+        <div class="member-cookie-buttons">
+          <button id="accept-selected">Accept Selected</button>
+          <button id="accept-all">Accept All</button>
+        </div>
       </div>
     </div>
-  </div>
 
   <!-- Back to Top -->
   <button id="member-backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
-  <script src="../../js/member.js" defer></script>
-  <script src="/hivetag-netlify/hivetag/dashboard.js"></script>
+  <script src="../../js/members.js" defer></script> 
+  <script src="/hivetag-netlify/hivetag/dashboard.js" defer></script>
 
 </body>
 </html>
+s
