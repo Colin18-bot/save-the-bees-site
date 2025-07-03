@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title>BeezKnees | Member Dashboard</title>
+  <title>BeezKnees | Register Apiary</title>
 
   <!-- Font Awesome (Hamburger Button - Correct class will be used below) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
@@ -38,7 +38,7 @@
     <div class="member-header-container" role="region" aria-label="Site Branding">
       <a href="https://www.beezknees.co.uk" aria-label="Visit BeezKnees Home">
         <img src="../../images/BeezKnees-Logo.png" alt="BeezKnees Logo" class="member-logo" /></a>
-          <h1 class="member-title">Dashboard</h1>
+          <h1 class="member-title">Register Apiary</h1>
 
       <!-- 🍔 Hamburger Toggle -->
       <button class="member-menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
@@ -48,14 +48,14 @@
   </header>
 
   <!-- NAVIGATION -->
-   <nav class="member-navbar" role="navigation" aria-label="Member Navigation Menu">
+  <nav class="member-navbar" role="navigation" aria-label="Member Navigation Menu">
     <ul class="member-nav-menu">
       <li class="member-dropdown">
         <button class="member-dropdown-toggle" onclick="window.location.href='dashboard.html'">
             Dashboard
         </button>
       </li>
-    
+
       <li class="member-dropdown">
         <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="apiary-menu">
           Apiary <span class="member-arrow">▼</span>
@@ -110,14 +110,29 @@
   </section>  
 
     <!-- Main Content -->
-    <main class="member-content">
-      <div class="member-container member-contact-container" style="max-width: 700px;">
-        <h2>Welcome to Your Hive Dashboard</h2>
-        <p>You are now logged in. From here, you can inspect hives, update your data, and manage your apiaries and team members.</p>
-      </div>
-    </main>
+    <main class="content form-page">
+      <div class="form-card">
+        <h2>Register New Apiary</h2>
+          <form id="register-apiary-form">
+            <label for="apiary-name">Apiary Name *</label>
+            <input type="text" id="apiary-name" name="apiaryName" required />
 
-    <!-- Footer -->
+            <label for="description">Description (optional)</label>
+            <textarea id="description" name="description"></textarea>
+
+            <label for="latitude">Latitude (optional)</label>
+            <input type="number" id="latitude" name="latitude" step="any" />
+
+            <label for="longitude">Longitude (optional)</label>
+            <input type="number" id="longitude" name="longitude" step="any" />
+
+            <button type="submit">Register Apiary</button>
+          </form>
+              <p id="form-message"></p>
+      </div>
+  </main>
+
+  <!-- Footer -->
     <footer class="member-footer" role="region" aria-label="Site Footer">
       <div class="member-footer-columns">
         <div class="member-footer-column">
@@ -175,10 +190,11 @@
   <button id="member-backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button>
 
   <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="register-apiary.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
-  <script src="../../js/members.js" defer></script> 
+  <script src="../../js/members.js" defer></script>
   <script src="/hivetag-netlify/hivetag/dashboard.js" defer></script>
 
 </body>
 </html>
-s

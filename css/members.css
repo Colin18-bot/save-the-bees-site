@@ -167,6 +167,7 @@ body {
   width: 100%;
   padding: 0;
   margin: 0;
+  transition: max-height 0.3s ease; /*ADDED*/
 }
 
 .member-nav-menu > li {
@@ -452,3 +453,96 @@ address {
   background-color: #e09f00;
 }
 
+/* ==== ✨ ACCESSIBILITY: Focus Outlines ==== */
+
+a:focus,
+button:focus,
+.menu-toggle:focus,
+.nav-menu a:focus {
+  outline: 2px dashed #D4A017;
+  outline-offset: 4px;
+  background-color: rgba(212, 160, 23, 0.15);
+  border-radius: 4px;
+}
+
+
+
+
+/* ==== 🌐 GENERAL FORM PAGE LAYOUT ==== */
+.form-page {
+  display: flex;
+  justify-content: center;     /* center horizontally */
+  align-items: flex-start;     /* align to top */
+  min-height: 100vh;           /* full screen height */
+  padding: 2rem 1rem 4rem;     /* extra bottom padding */
+  box-sizing: border-box;
+  background-color: #fdf6ec;   /* matches your site background */
+}
+
+/* 🧾 FORM CARD STYLING (like auth.html) */
+.form-card {
+  background-color: #fffdf4;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+/* 📋 FORM STRUCTURE */
+.form-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-card label {
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.form-card input,
+.form-card textarea,
+.form-card select {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+/* 🟡 BUTTON STYLING */
+.form-card button {
+  align-self: flex-start;
+  padding: 0.75rem 1.5rem;
+  background-color: #D4A017;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.form-card button:hover {
+  background-color: #b88c14;
+}
+
+/* ✅ MESSAGE BELOW FORM */
+#form-message {
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+/* 📱 RESPONSIVENESS */
+@media (max-width: 600px) {
+  .form-card {
+    padding: 1.5rem;
+  }
+
+  .form-card button {
+    width: 100%;
+    text-align: center;
+  }
+}
