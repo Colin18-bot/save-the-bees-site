@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title>BeezKnees | Register Apiary</title>
+  <title>Thank You Apiary Registered</title>
 
   <!-- Font Awesome (Hamburger Button - Correct class will be used below) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
@@ -12,9 +12,6 @@
   <!-- Member-only styles -->
   <link rel="stylesheet" href="../../css/members.css" />
 
-  <!-- Map Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
- 
   <!-- SEO Meta Tags -->
   <meta name="description" content="BeezKnees is your practical beekeeping guide, offering seasonal tips, hive health advice, and pollinator protection resources for beginners and experienced keepers alike." />
   <meta name="keywords" content="beekeeping guide, practical beekeeping, hive care, pollinator protection, apiary tips, seasonal hive tasks, queen rearing, swarm control, beekeeping for beginners, beekeeping resources" />
@@ -41,7 +38,7 @@
     <div class="member-header-container" role="region" aria-label="Site Branding">
       <a href="https://www.beezknees.co.uk" aria-label="Visit BeezKnees Home">
         <img src="../../images/BeezKnees-Logo.png" alt="BeezKnees Logo" class="member-logo" /></a>
-          <h1 class="member-title">Register Apiary</h1>
+          <h1 class="member-title">Thank You!</h1>
 
       <!-- 🍔 Hamburger Toggle -->
       <button class="member-menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navMenu">
@@ -106,85 +103,21 @@
   </nav>
 
   <!-- Hero Banner -->
-    <section role="region" aria-label="Dashboard Banner">
-      <div class="member-banner">
-        <img src="../../images/hives.jpg" alt="Beehive image in apiary" />
-      </div>
-    </section>  
-
- <main class="content form-page">
-    <div class="form-card">
-      <h2>Register New Apiary</h2>
-
-      <form name="register-apiary" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/thank-you.html">
-        <input type="hidden" name="form-name" value="register-apiary" />
-        <p style="display:none;"><label>Don’t fill this out: <input name="bot-field" /></label></p>
-
-        <label for="apiary-name">Apiary Name *</label>
-        <input type="text" id="apiary-name" name="apiaryName" required />
-
-        <label for="established-date">Date Established *</label>
-        <input type="date" id="established-date" name="establishedDate" required />
-
-        <!-- Environment -->
-        <label for="environment">Apiary Environment *</label>
-        <select id="environment" name="environment" required onchange="toggleOtherInput(this, 'other-environment')">
-          <option value="">Select environment</option>
-          <option value="Rural">Rural</option>
-          <option value="Suburban">Suburban</option>
-          <option value="Urban">Urban</option>
-          <option value="Industrial">Industrial</option>
-          <option value="Agricultural / Farmland">Agricultural / Farmland</option>
-          <option value="Botanical Garden / Park">Botanical Garden / Park</option>
-          <option value="Nature Reserve / Conservation Area">Nature Reserve / Conservation Area</option>
-          <option value="School / Educational Facility">School / Educational Facility</option>
-          <option value="Allotment / Community Garden">Allotment / Community Garden</option>
-          <option value="Orchard / Vineyard">Orchard / Vineyard</option>
-          <option value="Commercial Site / Business Grounds">Commercial Site / Business Grounds</option>
-          <option value="Research Facility">Research Facility</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="text" id="other-environment" name="otherEnvironment" placeholder="Please specify..." style="display:none;" />
-
-        <!-- Terrain -->
-        <label for="terrain">Apiary Terrain *</label>
-        <select id="terrain" name="terrain" required onchange="toggleOtherInput(this, 'other-terrain')">
-          <option value="">Select terrain</option>
-          <option value="Backyard / Garden">Backyard / Garden</option>
-          <option value="Grassland / Meadow">Grassland / Meadow</option>
-          <option value="Woodland / Forest">Woodland / Forest</option>
-          <option value="Rooftop">Rooftop</option>
-          <option value="Hillside / Slope">Hillside / Slope</option>
-          <option value="Marshland / Wetland">Marshland / Wetland</option>
-          <option value="Coastal / Dune">Coastal / Dune</option>
-          <option value="Upland / Mountainous">Upland / Mountainous</option>
-          <option value="Field Edge / Hedgerow">Field Edge / Hedgerow</option>
-          <option value="Paved / Urban Courtyard">Paved / Urban Courtyard</option>
-          <option value="Gravel / Hardstanding">Gravel / Hardstanding</option>
-          <option value="Other">Other</option>
-        </select>
-        <input type="text" id="other-terrain" name="otherTerrain" placeholder="Please specify..." style="display:none;" />
-
-        <!-- Address Search + Map -->
-        <label for="address">Search Address (optional)</label>
-        <input type="text" id="address" name="address" placeholder="e.g., Cardiff, Wales" />
-
-        <label>Pin Apiary Location on Map</label>
-        <div id="map"></div>
-
-        <label for="latitude">Latitude *</label>
-        <input type="number" id="latitude" name="latitude" step="any" required />
-
-        <label for="longitude">Longitude *</label>
-        <input type="number" id="longitude" name="longitude" step="any" required />
-
-        <button type="submit">Register Apiary</button>
-      </form>
-
-      <p id="form-message"></p>
+  <section role="region" aria-label="Dashboard Banner">
+    <div class="member-banner">
+      <img src="../../images/hives.jpg" alt="Beehive image in apiary" />
     </div>
-  </main>
-
+  </section>  
+   
+  <!-- Main Content -->
+    <main class="member-content">
+      <div class="member-container member-contact-container" style="max-width: 700px;">
+        <h1>Thank You!</h1>
+        <p>Your apiary has been successfully registered.</p>
+        <p><a href="/index.html">Back to Home</a></p>
+      </div>
+    </main>
+     
   <!-- Footer -->
     <footer class="member-footer" role="region" aria-label="Site Footer">
       <div class="member-footer-columns">
@@ -242,72 +175,12 @@
   <!-- Back to Top -->
   <button id="member-backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button>
 
-  
-  
-  
-  
-  <!-- Toggle 'Other' Inputs -->
-  <script>
-    function toggleOtherInput(selectElement, inputId) {
-      const input = document.getElementById(inputId);
-      input.style.display = selectElement.value === "Other" ? "block" : "none";
-    }
-  </script>
-
-  <!-- Map JS -->
-  <script>
-    const map = L.map('map').setView([51.505, -0.09], 6);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-
-    const marker = L.marker([51.505, -0.09], { draggable: true }).addTo(map);
-
-    // Update lat/lon fields when marker moved
-    marker.on('dragend', function (e) {
-      const { lat, lng } = e.target.getLatLng();
-      document.getElementById('latitude').value = lat.toFixed(6);
-      document.getElementById('longitude').value = lng.toFixed(6);
-    });
-
-    // Address search via enter key
-    document.getElementById('address').addEventListener('keypress', async function (e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        const query = e.target.value;
-        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
-        const results = await res.json();
-        if (results.length > 0) {
-          const lat = parseFloat(results[0].lat);
-          const lon = parseFloat(results[0].lon);
-          marker.setLatLng([lat, lon]);
-          map.setView([lat, lon], 14);
-          document.getElementById('latitude').value = lat.toFixed(6);
-          document.getElementById('longitude').value = lon.toFixed(6);
-        } else {
-          alert('No results found. Please refine your address.');
-        }
-      }
-    });
-  </script>
-
-  
-
-
-
-
-
-
-
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="register-apiary.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
   <script src="../../js/members.js" defer></script>
   <script src="/hivetag-netlify/hivetag/dashboard.js" defer></script>
-  <!-- Map Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 
 </body>
 </html>
