@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Hive Dashboard</title>
+  <link rel="stylesheet" href="../../css/members.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #dashboard-map { height: 300px; border-radius: 8px; margin-bottom: 2rem; }
+    .apiary-card { border: 1px solid #ccc; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; background: #fff; }
+    .apiary-card h3 { margin: 0.5rem 0; }
+    .card-actions button { margin-right: 0.5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to Your Hive Dashboard</h1>
+    <p>You are now logged in. Manage your apiaries below.</p>
+  </header>
+
+  <section>
+    <div id="dashboard-map"></div>
+    <div id="apiary-list"></div>
+  </section>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabase = createClient(
+      'https://YOUR-SUPABASE-URL.supabase.co',
+      'YOUR-ANON-PUBLIC-KEY'
+    );
+
+    const map = L.map('dashboard-map').setView([51.505, -0.09], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors',
+    }).addTo(map);
+
+    const apiaryLayer = L.layerGroup().addTo(map);
+
+    async function loadApiaries() {
+      const { data, error } = await supabase.from('apiaries').select('*');
+      if (error) return alert('Error loading apiaries.');
+
+      apiaryLayer.clearLayers();
+      document.getElementById('apiary-list').innerHTML = '';
+
+      data.forEach(apiary => {
+        const { id, name, latitude, longitude } = apiary;
+        const marker = L.marker([latitude, longitude]).addTo(apiaryLayer);
+        marker.bindPopup(`<strong>${name}</strong>`);
+
+        const card = document.createElement('div');
+        card.className = 'apiary-card';
+        card.innerHTML = `
+          <h3>${name}</h3>
+          <p>Lat: ${latitude}, Lon: ${longitude}</p>
+          <div class="card-actions">
+            <button onclick="editApiary(${id})">Edit</button>
+            <button onclick="deleteApiary(${id})">Delete</button>
+            <button onclick="archiveApiary(${id})">Archive</button>
+          </div>
+        `;
+        document.getElementById('apiary-list').appendChild(card);
+      });
+    }
+
+    window.editApiary = (id) => alert(`Edit apiary ${id}`);
+    window.deleteApiary = (id) => alert(`Delete apiary ${id}`);
+    window.archiveApiary = (id) => alert(`Archive apiary ${id}`);
+
+    loadApiaries();
+  </script>
+</body>
+</html>

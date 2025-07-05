@@ -53,61 +53,6 @@
     </div>
   </header>
 
-  <!-- NAVIGATION -->
-  <nav class="member-navbar" role="navigation" aria-label="Member Navigation Menu">
-    <ul class="member-nav-menu">
-      <li class="member-dropdown">
-        <button class="member-dropdown-toggle" onclick="window.location.href='dashboard.html'">
-            Dashboard
-        </button>
-      </li>
-
-      <li class="member-dropdown">
-        <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="apiary-menu">
-          Apiary <span class="member-arrow">▼</span>
-        </button>
-        <ul id="apiary-menu" class="member-dropdown-menu">
-          <li><a href="register-apiary.html">Register New Apiary</a></li>
-          <li><a href="map.html">View Apiary Map</a></li>
-        </ul>
-      </li>
-
-      <li class="member-dropdown">
-        <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="hives-menu">
-          Hives <span class="member-arrow">▼</span>
-        </button>
-        <ul id="hives-menu" class="member-dropdown-menu">
-          <li><a href="register-hive.html">Register New Hive</a></li>
-          <li><a href="materials.html">Hive Material Tracker</a></li>
-          <li><a href="inspection.html">Start New Inspection</a></li>
-          <li><a href="inspections.html">Past Inspections</a></li>
-        </ul>
-      </li>
-
-      <li class="member-dropdown">
-        <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="analytics-menu">
-          Analytics <span class="member-arrow">▼</span>
-        </button>
-        <ul id="analytics-menu" class="member-dropdown-menu">
-          <li><a href="calendar.html">Inspection Calendar</a></li>
-          <li><a href="analytics.html">Trends & Analytics</a></li>
-        </ul>
-      </li>
-
-      <li class="member-dropdown">
-        <button class="member-dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="team-menu">
-          Team & Account <span class="member-arrow">▼</span>
-        </button>
-        <ul id="team-menu" class="member-dropdown-menu">
-          <li><a href="team.html">Manage Team Members</a></li>
-          <li><a href="account.html">Account Settings</a></li>
-          <li><a href="#" id="logout-btn">Log Out</a></li>
-          <li><a href="#" id="delete-account-btn">Delete Account</a></li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
-
   <!-- Hero Banner -->
     <section role="region" aria-label="Dashboard Banner">
       <div class="member-banner">
@@ -252,10 +197,10 @@
   <button id="member-backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button>
 
   <!-- Scripts -->
-  <script src="register-apiary.js" defer></script>
+  <script src="../../js/register-apiary.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
   <script src="../../js/members.js" defer></script>
-  <script src="/hivetag-netlify/hivetag/dashboard.js" defer></script>
+  <script src="../../js/dashboard.js" defer></script>
  
 </body>
 </html>

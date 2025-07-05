@@ -4,13 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title>BeezKnees | Member Dashboard</title>
+  <title>Register New Hive</title>
 
   <!-- Font Awesome (Hamburger Button - Correct class will be used below) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
 
   <!-- Member-only styles -->
   <link rel="stylesheet" href="../../css/members.css" />
+  <script src="register-hive.js" defer></script>
 
   <!-- SEO Meta Tags -->
   <meta name="description" content="HiveTag smart beekeeping dashboard with apiary, hive, and inspection tracking." />
@@ -54,38 +55,38 @@
     </div>
   </section>  
 
-  <!-- Dashboard Progress Panel -->
+<body>
   <main class="member-content">
-    <section class="member-container" id="dashboard-progress">
-      <h2>Welcome, Beekeeper 🐝</h2>
-      <p>Your account is active. Let’s get your hive management system set up in 3 simple steps:</p>
+    <div class="member-container">
+      <h1>Register a New Hive</h1>
+      <form id="hive-form">
+        <label for="apiary">Select Apiary:</label>
+        <select id="apiary" name="apiary_id" required>
+          <option value="">Loading...</option>
+        </select>
 
-      <!-- Progress Tracker -->
-      <ol id="setup-steps">
-        <li id="step-apiary">
-          <strong>Step 1:</strong> Register your first <b>Apiary</b>
-          <button onclick="window.location.href='register-apiary.html'">Add Apiary</button>
-        </li>
-        <li id="step-hive" class="hidden">
-          <strong>Step 2:</strong> Register your first <b>Hive</b>
-          <button onclick="window.location.href='register-hive.html'">Add Hive</button>
-        </li>
-        <li id="step-inspection" class="hidden">
-          <strong>Step 3:</strong> Perform your first <b>Hive Inspection</b>
-          <button onclick="window.location.href='inspection.html'">Start Inspection</button>
-        </li>
-      </ol>
-    </section>
+        <label for="hive_name">Hive Name/Number:</label>
+        <input type="text" id="hive_name" name="hive_name" required />
 
-    <!-- Container for Post-Onboarding Features -->
-    <section class="member-container hidden" id="dashboard-features">
-      <h2>Your Apiaries & Hives</h2>
-      <div id="dashboard-summary"></div>
-    </section>
+        <label for="hive_type">Hive Type:</label>
+        <input type="text" id="hive_type" name="hive_type" />
 
-    </main>
+        <label for="frame_count">Number of Frames:</label>
+        <input type="number" id="frame_count" name="frame_count" min="0" />
 
-    <!-- Footer -->
+        <label for="queen_origin">Queen Origin:</label>
+        <input type="text" id="queen_origin" name="queen_origin" />
+
+        <label for="install_date">Install Date:</label>
+        <input type="date" id="install_date" name="install_date" />
+
+        <button type="submit">Register Hive</button>
+      </form>
+      <div id="form-message"></div>
+    </div>
+  </main>
+
+  <!-- Footer -->
     <footer class="member-footer" role="region" aria-label="Site Footer">
       <div class="member-footer-columns">
         <div class="member-footer-column">
