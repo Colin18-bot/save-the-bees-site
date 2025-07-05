@@ -11,6 +11,12 @@
 
   <!-- Member-only styles -->
   <link rel="stylesheet" href="../../css/members.css" />
+  
+  <!-- Leaflet CSS (Fixed) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- Leaflet JS (Fixed) -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
   <!-- SEO Meta Tags -->
   <meta name="description" content="BeezKnees is your practical beekeeping guide, offering seasonal tips, hive health advice, and pollinator protection resources for beginners and experienced keepers alike." />
@@ -173,7 +179,7 @@
       <!-- Map -->
       <label for="map">Pin Apiary Location on Map</label>
       <div id="map" role="application" aria-label="Interactive map to select apiary location" style="height: 300px; margin-bottom: 1rem; border-radius: 8px;"></div>
-
+    
       <!-- Coordinates -->
       <label for="latitude">Latitude <span aria-hidden="true">*</span></label>
       <input type="number" id="latitude" name="latitude" step="any" required aria-required="true" />
@@ -187,7 +193,6 @@
     <p id="form-message" aria-live="polite"></p>
   </div>
 </main>
-
 
   <!-- Footer -->
     <footer class="member-footer" role="region" aria-label="Site Footer">
@@ -247,12 +252,11 @@
   <button id="member-backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button>
 
   <!-- Scripts -->
-    <script src="register-apiary.js"></script>
+  <script src="register-apiary.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
   <script src="../../js/members.js" defer></script>
   <script src="/hivetag-netlify/hivetag/dashboard.js" defer></script>
-  <!-- Map Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+ 
 
 </body>
 </html>
