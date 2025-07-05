@@ -535,6 +535,13 @@ button:focus,
   margin-top: 1rem;
 }
 
+.form-hint {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 1rem;
+  display: block;
+}
+
 /* 📱 RESPONSIVENESS */
 @media (max-width: 600px) {
   .form-card {
