@@ -112,3 +112,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+const form = document.querySelector('form[name="register-apiary"]');
+const formMessage = document.getElementById('form-message');
+
+form.addEventListener('submit', function (e) {
+  e.preventDefault(); // prevent instant reload
+
+  // Submit via fetch to Netlify
+  const formData = new FormData(form);
+
+  fetch("/", {
+    method: "POST",
+    body: formData,
+  })
+  .then(() => {
+    formMessage.textContent = "✅ Apiary registered successfully! Redirecting to dashboard...";
+    formMessage.style.color = "green";
+    form.reset();
+
+    // Delay, then redirect to dashboard
+    setTimeout(() => {
+      window.location.href = "/hivetag-netlify/hivetag/dashboard.html";
+    }, 3000);
+  })
+  .catch((error) => {
+    console.error("Form submission error:", error);
+    formMessage.textContent = "❌ Something went wrong. Please try again.";
+    formMessage.style.color = "red";
+  });
+});
+

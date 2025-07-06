@@ -64,8 +64,7 @@
    <main class="content form-page">
   <div class="form-card">
     <h2>Register New Apiary</h2>
-
-    <form name="register-apiary" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/register-apiary-thank-you.html" aria-label="Register New Apiary Form">
+      <form name="register-apiary" method="POST" data-netlify="true" netlify-honeypot="bot-field">
       <input type="hidden" name="form-name" value="register-apiary" />
       <p style="display:none;"><label>Don’t fill this out: <input name="bot-field" /></label></p>
 
@@ -197,10 +196,10 @@
   <button id="member-backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button>
 
   <!-- Scripts -->
-  <script src="../../js/register-apiary.js" defer></script>
+  <script src="/js/register-apiary.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
-  <script src="../../js/members.js" defer></script>
-  <script src="../../js/dashboard.js" defer></script>
+  <script src="/js/members.js" defer></script>
+  <script src="/js/dashboard.js" defer></script>
  
 </body>
 </html>
