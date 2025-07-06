@@ -143,9 +143,16 @@
   <button id="member-backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button>
 
   <!-- Scripts -->
+  <!-- Load Supabase Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
-  <script src="../../js/members.js" defer></script> 
-  <script src="../../js/dashboard.js" defer></script>
+  <!-- Supabase Client Setup (URL + Key) -->
+  <script src="/js/supabaseClient.js"></script>
+  <!-- Shared Auth/Utility Logic -->
+  <script src="/js/members.js" defer></script>
+  <!-- Page-Specific Script -->
+  <script src="/js/register-hive.js" defer></script>
+  <!-- Page-Specific Script -->
+  <script src="/js/dashboard.js" defer></script>
 
 </body>
 </html>

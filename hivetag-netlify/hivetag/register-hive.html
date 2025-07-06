@@ -11,8 +11,7 @@
 
   <!-- Member-only styles -->
   <link rel="stylesheet" href="../../css/members.css" />
-  <script src="register-hive.js" defer></script>
-
+  
   <!-- SEO Meta Tags -->
   <meta name="description" content="HiveTag smart beekeeping dashboard with apiary, hive, and inspection tracking." />
   <meta name="keywords" content="beekeeping guide, practical beekeeping, hive care, pollinator protection, apiary tips, seasonal hive tasks, queen rearing, swarm control, beekeeping for beginners, beekeeping resources" />
@@ -56,34 +55,104 @@
   </section>  
 
 <body>
-  <main class="member-content">
-    <div class="member-container">
-      <h1>Register a New Hive</h1>
-      <form id="hive-form">
-        <label for="apiary">Select Apiary:</label>
-        <select id="apiary" name="apiary_id" required>
-          <option value="">Loading...</option>
+   <!-- Register Hive Form -->
+  <main>
+    <h1>Register Hive</h1>
+      <form id="registerHiveForm">
+        
+        <!-- Select Apiary -->
+        <label for="apiary">Select Apiary</label>
+        <select id="apiary" name="apiary" required></select>
+
+        <!-- Hive Name -->
+        <label for="hiveName">Hive Name/Number</label>
+        <input type="text" id="hiveName" name="hiveName" required autocomplete="off" />
+
+        <!-- Hive Type -->
+        <div class="field-group">
+          <label for="hiveType">Hive Type</label>
+          <select id="hiveType" name="hiveType" required>
+            <option>Top Bar</option>
+            <option>Traditional</option>
+            <option>Transitional</option>
+            <option>Warre</option>
+            <option>Flow Hive</option>
+            <option>Horizontal Langstroth</option>
+            <option>Langstroth</option>
+            <option>Nucleus</option>
+            <option>National</option>
+            <option value="other">Other</option>
+          </select>
+          <input type="text" id="otherHiveType" name="otherHiveType" placeholder="Specify Hive Type" style="display:none;" />
+        </div>
+
+        <!-- Hive Configuration -->
+        <label for="deeps">Number of Deeps</label>
+        <input type="number" id="deeps" name="deeps" min="0" step="1" />
+
+        <label for="supers">Number of Supers</label>
+        <input type="number" id="supers" name="supers" min="0" step="1" />
+
+        <label for="frames">Total Number of Frames</label>
+        <input type="number" id="frames" name="frames" min="0" step="1" />
+
+        <label for="hiveColour">Hive Colour</label>
+        <input type="text" id="hiveColour" name="hiveColour" autocomplete="color" />
+
+        <!-- Bee Source -->
+        <div class="field-group">
+          <label for="beeSource">Bee Source</label>
+          <select id="beeSource" name="beeSource" required>
+            <option>Swarm</option>
+            <option>Nucleus</option>
+            <option>Package</option>
+            <option>Split</option>
+            <option>Acquired</option>
+            <option value="other">Other</option>
+          </select>
+          <input type="text" id="otherBeeSource" name="otherBeeSource" placeholder="Specify Bee Source" style="display:none;" />
+        </div>
+
+        <label for="hiveEstablished">Date of Hive Establishment</label>
+        <input type="date" id="hiveEstablished" name="hiveEstablished" autocomplete="bday" />
+
+        <!-- Queen Breed -->
+        <div class="field-group">
+          <label for="queenBreed">Queen Breed</label>
+          <select id="queenBreed" name="queenBreed" required>
+            <option>Buckfast</option>
+            <option>Local</option>
+            <option>Carniolan</option>
+            <option>Italian</option>
+            <option>Caucasian</option>
+            <option>Russian</option>
+            <option value="other">Other</option>
+          </select>
+          <input type="text" id="otherQueenBreed" name="otherQueenBreed" placeholder="Specify Queen Breed" style="display:none;" />
+        </div>
+
+        <label for="queen_color">Queen Mark Colour</label>
+        <select id="queen_color" name="queen_color" required>
+          <option value="unmarked">Unmarked</option>
+          <option value="white">⚪ White (Year ending in 1 or 6)</option>
+          <option value="yellow">🟡 Yellow (Year ending in 2 or 7)</option>
+          <option value="red">🔴 Red (Year ending in 3 or 8)</option>
+          <option value="green">🟢 Green (Year ending in 4 or 9)</option>
+          <option value="blue">🔵 Blue (Year ending in 5 or 0)</option>
         </select>
 
-        <label for="hive_name">Hive Name/Number:</label>
-        <input type="text" id="hive_name" name="hive_name" required />
+        <label for="queenAccepted">Date of Queen Acceptance</label>
+        <input type="date" id="queenAccepted" name="queenAccepted" autocomplete="bday" />
 
-        <label for="hive_type">Hive Type:</label>
-        <input type="text" id="hive_type" name="hive_type" />
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes" rows="4" placeholder="Add any additional notes..."></textarea>
 
-        <label for="frame_count">Number of Frames:</label>
-        <input type="number" id="frame_count" name="frame_count" min="0" />
+        <!-- Image Upload (Optional) -->
+        <label for="photo">Upload Photograph (optional)</label>
+        <input type="file" id="photo" name="photo" accept="image/*" />
 
-        <label for="queen_origin">Queen Origin:</label>
-        <input type="text" id="queen_origin" name="queen_origin" />
-
-        <label for="install_date">Install Date:</label>
-        <input type="date" id="install_date" name="install_date" />
-
-        <button type="submit">Register Hive</button>
+        <button type="submit">Save Hive</button>
       </form>
-      <div id="form-message"></div>
-    </div>
   </main>
 
   <!-- Footer -->
@@ -144,9 +213,14 @@
   <button id="member-backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button>
 
   <!-- Scripts -->
+  <!-- Load Supabase Library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
-  <script src="../../js/members.js" defer></script> 
-  <script src="../../js/dashboard.js" defer></script>
-
+  <!-- Supabase Client Setup (URL + Key) -->
+  <script src="/js/supabaseClient.js"></script>
+  <!-- Shared Auth/Utility Logic -->
+  <script src="/js/members.js" defer></script>
+  <!-- Page-Specific Script -->
+  <script src="/js/register-hive.js" defer></script>
+ 
 </body>
 </html>
