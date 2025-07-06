@@ -1,9 +1,7 @@
 console.log("register-apiary.js loaded");
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Set up base map
-  const map = L.map("map").setView([51.505, -0.09], 6); // UK-centred
-
+  const map = L.map("map").setView([51.505, -0.09], 6);
   const lightTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
     attribution: "&copy; OpenStreetMap contributors, &copy; CARTO",
     subdomains: "abcd",
@@ -11,53 +9,42 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   lightTiles.addTo(map);
 
-  let marker;
-  let foragingCircle;
-
+  let marker, foragingCircle;
   const latInput = document.getElementById("latitude");
   const lonInput = document.getElementById("longitude");
   const addressInput = document.getElementById("address");
 
-  // Place marker + circle on click
   map.on("click", (e) => {
     const { lat, lng } = e.latlng;
-
     if (marker) {
       marker.setLatLng([lat, lng]);
       foragingCircle.setLatLng([lat, lng]);
     } else {
       marker = L.marker([lat, lng], { draggable: true }).addTo(map);
       foragingCircle = L.circle([lat, lng], {
-        radius: 4828, // 3 miles
+        radius: 4828,
         color: '#007BFF',
         fillColor: '#007BFF',
         fillOpacity: 0.1
       }).addTo(map);
     }
-
-    const bounds = foragingCircle.getBounds();
-    map.fitBounds(bounds, { padding: [20, 20] });
-
+    map.fitBounds(foragingCircle.getBounds(), { padding: [20, 20] });
     latInput.value = lat.toFixed(6);
     lonInput.value = lng.toFixed(6);
   });
 
-  // Address search
   addressInput.addEventListener("keypress", async (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
       const query = addressInput.value.trim();
       if (!query) return;
-
       try {
         const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
         const results = await response.json();
-
         if (results.length > 0) {
           const { lat, lon } = results[0];
           const latNum = parseFloat(lat);
           const lonNum = parseFloat(lon);
-
           if (marker) {
             marker.setLatLng([latNum, lonNum]);
             foragingCircle.setLatLng([latNum, lonNum]);
@@ -70,10 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
               fillOpacity: 0.1
             }).addTo(map);
           }
-
-          const bounds = foragingCircle.getBounds();
-          map.fitBounds(bounds, { padding: [20, 20] });
-
+          map.fitBounds(foragingCircle.getBounds(), { padding: [20, 20] });
           latInput.value = latNum.toFixed(6);
           lonInput.value = lonNum.toFixed(6);
         } else {
@@ -86,7 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Pre-fill marker if lat/lon exist
   if (latInput.value && lonInput.value) {
     const lat = parseFloat(latInput.value);
     const lon = parseFloat(lonInput.value);
@@ -97,47 +80,59 @@ document.addEventListener("DOMContentLoaded", () => {
       fillColor: '#007BFF',
       fillOpacity: 0.1
     }).addTo(map);
-    const bounds = foragingCircle.getBounds();
-    map.fitBounds(bounds, { padding: [20, 20] });
+    map.fitBounds(foragingCircle.getBounds(), { padding: [20, 20] });
   }
 
-  // Try user location
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
       const { latitude, longitude } = position.coords;
       map.setView([latitude, longitude], 10);
     });
   }
+});
 
-  // Handle form submission
-  const form = document.querySelector('form[name="register-apiary"]');
-  const formMessage = document.getElementById('form-message');
+// Form logic with top progress bar
+const form = document.querySelector('form[name="register-apiary"]');
+const formMessage = document.getElementById('form-message');
+const submitButton = form.querySelector('button[type="submit"]');
 
-  if (form) {
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
+// Create progress bar element
+const progressBar = document.createElement('div');
+progressBar.id = 'form-progress-bar';
+document.body.appendChild(progressBar);
 
-      const formData = new FormData(form);
+form.addEventListener('submit', function (e) {
+  e.preventDefault();
 
-      fetch("/", {
-        method: "POST",
-        body: formData,
-        headers: { "Accept": "application/x-www-form-urlencoded" }
-      })
-        .then(() => {
-          formMessage.textContent = "✅ Apiary registered successfully! Redirecting to dashboard...";
-          formMessage.style.color = "green";
-          form.reset();
+  // Start progress bar
+  progressBar.classList.add('active');
 
-          setTimeout(() => {
-            window.location.href = "/hivetag-netlify/hivetag/dashboard.html";
-          }, 3000);
-        })
-        .catch((error) => {
-          console.error("Form submission error:", error);
-          formMessage.textContent = "❌ Something went wrong. Please try again.";
-          formMessage.style.color = "red";
-        });
+  submitButton.disabled = true;
+  formMessage.textContent = "";
+  formMessage.className = "";
+
+  const formData = new FormData(form);
+
+  fetch("/", {
+    method: "POST",
+    body: formData,
+  })
+    .then(() => {
+      formMessage.textContent = "✅ Apiary registered successfully! Redirecting to dashboard...";
+      formMessage.className = "form-success";
+      form.reset();
+
+      setTimeout(() => {
+        window.location.href = "/hivetag-netlify/hivetag/dashboard.html";
+      }, 3000);
+    })
+    .catch((error) => {
+      console.error("Form submission error:", error);
+      formMessage.textContent = "❌ Something went wrong. Please try again.";
+      formMessage.className = "form-error";
+    })
+    .finally(() => {
+      progressBar.classList.remove('active');
+      submitButton.disabled = false;
     });
-  }
 });
