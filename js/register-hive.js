@@ -22,20 +22,29 @@ const otherQueenBreed = document.getElementById("otherQueenBreed");
 const formMessage = document.getElementById("form-message");
 const submitBtn = form.querySelector("button[type='submit']");
 
+// Show/hide logic
 function toggleOtherField(selectEl, otherInputEl) {
   if (selectEl.value === "other") {
     otherInputEl.style.display = "block";
-    otherInputEl.required = false;
   } else {
     otherInputEl.style.display = "none";
-    otherInputEl.required = false;
+    otherInputEl.value = "";
   }
 }
 
+// Attach change listeners
 hiveTypeSelect.addEventListener("change", () => toggleOtherField(hiveTypeSelect, otherHiveType));
 beeSourceSelect.addEventListener("change", () => toggleOtherField(beeSourceSelect, otherBeeSource));
 queenBreedSelect.addEventListener("change", () => toggleOtherField(queenBreedSelect, otherQueenBreed));
 
+// Auto-hide all other fields on load
+document.addEventListener("DOMContentLoaded", () => {
+  toggleOtherField(hiveTypeSelect, otherHiveType);
+  toggleOtherField(beeSourceSelect, otherBeeSource);
+  toggleOtherField(queenBreedSelect, otherQueenBreed);
+});
+
+// Load user apiaries
 async function populateApiaryOptions() {
   const { data, error } = await supabase
     .from("apiaries")
@@ -58,6 +67,7 @@ async function populateApiaryOptions() {
 
 populateApiaryOptions();
 
+// Submit form
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   submitBtn.disabled = true;

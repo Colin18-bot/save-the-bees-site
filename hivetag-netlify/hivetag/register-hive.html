@@ -55,107 +55,130 @@
   </section>  
 
 <body>
-   <!-- Register Hive Form -->
-  <main>
-    <h1>Register Hive</h1>
-      <form id="registerHiveForm">
-        
-        <!-- Select Apiary -->
-        <label for="apiary">Select Apiary</label>
-        <select id="apiary" name="apiary" required></select>
 
-        <!-- Hive Name -->
-        <label for="hiveName">Hive Name/Number</label>
-        <input type="text" id="hiveName" name="hiveName" required autocomplete="off" />
+<!-- Register Hive Form -->
+<main class="content form-page">
+  <div class="form-card">
+    <h2>Register Hive</h2>
+    <form name="register-hive" id="registerHiveForm" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+      <input type="hidden" name="form-name" value="register-hive">
+      <p style="display:none;"><label>Don’t fill this out: <input name="bot-field"></label></p>
 
-        <!-- Hive Type -->
-        <div class="field-group">
-          <label for="hiveType">Hive Type</label>
-          <select id="hiveType" name="hiveType" required>
-            <option>Top Bar</option>
-            <option>Traditional</option>
-            <option>Transitional</option>
-            <option>Warre</option>
-            <option>Flow Hive</option>
-            <option>Horizontal Langstroth</option>
-            <option>Langstroth</option>
-            <option>Nucleus</option>
-            <option>National</option>
-            <option value="other">Other</option>
-          </select>
-          <input type="text" id="otherHiveType" name="otherHiveType" placeholder="Specify Hive Type" style="display:none;" />
-        </div>
-
-        <!-- Hive Configuration -->
-        <label for="deeps">Number of Deeps</label>
-        <input type="number" id="deeps" name="deeps" min="0" step="1" />
-
-        <label for="supers">Number of Supers</label>
-        <input type="number" id="supers" name="supers" min="0" step="1" />
-
-        <label for="frames">Total Number of Frames</label>
-        <input type="number" id="frames" name="frames" min="0" step="1" />
-
-        <label for="hiveColour">Hive Colour</label>
-        <input type="text" id="hiveColour" name="hiveColour" autocomplete="color" />
-
-        <!-- Bee Source -->
-        <div class="field-group">
-          <label for="beeSource">Bee Source</label>
-          <select id="beeSource" name="beeSource" required>
-            <option>Swarm</option>
-            <option>Nucleus</option>
-            <option>Package</option>
-            <option>Split</option>
-            <option>Acquired</option>
-            <option value="other">Other</option>
-          </select>
-          <input type="text" id="otherBeeSource" name="otherBeeSource" placeholder="Specify Bee Source" style="display:none;" />
-        </div>
-
-        <label for="hiveEstablished">Date of Hive Establishment</label>
-        <input type="date" id="hiveEstablished" name="hiveEstablished" autocomplete="bday" />
-
-        <!-- Queen Breed -->
-        <div class="field-group">
-          <label for="queenBreed">Queen Breed</label>
-          <select id="queenBreed" name="queenBreed" required>
-            <option>Buckfast</option>
-            <option>Local</option>
-            <option>Carniolan</option>
-            <option>Italian</option>
-            <option>Caucasian</option>
-            <option>Russian</option>
-            <option value="other">Other</option>
-          </select>
-          <input type="text" id="otherQueenBreed" name="otherQueenBreed" placeholder="Specify Queen Breed" style="display:none;" />
-        </div>
-
-        <label for="queen_color">Queen Mark Colour</label>
-        <select id="queen_color" name="queen_color" required>
-          <option value="unmarked">Unmarked</option>
-          <option value="white">⚪ White (Year ending in 1 or 6)</option>
-          <option value="yellow">🟡 Yellow (Year ending in 2 or 7)</option>
-          <option value="red">🔴 Red (Year ending in 3 or 8)</option>
-          <option value="green">🟢 Green (Year ending in 4 or 9)</option>
-          <option value="blue">🔵 Blue (Year ending in 5 or 0)</option>
+      <div class="form-full">
+        <label for="apiary">Select Apiary <span aria-hidden="true">*</span></label>
+        <select id="apiary" name="apiary" required>
+          <option value="">Select...</option>
         </select>
+      </div>
 
-        <label for="queenAccepted">Date of Queen Acceptance</label>
-        <input type="date" id="queenAccepted" name="queenAccepted" autocomplete="bday" />
+      <div class="form-full">
+        <label for="hive-name">Hive Name/Number <span aria-hidden="true">*</span></label>
+        <input type="text" id="hive-name" name="hiveName" placeholder="e.g., Hive #1" required>
+      </div>
 
+      <div>
+        <label for="hive-type">Hive Type</label>
+        <select id="hiveType" name="hiveType" onchange="toggleOtherField(this, document.getElementById('otherHiveType'))">
+          <option value="National">National</option>
+          <option value="Langstroth">Langstroth</option>
+          <option value="Commercial">Commercial</option>
+          <option value="WBC">WBC</option>
+          <option value="Top Bar">Top Bar</option>
+          <option value="other">Other</option>
+        </select>
+        <input type="text" id="otherHiveType" name="otherHiveType" class="optional-other" placeholder="Please specify (optional)">
+      </div>
+
+      <div>
+        <label for="deeps">Number of Deeps</label>
+        <input type="number" id="deeps" name="deeps" inputmode="numeric" pattern="[0-9]*">
+      </div>
+
+      <div>
+        <label for="frames-deep">Number of Frames in Deeps</label>
+        <input type="number" id="frames-deep" name="framesInDeeps" inputmode="numeric" pattern="[0-9]*">
+      </div>
+
+      <div>
+        <label for="supers">Number of Supers</label>
+        <input type="number" id="supers" name="supers" inputmode="numeric" pattern="[0-9]*">
+      </div>
+
+      <div>
+        <label for="frames">Number of Frames in Super</label>
+        <input type="number" id="frames" name="frames" inputmode="numeric" pattern="[0-9]*">
+      </div>
+
+      <div>
+        <label for="hive-colour">Hive Colour</label>
+        <input type="text" id="hive-colour" name="hiveColour" placeholder="e.g., Cedar">
+      </div>
+
+      <div>
+        <label for="beeSource">Bee Source</label>
+        <select id="beeSource" name="beeSource" onchange="toggleOtherField(this, document.getElementById('otherBeeSource'))">
+          <option value="Nucleus">Nucleus</option>
+          <option value="Swarm">Swarm</option>
+          <option value="Package">Package</option>
+          <option value="Split">Split</option>
+          <option value="other">Other</option>
+        </select>
+        <input type="text" id="otherBeeSource" name="otherBeeSource" class="optional-other" placeholder="Please specify (optional)">
+      </div>
+
+      <div>
+        <label for="date-established">Date of Hive Establishment</label>
+        <input type="date" id="date-established" name="hiveEstablished">
+      </div>
+
+      <div>
+        <label for="queenBreed">Queen Breed</label>
+        <select id="queenBreed" name="queenBreed" onchange="toggleOtherField(this, document.getElementById('otherQueenBreed'))">
+          <option value="Buckfast">Buckfast</option>
+          <option value="Carniolan">Carniolan</option>
+          <option value="Italian">Italian</option>
+          <option value="British Black Bee">British Black Bee</option>
+          <option value="other">Other</option>
+        </select>
+        <input type="text" id="otherQueenBreed" name="otherQueenBreed" class="optional-other" placeholder="Please specify (optional)">
+      </div>
+
+      <div>
+        <label for="queen-mark">Queen Mark Colour</label>
+        <select id="queen_color" name="queen_color">
+          <option value="Red">🔴 Red (Year ending in 3 or 8)</option>
+          <option value="Yellow">🟡 Yellow (Year ending in 2 or 7)</option>
+          <option value="Green">🟢 Green (Year ending in 4 or 9)</option>
+          <option value="Blue">🔵 Blue (Year ending in 0 or 5)</option>
+          <option value="White">⚪ White (Year ending in 1 or 6)</option>
+          <option value="None">None</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="queen-accept">Date of Queen Acceptance</label>
+        <input type="date" id="queen-accept" name="queenAccepted">
+      </div>
+
+      <div class="form-full">
         <label for="notes">Notes</label>
-        <textarea id="notes" name="notes" rows="4" placeholder="Add any additional notes..."></textarea>
+        <textarea id="notes" name="notes" rows="3" placeholder="Add any special notes..."></textarea>
+      </div>
 
-        <!-- Image Upload (Optional) -->
+      <div class="form-full">
         <label for="photo">Upload Photograph (optional)</label>
-        <input type="file" id="photo" name="photo" accept="image/*" />
+        <input type="file" id="photo" name="photo" accept="image/*">
+      </div>
 
+      <div class="form-full">
         <button type="submit">Save Hive</button>
-      </form>
-  </main>
+        <div id="form-message"></div>
+      </div>
+    </form>
+  </div>
+</main>
 
-  <!-- Footer -->
+<!-- Footer -->
     <footer class="member-footer" role="region" aria-label="Site Footer">
       <div class="member-footer-columns">
         <div class="member-footer-column">
