@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set up base map
   const map = L.map("map").setView([51.505, -0.09], 6); // UK-centred
 
-  // Light theme
   const lightTiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
     attribution: "&copy; OpenStreetMap contributors, &copy; CARTO",
     subdomains: "abcd",
@@ -19,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const lonInput = document.getElementById("longitude");
   const addressInput = document.getElementById("address");
 
-  // Handle map click to place/move marker and draw 3-mile radius
+  // Place marker + circle on click
   map.on("click", (e) => {
     const { lat, lng } = e.latlng;
 
@@ -29,14 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       marker = L.marker([lat, lng], { draggable: true }).addTo(map);
       foragingCircle = L.circle([lat, lng], {
-        radius: 4828, // 3 miles in meters
+        radius: 4828, // 3 miles
         color: '#007BFF',
         fillColor: '#007BFF',
         fillOpacity: 0.1
       }).addTo(map);
     }
 
-    // Fit map to show full circle
     const bounds = foragingCircle.getBounds();
     map.fitBounds(bounds, { padding: [20, 20] });
 
@@ -44,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
     lonInput.value = lng.toFixed(6);
   });
 
-  // Address search via Nominatim
+  // Address search
   addressInput.addEventListener("keypress", async (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -73,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }).addTo(map);
           }
 
-          // Fit map to show full circle
           const bounds = foragingCircle.getBounds();
           map.fitBounds(bounds, { padding: [20, 20] });
 
@@ -89,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Pre-fill lat/lon on load (e.g., for edit mode)
+  // Pre-fill marker if lat/lon exist
   if (latInput.value && lonInput.value) {
     const lat = parseFloat(latInput.value);
     const lon = parseFloat(lonInput.value);
@@ -104,42 +101,43 @@ document.addEventListener("DOMContentLoaded", () => {
     map.fitBounds(bounds, { padding: [20, 20] });
   }
 
-  // Center map to user's location if available
+  // Try user location
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
       const { latitude, longitude } = position.coords;
       map.setView([latitude, longitude], 10);
     });
   }
+
+  // Handle form submission
+  const form = document.querySelector('form[name="register-apiary"]');
+  const formMessage = document.getElementById('form-message');
+
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      fetch("/", {
+        method: "POST",
+        body: formData,
+        headers: { "Accept": "application/x-www-form-urlencoded" }
+      })
+        .then(() => {
+          formMessage.textContent = "✅ Apiary registered successfully! Redirecting to dashboard...";
+          formMessage.style.color = "green";
+          form.reset();
+
+          setTimeout(() => {
+            window.location.href = "/hivetag-netlify/hivetag/dashboard.html";
+          }, 3000);
+        })
+        .catch((error) => {
+          console.error("Form submission error:", error);
+          formMessage.textContent = "❌ Something went wrong. Please try again.";
+          formMessage.style.color = "red";
+        });
+    });
+  }
 });
-
-const form = document.querySelector('form[name="register-apiary"]');
-const formMessage = document.getElementById('form-message');
-
-form.addEventListener('submit', function (e) {
-  e.preventDefault(); // prevent instant reload
-
-  // Submit via fetch to Netlify
-  const formData = new FormData(form);
-
-  fetch("/", {
-    method: "POST",
-    body: formData,
-  })
-  .then(() => {
-    formMessage.textContent = "✅ Apiary registered successfully! Redirecting to dashboard...";
-    formMessage.style.color = "green";
-    form.reset();
-
-    // Delay, then redirect to dashboard
-    setTimeout(() => {
-      window.location.href = "/hivetag-netlify/hivetag/dashboard.html";
-    }, 3000);
-  })
-  .catch((error) => {
-    console.error("Form submission error:", error);
-    formMessage.textContent = "❌ Something went wrong. Please try again.";
-    formMessage.style.color = "red";
-  });
-});
-
