@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register Hive</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="content form-page">
+    <div class="form-card">
+      <h2>Register Hive</h2>
+      <form name="register-hive" id="registerHiveForm" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="register-hive">
+        <p style="display:none;"><label>Don’t fill this out: <input name="bot-field"></label></p>
+
+        <div class="form-full">
+          <label for="apiary">Select Apiary <span>*</span></label>
+          <select id="apiary" name="apiary" required>
+            <option value="">Select...</option>
+          </select>
+        </div>
+
+        <div class="form-full">
+          <label for="hive-name">Hive Name/Number <span>*</span></label>
+          <input type="text" id="hive-name" name="hiveName" placeholder="e.g., Hive #1" required>
+        </div>
+
+        <div>
+          <label for="hive-type">Hive Type</label>
+          <select id="hiveType" name="hiveType" onchange="toggleOtherField(this, document.getElementById('otherHiveType'))">
+            <option value="National">National</option>
+            <option value="Langstroth">Langstroth</option>
+            <option value="Commercial">Commercial</option>
+            <option value="WBC">WBC</option>
+            <option value="Top Bar">Top Bar</option>
+            <option value="other">Other</option>
+          </select>
+          <input type="text" id="otherHiveType" name="otherHiveType" class="optional-other" placeholder="Please specify (optional)">
+        </div>
+
+        <div class="form-full">
+          <button type="submit">Save Hive</button>
+          <div id="form-message"></div>
+        </div>
+      </form>
+    </div>
+  </main>
+  <script src="register-hive.js"></script>
+</body>
+</html>
