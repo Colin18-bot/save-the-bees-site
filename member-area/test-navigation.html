@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dropdown Test</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+ <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="nav-left">
+      <a href="#" class="logo">HiveTag</a>
+    </div>
+    <nav>
+      <ul class="nav-menu">
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Apiaries</a></li>
+        <li><a href="#">Hives</a></li>
+        <li class="profile-dropdown">
+          <button class="profile-icon" id="profile-icon">
+            <img src="https://ui-avatars.com/api/?name=User" class="avatar" alt="Profile">
+            <span>Logged in</span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <ul class="dropdown-menu" id="dropdown-menu">
+            <li><strong>user@example.com</strong></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Groups</a></li>
+            <li><button id="logout-button">Log out</button></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <script>
+    // Toggle dropdown menu
+    const profileIcon = document.getElementById("profile-icon");
+    const dropdownMenu = document.getElementById("dropdown-menu");
+
+    profileIcon.addEventListener("click", function(e) {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle("show");
+    });
+
+    window.addEventListener("click", function() {
+      dropdownMenu.classList.remove("show");
+    });
+  </script>
+
+</body>
+</html>

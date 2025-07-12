@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – HiveTag</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+ <header class="main-header">
+    <div class="nav-left">
+      <a href="dashboard.html" class="logo">HiveTag</a>
+    </div>
+    <nav class="nav-right">
+      <ul class="nav-menu">
+        <li><a href="dashboard.html" class="active">Dashboard</a></li>
+        <li><a href="apiaries.html">Apiaries</a></li>
+        <li><a href="hives.html">Hives</a></li>
+        <li><a href="inspections.html">Inspections</a></li>
+        <li><a href="todo.html">To-Do</a></li>
+        <li><a href="hive-logbook.html">Hive Logbook</a></li>
+        <li><a href="weather.html">Weather</a></li>
+        <li><a href="calendar.html">Calendar</a></li>
+        <li class="profile-dropdown">
+          <button class="profile-icon" id="profile-icon" type="button">
+            <img src="https://ui-avatars.com/api/?name=User" alt="Profile" class="avatar">
+            <span id="profile-name">Logged in</span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <ul class="dropdown-menu" id="dropdown-menu">
+            <li><strong id="dropdown-email">user@example.com</strong></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="groups.html">Groups</a></li>
+            <li><button id="logout-button">Log out</button></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="dashboard">
+    <section class="card-grid">
+      <div class="card">
+        <h2>Next Steps</h2>
+        <p>You haven't added an apiary yet.</p>
+        <a href="apiaries.html" class="btn-primary">Add Apiary</a>
+      </div>
+
+      <div class="card">
+        <h2>Weather Forecast</h2>
+        <p>Today: Sunny, 18°C</p>
+        <p>Tomorrow: Light rain, 16°C</p>
+        <a href="weather.html" class="btn-link">View full forecast</a>
+      </div>
+
+      <div class="card">
+        <h2>Upcoming Inspections</h2>
+        <ul>
+          <li>Hive A – due tomorrow</li>
+          <li>Hive B – due in 3 days</li>
+        </ul>
+        <a href="inspections.html" class="btn-link">View all</a>
+      </div>
+
+      <div class="card">
+        <h2>To-Do</h2>
+        <ul>
+          <li>✔ Feed Hive A</li>
+          <li>⏳ Check for queen cells</li>
+        </ul>
+        <a href="todo.html" class="btn-link">Go to To-Do</a>
+      </div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="js/scripts.js"></script>
+</body>
+</html>

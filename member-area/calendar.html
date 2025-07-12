@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calendar – HiveTag</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+ <header class="main-header">
+    <div class="nav-left">
+      <a href="dashboard.html" class="logo">HiveTag</a>
+    </div>
+    <nav class="nav-right">
+      <ul class="nav-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="apiaries.html">Apiaries</a></li>
+        <li><a href="hives.html">Hives</a></li>
+        <li><a href="inspections.html">Inspections</a></li>
+        <li><a href="todo.html">To-Do</a></li>
+        <li><a href="hive-logbook.html">Hive Logbook</a></li>
+        <li><a href="weather.html">Weather</a></li>
+        <li><a href="calendar.html" class="active">Calendar</a></li>
+        <li class="profile-dropdown">
+          <button class="profile-icon" id="profile-icon" type="button">
+            <img src="https://ui-avatars.com/api/?name=User" alt="Profile" class="avatar">
+            <span id="profile-name">Logged in</span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <ul class="dropdown-menu" id="dropdown-menu">
+            <li><strong id="dropdown-email">user@example.com</strong></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="groups.html">Groups</a></li>
+            <li><button id="logout-button">Log out</button></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page">
+    <h2 id="calendar-title">Calendar</h2>
+    <div class="calendar-weekdays">
+      <div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div>
+    </div>
+    <div id="calendar" class="calendar-grid"></div>
+  </main>
+
+
+
+  
+  <script src="js/scripts.js"></script>
+  <script>
+    const calendar = document.getElementById("calendar");
+    const title = document.getElementById("calendar-title");
+
+    const tasks = [
+      { date: "2025-07-09", type: "Task", title: "Feed Bees – Hive B", link: "todo.html" },
+      { date: "2025-07-10", type: "Inspection", title: "Weekly Inspection – Orchard Apiary", link: "inspections.html" },
+      { date: "2025-07-11", type: "Log", title: "Treatment – 2 Strips Apivar", link: "hive-logbook.html" }
+    ];
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const monthName = today.toLocaleString('default', { month: 'long' });
+
+    title.textContent = `${monthName} ${year}`;
+
+    const first = new Date(year, month, 1);
+    const firstDay = (first.getDay() + 6) % 7; // Adjust so Monday = 0
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    for (let i = 0; i < firstDay; i++) {
+      const empty = document.createElement("div");
+      calendar.appendChild(empty);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+      const cell = document.createElement("div");
+      cell.className = "calendar-day";
+      cell.innerHTML = `<strong>${day}</strong>`;
+
+      const dayEvents = tasks.filter(t => t.date === dateStr);
+      dayEvents.forEach(event => {
+        const entry = document.createElement("a");
+        entry.href = event.link;
+        entry.textContent = event.title;
+        entry.className = "calendar-event";
+        cell.appendChild(entry);
+      });
+
+      calendar.appendChild(cell);
+    }
+  </script>
+
+  <style>
+    .calendar-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      font-weight: bold;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .calendar-day {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      font-size: 0.9rem;
+    }
+    .calendar-day strong {
+      margin-bottom: 0.25rem;
+    }
+    .calendar-event {
+      font-size: 0.75rem;
+      margin: 2px 0;
+      display: block;
+      color: var(--link-color);
+      text-decoration: none;
+    }
+    .calendar-event:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 768px) {
+      .calendar-weekdays,
+      .calendar-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="js/scripts.js"></script>
+</body>
+</html>

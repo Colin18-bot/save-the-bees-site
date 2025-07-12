@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Group – HiveTag</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="main-header">
+    <div class="nav-left">
+      <a href="dashboard.html" class="logo">HiveTag</a>
+    </div>
+    <nav class="nav-right">
+      <ul class="nav-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="apiaries.html">Apiaries</a></li>
+        <li><a href="hives.html">Hives</a></li>
+        <li><a href="inspections.html">Inspections</a></li>
+        <li><a href="todo.html">To-Do</a></li>
+        <li><a href="hive-logbook.html">Hive Logbook</a></li>
+        <li><a href="weather.html">Weather</a></li>
+        <li><a href="calendar.html">Calendar</a></li>
+        <li class="profile-dropdown">
+          <button class="profile-icon" id="profile-icon" type="button">
+            <img src="https://ui-avatars.com/api/?name=User" alt="Profile" class="avatar">
+            <span id="profile-name">Logged in</span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <ul class="dropdown-menu" id="dropdown-menu">
+            <li><strong id="dropdown-email">user@example.com</strong></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="groups.html">Groups</a></li>
+            <li><button id="logout-button">Log out</button></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page">
+    <h2>Create New Group</h2>
+    <form class="form-card" action="groups.html" method="POST">
+      <label for="group-name">Group Name</label>
+      <input type="text" id="group-name" name="group-name" required />
+
+      <label for="group-description">Group Description</label>
+      <textarea id="group-description" name="group-description" rows="3" placeholder="Optional group purpose or notes..."></textarea>
+
+      <div class="invite-section">
+        <label for="member-email">Invite Member</label>
+        <input type="email" id="member-email" name="member-email" placeholder="Enter member email or username" required />
+
+        <label for="member-role">Set Role</label>
+        <select id="member-role" name="member-role">
+          <option>View Only</option>
+          <option>Edit Access</option>
+          <option>Admin</option>
+        </select>
+      </div>
+
+      <!-- Placeholder for future multiple invite feature -->
+      <!-- <button type="button" class="btn-secondary">+ Add Another Member</button> -->
+
+      <button type="submit" class="btn-primary">Create Group</button>
+    </form>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="js/scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Member Login – HiveTag</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"></script>
+</head>
+<body class="login-page">
+  <div class="page">
+    <main class="login-container" style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center;">
+      <section class="form-card" style="flex: 1 1 400px; max-width: 500px;">
+        <h1>Login</h1>
+        <form id="login-form">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="you@example.com" required />
+
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" required />
+
+          <button type="submit" class="btn-primary" id="login-button">Log In</button>
+          <p><a href="#" id="forgot-password">Forgot your password?</a></p>
+        </form>
+
+        <button type="button" class="btn-google" id="google-login" style="margin-top: 1rem;">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="height: 20px; margin-right: 8px;" />
+          Sign in with Google
+        </button>
+      </section>
+
+      <section class="form-card" style="flex: 1 1 400px; max-width: 500px;">
+        <h1>Register</h1>
+        <form id="register-form">
+          <label for="register-name">Full Name</label>
+          <input type="text" id="register-name" placeholder="Your Name" required />
+
+          <label for="register-email">Email</label>
+          <input type="email" id="register-email" placeholder="you@example.com" required />
+
+          <label for="register-password">Password</label>
+          <input type="password" id="register-password" placeholder="Create a password" required minlength="8" />
+
+          <!-- Password Strength Bar & Label -->
+          <div class="password-strength-container" aria-live="polite">
+            <div class="strength-bar" role="progressbar" aria-valuemin="0" aria-valuemax="4" aria-valuenow="0">
+              <div class="strength-fill"></div>
+            </div>
+            <div class="strength-label" id="password-strength">Strength: </div>
+          </div>
+
+          <p style="font-size: 0.85rem; color: #666; margin-top: 0.25rem;">
+            Password must be at least 8 characters long, with an uppercase letter, number, and symbol.
+          </p>
+          <button type="submit" class="btn-secondary" id="register-button">Register</button>
+        </form>
+      </section>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="js/scripts.js"></script>
+</body>
+
+</html>

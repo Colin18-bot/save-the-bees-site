@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>To-Do – HiveTag</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="main-header">
+    <div class="nav-left">
+      <a href="dashboard.html" class="logo">HiveTag</a>
+    </div>
+    <nav class="nav-right">
+      <ul class="nav-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="apiaries.html">Apiaries</a></li>
+        <li><a href="hives.html">Hives</a></li>
+        <li><a href="inspections.html">Inspections</a></li>
+        <li><a href="todo.html" class="active">To-Do</a></li>
+        <li><a href="hive-logbook.html">Hive Logbook</a></li>
+        <li><a href="weather.html">Weather</a></li>
+        <li><a href="calendar.html">Calendar</a></li>
+        <li class="profile-dropdown">
+          <button class="profile-icon" id="profile-icon" type="button">
+            <img src="https://ui-avatars.com/api/?name=User" alt="Profile" class="avatar">
+            <span id="profile-name">Logged in</span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <ul class="dropdown-menu" id="dropdown-menu">
+            <li><strong id="dropdown-email">user@example.com</strong></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="groups.html">Groups</a></li>
+            <li><button id="logout-button">Log out</button></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page">
+    <h2>To-Do Tasks</h2>
+    <p style="text-align: center;">
+      <a href="calendar.html" class="btn-secondary">📅 View Calendar</a>
+    </p>
+
+    <!-- Task Type Tabs -->
+    <div class="tab-buttons">
+      <button onclick="showTaskForm('feed')">Feed Bees</button>
+      <button onclick="showTaskForm('varroa')">Varroa Assessment</button>
+      <button onclick="showTaskForm('inspection')">Weekly Inspection</button>
+      <button onclick="showTaskForm('requeen')">Requeen</button>
+      <button onclick="showTaskForm('treatment')">Treatment</button>
+      <button onclick="showTaskForm('harvest')">Harvest Honey</button>
+      <button onclick="showTaskForm('buy')">Buy Equipment</button>
+      <button onclick="showTaskForm('winter')">Winter Preparation</button>
+      <button onclick="showTaskForm('other')">Other</button>
+    </div>
+
+    <!-- Task Form Template -->
+    <template id="task-form-template">
+      <form class="form-card todo-form" style="display:none;">
+        <h3 class="task-title"></h3>
+
+        <label>Apiary</label>
+        <select name="apiary" required>
+          <option>Select Apiary</option>
+          <option>Orchard Apiary</option>
+        </select>
+
+        <label>Hive</label>
+        <select name="hive">
+          <option>All Hives</option>
+          <option>Hive A</option>
+        </select>
+
+        <label>Due Date</label>
+        <input type="date" name="due-date" required>
+
+        <label>Notes</label>
+        <textarea name="notes" rows="3"></textarea>
+
+        <label>Status</label>
+        <select name="status">
+          <option>Pending</option>
+          <option>Complete</option>
+        </select>
+
+        <button type="submit" class="btn-primary">Save Task</button>
+      </form>
+    </template>
+
+    <!-- Form Containers for Each Task -->
+    <div id="task-forms"></div>
+
+    <div id="permission-message" style="display:none; color: red; text-align: center; margin-top: 1rem;">
+      You do not have permission to edit this task.
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="js/scripts.js"></script>
+  <script>
+    const tasks = [
+      { id: 'feed', label: 'Feed Bees' },
+      { id: 'varroa', label: 'Varroa Assessment' },
+      { id: 'inspection', label: 'Weekly Inspection' },
+      { id: 'requeen', label: 'Requeen' },
+      { id: 'treatment', label: 'Treatment' },
+      { id: 'harvest', label: 'Harvest Honey' },
+      { id: 'buy', label: 'Buy Equipment' },
+      { id: 'winter', label: 'Winter Preparation' },
+      { id: 'other', label: 'Other' }
+    ];
+
+    const container = document.getElementById("task-forms");
+    const template = document.getElementById("task-form-template").content;
+
+    tasks.forEach(task => {
+      const form = template.cloneNode(true);
+      form.querySelector("form").id = task.id;
+      form.querySelector(".task-title").textContent = task.label;
+      container.appendChild(form);
+    });
+
+    function showTaskForm(id) {
+      document.querySelectorAll(".todo-form").forEach(f => f.style.display = "none");
+      document.querySelectorAll(".tab-buttons button").forEach(btn => btn.classList.remove("active"));
+      document.getElementById(id).style.display = "block";
+      document.querySelector(`.tab-buttons button[onclick*="${id}"]`).classList.add("active");
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inspection Records – HiveTag</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+ <header class="main-header">
+    <div class="nav-left">
+      <a href="dashboard.html" class="logo">HiveTag</a>
+    </div>
+    <nav class="nav-right">
+      <ul class="nav-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="apiaries.html">Apiaries</a></li>
+        <li><a href="hives.html">Hives</a></li>
+        <li><a href="inspections.html" class="active">Inspections</a></li>
+        <li><a href="todo.html">To-Do</a></li>
+        <li><a href="hive-logbook.html">Hive Logbook</a></li>
+        <li><a href="weather.html">Weather</a></li>
+        <li><a href="calendar.html">Calendar</a></li>
+        <li class="profile-dropdown">
+          <button class="profile-icon" id="profile-icon" type="button">
+            <img src="https://ui-avatars.com/api/?name=User" alt="Profile" class="avatar">
+            <span id="profile-name">Logged in</span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <ul class="dropdown-menu" id="dropdown-menu">
+            <li><strong id="dropdown-email">user@example.com</strong></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="groups.html">Groups</a></li>
+            <li><button id="logout-button">Log out</button></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page">
+    <div class="page-header">
+      <h2>Inspection Records</h2>
+      <div class="button-group">
+        <a href="inspection-form.html" class="btn-primary">+ Add Inspection</a>
+        <button class="btn-secondary" onclick="exportPDF()">Export PDF</button>
+        <button class="btn-secondary" onclick="exportCSV()">Export CSV</button>
+      </div>
+    </div>
+
+    <div class="filters">
+      <label for="filter-apiary">Filter by Apiary:</label>
+      <select id="filter-apiary">
+        <option value="">All Apiaries</option>
+        <option>Orchard Apiary</option>
+        <option>Garden Apiary</option>
+      </select>
+
+      <label for="filter-hive">Filter by Hive:</label>
+      <select id="filter-hive">
+        <option value="">All Hives</option>
+        <option>Hive A</option>
+        <option>Hive B</option>
+      </select>
+
+      <input type="text" id="search-inspections" placeholder="Search notes..." />
+    </div>
+
+    <!-- 🟡 ID must be on <table>, not just <tbody> -->
+    <table id="inspection-table" class="responsive-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Apiary</th>
+          <th>Hive</th>
+          <th>Queen Seen</th>
+          <th>Brood</th>
+          <th>Temperament</th>
+          <th>Notes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Example static row -->
+        <tr>
+          <td>2025-07-05</td>
+          <td>Orchard Apiary</td>
+          <td>Hive A</td>
+          <td>Yes</td>
+          <td>Solid</td>
+          <td>Calm</td>
+          <td>No issues</td>
+          <td><button class="btn-small" onclick="viewInspection('${row.id}')">View</button></td>
+
+        </tr>
+      </tbody>
+    </table>
+  </main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+<script>
+const dummyInspections = [
+  {
+    date: "2025-07-05",
+    apiary: "Orchard Apiary",
+    hive: "Hive A",
+    queenSeen: "Yes",
+    eggs: "Yes",
+    capped: "Yes",
+    uncapped: "No",
+    temperament: "Calm",
+    population: "Strong",
+    brood: "Solid",
+    pests: ["Varroa"],
+    supers: "1 Super",
+    excluder: "Present",
+    notes: "Marked queen blue, no swarm cells."
+  },
+  {
+    date: "2025-07-06",
+    apiary: "Garden Apiary",
+    hive: "Hive B",
+    queenSeen: "No",
+    eggs: "No",
+    capped: "No",
+    uncapped: "Yes",
+    temperament: "Aggressive",
+    population: "Medium",
+    brood: "Spotty",
+    pests: ["Wax Moth"],
+    supers: "2 Supers",
+    excluder: "Missing",
+    notes: "Aggressive bees, signs of chalkbrood."
+  }
+];
+
+// Load table to screen
+function loadTable(data) {
+  const tbody = document.getElementById("inspection-table");
+  tbody.innerHTML = "";
+  data.forEach(row => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${row.date}</td>
+        <td>${row.apiary}</td>
+        <td>${row.hive}</td>
+        <td>${row.queenSeen}</td>
+        <td>${row.brood}</td>
+        <td>${row.temperament}</td>
+        <td>${row.notes}</td>
+        <td>
+          <button class="btn-small" onclick="viewInspection('${row.date}', '${row.hive}')">View</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+// View button handler (placeholder)
+function viewInspection(date, hive) {
+  alert(`View full inspection for ${hive} on ${date} – to be linked.`);
+}
+
+// PDF export
+function exportPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: "landscape" });
+
+  const filterApiary = document.getElementById("filter-apiary").value;
+  const filterHive = document.getElementById("filter-hive").value;
+  const search = document.getElementById("search-inspections").value.toLowerCase();
+
+  const filtered = dummyInspections.filter(i => {
+    return (!filterApiary || i.apiary === filterApiary) &&
+           (!filterHive || i.hive === filterHive) &&
+           i.notes.toLowerCase().includes(search);
+  });
+
+  const rows = filtered.map(row => [
+    row.date,
+    row.apiary,
+    row.hive,
+    row.queenSeen,
+    row.eggs,
+    row.capped,
+    row.uncapped,
+    row.temperament,
+    row.population,
+    row.brood,
+    Array.isArray(row.pests) ? row.pests.join(", ") : row.pests || "",
+    row.supers,
+    row.excluder,
+    row.notes
+  ]);
+
+  doc.setFontSize(14);
+  doc.text("HiveTag – Inspection Summary", 14, 14);
+
+  doc.autoTable({
+    startY: 20,
+    head: [[
+      "Date", "Apiary", "Hive", "Queen Seen", "Eggs", "Capped", "Uncapped",
+      "Temperament", "Population", "Brood", "Pests", "Supers", "Excluder", "Notes"
+    ]],
+    body: rows,
+    styles: {
+      fontSize: 9,
+      cellPadding: 2
+    },
+    headStyles: {
+      fillColor: [30, 30, 90],
+      textColor: 255
+    },
+    theme: "striped",
+    margin: { top: 20, bottom: 20 }
+  });
+
+  const pageHeight = doc.internal.pageSize.height;
+  doc.setFontSize(9);
+  doc.text("Generated by HiveTag", 14, pageHeight - 10);
+
+  doc.save("HiveTag_Inspection_Report.pdf");
+}
+
+// CSV export
+function exportCSV() {
+  const filterApiary = document.getElementById("filter-apiary").value;
+  const filterHive = document.getElementById("filter-hive").value;
+  const searchQuery = document.getElementById("search-inspections").value.toLowerCase();
+
+  const filtered = dummyInspections.filter(i => {
+    const matchesApiary = !filterApiary || i.apiary === filterApiary;
+    const matchesHive = !filterHive || i.hive === filterHive;
+    const matchesSearch = i.notes.toLowerCase().includes(searchQuery);
+    return matchesApiary && matchesHive && matchesSearch;
+  });
+
+  const headers = [
+    "Date", "Apiary", "Hive", "Queen Seen", "Eggs", "Capped", "Uncapped",
+    "Temperament", "Population", "Brood", "Pests", "Supers", "Excluder", "Notes"
+  ];
+
+  const rows = filtered.map(row => [
+    row.date || "",
+    row.apiary || "",
+    row.hive || "",
+    row.queenSeen || "No",
+    row.eggs || "No",
+    row.capped || "No",
+    row.uncapped || "No",
+    row.temperament || "",
+    row.population || "",
+    row.brood || "",
+    Array.isArray(row.pests) ? row.pests.join(", ") : row.pests || "",
+    row.supers || "",
+    row.excluder || "",
+    row.notes || ""
+  ]);
+
+  let csv = headers.join(",") + "\n";
+  rows.forEach(row => {
+    csv += row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",") + "\n";
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "HiveTag_Inspection_Report.csv";
+  a.click();
+}
+
+// Filters
+document.getElementById("search-inspections").addEventListener("input", filterTable);
+document.getElementById("filter-apiary").addEventListener("change", filterTable);
+document.getElementById("filter-hive").addEventListener("change", filterTable);
+
+function filterTable() {
+  const apiary = document.getElementById("filter-apiary").value;
+  const hive = document.getElementById("filter-hive").value;
+  const query = document.getElementById("search-inspections").value.toLowerCase();
+  const filtered = dummyInspections.filter(i => {
+    return (!apiary || i.apiary === apiary) &&
+           (!hive || i.hive === hive) &&
+           i.notes.toLowerCase().includes(query);
+  });
+  loadTable(filtered);
+}
+
+window.onload = () => loadTable(dummyInspections);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="js/scripts.js"></script>
+</body>
+</html>

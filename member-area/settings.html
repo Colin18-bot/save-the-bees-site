@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings – HiveTag</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="main-header">
+    <div class="nav-left">
+      <a href="dashboard.html" class="logo">HiveTag</a>
+    </div>
+    <nav class="nav-right">
+      <ul class="nav-menu">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="apiaries.html">Apiaries</a></li>
+        <li><a href="hives.html">Hives</a></li>
+        <li><a href="inspections.html">Inspections</a></li>
+        <li><a href="todo.html">To-Do</a></li>
+        <li><a href="hive-logbook.html">Hive Logbook</a></li>
+        <li><a href="weather.html">Weather</a></li>
+        <li><a href="calendar.html">Calendar</a></li>
+        <li class="profile-dropdown">
+          <button class="profile-icon" id="profile-icon" type="button">
+            <img src="https://ui-avatars.com/api/?name=User" alt="Profile" class="avatar">
+            <span id="profile-name">Logged in</span>
+            <i class="fas fa-caret-down"></i>
+          </button>
+          <ul class="dropdown-menu" id="dropdown-menu">
+            <li><strong id="dropdown-email">user@example.com</strong></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="groups.html">Groups</a></li>
+            <li><button id="logout-button">Log out</button></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page">
+    <h2>Account Settings</h2>
+    <form class="form-card">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" value="Colin Chorley" />
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" value="colin@example.com" />
+
+      <label for="password">Old Password</label>
+      <input type="password" id="old-password" placeholder="Leave blank to keep current password" />
+
+      <label for="password">New Password</label>
+      <input type="password" id="new-password" placeholder="Leave blank to keep current password" />
+
+      <label for="password">Confirm New Password</label>
+      <input type="password" id="confirm-password" placeholder="Leave blank to keep current password" />
+
+      <button type="submit" class="btn-primary">Save Changes</button>
+    </form>
+
+    <section class="card">
+      <h3>Theme Preferences</h3>
+      <p>Toggle between light and dark mode.</p>
+      <button id="toggle-theme-settings" class="btn-secondary">Toggle Theme 🌗</button>
+    </section>
+
+    <section class="card danger">
+      <h3>Danger Zone</h3>
+      <p>Deleting your account will remove all your data permanently.</p>
+      <button id="delete-account-button" class="btn-danger">Delete My Account</button>
+      <div id="delete-spinner" class="spinner hidden"></div>
+      <div id="delete-toast" class="toast hidden">✅ Account deleted.</div>
+   
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal hidden">
+      <div class="modal-content">
+        <h4>Are you absolutely sure?</h4>
+        <p>This action will permanently delete your account and all data. This cannot be undone.</p>
+        <button id="confirm-delete" class="btn-danger">Yes, delete everything</button>
+        <button id="cancel-delete" class="btn-secondary">Cancel</button>
+      </div>
+    </div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="js/scripts.js"></script>
+  <script src="js/delete-account.js"></script>
+</body>
+</html>
