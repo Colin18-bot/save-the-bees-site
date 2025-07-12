@@ -1,14 +1,12 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
 document.addEventListener('DOMContentLoaded', () => {
   // === Supabase Setup ===
-  const supabase = createClient(
+  const client = supabase.createClient(
     'https://uihngfpmoasnofyrvpmw.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpaG5nZnBtb2Fzbm9meXJ2cG13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxNzI3MzcsImV4cCI6MjA2Nzc0ODczN30.Y2CZgaYKx60FhJjorxepNjni-azsexxpXsmhaGGYfUs'
   );
 
   // === Auto-Fill Profile Info ===
-  supabase.auth.getUser().then(({ data }) => {
+  client.auth.getUser().then(({ data }) => {
     if (data.user) {
       const profileName = document.getElementById("profile-name");
       const email = document.getElementById("dropdown-email");
@@ -63,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.disabled = true;
     btn.textContent = 'Logging in...';
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await client.auth.signInWithPassword({ email, password });
 
     if (error) {
       alert(error.message);
@@ -76,94 +74,96 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // === Register ===
-  document.getElementById('register-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const fullName = document.getElementById('register-name').value.trim();
-    const email = document.getElementById('register-email').value.trim();
-    const password = document.getElementById('register-password').value;
-    const btn = document.getElementById('register-button');
+document.getElementById('register-form')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const fullName = document.getElementById('register-name').value.trim();
+  const email = document.getElementById('register-email').value.trim();
+  const password = document.getElementById('register-password').value;
+  const btn = document.getElementById('register-button');
 
-    btn.disabled = true;
-    btn.textContent = 'Registering...';
+  btn.disabled = true;
+  btn.textContent = 'Registering...';
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: 'https://www.beezknees.co.uk/login.html'
-      }
-    });
-
-    if (error) {
-      if (error.message.includes("User already registered")) {
-        alert("This email is already registered. Please log in instead.");
-        window.location.href = 'login.html';
-      } else {
-        alert(error.message);
-      }
-    } else if (data?.user?.identities?.length === 0) {
-      alert("Account already exists. Please log in.");
-      window.location.href = 'login.html';
-    } else {
-      alert("✅ Registration successful! Please check your email to verify your account.");
+  const { data, error } = await client.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: 'https://www.beezknees.co.uk/login.html'
     }
-
-    btn.disabled = false;
-    btn.textContent = 'Register';
   });
 
-  // === Forgot Password ===
-  const forgotPasswordLink = document.getElementById('forgot-password');
-  if (forgotPasswordLink) {
-    forgotPasswordLink.addEventListener('click', (e) => {
-      e.preventDefault();
+  if (error) {
+    if (error.message.includes("User already registered")) {
+      alert("This email is already registered. Please log in instead.");
+      window.location.href = 'login.html';
+    } else {
+      alert(error.message);
+    }
+  } else if (data?.user?.identities?.length === 0) {
+    alert("Account already exists. Please log in.");
+    window.location.href = 'login.html';
+  } else {
+    alert("✅ Registration successful! Please check your email to verify your account.");
+  }
 
-      if (!document.getElementById('forgot-email')) {
-        const form = document.getElementById('login-form');
-        const resetSection = document.createElement('div');
-        resetSection.id = 'reset-password-container';
-        resetSection.innerHTML = `
-          <input type="email" id="forgot-email" placeholder="Enter your email to reset password" class="form-input" required style="margin-top: 10px;" />
-          <button id="send-reset-link" class="form-button" style="margin-top: 5px;">Send Reset Link</button>
-          <div id="forgot-message" class="form-message" style="margin-top: 5px;"></div>
-        `;
-        form.appendChild(resetSection);
+  btn.disabled = false;
+  btn.textContent = 'Register';
+});
 
-        document.getElementById('send-reset-link').addEventListener('click', async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
+   // === Forgot Password ===
+const forgotPasswordLink = document.getElementById('forgot-password');
+if (forgotPasswordLink) {
+  forgotPasswordLink.addEventListener('click', (e) => {
+    e.preventDefault();
 
-          const email = document.getElementById('forgot-email').value.trim();
-          const messageBox = document.getElementById('forgot-message');
+    // Insert inline input if not already present
+    if (!document.getElementById('forgot-email')) {
+      const form = document.getElementById('login-form');
+      const resetSection = document.createElement('div');
+      resetSection.id = 'reset-password-container';
+      resetSection.innerHTML = `
+        <input type="email" id="forgot-email" placeholder="Enter your email to reset password" class="form-input" required style="margin-top: 10px;" />
+        <button id="send-reset-link" class="form-button" style="margin-top: 5px;">Send Reset Link</button>
+        <div id="forgot-message" class="form-message" style="margin-top: 5px;"></div>
+      `;
+      form.appendChild(resetSection);
 
-          if (!email) {
-            messageBox.innerHTML = '<p class="error">Please enter your email address.</p>';
-            return;
-          }
+     document.getElementById('send-reset-link').addEventListener('click', async (e) => {
+  e.preventDefault();
+  e.stopPropagation();
 
-          const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: 'https://www.beezknees.co.uk/member-area/login.html'
-          });
+        const email = document.getElementById('forgot-email').value.trim();
+        const messageBox = document.getElementById('forgot-message');
 
-          if (error) {
-            messageBox.innerHTML = `<p class="error">❌ ${error.message}</p>`;
-          } else {
-            messageBox.innerHTML = `<p class="success">📧 Password reset email sent. Check your inbox.</p>`;
-          }
+        if (!email) {
+          messageBox.innerHTML = '<p class="error">Please enter your email address.</p>';
+          return;
+        }
+
+        const { error } = await client.auth.resetPasswordForEmail(email, {
+          redirectTo: 'https://www.beezknees.co.uk/member-area/login.html'
         });
-      }
-    });
-  }
 
-  // === Show Password Reset Confirmation if redirected ===
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.has('type') && urlParams.get('type') === 'recovery') {
-    alert("✅ Your password has been reset. You can now log in with your new password.");
-  }
+        if (error) {
+          messageBox.innerHTML = `<p class="error">❌ ${error.message}</p>`;
+        } else {
+          messageBox.innerHTML = `<p class="success">📧 Password reset email sent. Check your inbox.</p>`;
+        }
+      });
+    }
+  });
+}
+
+// === Show Password Reset Confirmation if redirected ===
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has('type') && urlParams.get('type') === 'recovery') {
+  alert("✅ Your password has been reset. You can now log in with your new password.");
+}
+
 
   // === Google Sign-In ===
   document.getElementById('google-login')?.addEventListener('click', async () => {
-    await supabase.auth.signInWithOAuth({
+    await client.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: 'https://www.beezknees.co.uk/dashboard.html'
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // === Redirect If Already Logged In (login/register pages only) ===
   const isAuthPage = window.location.pathname.includes("login") || window.location.pathname.includes("register");
   if (isAuthPage) {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    client.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         window.location.href = 'dashboard.html';
       }
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (logoutBtn) {
     logoutBtn.addEventListener("click", async () => {
       if (confirm("Are you sure you want to log out?")) {
-        await supabase.auth.signOut();
+        await client.auth.signOut();
         window.location.href = "login.html";
       }
     });
