@@ -1,12 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // === Supabase Setup ===
-  const supabase = supabase.createClient(
+  const client = supabase.createClient(
     'https://uihngfpmoasnofyrvpmw.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpaG5nZnBtb2Fzbm9meXJ2cG13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxNzI3MzcsImV4cCI6MjA2Nzc0ODczN30.Y2CZgaYKx60FhJjorxepNjni-azsexxpXsmhaGGYfUs'
   );
 
   // === Auto-Fill Profile Info ===
-  supabase.auth.getUser().then(({ data }) => {
+  client.auth.getUser().then(({ data }) => {
     if (data.user) {
       const profileName = document.getElementById("profile-name");
       const email = document.getElementById("dropdown-email");
@@ -61,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.disabled = true;
     btn.textContent = 'Logging in...';
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await client.auth.signInWithPassword({ email, password });
 
     if (error) {
       alert(error.message);
@@ -84,12 +83,12 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.disabled = true;
     btn.textContent = 'Registering...';
 
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await client.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: 'https://www.beezknees.co.uk/login.html',
-        data: { full_name: fullName }
+        data: { full_name: fullName },
+        emailRedirectTo: 'https://www.beezknees.co.uk/login.html'
       }
     });
 
@@ -140,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
           }
 
-          const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          const { error } = await client.auth.resetPasswordForEmail(email, {
             redirectTo: 'https://www.beezknees.co.uk/member-area/login.html'
           });
 
@@ -154,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // === Show Password Reset Confirmation if redirected ===
+  // === Show Password Reset Confirmation ===
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.has('type') && urlParams.get('type') === 'recovery') {
     alert("✅ Your password has been reset. You can now log in with your new password.");
@@ -162,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // === Google Sign-In ===
   document.getElementById('google-login')?.addEventListener('click', async () => {
-    await supabase.auth.signInWithOAuth({
+    await client.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: 'https://www.beezknees.co.uk/dashboard.html'
@@ -170,10 +169,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // === Redirect If Already Logged In ===
+  // === Redirect If Already Logged In (login/register pages only) ===
   const isAuthPage = window.location.pathname.includes("login") || window.location.pathname.includes("register");
   if (isAuthPage) {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    client.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         window.location.href = 'dashboard.html';
       }
@@ -207,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (logoutBtn) {
     logoutBtn.addEventListener("click", async () => {
       if (confirm("Are you sure you want to log out?")) {
-        await supabase.auth.signOut();
+        await client.auth.signOut();
         window.location.href = "login.html";
       }
     });
@@ -227,4 +226,5 @@ document.addEventListener('DOMContentLoaded', () => {
       dropdownMenu.classList.remove("show");
     });
   }
+
 });
