@@ -1,5 +1,7 @@
+// === Import Supabase client (must be at top for module type)
+import { supabase as client } from './supabaseClient.js';
+
 document.addEventListener('DOMContentLoaded', () => {
- import { supabase as client } from './supabaseClient.js';
 
   // === Auto-Fill Profile Info ===
   client.auth.getUser().then(({ data }) => {
