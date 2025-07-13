@@ -1,7 +1,5 @@
 // netlify/functions/deleteUser.js
 
-// netlify/functions/deleteUser.js
-
 import { createClient } from '@supabase/supabase-js';
 
 // Use environment variables injected by Netlify
