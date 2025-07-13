@@ -1,5 +1,9 @@
 // delete-account.js
-import { supabase } from './supabaseClient.js';
+
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+// These values are now safely injected from the HTML <script> tag
+const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
 
 // Elements
 const deleteBtn = document.getElementById('delete-account-button');
