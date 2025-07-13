@@ -2,9 +2,8 @@
 
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-const supabaseUrl = 'https://uihngfpmoasnofyrvpmw.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpaG5nZnBtb2Fzbm9meXJ2cG13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxNzI3MzcsImV4cCI6MjA2Nzc0ODczN30.Y2CZgaYKx60FhJjorxepNjni-azsexxpXsmhaGGYfUs';
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// These values are now safely injected from the HTML <script> tag
+const supabase = createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
 
 // Elements
 const deleteBtn = document.getElementById('delete-account-button');
@@ -47,7 +46,7 @@ confirmDelete.addEventListener('click', async () => {
     await supabase.from('logbook').delete().eq('user_id', userId);
     await supabase.from('groups').delete().eq('user_id', userId);
 
-    // Call serverless function to delete user from Supabase auth
+    // Call serverless function to delete the user
     const res = await fetch('/.netlify/functions/deleteUser', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
