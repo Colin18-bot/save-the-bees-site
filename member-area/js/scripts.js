@@ -1,8 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const client = supabase.createClient(
-    'https://uihngfpmoasnofyrvpmw.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpaG5nZnBtb2Fzbm9meXJ2cG13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxNzI3MzcsImV4cCI6MjA2Nzc0ODczN30.Y2CZgaYKx60FhJjorxepNjni-azsexxpXsmhaGGYfUs'
-  );
+  const client = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
 
   // === Auto-Fill Profile Info ===
   client.auth.getUser().then(({ data }) => {
