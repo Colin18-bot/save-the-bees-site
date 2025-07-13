@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const client = supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+ import { supabase as client } from './supabaseClient.js';
 
   // === Auto-Fill Profile Info ===
   client.auth.getUser().then(({ data }) => {
