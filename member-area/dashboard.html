@@ -72,23 +72,8 @@
       </div>
     </section>
   </main>
-
-<!-- Supabase credentials injected via HTML (Netlify safe) -->
-<script>
-  window.SUPABASE_URL = 'https://uihngfpmoasnofyrvpmw.supabase.co';
-  window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpaG5nZnBtb2Fzbm9meXJ2cG13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIxNzI3MzcsImV4cCI6MjA2Nzc0ODczN30.Y2CZgaYKx60FhJjorxepNjni-azsexxpXsmhaGGYfUs';
-</script>
-
-<!-- Supabase client library (ESM version for modules) -->
-<script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-  // Make it globally accessible
-  window.supabase = createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
-</script>
-
-<!-- Your custom scripts -->
-<script src="js/scripts.js"></script>
-
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="js/scripts.js"></script>
 </body>
 </html>
