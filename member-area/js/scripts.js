@@ -1,5 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  // === Member Dropdown Toggle (must be outside import) ===
+  const profileIcon = document.getElementById("profile-icon");
+  const dropdownMenu = document.getElementById("dropdown-menu");
+
+  if (profileIcon && dropdownMenu) {
+    profileIcon.addEventListener("click", function (e) {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle("show");
+    });
+
+    window.addEventListener("click", function () {
+      dropdownMenu.classList.remove("show");
+    });
+  }
+
   import('./supabaseClient.js').then(({ supabase: client }) => {
 
     // === Auto-Fill Profile Info ===
@@ -209,21 +224,6 @@ document.addEventListener('DOMContentLoaded', () => {
           await client.auth.signOut();
           window.location.href = "login.html";
         }
-      });
-    }
-
-    // === Member Dropdown Toggle ===
-    const profileIcon = document.getElementById("profile-icon");
-    const dropdownMenu = document.getElementById("dropdown-menu");
-
-    if (profileIcon && dropdownMenu) {
-      profileIcon.addEventListener("click", function (e) {
-        e.stopPropagation();
-        dropdownMenu.classList.toggle("show");
-      });
-
-      window.addEventListener("click", function () {
-        dropdownMenu.classList.remove("show");
       });
     }
 
