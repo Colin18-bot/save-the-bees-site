@@ -1,4 +1,4 @@
-// .netlify/functions/deleteUser.js
+// netlify/functions/deleteUser.js
 
 import { createClient } from '@supabase/supabase-js'
 
@@ -16,11 +16,7 @@ export async function handler(event) {
   }
 
   try {
-    const parsed = JSON.parse(event.body)
-    console.log('Received body:', parsed)
-
-    const { userId } = parsed
-    console.log('User ID to delete:', userId)
+    const { userId } = JSON.parse(event.body)
 
     if (!userId) {
       return {
