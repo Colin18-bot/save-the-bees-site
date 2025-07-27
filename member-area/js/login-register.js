@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const { error } = await supabase.auth.signUp({
+      const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -96,9 +96,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
-      if (error) {
-        alert("Registration failed: " + error.message);
+      if (signUpError) {
+        alert("Registration failed: " + signUpError.message);
         return;
+      }
+
+      // ✅ Manually update display_name so it shows in Supabase dashboard
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: { display_name: name }
+      });
+
+      if (updateError) {
+        console.warn("Display name update failed:", updateError.message);
       }
 
       window.location.href = "login.html";
