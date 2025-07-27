@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Dashboard | HiveTag Member Area</title>
+      <!-- Description (optional but good practice) -->
+      <meta name="description" content="Your personalised HiveTag dashboard showing beekeeping stats, tasks, weather, and setup checklist." />
+      <!-- Theme color (browser bar on mobile) -->
+      <meta name="theme-color" content="#222222" />
+      <!-- Prevent indexing by search engines if this page is private -->
+      <meta name="robots" content="noindex, nofollow" />
+      <!-- Optional: Disable automatic phone number detection on iOS -->
+      <meta name="format-detection" content="telephone=no" />
+      <!-- No caching (optional) -->
+      <meta http-equiv="Cache-Control" content="no-store" />
+      <meta http-equiv="Pragma" content="no-cache" />
+      <meta http-equiv="Expires" content="0" />
+      <!-- Favicon -->
+      <link rel="icon" href="../../images/favicon.ico" type="image/x-icon" />
+      <!-- 16x16 and 32x32 favicons for browser tabs -->
+      <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png" />
+      <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png" />
+      <!-- Apple touch icon for iOS home screen -->
+      <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png" />
+      <!-- Android home screen icons -->
+      <link rel="icon" type="image/png" sizes="192x192" href="../../android-chrome-192x192.png" />
+      <link rel="icon" type="image/png" sizes="512x512" href="../../android-chrome-512x512.png" />
+      <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="../css/main.css" />
+   </head>
+   <body>
+      <div class="wrapper">
+      <div class="top-banner">
+         <div class="logo">
+            <a href="https://www.beezknees.co.uk" class="logo">
+            <img src="../../images/Beezknees-Logo-Inverted.png" alt="HiveTag Logo" class="logo-img">HiveTag
+            </a>
+         </div>
+         <div class="user-info">
+            <span>Members Area</span>
+            <div class="user-circle">CC</div>
+         </div>
+         <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         </button>
+      </div>
+      <div class="layout">
+      <aside class="sidebar">
+         <div>
+            <a href="dashboard.html" class="nav-link active">Dashboard</a>
+            <a href="apiaries.html" class="nav-link">Apiaries</a>
+            <a href="hives.html" class="nav-link">Hives</a>
+            <a href="inspections.html" class="nav-link">Inspections</a>
+            <a href="todo.html" class="nav-link">To-do List</a>
+            <a href="hive-logbook.html" class="nav-link">Hive Logbook</a>
+            <a href="calendar.html" class="nav-link">Calendar</a>
+            <a href="weather.html" class="nav-link">Weather</a>
+            <a href="settings.html" class="nav-link">Settings</a>
+            <a href="groups.html" class="nav-link">Groups</a>
+            <a href="archives.html" class="nav-link">Archives</a>
+            <a href="help.html" class="nav-link">Help</a>
+            <a href="logout.html" class="logout-btn">Log Out</a>
+         </div>
+         <div class="copyright">
+            © 2023 BeezKnees<br/>All rights reserved.
+         </div>
+      </aside>
+      <main class="main-content">
+         <div class="main-header">
+            <h1>Dashboard</h1>
+         </div>
+         <img src="../../images/beautiful-bee-farm.jpg" alt="Dashboard Image" class="dashboard-image">
+         <div class="section">
+            <h3>Get Started</h3>
+            <div class="setup-steps">
+               <div class="setup-step">
+                  <span>STEP 1</span> 
+                  <p>Add your first apiary</p>
+                  <a href="../forms/add-apiary.html" class="add-btn">+ Add Apiary</a>
+               </div>
+               <div class="setup-step">
+                  <span>STEP 2</span>
+                  <p>Add a hive</p>
+                  <a href="../forms/add-hive.html" class="add-btn">+ Add Hive</a>
+               </div>
+               <div class="setup-step">
+                  <span>STEP 3</span> 
+                  <p>Inspect a hive</p>
+                  <a href="../forms/add-inspection.html" class="add-btn">+ Add Inspection</a>
+               </div>
+            </div>
+         </div>
+         <div class="section">
+            <h3>Summary Overview</h3>
+            <div class="card-grid">
+               <div class="card">
+                  <strong>Total Apiaries</strong>
+                  <p>2</p>
+               </div>
+               <div class="card">
+                  <strong>Total Hives</strong>
+                  <p>8</p>
+               </div>
+               <div class="card">
+                  <strong>Inspections</strong>
+                  <p>12</p>
+               </div>
+            </div>
+            <div class="section">
+               <h3>Today's Weather</h3>
+               <div class="today-forecast">
+                  <div class="forecast-content">☀️ 23°C – 60% Humidity</div>
+                  <a href="weather.html" class="forecast-link">View 3-Day Forecast</a>
+               </div>
+            </div>
+            <!-- Upcoming Tasks Section -->
+            <div class="section">
+               <h3>Upcoming Tasks</h3>
+               <div class="tasks-container">
+                  <!-- Feed Bees task -->
+                  <div class="task-item">
+                     <div class="task-info">
+                        <strong>Feed Bees</strong>
+                        <p>Apiary: Sunny Fields</p>
+                        <p>Hive: Hive #3</p>
+                        <p>Due: 20/07/2025</p>
+                        <p>In 2 days</p>
+                     </div>
+                     <button class="complete-btn">Mark Complete</button>
+                  </div>
+                  <!-- End Feed Bees task -->
+                  <!-- Varroa Assessment task -->
+                  <div class="task-item">
+                     <div class="task-info">
+                        <strong>Varroa Assessment</strong>
+                        <p>Apiary: Hilltop Apiary</p>
+                        <p>Hive: Hive A</p>
+                        <p>Due: 22/07/2025</p>
+                        <p>In 4 days</p>
+                     </div>
+                     <button class="complete-btn">Mark Complete</button>
+                  </div>
+                  <!-- End Varroa Assessment task -->
+                  <!-- Weekly Inspection task -->
+                  <div class="task-item">
+                     <div class="task-info">
+                        <strong>Weekly Inspection</strong>
+                        <p>Apiary: Orchard Bees</p>
+                        <p>Hive: Hive 7</p>
+                        <p>Due: 19/07/2025</p>
+                        <p>Tomorrow</p>
+                     </div>
+                     <button class="complete-btn">Mark Complete</button>
+                  </div>
+                  <!-- End Weekly Inspection task -->
+                  <!-- Harvest Honey task -->
+                  <div class="task-item">
+                     <div class="task-info">
+                        <strong>Harvest Honey</strong>
+                        <p>Apiary: Meadow Lane</p>
+                        <p>Hive: Hive 12</p>
+                        <p>Due: 25/07/2025</p>
+                        <p>In 7 days</p>
+                     </div>
+                     <button class="complete-btn">Mark Complete</button>
+                  </div>
+                  <!-- End Harvest Honey task -->
+               </div>
+            </div>
+            <!-- End Upcoming Tasks Section -->
+      </main>
+      </div>
+      <div class="footer-fill"></div>
+      <script src="../js/script.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <script src="../js/supabaseClient.js"></script>
+      <script src="../js/authCheck.js"></script>
+   </body>
+</html>

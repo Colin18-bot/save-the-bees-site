@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Login | HiveTag Member Area</title>
+      <meta name="description" content="Login to access your HiveTag beekeeping dashboard." />
+      <meta name="theme-color" content="#222222" />
+      <meta name="robots" content="noindex, nofollow" />
+      <meta name="format-detection" content="telephone=no" />
+      <meta http-equiv="Cache-Control" content="no-store" />
+      <meta http-equiv="Pragma" content="no-cache" />
+      <meta http-equiv="Expires" content="0" />
+      <!-- Favicon -->
+      <link rel="icon" href="../../images/favicon.ico" type="image/x-icon" />
+      <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png" />
+      <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png" />
+      <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png" />
+      <link rel="icon" type="image/png" sizes="192x192" href="../../android-chrome-192x192.png" />
+      <link rel="icon" type="image/png" sizes="512x512" href="../../android-chrome-512x512.png" />
+      <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="../css/main.css" />
+   </head>
+   <body>
+      <div class="wrapper">
+      <div class="top-banner">
+         <div class="logo">
+            <a href="https://www.beezknees.co.uk" class="logo">
+            <img src="../../images/Beezknees-Logo-Inverted.png" alt="HiveTag Logo" class="logo-img">HiveTag
+            </a>
+         </div>
+         <div class="user-info">
+            <span>Members Area</span>
+            <div class="user-circle">CC</div>
+         </div>
+         <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         </button>
+      </div>
+      <div class="layout">
+         <aside class="sidebar">
+            <div>
+               <a href="../html/dashboard.html" class="nav-link active">Dashboard</a>
+               <a href="../html/apiaries.html" class="nav-link">Apiaries</a>
+               <a href="../html/hives.html" class="nav-link">Hives</a>
+               <a href="../html/inspections.html" class="nav-link">Inspections</a>
+               <a href="../html/todo.html" class="nav-link">To-do List</a>
+               <a href="../html/hive-logbook.html" class="nav-link">Hive Logbook</a>
+               <a href="../html/calendar.html" class="nav-link">Calendar</a>
+               <a href="../html/weather.html" class="nav-link">Weather</a>
+               <a href="../html/settings.html" class="nav-link">Settings</a>
+               <a href="../html/groups.html" class="nav-link">Groups</a>
+               <a href="../html/archives.html" class="nav-link">Archives</a>
+               <a href="../html/help.html" class="nav-link">Help</a>
+               <a href="logout.html" class="logout-btn">Log Out</a>
+            </div>
+            <div class="copyright">
+               © 2023 BeezKnees<br/>All rights reserved.
+            </div>
+         </aside>
+         <main class="main-content">
+            <div class="main-header">
+               <h1>Login</h1>
+            </div>
+            <img src="../../images/beautiful-bee-farm.jpg" alt="Banner" class="dashboard-image" />
+            <div class="section">
+               <div class="login-card">
+                  <h2>Welcome Back</h2>
+                  <form id="login-form">
+                     <label for="email">Email</label>
+                     <input type="email" id="email" placeholder="e.g. user@example.com" required>
+                     <label for="password">Password</label>
+                     <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="Enter your password" required>
+                        <i class="fa-solid fa-eye toggle-password" id="togglePassword" title="Show/Hide Password"></i>
+                     </div>
+                     <div class="forgot-password">
+                        <a href="forgot-password.html">Forgot password?</a>
+                     </div>
+                     <button type="submit" class="btn-primary">Log In</button>
+                     <p class="auth-switch">Don’t have an account?
+                        <a href="register.html">Register here</a>
+                     </p>
+                  </form>
+               </div>
+            </div>
+         </main>
+      </div>
+      <div class="footer-fill"></div>
+      <!-- Supabase CDN -->
+      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+      <!-- Scripts -->
+      <script src="../js/supabaseClient.js"></script>
+      <script src="../js/login-register.js"></script>
+     
+   </body>
+</html>

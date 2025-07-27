@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Hives | HiveTag Member Area</title>
+      <!-- Description (optional but good practice) -->
+      <meta name="description" content="View and manage your hives in each apiary. Inspect, edit, clone, archive, or delete hives directly from your HiveTag dashboard." />
+      <!-- Theme color (browser bar on mobile) -->
+      <meta name="theme-color" content="#222222" />
+      <!-- Prevent indexing by search engines if this page is private -->
+      <meta name="robots" content="noindex, nofollow" />
+      <!-- Optional: Disable automatic phone number detection on iOS -->
+      <meta name="format-detection" content="telephone=no" />
+      <!-- No caching (optional) -->
+      <meta http-equiv="Cache-Control" content="no-store" />
+      <meta http-equiv="Pragma" content="no-cache" />
+      <meta http-equiv="Expires" content="0" />
+      <!-- Favicon -->
+      <link rel="icon" href="../../images/favicon.ico" type="image/x-icon" />
+      <!-- 16x16 and 32x32 favicons for browser tabs -->
+      <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png" />
+      <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png" />
+      <!-- Apple touch icon for iOS home screen -->
+      <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png" />
+      <!-- Android home screen icons -->
+      <link rel="icon" type="image/png" sizes="192x192" href="../../android-chrome-192x192.png" />
+      <link rel="icon" type="image/png" sizes="512x512" href="../../android-chrome-512x512.png" />
+      <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="../css/main.css" />
+   </head>
+   <body>
+      <div class="wrapper">
+      <div class="top-banner">
+         <div class="logo">
+            <a href="https://www.beezknees.co.uk" class="logo">
+            <img src="../../images/Beezknees-Logo-Inverted.png" alt="HiveTag Logo" class="logo-img">HiveTag
+            </a>
+         </div>
+         <div class="user-info">
+            <span>Members Area</span>
+            <div class="user-circle">CC</div>
+         </div>
+         <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         </button>
+      </div>
+      <div class="layout">
+         <aside class="sidebar">
+            <div>
+               <a href="dashboard.html" class="nav-link">Dashboard</a>
+               <a href="apiaries.html" class="nav-link">Apiaries</a>
+               <a href="hives.html" class="nav-link">Hives</a>
+               <a href="inspections.html" class="nav-link">Inspections</a>
+               <a href="todo.html" class="nav-link class">To-do List</a>
+               <a href="hive-logbook.html" class="nav-link active">Hive Logbook</a>
+               <a href="calendar.html" class="nav-link">Calendar</a>
+               <a href="weather.html" class="nav-link">Weather</a>
+               <a href="settings.html" class="nav-link">Settings</a>
+               <a href="groups.html" class="nav-link">Groups</a>
+               <a href="archives.html" class="nav-link">Archives</a>
+               <a href="help.html" class="nav-link">Help</a>
+               <a href="logout.html" class="logout-btn">Log Out</a>
+            </div>
+            <div class="copyright">
+               © 2023 BeezKnees<br/>All rights reserved.
+            </div>
+         </aside>
+         <!-- Main Content -->
+         <main class="main-content">
+            <!-- Page Title & Button -->
+            <div class="main-header">
+               <h1>Hive Logbook</h1>
+            </div>
+            <img src="../../images/beautiful-bee-farm.jpg" alt="Banner" class="dashboard-image" />
+            <div class="logbook-container">
+               <h2 style="padding-bottom: 1rem;">Hive Logbook Entry</h2>
+               <div class="logbook-buttons">
+                  <button onclick="selectLogType('Fed Bees')">Fed Bees</button>
+                  <button onclick="selectLogType('Mite Assessment')">Mite Assessment</button>
+                  <button onclick="selectLogType('Treatment')">Treatment</button>
+                  <button onclick="selectLogType('Winter Prep.')">Winter Prep.</button>
+                  <button onclick="selectLogType('Dead Hive')">Dead Hive</button>
+                  <button onclick="selectLogType('Requeen')">Requeen</button>
+                  <button onclick="selectLogType('Harvesting')">Harvesting</button>
+                  <button onclick="selectLogType('Other')">Other</button>
+               </div>
+               <form id="log-form" class="log-form hidden">
+                  <h4 id="selected-log-label"></h4>
+                  <div class="form-grid">
+                     <div>
+                        <label for="log-date">Date</label>
+                        <input type="date" id="log-date" name="log-date" required>
+                     </div>
+                     <div>
+                        <label for="apiary">Apiary</label>
+                        <select id="apiary" required>
+                           <option value="">Select Apiary</option>
+                           <option value="Meadow Apiary">Meadow Apiary</option>
+                           <option value="Hilltop Apiary">Hilltop Apiary</option>
+                        </select>
+                     </div>
+                     <div>
+                        <label for="hive">Hive</label>
+                        <select id="hive" required>
+                           <option value="All">All Hives</option>
+                           <option value="Hive A">Hive A</option>
+                           <option value="Hive B">Hive B</option>
+                        </select>
+                     </div>
+                     <div>
+                        <label for="inspection-link">Related Inspection (optional)</label>
+                        <select id="inspection-link">
+                           <option value="">None</option>
+                           <option value="Inspection 2025-07-10">Inspection 2025-07-10</option>
+                           <option value="Inspection 2025-07-05">Inspection 2025-07-05</option>
+                        </select>
+                     </div>
+                     <div id="fedbees-fields" class="log-type-fields" style="display:none;">
+                        <label>What was fed?</label>
+                        <input type="text" placeholder="e.g., Syrup, Fondant">
+                        <label>How much?</label>
+                        <input type="text" placeholder="e.g., 2L, 500g">
+                     </div>
+                     <div id="mite-fields" class="log-type-fields" style="display:none;">
+                        <label>Method</label>
+                        <input type="text" placeholder="e.g., Sugar roll, Alcohol wash">
+                     </div>
+                     <div id="treatment-fields" class="log-type-fields" style="display:none;">
+                        <label>Disease Treated</label>
+                        <input type="text" placeholder="e.g., Varroa">
+                        <label>Product Used</label>
+                        <input type="text" placeholder="e.g., Apiguard">
+                        <label>Dosage</label>
+                        <input type="text" placeholder="e.g., 2 strips">
+                     </div>
+                     <div id="requeen-fields" class="log-type-fields" style="display:none;">
+                        <label>Breed</label>
+                        <select id="breed-select" onchange="toggleOther('breed')">
+                           <option value="">Select</option>
+                           <option>Buckfast</option>
+                           <option>Carniolan</option>
+                           <option>Caucasian</option>
+                           <option>Carpathian</option>
+                           <option>Russian</option>
+                           <option>Italian</option>
+                           <option>Local</option>
+                           <option value="Other">Other</option>
+                        </select>
+                        <input id="breed-other" type="text" style="display:none;" placeholder="Specify other breed">
+                        <label>Source</label>
+                        <select id="source-select" onchange="toggleOther('source')">
+                           <option value="">Select</option>
+                           <option>Reared</option>
+                           <option>from Breeder</option>
+                           <option value="Other">Other</option>
+                        </select>
+                        <input id="source-other" type="text" style="display:none;" placeholder="Specify source">
+                        <label>Marking Colour</label>
+                        <select id="marking-select" onchange="toggleOther('marking')">
+                           <option value="">Select</option>
+                           <option>White (1,6)</option>
+                           <option>Yellow (2,7)</option>
+                           <option>Red (3,8)</option>
+                           <option>Green (4,9)</option>
+                           <option>Blue (5,0)</option>
+                           <option>Unmarked</option>
+                           <option value="Other">Other</option>
+                        </select>
+                        <input id="marking-other" type="text" style="display:none;" placeholder="Specify colour">
+                     </div>
+                     <div class="full-width">
+                        <label>Photo (optional)</label>
+                        <input type="file" accept="image/*">
+                     </div>
+                     <div class="full-width">
+                        <label>Notes</label>
+                        <textarea rows="3" placeholder="Add any additional notes..."></textarea>
+                     </div>
+                  </div>
+                  <div class="form-buttons">
+                     <button type="submit" class="btn-save">Save Entry</button>
+                     <button type="reset" class="btn-cancel" onclick="resetLogbookForm()">Cancel</button>
+                  </div>
+               </form>
+            </div>
+         </main>
+      </div>
+      <div class="footer-fill"></div>
+      <script src="../js/script.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <script src="../js/supabaseClient.js"></script>
+      <script src="../js/authCheck.js"></script>
+   </body>
+</html>

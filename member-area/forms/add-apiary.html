@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Add Apiary | HiveTag Member Area</title>
+      <!-- Description (optional but good practice) -->
+      <meta name="description" content="View and manage your hives in each apiary. Inspect, edit, clone, archive, or delete hives directly from your HiveTag dashboard." />
+      <!-- Theme color (browser bar on mobile) -->
+      <meta name="theme-color" content="#222222" />
+      <!-- Prevent indexing by search engines if this page is private -->
+      <meta name="robots" content="noindex, nofollow" />
+      <!-- Optional: Disable automatic phone number detection on iOS -->
+      <meta name="format-detection" content="telephone=no" />
+      <!-- No caching (optional) -->
+      <meta http-equiv="Cache-Control" content="no-store" />
+      <meta http-equiv="Pragma" content="no-cache" />
+      <meta http-equiv="Expires" content="0" />
+      <!-- Favicon -->
+      <link rel="icon" href="../../images/favicon.ico" type="image/x-icon" />
+      <!-- 16x16 and 32x32 favicons for browser tabs -->
+      <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png" />
+      <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png" />
+      <!-- Apple touch icon for iOS home screen -->
+      <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png" />
+      <!-- Android home screen icons -->
+      <link rel="icon" type="image/png" sizes="192x192" href="../../android-chrome-192x192.png" />
+      <link rel="icon" type="image/png" sizes="512x512" href="../../android-chrome-512x512.png" />
+      <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="../css/main.css" />
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+   </head>
+   <body>
+      <div class="wrapper">
+      <div class="top-banner">
+         <div class="logo">
+            <a href="https://www.beezknees.co.uk" class="logo">
+            <img src="../../images/Beezknees-Logo-Inverted.png" alt="HiveTag Logo" class="logo-img">HiveTag
+            </a>
+         </div>
+         <div class="user-info">
+            <span>Members Area</span>
+            <div class="user-circle">CC</div>
+         </div>
+         <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         </button>
+      </div>
+      <div class="layout">
+         <aside class="sidebar">
+            <div>
+               <a href="../html/dashboard.html" class="nav-link active">Dashboard</a>
+               <a href="../html/apiaries.html" class="nav-link">Apiaries</a>
+               <a href="../html/hives.html" class="nav-link">Hives</a>
+               <a href="../html/inspections.html" class="nav-link">Inspections</a>
+               <a href="../html/todo.html" class="nav-link">To-do List</a>
+               <a href="../html/hive-logbook.html" class="nav-link">Hive Logbook</a>
+               <a href="../html/calendar.html" class="nav-link">Calendar</a>
+               <a href="../html/weather.html" class="nav-link">Weather</a>
+               <a href="../html/settings.html" class="nav-link">Settings</a>
+               <a href="../html/groups.html" class="nav-link">Groups</a>
+               <a href="../html/archives.html" class="nav-link">Archives</a>
+               <a href="../html/help.html" class="nav-link">Help</a>
+               <a href="logout.html" class="logout-btn">Log Out</a>
+            </div>
+            <div class="copyright">
+               © 2023 BeezKnees<br/>All rights reserved.
+            </div>
+         </aside>
+         <main class="main-content">
+            <div class="main-header">
+               <h1>Add Apiary</h1>
+            </div>
+            <img src="../../images/beautiful-bee-farm.jpg" alt="Banner" class="dashboard-image" />
+            <form name="add-apiary-form" method="POST" netlify class="form-container">
+               <!-- Apiary Name -->
+               <label for="apiaryName">Apiary Name</label>
+               <input type="text" id="apiaryName" name="apiaryName" required>
+               <!-- Location Notes -->
+               <label for="locationNotes">Location Notes</label>
+               <textarea id="locationNotes" name="locationNotes" rows="3" placeholder="Notes about access, visibility, etc."></textarea>
+               <!-- Postcode -->
+               <label for="postcode">Postcode</label>
+               <input type="text" id="postcode" name="postcode" required>
+               <!-- Date Established -->
+               <label for="startDate">Date Established</label>
+               <input type="date" id="startDate" name="startDate">
+               <!-- Location Type -->
+               <label for="locationType">Location Type</label>
+               <select id="locationType" name="locationType" required>
+                  <option value="">Select...</option>
+                  <option value="rural">Rural</option>
+                  <option value="urban">Urban</option>
+                  <option value="suburban">Suburban</option>
+                  <option value="industrial">Industrial</option>
+                  <option value="coastal">Coastal</option>
+                  <option value="other">Other</option>
+               </select>
+               <input type="text" id="locationTypeOther" name="locationTypeOther" class="hidden" placeholder="Please specify">
+               <!-- Site Setting -->
+               <label for="siteSetting">Site Setting</label>
+               <select id="siteSetting" name="siteSetting" required>
+                  <option value="">Select...</option>
+                  <option value="backyard">Backyard</option>
+                  <option value="mountainous">Mountainous</option>
+                  <option value="forest">Forest</option>
+                  <option value="rooftop">Rooftop</option>
+                  <option value="farmland">Farmland</option>
+                  <option value="meadow">Meadow</option>
+                  <option value="moorland">Moorland</option>
+                  <option value="orchard">Orchard</option>
+                  <option value="heathland">Heathland</option>
+                  <option value="wetland">Wetland</option>
+                  <option value="schoolGrounds">School Grounds</option>
+                  <option value="cemetery">Cemetery</option>
+                  <option value="urbanGarden">Urban Garden</option>
+                  <option value="allotment">Allotment</option>
+                  <option value="other">Other</option>
+               </select>
+               <input type="text" id="siteSettingOther" name="siteSettingOther" class="hidden" placeholder="Please specify">
+               <!-- Map -->
+               <label for="map">Pin Apiary Location</label>
+               <div id="map" style="height: 300px; width: 100%; border-radius: 12px; margin-bottom: 1rem;"></div>
+               <input type="hidden" name="latitude" id="latitude">
+               <input type="hidden" name="longitude" id="longitude">
+               <!-- Upload Photo -->
+               <label for="photo">Upload Photo</label>
+               <input type="file" name="photo" id="photo" accept="image/*">
+               <!-- Default Apiary -->
+               <label class="checkbox-inline">
+               <input type="checkbox" name="defaultApiary" id="defaultApiary">
+               Make this my default apiary
+               </label>
+               <!-- Submit -->
+               <button type="submit" class="btn-primary">Save Apiary</button>
+            </form>
+         </main>
+      </div>
+      <div class="footer-fill"></div>
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+      <script src="../js/script.js"></script>
+      <script src="../js/add-apiary.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <script src="../js/supabaseClient.js"></script>
+      <script src="../js/authCheck.js"></script>
+   </body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Settings | HiveTag Member Area</title>
+      <!-- Description (optional but good practice) -->
+      <meta name="description" content="Manage your HiveTag account settings, language, timezone, preferences, password, and data export options." />
+      <!-- Theme color (browser bar on mobile) -->
+      <meta name="theme-color" content="#222222" />
+      <!-- Prevent indexing by search engines if this page is private -->
+      <meta name="robots" content="noindex, nofollow" />
+      <!-- Optional: Disable automatic phone number detection on iOS -->
+      <meta name="format-detection" content="telephone=no" />
+      <!-- No caching (optional) -->
+      <meta http-equiv="Cache-Control" content="no-store" />
+      <meta http-equiv="Pragma" content="no-cache" />
+      <meta http-equiv="Expires" content="0" />
+      <!-- Favicon -->
+      <link rel="icon" href="../../images/favicon.ico" type="image/x-icon" />
+      <!-- 16x16 and 32x32 favicons for browser tabs -->
+      <link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png" />
+      <link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png" />
+      <!-- Apple touch icon for iOS home screen -->
+      <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png" />
+      <!-- Android home screen icons -->
+      <link rel="icon" type="image/png" sizes="192x192" href="../../android-chrome-192x192.png" />
+      <link rel="icon" type="image/png" sizes="512x512" href="../../android-chrome-512x512.png" />
+      <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="../css/main.css" />
+   </head>
+   <body>
+      <div class="wrapper">
+      <div class="top-banner">
+         <div class="logo">
+            <a href="https://www.beezknees.co.uk" class="logo">
+            <img src="../../images/Beezknees-Logo-Inverted.png" alt="HiveTag Logo" class="logo-img">HiveTag
+            </a>
+         </div>
+         <div class="user-info">
+            <span>Members Area</span>
+            <div class="user-circle">CC</div>
+         </div>
+         <button class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         </button>
+      </div>
+      <div class="layout">
+         <aside class="sidebar">
+            <div>
+               <a href="dashboard.html" class="nav-link">Dashboard</a>
+               <a href="apiaries.html" class="nav-link">Apiaries</a>
+               <a href="hives.html" class="nav-link">Hives</a>
+               <a href="inspections.html" class="nav-link">Inspections</a>
+               <a href="todo.html" class="nav-link">To-do List</a>
+               <a href="hive-logbook.html" class="nav-link">Hive Logbook</a>
+               <a href="calendar.html" class="nav-link">Calendar</a>
+               <a href="weather.html" class="nav-link">Weather</a>
+               <a href="settings.html" class="nav-link active">Settings</a>
+               <a href="groups.html" class="nav-link">Groups</a>
+               <a href="archives.html" class="nav-link">Archives</a>
+               <a href="help.html" class="nav-link">Help</a>
+               <a href="logout.html" class="logout-btn">Log Out</a>
+            </div>
+            <div class="copyright">
+               © 2023 BeezKnees<br/>All rights reserved.
+            </div>
+         </aside>
+         <main class="main-content">
+            <div class="main-header">
+               <h1>Account Settings</h1>
+            </div>
+            <img src="../../images/beautiful-bee-farm.jpg" alt="Banner" class="dashboard-image" />
+            <div class="main-container">
+               <div class="settings-wrapper">
+                  <!-- All form content and sections go here -->
+                  <form id="settingsForm">
+                     <!-- Profile -->
+                     <section class="section">
+                        <h3>Profile</h3>
+                        <label for="displayName">Display Name</label>
+                        <input type="text" id="displayName" name="displayName" placeholder="Your name" required />
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="you@example.com" required />
+                     </section>
+                     <!-- Preferences -->
+                     <section class="section">
+                        <h3>Preferences</h3>
+                        <label for="language">Preferred Language</label>
+                        <select id="language" name="language">
+                           <option value="en">English</option>
+                           <option value="cy">Cymraeg</option>
+                           <option value="fr">Français</option>
+                        </select>
+                        <label for="timezone">Timezone</label>
+                        <select id="timezone" name="timezone">
+                           <option value="Europe/London">UK (GMT / BST)</option>
+                           <option value="UTC">UTC</option>
+                           <option value="Europe/Paris">Europe/Paris</option>
+                           <!-- Add more timezones as needed -->
+                        </select>
+                        <label for="units">Units</label>
+                        <select id="units" name="units">
+                           <option value="metric">Metric (°C, kg)</option>
+                           <option value="imperial">Imperial (°F, lbs)</option>
+                        </select>
+                        <label>
+                        <input type="checkbox" name="emailReminders" />
+                        Receive email reminders
+                        </label>
+                        <label>
+                        <input type="checkbox" name="showCalendar" />
+                        Show calendar on dashboard
+                        </label>
+                        <label>
+                        <input type="checkbox" name="groupedInspections" />
+                        Group inspection view by apiary
+                        </label>
+                     </section>
+                     <!-- Actions -->
+                     <section class="section">
+                        <h3>Actions</h3>
+                        <a href="#" class="btn-secondary">Download My Data</a>
+                     </section>
+                     <!-- Save Button -->
+                     <div style="margin-top: 2rem;">
+                        <button type="submit" class="btn-primary">Save Settings</button>
+                     </div>
+                  </form>
+                  <!-- Danger Zone -->
+                  <section class="section" style="margin-top: 3rem;">
+                     <h3>Danger Zone</h3>
+                     <p class="warning-text">Deleting your account will permanently remove all data. This action cannot be undone.</p>
+                     <button class="btn-danger" id="deleteAccountBtn">Delete My Account</button>
+                  </section>
+               </div>
+            </div>
+         </main>
+      </div>
+      <div class="footer-fill"></div>
+      <script src="../js/script.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+      <script src="../js/supabaseClient.js"></script>
+      <script src="../js/authCheck.js"></script>
+   </body>
+</html>

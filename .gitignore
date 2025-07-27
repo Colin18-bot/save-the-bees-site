@@ -1,1 +1,9 @@
-hivetag-netlify/.env
+# Prevent accidental commits of Supabase client config if it includes secrets
+member-area/js/supabaseClient.js
+
+# Prevent .env file from being committed (contains private keys)
+.env
+
+# Optional: ignore local build artifacts
+dist/
+build/
