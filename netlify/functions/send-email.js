@@ -1,27 +1,25 @@
-// /netlify/functions/send-email.js
-
-import { Resend } from 'resend';
-
-const resend = new Resend('your_api_key_here'); // Replace with your Resend API key
-
 export default async (req, res) => {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  const { to, name } = req.body;
+
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+
+  const emailResponse = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      from: "BeezKnees <noreply@beezknees.co.uk>",
+      to: [to],
+      subject: "Welcome to BeezKnees",
+      html: `<p>Hi ${name},</p><p>Thanks for registering with BeezKnees. You're all set to start managing your hives!</p><p>🐝</p>`
+    })
+  });
+
+  if (!emailResponse.ok) {
+    return res.status(500).json({ error: "Failed to send email." });
   }
 
-  const { to, subject, html } = JSON.parse(req.body);
-
-  try {
-    const data = await resend.emails.send({
-      from: 'Your Name <info@beezknees.co.uk>',
-      to,
-      subject,
-      html,
-    });
-
-    return res.status(200).json({ success: true, data });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Email failed to send' });
-  }
+  return res.status(200).json({ success: true });
 };
