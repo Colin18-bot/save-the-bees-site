@@ -1,10 +1,13 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // ==== Supabase Config ====
-  const SUPABASE_URL = 'https://uihngfpmoasnofyrvpmw.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpaG5nZnBtb2Fzbm9meXJ2cG13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNzE2MTEsImV4cCI6MjA2Nzk0NzYxMX0.JO8y5G4lxGoyJozZfyxK-8VkJ5UusQzzkQxEYy8RVGo';
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// login-register.js
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/+esm';
 
-   // ==== Show/Hide Password Toggle (Login) ====
+const SUPABASE_URL = 'https://uihngfpmoasnofyrvpmw.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpaG5nZnBtb2Fzbm9meXJ2cG13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNzE2MTEsImV4cCI6MjA2Nzk0NzYxMX0.JO8y5G4lxGoyJozZfyxK-8VkJ5UusQzzkQxEYy8RVGo';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+document.addEventListener("DOMContentLoaded", () => {
+  // ==== Show/Hide Password Toggle (Login) ====
   const passwordInput = document.getElementById("password");
   const togglePassword = document.getElementById("togglePassword");
 
@@ -78,8 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
     registerForm.addEventListener("submit", async function (e) {
       e.preventDefault();
 
-      console.log("Register form submitted");
-
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = registerPasswordInput.value;
@@ -106,8 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
           emailRedirectTo: 'https://www.beezknees.co.uk/member-area/forms/login.html'
         }
       });
-
-      console.log("Sign-up result:", data, error);
 
       if (error) {
         if (error.message.toLowerCase().includes("already registered")) {
