@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpaG5nZnBtb2Fzbm9meXJ2cG13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNzE2MTEsImV4cCI6MjA2Nzk0NzYxMX0.JO8y5G4lxGoyJozZfyxK-8VkJ5UusQzzkQxEYy8RVGo';
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // ==== Show/Hide Password Toggle ====
+  // ==== Show/Hide Password Toggle (Login) ====
   const passwordInput = document.getElementById("password");
   const togglePassword = document.getElementById("togglePassword");
 
@@ -17,7 +17,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ==== Live Password Validation ====
+  // ==== Show/Hide Password Toggle (Register) ====
+  const registerPasswordInput = document.getElementById("register-password");
+  const toggleRegisterPassword = document.getElementById("toggleRegisterPassword");
+
+  if (toggleRegisterPassword && registerPasswordInput) {
+    toggleRegisterPassword.addEventListener("click", function () {
+      const type = registerPasswordInput.getAttribute("type") === "password" ? "text" : "password";
+      registerPasswordInput.setAttribute("type", type);
+      this.classList.toggle("fa-eye");
+      this.classList.toggle("fa-eye-slash");
+    });
+  }
+
+  // ==== Live Password Validation (Register Only) ====
   const passwordRules = {
     length: document.getElementById("length"),
     uppercase: document.getElementById("uppercase"),
@@ -25,9 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
     special: document.getElementById("special")
   };
 
-  if (passwordInput) {
-    passwordInput.addEventListener("input", () => {
-      const val = passwordInput.value;
+  if (registerPasswordInput) {
+    registerPasswordInput.addEventListener("input", () => {
+      const val = registerPasswordInput.value;
       passwordRules.length.className = val.length >= 8 ? "valid" : "invalid";
       passwordRules.uppercase.className = /[A-Z]/.test(val) ? "valid" : "invalid";
       passwordRules.number.className = /\d/.test(val) ? "valid" : "invalid";
@@ -59,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-    // ==== Register Form ====
+  // ==== Register Form ====
   const registerForm = document.getElementById("register-form");
   if (registerForm) {
     registerForm.addEventListener("submit", async function (e) {
@@ -69,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
-      const password = passwordInput.value;
+      const password = registerPasswordInput.value;
 
       const allValid = [...document.querySelectorAll("#password-rules li")].every(item =>
         item.classList.contains("valid")
@@ -127,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'http://localhost:3000/html/reset-password.html'
+        redirectTo: 'https://www.beezknees.co.uk/member-area/forms/reset-password.html'
       });
 
       if (error) {
@@ -147,7 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: 'http://www.beezknees.co.uk/member-area/html/dashboard.html'
+          redirectTo: 'https://www.beezknees.co.uk/member-area/html/dashboard.html'
         }
       });
 
