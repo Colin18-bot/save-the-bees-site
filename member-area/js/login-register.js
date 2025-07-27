@@ -117,12 +117,19 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      if (data.user && !data.user.confirmed_at) {
-        alert("Registration successful! Please check your email to confirm before logging in.");
-      } else {
-        alert("Registration complete. Redirecting to login...");
-        window.location.href = "login.html";
+      // Send welcome email via Netlify after successful registration
+      try {
+        await fetch("/.netlify/functions/send-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ to: email, name })
+        });
+      } catch (err) {
+        console.warn("Failed to send welcome email:", err);
       }
+
+      // Redirect user to confirmation page
+      window.location.href = "registration-success.html";
     });
   }
 
