@@ -135,8 +135,8 @@ if (photoInput && preview && deleteBtn) {
     const file = photoInput.files[0];
     if (!file) return;
 
-    // ✅ FILE SIZE LIMIT (2MB)
-    const maxSizeMB = 2;
+    // ✅ FILE SIZE LIMIT (5MB)
+    const maxSizeMB = 5;
     if (file.size > maxSizeMB * 1024 * 1024) {
       alert(`Image is too large. Please upload a file smaller than ${maxSizeMB}MB.`);
       photoInput.value = "";
