@@ -194,7 +194,7 @@ if (form) {
       return;
     }
 
-    const get = (id) => form[id]?.value.trim() || null;
+    const get = (id) => document.getElementById(id)?.value.trim() || null;
 
     let locationType = get("locationType");
     if (locationType === "other") locationType = get("locationTypeOther");
