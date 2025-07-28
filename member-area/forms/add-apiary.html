@@ -75,75 +75,90 @@
             </div>
             <img src="../../images/beautiful-bee-farm.jpg" alt="Banner" class="dashboard-image" />
             <form name="add-apiary-form" method="POST" netlify class="form-container">
-               <!-- Apiary Name -->
-               <label for="apiaryName">Apiary Name</label>
-               <input type="text" id="apiaryName" name="apiaryName" required>
-               <!-- Location Notes -->
-               <label for="locationNotes">Location Notes</label>
-               <textarea id="locationNotes" name="locationNotes" rows="3" placeholder="Notes about access, visibility, etc."></textarea>
-               <!-- Postcode -->
-               <label for="postcode">Postcode</label>
-               <input type="text" id="postcode" name="postcode" required>
-               <!-- Date Established -->
-               <label for="startDate">Date Established</label>
-               <input type="date" id="startDate" name="startDate">
-               <!-- Location Type -->
-               <label for="locationType">Location Type</label>
-               <select id="locationType" name="locationType" required>
-                  <option value="">Select...</option>
-                  <option value="rural">Rural</option>
-                  <option value="urban">Urban</option>
-                  <option value="suburban">Suburban</option>
-                  <option value="industrial">Industrial</option>
-                  <option value="coastal">Coastal</option>
-                  <option value="other">Other</option>
-               </select>
-               <input type="text" id="locationTypeOther" name="locationTypeOther" class="hidden" placeholder="Please specify">
-               <!-- Site Setting -->
-               <label for="siteSetting">Site Setting</label>
-               <select id="siteSetting" name="siteSetting" required>
-                  <option value="">Select...</option>
-                  <option value="backyard">Backyard</option>
-                  <option value="mountainous">Mountainous</option>
-                  <option value="forest">Forest</option>
-                  <option value="rooftop">Rooftop</option>
-                  <option value="farmland">Farmland</option>
-                  <option value="meadow">Meadow</option>
-                  <option value="moorland">Moorland</option>
-                  <option value="orchard">Orchard</option>
-                  <option value="heathland">Heathland</option>
-                  <option value="wetland">Wetland</option>
-                  <option value="schoolGrounds">School Grounds</option>
-                  <option value="cemetery">Cemetery</option>
-                  <option value="urbanGarden">Urban Garden</option>
-                  <option value="allotment">Allotment</option>
-                  <option value="other">Other</option>
-               </select>
-               <input type="text" id="siteSettingOther" name="siteSettingOther" class="hidden" placeholder="Please specify">
-               <!-- Map -->
-               <label for="map">Pin Apiary Location</label>
-               <div id="map" style="height: 300px; width: 100%; border-radius: 12px; margin-bottom: 1rem;"></div>
-               <input type="hidden" name="latitude" id="latitude">
-               <input type="hidden" name="longitude" id="longitude">
-               <!-- Upload Photo -->
-               <label for="photo">Upload Photo</label>
-               <input type="file" name="photo" id="photo" accept="image/*">
-               <!-- Default Apiary -->
-               <label class="checkbox-inline">
-               <input type="checkbox" name="defaultApiary" id="defaultApiary">
-               Make this my default apiary
-               </label>
-               <!-- Submit -->
-               <button type="submit" class="btn-primary">Save Apiary</button>
-            </form>
+  <!-- Apiary Name -->
+  <label for="apiaryName">Apiary Name</label>
+  <input type="text" id="apiaryName" name="apiaryName" required>
+
+  <!-- Location Notes -->
+  <label for="locationNotes">Location Notes</label>
+  <textarea id="locationNotes" name="locationNotes" rows="3" placeholder="Notes about access, visibility, etc."></textarea>
+
+  <!-- Postcode -->
+  <label for="postcode">Postcode</label>
+  <input type="text" id="postcode" name="postcode" required>
+
+  <!-- Date Established -->
+  <label for="startDate">Date Established</label>
+  <input type="date" id="startDate" name="startDate">
+
+  <!-- Location Type -->
+  <label for="locationType">Location Type</label>
+  <select id="locationType" name="locationType" required>
+    <option value="">Select...</option>
+    <option value="rural">Rural</option>
+    <option value="urban">Urban</option>
+    <option value="suburban">Suburban</option>
+    <option value="industrial">Industrial</option>
+    <option value="coastal">Coastal</option>
+    <option value="other">Other</option>
+  </select>
+  <input type="text" id="locationTypeOther" name="locationTypeOther" class="hidden" placeholder="Please specify">
+
+  <!-- Site Setting -->
+  <label for="siteSetting">Site Setting</label>
+  <select id="siteSetting" name="siteSetting" required>
+    <option value="">Select...</option>
+    <option value="backyard">Backyard</option>
+    <option value="mountainous">Mountainous</option>
+    <option value="forest">Forest</option>
+    <option value="rooftop">Rooftop</option>
+    <option value="farmland">Farmland</option>
+    <option value="meadow">Meadow</option>
+    <option value="moorland">Moorland</option>
+    <option value="orchard">Orchard</option>
+    <option value="heathland">Heathland</option>
+    <option value="wetland">Wetland</option>
+    <option value="schoolGrounds">School Grounds</option>
+    <option value="cemetery">Cemetery</option>
+    <option value="urbanGarden">Urban Garden</option>
+    <option value="allotment">Allotment</option>
+    <option value="other">Other</option>
+  </select>
+  <input type="text" id="siteSettingOther" name="siteSettingOther" class="hidden" placeholder="Please specify">
+
+  <!-- Map -->
+  <label for="map">Pin Apiary Location</label>
+  <div id="map" style="height: 300px; width: 100%; border-radius: 12px; margin-bottom: 1rem;"></div>
+  <input type="hidden" name="latitude" id="latitude">
+  <input type="hidden" name="longitude" id="longitude">
+
+  <!-- Upload Photo -->
+  <label for="photo">Upload Photo</label>
+  <input type="file" name="photo" id="photo" accept="image/*">
+  <div id="preview" class="form-container-preview"></div>
+    
+  <!-- Image Preview -->
+  <div id="preview" style="margin-top: 0.5rem;"></div>
+  <button type="button" id="deleteImageBtn" class="btn-secondary hidden" style="margin-bottom: 1rem;">Remove Image</button>
+
+  <!-- Default Apiary -->
+  <label class="checkbox-inline">
+    <input type="checkbox" name="defaultApiary" id="defaultApiary">
+    Make this my default apiary
+  </label>
+
+  <!-- Submit -->
+  <button type="submit" class="btn-primary">Save Apiary</button>
+</form>
+
          </main>
       </div>
       <div class="footer-fill"></div>
+      <!-- Leaflet must come first -->
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-      <script src="../js/script.js"></script>
-      <script src="../js/add-apiary.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-      <script src="../js/supabaseClient.js"></script>
+      <!-- Main logic with Supabase (ESM) -->
+      <script type="module" src="../js/add-apiary.js"></script>
+      <!-- Auth check or other logic (non-module) -->
       <script src="../js/authCheck.js"></script>
-   </body>
+      </body>
 </html>
