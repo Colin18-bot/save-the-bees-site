@@ -739,12 +739,21 @@ button.btn-primary:hover {
 .form-container #preview img {
   max-width: 100%;
   max-height: 200px;
+  object-fit: contain; 
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15); 
   border-radius: 8px;
   margin-top: 0.5rem;
   object-fit: cover;
   display: block;
 }
 
+.form-container #preview:empty {
+  display: none;
+}
+
+.form-container #deleteImageBtn.hidden {
+  display: none;
+}
 
 /*-- Hives Page CSS -- */
 .card-grid {

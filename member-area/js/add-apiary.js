@@ -107,7 +107,7 @@ if (mapElement) {
   });
 }
 
-// === TOGGLE OTHER FIELDS ===
+// === TOGGLE "OTHER" FIELDS ===
 const toggleOther = (selectId, inputId) => {
   const select = document.getElementById(selectId);
   const input = document.getElementById(inputId);
@@ -120,11 +120,12 @@ const toggleOther = (selectId, inputId) => {
   }
 };
 
-toggleOther("locationType", "locationTypeOther");
-toggleOther("siteSetting", "siteSettingOther");
+toggleOther("locationType", "location_type_other");
+toggleOther("siteSetting", "site_setting_other");
 
 // === IMAGE PREVIEW, DELETE, AND RESIZE ===
 let resizedFile = null;
+let uploadedFilePath = null;
 const photoInput = document.getElementById("photo");
 const preview = document.getElementById("preview");
 const deleteBtn = document.getElementById("deleteImageBtn");
@@ -133,6 +134,14 @@ if (photoInput && preview && deleteBtn) {
   photoInput.addEventListener("change", async () => {
     const file = photoInput.files[0];
     if (!file) return;
+
+    // ✅ FILE SIZE LIMIT (2MB)
+    const maxSizeMB = 2;
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      alert(`Image is too large. Please upload a file smaller than ${maxSizeMB}MB.`);
+      photoInput.value = "";
+      return;
+    }
 
     const img = new Image();
     const reader = new FileReader();
@@ -146,16 +155,12 @@ if (photoInput && preview && deleteBtn) {
       const maxSize = 1024;
       let { width, height } = img;
 
-      if (width > height) {
-        if (width > maxSize) {
-          height *= maxSize / width;
-          width = maxSize;
-        }
-      } else {
-        if (height > maxSize) {
-          width *= maxSize / height;
-          height = maxSize;
-        }
+      if (width > height && width > maxSize) {
+        height *= maxSize / width;
+        width = maxSize;
+      } else if (height > maxSize) {
+        width *= maxSize / height;
+        height = maxSize;
       }
 
       canvas.width = width;
@@ -174,11 +179,24 @@ if (photoInput && preview && deleteBtn) {
     reader.readAsDataURL(file);
   });
 
-  deleteBtn.addEventListener("click", () => {
+  deleteBtn.addEventListener("click", async () => {
     photoInput.value = "";
     preview.innerHTML = "";
-    resizedFile = null;
     deleteBtn.classList.add("hidden");
+
+    // Delete image from Supabase if uploaded
+    if (uploadedFilePath) {
+      const { error: deleteError } = await supabase.storage.from("photos").remove([uploadedFilePath]);
+      if (deleteError) {
+        console.error("Error deleting image:", deleteError);
+        alert("Error deleting image: " + deleteError.message);
+      } else {
+        console.log("Image deleted from storage:", uploadedFilePath);
+        uploadedFilePath = null;
+      }
+    }
+
+    resizedFile = null;
   });
 }
 
@@ -217,20 +235,28 @@ if (form) {
     };
 
     if (resizedFile) {
-      const filePath = `apiary-photos/${user.id}/${Date.now()}_${resizedFile.name}`;
-      const { error: uploadError } = await supabase.storage.from("photos").upload(filePath, resizedFile);
+      uploadedFilePath = `apiary-photos/${user.id}/${Date.now()}_${resizedFile.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from("photos")
+        .upload(uploadedFilePath, resizedFile, {
+          cacheControl: "3600",
+          upsert: false
+        });
+
       if (uploadError) {
-        alert("Photo upload failed.");
+        console.error("Photo upload error:", uploadError);
+        alert("Photo upload failed: " + uploadError.message);
         return;
       }
-      const { data: urlData } = supabase.storage.from("photos").getPublicUrl(filePath);
+
+      const { data: urlData } = supabase.storage.from("photos").getPublicUrl(uploadedFilePath);
       payload.photo_url = urlData.publicUrl;
     }
 
     const { error: insertError } = await supabase.from("apiaries").insert([payload]);
     if (insertError) {
-      console.error(insertError);
-      alert("Failed to save apiary.");
+      console.error("Supabase insert error:", insertError);
+      alert("Failed to save apiary: " + insertError.message);
     } else {
       alert("Apiary saved.");
       window.location.href = "/member-area/apiaries.html";
