@@ -225,7 +225,7 @@ if (form) {
       apiary_name: get("apiaryName"),
       location_notes: get("locationNotes"),
       postcode: get("postcode"),
-      date_established: get("startDate") || null,
+      start_date: get("startDate") || null,
       location_type: locationType,
       site_setting: siteSetting,
       latitude: parseFloat(get("latitude")),
