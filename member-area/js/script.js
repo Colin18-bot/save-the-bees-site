@@ -1,5 +1,3 @@
- // === LOGOUT BUTTON ===
-
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/+esm';
 
 const SUPABASE_URL = 'https://uihngfpmoasnofyrvpmw.supabase.co';

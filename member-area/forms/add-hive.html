@@ -133,9 +133,11 @@
       </main>
       </div>
       <div class="footer-fill"></div>
-      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-      <script src="../js/script.js"></script>
+      <!-- 1. Shared sidebar/logout/navigation -->
+      <script src="../js/script.js" defer></script>
+      <!-- 2. Auth check -->
+      <script src="../js/authCheck.js" defer></script>
+      <!-- 3. Page-specific logic -->
       <script type="module" src="../js/add-hive.js"></script>
-      <script src="../js/authCheck.js"></script>
    </body>
 </html>

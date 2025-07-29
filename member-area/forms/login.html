@@ -89,10 +89,11 @@
          </main>
       </div>
       <div class="footer-fill"></div>
-      <!-- Load Supabase UMD bundle for browser -->
+      <!-- 1. Supabase UMD -->
       <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
-      <!-- Your login/register logic -->
+      <!-- 2. Login/register logic -->
       <script type="module" src="../js/login-register.js"></script>
-      <script src="../js/script.js"></script>
-      </body>
+      <!-- 3. Shared UI/UX -->
+      <script src="../js/script.js" defer></script>
+   </body>
 </html>
