@@ -1,3 +1,33 @@
+ // === LOGOUT BUTTON ===
+
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/+esm';
+
+const SUPABASE_URL = 'https://uihngfpmoasnofyrvpmw.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpaG5nZnBtb2Fzbm9meXJ2cG13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNzE2MTEsImV4cCI6MjA2Nzk0NzYxMX0.JO8y5G4lxGoyJozZfyxK-8VkJ5UusQzzkQxEYy8RVGo';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Attach logout logic
+document.addEventListener('DOMContentLoaded', () => {
+  const logoutBtn = document.getElementById('logout');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error('Logout error:', error.message);
+        alert('Failed to log out. Try again.');
+      } else {
+        window.location.href = 'https://www.beezknees.co.uk';
+      }
+    });
+  }
+});
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
   // === SIDEBAR TOGGLE ===
   const hamburger = document.querySelector(".hamburger");

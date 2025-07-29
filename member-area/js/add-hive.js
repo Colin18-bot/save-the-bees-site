@@ -115,7 +115,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Failed to save hive.");
       console.error(insertErr);
     } else {
-      window.location.href = "/member-site/html/hives.html";
+      window.location.href = "//member-area/html/hives.html";
     }
   });
 });
