@@ -135,8 +135,8 @@ if (photoInput && preview && deleteBtn) {
     const file = photoInput.files[0];
     if (!file) return;
 
-    // ✅ FILE SIZE LIMIT (5MB)
-    const maxSizeMB = 5;
+    // ✅ FILE SIZE LIMIT (10MB)
+    const maxSizeMB = 10;
     if (file.size > maxSizeMB * 1024 * 1024) {
       alert(`Image is too large. Please upload a file smaller than ${maxSizeMB}MB.`);
       photoInput.value = "";
@@ -214,25 +214,30 @@ if (form) {
 
     const get = (id) => document.getElementById(id)?.value.trim() || null;
 
-    let locationType = get("locationType");
-    if (locationType === "other") locationType = get("locationTypeOther");
+const locationType = get("locationType");
+const locationTypeOther = locationType === "other" ? get("locationTypeOther") : null;
 
-    let siteSetting = get("siteSetting");
-    if (siteSetting === "other") siteSetting = get("siteSettingOther");
+const siteSetting = get("siteSetting");
+const siteSettingOther = siteSetting === "other" ? get("siteSettingOther") : null;
 
-    const payload = {
-      user_id: user.id,
-      apiary_name: get("apiaryName"),
-      location_notes: get("locationNotes"),
-      postcode: get("postcode"),
-      start_date: get("startDate") || null,
-      location_type: locationType,
-      site_setting: siteSetting,
-      latitude: parseFloat(get("latitude")),
-      longitude: parseFloat(get("longitude")),
-      photo_url: null,
-      is_default: form.defaultApiary.checked
-    };
+const isDefault = form.defaultApiary.checked;
+
+const payload = {
+  user_id: user.id,
+  apiary_name: get("apiaryName"),
+  location_notes: get("locationNotes"),
+  postcode: get("postcode"),
+  start_date: get("start_date") || null,
+  location_type: locationType,
+  location_type_other: locationTypeOther,
+  site_setting: siteSetting,
+  site_setting_other: siteSettingOther,
+  latitude: parseFloat(get("latitude")),
+  longitude: parseFloat(get("longitude")),
+  photo_url: null,
+  is_default: isDefault,
+  default_apiary: isDefault
+};
 
     if (resizedFile) {
       uploadedFilePath = `apiary-photos/${user.id}/${Date.now()}_${resizedFile.name}`;
@@ -259,7 +264,7 @@ if (form) {
       alert("Failed to save apiary: " + insertError.message);
     } else {
       alert("Apiary saved.");
-      window.location.href = "/member-area/apiaries.html";
+      window.location.href = "/member-area/html/apiaries.html";
     }
   });
 }
