@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Populate apiary list
   const { data: apiaries, error: apiaryErr } = await supabase
     .from("apiaries")
-    .select("apiary_name")
+    .select("apiary_id")
     .eq("user_id", userId);
 
   if (apiaryErr) {
@@ -37,10 +37,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  apiaries.forEach(({ apiary_name }) => {
+  apiaries.forEach(({ apiary_id }) => {
     const opt = document.createElement("option");
-    opt.value = apiary_name;
-    opt.textContent = apiary_name;
+    opt.value = apiary_id;
+    opt.textContent = apiary_id;
     apiarySelect.appendChild(opt);
   });
 

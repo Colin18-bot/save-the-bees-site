@@ -75,123 +75,154 @@
          <img src="../../images/beautiful-bee-farm.jpg" alt="Banner" class="dashboard-image" />
          <div class="page-container">
             <form class="inspection-form" method="POST" action="inspections.html" enctype="multipart/form-data">
-               <h2>Hive Information</h2>
-               <!-- Date -->
-               <label for="date">Inspection Date</label>
-               <input type="datetime-local" id="date" name="date" required>
-               <!-- Apiary -->
-               <label for="apiary">Apiary</label>
-               <select id="apiary" name="apiary" required>
-                  <option value="">Select Apiary</option>
-               </select>
-               <!-- Hive -->
-               <label for="hive">Hive</label>
-               <select id="hive" name="hive" required>
-                  <option value="">Select Hive</option>
-                  <option>Hive A</option>
-                  <option>Hive B</option>
-               </select>
-               <h3>General Observations</h3>
-               <label for="colony">Colony Behaviour</label>
-               <select id="colony" name="colony">
-                  <option value="calm">Calm</option>
-                  <option value="aggressive">Aggressive</option>
-                  <option value="other">Other</option>
-               </select>
-               <input type="text" name="colonyOtherText" class="hidden other-text" placeholder="Describe other behaviour">
-               <h3>Environment</h3>
-               <label>Environmental Signs (select all that apply)</label>
-               <div class="multi-option-group" data-toggle="environmentOther">
-                  <label><input type="checkbox" name="environment[]" value="entering"> Entering/exiting</label>
-                  <label><input type="checkbox" name="environment[]" value="pollen"> Bringing in pollen</label>
-                  <label><input type="checkbox" name="environment[]" value="robbing"> Robbing</label>
-                  <label><input type="checkbox" name="environment[]" value="odour"> Unusual odour</label>
-                  <label><input type="checkbox" name="environment[]" value="other"> Other</label>
-               </div>
-               <input type="text" name="environmentOtherText" class="hidden other-text" placeholder="Other environmental signs">
-               <label for="population">Hive Population</label>
-               <select id="population" name="population">
-                  <option value="">Select</option>
-                  <option>Very low</option>
-                  <option>Low</option>
-                  <option>Moderate</option>
-                  <option>Strong</option>
-                  <option>Very strong</option>
-               </select>
-               <h3>Brood</h3>
-               <label for="broodPattern">Brood Pattern</label>
-               <select id="broodPattern" name="broodPattern">
-                  <option>None</option>
-                  <option>Spotty</option>
-                  <option>Solid</option>
-               </select>
-               <label for="foodStores">Food Stores</label>
-               <select id="foodStores" name="foodStores">
-                  <option value="">Select</option>
-                  <option>None</option>
-                  <option>Low</option>
-                  <option>Moderate</option>
-                  <option>Full</option>
-               </select>
-               <h3>Queen</h3>
-               <label>Queen Status (select all that apply)</label>
-               <div class="multi-option-group" data-toggle="queenOther">
-                  <label><input type="checkbox" name="queen[]" value="seen"> Seen</label>
-                  <label><input type="checkbox" name="queen[]" value="eggs"> Eggs</label>
-                  <label><input type="checkbox" name="queen[]" value="capped"> Capped brood</label>
-                  <label><input type="checkbox" name="queen[]" value="uncapped"> Uncapped brood</label>
-                  <label><input type="checkbox" name="queen[]" value="other"> Other</label>
-               </div>
-               <input type="text" name="queenOtherText" class="hidden other-text" placeholder="Other queen details">
-               <h3>Disease</h3>
-               <label>Signs of Disease?</label>
-               <div class="radio-inline">
-                  <label><input type="radio" name="disease" value="no" checked> No</label>
-                  <label><input type="radio" name="disease" value="yes"> Yes</label>
-               </div>
-               <div id="diseaseDetails" class="hidden">
-                  <label>Select all that apply</label>
-                  <div class="multi-option-group" data-toggle="diseaseOther">
-                     <label><input type="checkbox" name="diseaseList[]" value="Varroa"> Varroa</label>
-                     <label><input type="checkbox" name="diseaseList[]" value="Chalkbrood"> Chalkbrood</label>
-                     <label><input type="checkbox" name="diseaseList[]" value="Sacbrood"> Sacbrood</label>
-                     <label><input type="checkbox" name="diseaseList[]" value="EFB"> EFB</label>
-                     <label><input type="checkbox" name="diseaseList[]" value="AFB"> AFB</label>
-                     <label><input type="checkbox" name="diseaseList[]" value="Nosema"> Nosema</label>
-                     <label><input type="checkbox" name="diseaseList[]" value="DeadBees"> Dead bees</label>
-                     <label><input type="checkbox" name="diseaseList[]" value="other"> Other</label>
-                  </div>
-                  <input type="text" name="diseaseOtherText" class="hidden other-text" placeholder="Other disease signs">
-               </div>
-               <h3>Pests</h3>
-               <label>Signs of Pests?</label>
-               <div class="radio-inline">
-                  <label><input type="radio" name="pests" value="no" checked> No</label>
-                  <label><input type="radio" name="pests" value="yes"> Yes</label>
-               </div>
-               <div id="pestDetails" class="hidden">
-                  <label>Select all that apply</label>
-                  <div class="multi-option-group" data-toggle="pestOther">
-                     <label><input type="checkbox" name="pestList[]" value="Mice"> Mice</label>
-                     <label><input type="checkbox" name="pestList[]" value="Ants"> Ants</label>
-                     <label><input type="checkbox" name="pestList[]" value="Beetles"> Beetles</label>
-                     <label><input type="checkbox" name="pestList[]" value="WaxMoths"> Wax Moths</label>
-                     <label><input type="checkbox" name="pestList[]" value="Wasps"> Wasps</label>
-                     <label><input type="checkbox" name="pestList[]" value="other"> Other</label>
-                  </div>
-                  <input type="text" name="pestOtherText" class="hidden other-text" placeholder="Other pest signs">
-               </div>
-               <h3>Inspection Notes</h3>
-               <label for="notes">Notes</label>
-               <textarea id="notes" name="notes" rows="4" placeholder="Observations, concerns, next steps…"></textarea>
-               <label for="photo">Upload Photo (optional)</label>
-               <input type="file" id="photo" name="photo" accept="image/*">
-               <button type="submit" class="btn-primary">Save Inspection</button>
-            </form>
+         <h2>Hive Information</h2>
+
+         <!-- Date -->
+         <label for="date">Inspection Date</label>
+         <input type="datetime-local" id="date" name="inspection_date" required>
+
+         <!-- Weather -->
+         <h3>Weather Forecast</h3>
+         <div class="weather-box">
+            <label for="weather">Weather Condition</label>
+            <input type="text" id="weather" name="weather" readonly>
+
+            <label for="temperature">Temperature (°C)</label>
+            <input type="text" id="temperature" name="temperature" readonly>
+
+            <label for="humidity">Humidity (%)</label>
+            <input type="text" id="humidity" name="humidity" readonly>
+
+            <small>Weather auto-loaded from apiary location</small>
+         </div>
+
+         <!-- Apiary -->
+         <label for="apiary">Apiary</label>
+         <select id="apiary" name="apiary_id" required>
+            <option value="">Select Apiary</option>
+         </select>
+
+         <!-- Hive -->
+         <label for="hive">Hive</label>
+         <select id="hive" name="hive_id" required>
+            <option value="">Select Hive</option>
+         </select>
+
+         <h3>General Observations</h3>
+         <label for="colony">Colony Behaviour</label>
+         <select id="colony" name="colony_behaviour">
+            <option value="calm">Calm</option>
+            <option value="aggressive">Aggressive</option>
+            <option value="other">Other</option>
+         </select>
+         <input type="text" name="colony_behaviour_other" class="hidden other-text" placeholder="Describe other behaviour">
+
+         <h3>Environment</h3>
+         <label>Environmental Signs (select all that apply)</label>
+         <div class="multi-option-group" data-toggle="environmentOther">
+            <label><input type="checkbox" name="environment_signs[]" value="entering"> Entering/exiting</label>
+            <label><input type="checkbox" name="environment_signs[]" value="pollen"> Bringing in pollen</label>
+            <label><input type="checkbox" name="environment_signs[]" value="robbing"> Robbing</label>
+            <label><input type="checkbox" name="environment_signs[]" value="odour"> Unusual odour</label>
+            <label><input type="checkbox" name="environment_signs[]" value="other"> Other</label>
+         </div>
+         <input type="text" name="environment_signs_other" class="hidden other-text" placeholder="Other environmental signs">
+
+         <label for="population">Hive Population</label>
+         <select id="population" name="hive_population">
+            <option value="">Select</option>
+            <option>Very low</option>
+            <option>Low</option>
+            <option>Moderate</option>
+            <option>Strong</option>
+            <option>Very strong</option>
+         </select>
+
+         <h3>Brood</h3>
+         <label for="broodPattern">Brood Pattern</label>
+         <select id="broodPattern" name="brood_pattern">
+            <option>None</option>
+            <option>Spotty</option>
+            <option>Solid</option>
+         </select>
+
+         <label for="foodStores">Food Stores</label>
+         <select id="foodStores" name="food_stores">
+            <option value="">Select</option>
+            <option>None</option>
+            <option>Low</option>
+            <option>Moderate</option>
+            <option>Full</option>
+         </select>
+
+         <h3>Queen</h3>
+         <label>Queen Status (select all that apply)</label>
+         <div class="multi-option-group" data-toggle="queenOther">
+            <label><input type="checkbox" name="queen_status[]" value="seen"> Seen</label>
+            <label><input type="checkbox" name="queen_status[]" value="eggs"> Eggs</label>
+            <label><input type="checkbox" name="queen_status[]" value="capped"> Capped brood</label>
+            <label><input type="checkbox" name="queen_status[]" value="uncapped"> Uncapped brood</label>
+            <label><input type="checkbox" name="queen_status[]" value="other"> Other</label>
+         </div>
+         <input type="text" name="queen_status_other" class="hidden other-text" placeholder="Other queen details">
+
+         <h3>Disease</h3>
+         <label>Signs of Disease?</label>
+         <div class="radio-inline">
+            <label><input type="radio" name="disease_present" value="no" checked> No</label>
+            <label><input type="radio" name="disease_present" value="yes"> Yes</label>
+         </div>
+         <div id="diseaseDetails" class="hidden">
+            <label>Select all that apply</label>
+            <div class="multi-option-group" data-toggle="diseaseOther">
+               <label><input type="checkbox" name="disease_list[]" value="Varroa"> Varroa</label>
+               <label><input type="checkbox" name="disease_list[]" value="Chalkbrood"> Chalkbrood</label>
+               <label><input type="checkbox" name="disease_list[]" value="Sacbrood"> Sacbrood</label>
+               <label><input type="checkbox" name="disease_list[]" value="EFB"> EFB</label>
+               <label><input type="checkbox" name="disease_list[]" value="AFB"> AFB</label>
+               <label><input type="checkbox" name="disease_list[]" value="Nosema"> Nosema</label>
+               <label><input type="checkbox" name="disease_list[]" value="DeadBees"> Dead bees</label>
+               <label><input type="checkbox" name="disease_list[]" value="other"> Other</label>
+            </div>
+            <input type="text" name="disease_other" class="hidden other-text" placeholder="Other disease signs">
+         </div>
+
+         <h3>Pests</h3>
+         <label>Signs of Pests?</label>
+         <div class="radio-inline">
+            <label><input type="radio" name="pests_present" value="no" checked> No</label>
+            <label><input type="radio" name="pests_present" value="yes"> Yes</label>
+         </div>
+         <div id="pestDetails" class="hidden">
+            <label>Select all that apply</label>
+            <div class="multi-option-group" data-toggle="pestOther">
+               <label><input type="checkbox" name="pest_list[]" value="Mice"> Mice</label>
+               <label><input type="checkbox" name="pest_list[]" value="Ants"> Ants</label>
+               <label><input type="checkbox" name="pest_list[]" value="Beetles"> Beetles</label>
+               <label><input type="checkbox" name="pest_list[]" value="WaxMoths"> Wax Moths</label>
+               <label><input type="checkbox" name="pest_list[]" value="Wasps"> Wasps</label>
+               <label><input type="checkbox" name="pest_list[]" value="other"> Other</label>
+            </div>
+            <input type="text" name="pest_other" class="hidden other-text" placeholder="Other pest signs">
+         </div>
+
+         <h3>Inspection Notes</h3>
+         <label for="notes">Notes</label>
+         <textarea id="notes" name="inspection_notes" rows="4" placeholder="Observations, concerns, next steps…"></textarea>
+
+         <label for="photo">Upload Photo (optional)</label>
+         <input type="file" id="photo" name="inspection_photo_url" accept="image/*">
+
+         <button type="submit" class="btn-primary">Save Inspection</button>
+         </form>
       </main>
       </div>
       <div class="footer-fill"></div>
-      <script src="../js/script.js"></script>
-      <script src="../js/authCheck.js"></script>
+      <!-- 1. Shared sidebar/logout/navigation -->
+      <script src="../js/script.js" defer></script>
+      <!-- 2. Auth check -->
+      <script src="../js/authCheck.js" defer></script>
+      <!-- 3. Page-specific logic -->
+      <script type="module" src="../js/add-inspection.js"></script>
    </body>
 </html>
