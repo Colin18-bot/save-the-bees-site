@@ -74,21 +74,23 @@
          </div>
          <img src="../../images/beautiful-bee-farm.jpg" alt="Banner" class="dashboard-image" />
          <div class="page-container">
-            <form name="add-hive-form" method="POST" netlify class="form-container" action="/member-area/hives.html">
+            <form name="add-hive-form" method="POST" netlify class="form-container" action="/member-area/html/hives.html">
                <!-- Link to Apiary -->
                <label for="apiarySelect">Select Apiary</label>
                <select id="apiarySelect" name="apiary" required>
                   <option value="">Select Apiary</option>
-                  <!-- These should be dynamically populated -->
+                  <!-- These will be dynamically populated -->
                   <option value="apiary-1">Apiary 1</option>
                   <option value="apiary-2">Apiary 2</option>
                </select>
+
                <!-- Hive ID -->
-               <label for="hiveId">Hive ID</label>
-               <input type="text" id="hiveId" name="hiveId" required placeholder="e.g. Hive A, 2024-N1">
+               <label for="hive_id">Hive ID</label>
+               <input type="text" id="hive_id" name="hive_id" required placeholder="e.g. Hive A, 2024-N1">
+
                <!-- Hive Type -->
-               <label for="hiveType">Hive Type</label>
-               <select id="hiveType" name="hiveType" required>
+               <label for="hive_type">Hive Type</label>
+               <select id="hive_type" name="hive_type" required>
                   <option value="">Select...</option>
                   <option value="National">National</option>
                   <option value="WBC">WBC</option>
@@ -97,39 +99,45 @@
                   <option value="Flow Hive">Flow Hive</option>
                   <option value="other">Other</option>
                </select>
+
+               <!-- Hive Type Other -->
                <div id="hiveTypeOtherWrapper" class="hidden">
-                  <label for="hiveTypeOther">Specify Hive Type</label>
-                  <input type="text" id="hiveTypeOther" name="hiveTypeOther" placeholder="Specify hive type">
+                  <label for="hive_type_other">Specify Hive Type</label>
+                  <input type="text" id="hive_type_other" name="hive_type_other" placeholder="Specify hive type">
                </div>
+
                <!-- Hive Status -->
-               <label for="hiveStatus">Hive Status</label>
-               <select id="hiveStatus" name="hiveStatus" required>
+               <label for="hive_status">Hive Status</label>
+               <select id="hive_status" name="hive_status" required>
                   <option value="">Select...</option>
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                   <option value="Archived">Archived</option>
                </select>
+
                <!-- Date Established -->
-               <label for="hiveStartDate">Date Established</label>
-               <input type="date" id="hiveStartDate" name="hiveStartDate">
+               <label for="hive_start_date">Date Established</label>
+               <input type="date" id="hive_start_date" name="hive_start_date">
+
                <!-- Notes -->
-               <label for="hiveNotes">Notes</label>
-               <textarea id="hiveNotes" name="hiveNotes" rows="3" placeholder="Any special observations or details..."></textarea>
+               <label for="hive_notes">Notes</label>
+               <textarea id="hive_notes" name="hive_notes" rows="3" placeholder="Any special observations or details..."></textarea>
+
                <!-- Photo Upload -->
                <label for="hivePhoto">Upload Photo</label>
                <input type="file" name="hivePhoto" id="hivePhoto" accept="image/*">
+
                <!-- Submit -->
                <div class="button-group">
                   <button type="submit" class="btn-primary">Save Hive</button>
                </div>
-            </form>
+               </form>
       </main>
       </div>
       <div class="footer-fill"></div>
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
       <script src="../js/script.js"></script>
-      <script src="../js/add-hive.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-      <script src="../js/supabaseClient.js"></script>
+      <script type="module" src="../js/add-hive.js"></script>
       <script src="../js/authCheck.js"></script>
    </body>
 </html>
