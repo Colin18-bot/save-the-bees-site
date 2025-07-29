@@ -7,26 +7,21 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Attach logout logic
 document.addEventListener('DOMContentLoaded', () => {
+  // ✅ LOGOUT BUTTON HANDLER
   const logoutBtn = document.getElementById('logout');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async (e) => {
       e.preventDefault();
       const { error } = await supabase.auth.signOut();
       if (error) {
-        console.error('Logout error:', error.message);
-        alert('Failed to log out. Try again.');
+        alert("Failed to log out: " + error.message);
+        console.error(error);
       } else {
-        window.location.href = 'https://www.beezknees.co.uk';
+        window.location.href = 'https://www.beezknees.co.uk/';
       }
     });
   }
-});
 
-
-
-
-
-document.addEventListener("DOMContentLoaded", () => {
   // === SIDEBAR TOGGLE ===
   const hamburger = document.querySelector(".hamburger");
   const sidebar = document.querySelector(".sidebar");
