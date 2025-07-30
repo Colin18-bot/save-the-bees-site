@@ -33,6 +33,18 @@ const toggleRadioGroup = (radioName, sectionId) => {
   });
 };
 
+const toggleColonyBehaviourOther = () => {
+  const select = document.getElementById("colony");
+  const otherInput = document.getElementById("colony_behaviour_other");
+  if (select && otherInput) {
+    select.addEventListener("change", () => {
+      otherInput.classList.toggle("hidden", select.value !== "other");
+      if (select.value !== "other") otherInput.value = "";
+    });
+    otherInput.classList.toggle("hidden", select.value !== "other");
+  }
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -57,6 +69,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   let selectedDate = new Date().toISOString().split('T')[0];
 
   if (dateField) {
+    dateField.setAttribute("type", "date");
+    dateField.value = selectedDate;
     dateField.addEventListener("change", async () => {
       selectedDate = dateField.value;
       await fetchWeather(selectedDate);
@@ -99,6 +113,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+  toggleColonyBehaviourOther();
   toggleOtherCheckboxGroup("queen_status", "queen_status_other");
   toggleOtherCheckboxGroup("environment_signs", "environment_signs_other");
   toggleOtherCheckboxGroup("disease_list", "disease_other");
@@ -107,7 +122,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   toggleRadioGroup("pests_present", "pestDetails");
 
   if (photoInput) {
+    const deleteBtn = document.getElementById("deleteImageBtn");
     photoInput.addEventListener("change", async () => {
+      preview.innerHTML = "";
+      photoUrls = [];
       const files = [...photoInput.files].slice(0, 3);
       for (const file of files) {
         if (file.size > 10 * 1024 * 1024) {
@@ -145,6 +163,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const thumb = img.cloneNode();
                 thumb.classList.add("thumbnail");
                 preview.appendChild(thumb);
+                if (deleteBtn) deleteBtn.classList.remove("hidden");
               } else {
                 alert("Image upload failed.");
               }
@@ -156,6 +175,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         reader.readAsDataURL(file);
       }
     });
+
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", () => {
+        preview.innerHTML = "";
+        photoInput.value = "";
+        photoUrls = [];
+        deleteBtn.classList.add("hidden");
+      });
+    }
   }
 
   form.addEventListener("submit", async (e) => {
@@ -164,6 +192,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const get = id => document.getElementById(id)?.value.trim() || null;
     const getArray = name => [...document.querySelectorAll(`input[name='${name}[]']:checked`)].map(cb => cb.value);
     const getRadio = name => document.querySelector(`input[name='${name}']:checked`)?.value || null;
+
+    if (!get("hive_id")) {
+      alert("Please select a hive before submitting.");
+      return;
+    }
 
     const payload = {
       user_id: user.id,
