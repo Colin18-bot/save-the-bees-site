@@ -490,6 +490,45 @@ button.btn-primary:hover {
 	background-color: #355c4a;
 }
 
+/* ===== Add Inspection Page Layout ===== */
+
+/* Image Preview Styling */
+.image-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.image-preview .thumbnail {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+
+.image-preview .thumbnail:hover {
+  transform: scale(1.05);
+  border-color: #ffcc00;
+}
+
+/* Optional: Delete button placement */
+#deleteImageBtn {
+  margin-top: 10px;
+  background-color: #b30000;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#deleteImageBtn:hover {
+  background-color: #990000;
+}
+
 /* ===== Inspections Page Layout ===== */
 
 /* Container for the inspections page */
@@ -644,7 +683,6 @@ button.btn-primary:hover {
 	display: flex;
 	gap: 0.5rem;
 }
-
 
 /* === Add Apiary Form === */
 .form-container {
