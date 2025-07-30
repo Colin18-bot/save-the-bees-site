@@ -8,9 +8,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   const form = document.querySelector("form[name='add-hive-form']");
   const apiarySelect = document.getElementById("apiary_name");
   const hivePhoto = document.getElementById("hivePhoto");
+  const preview = document.getElementById("preview");
+  const deleteBtn = document.getElementById("deleteImageBtn");
 
-  const user = await supabase.auth.getUser();
-  const userId = user?.data?.user?.id;
+  let resizedFile = null;
+  let uploadedFilePath = null;
+
+  const { data: { user } } = await supabase.auth.getUser();
+  const userId = user?.id;
 
   if (!userId) {
     alert("You must be logged in to add a hive.");
@@ -18,19 +23,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // Populate apiary list
+  // === Populate apiary list ===
   const { data: apiaries, error: apiaryErr } = await supabase
     .from("apiaries")
     .select("apiary_name")
     .eq("user_id", userId);
 
-  if (apiaryErr) {
-    console.error("Error loading apiaries:", apiaryErr.message);
-    alert("Could not load apiaries.");
-    return;
-  }
-
-  if (!apiaries.length) {
+  if (apiaryErr || !apiaries.length) {
     alert("You must add an apiary before adding a hive.");
     form.querySelector("button[type='submit']").disabled = true;
     return;
@@ -43,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     apiarySelect.appendChild(opt);
   });
 
-  // Handle Hive Type "Other"
+  // === Handle Hive Type "Other" ===
   const hiveType = document.getElementById("hive_type");
   const otherWrapper = document.getElementById("hiveTypeOtherWrapper");
   const otherInput = document.getElementById("hive_type_other");
@@ -53,7 +52,66 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (hiveType.value !== "other") otherInput.value = "";
   });
 
-  // Handle form submission
+  // === Handle Image Preview and Delete ===
+  if (hivePhoto && preview && deleteBtn) {
+    hivePhoto.addEventListener("change", async () => {
+      const file = hivePhoto.files[0];
+      if (!file) return;
+
+      if (file.size > 10 * 1024 * 1024) {
+        alert("Image is too large. Please use a file under 10MB.");
+        hivePhoto.value = "";
+        return;
+      }
+
+      const img = new Image();
+      const reader = new FileReader();
+      reader.onload = (e) => img.src = e.target.result;
+
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const maxSize = 1024;
+        let { width, height } = img;
+
+        if (width > height && width > maxSize) {
+          height *= maxSize / width;
+          width = maxSize;
+        } else if (height > maxSize) {
+          width *= maxSize / height;
+          height = maxSize;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob((blob) => {
+          resizedFile = new File([blob], file.name, { type: "image/jpeg" });
+        }, "image/jpeg", 0.8);
+
+        preview.innerHTML = "";
+        preview.appendChild(img);
+        deleteBtn.classList.remove("hidden");
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+    deleteBtn.addEventListener("click", async () => {
+      hivePhoto.value = "";
+      preview.innerHTML = "";
+      deleteBtn.classList.add("hidden");
+
+      if (uploadedFilePath) {
+        await supabase.storage.from("photos").remove([uploadedFilePath]);
+        uploadedFilePath = null;
+      }
+
+      resizedFile = null;
+    });
+  }
+
+  // === Form Submit ===
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -63,10 +121,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const hive_status = document.getElementById("hive_status").value;
     const hive_start_date = document.getElementById("hive_start_date").value || null;
     const hive_notes = document.getElementById("hive_notes").value.trim();
-    const photo = hivePhoto.files[0];
     let hive_photo_url = null;
 
-    // Check for duplicate hive ID
+    // === Duplicate Hive Check ===
     const { data: existing, error: checkErr } = await supabase
       .from("hives")
       .select("hive_id")
@@ -84,21 +141,26 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // Upload photo to Supabase Storage
-    if (photo) {
-      const path = `${userId}/${apiary_name}/${Date.now()}_${photo.name}`;
-      const { error: uploadErr } = await supabase.storage.from("photos").upload(path, photo);
+    // === Upload Photo ===
+    if (resizedFile) {
+      uploadedFilePath = `${userId}/hive-photos/${Date.now()}_${resizedFile.name}`;
+      const { error: uploadErr } = await supabase.storage
+        .from("photos")
+        .upload(uploadedFilePath, resizedFile, {
+          cacheControl: "3600",
+          upsert: false
+        });
 
       if (uploadErr) {
-        alert("Image upload failed.");
+        alert("Image upload failed: " + uploadErr.message);
         return;
       }
 
-      const { data: publicUrl } = supabase.storage.from("photos").getPublicUrl(path);
-      hive_photo_url = publicUrl.publicUrl;
+      const { data: urlData } = supabase.storage.from("photos").getPublicUrl(uploadedFilePath);
+      hive_photo_url = urlData.publicUrl;
     }
 
-    // Save hive to Supabase
+    // === Save Hive ===
     const { error: insertErr } = await supabase.from("hives").insert([{
       user_id: userId,
       apiary_name,
