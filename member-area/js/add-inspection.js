@@ -65,6 +65,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (dateField) {
     dateField.type = "date";
     dateField.value = selectedDate;
+
+    // Limit selection to today or earlier
+    dateField.setAttribute("max", selectedDate);
+
     dateField.addEventListener("change", async () => {
       selectedDate = dateField.value;
       await fetchWeather(selectedDate);
@@ -73,10 +77,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function fetchWeather(date) {
     try {
+      const selected = new Date(date);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (selected >= today) {
+        document.getElementById("weather").value = "";
+        document.getElementById("temperature").value = "";
+        document.getElementById("humidity").value = "";
+        console.warn("Weather not available for today or future dates.");
+        return;
+      }
+
       const res = await fetch(`https://api.weatherapi.com/v1/history.json?key=39921156867541d5812194436251705&q=${latitude},${longitude}&dt=${date}`);
       const data = await res.json();
       const day = data?.forecast?.forecastday?.[0]?.day;
       if (!day) throw new Error("Missing forecast data");
+
       document.getElementById("weather").value = day.condition.text;
       document.getElementById("temperature").value = day.avgtemp_c;
       document.getElementById("humidity").value = day.avghumidity;
@@ -176,24 +193,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       deleteBtn.classList.add("hidden");
     });
   }
-
-
-// TEMP
-
-console.log("Debug Info:");
-console.log("inspection_date:", get("inspection_date"));
-console.log("user_id:", user?.id);
-console.log("hive_id:", get("hive_id"));
-console.log("apiary_name:", get("apiary_name"));
-
-// END TEMP
-
-
-
-
-
-
-
 
   // Submit
   form.addEventListener("submit", async e => {
