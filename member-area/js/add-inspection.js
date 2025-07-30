@@ -177,6 +177,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
+
+// TEMP
+
+console.log("Debug Info:");
+console.log("inspection_date:", get("inspection_date"));
+console.log("user_id:", user?.id);
+console.log("hive_id:", get("hive_id"));
+console.log("apiary_name:", get("apiary_name"));
+
+// END TEMP
+
+
+
+
+
+
+
+
   // Submit
   form.addEventListener("submit", async e => {
     e.preventDefault();
