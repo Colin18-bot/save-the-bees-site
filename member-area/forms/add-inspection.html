@@ -217,11 +217,19 @@
          <label for="notes">Notes</label>
          <textarea id="notes" name="inspection_notes" rows="4" placeholder="Observations, concerns, next steps…"></textarea>
 
-         <label for="photo">Upload Photo (optional)</label>
+        <label for="photo">Upload Photo (optional)</label>
         <input type="file" id="photo" name="inspection_photo_url" accept="image/*" multiple>
          <div id="preview" class="image-preview"></div>
+         
+         <button type="button" id="deleteImageBtn" class="btn-secondary hidden">Remove Photose</button>
 
-         <button type="submit" class="btn-primary">Save Inspection</button>
+
+         <div class="button-group">
+          <button type="submit" class="btn-primary">Save Inspection</button>
+         </div>
+
+
+
          </form>
       </main>
       </div>
