@@ -115,13 +115,29 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const apiary_name = apiarySelect.value;
+    const apiary_name = apiarySelect.value.trim();
     const hive_id = document.getElementById("hive_id").value.trim();
-    const hive_type = hiveType.value === "other" ? otherInput.value.trim() : hiveType.value;
+    const hive_type_raw = hiveType.value;
+    const hive_type_other_val = otherInput.value.trim();
+    const hive_type = hive_type_raw === "other" ? hive_type_other_val : hive_type_raw;
     const hive_status = document.getElementById("hive_status").value;
     const hive_start_date = document.getElementById("hive_start_date").value || null;
     const hive_notes = document.getElementById("hive_notes").value.trim();
     let hive_photo_url = null;
+
+    // === Validate Required Fields ===
+    if (!apiary_name) {
+      alert("Please select or enter an apiary name.");
+      return;
+    }
+    if (!hive_id) {
+      alert("Hive ID cannot be empty.");
+      return;
+    }
+    if (hive_type_raw === "other" && !hive_type_other_val) {
+      alert("Please specify the other hive type.");
+      return;
+    }
 
     // === Duplicate Hive Check ===
     const { data: existing, error: checkErr } = await supabase
