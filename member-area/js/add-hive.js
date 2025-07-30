@@ -37,10 +37,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  apiaries.forEach(({ apiary_id }) => {
+  apiaries.forEach(({ apiary_name }) => {
     const opt = document.createElement("option");
-    opt.value = apiary_id;
-    opt.textContent = apiary_id;
+    opt.value = apiary_name;
+    opt.textContent = apiary_name;
     apiarySelect.appendChild(opt);
   });
 
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Check for duplicate hive ID
     const { data: existing, error: checkErr } = await supabase
       .from("hives")
-      .select("hive_id")
+      .select("hive_name")
       .eq("user_id", userId)
       .eq("apiary_id", apiary_id)
       .eq("hive_id", hive_id);
