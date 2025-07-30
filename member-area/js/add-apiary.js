@@ -295,7 +295,7 @@ if (form) {
       alert(isDefault
         ? "Your new default apiary has been saved."
         : "Apiary saved. You can set it as default later.");
-      window.location.href = "/member-area/html/apiaries.html";
+      window.location.href = "/member-area/html/dashboard.html";
     }
   });
 }

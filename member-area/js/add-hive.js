@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const hivePhoto = document.getElementById("hivePhoto");
   const preview = document.getElementById("preview");
   const deleteBtn = document.getElementById("deleteImageBtn");
+  const latInput = document.getElementById("latitude");
+  const lonInput = document.getElementById("longitude");
 
   let resizedFile = null;
   let uploadedFilePath = null;
@@ -26,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // === Populate apiary list ===
   const { data: apiaries, error: apiaryErr } = await supabase
     .from("apiaries")
-    .select("apiary_name")
+    .select("apiary_name, latitude, longitude")
     .eq("user_id", userId);
 
   if (apiaryErr || !apiaries.length) {
@@ -40,6 +42,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     opt.value = apiary_name;
     opt.textContent = apiary_name;
     apiarySelect.appendChild(opt);
+  });
+
+  // === Populate lat/lon on apiary selection ===
+  apiarySelect.addEventListener("change", () => {
+    const selected = apiaries.find(a => a.apiary_name === apiarySelect.value);
+    if (selected) {
+      latInput.value = selected.latitude ?? "";
+      lonInput.value = selected.longitude ?? "";
+    } else {
+      latInput.value = "";
+      lonInput.value = "";
+    }
   });
 
   // === Handle Hive Type "Other" ===
@@ -123,19 +137,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const hive_status = document.getElementById("hive_status").value;
     const hive_start_date = document.getElementById("hive_start_date").value || null;
     const hive_notes = document.getElementById("hive_notes").value.trim();
+    const latitude = parseFloat(latInput.value) || null;
+    const longitude = parseFloat(lonInput.value) || null;
     let hive_photo_url = null;
 
-    // === Validate Required Fields ===
-    if (!apiary_name) {
-      alert("Please select or enter an apiary name.");
-      return;
-    }
-    if (!hive_id) {
-      alert("Hive ID cannot be empty.");
-      return;
-    }
-    if (hive_type_raw === "other" && !hive_type_other_val) {
-      alert("Please specify the other hive type.");
+    if (!apiary_name || !hive_id || (hive_type_raw === "other" && !hive_type_other_val)) {
+      alert("Please complete all required fields.");
       return;
     }
 
@@ -185,14 +192,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       hive_status,
       hive_start_date,
       hive_notes,
-      hive_photo_url
+      hive_photo_url,
+      latitude,
+      longitude
     }]);
 
     if (insertErr) {
       alert("Failed to save hive.");
       console.error(insertErr);
     } else {
-      window.location.href = "/member-area/html/hives.html";
+      window.location.href = "/member-area/html/dashboard.html";
     }
   });
 });
