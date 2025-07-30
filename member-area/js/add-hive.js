@@ -1,13 +1,12 @@
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/+esm';
 
 const SUPABASE_URL = 'https://uihngfpmoasnofyrvpmw.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVpaG5nZnBtb2Fzbm9meXJ2cG13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNzE2MTEsImV4cCI6MjA2Nzk0NzYxMX0.JO8y5G4lxGoyJozZfyxK-8VkJ5UusQzzkQxEYy8RVGo';
-
+const SUPABASE_ANON_KEY = 'YOUR_KEY_HERE'; // Replace if needed
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 document.addEventListener("DOMContentLoaded", async () => {
   const form = document.querySelector("form[name='add-hive-form']");
-  const apiarySelect = document.getElementById("apiarySelect");
+  const apiarySelect = document.getElementById("apiary_name");
   const hivePhoto = document.getElementById("hivePhoto");
 
   const user = await supabase.auth.getUser();
@@ -22,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Populate apiary list
   const { data: apiaries, error: apiaryErr } = await supabase
     .from("apiaries")
-    .select("apiary_id")
+    .select("apiary_name")
     .eq("user_id", userId);
 
   if (apiaryErr) {
@@ -58,7 +57,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const apiary_id = apiarySelect.value;
+    const apiary_name = apiarySelect.value;
     const hive_id = document.getElementById("hive_id").value.trim();
     const hive_type = hiveType.value === "other" ? otherInput.value.trim() : hiveType.value;
     const hive_status = document.getElementById("hive_status").value;
@@ -72,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       .from("hives")
       .select("hive_name")
       .eq("user_id", userId)
-      .eq("apiary_id", apiary_id)
+      .eq("apiary_name", apiary_name)
       .eq("hive_id", hive_id);
 
     if (checkErr) {
@@ -81,13 +80,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (existing.length > 0) {
-      alert(`You already have a hive with the ID "${hive_id}" in ${apiary_id}.`);
+      alert(`You already have a hive with the ID "${hive_id}" in ${apiary_name}.`);
       return;
     }
 
     // Upload photo to Supabase Storage
     if (photo) {
-      const path = `${userId}/${apiary_id}/${Date.now()}_${photo.name}`;
+      const path = `${userId}/${apiary_name}/${Date.now()}_${photo.name}`;
       const { error: uploadErr } = await supabase.storage.from("photos").upload(path, photo);
 
       if (uploadErr) {
@@ -102,7 +101,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Save hive to Supabase
     const { error: insertErr } = await supabase.from("hives").insert([{
       user_id: userId,
-      apiary_id,
+      apiary_name,
       hive_id,
       hive_type,
       hive_status,
@@ -115,7 +114,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert("Failed to save hive.");
       console.error(insertErr);
     } else {
-      window.location.href = "//member-area/html/hives.html";
+      window.location.href = "/member-area/html/hives.html";
     }
   });
 });

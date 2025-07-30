@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const payload = {
       user_id: user.id,
       inspection_date: new Date().toISOString(),
-      apiary_id: get("apiarySelect"),
+      apiary_name: get("apiary_name"),
       hive_id: get("hiveSelect"),
       weather,
       temperature,
