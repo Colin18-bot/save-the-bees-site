@@ -74,12 +74,15 @@
          </div>
          <img src="../../images/beautiful-bee-farm.jpg" alt="Banner" class="dashboard-image" />
          <div class="page-container">
-            <form class="inspection-form" method="POST" action="inspections.html" enctype="multipart/form-data">
+            
+         <form class="inspection-form" method="POST" action="inspections.html" enctype="multipart/form-data" novalidate autocomplete="off">
+
+           
          <h2>Hive Information</h2>
          <!-- Date -->
-         <label for="date">Inspection Date</label>
-         <input type="datetime-local" id="date" name="inspection_date" required>
-
+         <label for="inspection_date">Inspection Date</label>
+         <input type="date" id="inspection_date" name="inspection_date" required>
+        
          <!-- Weather -->
          <h3>Weather Forecast</h3>
          <div class="weather-box">
@@ -107,8 +110,8 @@
          </select>
          
          <!-- Hive -->
-         <label for="hive">Hive</label>
-         <select id="hive" name="hive_id" required>
+        <label for="hive_id">Hive</label>
+         <select id="hive_id" name="hive_id" required>
             <option value="">Select Hive</option>
          </select>
 
@@ -215,7 +218,8 @@
          <textarea id="notes" name="inspection_notes" rows="4" placeholder="Observations, concerns, next steps…"></textarea>
 
          <label for="photo">Upload Photo (optional)</label>
-         <input type="file" id="photo" name="inspection_photo_url" accept="image/*">
+        <input type="file" id="photo" name="inspection_photo_url" accept="image/*" multiple>
+         <div id="preview" class="image-preview"></div>
 
          <button type="submit" class="btn-primary">Save Inspection</button>
          </form>

@@ -40,7 +40,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // === Fetch default apiary ===
   const { data: apiaryData, error: apiaryError } = await supabase
     .from("apiaries")
     .select("apiary_name, latitude, longitude")
@@ -54,43 +53,52 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   const { latitude, longitude } = apiaryData;
+  const dateField = document.getElementById("inspection_date");
+  let selectedDate = new Date().toISOString().split('T')[0];
 
-  // === Fetch Weather ===
-  try {
-    const res = await fetch(`https://api.weatherapi.com/v1/current.json?key=39921156867541d5812194436251705&q=${latitude},${longitude}`);
-    const data = await res.json();
-    document.getElementById("weather").value = data.current.condition.text;
-    document.getElementById("temperature").value = data.current.temp_c;
-    document.getElementById("humidity").value = data.current.humidity;
-  } catch (err) {
-    console.error("Weather API failed:", err);
+  if (dateField) {
+    dateField.addEventListener("change", async () => {
+      selectedDate = dateField.value;
+      await fetchWeather(selectedDate);
+    });
+  }
+  await fetchWeather(selectedDate);
+
+  async function fetchWeather(date) {
+    try {
+      const res = await fetch(`https://api.weatherapi.com/v1/history.json?key=39921156867541d5812194436251705&q=${latitude},${longitude}&dt=${date}`);
+      const data = await res.json();
+      document.getElementById("weather").value = data.forecast.forecastday[0].day.condition.text;
+      document.getElementById("temperature").value = data.forecast.forecastday[0].day.avgtemp_c;
+      document.getElementById("humidity").value = data.forecast.forecastday[0].day.avghumidity;
+    } catch (err) {
+      console.error("Weather API failed:", err);
+    }
   }
 
-  // === Populate apiary & hive dropdowns ===
   const { data: apiaries } = await supabase.from("apiaries").select("id, apiary_name").eq("user_id", user.id);
   const apiarySelect = document.getElementById("apiary_name");
   apiaries.forEach(a => {
     const opt = document.createElement("option");
-    opt.value = a.id;
+    opt.value = a.apiary_name;
     opt.textContent = a.apiary_name;
     apiarySelect.appendChild(opt);
   });
 
   apiarySelect.addEventListener("change", async () => {
     const selectedApiary = apiarySelect.value;
-    const hiveSelect = document.getElementById("hive");
+    const hiveSelect = document.getElementById("hive_id");
     hiveSelect.innerHTML = '<option value="">Select Hive</option>';
 
-    const { data: hives } = await supabase.from("hives").select("id, hive_id").eq("user_id", user.id).eq("apiary_name", selectedApiary);
+    const { data: hives } = await supabase.from("hives").select("hive_id, apiary_name").eq("user_id", user.id).eq("apiary_name", selectedApiary);
     hives.forEach(h => {
       const opt = document.createElement("option");
-      opt.value = h.id;
+      opt.value = h.hive_id;
       opt.textContent = h.hive_id;
       hiveSelect.appendChild(opt);
     });
   });
 
-  // === Dynamic toggle groups ===
   toggleOtherCheckboxGroup("queen_status", "queen_status_other");
   toggleOtherCheckboxGroup("environment_signs", "environment_signs_other");
   toggleOtherCheckboxGroup("disease_list", "disease_other");
@@ -98,57 +106,58 @@ document.addEventListener("DOMContentLoaded", async () => {
   toggleRadioGroup("disease_present", "diseaseDetails");
   toggleRadioGroup("pests_present", "pestDetails");
 
-  // === Photo upload with preview and delete ===
   if (photoInput) {
     photoInput.addEventListener("change", async () => {
-      const file = photoInput.files[0];
-      if (!file || file.size > 10 * 1024 * 1024) {
-        alert("Image must be less than 10MB");
-        return;
-      }
-
-      const img = new Image();
-      const reader = new FileReader();
-      reader.onload = e => img.src = e.target.result;
-
-      img.onload = async () => {
-        const canvas = document.createElement("canvas");
-        let { width, height } = img;
-        const maxSize = 1024;
-
-        if (width > height && width > maxSize) {
-          height *= maxSize / width;
-          width = maxSize;
-        } else if (height > maxSize) {
-          width *= maxSize / height;
-          height = maxSize;
+      const files = [...photoInput.files].slice(0, 3);
+      for (const file of files) {
+        if (file.size > 10 * 1024 * 1024) {
+          alert("Each image must be less than 10MB");
+          continue;
         }
 
-        canvas.width = width;
-        canvas.height = height;
-        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+        const img = new Image();
+        const reader = new FileReader();
+        reader.onload = e => img.src = e.target.result;
 
-        canvas.toBlob(async blob => {
-          const resizedFile = new File([blob], file.name, { type: "image/jpeg" });
-          const filePath = `${user.id}/inspection-photos/${Date.now()}_${file.name}`;
-          const { error } = await supabase.storage.from("photos").upload(filePath, resizedFile);
-          if (!error) {
-            const { data: urlData } = supabase.storage.from("photos").getPublicUrl(filePath);
-            photoUrls.push(urlData.publicUrl);
-            const thumb = img.cloneNode();
-            thumb.classList.add("thumbnail");
-            preview.appendChild(thumb);
-          } else {
-            alert("Image upload failed.");
-          }
-        }, "image/jpeg", 0.8);
-      };
+        await new Promise(resolve => {
+          img.onload = async () => {
+            const canvas = document.createElement("canvas");
+            let { width, height } = img;
+            const maxSize = 1024;
+            if (width > height && width > maxSize) {
+              height *= maxSize / width;
+              width = maxSize;
+            } else if (height > maxSize) {
+              width *= maxSize / height;
+              height = maxSize;
+            }
+            canvas.width = width;
+            canvas.height = height;
+            canvas.getContext("2d").drawImage(img, 0, 0, width, height);
 
-      reader.readAsDataURL(file);
+            canvas.toBlob(async blob => {
+              const resizedFile = new File([blob], file.name, { type: "image/jpeg" });
+              const filePath = `${user.id}/inspection-photos/${Date.now()}_${file.name}`;
+              const { error } = await supabase.storage.from("photos").upload(filePath, resizedFile);
+              if (!error) {
+                const { data: urlData } = supabase.storage.from("photos").getPublicUrl(filePath);
+                photoUrls.push(urlData.publicUrl);
+                const thumb = img.cloneNode();
+                thumb.classList.add("thumbnail");
+                preview.appendChild(thumb);
+              } else {
+                alert("Image upload failed.");
+              }
+              resolve();
+            }, "image/jpeg", 0.8);
+          };
+        });
+
+        reader.readAsDataURL(file);
+      }
     });
   }
 
-  // === Submit form ===
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -158,12 +167,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const payload = {
       user_id: user.id,
-      inspection_date: new Date().toISOString(),
+      inspection_date: get("inspection_date"),
       weather: get("weather"),
       temperature: parseFloat(get("temperature")),
       humidity: parseFloat(get("humidity")),
       apiary_name: get("apiary_name"),
-      hive_id: get("hive"),
+      hive_id: get("hive_id"),
       colony_behaviour: get("colony"),
       colony_behaviour_other: get("colony_behaviour_other"),
       environment_signs: getArray("environment_signs"),
@@ -180,7 +189,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       pest_list: getArray("pest_list"),
       pest_other: get("pest_other"),
       inspection_notes: get("notes"),
-      inspection_photo_url: photoUrls.length ? photoUrls[0] : null, // support for 1 photo now
+      inspection_photo_url: photoUrls.length ? photoUrls.join(",") : null,
       latitude,
       longitude
     };
