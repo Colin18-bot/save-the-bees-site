@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Check for duplicate hive ID
     const { data: existing, error: checkErr } = await supabase
       .from("hives")
-      .select("hive_name")
+      .select("hive_id")
       .eq("user_id", userId)
       .eq("apiary_name", apiary_name)
       .eq("hive_id", hive_id);
