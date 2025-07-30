@@ -221,7 +221,7 @@ if (form) {
 
     const payload = {
       user_id: user.id,
-      apiary_name: get("apiaryName"),
+      apiary_name: get("apiary_name"),
       location_notes: get("locationNotes"),
       postcode: get("postcode"),
       start_date: get("start_date") || null,
