@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       temperature: parseFloat(get("temperature")) || null,
       humidity: parseFloat(get("humidity")) || null,
       apiary_name: apiarySelect.value,
-      hive_id: hiveSelect.value || null,
+      hive_id: hiveSelect.value,
       colony_behaviour: get("colony"),
       colony_behaviour_other: get("colony_behaviour_other"),
       environment_signs: [...document.querySelectorAll("input[name='environment_signs[]']:checked")].map(x => x.value),
