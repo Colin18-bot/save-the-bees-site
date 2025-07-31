@@ -286,14 +286,7 @@
 			</div>
 		</main>
 
-		<script>
-			const toggleBtn = document.getElementById('menuToggle');
-			const navMenu = document.querySelector('.nav-menu');
-
-			toggleBtn.addEventListener('click', () => {
-			  navMenu.classList.toggle('active');
-			});
-		</script>
+		
 
 		<!-- Footer -->
 		<footer class="site-footer" role="region" aria-label="Site Footer">
@@ -404,69 +397,9 @@
 			⬆ Top
 		</button>
 
-		<!-- ============================================
-     📁 JavaScript: Mobile Menu Interactions
-     - Toggles hamburger menu on mobile
-     - Closes menu on link click or outside click
-     ============================================ -->
-		<script src="js/menu.js"></script>
+	
+		<script src="/js/menu.js" defer></script>
 
-		<!-- Google Analytics with Cookie Consent -->
-		<script>
-			document.addEventListener('DOMContentLoaded', function () {
-			  const popup = document.getElementById('cookie-consent');
-			  const acceptAllBtn = document.getElementById('accept-all');
-			  const acceptSelectedBtn = document.getElementById('accept-selected');
-			  const analyticsCheckbox = document.getElementById('analytics');
-			  const marketingCheckbox = document.getElementById('marketing');
-
-			  if (!localStorage.getItem('cookieConsent')) {
-			    popup.style.display = 'block';
-			  }
-
-			  function savePreferences(analytics, marketing) {
-			    const consent = {
-			      essential: true,
-			      analytics: analytics,
-			      marketing: marketing
-			    };
-			    localStorage.setItem('cookieConsent', JSON.stringify(consent));
-			    popup.style.display = 'none';
-			    applyConsent(consent);
-			  }
-
-			  acceptAllBtn.addEventListener('click', () => {
-			    savePreferences(true, true);
-			  });
-
-			  acceptSelectedBtn.addEventListener('click', () => {
-			    savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
-			  });
-
-			  function applyConsent(consent) {
-			    if (consent.analytics) {
-			      const gaScript = document.createElement('script');
-			      gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
-			      gaScript.async = true;
-			      document.head.appendChild(gaScript);
-
-			      window.dataLayer = window.dataLayer || [];
-			      function gtag(){dataLayer.push(arguments);}
-			      gtag('js', new Date());
-			      gtag('config', 'G-7C99K0XQKV');
-			    }
-
-			    if (consent.marketing) {
-			      // Load marketing scripts here
-			    }
-			  }
-
-			  const stored = localStorage.getItem('cookieConsent');
-			  if (stored) {
-			    const consent = JSON.parse(stored);
-			    applyConsent(consent);
-			  }
-			});
-		</script>
+		
 	</body>
 </html>
