@@ -7,10 +7,13 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const form = document.querySelector("form.inspection-form");
 const preview = document.getElementById("preview") || document.createElement("div");
 const photoInput = document.getElementById("photo");
-const deleteBtn = document.getElementById("deleteImageBtn");
 let photoUrls = [];
 
-const toggleOtherCheckboxGroup = (groupName, inputName) => {
+function get(id) {
+  return document.getElementById(id)?.value.trim() || null;
+}
+
+function toggleOtherCheckboxGroup(groupName, inputName) {
   const checkboxes = document.querySelectorAll(`input[name="${groupName}[]"]`);
   const otherInput = document.querySelector(`input[name="${inputName}"]`);
   checkboxes.forEach(box => {
@@ -20,9 +23,9 @@ const toggleOtherCheckboxGroup = (groupName, inputName) => {
       if (!otherChecked) otherInput.value = "";
     });
   });
-};
+}
 
-const toggleRadioGroup = (radioName, sectionId) => {
+function toggleRadioGroup(radioName, sectionId) {
   const radios = document.querySelectorAll(`input[name="${radioName}"]`);
   const section = document.getElementById(sectionId);
   radios.forEach(radio => {
@@ -31,9 +34,9 @@ const toggleRadioGroup = (radioName, sectionId) => {
     });
     if (radio.checked) section.classList.toggle("hidden", radio.value !== "yes");
   });
-};
+}
 
-const toggleColonyBehaviourOther = () => {
+function toggleColonyBehaviourOther() {
   const select = document.getElementById("colony");
   const otherInput = document.getElementById("colony_behaviour_other");
   if (select && otherInput) {
@@ -43,7 +46,7 @@ const toggleColonyBehaviourOther = () => {
     });
     otherInput.classList.toggle("hidden", select.value !== "other");
   }
-};
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
   const { data: { user } } = await supabase.auth.getUser();
@@ -51,71 +54,72 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const { data: apiaryData, error: apiaryError } = await supabase
     .from("apiaries")
-    .select("apiary_name, latitude, longitude")
+    .select("id, apiary_name, latitude, longitude")
     .eq("user_id", user.id)
     .eq("is_default", true)
     .single();
 
   if (apiaryError || !apiaryData) return alert("No default apiary found. Please set one.");
 
-  const { latitude, longitude } = apiaryData;
+  const { id: apiary_id, apiary_name, latitude, longitude } = apiaryData;
   const dateField = document.getElementById("inspection_date");
-  const today = new Date();
-  let selectedDate = today.toISOString().split("T")[0];
-
-  if (dateField) {
-    dateField.type = "date";
-    dateField.value = selectedDate;
-    dateField.addEventListener("change", async () => {
-      selectedDate = dateField.value;
-      await fetchWeather(selectedDate);
-    });
-  }
+  let selectedDate = new Date().toISOString().split("T")[0];
+  dateField.value = selectedDate;
 
   async function fetchWeather(date) {
     try {
-      const selected = new Date(date);
-      const todayStripped = new Date();
-      todayStripped.setHours(0, 0, 0, 0);
+      const today = new Date().toISOString().split("T")[0];
+      if (date > today) throw new Error("Cannot fetch future weather");
 
-      let res, data;
-      if (selected.toDateString() === todayStripped.toDateString()) {
-        res = await fetch(`https://api.weatherapi.com/v1/current.json?key=39921156867541d5812194436251705&q=${latitude},${longitude}`);
-        data = await res.json();
-        document.getElementById("weather").value = data.current.condition.text;
-        document.getElementById("temperature").value = data.current.temp_c;
-        document.getElementById("humidity").value = data.current.humidity;
-      } else {
-        res = await fetch(`https://api.weatherapi.com/v1/history.json?key=39921156867541d5812194436251705&q=${latitude},${longitude}&dt=${date}`);
-        data = await res.json();
-        const day = data?.forecast?.forecastday?.[0]?.day;
-        if (!day) throw new Error("Missing forecast data");
-        document.getElementById("weather").value = day.condition.text;
-        document.getElementById("temperature").value = day.avgtemp_c;
-        document.getElementById("humidity").value = day.avghumidity;
-      }
+      const res = await fetch(`https://api.weatherapi.com/v1/history.json?key=39921156867541d5812194436251705&q=${latitude},${longitude}&dt=${date}`);
+      const data = await res.json();
+      const day = data?.forecast?.forecastday?.[0]?.day;
+      if (!day) throw new Error("No weather data found");
+      document.getElementById("weather").value = day.condition.text;
+      document.getElementById("temperature").value = day.avgtemp_c;
+      document.getElementById("humidity").value = day.avghumidity;
     } catch (err) {
-      console.error("Weather API failed:", err);
-      alert("Could not load weather for selected date.");
+      console.error("Weather API error:", err);
+      alert("Could not load weather for selected date: " + err.message);
+      document.getElementById("weather").value = "";
+      document.getElementById("temperature").value = "";
+      document.getElementById("humidity").value = "";
     }
   }
 
   await fetchWeather(selectedDate);
 
-  const { data: apiaries } = await supabase.from("apiaries").select("id, apiary_name").eq("user_id", user.id);
+  dateField.addEventListener("change", async () => {
+    selectedDate = dateField.value;
+    await fetchWeather(selectedDate);
+  });
+
   const apiarySelect = document.getElementById("apiary_name");
+  const hiveSelect = document.getElementById("hive_id");
+
+  const { data: apiaries } = await supabase.from("apiaries").select("id, apiary_name").eq("user_id", user.id);
   apiaries.forEach(a => {
     const opt = document.createElement("option");
-    opt.value = a.apiary_name;
+    opt.value = a.id;
     opt.textContent = a.apiary_name;
     apiarySelect.appendChild(opt);
   });
 
+  apiarySelect.value = apiary_id;
+
+  const { data: hives } = await supabase.from("hives").select("hive_id, apiary_id").eq("user_id", user.id).eq("apiary_id", apiary_id);
+  hiveSelect.innerHTML = '<option value="">Select Hive</option>';
+  hives.forEach(h => {
+    const opt = document.createElement("option");
+    opt.value = h.hive_id;
+    opt.textContent = h.hive_id;
+    hiveSelect.appendChild(opt);
+  });
+
   apiarySelect.addEventListener("change", async () => {
-    const selectedApiary = apiarySelect.value;
-    const hiveSelect = document.getElementById("hive_id");
+    const selectedApiaryId = apiarySelect.value;
     hiveSelect.innerHTML = '<option value="">Select Hive</option>';
-    const { data: hives } = await supabase.from("hives").select("hive_id").eq("user_id", user.id).eq("apiary_name", selectedApiary);
+    const { data: hives } = await supabase.from("hives").select("hive_id").eq("user_id", user.id).eq("apiary_id", selectedApiaryId);
     hives.forEach(h => {
       const opt = document.createElement("option");
       opt.value = h.hive_id;
@@ -133,6 +137,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   toggleRadioGroup("pests_present", "pestDetails");
 
   if (photoInput) {
+    if (!navigator.onLine) {
+      alert("You are offline. Image upload is disabled.");
+      photoInput.disabled = true;
+    }
+
     photoInput.addEventListener("change", async () => {
       preview.innerHTML = "";
       photoUrls = [];
@@ -171,8 +180,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 photoUrls.push(urlData.publicUrl);
                 const thumb = img.cloneNode();
                 thumb.classList.add("thumbnail");
+                thumb.title = "Click to remove";
+                thumb.style.cursor = "pointer";
+                thumb.addEventListener("click", () => {
+                  photoUrls = photoUrls.filter(url => url !== urlData.publicUrl);
+                  thumb.remove();
+                });
                 preview.appendChild(thumb);
-                deleteBtn?.classList.remove("hidden");
               }
             }, "image/jpeg", 0.8);
           };
@@ -180,56 +194,33 @@ document.addEventListener("DOMContentLoaded", async () => {
         reader.readAsDataURL(file);
       }
     });
-
-    deleteBtn?.addEventListener("click", () => {
-      preview.innerHTML = "";
-      photoInput.value = "";
-      photoUrls = [];
-      deleteBtn.classList.add("hidden");
-    });
   }
 
   form.addEventListener("submit", async e => {
     e.preventDefault();
 
-    const get = id => document.getElementById(id)?.value.trim() || null;
-    const getArray = name => [...document.querySelectorAll(`input[name='${name}[]']:checked`)].map(cb => cb.value);
-    const getRadio = name => document.querySelector(`input[name='${name}']:checked`)?.value || null;
-
-    const rawDate = get("inspection_date");
-    if (!rawDate) {
-      alert("Please select an inspection date.");
-      return;
-    }
-    const inspectionDate = new Date(`${rawDate}T12:00:00Z`).toISOString();
-
-    if (!get("hive_id")) {
-      alert("Please select a hive.");
-      return;
-    }
-
     const payload = {
       user_id: user.id,
-      inspection_date: inspectionDate,
+      inspection_date: get("inspection_date"),
       weather: get("weather"),
       temperature: parseFloat(get("temperature")),
       humidity: parseFloat(get("humidity")),
-      apiary_name: get("apiary_name"),
+      apiary_name: apiary_id,
       hive_id: get("hive_id"),
       colony_behaviour: get("colony"),
       colony_behaviour_other: get("colony_behaviour_other"),
-      environment_signs: getArray("environment_signs"),
+      environment_signs: [...document.querySelectorAll("input[name='environment_signs[]']:checked")].map(cb => cb.value),
       environment_signs_other: get("environment_signs_other"),
       hive_population: get("population"),
       brood_pattern: get("broodPattern"),
       food_stores: get("foodStores"),
-      queen_status: getArray("queen_status"),
+      queen_status: [...document.querySelectorAll("input[name='queen_status[]']:checked")].map(cb => cb.value),
       queen_status_other: get("queen_status_other"),
-      disease_present: getRadio("disease_present"),
-      disease_list: getArray("disease_list"),
+      disease_present: document.querySelector("input[name='disease_present']:checked")?.value || null,
+      disease_list: [...document.querySelectorAll("input[name='disease_list[]']:checked")].map(cb => cb.value),
       disease_other: get("disease_other"),
-      pests_present: getRadio("pests_present"),
-      pest_list: getArray("pest_list"),
+      pests_present: document.querySelector("input[name='pests_present']:checked")?.value || null,
+      pest_list: [...document.querySelectorAll("input[name='pest_list[]']:checked")].map(cb => cb.value),
       pest_other: get("pest_other"),
       inspection_notes: get("notes"),
       inspection_photo_url: photoUrls.length ? photoUrls.join(",") : null,
@@ -237,13 +228,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       longitude
     };
 
-    console.log("Submitting inspection:", payload);
+    if (!payload.inspection_date || !payload.user_id) {
+      alert("Missing required fields: date or user.");
+      return;
+    }
+
     const { error } = await supabase.from("inspections").insert([payload]);
     if (error) {
-      console.error("Submission failed:", error.message || error);
-      alert("Submission failed. Please check for missing fields.");
-    } else {
-      window.location.href = "/member-area/html/dashboard.html";
+      alert("Submission failed: " + error.message);
+      return console.error("Submission error:", error);
     }
+
+    window.location.href = "/member-area/html/dashboard.html";
   });
 });
