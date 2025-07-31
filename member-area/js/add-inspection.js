@@ -197,7 +197,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const getRadio = name => document.querySelector(`input[name='${name}']:checked`)?.value || null;
 
     const rawDate = get("inspection_date");
-    const inspectionDate = rawDate ? new Date(`${rawDate}T12:00:00Z`).toISOString() : null;
+    if (!rawDate) {
+      alert("Please select an inspection date.");
+      return;
+    }
+    const inspectionDate = new Date(`${rawDate}T12:00:00Z`).toISOString();
 
     if (!get("hive_id")) {
       alert("Please select a hive.");
@@ -236,7 +240,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("Submitting inspection:", payload);
     const { error } = await supabase.from("inspections").insert([payload]);
     if (error) {
-      console.error("Submission failed:", error);
+      console.error("Submission failed:", error.message || error);
       alert("Submission failed. Please check for missing fields.");
     } else {
       window.location.href = "/member-area/html/dashboard.html";
