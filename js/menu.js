@@ -1,15 +1,18 @@
 document.addEventListener('DOMContentLoaded', function () {
-  // === Main Nav Toggle ===
+  console.log("✅ DOM ready");
+
+  // === Hamburger Menu Toggle ===
   const toggleBtn = document.getElementById('menuToggle');
-  const navMenu = document.querySelector('.nav-menu');
+  const navMenu = document.querySelector('.nav-menu'); // ← Fix: matches your HTML
 
   if (toggleBtn && navMenu) {
     toggleBtn.addEventListener('click', () => {
       navMenu.classList.toggle('active');
+      console.log("✅ Hamburger toggled");
     });
   }
 
-  // === Dropdown Menu Toggle ===
+  // === Dropdown Toggle ===
   document.querySelectorAll('.dropdown-toggle').forEach(button => {
     button.addEventListener('click', function (e) {
       e.preventDefault();
@@ -44,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // === Cookie Consent Logic ===
+  // === Cookie Consent ===
   const popup = document.getElementById('cookie-consent');
   const acceptAllBtn = document.getElementById('accept-all');
   const acceptSelectedBtn = document.getElementById('accept-selected');
@@ -99,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const consent = JSON.parse(stored);
         applyConsent(consent);
       } catch (e) {
-        console.error('Invalid cookie consent JSON', e);
+        console.error('❌ Invalid cookie consent JSON', e);
         localStorage.removeItem('cookieConsent');
         popup.style.display = 'block';
       }
