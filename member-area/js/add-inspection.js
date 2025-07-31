@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   apiarySelect.addEventListener("change", async () => {
     hiveSelect.innerHTML = '<option value="">Select Hive</option>';
-    const { data: hives } = await supabase.from("hives").select("id, hive_id").eq("user_id", user.id).eq("apiary_id", apiarySelect.value);
+    const { data: hives } = await supabase.from("hives").select("id, hive_id").eq("user_id", user.id).eq("apiary_name", apiarySelect.value);
     hives.forEach(h => {
       const opt = document.createElement("option");
       opt.value = h.id;
