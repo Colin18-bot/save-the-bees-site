@@ -47,35 +47,51 @@ function toggleColonyOther() {
   otherInput.classList.toggle("hidden", select.value !== "other");
 }
 
-function handlePhotoUploads() {
+function handlePhotoUploads(user) {
   if (!navigator.onLine) {
     photoInput.disabled = true;
     return;
   }
+
   photoInput.addEventListener("change", async () => {
-    preview.innerHTML = "";
-    photoUrls = [];
+    if (photoUrls.length + photoInput.files.length > 3) {
+      alert("You can only upload up to 3 images.");
+      return;
+    }
+
     for (const file of photoInput.files) {
-      const fileName = `${Date.now()}_${file.name}`;
+      const fileName = `${user.id}/${Date.now()}_${file.name}`;
       const { data, error } = await supabase.storage.from("photos").upload(fileName, file);
-      if (error) return alert("Image upload failed: " + error.message);
+
+      if (error) {
+        alert("Image upload failed: " + error.message);
+        continue;
+      }
+
       const { data: { publicUrl } } = supabase.storage.from("photos").getPublicUrl(fileName);
       photoUrls.push(publicUrl);
 
       const imgBox = document.createElement("div");
       imgBox.className = "img-thumb";
+
       const img = document.createElement("img");
       img.src = publicUrl;
+      img.className = "thumbnail";
+
       const btn = document.createElement("button");
       btn.type = "button";
       btn.textContent = "Remove";
       btn.onclick = () => {
         imgBox.remove();
         photoUrls = photoUrls.filter(url => url !== publicUrl);
+        if (photoUrls.length < 3) photoInput.disabled = false;
       };
+
       imgBox.appendChild(img);
       imgBox.appendChild(btn);
       preview.appendChild(imgBox);
+
+      if (photoUrls.length >= 3) photoInput.disabled = true;
     }
   });
 }
@@ -142,7 +158,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   toggleOtherCheckboxGroup("pest_list", "pest_other");
   toggleRadioGroup("disease_present", "diseaseDetails");
   toggleRadioGroup("pests_present", "pestDetails");
-  handlePhotoUploads();
+  handlePhotoUploads(user);
 
   form.addEventListener("submit", async e => {
     e.preventDefault();
