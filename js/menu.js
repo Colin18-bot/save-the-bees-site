@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
   // === Main Nav Toggle ===
   const menuToggle = document.getElementById('menuToggle');
-  const navMenu = document.getElementById('navMenu');
+  const navMenu = document.querySelector('.nav-menu'); // <- CHANGED FROM getElementById
+
   if (menuToggle && navMenu) {
     menuToggle.addEventListener('click', () => {
       navMenu.classList.toggle('active');
