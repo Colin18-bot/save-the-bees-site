@@ -60,15 +60,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const { latitude, longitude } = apiaryData;
   const dateField = document.getElementById("inspection_date");
-  let selectedDate = new Date().toISOString().split("T")[0];
+  const today = new Date();
+  let selectedDate = today.toISOString().split("T")[0];
 
   if (dateField) {
     dateField.type = "date";
     dateField.value = selectedDate;
-
-    // Limit selection to today or earlier
-    dateField.setAttribute("max", selectedDate);
-
     dateField.addEventListener("change", async () => {
       selectedDate = dateField.value;
       await fetchWeather(selectedDate);
@@ -78,25 +75,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function fetchWeather(date) {
     try {
       const selected = new Date(date);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const todayStripped = new Date();
+      todayStripped.setHours(0, 0, 0, 0);
 
-      if (selected >= today) {
-        document.getElementById("weather").value = "";
-        document.getElementById("temperature").value = "";
-        document.getElementById("humidity").value = "";
-        console.warn("Weather not available for today or future dates.");
-        return;
+      let res, data;
+      if (selected.toDateString() === todayStripped.toDateString()) {
+        res = await fetch(`https://api.weatherapi.com/v1/current.json?key=39921156867541d5812194436251705&q=${latitude},${longitude}`);
+        data = await res.json();
+        document.getElementById("weather").value = data.current.condition.text;
+        document.getElementById("temperature").value = data.current.temp_c;
+        document.getElementById("humidity").value = data.current.humidity;
+      } else {
+        res = await fetch(`https://api.weatherapi.com/v1/history.json?key=39921156867541d5812194436251705&q=${latitude},${longitude}&dt=${date}`);
+        data = await res.json();
+        const day = data?.forecast?.forecastday?.[0]?.day;
+        if (!day) throw new Error("Missing forecast data");
+        document.getElementById("weather").value = day.condition.text;
+        document.getElementById("temperature").value = day.avgtemp_c;
+        document.getElementById("humidity").value = day.avghumidity;
       }
-
-      const res = await fetch(`https://api.weatherapi.com/v1/history.json?key=39921156867541d5812194436251705&q=${latitude},${longitude}&dt=${date}`);
-      const data = await res.json();
-      const day = data?.forecast?.forecastday?.[0]?.day;
-      if (!day) throw new Error("Missing forecast data");
-
-      document.getElementById("weather").value = day.condition.text;
-      document.getElementById("temperature").value = day.avgtemp_c;
-      document.getElementById("humidity").value = day.avghumidity;
     } catch (err) {
       console.error("Weather API failed:", err);
       alert("Could not load weather for selected date.");
@@ -105,7 +102,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   await fetchWeather(selectedDate);
 
-  // Populate apiaries
   const { data: apiaries } = await supabase.from("apiaries").select("id, apiary_name").eq("user_id", user.id);
   const apiarySelect = document.getElementById("apiary_name");
   apiaries.forEach(a => {
@@ -136,7 +132,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   toggleRadioGroup("disease_present", "diseaseDetails");
   toggleRadioGroup("pests_present", "pestDetails");
 
-  // Photo uploads
   if (photoInput) {
     photoInput.addEventListener("change", async () => {
       preview.innerHTML = "";
@@ -194,13 +189,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // Submit
   form.addEventListener("submit", async e => {
     e.preventDefault();
 
     const get = id => document.getElementById(id)?.value.trim() || null;
     const getArray = name => [...document.querySelectorAll(`input[name='${name}[]']:checked`)].map(cb => cb.value);
     const getRadio = name => document.querySelector(`input[name='${name}']:checked`)?.value || null;
+
+    const rawDate = get("inspection_date");
+    const inspectionDate = rawDate ? new Date(`${rawDate}T12:00:00Z`).toISOString() : null;
 
     if (!get("hive_id")) {
       alert("Please select a hive.");
@@ -209,7 +206,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const payload = {
       user_id: user.id,
-      inspection_date: get("inspection_date"),
+      inspection_date: inspectionDate,
       weather: get("weather"),
       temperature: parseFloat(get("temperature")),
       humidity: parseFloat(get("humidity")),
