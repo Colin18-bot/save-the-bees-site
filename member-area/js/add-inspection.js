@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const { data: apiaries } = await supabase.from("apiaries").select("id, apiary_name, latitude, longitude").eq("user_id", user.id);
   apiaries.forEach(a => {
     const opt = document.createElement("option");
-    opt.value = a.id;
+    opt.value = a.apiary_name;
     opt.textContent = a.apiary_name;
     apiarySelect.appendChild(opt);
   });
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   apiarySelect.addEventListener("change", async () => {
     hiveSelect.innerHTML = '<option value="">Select Hive</option>';
-    const selectedName = apiarySelect.options[apiarySelect.selectedIndex].text;
+    const selectedName = apiarySelect.value;
     const { data: hives } = await supabase.from("hives").select("id, hive_id").eq("user_id", user.id).eq("apiary_name", selectedName);
     hives.forEach(h => {
       const opt = document.createElement("option");
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   apiarySelect.dispatchEvent(new Event("change"));
   dateField.addEventListener("change", () => {
     const selected = dateField.value;
-    const selectedApiary = apiaries.find(a => a.id === apiarySelect.value);
+    const selectedApiary = apiaries.find(a => a.apiary_name === apiarySelect.value);
     if (selectedApiary) fetchWeather(selected, selectedApiary.latitude, selectedApiary.longitude);
   });
   dateField.dispatchEvent(new Event("change"));
