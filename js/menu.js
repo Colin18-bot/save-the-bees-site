@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
   // === Main Nav Toggle ===
-  const menuToggle = document.getElementById('menuToggle');
-  const navMenu = document.querySelector('.nav-menu'); // <- CHANGED FROM getElementById
+  const toggleBtn = document.getElementById('menuToggle');
+  const navMenu = document.querySelector('.nav-menu');
 
-  if (menuToggle && navMenu) {
-    menuToggle.addEventListener('click', () => {
+  if (toggleBtn && navMenu) {
+    toggleBtn.addEventListener('click', () => {
       navMenu.classList.toggle('active');
     });
   }
