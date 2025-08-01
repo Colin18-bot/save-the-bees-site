@@ -1,9 +1,11 @@
+console.log("✅ menu.js is running");
+
 document.addEventListener('DOMContentLoaded', function () {
   console.log("✅ DOM ready");
 
   // === Hamburger Menu Toggle ===
   const toggleBtn = document.getElementById('menuToggle');
-  const navMenu = document.querySelector('.nav-menu'); // ← Fix: matches your HTML
+  const navMenu = document.querySelector('.nav-menu');
 
   if (toggleBtn && navMenu) {
     toggleBtn.addEventListener('click', () => {
@@ -12,22 +14,35 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // === Dropdown Toggle ===
-  document.querySelectorAll('.dropdown-toggle').forEach(button => {
-    button.addEventListener('click', function (e) {
-      e.preventDefault();
-      e.stopPropagation();
+  // === Retry loop for Dropdown Binding ===
+  function bindDropdowns() {
+    const buttons = document.querySelectorAll('.dropdown-toggle');
+    if (buttons.length === 0) {
+      console.log("🔁 Waiting for dropdowns...");
+      setTimeout(bindDropdowns, 100);
+      return;
+    }
 
-      const dropdown = this.closest('.dropdown');
-      const isOpen = dropdown.classList.contains('open');
+    console.log("✅ Dropdowns found:", buttons.length);
+    buttons.forEach(button => {
+      button.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
 
-      document.querySelectorAll('.dropdown.open').forEach(dd => {
-        if (dd !== dropdown) dd.classList.remove('open');
+        const dropdown = this.closest('.dropdown');
+        const isOpen = dropdown.classList.contains('open');
+
+        document.querySelectorAll('.dropdown.open').forEach(dd => {
+          if (dd !== dropdown) dd.classList.remove('open');
+        });
+
+        dropdown.classList.toggle('open');
+        console.log("✅ Dropdown toggled");
       });
-
-      dropdown.classList.toggle('open');
     });
-  });
+  }
+
+  bindDropdowns();
 
   document.addEventListener('click', e => {
     if (!e.target.closest('.dropdown')) {
@@ -47,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // === Cookie Consent ===
+  // === Cookie Consent Logic ===
   const popup = document.getElementById('cookie-consent');
   const acceptAllBtn = document.getElementById('accept-all');
   const acceptSelectedBtn = document.getElementById('accept-selected');
