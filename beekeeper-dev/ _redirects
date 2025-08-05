@@ -1,0 +1,13 @@
+# _redirects
+
+# Default fallback for /html
+/html/*    /html/404.html   404
+
+# Beekeeper member area SPA fallback
+/beekeeper-dev/*    /beekeeper-dev/index.html   200
+
+# Auth redirect paths (optional if handled by router)
+/beekeeper-dev/login             /beekeeper-dev/index.html   200
+/beekeeper-dev/register          /beekeeper-dev/index.html   200
+/beekeeper-dev/reset-password    /beekeeper-dev/index.html   200
+/beekeeper-dev/forgot-password   /beekeeper-dev/index.html   200

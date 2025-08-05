@@ -1,2 +1,0 @@
-# _redirects
-/html/*    /html/404.html   404
