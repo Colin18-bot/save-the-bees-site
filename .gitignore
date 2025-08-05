@@ -1,9 +1,12 @@
-# Prevent accidental commits of Supabase client config if it includes secrets
-member-area/js/supabaseClient.js
+# Ignore dependencies
+node_modules/
 
-# Prevent .env file from being committed (contains private keys)
+# Ignore environment variables
 .env
 
-# Optional: ignore local build artifacts
+# Ignore build output
 dist/
 build/
+
+# Optional: Supabase client config if manually handled
+src/services/supabaseClient.js
