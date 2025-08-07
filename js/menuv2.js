@@ -1,11 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
   const menuToggle = document.getElementById('menuToggle');
-  const navMenu = document.getElementById('navMenu');
+  const navMenu = document.querySelector('.nav-menu'); // ✅ FIXED
 
   // ✅ Toggle main nav menu
   if (menuToggle && navMenu) {
     menuToggle.addEventListener('click', () => {
       navMenu.classList.toggle('active');
+      document.body.classList.toggle('menu-open');
     });
   }
 
@@ -27,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!isOpen) {
         dropdown.classList.add('open');
       } else {
-        dropdown.classList.remove('open'); // ✅ Allow collapse when clicked again
+        dropdown.classList.remove('open');
       }
     });
   });
@@ -54,4 +55,3 @@ window.addEventListener('scroll', () => {
 backToTopBtn.addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
-
