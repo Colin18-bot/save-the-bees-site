@@ -1,11 +1,17 @@
 console.log("✅ menu.js is running");
 
+const toggleBtn = document.getElementById('menuToggle');
+const navMenu = document.querySelector('.nav-menu');
+
+console.log("✅ toggleBtn:", toggleBtn);
+console.log("✅ navMenu:", navMenu);
+
 document.addEventListener('DOMContentLoaded', function () {
   console.log("✅ DOM ready");
 
   // === Hamburger Menu Toggle ===
   const toggleBtn = document.getElementById('menuToggle');
-  const navMenu = document.querySelector('.nav-menu');
+  const navMenu = document.querySelector('.nav-menu'); // ← Fix: matches your HTML
 
   if (toggleBtn && navMenu) {
     toggleBtn.addEventListener('click', () => {
@@ -14,35 +20,22 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // === Retry loop for Dropdown Binding ===
-  function bindDropdowns() {
-    const buttons = document.querySelectorAll('.dropdown-toggle');
-    if (buttons.length === 0) {
-      console.log("🔁 Waiting for dropdowns...");
-      setTimeout(bindDropdowns, 100);
-      return;
-    }
+  // === Dropdown Toggle ===
+  document.querySelectorAll('.dropdown-toggle').forEach(button => {
+    button.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
 
-    console.log("✅ Dropdowns found:", buttons.length);
-    buttons.forEach(button => {
-      button.addEventListener('click', function (e) {
-        e.preventDefault();
-        e.stopPropagation();
+      const dropdown = this.closest('.dropdown');
+      const isOpen = dropdown.classList.contains('open');
 
-        const dropdown = this.closest('.dropdown');
-        const isOpen = dropdown.classList.contains('open');
-
-        document.querySelectorAll('.dropdown.open').forEach(dd => {
-          if (dd !== dropdown) dd.classList.remove('open');
-        });
-
-        dropdown.classList.toggle('open');
-        console.log("✅ Dropdown toggled");
+      document.querySelectorAll('.dropdown.open').forEach(dd => {
+        if (dd !== dropdown) dd.classList.remove('open');
       });
-    });
-  }
 
-  bindDropdowns();
+      dropdown.classList.toggle('open');
+    });
+  });
 
   document.addEventListener('click', e => {
     if (!e.target.closest('.dropdown')) {
@@ -62,29 +55,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // === Cookie Consent Logic ===
+  // === Cookie Consent ===
   const popup = document.getElementById('cookie-consent');
   const acceptAllBtn = document.getElementById('accept-all');
   const acceptSelectedBtn = document.getElementById('accept-selected');
   const analyticsCheckbox = document.getElementById('analytics');
   const marketingCheckbox = document.getElementById('marketing');
 
-  function applyConsent(consent) {
-    if (consent.analytics) {
-      const gaScript = document.createElement('script');
-      gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-7C99K0XQKV';
-      gaScript.async = true;
-      document.head.appendChild(gaScript);
-
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-      gtag('config', 'G-7C99K0XQKV');
-    }
-
-    if (consent.marketing) {
-      // Future: Load marketing scripts here
-    }
+  // Check if user has already made a choice
+  if (!localStorage.getItem('cookieConsent')) {
+    popup.style.display = 'block';
   }
 
   function savePreferences(analytics, marketing) {
@@ -98,29 +78,29 @@ document.addEventListener('DOMContentLoaded', function () {
     applyConsent(consent);
   }
 
-  if (popup && acceptAllBtn && acceptSelectedBtn && analyticsCheckbox && marketingCheckbox) {
-    if (!localStorage.getItem('cookieConsent')) {
-      popup.style.display = 'block';
+  acceptAllBtn.addEventListener('click', () => {
+    savePreferences(true, true);
+  });
+
+  acceptSelectedBtn.addEventListener('click', () => {
+    savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
+  });
+
+  // Example: You can load or block scripts here based on consent
+  function applyConsent(consent) {
+    if (consent.analytics) {
+      // Load Google Analytics here
+      // e.g. insert GA script dynamically
     }
-
-    acceptAllBtn.addEventListener('click', () => {
-      savePreferences(true, true);
-    });
-
-    acceptSelectedBtn.addEventListener('click', () => {
-      savePreferences(analyticsCheckbox.checked, marketingCheckbox.checked);
-    });
-
-    const stored = localStorage.getItem('cookieConsent');
-    if (stored) {
-      try {
-        const consent = JSON.parse(stored);
-        applyConsent(consent);
-      } catch (e) {
-        console.error('❌ Invalid cookie consent JSON', e);
-        localStorage.removeItem('cookieConsent');
-        popup.style.display = 'block';
-      }
+    if (consent.marketing) {
+      // Load marketing pixels/scripts here
     }
+  }
+
+  // Re-apply saved preferences on load
+  const stored = localStorage.getItem('cookieConsent');
+  if (stored) {
+    const consent = JSON.parse(stored);
+    applyConsent(consent);
   }
 });
