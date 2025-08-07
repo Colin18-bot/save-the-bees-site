@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
+
 // Back to Top button functionality
 const backToTopBtn = document.getElementById('backToTop');
 

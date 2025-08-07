@@ -9,6 +9,7 @@ console.log("✅ navMenu:", navMenu);
 document.addEventListener('DOMContentLoaded', function () {
   console.log("✅ DOM ready");
 
+  
   // === Hamburger Menu Toggle ===
   const toggleBtn = document.getElementById('menuToggle');
   const navMenu = document.querySelector('.nav-menu'); // ← Fix: matches your HTML
