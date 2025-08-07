@@ -1,12 +1,28 @@
-# Ignore dependencies
+# Ignore Node modules
 node_modules/
 
-# Ignore environment variables
+# Ignore environment variable files
 .env
+.env.local
+.env.production
 
-# Ignore build output
+# Ignore build or Vite output (if accidentally copied)
 dist/
 build/
 
-# Optional: Supabase client config if manually handled
+# Ignore log files and OS junk
+*.log
+.DS_Store
+Thumbs.db
+
+# Ignore Supabase config (if copied)
 src/services/supabaseClient.js
+
+# Ignore Vite cache if copied in
+.vite/
+
+# Ignore system config files
+*.swp
+*.swo
+*.bak
+
