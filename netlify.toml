@@ -1,2 +1,7 @@
+[build]
+  base = "beekeeper-dev"
+  command = "npm run build"
+  publish = "dist"
+
 [functions]
-directory = "netlify/functions"
+  directory = ""
