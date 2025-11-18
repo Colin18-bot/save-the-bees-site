@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
 const PREMIUM_PRICE_TEXT = "£4.99 / month";
+const SUPABASE_FUNCTIONS_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
 
 function CheckIcon({ className = "w-5 h-5" }) {
   return (
@@ -30,7 +31,11 @@ function PlanCard({
   currentLabel = "Current Plan",
 }) {
   return (
-    <div className={`relative rounded-2xl border bg-white shadow-sm p-6 flex flex-col ${highlight ? "ring-2 ring-amber-500" : "border-gray-200"}`}>
+    <div
+      className={`relative rounded-2xl border bg-white shadow-sm p-6 flex flex-col ${
+        highlight ? "ring-2 ring-amber-500" : "border-gray-200"
+      }`}
+    >
       {highlight && (
         <div className="absolute -top-3 left-6 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-white shadow">
           Most Popular
@@ -46,7 +51,9 @@ function PlanCard({
       <ul className="mt-4 space-y-2 text-sm text-gray-700">
         {features.map((f) => (
           <li key={f} className="flex items-start gap-2">
-            <span className="mt-0.5 text-green-600"><CheckIcon /></span>
+            <span className="mt-0.5 text-green-600">
+              <CheckIcon />
+            </span>
             <span>{f}</span>
           </li>
         ))}
@@ -85,7 +92,9 @@ export default function Pricing() {
 
   useEffect(() => {
     (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       const { data: userData } = await supabase.auth.getUser();
 
       if (session?.user && userData?.user) {
@@ -131,7 +140,9 @@ export default function Pricing() {
     try {
       setUpgrading(true);
 
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session?.access_token) {
         navigate("/login?redirect=/pricing");
         return;
@@ -141,24 +152,21 @@ export default function Pricing() {
       // Optional local env price id (not required if secret exists)
       const priceId = import.meta.env.VITE_STRIPE_PRICE_ID_PREMIUM;
 
-      const res = await fetch(
-        "https://uihngfpmoasnofyrvpmw.supabase.co/functions/v1/create-checkout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-            "apikey": import.meta.env.VITE_SUPABASE_ANON_KEY,
-          },
-          body: JSON.stringify({
-            plan: "premium",
-            user_id: user.id,
-            ...(priceId ? { price_id: priceId } : {}),
-            success_path: "/dashboard?upgraded=1",
-            cancel_path: "/pricing?canceled=1",
-          }),
-        }
-      );
+      const res = await fetch(`${SUPABASE_FUNCTIONS_BASE}/create-checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({
+          plan: "premium",
+          user_id: user.id,
+          ...(priceId ? { price_id: priceId } : {}),
+          success_path: "/dashboard?upgraded=1",
+          cancel_path: "/pricing?canceled=1",
+        }),
+      });
 
       const txt = await res.text().catch(() => "");
       if (!res.ok) {
@@ -177,7 +185,9 @@ export default function Pricing() {
   };
 
   const handleManageBilling = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (!session?.access_token) {
       navigate("/login?redirect=/pricing");
       return;
@@ -185,7 +195,7 @@ export default function Pricing() {
     const token = session.access_token;
     const returnUrl = window.location.origin + "/settings";
     const portalUrl =
-      "https://uihngfpmoasnofyrvpmw.supabase.co/functions/v1/create-billing-portal" +
+      `${SUPABASE_FUNCTIONS_BASE}/create-billing-portal` +
       `?token=${encodeURIComponent(token)}` +
       `&return_url=${encodeURIComponent(returnUrl)}`;
 
@@ -284,12 +294,42 @@ export default function Pricing() {
       <section className="mt-12 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
         <h2 className="text-xl font-bold text-green-800 mb-3">Everything you need to run your apiaries</h2>
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm text-gray-700">
-          <li className="flex items-start gap-2"><span className="text-green-600 mt-0.5"><CheckIcon /></span> Guided inspections & notes</li>
-          <li className="flex items-start gap-2"><span className="text-green-600 mt-0.5"><CheckIcon /></span> Logbook for quick events & findings</li>
-          <li className="flex items-start gap-2"><span className="text-green-600 mt-0.5"><CheckIcon /></span> To-Dos, reminders & calendar view</li>
-          <li className="flex items-start gap-2"><span className="text-green-600 mt-0.5"><CheckIcon /></span> Local weather at your apiaries</li>
-          <li className="flex items-start gap-2"><span className="text-green-600 mt-0.5"><CheckIcon /></span> Archive & full history for compliance</li>
-          <li className="flex items-start gap-2"><span className="text-green-600 mt-0.5"><CheckIcon /></span> Mobile-friendly PWA — works great on site</li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-600 mt-0.5">
+              <CheckIcon />
+            </span>
+            Guided inspections & notes
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-600 mt-0.5">
+              <CheckIcon />
+            </span>
+            Logbook for quick events & findings
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-600 mt-0.5">
+              <CheckIcon />
+            </span>
+            To-Dos, reminders & calendar view
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-600 mt-0.5">
+              <CheckIcon />
+            </span>
+            Local weather at your apiaries
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-600 mt-0.5">
+              <CheckIcon />
+            </span>
+            Archive & full history for compliance
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-600 mt-0.5">
+              <CheckIcon />
+            </span>
+            Mobile-friendly PWA — works great on site
+          </li>
         </ul>
       </section>
 
