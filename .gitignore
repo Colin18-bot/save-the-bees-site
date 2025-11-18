@@ -1,28 +1,41 @@
-# Ignore Node modules
+# ===========================
+# Node / Vite / Build
+# ===========================
+
 node_modules/
-
-# Ignore environment variable files
-.env
-.env.local
-.env.production
-
-# Ignore build or Vite output (if accidentally copied)
 dist/
 build/
+.vite/
 
-# Ignore log files and OS junk
+# ===========================
+# Environment Variables
+# ===========================
+# These must NEVER be committed
+.env
+.env.*
+!.env.example     # allow a safe example env if you create one
+
+# ===========================
+# Logs and OS Junk
+# ===========================
+
 *.log
 .DS_Store
 Thumbs.db
 
-# Ignore Supabase config (if copied)
-src/services/supabaseClient.js
-
-# Ignore Vite cache if copied in
-.vite/
-
-# Ignore system config files
+# Swap / temp editor files
 *.swp
 *.swo
 *.bak
 
+# ===========================
+# Supabase local state
+# ===========================
+
+supabase/.temp/
+
+# Optional Docker local volumes
+docker-data/
+
+images/honeybee-kit.png
+kit/
