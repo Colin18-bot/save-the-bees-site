@@ -1,13 +1,119 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- SEO Meta Tags -->
+    <title>BeezKnees | Smart Beekeeping Management Platform</title>
+    <meta name="description" content="BeezKnees is a smart, modern beekeeping platform to manage your apiaries, hives, inspections, weather tracking, and more." />
+    <meta name="keywords" content="beekeeping, apiary management, hive tracking, smart beekeeping, BeezKnees, hive inspections, bee weather" />
+    <meta name="author" content="BeezKnees Team" />
+    <meta name="theme-color" content="#facc15" />
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="BeezKnees | Smart Beekeeping Management Platform" />
+    <meta property="og:description" content="BeezKnees helps you manage hives, inspections, and apiary tasks with ease. Track your bees like never before." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.beezknees.co.uk" />
+    <meta property="og:image" content="https://www.beezknees.co.uk/assets/android-chrome-512x512.png" />
+    <meta property="og:site_name" content="BeezKnees" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BeezKnees | Smart Beekeeping Management Platform" />
+    <meta name="twitter:description" content="BeezKnees helps you manage hives, inspections, and apiary tasks with ease. Track your bees like never before." />
+    <meta name="twitter:image" content="https://www.beezknees.co.uk/assets/android-chrome-512x512.png" />
+    <meta name="twitter:site" content="@BeezKnees" />
+    <meta name="twitter:creator" content="@BeezKnees" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "BeezKnees",
+        "url": "https://www.beezknees.co.uk",
+        "description": "BeezKnees is a smart, modern beekeeping platform to manage your apiaries, hives, inspections, weather tracking, and more.",
+        "publisher": {
+          "@type": "Organization",
+          "name": "BeezKnees",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.beezknees.co.uk/assets/android-chrome-512x512.png"
+          }
+        }
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "BeezKnees Pro",
+        "image": ["https://www.beezknees.co.uk/assets/beekeeper-pro.jpg"],
+        "description": "A premium hive management toolkit for modern beekeepers.",
+        "brand": { "@type": "Brand", "name": "BeezKnees" },
+        "url": "https://www.beezknees.co.uk/pricing"
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is BeezKnees?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "BeezKnees is a smart beekeeping platform for managing hives, inspections, and apiaries."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is BeezKnees free to use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! There's a free tier, and premium features are available under BeezKnees Pro."
+            }
+          }
+        ]
+      }
+    </script>
+
+    <!-- Favicons (relative so they work under /beekeeper-dev too) -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="android-chrome-192x192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="android-chrome-512x512.png" />
+
+    <!-- PWA manifest (relative path for subfolder deploys) -->
+    <link rel="manifest" href="site.webmanifest" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
+  
+  
+    <!-- Netlify Forms detection (hidden) -->
+    <form name="member-contact" netlify data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="member-contact" />
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="text" name="subject" />
+      <textarea name="message"></textarea>
+      <input type="text" name="bot-field" />
+    </form>
+  
     <div id="root"></div>
+
+    <!-- Keep absolute path here; Vite rewrites this on build -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -1,0 +1,9 @@
+{
+  "exclude": [],
+  "env": [
+    "STRIPE_SECRET_KEY",
+    "STRIPE_PRICE_ID_PREMIUM"
+  ],
+  "invoke": "index.ts",
+  "verifyJwt": false
+}

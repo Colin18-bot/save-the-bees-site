@@ -1,0 +1,9 @@
+{
+  "env": [
+    "SUPABASE_URL",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "STRIPE_SECRET_KEY"
+  ],
+  "invoke": "index.ts",
+  "verifyJwt": false
+}

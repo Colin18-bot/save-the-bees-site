@@ -1,0 +1,5 @@
+{
+  "compilerOptions": { "lib": ["ES2022", "DOM", "deno.ns", "deno.window"] },
+  "nodeModulesDir": "auto",
+  "exclude": ["node_modules", "dist"]
+}

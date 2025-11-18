@@ -1,0 +1,87 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* -------- Base element styles go here -------- */
+@layer base {
+  body {
+    @apply bg-white text-gray-900;
+  }
+}
+
+/* -------- Small custom utilities go here -------- */
+@layer utilities {
+  /* Hide scrollbar for mobile sidebar */
+  /* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+  .scrollbar-none::-webkit-scrollbar { display: none; } /* VS Code: allow vendor pseudo-element */
+  .scrollbar-none { scrollbar-width: none; }
+
+  /* Hand cursor on our maps */
+  .leaflet-container.clickable-map { cursor: pointer !important; }
+
+  /* Visibility helpers (screen vs print) */
+  .print-only { display: none; }
+  .screen-only { display: initial; }
+}
+
+/* ---------- Print helpers & utilities ---------- */
+@media print {
+  /* Hide app chrome */
+  .no-print,
+  header, nav, footer,
+  .app-sidebar, .sidebar, .site-nav, .site-footer {
+    display: none !important;
+  }
+
+  html, body { background: #fff !important; }
+  main { padding: 0 !important; margin: 0 !important; box-shadow: none !important; }
+
+  /* Don’t append raw URLs after links when printing */
+  a[href]::after { content: "" !important; }
+
+  /* Page break helpers */
+  .page-break-before { break-before: page; page-break-before: always; }
+  .page-break-after  { break-after: page;  page-break-after: always; }
+  .avoid-break-inside { break-inside: avoid; page-break-inside: avoid; }
+
+  /* Simple table styling for printable reports */
+  table.print-table { width: 100%; border-collapse: collapse; }
+  .print-table th,
+  .print-table td {
+    border: 1px solid #000;
+    padding: 6px 8px;
+    font-size: 12px;
+    vertical-align: top;
+  }
+  .print-table thead th {
+    background: #f3f4f6; /* Tailwind gray-100 */
+    /* stylelint-disable-next-line property-no-unknown */
+    -webkit-print-color-adjust: exact; /* allow vendor property for Safari/Chromium */
+    /* stylelint-disable-next-line property-no-unknown */
+    print-color-adjust: exact;
+  }
+
+  /* Pills/badges that still look OK on paper */
+  .print-badge {
+    border-radius: 9999px;
+    padding: 2px 8px;
+    font-weight: 600;
+    font-size: 10px;
+    /* stylelint-disable-next-line property-no-unknown */
+    -webkit-print-color-adjust: exact;
+    /* stylelint-disable-next-line property-no-unknown */
+    print-color-adjust: exact;
+  }
+
+  /* Visibility helpers (override for print) */
+  .screen-only { display: none !important; }
+  .print-only  { display: block !important; }
+}
+
+/* A4 page size & margins for browsers that honor @page */
+/* stylelint-disable-next-line at-rule-no-unknown */
+@page {
+  size: A4;
+  margin: 12mm;
+}
