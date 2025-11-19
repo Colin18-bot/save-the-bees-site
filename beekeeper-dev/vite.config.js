@@ -3,12 +3,12 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-export default defineConfig(({ mode }) => {
-  const isProd = mode === 'production'
-  const base = isProd ? '/beekeeper-dev/' : '/'
+export default defineConfig(() => {
+  // App is served from the ROOT of the Netlify site
+  const base = '/'
 
   return {
-    // important: Vite rewrites all asset links with this
+    // Vite rewrites all asset links with this base
     base,
 
     plugins: [
@@ -17,14 +17,13 @@ export default defineConfig(({ mode }) => {
       VitePWA({
         registerType: 'autoUpdate',
 
-        // make the PWA aware of the subfolder
         manifest: {
           name: 'BeezKnees',
           short_name: 'BeezKnees',
           description: 'Smart Beekeeping Management Platform',
 
-          // critical for subfolder deploys
-          start_url: base,     // '/' in dev, '/beekeeper-dev/' in prod
+          // Root deployment, so just use "/"
+          start_url: base,
           scope: base,
 
           display: 'standalone',
@@ -33,7 +32,6 @@ export default defineConfig(({ mode }) => {
           orientation: 'portrait-primary',
           categories: ['productivity', 'utilities', 'beekeeping'],
 
-          // paths are relative to the manifest location (served from base)
           icons: [
             { src: 'android-chrome-192x192.png', sizes: '192x192', type: 'image/png' },
             { src: 'android-chrome-512x512.png', sizes: '512x512', type: 'image/png' },
@@ -42,7 +40,6 @@ export default defineConfig(({ mode }) => {
             { src: 'favicon-16x16.png', sizes: '16x16', type: 'image/png' }
           ],
 
-          // relative so they resolve under the PWA scope
           shortcuts: [
             {
               name: 'New Inspection',
@@ -59,14 +56,13 @@ export default defineConfig(({ mode }) => {
           ]
         },
 
-        // ensure navigation fallbacks work inside subfolder in offline mode
         workbox: {
+          // SPA fallback at the root
           navigateFallback: `${base}index.html`
         }
       })
     ],
 
-    // optional, but explicit never hurts
     build: {
       outDir: 'dist',
       assetsDir: 'assets',
