@@ -1,5 +1,6 @@
+// src/pages/Legal/CookieSettings.jsx
 import React, { useEffect, useState } from "react";
-import { getConsent, setConsent, resetConsent } from "./cookieConsent";
+import { getConsent, setConsent, resetConsent } from "./CookieConsent";
 
 export default function CookieSettings() {
   const [consent, setConsentState] = useState(getConsent());
@@ -70,13 +71,17 @@ export default function CookieSettings() {
 
       <div className="flex flex-wrap gap-2">
         <button
-          onClick={() => setConsentState(setConsent({ analytics: true, marketing: true }))}
+          onClick={() =>
+            setConsentState(setConsent({ analytics: true, marketing: true }))
+          }
           className="px-4 py-2 rounded-xl bg-amber-500 text-white"
         >
           Accept all
         </button>
         <button
-          onClick={() => setConsentState(setConsent({ analytics: false, marketing: false }))}
+          onClick={() =>
+            setConsentState(setConsent({ analytics: false, marketing: false }))
+          }
           className="px-4 py-2 rounded-xl border"
         >
           Reject non-essential
@@ -87,7 +92,8 @@ export default function CookieSettings() {
       </div>
 
       <p className="text-xs text-gray-500">
-        Last updated: {consent.date ? new Date(consent.date).toLocaleString() : "Not set"}
+        Last updated:{" "}
+        {consent.date ? new Date(consent.date).toLocaleString() : "Not set"}
       </p>
     </div>
   );

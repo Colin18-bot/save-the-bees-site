@@ -1,5 +1,5 @@
 // Lightweight wrapper so we only send GA events if analytics is allowed.
-import { canUse } from "./cookieConsent";
+import { canUse } from "./CookieConsent";
 
 /**
  * Fire a GA4 event safely (only if consented and gtag is available).
