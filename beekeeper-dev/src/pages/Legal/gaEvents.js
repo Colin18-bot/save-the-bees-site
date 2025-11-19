@@ -1,3 +1,4 @@
+// src/pages/Legal/gaEvents.js
 // Lightweight wrapper so we only send GA events if analytics is allowed.
 import { canUse } from "./CookieConsent";
 
@@ -12,7 +13,7 @@ export function trackEvent(name, params = {}) {
     if (typeof window === "undefined") return; // SSR safety
     if (typeof window.gtag !== "function") return; // GA not loaded yet
     window.gtag("event", name, params);
-  } catch (_) {
-    // swallow (never break UX for analytics)
+  } catch {
+    // Never break UX for analytics failures
   }
 }

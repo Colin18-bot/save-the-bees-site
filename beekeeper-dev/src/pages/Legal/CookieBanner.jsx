@@ -32,8 +32,9 @@ const CookieBanner = () => {
           <div className="space-y-1">
             <h2 className="text-base font-semibold">We use cookies</h2>
             <p className="text-sm text-gray-600">
-              We use necessary cookies to make our site work. With your permission, we’d also like to set analytics
-              and marketing cookies. Read our{" "}
+              We use necessary cookies to make our site work. With your
+              permission, we’d also like to set analytics and marketing cookies.
+              Read our{" "}
               <Link to="/legal/privacy" className="underline text-amber-700">
                 Privacy Policy
               </Link>.

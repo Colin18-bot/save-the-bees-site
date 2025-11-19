@@ -25,20 +25,24 @@ export function getConsent() {
 export function setConsent(partial) {
   const next = { ...getConsent(), ...partial, date: new Date().toISOString() };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-  // Tell the rest of the app that consent changed
+
+  // Broadcast to the rest of the app
   window.dispatchEvent(
     new CustomEvent("cookie-consent:updated", { detail: next })
   );
+
   return next;
 }
 
 export function resetConsent() {
   localStorage.removeItem(STORAGE_KEY);
+
+  const reset = { ...DEFAULT_CONSENT };
   window.dispatchEvent(
-    new CustomEvent("cookie-consent:updated", {
-      detail: { ...DEFAULT_CONSENT },
-    })
+    new CustomEvent("cookie-consent:updated", { detail: reset })
   );
+
+  return reset;
 }
 
 export function canUse(category) {
