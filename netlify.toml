@@ -3,9 +3,13 @@
   command = "npm run build"
   publish = "dist"
 
-# Force Netlify to use a stable Node version (avoids Rollup native bug)
 [build.environment]
+  # Use Node 20 on Netlify
   NODE_VERSION = "20"
 
-# You can omit [functions] altogether if you’re not using Netlify Functions
-# (Supabase edge functions are separate)
+  # Work around Rollup's optional native binary issue on Netlify
+  ROLLUP_SKIP_NODEJS_NATIVE = "true"
+
+[functions]
+  # This can stay as-is if you want to keep the existing Netlify functions
+  directory = "netlify/functions"
