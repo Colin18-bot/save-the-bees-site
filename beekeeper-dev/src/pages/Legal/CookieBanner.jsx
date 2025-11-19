@@ -1,6 +1,6 @@
 // src/pages/Legal/CookieBanner.jsx
 import React, { useEffect, useState } from "react";
-import { getConsent, setConsent } from "./CookieConsent";
+import { getConsent, setConsent } from "./cookieConsent";
 import { Link } from "react-router-dom";
 
 const CookieBanner = () => {

@@ -1,7 +1,7 @@
 // Sends a page_view to GA on client-side route changes (React Router).
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { canUse } from "./CookieConsent";
+import { canUse } from "./cookieConsent";
 
 export default function GAReporter() {
   const location = useLocation();

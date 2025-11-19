@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getConsent, setConsent, resetConsent } from "./CookieConsent";
+import { getConsent, setConsent, resetConsent } from "./cookieConsent";
 
 export default function CookieSettings() {
   const [consent, setConsentState] = useState(getConsent());
