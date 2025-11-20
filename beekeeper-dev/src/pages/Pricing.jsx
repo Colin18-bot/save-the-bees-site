@@ -278,7 +278,6 @@ export default function Pricing() {
             "Unlimited apiaries & hives",
             "Full reports + CSV export",
             "Photo uploads & attachments",
-            "NFC tagging (compatible devices)",
             "Priority support",
           ]}
           disabled={!isPremium && upgrading}
