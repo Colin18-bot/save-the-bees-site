@@ -47,7 +47,7 @@ const ForgotPassword = () => {
           <label className="block font-medium mb-1">Email</label>
           <input
             type="email"
-            placeholder="e.g. john.doe@example.com"
+            placeholder="e.g. name@example.com"
             className={`w-full bg-blue-50 border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-500 ${
               email && !isValidEmail(email) ? "border-red-500" : "border-gray-300"
             }`}

@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { loginUser } from "../services/auth";
 import { supabase } from "../services/supabase";
 import googleIcon from "../assets/google-icon.svg";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -15,6 +16,9 @@ const Login = () => {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [redirectMessage, setRedirectMessage] = useState("");
+
+  // NEW: show/hide password state
+  const [showPassword, setShowPassword] = useState(false);
 
   // If already logged in, go where they intended or to /dashboard
   useEffect(() => {
@@ -139,7 +143,7 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            placeholder="e.g. john.doe@example.com"
+            placeholder="e.g. name@example.com"
           />
           {email && !isValidEmail(email) && (
             <p className="text-sm text-red-500 mt-1">
@@ -148,16 +152,26 @@ const Login = () => {
           )}
         </div>
 
-        <div>
+        <div className="relative">
           <label className="block font-medium mb-1">Password</label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-500 bg-blue-50"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             placeholder="Enter your password"
           />
+
+          {/* Password eye icon */}
+          <button
+            type="button"
+            className="absolute right-3 top-9 text-gray-500"
+            onClick={() => setShowPassword((prev) => !prev)}
+          >
+            {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+          </button>
+
           <p className="text-sm text-gray-500 mt-1">
             Must be at least 8 characters with uppercase, lowercase, number, and symbol.
           </p>
