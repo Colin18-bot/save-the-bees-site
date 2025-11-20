@@ -42,7 +42,8 @@ const DEFAULT_PRICE_ID =
   Deno.env.get("STRIPE_PRICE_ID_PREMIUM") ??
   Deno.env.get("PRICE_ID_PREMIUM");
 
-const APP_BASE_URL = Deno.env.get("APP_BASE_URL"); // optional
+// Optional override for the app base URL (e.g. https://beezknees-members.netlify.app)
+const APP_BASE_URL = Deno.env.get("APP_BASE_URL") || "";
 
 const supaSrv = createClient(supabaseUrl, serviceRole);
 
@@ -86,11 +87,8 @@ Deno.serve(async (req: Request) => {
 
     // URLs
     const callerOrigin = req.headers.get("origin") || new URL(req.url).origin;
-    const appBase =
-      APP_BASE_URL ||
-      (callerOrigin.includes("localhost")
-        ? callerOrigin
-        : `${callerOrigin}/beekeeper-dev`);
+    // If APP_BASE_URL is set, always use that; otherwise trust the caller's origin
+    const appBase = APP_BASE_URL || callerOrigin;
 
     const ensureSlash = (p?: string) =>
       p && p.trim() ? (p.startsWith("/") ? p : `/${p}`) : "";
