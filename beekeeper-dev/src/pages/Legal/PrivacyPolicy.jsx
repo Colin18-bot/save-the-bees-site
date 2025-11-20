@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
             href="/contact"
             title="Open the members contact form"
           >
-            info@beezknees.co.uk
+            BeezKnees
           </a>.
         </p>
       </section>
@@ -111,13 +111,13 @@ export default function PrivacyPolicy() {
           You have rights under UK data protection law, including access, rectification, erasure, restriction, data
           portability, and objection. Where processing is based on consent, you may withdraw consent at any time in{" "}
           <a href="/legal/cookies" className="underline text-amber-700">Cookie Settings</a>.
-          You can also export or delete your data in Settings, or email{" "}
+          You can also export or delete your data in Settings, or contact{" "}
           <a
             href="/contact"
             className="underline text-amber-700"
             title="Open the members contact form"
           >
-            info@beezknees.co.uk
+            BeezKnees
           </a>.
         </p>
         <p>
@@ -158,7 +158,7 @@ export default function PrivacyPolicy() {
             className="underline text-amber-700"
             title="Open the members contact form"
           >
-            info@beezknees.co.uk
+            BeezKnees
           </a>.
         </p>
       </section>
