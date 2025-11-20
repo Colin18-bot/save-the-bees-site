@@ -246,6 +246,13 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
             Privacy Policy
           </NavLink>
           <NavLink
+            to="/legal/terms"
+            onClick={handleLinkClick}
+            className="hover:underline block"
+          >
+            Terms of Use
+          </NavLink>
+          <NavLink
             to="/legal/cookies"
             onClick={handleLinkClick}
             className="hover:underline block"

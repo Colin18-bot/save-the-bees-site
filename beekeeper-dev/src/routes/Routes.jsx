@@ -1,5 +1,4 @@
 // src/routes/Routes.jsx
-// src/routes/Routes.jsx
 import { Suspense, lazy } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Layout from "../components/Layout.jsx";
@@ -72,8 +71,9 @@ import EditSale from "../pages/Sales/EditSale.jsx";
 import Updates from "../pages/Updates.jsx";
 
 // Public/legal (lazy)
-const PrivacyPolicy  = lazy(() => import("../pages/Legal/PrivacyPolicy.jsx"));
+const PrivacyPolicy = lazy(() => import("../pages/Legal/PrivacyPolicy.jsx"));
 const CookieSettings = lazy(() => import("../pages/Legal/CookieSettings.jsx"));
+const Terms = lazy(() => import("../pages/Legal/Terms.jsx"));
 
 // Wrapper to avoid repeating ProtectedRoute+Layout
 const Guarded = ({ children }) => (
@@ -104,6 +104,16 @@ function AppRoutes() {
           <Layout>
             <Suspense fallback={<div className="p-6">Loading…</div>}>
               <PrivacyPolicy />
+            </Suspense>
+          </Layout>
+        }
+      />
+      <Route
+        path="/legal/terms"
+        element={
+          <Layout>
+            <Suspense fallback={<div className="p-6">Loading…</div>}>
+              <Terms />
             </Suspense>
           </Layout>
         }
