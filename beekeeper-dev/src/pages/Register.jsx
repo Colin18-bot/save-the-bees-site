@@ -4,12 +4,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { registerUser } from "../services/auth";
 import { supabase } from "../services/supabase";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 const Register = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // If already logged in, send to dashboard
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -22,6 +22,10 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
+
+  // NEW: show/hide password toggles
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const isPasswordValid = (pw) => ({
     length: pw.length >= 8,
@@ -47,23 +51,17 @@ const Register = () => {
     }
 
     try {
-      // 1) Create auth user
-      //    IMPORTANT: registerUser should return the full `data` from supabase.auth.signUp
-      //    e.g. { user, session }
       const signUpData = await registerUser(email, password);
 
-      // Prefer the session returned by signUp (most reliable)
       let session = signUpData?.session || null;
       let userId = signUpData?.user?.id || null;
 
-      // Fallback: read session once (covers rare race where storage isn't populated yet)
       if (!session) {
         const { data: sessData } = await supabase.auth.getSession();
         session = sessData?.session || null;
       }
       if (session && !userId) userId = session.user.id;
 
-      // If we have a session, we can upsert the profile now
       if (session && userId) {
         const { error: profileError } = await supabase
           .from("profiles")
@@ -76,20 +74,17 @@ const Register = () => {
             }],
             { onConflict: "user_id" }
           );
+
         if (profileError) throw profileError;
 
-        // Sign out so the next step is a proper login
         await supabase.auth.signOut();
 
-        // Redirect to Login with success message
         const params = new URLSearchParams(location.search);
         const redirect = params.get("redirect") || "/login";
         navigate(redirect, { state: { successMessage: "Registration successful. Please log in." } });
         return;
       }
 
-      // No session visible yet — don't block the user.
-      // Just go to Login with success message (profile can be created after first login if needed).
       const params = new URLSearchParams(location.search);
       const redirect = params.get("redirect") || "/login";
       navigate(redirect, { state: { successMessage: "Registration successful. Please log in." } });
@@ -111,10 +106,13 @@ const Register = () => {
       >
         ×
       </button>
+
       <h2 className="text-3xl font-bold mb-6 text-center text-green-700">Register</h2>
       {error && <p className="text-red-500 mb-2">{error}</p>}
 
       <form onSubmit={handleRegister} className="space-y-4">
+
+        {/* EMAIL */}
         <div>
           <label className="block font-medium">Email</label>
           <input
@@ -127,10 +125,11 @@ const Register = () => {
           />
         </div>
 
-        <div>
+        {/* PASSWORD */}
+        <div className="relative">
           <label className="block font-medium">Password</label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             className={`w-full border px-3 py-2 rounded bg-blue-50 focus:outline-none focus:ring-2 focus:ring-green-500 ${
               password && !Object.values(criteria).every(Boolean) ? "border-red-500" : "border-gray-300"
             }`}
@@ -139,6 +138,16 @@ const Register = () => {
             placeholder="••••••••"
             required
           />
+
+          {/* PASSWORD EYE ICON */}
+          <button
+            type="button"
+            className="absolute right-3 top-9 text-gray-500"
+            onClick={() => setShowPassword((prev) => !prev)}
+          >
+            {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+          </button>
+
           <ul className="text-sm mt-2 space-y-1">
             <li className="flex items-center">
               {criteria.length ? <FaCheckCircle className="text-green-600 mr-2" /> : <FaTimesCircle className="text-gray-400 mr-2" />}
@@ -163,16 +172,26 @@ const Register = () => {
           </ul>
         </div>
 
-        <div>
+        {/* CONFIRM PASSWORD */}
+        <div className="relative">
           <label className="block font-medium">Confirm Password</label>
           <input
-            type="password"
+            type={showConfirm ? "text" : "password"}
             className="w-full border border-gray-300 px-3 py-2 rounded bg-blue-50 focus:outline-none focus:ring-2 focus:ring-green-500"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
             placeholder="••••••••"
             required
           />
+
+          {/* CONFIRM PASSWORD EYE ICON */}
+          <button
+            type="button"
+            className="absolute right-3 top-9 text-gray-500"
+            onClick={() => setShowConfirm((prev) => !prev)}
+          >
+            {showConfirm ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+          </button>
         </div>
 
         <button type="submit" className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition duration-200 shadow">
@@ -182,6 +201,7 @@ const Register = () => {
         <p className="text-sm text-center mt-2">
           Already have an account? <a href="/login" className="text-blue-600 hover:underline">Log in</a>
         </p>
+
         <p className="text-sm text-center mt-6">
           Curious what’s included? <a href="/pricing" className="text-blue-600 hover:underline">Compare Plans</a>
         </p>
