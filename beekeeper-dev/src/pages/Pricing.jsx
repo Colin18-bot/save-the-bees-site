@@ -123,12 +123,10 @@ export default function Pricing() {
     }
   }, [location]);
 
-  // Compute a safe "escape" target
   const params = new URLSearchParams(location.search);
   const redirectParam = params.get("redirect");
   const backTarget = redirectParam || (user ? "/dashboard" : "/login");
 
-  // Convenience flags
   const isPremium = !!user && subscriptionLevel === "premium";
 
   const handleUpgrade = async () => {
@@ -149,7 +147,6 @@ export default function Pricing() {
       }
       const token = session.access_token;
 
-      // Optional local env price id (not required if secret exists)
       const priceId = import.meta.env.VITE_STRIPE_PRICE_ID_PREMIUM;
 
       const res = await fetch(`${SUPABASE_FUNCTIONS_BASE}/create-checkout`, {
@@ -251,16 +248,19 @@ export default function Pricing() {
 
       {/* Plans */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* FREE PLAN */}
         <PlanCard
           title="Free"
           price="£0"
-          description="Everything you need to get started with confident hive management."
+          description="A perfect starter plan with all features included — just limited to one apiary and two hives."
           features={[
-            "Track 2 hives & multiple inspections",
+            "Full inspection records",
             "To-Dos & calendar reminders",
             "Weather overview",
-            "Printable reports (basic)",
-            "Single apiary",
+            "Photo uploads",
+            "Printable reports",
+            "Logbook & archive",
+            "1 apiary • Up to 2 hives",
           ]}
           disabled={subscriptionLevel === "free" && !!user}
           onClick={() => navigate(user ? "/dashboard" : "/register?redirect=/dashboard")}
@@ -270,15 +270,19 @@ export default function Pricing() {
           currentLabel="Current Plan"
         />
 
+        {/* PREMIUM PLAN */}
         <PlanCard
           title="Premium"
           price={PREMIUM_PRICE_TEXT}
-          description="Designed for serious hobbyists and commercial beekeepers."
+          description="Everything in Free — without limits. Grow your apiaries at your own pace and support BeezKnees development."
           features={[
-            "Unlimited apiaries & hives",
-            "Full reports + CSV export",
-            "Photo uploads & attachments",
+            "Unlimited apiaries",
+            "Unlimited hives",
+            "All features included — nothing locked",
+            "Advanced seasonal & per-apiary reporting",
+            "Ideal for growing hobbyists & sideline/commercial setups",
             "Priority support",
+            "Directly supports ongoing development of BeezKnees",
           ]}
           disabled={!isPremium && upgrading}
           onClick={() => (isPremium ? handleManageBilling() : handleUpgrade())}
@@ -327,12 +331,12 @@ export default function Pricing() {
             <span className="text-green-600 mt-0.5">
               <CheckIcon />
             </span>
-            Mobile-friendly PWA — works great on site
+            Works great on mobiles & tablets — ideal for use at the apiary
           </li>
         </ul>
       </section>
 
-      {/* FAQ (short) */}
+      {/* FAQ */}
       <section className="mt-10 grid grid-cols-1 md-grid-cols-2 gap-6 text-sm">
         <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5">
           <h3 className="font-semibold text-green-900">Can I switch plans anytime?</h3>
