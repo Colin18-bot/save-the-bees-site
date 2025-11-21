@@ -91,7 +91,8 @@ const Layout = ({ children }) => {
         avatarUrl={avatarUrl}
       />
 
-      <div className="flex flex-1 relative overflow-hidden">
+      {/* 🔧 MAIN WRAPPER – removed overflow-hidden so content isn't clipped on mobile */}
+      <div className="flex flex-1 relative">
         {/* Backdrop Blur when Sidebar is open on mobile */}
         {isMobileMenuOpen && (
           <div
@@ -124,10 +125,8 @@ const Layout = ({ children }) => {
           </div>
 
           {/* Page Content */}
-          <main className="flex-1 bg-white z-10 overflow-y-auto">
-            <div className="w-full max-w-5xl mx-auto px-4 py-6">
-              {children}
-            </div>
+          <main className="flex-1 p-4 sm:p-6 overflow-y-auto bg-white z-10 max-w-full">
+            {children}
           </main>
         </div>
       </div>
