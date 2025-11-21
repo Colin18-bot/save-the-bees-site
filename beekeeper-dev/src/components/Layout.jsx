@@ -7,7 +7,7 @@ import { supabase } from "../services/supabase";
 
 // ✅ Legal/consent
 import AnalyticsGate from "../pages/Legal/AnalyticsGate";
-import GAReporter from "../pages/Legal/GAReporter";   // ← NEW
+import GAReporter from "../pages/Legal/GAReporter"; // ← NEW
 import CookieBanner from "../pages/Legal/CookieBanner";
 
 const Layout = ({ children }) => {
@@ -82,7 +82,7 @@ const Layout = ({ children }) => {
     <div className="min-h-screen flex flex-col bg-yellow-500">
       {/* ✅ Loads GA only if the user has granted analytics consent */}
       <AnalyticsGate />
-      <GAReporter /> {/* ← NEW: reports page_view on route changes when analytics is allowed */}
+      <GAReporter /> {/* reports page_view on route changes when analytics is allowed */}
 
       <NavBar
         isMobileMenuOpen={isMobileMenuOpen}
@@ -91,8 +91,11 @@ const Layout = ({ children }) => {
         avatarUrl={avatarUrl}
       />
 
-      {/* 🔧 MAIN WRAPPER – removed overflow-hidden so content isn't clipped on mobile */}
-      <div className="flex flex-1 relative">
+      {/* MAIN WRAPPER
+          - On mobile: block layout (no flex), so sidebar width doesn’t fight with content
+          - On md+: flex layout with sidebar on the left as before
+      */}
+      <div className="flex-1 relative overflow-hidden md:flex">
         {/* Backdrop Blur when Sidebar is open on mobile */}
         {isMobileMenuOpen && (
           <div
@@ -101,10 +104,10 @@ const Layout = ({ children }) => {
           />
         )}
 
-        {/* Gold strip on the left */}
+        {/* Gold strip on the left (desktop only) */}
         <div className="w-12 bg-yellow-500 hidden md:block" />
 
-        {/* Sidebar */}
+        {/* Sidebar (desktop: in flow; mobile: fixed off-canvas) */}
         <div
           className={`fixed md:static top-0 left-0 z-40 w-64 bg-[#1a3329] text-white rounded-l-2xl overflow-y-auto scrollbar-none transform transition-transform duration-300 ${
             isMobileMenuOpen ? "translate-x-0 h-screen" : "-translate-x-full"
@@ -114,7 +117,7 @@ const Layout = ({ children }) => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col min-h-screen">
+        <div className="md:flex-1 flex flex-col min-h-screen">
           {/* Banner */}
           <div className="relative z-0">
             <img
@@ -125,7 +128,7 @@ const Layout = ({ children }) => {
           </div>
 
           {/* Page Content */}
-          <main className="flex-1 p-4 sm:p-6 overflow-y-auto bg-white z-10 max-w-full">
+          <main className="flex-1 p-4 sm:p-6 overflow-auto bg-white z-10 max-w-full">
             {children}
           </main>
         </div>
