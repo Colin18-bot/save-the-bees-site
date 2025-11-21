@@ -106,7 +106,9 @@ const LogEntryList = () => {
         .single();
       if (!ignore) setInspectionMeta(data || null);
     })();
-    return () => { ignore = true; };
+    return () => {
+      ignore = true;
+    };
   }, [inspectionIdFromUrl]);
 
   // fetch active options + active entries
@@ -145,7 +147,7 @@ const LogEntryList = () => {
       const [
         { data: entriesData, error: entriesErr },
         { data: apiaryData, error: apiaryErr },
-        { data: hiveData, error: hiveErr }
+        { data: hiveData, error: hiveErr },
       ] = await Promise.all([
         entriesQuery,
         supabase
@@ -157,7 +159,7 @@ const LogEntryList = () => {
           .from("hives")
           .select("id, name, apiary_id")
           .is("archived_at", null)
-          .order("name", { ascending: true })
+          .order("name", { ascending: true }),
       ]);
 
       if (entriesErr) setError(entriesErr.message || "Failed to load logbook entries.");
@@ -191,7 +193,7 @@ const LogEntryList = () => {
   // Client-side filter (defensive; server already filters when selected)
   const filtered = useMemo(() => {
     if (inspectionIdFromUrl) return entries; // already scoped to inspection
-    return selectedApiary ? entries.filter(e => e.apiary_id === selectedApiary) : entries;
+    return selectedApiary ? entries.filter((e) => e.apiary_id === selectedApiary) : entries;
   }, [entries, selectedApiary, inspectionIdFromUrl]);
 
   // If a highlight is present, auto-jump to the correct page (once)
@@ -254,40 +256,60 @@ const LogEntryList = () => {
   return (
     <div className="p-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+      <div className="flex flex-col gap-3 mb-4 md:flex-row md:items-center md:justify-between">
         <h2 className="text-2xl font-bold">Logbook Entries</h2>
 
-        <div className="flex items-center gap-2">
+        {/* Controls wrapper – stacks on mobile, row on larger screens */}
+        <div className="flex flex-col gap-2 w-full sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
           {/* Filter by apiary (disabled when inspection filter is active) */}
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-700">Filter by Apiary:</label>
+            <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
+              Filter by Apiary:
+            </label>
             <select
               value={selectedApiary}
-              onChange={(e) => { setSelectedApiary(e.target.value); setPage(1); }}
+              onChange={(e) => {
+                setSelectedApiary(e.target.value);
+                setPage(1);
+              }}
               disabled={!!inspectionIdFromUrl}
-              className={`border border-gray-300 rounded px-2 py-1 text-sm ${inspectionIdFromUrl ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""}`}
-              title={inspectionIdFromUrl ? "Disabled while filtering by a specific inspection" : "Filter by Apiary"}
+              className={`border border-gray-300 rounded px-2 py-1 text-sm max-w-full ${
+                inspectionIdFromUrl
+                  ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                  : ""
+              }`}
+              title={
+                inspectionIdFromUrl
+                  ? "Disabled while filtering by a specific inspection"
+                  : "Filter by Apiary"
+              }
             >
               <option value="">All Apiaries</option>
-              {apiaries.map(a => (
-                <option key={a.id} value={a.id}>{a.name}</option>
+              {apiaries.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name}
+                </option>
               ))}
             </select>
           </div>
 
           {/* View toggle */}
-          <div className="flex border border-gray-300 rounded overflow-hidden">
+          <div className="flex border border-gray-300 rounded overflow-hidden self-start sm:self-auto">
             <button
               type="button"
               onClick={() => setViewMode("list")}
-              className={`px-3 py-1 text-sm ${viewMode === "list" ? "bg-green-700 text-white" : "bg-white"}`}
+              className={`px-3 py-1 text-sm ${
+                viewMode === "list" ? "bg-green-700 text-white" : "bg-white"
+              }`}
             >
               List
             </button>
             <button
               type="button"
               onClick={() => setViewMode("grid")}
-              className={`px-3 py-1 text-sm ${viewMode === "grid" ? "bg-green-700 text-white" : "bg-white"}`}
+              className={`px-3 py-1 text-sm ${
+                viewMode === "grid" ? "bg-green-700 text-white" : "bg-white"
+              }`}
             >
               Grid
             </button>
@@ -296,7 +318,7 @@ const LogEntryList = () => {
           {/* Add new */}
           <Link
             to="/logbook/new"
-            className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
+            className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded self-start sm:self-auto"
           >
             New Log Entry
           </Link>
@@ -363,10 +385,7 @@ const LogEntryList = () => {
                     key={e.id}
                     id={`log-${e.id}`}
                     data-highlight={isHighlighted ? "true" : "false"}
-                    className={[
-                      "p-4",
-                      isHighlighted ? "bg-amber-50" : "",
-                    ].join(" ")}
+                    className={["p-4", isHighlighted ? "bg-amber-50" : ""].join(" ")}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">

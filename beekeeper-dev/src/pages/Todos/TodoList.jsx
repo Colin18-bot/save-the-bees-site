@@ -250,20 +250,24 @@ const TodoList = () => {
 
   return (
     <div className="p-6 space-y-4">
-      <div className="flex items-center justify-between flex-wrap gap-3">
+      {/* Header: mobile-friendly controls like LogEntryList */}
+      <div className="flex flex-col gap-3 mb-2 md:flex-row md:items-center md:justify-between">
         <h1 className="text-2xl font-bold">Tasks</h1>
 
-        <div className="flex items-center gap-2">
+        {/* Controls wrapper – stacks on mobile, row on larger screens */}
+        <div className="flex flex-col gap-2 w-full sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
           {/* Filter by Apiary */}
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-700">Filter by Apiary:</label>
+            <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
+              Filter by Apiary:
+            </label>
             <select
               value={selectedApiary}
               onChange={(e) => {
                 setSelectedApiary(e.target.value);
                 setPage(1);
               }}
-              className="border border-gray-300 rounded px-2 py-1 text-sm"
+              className="border border-gray-300 rounded px-2 py-1 text-sm max-w-full"
             >
               <option value="">All Apiaries</option>
               {apiaries.map((a) => (
@@ -275,25 +279,32 @@ const TodoList = () => {
           </div>
 
           {/* View toggle */}
-          <div className="flex border border-gray-300 rounded overflow-hidden">
+          <div className="flex border border-gray-300 rounded overflow-hidden self-start sm:self-auto">
             <button
               type="button"
               onClick={() => setView("list")}
-              className={`px-3 py-1 text-sm ${view === "list" ? "bg-green-700 text-white" : "bg-white"}`}
+              className={`px-3 py-1 text-sm ${
+                view === "list" ? "bg-green-700 text-white" : "bg-white"
+              }`}
             >
               List
             </button>
             <button
               type="button"
               onClick={() => setView("grid")}
-              className={`px-3 py-1 text-sm ${view === "grid" ? "bg-green-700 text-white" : "bg-white"}`}
+              className={`px-3 py-1 text-sm ${
+                view === "grid" ? "bg-green-700 text-white" : "bg-white"
+              }`}
             >
               Grid
             </button>
           </div>
 
           {/* Add new */}
-          <Link to="/todos/new" className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded">
+          <Link
+            to="/todos/new"
+            className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded self-start sm:self-auto"
+          >
             New Task
           </Link>
         </div>
@@ -301,7 +312,9 @@ const TodoList = () => {
 
       {/* Error */}
       {error && (
-        <div className="text-red-700 bg-red-50 border border-red-200 rounded p-3 text-sm mb-3">{error}</div>
+        <div className="text-red-700 bg-red-50 border border-red-200 rounded p-3 text-sm mb-3">
+          {error}
+        </div>
       )}
 
       {/* Empty / List & Grid */}
@@ -342,7 +355,9 @@ const TodoList = () => {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="font-bold text-lg">{todo.title}</h3>
-                    <span className={`text-xs px-2 py-1 rounded ${badgeClass(todo.status)}`}>{displayStatus}</span>
+                    <span className={`text-xs px-2 py-1 rounded ${badgeClass(todo.status)}`}>
+                      {displayStatus}
+                    </span>
                   </div>
 
                   <div className="mt-2 space-y-1">
@@ -419,7 +434,10 @@ const TodoList = () => {
                   key={todo.id}
                   id={`todo-${todo.id}`}
                   data-highlight={isHighlighted ? "true" : "false"}
-                  className={["p-4", isHighlighted ? "bg-amber-50 ring-2 ring-amber-400" : ""].join(" ")}
+                  className={[
+                    "p-4",
+                    isHighlighted ? "bg-amber-50 ring-2 ring-amber-400" : "",
+                  ].join(" ")}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -439,7 +457,9 @@ const TodoList = () => {
                         {apiaryName && <span className="mr-2">Apiary: {apiaryName}</span>}
                         {hiveLabel && <span>Hive: {hiveLabel}</span>}
                       </p>
-                      {todo.notes && <p className="mt-2 text-gray-800 whitespace-pre-wrap">{todo.notes}</p>}
+                      {todo.notes && (
+                        <p className="mt-2 text-gray-800 whitespace-pre-wrap">{todo.notes}</p>
+                      )}
                       <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
                         <Link
                           to={`/todos/${todo.id}/edit`}
