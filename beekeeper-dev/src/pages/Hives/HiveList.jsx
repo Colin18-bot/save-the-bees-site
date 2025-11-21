@@ -369,7 +369,8 @@ const HiveList = () => {
                     <MapContainer
                       center={[lat, lon]}
                       zoom={13}
-                      scrollWheelZoom={false}
+                      scrollWheelZoom={true}   // zoom stays enabled
+                      dragging={false}         // prevents accidental map movement
                       className="h-32 w-full mb-2 rounded"
                     >
                       <TileLayer
