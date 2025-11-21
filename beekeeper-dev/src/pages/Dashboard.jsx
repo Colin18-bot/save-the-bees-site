@@ -325,22 +325,27 @@ const Dashboard = () => {
     `/logbook${selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""}`;
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
+    <div className="p-4 sm:p-6 space-y-6">
+      {/* Header: stacks nicely on mobile, side-by-side on larger screens */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-bold">Dashboard</h1>
 
         {/* Filter by Apiary */}
-        <div className="flex items-center gap-2">
-          <label htmlFor="apiaryFilter" className="font-medium">Filter by Apiary:</label>
+        <div className="flex items-center gap-2 flex-wrap sm:justify-end">
+          <label htmlFor="apiaryFilter" className="font-medium">
+            Filter by Apiary:
+          </label>
           <select
             id="apiaryFilter"
-            className="border rounded px-2 py-1"
+            className="border rounded px-2 py-1 max-w-full"
             value={selectedApiaryId}
             onChange={(e) => setSelectedApiaryId(e.target.value)}
           >
             <option value="all">All Apiaries</option>
             {apiariesList.map((a) => (
-              <option key={a.id} value={a.id}>{a.name}</option>
+              <option key={a.id} value={a.id}>
+                {a.name}
+              </option>
             ))}
           </select>
         </div>
@@ -482,7 +487,6 @@ const Dashboard = () => {
                         <strong>{t.due_date ? formatUKDate(t.due_date) : "No date"}</strong>
                         <span className={statusPill(t.status)}>{t.status || "Pending"}</span>
                         {overdue && <span className="text-red-700 text-xs font-semibold">Overdue</span>}
-                        {/* Removed Archived pill from left cluster for tasks */}
                       </div>
                       <div className="truncate">
                         {t.title}
@@ -545,11 +549,9 @@ const Dashboard = () => {
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <strong className="mr-1">{formatUKDate(l.date)}</strong>: {l.log_type}
-                        {/* Removed Archived pill from left cluster for logs */}
                       </div>
                       {l.apiary_id && apiaryNameById[l.apiary_id] ? ` • Apiary: ${apiaryNameById[l.apiary_id]}` : ""}
                       {l.entry ? ` — ${l.entry.slice(0, 80)}` : ""}
-                      {/* Only show linked inspection if this log entry is not archived */}
                       {!l.archived_at && l.inspection?.date && (
                         <>
                           {" • "}
@@ -650,7 +652,7 @@ const Dashboard = () => {
       {/* Quick Actions */}
       <div className="bg-white rounded shadow p-4">
         <h2 className="text-lg font-semibold mb-2">Quick Actions</h2>
-        <div className="space-x-4">
+        <div className="flex flex-wrap gap-3">
           <Link to="/apiaries/new" className="text-blue-600 underline">New Apiary</Link>
           <Link to="/hives/new" className="text-blue-600 underline">New Hive</Link>
           <Link to="/inspections/new" className="text-blue-600 underline">New Inspection</Link>
