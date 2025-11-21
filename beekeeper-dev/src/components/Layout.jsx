@@ -124,8 +124,10 @@ const Layout = ({ children }) => {
           </div>
 
           {/* Page Content */}
-          <main className="flex-1 p-4 overflow-auto bg-white z-10">
-            {children}
+          <main className="flex-1 bg-white z-10 overflow-y-auto">
+            <div className="w-full max-w-5xl mx-auto px-4 py-6">
+              {children}
+            </div>
           </main>
         </div>
       </div>
