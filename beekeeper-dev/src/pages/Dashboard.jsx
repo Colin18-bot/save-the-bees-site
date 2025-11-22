@@ -97,14 +97,14 @@ const Dashboard = () => {
   const [hiveNameById, setHiveNameById] = useState({});
 
   const formatUKDate = (d) => {
-    if (!d) return "No date";
-    const dt = new Date(d);
-    if (isNaN(dt)) return d;
-    const dd = String(dt.getDate()).padStart(2, "0");
-    const mm = String(dt.getMonth() + 1).padStart(2, "0");
-    const yyyy = dt.getFullYear();
-    return `${dd}/${mm}/${yyyy}`;
-  };
+  if (!d) return "No date";
+  const dt = new Date(d);
+  if (isNaN(dt)) return d;
+  const dd = String(dt.getDate()).padStart(2, "0");
+  const mm = String(dt.getMonth() + 1).padStart(2, "0");
+  const yyyy = dt.getFullYear();
+  return `${dd}/${mm}/${yyyy}`;
+};
 
   // Build report link with current filter
   const reportHref = useMemo(() => {
@@ -326,33 +326,32 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 space-y-6">
-     <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-  <h1 className="text-2xl font-bold">Dashboard</h1>
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
 
-  {/* Filter by Apiary */}
-  <div className="w-full md:w-auto flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
-    <label
-      htmlFor="apiaryFilter"
-      className="font-medium text-sm whitespace-nowrap"
-    >
-      Filter by Apiary:
-    </label>
-    <select
-      id="apiaryFilter"
-      className="w-full sm:w-auto border rounded px-3 py-2"
-      value={selectedApiaryId}
-      onChange={(e) => setSelectedApiaryId(e.target.value)}
-    >
-      <option value="all">All Apiaries</option>
-      {apiariesList.map((a) => (
-        <option key={a.id} value={a.id}>
-          {a.name}
-        </option>
-      ))}
-    </select>
-  </div>
-</div>
-
+        {/* Filter by Apiary */}
+        <div className="w-full md:w-auto flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+          <label
+            htmlFor="apiaryFilter"
+            className="font-medium text-sm whitespace-nowrap"
+          >
+            Filter by Apiary:
+          </label>
+          <select
+            id="apiaryFilter"
+            className="w-full sm:w-auto border rounded px-3 py-2"
+            value={selectedApiaryId}
+            onChange={(e) => setSelectedApiaryId(e.target.value)}
+          >
+            <option value="all">All Apiaries</option>
+            {apiariesList.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       {/* Reports & Export */}
       <div
@@ -424,20 +423,26 @@ const Dashboard = () => {
               {recentInspections.map((i) => (
                 <li
                   key={i.id}
-                  className={`border p-2 rounded text-sm flex items-center justify-between ${i.archived_at ? "opacity-60" : ""}`}
+                  className={`border p-2 rounded text-sm ${i.archived_at ? "opacity-60" : ""}`}
                   title={i.archived_at ? "Archived inspection" : ""}
                 >
+                  {/* Text row */}
                   <div className="min-w-0">
                     <strong className="mr-1">{formatUKDate(i.date)}</strong>
-                    {i.apiary_id && apiaryNameById[i.apiary_id] ? ` • Apiary: ${apiaryNameById[i.apiary_id]}` : ""}
-                    {i.hive_id && hiveNameById[i.hive_id] ? ` • Hive: ${hiveNameById[i.hive_id]}` : ""}
+                    {i.apiary_id && apiaryNameById[i.apiary_id]
+                      ? ` • Apiary: ${apiaryNameById[i.apiary_id]}`
+                      : ""}
+                    {i.hive_id && hiveNameById[i.hive_id]
+                      ? ` • Hive: ${hiveNameById[i.hive_id]}`
+                      : ""}
                     {i.notes ? ` — ${i.notes.slice(0, 80)}` : ""}
                   </div>
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    {/* Keep archived pill on the right for inspections */}
+
+                  {/* Actions row at bottom */}
+                  <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
                     <ArchivedPill at={i.archived_at} />
                     {!i.archived_at && (
-                      <>
+                      <div className="flex items-center gap-3 flex-wrap">
                         <Link
                           to={toInspectionsList(i.id)}
                           className="text-blue-600 hover:underline whitespace-nowrap"
@@ -452,7 +457,7 @@ const Dashboard = () => {
                         >
                           ✎ Edit
                         </Link>
-                      </>
+                      </div>
                     )}
                   </div>
                 </li>
@@ -482,27 +487,32 @@ const Dashboard = () => {
                 return (
                   <li
                     key={t.id}
-                    className={`border p-2 rounded text-sm flex items-center justify-between ${t.archived_at ? "opacity-60" : ""}`}
+                    className={`border p-2 rounded text-sm ${t.archived_at ? "opacity-60" : ""}`}
                     title={t.archived_at ? "Archived task" : ""}
                   >
+                    {/* Text row */}
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <strong>{t.due_date ? formatUKDate(t.due_date) : "No date"}</strong>
                         <span className={statusPill(t.status)}>{t.status || "Pending"}</span>
-                        {overdue && <span className="text-red-700 text-xs font-semibold">Overdue</span>}
-                        {/* Removed Archived pill from left cluster for tasks */}
+                        {overdue && (
+                          <span className="text-red-700 text-xs font-semibold">Overdue</span>
+                        )}
                       </div>
                       <div className="truncate">
                         {t.title}
                         {t.hive_name ? ` • Hive: ${t.hive_name}` : ""}
-                        {t.apiary_id && apiaryNameById[t.apiary_id] ? ` • Apiary: ${apiaryNameById[t.apiary_id]}` : ""}
+                        {t.apiary_id && apiaryNameById[t.apiary_id]
+                          ? ` • Apiary: ${apiaryNameById[t.apiary_id]}`
+                          : ""}
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                      {t.archived_at ? (
-                        <ArchivedPill at={t.archived_at} />
-                      ) : (
-                        <>
+
+                    {/* Actions row at bottom */}
+                    <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
+                      {t.archived_at && <ArchivedPill at={t.archived_at} />}
+                      {!t.archived_at && (
+                        <div className="flex items-center gap-3 flex-wrap">
                           <Link
                             to={toTodosList(t.id)}
                             className="text-blue-600 hover:underline whitespace-nowrap"
@@ -517,7 +527,7 @@ const Dashboard = () => {
                           >
                             ✎ Edit
                           </Link>
-                        </>
+                        </div>
                       )}
                     </div>
                   </li>
@@ -549,49 +559,50 @@ const Dashboard = () => {
                   className={`border p-2 rounded text-sm ${l.archived_at ? "opacity-60" : ""}`}
                   title={l.archived_at ? "Archived log entry" : ""}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <strong className="mr-1">{formatUKDate(l.date)}</strong>: {l.log_type}
-                        {/* Removed Archived pill from left cluster for logs */}
+                  {/* Text row */}
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <strong className="mr-1">{formatUKDate(l.date)}</strong>: {l.log_type}
+                    </div>
+                    {l.apiary_id && apiaryNameById[l.apiary_id]
+                      ? ` • Apiary: ${apiaryNameById[l.apiary_id]}`
+                      : ""}
+                    {l.entry ? ` — ${l.entry.slice(0, 80)}` : ""}
+                    {!l.archived_at && l.inspection?.date && (
+                      <>
+                        {" • "}
+                        <Link
+                          to={`/inspections/${l.inspection_id}/edit`}
+                          className="text-blue-600 underline"
+                        >
+                          Inspection ({formatUKDate(l.inspection.date)})
+                        </Link>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Actions row at bottom */}
+                  <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
+                    {l.archived_at && <ArchivedPill at={l.archived_at} />}
+                    {!l.archived_at && (
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <Link
+                          to={toLogbookList(l.id)}
+                          className="text-blue-600 hover:underline whitespace-nowrap"
+                          aria-label={`Open log entry ${l.id}`}
+
+                        >
+                          Open →
+                        </Link>
+                        <Link
+                          to={`/logbook/${l.id}/edit`}
+                          className="text-xs text-gray-600 hover:underline whitespace-nowrap"
+                          aria-label={`Edit log entry ${l.id}`}
+                        >
+                          ✎ Edit
+                        </Link>
                       </div>
-                      {l.apiary_id && apiaryNameById[l.apiary_id] ? ` • Apiary: ${apiaryNameById[l.apiary_id]}` : ""}
-                      {l.entry ? ` — ${l.entry.slice(0, 80)}` : ""}
-                      {/* Only show linked inspection if this log entry is not archived */}
-                      {!l.archived_at && l.inspection?.date && (
-                        <>
-                          {" • "}
-                          <Link
-                            to={`/inspections/${l.inspection_id}/edit`}
-                            className="text-blue-600 underline"
-                          >
-                            Inspection ({formatUKDate(l.inspection.date)})
-                          </Link>
-                        </>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-3 flex-shrink-0">
-                      {l.archived_at ? (
-                        <ArchivedPill at={l.archived_at} />
-                      ) : (
-                        <>
-                          <Link
-                            to={toLogbookList(l.id)}
-                            className="text-blue-600 hover:underline whitespace-nowrap"
-                            aria-label={`Open log entry ${l.id} in list`}
-                          >
-                            Open →
-                          </Link>
-                          <Link
-                            to={`/logbook/${l.id}/edit`}
-                            className="text-xs text-gray-600 hover:underline whitespace-nowrap"
-                            aria-label={`Edit log entry ${l.id}`}
-                          >
-                            ✎ Edit
-                          </Link>
-                        </>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </li>
               ))}
@@ -611,7 +622,10 @@ const Dashboard = () => {
         <p className="text-xs text-gray-600 mb-3">
           📍 Weather is based on your <strong>default apiary</strong>
           {defaultApiaryName ? `: ${defaultApiaryName}` : ""}.{" "}
-          <Link to="/settings" className="text-blue-600 underline">Change default in Settings</Link>.
+          <Link to="/settings" className="text-blue-600 underline">
+            Change default in Settings
+          </Link>
+          .
           {usedFallback && (
             <>
               {" "}
@@ -630,9 +644,12 @@ const Dashboard = () => {
           <div className="text-sm">
             <p>
               <strong>Now:</strong>{" "}
-              {weather?.current?.temperature_2m ?? "N/A"}°C, Wind {weather?.current?.wind_speed_10m ?? "N/A"} km/h
+              {weather?.current?.temperature_2m ?? "N/A"}°C, Wind{" "}
+              {weather?.current?.wind_speed_10m ?? "N/A"} km/h
             </p>
-            <p className="mt-2"><strong>Next 5 Days:</strong></p>
+            <p className="mt-2">
+              <strong>Next 5 Days:</strong>
+            </p>
             <ul className="grid grid-cols-1 gap-x-6">
               {Array.isArray(weather?.forecast?.time) && weather.forecast.time.length ? (
                 weather.forecast.time.slice(0, 5).map((day, index) => {
@@ -643,7 +660,8 @@ const Dashboard = () => {
                   const tmax = weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
                   return (
                     <li key={day ?? index}>
-                      {formatUKDate(day)}: {icon} {label && `${label} — `}{tmin}°C → {tmax}°C
+                      {formatUKDate(day)}: {icon} {label && `${label} — `}
+                      {tmin}°C → {tmax}°C
                     </li>
                   );
                 })
@@ -659,11 +677,21 @@ const Dashboard = () => {
       <div className="bg-white rounded shadow p-4">
         <h2 className="text-lg font-semibold mb-2">Quick Actions</h2>
         <div className="space-x-4">
-          <Link to="/apiaries/new" className="text-blue-600 underline">New Apiary</Link>
-          <Link to="/hives/new" className="text-blue-600 underline">New Hive</Link>
-          <Link to="/inspections/new" className="text-blue-600 underline">New Inspection</Link>
-          <Link to="/archive" className="text-blue-600 underline">View Archive</Link>
-          <Link to={reportHref} className="text-blue-600 underline">Report / Export</Link>
+          <Link to="/apiaries/new" className="text-blue-600 underline">
+            New Apiary
+          </Link>
+          <Link to="/hives/new" className="text-blue-600 underline">
+            New Hive
+          </Link>
+          <Link to="/inspections/new" className="text-blue-600 underline">
+            New Inspection
+          </Link>
+          <Link to="/archive" className="text-blue-600 underline">
+            View Archive
+          </Link>
+          <Link to={reportHref} className="text-blue-600 underline">
+            Report / Export
+          </Link>
         </div>
       </div>
     </div>
