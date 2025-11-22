@@ -952,3 +952,10 @@ button:focus,
 #backToTop:hover {
   background-color: #e09f00;
 }
+
+.hivetag-list {
+  list-style-position: inside; /* bullet sits with the text */
+  padding-left: 0;             /* remove extra left padding */
+  margin-left: 0;              /* keep aligned with paragraph text */
+  margin-bottom: 1rem; /* ← adds space below the bullet list */
+}

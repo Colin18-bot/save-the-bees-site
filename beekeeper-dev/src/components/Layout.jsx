@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import Sidebar from "../components/Sidebar";
-import bannerImage from "../assets/banner.jpg";
+import bannerImage from "../assets/banner.webp";
 import { supabase } from "../services/supabase";
 
 // ✅ Legal/consent

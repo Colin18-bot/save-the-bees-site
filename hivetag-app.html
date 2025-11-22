@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>HiveTag Beekeeping App – UK Hive Records, Tasks & Apiary Management</title>
+
+    <!-- Hamburger button -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- Your CSS file -->
+    <link rel="stylesheet" href="css/style.css" />
+
+    <!-- Small inline styles to match index hero CTA -->
+    <style>
+      .hero-cta {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.6rem 1.4rem;
+        border-radius: 999px;
+        background-color: #166534; /* deep green */
+        color: #ffffff;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .hero-cta:hover {
+        background-color: #14532d;
+      }
+    </style>
+
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="HiveTag is a UK-based beekeeping app from BeezKnees for recording hive inspections, apiaries, tasks, inventory, sales and expenses – perfect for hobby beekeepers in Cardiff, South Wales and across the UK."
+    />
+    <meta
+      name="keywords"
+      content="HiveTag app, UK beekeeping app, beekeeping records, hive inspection log, apiary management Wales, Cardiff beekeeping, hive health tracking, beekeeping software UK, hobby beekeeper tools"
+    />
+    <meta name="author" content="Colin Chorley" />
+
+    <!-- Open Graph (for sharing / rich previews) -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="HiveTag Beekeeping App – UK Hive Records, Tasks & Apiary Management"
+    />
+    <meta
+      property="og:description"
+      content="Keep all your beekeeping records in one place – apiaries, hives, inspections, tasks, inventory, sales and expenses – with HiveTag from BeezKnees."
+    />
+    <meta property="og:url" content="https://www.beezknees.co.uk/hivetag-app.html" />
+    <meta
+      property="og:image"
+      content="https://www.beezknees.co.uk/images/BeezKnees-Logo.png"
+    />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="HiveTag Beekeeping App – UK Hive Records, Tasks & Apiary Management"
+    />
+    <meta
+      name="twitter:description"
+      content="HiveTag helps UK beekeepers track apiaries, hives, inspections and costs in one simple web app."
+    />
+    <meta
+      name="twitter:image"
+      content="https://www.beezknees.co.uk/images/BeezKnees-Logo.png"
+    />
+
+    <!-- Favicons -->
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+    <!-- 16x16 and 32x32 for classic tabs -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/images/favicon-16x16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/images/favicon-32x32.png"
+    />
+    <!-- Apple touch icon for iOS -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/images/apple-touch-icon.png"
+    />
+    <!-- Android home screen icons -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="/images/android-chrome-192x192.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/images/android-chrome-512x512.png"
+    />
+    <!-- Android / PWA -->
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Schema.org Structured Data for HiveTag page -->
+    <script type="application/ld+json">
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "HiveTag",
+          "url": "https://beezknees-members.netlify.app/",
+          "applicationCategory": "ProductivityApplication",
+          "operatingSystem": "Web",
+          "description": "HiveTag is a simple web-based beekeeping app for recording apiaries, hives, inspections, tasks, inventory, sales and expenses.",
+          "creator": {
+            "@type": "Person",
+            "name": "Colin Chorley"
+          },
+          "areaServed": {
+            "@type": "Country",
+            "name": "United Kingdom"
+          },
+          "spatialCoverage": [
+            {
+              "@type": "Place",
+              "name": "Cardiff, South Wales, UK"
+            },
+            {
+              "@type": "Place",
+              "name": "Vale of Glamorgan, Wales, UK"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.beezknees.co.uk/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "HiveTag App",
+              "item": "https://www.beezknees.co.uk/hivetag-app.html"
+            }
+          ]
+        }
+      ]
+    </script>
+  </head>
+  <body>
+    <!-- Fixed Header and Nav Container -->
+    <div class="fixed-header">
+      <header class="site-header" role="region" aria-label="Site Header">
+        <div class="header-container" role="region" aria-label="Site Branding">
+          <a href="https://www.beezknees.co.uk">
+            <img
+              src="images/BeezKnees-Logo.png"
+              alt="BeezKnees-Logo"
+              class="site-logo"
+            />
+          </a>
+
+          <h1 class="site-title">BeezKnees</h1>
+          <!-- WORKING HAMBURGER ICON BUTTON -->
+          <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </header>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+        <li>
+          <a href="/index.html" title="Visit the homepage">Home</a>
+        </li>
+
+        <li class="dropdown">
+          <a href="/about-us.html" title="Learn more about us">About</a>
+        </li>
+
+        <li class="dropdown">
+          <a href="/donate.html" title="Support out mission">Donate</a>
+        </li>
+
+        <li class="dropdown">
+          <a href="/beekeeping-guides.html" title="Explore our beekeeping guides"
+            >Beekeeping</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li>
+              <a
+                href="/getting-started.html"
+                title="Begin your beekeeping journey"
+                >Getting Started</a
+              >
+            </li>
+            <li>
+              <a href="/equipment.html" title="Essential beekeeping equipment"
+                >Equipment</a
+              >
+            </li>
+            <li>
+              <a href="/hive-management.html" title="Manage your hive effectively"
+                >Hive Management</a
+              >
+            </li>
+            <li>
+              <a href="/varroa-management.html" title="control varroa mite infestations"
+                >Varroa Management</a
+              >
+            </li>
+            <li>
+              <a href="/hygiene.html" title="Keep your hive clean and healthy"
+                >Hygiene</a
+              >
+            </li>
+            <li>
+              <a href="/bee-stings.html" title="Understand and treat bee stings"
+                >Bee Stings</a
+              >
+            </li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary"
+            >Apiary Calendar</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/january.html" title="January beekeeping tasks">January</a></li>
+            <li><a href="/february.html" title="February beekeeping tasks">February</a></li>
+            <li><a href="/march.html" title="March beekeeping tasks">March</a></li>
+            <li><a href="/april.html" title="April beekeeping tasks">April</a></li>
+            <li><a href="/may.html" title="May beekeeping tasks">May</a></li>
+            <li><a href="/june.html" title="June beekeeping tasks">June</a></li>
+            <li><a href="/july.html" title="July beekeeping tasks">July</a></li>
+            <li><a href="/august.html" title="August beekeeping tasks">August</a></li>
+            <li>
+              <a href="/september.html" title="September beekeeping tasks"
+                >September</a
+              >
+            </li>
+            <li>
+              <a href="/october.html" title="October beekeeping tasks">October</a>
+            </li>
+            <li>
+              <a href="/november.html" title="November beekeeping tasks">November</a>
+            </li>
+            <li>
+              <a href="/december.html" title="December beekeeping tasks">December</a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/bee-diseases.html" title="Bee diseases and pests overview"
+            >Diseases and Pests</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li>
+              <a
+                href="/bacterial-diseases.html"
+                title="Learn about bacterial bee diseases"
+                >Bacterial</a
+              >
+            </li>
+            <li>
+              <a href="/viral-diseases.html" title="Learn about viral bee diseases"
+                >Viral</a
+              >
+            </li>
+            <li>
+              <a href="/bee-pests.html" title="Common pests affecting bees">Pests</a>
+            </li>
+            <li>
+              <a href="/parasitic-mites.html" title="Parasitic mites in bee colonies"
+                >Mites</a
+              >
+            </li>
+            <li>
+              <a href="/other-conditions.html" title="Other bee health conditions"
+                >Other Conditions</a
+              >
+            </li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/honeybee-facts.html" title="Interesting facts about honeybees"
+            >Honeybee Facts</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/anatomy.html" title="Honeybee anatomy explained">Anatomy</a>
+            </li>
+            <li>
+              <a href="/behaviour.html" title="Learn about honeybee behaviour"
+                >Behaviour</a
+              >
+            </li>
+            <li>
+              <a href="/how-bees-make-honey.html" title="How bees make honey"
+                >Make Honey</a
+              >
+            </li>
+            <li>
+              <a href="/pollination.html" title="Honeybee role in pollination"
+                >Pollination</a
+              >
+            </li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/help-the-bees.html" title="How you can help save the bees"
+            >Help Bees</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/bee-gardening.html" title="Make your garden bee friendly"
+                >Gardening</a
+              >
+            </li>
+            <li><a href="/donate.html" title="Make a donation to support bees">Donate</a></li>
+            <li>
+              <a href="/report-a-swarm.html" title="Report a bee swarm">Report a Swarm</a>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <a
+            href="https://beezknees-members.netlify.app/login"
+            title="Login or Register for HiveTag Dashboard"
+            >Members Area</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Hero Banner with Image and Alt Fallback (same structure as About) -->
+    <section role="region" aria-label="HiveTag Banner">
+      <div class="banner">
+        <img
+          src="images/honey-bees-on-a-flower.jpg"
+          alt="Picture of two Honeybees on a Flower"
+        />
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="content" role="main" aria-label="HiveTag App Main Content">
+      <!-- Intro / Hero copy -->
+      <section role="region" aria-label="HiveTag Introduction">
+        <h1>HiveTag – Your Beekeeping Records in One Place</h1>
+        <p>
+          HiveTag is the BeezKnees members app for keeping track of your
+          apiaries, hives, inspections, tasks and beekeeping costs. It’s built
+          for real beekeepers who want simple, practical records – not complex
+          software.
+        </p>
+
+        <p>
+          Use it on desktop, tablet or mobile through your browser. There’s
+          nothing to install, and your data stays in sync wherever you log in.
+        </p>
+
+        <div class="indented-list">
+          <ul>
+            <li>Record hive inspections while you’re at the apiary</li>
+            <li>See what each hive needs at a glance</li>
+            <li>Keep a running log of tasks, feeding and observations</li>
+            <li>Track inventory, sales and expenses for your beekeeping</li>
+          </ul>
+        </div>
+
+        <p><strong>Start on the Free plan</strong> and upgrade later if you need more.</p>
+
+        <p>
+          <a
+            href="https://beezknees-members.netlify.app/login"
+            class="hero-cta"
+            title="Open the HiveTag Members Area"
+            >Open Members Area</a
+          >
+          &nbsp;&nbsp;
+          <a
+            href="https://beezknees-members.netlify.app/pricing"
+            class="hero-cta"
+            title="View HiveTag plans and features"
+            >View Plans &amp; Features</a
+          >
+        </p>
+      </section>
+
+      <!-- Features grid -->
+      <section role="region" aria-label="HiveTag Key Features">
+        <h2>What HiveTag Helps You With</h2>
+
+        <div class="grid">
+          <div class="card">
+            <img
+              src="images/hive_1.jpg"
+              alt="Beehive inspection representing record keeping"
+            />
+            <div class="card-content">
+              <h3>Stay Organised in the Apiary</h3>
+              <p>
+                Log every inspection with notes on brood, stores, queen status,
+                temperament and actions taken. Quickly see the last visit for
+                each hive so you don’t miss important follow-ups.
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <img
+              src="images/Apiary.jpg"
+              alt="Apiary scene representing hive overview"
+            />
+            <div class="card-content">
+              <h3>Know What Each Hive Needs</h3>
+              <p>
+                Link tasks and to-dos to specific apiaries and hives. From
+                feeding and treatments to equipment changes, HiveTag keeps a
+                clear list of what needs doing and where.
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <img
+              src="images/bees-in-hive.jpg"
+              alt="Honeybees inside hive representing beekeeping records"
+            />
+            <div class="card-content">
+              <h3>Keep on Top of Costs</h3>
+              <p>
+                Track inventory items, expenses and sales so you can see what
+                your beekeeping is really costing – or earning. Helpful whether
+                you sell a few jars to friends or run a small sideline.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section role="region" aria-label="How HiveTag Works">
+        <h2>How HiveTag Fits Into Your Beekeeping</h2>
+        <p>HiveTag is designed to sit alongside your real hive work:</p>
+
+        <div class="indented-list">
+          <ol>
+            <li><strong>Create your account</strong> and choose the Free plan.</li>
+            <li>
+              <strong>Add your apiaries and hives</strong> so each colony has a
+              clear home in the app.
+            </li>
+            <li>
+              <strong>Record inspections and tasks</strong> during or just
+              after your visits, so nothing is forgotten.
+            </li>
+            <li>
+              <strong>Log inventory, sales and expenses</strong> to get a better
+              picture of your beekeeping costs.
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Free vs Premium comparison -->
+      <section role="region" aria-label="HiveTag Plans Overview">
+        <h2>Free Plan vs Premium – What’s Included?</h2>
+        <p>
+          HiveTag is built so you can start small and grow into more features
+          when you need them. Here’s a simple overview in plain language:
+        </p>
+
+        <!-- Cards instead of table -->
+        <div class="grid">
+          <div class="card">
+            <div class="card-content">
+              <h3>Apiaries &amp; Hives</h3>
+              <p><strong>Free plan:</strong> Ideal for a single apiary and a handful of hives.</p>
+              <p>
+                <strong>Premium plan:</strong> Better if you have multiple apiaries or your hive
+                numbers are growing and you want more headroom.
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-content">
+              <h3>Inspections, Logbook &amp; Tasks</h3>
+              <p>
+                <strong>Free plan:</strong> Core inspection records, notes and basic task lists so
+                you can keep on top of key jobs.
+              </p>
+              <p>
+                <strong>Premium plan:</strong> Same simple layout but more space and flexibility,
+                especially useful if you manage many colonies or helpers.
+              </p>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-content">
+              <h3>Inventory, Sales &amp; Expenses</h3>
+              <p>
+                <strong>Free plan:</strong> Great for tracking small-scale costs and the odd jar of
+                honey sold to friends or neighbours.
+              </p>
+              <p>
+                <strong>Premium plan:</strong> More useful if you sell regularly, run a sideline
+                or want a clearer picture of profit and loss.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          You can stay on the Free plan for as long as you like. If you grow
+          your beekeeping and want more headroom, upgrading to Premium is done
+          securely through Stripe inside the app.
+        </p>
+
+        <p>
+          <a
+            href="https://beezknees-members.netlify.app/pricing"
+            class="hero-cta"
+            title="See HiveTag pricing and plan details"
+            >See Full Plan Details</a
+          >
+        </p>
+      </section>
+
+      <!-- Reassurance / philosophy -->
+      <section role="region" aria-label="Why HiveTag Exists">
+        <h2>Built by a Beekeeper, Not a Software Company</h2>
+        <p>
+          HiveTag grows out of the same thinking as the main BeezKnees website:
+          practical, beginner-friendly and focused on what’s genuinely useful in
+          the apiary. It isn’t about ticking boxes for enterprise features – it
+          exists to help you keep better bees.
+        </p>
+        <p>
+          Whether you’re running a single hive at the end of the garden or
+          starting a small out-apiary, HiveTag is there to support your decision
+          making, not replace it. The real work is still done by you – and the
+          bees.
+        </p>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" role="region" aria-label="Site Footer">
+      <div class="footer-columns">
+        <div class="footer-column" role="region" aria-label="Contact Information">
+          <h3>Contact</h3>
+          <address>
+            <p>
+              Email:
+              <a href="/contact.html" title="Send us a message via our contact page"
+                >Contact</a
+              >
+            </p>
+          </address>
+        </div>
+
+        <div class="footer-column" role="region" aria-label="Useful Site Links">
+          <h3>Useful Links</h3>
+          <ul>
+            <li>
+              <a href="/privacy.html" title="Read our privacy policy"
+                >Privacy Policy</a
+              >
+            </li>
+            <li>
+              <a href="/site-map.html" title="View a map of our entire website"
+                >Site Map</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-column" role="region" aria-label="Beekeeping Resources">
+          <h3>Resources</h3>
+          <ul>
+            <li>
+              <a
+                href="https://www.bbka.org.uk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Visit the British Beekeepers Association 
+            website"
+              >
+                British Beekeepers Association
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.cardiffbeekeepers.co.uk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Visit the Cardiff Beekeepers 
+            Association site"
+              >
+                Cardiff, Vale and Valleys Beekeepers Association
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
+                target="_blank"
+                rel="noopener 
+            noreferrer"
+                title="Read the Honey (Wales) Regulations 2015"
+              >
+                The Honey (Wales) Regulations 2015
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.biodiversitywales.org.uk/Bee-Friendly"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Explore 
+            Bee-Friendly programme by Wales Biodiversity Partnership"
+              >
+                Wales Biodiversity Partnership
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.nationalbeeunit.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Access BeeBase for beekeeping 
+          information"
+              >
+                BeeBase
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom" role="region" aria-label="Copyright">
+        &copy; 2023 Practical Beekeeping. All rights reserved.
+      </div>
+    </footer>
+
+    <!-- Cookie Consent Popup -->
+    <div
+      id="cookie-consent"
+      class="cookie-popup"
+      role="region"
+      aria-label="Cookie Consent Settings"
+    >
+      <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+        <h2>🍪 We Use Cookies</h2>
+        <p>
+          We use essential cookies for site functionality. With your consent, we
+          may also use cookies for analytics and marketing purposes.
+        </p>
+
+        <form id="cookie-options">
+          <label
+            ><input type="checkbox" checked disabled /> Essential (always
+            active)</label
+          ><br />
+          <label><input type="checkbox" id="analytics" /> Analytics</label><br />
+          <label><input type="checkbox" id="marketing" /> Marketing</label><br />
+        </form>
+
+        <div class="cookie-buttons">
+          <button id="accept-selected">Accept Selected</button>
+          <button id="accept-all">Accept All</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" title="Back to top" aria-label="Back to top">
+      ⬆ Top
+    </button>
+
+    <script src="js/menuv2.js" defer></script>
+  </body>
+</html>
