@@ -162,6 +162,19 @@ export default function PrivacyPolicy() {
           </a>.
         </p>
       </section>
+
+
+<div className="pt-8">
+  <a
+    href="#top"
+    className="inline-block text-sm text-blue-700 hover:underline"
+  >
+    ↑ Back to top
+  </a>
+</div>
+
+
+
     </div>
   );
 }

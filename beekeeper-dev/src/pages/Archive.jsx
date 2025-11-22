@@ -68,14 +68,15 @@ const Archive = () => {
       logbook: logbookArch,
     });
 
-    // active apiaries for filter dropdown
-    const { data: apiariesActive } = await supabase
-      .from("apiaries")
-      .select("id, name")
-      .is("archived_at", null)
-      .order("name", { ascending: true });
+        // apiaries for filter dropdown – only those that are archived
+    const apiaryOptionsFromArchived = (apiariesArch || [])
+      .map((a) => ({
+        id: a.id,
+        name: a.name || "Unnamed Apiary",
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
-    setApiaryOptions(apiariesActive || []);
+    setApiaryOptions(apiaryOptionsFromArchived);
 
     // build name lookups from ALL (active + archived)
     const [{ data: apiariesAll }, { data: hivesAll }] = await Promise.all([
@@ -173,27 +174,35 @@ const Archive = () => {
 
   // Make a human-friendly label + sublines per type
   const describeItem = (type, item) => {
-    const errKey = `${type}-${item.id}`;
-    const common = {
-      errKey,
-      type,
-      table: type,
-      id: item.id,
-      archived_at: item.archived_at,
-      created_at: item.created_at,
-      apiary_id: item.apiary_id || (item.hive_id ? hiveApiaryId(item.hive_id) : ""),
-      hive_id: item.hive_id || "",
-      inspection_id: item.inspection_id || "",
-      raw: item,
-    };
+  const errKey = `${type}-${item.id}`;
 
-    if (type === "apiaries") {
-      return {
-        ...common,
-        title: item.name || `Apiary (${shortId(item.id)})`,
-        meta: [`Apiary`],
-      };
-    }
+  // Make sure every item has a consistent apiary_id for filtering
+  const resolvedApiaryId =
+    type === "apiaries"
+      ? item.id // an apiary "belongs" to itself for filtering
+      : item.apiary_id || (item.hive_id ? hiveApiaryId(item.hive_id) : "");
+
+  const common = {
+    errKey,
+    type,
+    table: type,
+    id: item.id,
+    archived_at: item.archived_at,
+    created_at: item.created_at,
+    apiary_id: resolvedApiaryId,
+    hive_id: item.hive_id || "",
+    inspection_id: item.inspection_id || "",
+    raw: item,
+  };
+
+  if (type === "apiaries") {
+  return {
+    ...common,
+    title: item.name || `Apiary (${shortId(item.id)})`,
+    meta: [], // no extra "Apiary" line under the pill
+  };
+}
+
 
     if (type === "hives") {
       const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
@@ -230,17 +239,21 @@ const Archive = () => {
 
     // logbook: try notes/content preview; always show linked hive/apiary
     if (type === "logbook") {
-      const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
-      const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
-      const preview =
-        item.notes || item.note || item.content || item.text || item.message || "";
-      const clipped = String(preview).trim().slice(0, 80);
-      return {
-        ...common,
-        title: clipped ? `Log: ${clipped}${preview.length > 80 ? "…" : ""}` : `Log entry (${shortId(item.id)})`,
-        meta: [`Hive: ${hive}`, `Apiary: ${apiary}`],
-      };
-    }
+  const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
+  const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
+  const preview =
+    item.notes || item.note || item.content || item.text || item.message || "";
+  const clipped = String(preview).trim().slice(0, 80);
+
+  return {
+    ...common,
+    title: clipped
+      ? `Log: ${clipped}${preview.length > 80 ? "…" : ""}`
+      : "Log entry", // simple human-readable fallback
+    meta: [`Hive: ${hive}`, `Apiary: ${apiary}`],
+  };
+}
+
 
     // fallback
     return {
@@ -680,23 +693,26 @@ const Archive = () => {
         </div>
       )}
 
-      {/* Bulk actions (when there are results) */}
+            {/* Bulk actions (when there are results) */}
       {total > 0 && (
-        <div className="mb-3 flex items-center justify-between">
-          <div className="text-sm text-gray-600">
-            {selectedItems.length > 0 ? `${selectedItems.length} selected` : null}
+        <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          {/* Left: selection count – fixed height + no wrapping so layout doesn't jump */}
+          <div className="text-sm text-gray-600 whitespace-nowrap min-h-[1.25rem]">
+            {selectedItems.length > 0 ? `${selectedItems.length} selected` : "\u00A0"}
           </div>
-          <div className="space-x-2">
+
+          {/* Right: buttons */}
+          <div className="flex flex-wrap gap-2 sm:justify-end">
             <button
               onClick={restoreSelectedItems}
-              className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
+              className="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 disabled:opacity-50"
               disabled={selectedItems.length === 0}
             >
               Restore Selected
             </button>
             <button
               onClick={deleteSelectedItems}
-              className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+              className="text-sm bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 disabled:opacity-50"
               disabled={selectedItems.length === 0}
             >
               Delete Selected
@@ -704,6 +720,7 @@ const Archive = () => {
           </div>
         </div>
       )}
+
 
       {/* List */}
       {total === 0 ? (
@@ -716,48 +733,42 @@ const Archive = () => {
             ))}
           </ul>
 
-          {/* Pagination — bottom only, matches InspectionList.jsx */}
-          <div className="flex items-center justify-between mt-6">
-            <div className="text-sm text-gray-600">
-              Showing {total === 0 ? 0 : startIdx + 1}–{endIdx} of {total}
-            </div>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                disabled={currentPage === 1}
-                className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50"
-              >
-                Prev
-              </button>
-              {totalPages > 1 && (
-                <div className="flex gap-1">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-                    <button
-                      key={n}
-                      type="button"
-                      onClick={() => setCurrentPage(n)}
-                      className={`text-sm px-3 py-2 rounded border ${
-                        n === currentPage
-                          ? "bg-green-700 text-white border-green-800"
-                          : "bg-white border-gray-300 hover:bg-gray-100"
-                      }`}
-                    >
-                      {n}
-                    </button>
-                  ))}
-                </div>
-              )}
-              <button
-                type="button"
-                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-                disabled={currentPage === totalPages}
-                className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
-          </div>
+          {/* Pagination – unified style with other pages */}
+<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
+  <div className="text-sm text-gray-600">
+    Showing {total === 0 ? 0 : Math.min(startIdx + 1, total)}–
+    {Math.min(currentPage * PAGE_SIZE, total)} of {total}
+  </div>
+
+  <div className="flex items-center gap-3 sm:justify-end">
+    {totalPages > 1 && (
+      <span className="text-xs text-gray-500">
+        Page {currentPage} of {totalPages}
+      </span>
+    )}
+
+    <button
+      type="button"
+      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+      disabled={currentPage === 1}
+      className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+    >
+      Prev
+    </button>
+
+    <button
+      type="button"
+      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+      disabled={currentPage === totalPages}
+      className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+    >
+      Next
+    </button>
+  </div>
+</div>
+
         </>
       )}
     </div>

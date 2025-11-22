@@ -493,12 +493,11 @@ const EditApiary = () => {
             <input type="file" accept="image/*" onChange={handleFileChange} />
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-4">
-            {/* ✅ Standard green submit button (two-tone + focus ring + consistent padding) */}
+                    {/* Actions */}
+          <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2">
             <button
               type="submit"
-              className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
+              className="w-full sm:w-auto bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
              focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
             >
               Save Changes
@@ -507,25 +506,28 @@ const EditApiary = () => {
             <button
               type="button"
               onClick={handleArchive}
-              className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+              className="w-full sm:w-auto bg-yellow-500 text-white text-sm px-3 py-2 rounded hover:bg-yellow-600"
             >
               Archive
             </button>
+
             <button
               type="button"
               onClick={handleDelete}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+              className="w-full sm:w-auto bg-red-600 text-white text-sm px-3 py-2 rounded hover:bg-red-700"
             >
               Delete
             </button>
+
             <button
               type="button"
               onClick={() => navigate("/apiaries")}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm px-4 py-2 rounded"
+              className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm px-3 py-2 rounded"
             >
               Cancel
             </button>
           </div>
+
         </form>
       )}
     </div>

@@ -126,7 +126,7 @@ export default function Updates() {
   );
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div id="top" className="p-6 max-w-5xl mx-auto">
       {/* Back link (blue) */}
       <Link
         to="/dashboard"
@@ -146,7 +146,11 @@ export default function Updates() {
       ) : (
         <div className="space-y-6">
           {notes.map((n) => (
-            <article key={n.version} id={`v-${n.version}`} className="border rounded-lg bg-white">
+            <article
+              key={n.version}
+              id={`v-${n.version}`}
+              className="border rounded-lg bg-white"
+            >
               <header className="px-4 py-3 border-b flex flex-wrap items-center gap-3">
                 <span className="inline-flex items-center text-xs font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
                   v{n.version}
@@ -154,7 +158,9 @@ export default function Updates() {
                 <time className="text-sm text-gray-600">
                   {dayjs(n.released_at).format("DD/MM/YYYY")}
                 </time>
-                {n.summary && <p className="text-sm text-gray-800">{n.summary}</p>}
+                {n.summary && (
+                  <p className="text-sm text-gray-800">{n.summary}</p>
+                )}
               </header>
 
               <div className="p-4 grid md:grid-cols-2 gap-6">
@@ -169,13 +175,31 @@ export default function Updates() {
                   </>
                 )}
 
-                <NoteSection title="Breaking changes" items={n.breaking} highlight />
-                <NoteSection title="Known issues" items={n.known_issues} muted />
+                <NoteSection
+                  title="Breaking changes"
+                  items={n.breaking}
+                  highlight
+                />
+                <NoteSection
+                  title="Known issues"
+                  items={n.known_issues}
+                  muted
+                />
               </div>
             </article>
           ))}
         </div>
       )}
+
+      {/* Back to top link */}
+      <div className="pt-6">
+        <a
+          href="#top"
+          className="inline-block text-sm text-blue-700 hover:underline"
+        >
+          ↑ Back to top
+        </a>
+      </div>
     </div>
   );
 }
@@ -187,7 +211,11 @@ function NoteSection({ title, items, highlight = false, muted = false }) {
       <h3
         className={
           "text-sm font-semibold mb-1 " +
-          (highlight ? "text-red-700" : muted ? "text-gray-500" : "text-gray-700")
+          (highlight
+            ? "text-red-700"
+            : muted
+            ? "text-gray-500"
+            : "text-gray-700")
         }
       >
         {title}
