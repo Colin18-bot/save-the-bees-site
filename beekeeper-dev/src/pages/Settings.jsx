@@ -554,14 +554,17 @@ const Settings = () => {
         className="mb-10 border rounded-xl p-4 bg-white shadow-sm"
         aria-labelledby="profile-settings"
       >
-        <div className="flex items-center justify-between mb-3">
+                <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <h2 id="profile-settings" className="text-xl font-semibold">
             Profile (saved together)
           </h2>
-          <span className="text-xs px-2 py-1 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span
+            className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs sm:text-sm text-emerald-800 max-w-xs sm:max-w-none self-start sm:self-auto"
+          >
             Save Profile affects these fields
           </span>
         </div>
+
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
