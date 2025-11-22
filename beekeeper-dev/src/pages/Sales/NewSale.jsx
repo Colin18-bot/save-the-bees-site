@@ -202,7 +202,7 @@ export default function NewSale() {
                       className="w-full border rounded px-2 py-2"
                       value={l.product_name}
                       onChange={(e)=>updateLine(i,"product_name",e.target.value)}
-                      placeholder="Optional — will default to Type (Unit)"
+                      placeholder="Optional — default to Type (Unit)"
                     />
                   </div>
                   <div className="md:col-span-2">

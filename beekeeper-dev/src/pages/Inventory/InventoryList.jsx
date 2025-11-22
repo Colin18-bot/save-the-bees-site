@@ -65,14 +65,15 @@ export default function InventoryList() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <div className="flex items-center justify-between gap-3 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
         <h1 className="text-2xl font-bold">Inventory</h1>
         <Link
-          to="/inventory/new"
-          className="rounded-2xl px-4 py-2 border bg-black text-white"
-        >
-          New Inventory Item
-        </Link>
+  to="/inventory/new"
+  className="inline-flex items-center justify-center rounded-2xl border bg-black text-white px-3 py-1.5 text-sm self-start sm:self-auto"
+>
+  New Inventory Item
+</Link>
+
       </div>
 
       {err && (
