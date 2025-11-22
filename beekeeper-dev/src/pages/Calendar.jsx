@@ -576,95 +576,146 @@ const Calendar = () => {
       </div>
 
       {/* CALENDAR GRID */}
-      <div className="border border-zinc-200 rounded-md overflow-hidden">
-        <div className="grid grid-cols-7 bg-zinc-50 text-xs font-medium">
-          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-            <div key={d} className="px-2 py-2 border-b border-zinc-200">
-              {d}
-            </div>
-          ))}
-        </div>
-
-        {loading ? (
-          <div className="flex items-center justify-center p-10">
-            <div className="w-8 h-8 border-4 border-zinc-400 border-dotted rounded-full animate-spin" />
-          </div>
-        ) : err ? (
-          <div className="p-4 text-red-700 bg-red-50 border-t border-zinc-200">{err}</div>
-        ) : (
-          <div className="grid grid-cols-7 gap-px bg-zinc-200">
-            {daysInMonthGrid(year, month).map((cell, idx) => {
-              const inMonth = cell.inMonth;
-              const dateYMD = cell.date ? ymd(cell.date) : null;
-              const dayEvents = dateYMD ? (eventsByDay.get(dateYMD) || []).filter((e) => showHidden || !hidden.has(e.key)) : [];
-              const isToday = dateYMD === todayYMD();
-
-              return (
-                <div key={idx} className={`min-h-[110px] bg-white ${inMonth ? "" : "bg-zinc-50"} p-1`}>
-                  <div className="flex items-center justify-between mb-1">
-                    <div
-                      className={`text-xs font-semibold ${inMonth ? "text-zinc-800" : "text-zinc-400"} ${
-                        isToday ? "px-1 rounded bg-yellow-300 text-white" : ""
-                      }`}
-                    >
-                      {cell.date ? fmtDayNum(cell.date) : ""}
-                    </div>
-                    {dayEvents.length > 4 && (
-                      <div className="text-[10px] text-zinc-500">{dayEvents.length} items</div>
-                    )}
-                  </div>
-
-                  <div className="space-y-1">
-                    {dayEvents.slice(0, 4).map((e) => {
-                      const isDisabled = e.status === "archived" || e.status === "deleted";
-                      const badgeText = e.status === "deleted" ? "DELETED" : e.status === "archived" ? "ARCHIVED" : "";
-                      const badgeCls = e.status === "deleted" ? "bg-red-200 text-red-900" : "bg-zinc-200 text-zinc-800";
-
-                      const content = (
-                        <span
-                          className={pillClass(e)}
-                          title={isDisabled ? "Check archives" : `${e.subtitle}\n${fmtLong(e.date)}`}
-                        >
-                          <span>{e.completed ? "✅ " : ""}{e.title}</span>
-                          {badgeText && (
-                            <span className={`ml-1 px-1 rounded text-[10px] ${badgeCls}`}>{badgeText}</span>
-                          )}
-                        </span>
-                      );
-
-                      return (
-                        <div key={e.key} className="flex items-start gap-1">
-                          <span className={dotClass(e)} />
-                          {isDisabled || !e.link ? (
-                            content
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => openEvent(e)}
-                              className="text-left truncate"
-                              title="Open details"
-                            >
-                              {content}
-                            </button>
-                          )}
-                          {!showHidden && (
-                            <button
-                              className="ml-auto text-[10px] text-zinc-500 hover:text-zinc-800"
-                              title="Hide this item from the calendar (manual only)"
-                              onClick={() => hideEvent(e.key)}
-                            >
-                              ×
-                            </button>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+            {/* CALENDAR GRID */}
+      <div className="border border-zinc-200 rounded-md">
+        {/* scrollable wrapper – only really used on small screens */}
+        <div className="overflow-x-auto">
+          {/* keep the grid at a sensible width so days aren’t too squeezed */}
+          <div className="min-w-[640px]">
+            {/* weekday headings */}
+            <div className="grid grid-cols-7 bg-zinc-50 text-[11px] sm:text-xs font-medium">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
+                <div
+                  key={d}
+                  className="px-1.5 sm:px-2 py-1.5 sm:py-2 border-b border-zinc-200"
+                >
+                  {d}
                 </div>
-              );
-            })}
+              ))}
+            </div>
+
+            {loading ? (
+              <div className="flex items-center justify-center p-8 sm:p-10">
+                <div className="w-8 h-8 border-4 border-zinc-400 border-dotted rounded-full animate-spin" />
+              </div>
+            ) : err ? (
+              <div className="p-4 text-red-700 bg-red-50 border-t border-zinc-200">
+                {err}
+              </div>
+            ) : (
+              <div className="grid grid-cols-7 gap-px bg-zinc-200">
+                {daysInMonthGrid(year, month).map((cell, idx) => {
+                  const inMonth = cell.inMonth;
+                  const dateYMD = cell.date ? ymd(cell.date) : null;
+                  const dayEvents = dateYMD
+                    ? (eventsByDay.get(dateYMD) || []).filter(
+                        (e) => showHidden || !hidden.has(e.key)
+                      )
+                    : [];
+                  const isToday = dateYMD === todayYMD();
+
+                  return (
+                    <div
+                      key={idx}
+                      className={`min-h-[80px] sm:min-h-[110px] bg-white ${
+                        inMonth ? "" : "bg-zinc-50"
+                      } p-1 sm:p-1.5`}
+                    >
+                      <div className="flex items-center justify-between mb-0.5 sm:mb-1">
+                        <div
+                          className={`text-[11px] sm:text-xs font-semibold ${
+                            inMonth ? "text-zinc-800" : "text-zinc-400"
+                          } ${
+                            isToday
+                              ? "px-1 rounded bg-yellow-300 text-white"
+                              : ""
+                          }`}
+                        >
+                          {cell.date ? fmtDayNum(cell.date) : ""}
+                        </div>
+                        {dayEvents.length > 4 && (
+                          <div className="text-[9px] sm:text-[10px] text-zinc-500">
+                            {dayEvents.length} items
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="space-y-0.5 sm:space-y-1">
+                        {dayEvents.slice(0, 4).map((e) => {
+                          const isDisabled =
+                            e.status === "archived" || e.status === "deleted";
+                          const badgeText =
+                            e.status === "deleted"
+                              ? "DELETED"
+                              : e.status === "archived"
+                              ? "ARCHIVED"
+                              : "";
+                          const badgeCls =
+                            e.status === "deleted"
+                              ? "bg-red-200 text-red-900"
+                              : "bg-zinc-200 text-zinc-800";
+
+                          const content = (
+                            <span
+                              className={
+                                pillClass(e) +
+                                " text-[10px] sm:text-xs px-1.5 sm:px-2 py-[1px] sm:py-0.5"
+                              }
+                              title={
+                                isDisabled
+                                  ? "Check archives"
+                                  : `${e.subtitle}\n${fmtLong(e.date)}`
+                              }
+                            >
+                              <span>
+                                {e.completed ? "✅ " : ""}
+                                {e.title}
+                              </span>
+                              {badgeText && (
+                                <span
+                                  className={`ml-1 px-1 rounded text-[9px] ${badgeCls}`}
+                                >
+                                  {badgeText}
+                                </span>
+                              )}
+                            </span>
+                          );
+
+                          return (
+                            <div key={e.key} className="flex items-start gap-1">
+                              <span className={dotClass(e)} />
+                              {isDisabled || !e.link ? (
+                                content
+                              ) : (
+                                <button
+                                  type="button"
+                                  onClick={() => openEvent(e)}
+                                  className="text-left truncate"
+                                  title="Open details"
+                                >
+                                  {content}
+                                </button>
+                              )}
+                              {!showHidden && (
+                                <button
+                                  className="ml-auto hidden sm:inline text-[10px] text-zinc-500 hover:text-zinc-800"
+                                  title="Hide this item from the calendar (manual only)"
+                                  onClick={() => hideEvent(e.key)}
+                                >
+                                  ×
+                                </button>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       <div className="text-xs text-zinc-500">
