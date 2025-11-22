@@ -258,74 +258,69 @@ const pageItems = filtered.slice(startIdx, endIdx);
   return (
     <div className="p-4">
       {/* Header */}
-      <div className="flex flex-col gap-3 mb-4 md:flex-row md:items-center md:justify-between">
-        <h2 className="text-2xl font-bold">Logbook Entries</h2>
+<div className="mb-4">
+  {/* Heading always on its own line */}
+  <h2 className="text-2xl font-bold mb-3">Logbook Entries</h2>
 
-        {/* Controls wrapper – stacks on mobile, row on larger screens */}
-        <div className="flex flex-col gap-2 w-full sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
-          {/* Filter by apiary (disabled when inspection filter is active) */}
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
-              Filter by Apiary:
-            </label>
-            <select
-              value={selectedApiary}
-              onChange={(e) => {
-                setSelectedApiary(e.target.value);
-                setPage(1);
-              }}
-              disabled={!!inspectionIdFromUrl}
-              className={`border border-gray-300 rounded px-2 py-1 text-sm max-w-full ${
-                inspectionIdFromUrl
-                  ? "bg-gray-100 text-gray-500 cursor-not-allowed"
-                  : ""
-              }`}
-              title={
-                inspectionIdFromUrl
-                  ? "Disabled while filtering by a specific inspection"
-                  : "Filter by Apiary"
-              }
-            >
-              <option value="">All Apiaries</option>
-              {apiaries.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.name}
-                </option>
-              ))}
-            </select>
-          </div>
+  {/* Controls wrapper – now sits under the heading */}
+  <div className="flex flex-col gap-2 w-full sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+    {/* Filter by apiary (disabled when inspection filter is active) */}
+    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 w-full">
+      <label className="text-sm font-medium text-gray-700 whitespace-nowrap sm:mr-2 mb-1 sm:mb-0">
+        Filter by Apiary:
+      </label>
 
-          {/* View toggle */}
-          <div className="flex border border-gray-300 rounded overflow-hidden self-start sm:self-auto">
-            <button
-              type="button"
-              onClick={() => setViewMode("list")}
-              className={`px-3 py-1 text-sm ${
-                viewMode === "list" ? "bg-green-700 text-white" : "bg-white"
-              }`}
-            >
-              List
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode("grid")}
-              className={`px-3 py-1 text-sm ${
-                viewMode === "grid" ? "bg-green-700 text-white" : "bg-white"
-              }`}
-            >
-              Grid
-            </button>
-          </div>
+      <select
+        value={selectedApiary}
+        onChange={(e) => {
+          setSelectedApiary(e.target.value);
+          setPage(1);
+        }}
+        disabled={!!inspectionIdFromUrl}
+        className={`border border-gray-300 rounded px-2 py-1 text-sm w-full sm:w-auto ${
+          inspectionIdFromUrl ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""
+        }`}
+      >
+        <option value="">All Apiaries</option>
+        {apiaries.map((a) => (
+          <option key={a.id} value={a.id}>
+            {a.name}
+          </option>
+        ))}
+      </select>
+    </div>
 
-          {/* Add new */}
-          <Link
-            to="/logbook/new"
-            className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded self-start sm:self-auto"
-          >
-            New Log Entry
-          </Link>
-        </div>
-      </div>
+    {/* View toggle */}
+    <div className="flex border border-gray-300 rounded overflow-hidden self-start sm:self-auto">
+      <button
+        type="button"
+        onClick={() => setViewMode("list")}
+        className={`px-3 py-1 text-sm ${
+          viewMode === "list" ? "bg-green-700 text-white" : "bg-white"
+        }`}
+      >
+        List
+      </button>
+      <button
+        type="button"
+        onClick={() => setViewMode("grid")}
+        className={`px-3 py-1 text-sm ${
+          viewMode === "grid" ? "bg-green-700 text-white" : "bg-white"
+        }`}
+      >
+        Grid
+      </button>
+    </div>
+
+    {/* Add new */}
+    <Link
+      to="/logbook/new"
+      className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded self-start sm:self-auto"
+    >
+      New Log Entry
+    </Link>
+  </div>
+</div>
 
       {/* Filter banner when inspection_id is active */}
       {inspectionIdFromUrl && (

@@ -66,7 +66,9 @@ const TodoList = () => {
     // ACTIVE todos (+ optional apiary filter)
     let todoQuery = supabase
       .from("todos")
-      .select("id, title, due_date, apiary_id, hive_id, hive_name, status, notes, completed_at, archived_at")
+      .select(
+        "id, title, due_date, apiary_id, hive_id, hive_name, status, notes, completed_at, archived_at"
+      )
       .is("archived_at", null)
       .order("due_date", { ascending: true });
 
@@ -74,10 +76,15 @@ const TodoList = () => {
       todoQuery = todoQuery.eq("apiary_id", selectedApiary);
     }
 
-    const [{ data: todoData, error: todoErr }, { data: apiaryData, error: apiaryErr }] = await Promise.all([
-      todoQuery,
-      supabase.from("apiaries").select("id, name").is("archived_at", null).order("name", { ascending: true }),
-    ]);
+    const [{ data: todoData, error: todoErr }, { data: apiaryData, error: apiaryErr }] =
+      await Promise.all([
+        todoQuery,
+        supabase
+          .from("apiaries")
+          .select("id, name")
+          .is("archived_at", null)
+          .order("name", { ascending: true }),
+      ]);
 
     if (todoErr) setError(todoErr.message || "Failed to load todos");
     if (apiaryErr) setError((prev) => prev || apiaryErr.message || "Failed to load apiaries");
@@ -100,7 +107,9 @@ const TodoList = () => {
     return map;
   }, [apiaries]);
 
-  const filteredTodos = selectedApiary ? todos.filter((t) => t.apiary_id === selectedApiary) : todos;
+  const filteredTodos = selectedApiary
+    ? todos.filter((t) => t.apiary_id === selectedApiary)
+    : todos;
 
   // Auto-jump to page containing highlighted TODO (once)
   useEffect(() => {
@@ -116,9 +125,10 @@ const TodoList = () => {
     }
   }, [filteredTodos, highlightId, highlightType, page]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredTodos.length / PAGE_SIZE));
+  const total = filteredTodos.length;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const startIdx = (page - 1) * PAGE_SIZE;
-  const endIdx = Math.min(startIdx + PAGE_SIZE, filteredTodos.length);
+  const endIdx = Math.min(startIdx + PAGE_SIZE, total);
   const pageTodos = filteredTodos.slice(startIdx, endIdx);
 
   // After page renders, if a task is highlighted, scroll it into view.
@@ -207,7 +217,11 @@ const TodoList = () => {
         setTodos((prev) =>
           prev.map((t) =>
             String(t.id) === String(id)
-              ? { ...t, status: data.status || "completed", completed_at: data.completed_at || t.completed_at }
+              ? {
+                  ...t,
+                  status: data.status || "completed",
+                  completed_at: data.completed_at || t.completed_at,
+                }
               : t
           )
         );
@@ -221,111 +235,68 @@ const TodoList = () => {
 
   if (loading) return <p className="p-4">Loading Task list...</p>;
 
-  const Pagination = ({ page, setPage, totalPages, startIdx, endIdx, total }) => (
-  <div className="flex items-center justify-between mt-6">
-    <div className="text-sm text-gray-600">
-      Showing {total === 0 ? 0 : startIdx + 1}–{endIdx} of {total}
-    </div>
-    <div className="flex gap-2">
-      <button
-        type="button"
-        onClick={() => setPage((p) => Math.max(1, p - 1))}
-        disabled={page === 1}
-        className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50"
-      >
-        Prev
-      </button>
-      {totalPages > 1 && (
-        <div className="flex gap-1">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-            <button
-              key={n}
-              type="button"
-              onClick={() => setPage(n)}
-              className={`text-sm px-3 py-2 rounded border ${
-                n === page
-                  ? "bg-green-700 text-white border-green-800"
-                  : "bg-white border-gray-300 hover:bg-gray-100"
-              }`}
-            >
-              {n}
-            </button>
-          ))}
-        </div>
-      )}
-      <button
-        type="button"
-        onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-        disabled={page === totalPages}
-        className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50"
-      >
-        Next
-      </button>
-    </div>
-  </div>
-);
-
   return (
     <div className="p-6 space-y-4">
-      {/* Header: mobile-friendly controls like LogEntryList */}
-      <div className="flex flex-col gap-3 mb-2 md:flex-row md:items-center md:justify-between">
-        <h1 className="text-2xl font-bold">Tasks</h1>
+      {/* Header: heading on its own line, controls underneath */}
+<div className="mb-2">
+  <h1 className="text-2xl font-bold mb-3">Tasks</h1>
 
-        {/* Controls wrapper – stacks on mobile, row on larger screens */}
-        <div className="flex flex-col gap-2 w-full sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
-          {/* Filter by Apiary */}
-          <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-700 whitespace-nowrap">
-              Filter by Apiary:
-            </label>
-            <select
-              value={selectedApiary}
-              onChange={(e) => {
-                setSelectedApiary(e.target.value);
-                setPage(1);
-              }}
-              className="border border-gray-300 rounded px-2 py-1 text-sm max-w-full"
-            >
-              <option value="">All Apiaries</option>
-              {apiaries.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.name}
-                </option>
-              ))}
-            </select>
-          </div>
+  {/* Controls wrapper – now always below the heading */}
+  <div className="flex flex-col gap-2 w-full sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+    {/* Filter by Apiary – responsive like LogEntryList */}
+    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 w-full">
+      <label className="text-sm font-medium text-gray-700 whitespace-nowrap sm:mr-2 mb-1 sm:mb-0">
+        Filter by Apiary:
+      </label>
+      <select
+        value={selectedApiary}
+        onChange={(e) => {
+          setSelectedApiary(e.target.value);
+          setPage(1);
+        }}
+        className="border border-gray-300 rounded px-2 py-1 text-sm w-full sm:w-auto"
+      >
+        <option value="">All Apiaries</option>
+        {apiaries.map((a) => (
+          <option key={a.id} value={a.id}>
+            {a.name}
+          </option>
+        ))}
+      </select>
+    </div>
 
-          {/* View toggle */}
-          <div className="flex border border-gray-300 rounded overflow-hidden self-start sm:self-auto">
-            <button
-              type="button"
-              onClick={() => setView("list")}
-              className={`px-3 py-1 text-sm ${
-                view === "list" ? "bg-green-700 text-white" : "bg-white"
-              }`}
-            >
-              List
-            </button>
-            <button
-              type="button"
-              onClick={() => setView("grid")}
-              className={`px-3 py-1 text-sm ${
-                view === "grid" ? "bg-green-700 text-white" : "bg-white"
-              }`}
-            >
-              Grid
-            </button>
-          </div>
+    {/* View toggle */}
+    <div className="flex border border-gray-300 rounded overflow-hidden self-start sm:self-auto">
+      <button
+        type="button"
+        onClick={() => setView("list")}
+        className={`px-3 py-1 text-sm ${
+          view === "list" ? "bg-green-700 text-white" : "bg-white"
+        }`}
+      >
+        List
+      </button>
+      <button
+        type="button"
+        onClick={() => setView("grid")}
+        className={`px-3 py-1 text-sm ${
+          view === "grid" ? "bg-green-700 text-white" : "bg-white"
+        }`}
+      >
+        Grid
+      </button>
+    </div>
 
-          {/* Add new */}
-          <Link
-            to="/todos/new"
-            className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded self-start sm:self-auto"
-          >
-            New Task
-          </Link>
-        </div>
-      </div>
+    {/* Add new */}
+    <Link
+      to="/todos/new"
+      className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded self-start sm:self-auto"
+    >
+      New Task
+    </Link>
+  </div>
+</div>
+
 
       {/* Error */}
       {error && (
@@ -339,7 +310,10 @@ const TodoList = () => {
         <div className="space-y-2">
           <p>
             No task items found.{" "}
-            <Link to="/todos/new" className="text-blue-600 underline hover:text-blue-800">
+            <Link
+              to="/todos/new"
+              className="text-blue-600 underline hover:text-blue-800"
+            >
               Add one now
             </Link>
           </p>
@@ -349,7 +323,9 @@ const TodoList = () => {
           {/* GRID VIEW */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {pageTodos.map((todo) => {
-              const apiaryName = todo.apiary_id ? apiaryNameById.get(todo.apiary_id) : null;
+              const apiaryName = todo.apiary_id
+                ? apiaryNameById.get(todo.apiary_id)
+                : null;
               const hiveLabel = todo.hive_name || "";
               const overdue = isOverdueDate(todo.due_date, todo.status);
 
@@ -372,21 +348,32 @@ const TodoList = () => {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="font-bold text-lg">{todo.title}</h3>
-                    <span className={`text-xs px-2 py-1 rounded ${badgeClass(todo.status)}`}>
+                    <span
+                      className={`text-xs px-2 py-1 rounded ${badgeClass(todo.status)}`}
+                    >
                       {displayStatus}
                     </span>
                   </div>
 
                   <div className="mt-2 space-y-1">
                     <p>
-                      <span className="text-gray-600">Due:</span> {formatUKDate(todo.due_date)}
-                      {overdue && <span className="ml-2 text-red-600">Overdue</span>}
+                      <span className="text-gray-600">Due:</span>{" "}
+                      {formatUKDate(todo.due_date)}
+                      {overdue && (
+                        <span className="ml-2 text-red-600">Overdue</span>
+                      )}
                     </p>
                     <p className="text-gray-600">
-                      {apiaryName && <span className="mr-2">Apiary: {apiaryName}</span>}
+                      {apiaryName && (
+                        <span className="mr-2">Apiary: {apiaryName}</span>
+                      )}
                       {hiveLabel && <span>Hive: {hiveLabel}</span>}
                     </p>
-                    {todo.notes && <p className="mt-2 whitespace-pre-wrap text-sm">{todo.notes}</p>}
+                    {todo.notes && (
+                      <p className="mt-2 whitespace-pre-wrap text-sm">
+                        {todo.notes}
+                      </p>
+                    )}
                   </div>
 
                   <div className="mt-4 flex flex-wrap gap-2">
@@ -421,21 +408,50 @@ const TodoList = () => {
             })}
           </div>
 
-          <Pagination
-            page={page}
-            setPage={setPage}
-            totalPages={totalPages}
-            startIdx={startIdx}
-            endIdx={endIdx}
-            total={filteredTodos.length}
-          />
+          {/* Pagination – unified style */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
+            <div className="text-sm text-gray-600">
+              Showing {total === 0 ? 0 : Math.min((page - 1) * PAGE_SIZE + 1, total)}–
+              {Math.min(page * PAGE_SIZE, total)} of {total}
+            </div>
+
+            <div className="flex items-center gap-3 sm:justify-end">
+              {totalPages > 1 && (
+                <span className="text-xs text-gray-500">
+                  Page {page} of {totalPages}
+                </span>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+              >
+                Prev
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+              >
+                Next
+              </button>
+            </div>
+          </div>
         </>
       ) : (
         <>
           {/* LIST VIEW */}
           <div className="divide-y divide-gray-200 bg-white rounded shadow">
             {pageTodos.map((todo) => {
-              const apiaryName = todo.apiary_id ? apiaryNameById.get(todo.apiary_id) : "";
+              const apiaryName = todo.apiary_id
+                ? apiaryNameById.get(todo.apiary_id)
+                : "";
               const hiveLabel = todo.hive_name || "";
               const overdue = isOverdueDate(todo.due_date, todo.status);
 
@@ -469,13 +485,21 @@ const TodoList = () => {
                         </span>
                       </div>
                       <p className="text-sm text-gray-600">
-                        <span className="mr-2">Due: {formatUKDate(todo.due_date)}</span>
-                        {overdue && <span className="mr-2 text-red-600">Overdue</span>}
-                        {apiaryName && <span className="mr-2">Apiary: {apiaryName}</span>}
+                        <span className="mr-2">
+                          Due: {formatUKDate(todo.due_date)}
+                        </span>
+                        {overdue && (
+                          <span className="mr-2 text-red-600">Overdue</span>
+                        )}
+                        {apiaryName && (
+                          <span className="mr-2">Apiary: {apiaryName}</span>
+                        )}
                         {hiveLabel && <span>Hive: {hiveLabel}</span>}
                       </p>
                       {todo.notes && (
-                        <p className="mt-2 text-gray-800 whitespace-pre-wrap">{todo.notes}</p>
+                        <p className="mt-2 text-gray-800 whitespace-pre-wrap">
+                          {todo.notes}
+                        </p>
                       )}
                       <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
                         <Link
@@ -509,14 +533,41 @@ const TodoList = () => {
             })}
           </div>
 
-          <Pagination
-            page={page}
-            setPage={setPage}
-            totalPages={totalPages}
-            startIdx={startIdx}
-            endIdx={endIdx}
-            total={filteredTodos.length}
-          />
+          {/* Pagination – unified style */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
+            <div className="text-sm text-gray-600">
+              Showing {total === 0 ? 0 : Math.min((page - 1) * PAGE_SIZE + 1, total)}–
+              {Math.min(page * PAGE_SIZE, total)} of {total}
+            </div>
+
+            <div className="flex items-center gap-3 sm:justify-end">
+              {totalPages > 1 && (
+                <span className="text-xs text-gray-500">
+                  Page {page} of {totalPages}
+                </span>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+              >
+                Prev
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+              >
+                Next
+              </button>
+            </div>
+          </div>
         </>
       )}
     </div>
