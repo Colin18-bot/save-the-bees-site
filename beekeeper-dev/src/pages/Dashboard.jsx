@@ -326,25 +326,33 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
+     <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+  <h1 className="text-2xl font-bold">Dashboard</h1>
 
-        {/* Filter by Apiary */}
-        <div className="flex items-center gap-2">
-          <label htmlFor="apiaryFilter" className="font-medium">Filter by Apiary:</label>
-          <select
-            id="apiaryFilter"
-            className="border rounded px-2 py-1"
-            value={selectedApiaryId}
-            onChange={(e) => setSelectedApiaryId(e.target.value)}
-          >
-            <option value="all">All Apiaries</option>
-            {apiariesList.map((a) => (
-              <option key={a.id} value={a.id}>{a.name}</option>
-            ))}
-          </select>
-        </div>
-      </div>
+  {/* Filter by Apiary */}
+  <div className="w-full md:w-auto flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
+    <label
+      htmlFor="apiaryFilter"
+      className="font-medium text-sm whitespace-nowrap"
+    >
+      Filter by Apiary:
+    </label>
+    <select
+      id="apiaryFilter"
+      className="w-full sm:w-auto border rounded px-3 py-2"
+      value={selectedApiaryId}
+      onChange={(e) => setSelectedApiaryId(e.target.value)}
+    >
+      <option value="all">All Apiaries</option>
+      {apiariesList.map((a) => (
+        <option key={a.id} value={a.id}>
+          {a.name}
+        </option>
+      ))}
+    </select>
+  </div>
+</div>
+
 
       {/* Reports & Export */}
       <div

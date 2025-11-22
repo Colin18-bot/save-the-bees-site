@@ -492,11 +492,18 @@ const HiveList = () => {
             })}
           </ul>
 
-          <div className="flex items-center justify-between mt-6">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
             <div className="text-sm text-gray-600">
               Showing {total === 0 ? 0 : startIdx + 1}–{endIdx} of {total}
             </div>
-            <div className="flex gap-2">
+
+            <div className="flex items-center gap-3 sm:justify-end">
+              {totalPages > 1 && (
+                <span className="text-xs text-gray-500">
+                  Page {page} of {totalPages}
+                </span>
+              )}
+
               <button
                 type="button"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -506,24 +513,7 @@ const HiveList = () => {
               >
                 Prev
               </button>
-              {totalPages > 1 && (
-                <div className="flex gap-1">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-                    <button
-                      key={n}
-                      type="button"
-                      onClick={() => setPage(n)}
-                      className={`text-sm px-3 py-2 rounded border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 ${
-                        n === page
-                          ? "bg-green-700 text-white border-green-800 focus-visible:ring-green-500"
-                          : "bg-white border-gray-300 hover:bg-gray-100 focus-visible:ring-gray-400"
-                      }`}
-                    >
-                      {n}
-                    </button>
-                  ))}
-                </div>
-              )}
+
               <button
                 type="button"
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
@@ -535,6 +525,7 @@ const HiveList = () => {
               </button>
             </div>
           </div>
+
         </>
       )}
 

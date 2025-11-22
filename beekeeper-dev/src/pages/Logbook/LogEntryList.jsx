@@ -212,10 +212,12 @@ const LogEntryList = () => {
     }
   }, [filtered, highlightId, highlightType, page]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const startIdx = (page - 1) * PAGE_SIZE;
-  const endIdx = Math.min(startIdx + PAGE_SIZE, filtered.length);
-  const pageItems = filtered.slice(startIdx, endIdx);
+  const total = filtered.length;
+const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+const startIdx = (page - 1) * PAGE_SIZE;
+const endIdx = Math.min(startIdx + PAGE_SIZE, total);
+const pageItems = filtered.slice(startIdx, endIdx);
+
 
   // After pageItems render, scroll highlighted card into view and pulse it
   useEffect(() => {
@@ -532,47 +534,41 @@ const LogEntryList = () => {
           )}
 
           {/* Pagination */}
-          <div className="flex items-center justify-between mt-6">
-            <div className="text-sm text-gray-600">
-              Showing {filtered.length === 0 ? 0 : startIdx + 1}–{endIdx} of {filtered.length}
-            </div>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50"
-              >
-                Prev
-              </button>
-              {totalPages > 1 && (
-                <div className="flex gap-1">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-                    <button
-                      key={n}
-                      type="button"
-                      onClick={() => setPage(n)}
-                      className={`text-sm px-3 py-2 rounded border ${
-                        n === page
-                          ? "bg-green-700 text-white border-green-800"
-                          : "bg-white border-gray-300 hover:bg-gray-100"
-                      }`}
-                    >
-                      {n}
-                    </button>
-                  ))}
-                </div>
-              )}
-              <button
-                type="button"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-                className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
-          </div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
+  <div className="text-sm text-gray-600">
+    Showing {total === 0 ? 0 : Math.min((page - 1) * PAGE_SIZE + 1, total)}–
+    {Math.min(page * PAGE_SIZE, total)} of {total}
+  </div>
+
+  <div className="flex items-center gap-3 sm:justify-end">
+    {totalPages > 1 && (
+      <span className="text-xs text-gray-500">
+        Page {page} of {totalPages}
+      </span>
+    )}
+
+    <button
+      type="button"
+      onClick={() => setPage((p) => Math.max(1, p - 1))}
+      disabled={page === 1}
+      className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+    >
+      Prev
+    </button>
+
+    <button
+      type="button"
+      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+      disabled={page === totalPages}
+      className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+    >
+      Next
+    </button>
+  </div>
+</div>
+
         </>
       )}
 
