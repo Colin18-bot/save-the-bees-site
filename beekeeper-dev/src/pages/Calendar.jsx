@@ -28,14 +28,16 @@ const daysInMonthGrid = (year, month) => {
   // Leading blanks
   for (let i = 0; i < firstDay; i++) cells.push({ date: null, inMonth: false });
   // Actual days
-  for (let d = 1; d <= totalDays; d++) cells.push({ date: new Date(year, month, d), inMonth: true });
+  for (let d = 1; d <= totalDays; d++)
+    cells.push({ date: new Date(year, month, d), inMonth: true });
   // Trailing blanks
   while (cells.length % 7 !== 0) cells.push({ date: null, inMonth: false });
 
   return cells;
 };
 
-const fmtDayNum = (d) => new Intl.DateTimeFormat("en-GB", { day: "2-digit" }).format(d);
+const fmtDayNum = (d) =>
+  new Intl.DateTimeFormat("en-GB", { day: "2-digit" }).format(d);
 const fmtLong = (d) =>
   new Intl.DateTimeFormat("en-GB", {
     weekday: "short",
@@ -120,7 +122,8 @@ const ROUTES_EDIT = {
 const ROUTES_VIEW = {
   apiary: (id) => `/apiaries?highlight=${encodeURIComponent(id)}`,
   hive: (id) => `/hives?highlight=${encodeURIComponent(id)}`,
-  inspection: (id) => `/inspections?highlight=${encodeURIComponent(id)}&type=INSPECTION`,
+  inspection: (id) =>
+    `/inspections?highlight=${encodeURIComponent(id)}&type=INSPECTION`,
   todo: (id) => `/todos?highlight=${encodeURIComponent(id)}&type=TODO`,
   log: (id) => `/logbook?highlight=${encodeURIComponent(id)}&type=LOGBOOK`,
 };
@@ -177,8 +180,14 @@ const Calendar = () => {
   const [selected, setSelected] = useState(null); // clicked event
   const [modalOpen, setModalOpen] = useState(false);
 
-  const openEvent = (e) => { setSelected(e); setModalOpen(true); };
-  const closeModal = () => { setModalOpen(false); setSelected(null); };
+  const openEvent = (e) => {
+    setSelected(e);
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelected(null);
+  };
   const getIdFromKey = (key) => (key ? key.split(":")[1] : null);
 
   // Lookups for names (apiary/hive)
@@ -193,8 +202,10 @@ const Calendar = () => {
     return map;
   }, [hives]);
 
-  const getApiaryName = (id) => (id ? apiaryNameById.get(String(id)) || `Apiary ${id}` : null);
-  const getHiveName = (id) => (id ? hiveNameById.get(String(id)) || `Hive ${id}` : null);
+  const getApiaryName = (id) =>
+    id ? apiaryNameById.get(String(id)) || `Apiary ${id}` : null;
+  const getHiveName = (id) =>
+    id ? hiveNameById.get(String(id)) || `Hive ${id}` : null;
 
   // Simple table getter (keep ABOVE useEffect)
   const getTable = async (table, orderBy) => {
@@ -225,9 +236,12 @@ const Calendar = () => {
 
         // Logbook: try several likely table names
         let logbookRows = await getTable("logbook", "created_at");
-        if (!logbookRows.length) logbookRows = await getTable("inspection_logbook", "created_at");
-        if (!logbookRows.length) logbookRows = await getTable("logbook_entries", "created_at");
-        if (!logbookRows.length) logbookRows = await getTable("inspection_logs", "created_at");
+        if (!logbookRows.length)
+          logbookRows = await getTable("inspection_logbook", "created_at");
+        if (!logbookRows.length)
+          logbookRows = await getTable("logbook_entries", "created_at");
+        if (!logbookRows.length)
+          logbookRows = await getTable("inspection_logs", "created_at");
 
         if (!alive) return;
         setApiaries(apiRes);
@@ -242,13 +256,20 @@ const Calendar = () => {
         if (alive) setLoading(false);
       }
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, []);
 
   // Hives for Hive filter (dependent on Apiary)
   const visibleHivesForFilter = useMemo(() => {
-    const list = apiaryId === "all" ? hives : hives.filter((h) => String(h.apiary_id) === String(apiaryId));
-    return list.sort((a, b) => String(a.name || "").localeCompare(String(b.name || "")));
+    const list =
+      apiaryId === "all"
+        ? hives
+        : hives.filter((h) => String(h.apiary_id) === String(apiaryId));
+    return list.sort((a, b) =>
+      String(a.name || "").localeCompare(String(b.name || ""))
+    );
   }, [hives, apiaryId]);
 
   /** Build unified events for the selected Month/Year */
@@ -265,7 +286,7 @@ const Calendar = () => {
     const apiaryEvents = (apiaries || [])
       .map((a) => {
         const date = pickDate(a, [
-          "established_date",   // ✅ actual column
+          "established_date", // ✅ actual column
           "established_on",
           "established_at",
           "created_on",
@@ -291,7 +312,7 @@ const Calendar = () => {
     const hiveEvents = (hives || [])
       .map((h) => {
         const date = pickDate(h, [
-          "date_established",   // ✅ actual column from NewHive.jsx
+          "date_established", // ✅ actual column from NewHive.jsx
           "installed_at",
           "established_on",
           "created_at",
@@ -373,7 +394,13 @@ const Calendar = () => {
       })
       .filter(Boolean);
 
-    const all = [...apiaryEvents, ...hiveEvents, ...inspEvents, ...todoEvents, ...logEvents];
+    const all = [
+      ...apiaryEvents,
+      ...hiveEvents,
+      ...inspEvents,
+      ...todoEvents,
+      ...logEvents,
+    ];
     return all.filter((e) => inRange(e.date));
   }, [year, month, apiaries, hives, inspections, todos, logbook]);
 
@@ -381,8 +408,10 @@ const Calendar = () => {
   const filteredEvents = useMemo(() => {
     return events.filter((e) => {
       if (!typeFilter[e.type]) return false;
-      if (apiaryId !== "all" && String(e.apiary_id || "") !== String(apiaryId)) return false;
-      if (hiveId !== "all" && String(e.hive_id || "") !== String(hiveId)) return false;
+      if (apiaryId !== "all" && String(e.apiary_id || "") !== String(apiaryId))
+        return false;
+      if (hiveId !== "all" && String(e.hive_id || "") !== String(hiveId))
+        return false;
       return true;
     });
   }, [events, typeFilter, apiaryId, hiveId]);
@@ -410,127 +439,195 @@ const Calendar = () => {
   const hideEvent = (key) => {
     const next = new Set(hidden);
     next.add(key);
-    setHidden(next);
     saveHidden(next);
+    setHidden(next);
   };
 
   const dotClass = (e) => {
     const base = "inline-block w-1.5 h-1.5 rounded-full mt-1";
     switch (e.type) {
-      case TYPE.APIARY: return base + " bg-emerald-500";
-      case TYPE.HIVE: return base + " bg-sky-500";
-      case TYPE.INSPECTION: return base + " bg-amber-500";
-      case TYPE.LOGBOOK: return base + " bg-rose-500";
-      case TYPE.TODO: return base + " bg-violet-500";
-      default: return base + " bg-zinc-400";
+      case TYPE.APIARY:
+        return base + " bg-emerald-500";
+      case TYPE.HIVE:
+        return base + " bg-sky-500";
+      case TYPE.INSPECTION:
+        return base + " bg-amber-500";
+      case TYPE.LOGBOOK:
+        return base + " bg-rose-500";
+      case TYPE.TODO:
+        return base + " bg-violet-500";
+      default:
+        return base + " bg-zinc-400";
     }
   };
 
   const pillClass = (e) => {
     const base =
       "inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded border max-w-full truncate";
-    const strike = e.status === "archived" || e.status === "deleted" ? " line-through opacity-60" : "";
+    const strike =
+      e.status === "archived" || e.status === "deleted"
+        ? " line-through opacity-60"
+        : "";
     const futureTodo =
       e.type === TYPE.TODO &&
       !e.completed &&
       new Date(e.date + "T00:00:00") >= startOfMonth(year, month);
     switch (e.type) {
-      case TYPE.APIARY: return base + " bg-emerald-100 border-emerald-300 text-emerald-900" + strike;
-      case TYPE.HIVE: return base + " bg-sky-100 border-sky-300 text-sky-900" + strike;
-      case TYPE.INSPECTION: return base + " bg-amber-100 border-amber-300 text-amber-900" + strike;
-      case TYPE.LOGBOOK: return base + " bg-rose-100 border-rose-300 text-rose-900" + strike;
+      case TYPE.APIARY:
+        return (
+          base +
+          " bg-emerald-100 border-emerald-300 text-emerald-900" +
+          strike
+        );
+      case TYPE.HIVE:
+        return base + " bg-sky-100 border-sky-300 text-sky-900" + strike;
+      case TYPE.INSPECTION:
+        return (
+          base + " bg-amber-100 border-amber-300 text-amber-900" + strike
+        );
+      case TYPE.LOGBOOK:
+        return base + " bg-rose-100 border-rose-300 text-rose-900" + strike;
       case TYPE.TODO:
-        return base + " bg-violet-100 border-violet-300 text-violet-900" + (futureTodo ? " ring-1 ring-violet-400" : "") + strike;
-      default: return base + " bg-zinc-100 border-zinc-300 text-zinc-900" + strike;
+        return (
+          base +
+          " bg-violet-100 border-violet-300 text-violet-900" +
+          (futureTodo ? " ring-1 ring-violet-400" : "") +
+          strike
+        );
+      default:
+        return base + " bg-zinc-100 border-zinc-300 text-zinc-900" + strike;
     }
   };
 
   const eventsTitle = (y, m) =>
-    `${new Date(y, m, 1).toLocaleString("en-GB", { month: "long" })} ${y}`;
+    `${new Date(y, m, 1).toLocaleString("en-GB", {
+      month: "long",
+    })} ${y}`;
+
+  const eventsTitleShort = (y, m) =>
+    `${new Date(y, m, 1).toLocaleString("en-GB", {
+      month: "short",
+    })} ${y}`;
 
   return (
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-2xl font-bold">Calendar — {eventsTitle(year, month)}</h1>
+        <h1 className="text-xl sm:text-2xl font-bold">
+          {/* Mobile: short month (Nov 2025) */}
+          <span className="sm:hidden">
+            Calendar — {eventsTitleShort(year, month)}
+          </span>
+          {/* Desktop/tablet: full month (November 2025) */}
+          <span className="hidden sm:inline">
+            Calendar — {eventsTitle(year, month)}
+          </span>
+        </h1>
 
         {/* FILTERS – Row 1 */}
-        <div className="flex flex-wrap items-center gap-2">
-          <label className="text-sm font-medium">Apiary:</label>
-          <select
-            className="border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm"
-            value={apiaryId}
-            onChange={(e) => setApiaryId(e.target.value)}
-          >
-            <option value="all">All apiaries</option>
-            {apiaries.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.name || `Apiary ${a.id}`}
-              </option>
-            ))}
-          </select>
+        <div className="flex flex-wrap items-start gap-3 w-full">
+          {/* Apiary + Hive – stack on mobile, inline on larger screens */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full md:w-auto">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <label className="text-sm font-medium">Apiary:</label>
+              <select
+                className="flex-1 sm:flex-none border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm"
+                value={apiaryId}
+                onChange={(e) => setApiaryId(e.target.value)}
+              >
+                <option value="all">All apiaries</option>
+                {apiaries.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.name || `Apiary ${a.id}`}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <label className="text-sm font-medium ml-2">Hive:</label>
-          <select
-            className="border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm"
-            value={hiveId}
-            onChange={(e) => setHiveId(e.target.value)}
-          >
-            <option value="all">All hives</option>
-            {visibleHivesForFilter.map((h) => (
-              <option key={h.id} value={h.id}>
-                {h.name || `Hive ${h.id}`}
-              </option>
-            ))}
-          </select>
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <label className="text-sm font-medium">Hive:</label>
+              <select
+                className="flex-1 sm:flex-none border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm"
+                value={hiveId}
+                onChange={(e) => setHiveId(e.target.value)}
+              >
+                <option value="all">All hives</option>
+                {visibleHivesForFilter.map((h) => (
+                  <option key={h.id} value={h.id}>
+                    {h.name || `Hive ${h.id}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-          <div className="flex items-center gap-2 w-full md:w-auto md:ml-2">
-            {[TYPE.APIARY, TYPE.HIVE, TYPE.INSPECTION, TYPE.LOGBOOK, TYPE.TODO].map((t) => (
-              <label key={t} className="flex items-center gap-1 text-sm">
-                <input
-                  type="checkbox"
-                  className="accent-black"
-                  checked={!!typeFilter[t]}
-                  onChange={(e) => setTypeFilter((prev) => ({ ...prev, [t]: e.target.checked }))}
-                />
-                <span>{TYPE_LABEL[t]}</span>
-              </label>
-            ))}
+          {/* Type checkboxes – wrap nicely on mobile */}
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 w-full md:w-auto md:ml-2">
+            {[TYPE.APIARY, TYPE.HIVE, TYPE.INSPECTION, TYPE.LOGBOOK, TYPE.TODO].map(
+              (t) => (
+                <label
+                  key={t}
+                  className="flex items-center gap-1 text-xs sm:text-sm min-w-[45%] sm:min-w-0"
+                >
+                  <input
+                    type="checkbox"
+                    className="accent-black"
+                    checked={!!typeFilter[t]}
+                    onChange={(e) =>
+                      setTypeFilter((prev) => ({
+                        ...prev,
+                        [t]: e.target.checked,
+                      }))
+                    }
+                  />
+                  <span>{TYPE_LABEL[t]}</span>
+                </label>
+              )
+            )}
           </div>
         </div>
       </div>
 
       {/* FILTERS – Row 2: Date controls (left) + Hidden controls (right) */}
-      <div className="flex flex-wrap items-center gap-2">
-        {/* Date controls – LEFT */}
-        <div className="flex items-center gap-2">
-          <label className="text-sm font-medium">Month:</label>
-          <select
-            className="border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm"
-            value={month}
-            onChange={(e) => setMonth(Number(e.target.value))}
-          >
-            {Array.from({ length: 12 }, (_, m) => (
-              <option key={m} value={m}>
-                {new Date(2000, m, 1).toLocaleString("en-GB", { month: "long" })}
-              </option>
-            ))}
-          </select>
+      <div className="flex flex-wrap items-start gap-2">
+        {/* Date controls – stack on mobile */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium">Month:</label>
+            <select
+              className="border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm w-full sm:w-auto"
+              value={month}
+              onChange={(e) => setMonth(Number(e.target.value))}
+            >
+              {Array.from({ length: 12 }, (_, m) => (
+                <option key={m} value={m}>
+                  {new Date(2000, m, 1).toLocaleString("en-GB", {
+                    month: "long",
+                  })}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <label className="text-sm font-medium">Year:</label>
-          <select
-            className="border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm"
-            value={year}
-            onChange={(e) => setYear(Number(e.target.value))}
-          >
-            {Array.from({ length: 9 }, (_, i) => new Date().getFullYear() - 4 + i).map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium">Year:</label>
+            <select
+              className="border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm w-full sm:w-auto"
+              value={year}
+              onChange={(e) => setYear(Number(e.target.value))}
+            >
+              {Array.from(
+                { length: 9 },
+                (_, i) => new Date().getFullYear() - 4 + i
+              ).map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <button
-            className="px-2 py-1 text-sm rounded border border-zinc-300 bg-white hover:bg-zinc-100 text-black"
+            className="px-2 py-1 text-sm rounded border border-zinc-300 bg-white hover:bg-zinc-100 text-black w-full sm:w-auto"
             onClick={() => {
               const d = new Date();
               setYear(d.getFullYear());
@@ -542,8 +639,8 @@ const Calendar = () => {
           </button>
         </div>
 
-        {/* Hidden controls – RIGHT */}
-        <div className="flex items-center gap-2 ml-auto">
+        {/* Hidden controls – below on mobile, right on larger screens */}
+        <div className="flex items-center gap-2 w-full sm:w-auto sm:ml-auto mt-1 sm:mt-0">
           <label className="flex items-center gap-1 text-sm">
             <input
               type="checkbox"
@@ -565,18 +662,27 @@ const Calendar = () => {
 
       {/* Legend */}
       <div className="flex items-center flex-wrap gap-2 text-xs">
-        <span className="px-2 py-0.5 rounded border bg-emerald-100 border-emerald-300 text-emerald-900">Apiary</span>
-        <span className="px-2 py-0.5 rounded border bg-sky-100 border-sky-300 text-sky-900">Hive</span>
-        <span className="px-2 py-0.5 rounded border bg-amber-100 border-amber-300 text-amber-900">Inspection</span>
-        <span className="px-2 py-0.5 rounded border bg-rose-100 border-rose-300 text-rose-900">Logbook</span>
-        <span className="px-2 py-0.5 rounded border bg-violet-100 border-violet-300 text-violet-900">Task</span>
+        <span className="px-2 py-0.5 rounded border bg-emerald-100 border-emerald-300 text-emerald-900">
+          Apiary
+        </span>
+        <span className="px-2 py-0.5 rounded border bg-sky-100 border-sky-300 text-sky-900">
+          Hive
+        </span>
+        <span className="px-2 py-0.5 rounded border bg-amber-100 border-amber-300 text-amber-900">
+          Inspection
+        </span>
+        <span className="px-2 py-0.5 rounded border bg-rose-100 border-rose-300 text-rose-900">
+          Logbook
+        </span>
+        <span className="px-2 py-0.5 rounded border bg-violet-100 border-violet-300 text-violet-900">
+          Task
+        </span>
         <span className="ml-3 text-zinc-600">✅ completed</span>
         <span className="ml-3 text-zinc-600">⊘ archived/deleted</span>
         <span className="ml-3 text-zinc-600">◉ future tasks highlighted</span>
       </div>
 
       {/* CALENDAR GRID */}
-            {/* CALENDAR GRID */}
       <div className="border border-zinc-200 rounded-md">
         {/* scrollable wrapper – only really used on small screens */}
         <div className="overflow-x-auto">
@@ -682,7 +788,10 @@ const Calendar = () => {
                           );
 
                           return (
-                            <div key={e.key} className="flex items-start gap-1">
+                            <div
+                              key={e.key}
+                              className="flex items-start gap-1"
+                            >
                               <span className={dotClass(e)} />
                               {isDisabled || !e.link ? (
                                 content
@@ -719,8 +828,10 @@ const Calendar = () => {
       </div>
 
       <div className="text-xs text-zinc-500">
-        Items are never auto-removed from the calendar. Use the “×” to hide manually (stored on this device).
-        Archived/deleted entries remain visible with a strike-through and cannot be opened here — check your archive view.
+        Items are never auto-removed from the calendar. Use the “×” to hide
+        manually (stored on this device). Archived/deleted entries remain
+        visible with a strike-through and cannot be opened here — check your
+        archive view.
       </div>
 
       {/* -------- Modal -------- */}
@@ -739,26 +850,40 @@ const Calendar = () => {
               <h3 className="text-lg font-semibold">
                 {TYPE_LABEL[selected.type]} • {selected.title}
               </h3>
-              <button className="text-zinc-500 hover:text-zinc-800" onClick={closeModal} aria-label="Close">×</button>
+              <button
+                className="text-zinc-500 hover:text-zinc-800"
+                onClick={closeModal}
+                aria-label="Close"
+              >
+                ×
+              </button>
             </div>
 
             <div className="text-sm text-zinc-700 space-y-1">
-              <p><span className="font-medium">Date:</span> {fmtLong(selected.date)}</p>
+              <p>
+                <span className="font-medium">Date:</span>{" "}
+                {fmtLong(selected.date)}
+              </p>
 
               {selected.apiary_id && (
                 <p>
-                  <span className="font-medium">Apiary:</span> {getApiaryName(selected.apiary_id)}
+                  <span className="font-medium">Apiary:</span>{" "}
+                  {getApiaryName(selected.apiary_id)}
                 </p>
               )}
               {selected.hive_id && (
                 <p>
-                  <span className="font-medium">Hive:</span> {getHiveName(selected.hive_id)}
+                  <span className="font-medium">Hive:</span>{" "}
+                  {getHiveName(selected.hive_id)}
                 </p>
               )}
 
               {selected.completed && <p>✅ Completed</p>}
-              {(selected.status === "archived" || selected.status === "deleted") && (
-                <p className="text-red-700">This item is {selected.status}.</p>
+              {(selected.status === "archived" ||
+                selected.status === "deleted") && (
+                <p className="text-red-700">
+                  This item is {selected.status}.
+                </p>
               )}
             </div>
 
