@@ -222,31 +222,48 @@ const TodoList = () => {
   if (loading) return <p className="p-4">Loading Task list...</p>;
 
   const Pagination = ({ page, setPage, totalPages, startIdx, endIdx, total }) => (
-    <div className="flex items-center justify-between mt-3 text-sm">
-      <div className="text-gray-600">
-        Showing <strong>{startIdx + 1}</strong>–<strong>{endIdx}</strong> of <strong>{total}</strong>
-      </div>
-      <div className="flex items-center gap-2">
-        <button
-          className="px-3 py-1 border rounded disabled:opacity-50"
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page <= 1}
-        >
-          Prev
-        </button>
-        <span>
-          Page {page} / {totalPages}
-        </span>
-        <button
-          className="px-3 py-1 border rounded disabled:opacity-50"
-          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          disabled={page >= totalPages}
-        >
-          Next
-        </button>
-      </div>
+  <div className="flex items-center justify-between mt-6">
+    <div className="text-sm text-gray-600">
+      Showing {total === 0 ? 0 : startIdx + 1}–{endIdx} of {total}
     </div>
-  );
+    <div className="flex gap-2">
+      <button
+        type="button"
+        onClick={() => setPage((p) => Math.max(1, p - 1))}
+        disabled={page === 1}
+        className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50"
+      >
+        Prev
+      </button>
+      {totalPages > 1 && (
+        <div className="flex gap-1">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => setPage(n)}
+              className={`text-sm px-3 py-2 rounded border ${
+                n === page
+                  ? "bg-green-700 text-white border-green-800"
+                  : "bg-white border-gray-300 hover:bg-gray-100"
+              }`}
+            >
+              {n}
+            </button>
+          ))}
+        </div>
+      )}
+      <button
+        type="button"
+        onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+        disabled={page === totalPages}
+        className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+);
 
   return (
     <div className="p-6 space-y-4">
