@@ -11,16 +11,17 @@ const LogEntryList = () => {
   const navigate = useNavigate();
 
   // --- highlight/query params (normalize type to UPPERCASE)
-  const { highlightId, highlightType, apiaryFromUrl, inspectionIdFromUrl } = useMemo(() => {
-    const params = new URLSearchParams(location.search || "");
-    const rawType = params.get("type");
-    return {
-      highlightId: params.get("highlight") || null,
-      highlightType: rawType ? rawType.toUpperCase() : null, // "LOGBOOK" expected, but be flexible
-      apiaryFromUrl: params.get("apiary_id") || "", // "" means all
-      inspectionIdFromUrl: params.get("inspection_id") || "", // "" means no inspection filter
-    };
-  }, [location.search]);
+  const { highlightId, highlightType, apiaryFromUrl, inspectionIdFromUrl } =
+    useMemo(() => {
+      const params = new URLSearchParams(location.search || "");
+      const rawType = params.get("type");
+      return {
+        highlightId: params.get("highlight") || null,
+        highlightType: rawType ? rawType.toUpperCase() : null, // "LOGBOOK" expected, but be flexible
+        apiaryFromUrl: params.get("apiary_id") || "", // "" means all
+        inspectionIdFromUrl: params.get("inspection_id") || "", // "" means no inspection filter
+      };
+    }, [location.search]);
 
   // Avoid loops when auto-jumping to highlight page
   const jumpedToHighlightPageRef = useRef(false);
@@ -36,7 +37,7 @@ const LogEntryList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // NEW: keep a tiny bit of context about the inspection (date) if we can fetch it fast
+  // keep a tiny bit of context about the inspection (date) if we can fetch it fast
   const [inspectionMeta, setInspectionMeta] = useState(null); // { id, date } | null
 
   // --- Lightbox (single image only)
@@ -81,7 +82,8 @@ const LogEntryList = () => {
     if (selectedApiary) params.set("apiary_id", selectedApiary);
     if (incoming.get("highlight")) params.set("highlight", incoming.get("highlight"));
     if (incoming.get("type")) params.set("type", incoming.get("type"));
-    if (incoming.get("inspection_id")) params.set("inspection_id", incoming.get("inspection_id"));
+    if (incoming.get("inspection_id"))
+      params.set("inspection_id", incoming.get("inspection_id"));
 
     const next = params.toString();
     const curr = (location.search || "").replace(/^\?/, "");
@@ -120,7 +122,8 @@ const LogEntryList = () => {
       // Base query for ACTIVE log entries
       let entriesQuery = supabase
         .from("logbook")
-        .select(`
+        .select(
+          `
           id,
           log_type,
           entry,
@@ -132,7 +135,8 @@ const LogEntryList = () => {
           all_hives,
           archived_at,
           inspection:inspection_id ( id, date )
-        `)
+        `
+        )
         .is("archived_at", null)
         .order("date", { ascending: false });
 
@@ -162,9 +166,12 @@ const LogEntryList = () => {
           .order("name", { ascending: true }),
       ]);
 
-      if (entriesErr) setError(entriesErr.message || "Failed to load logbook entries.");
-      if (apiaryErr) setError((prev) => prev || apiaryErr.message || "Failed to load apiaries.");
-      if (hiveErr) setError((prev) => prev || hiveErr.message || "Failed to load hives.");
+      if (entriesErr)
+        setError(entriesErr.message || "Failed to load logbook entries.");
+      if (apiaryErr)
+        setError((prev) => prev || apiaryErr.message || "Failed to load apiaries.");
+      if (hiveErr)
+        setError((prev) => prev || hiveErr.message || "Failed to load hives.");
 
       setEntries(entriesData || []);
       setApiaries(apiaryData || []);
@@ -193,7 +200,9 @@ const LogEntryList = () => {
   // Client-side filter (defensive; server already filters when selected)
   const filtered = useMemo(() => {
     if (inspectionIdFromUrl) return entries; // already scoped to inspection
-    return selectedApiary ? entries.filter((e) => e.apiary_id === selectedApiary) : entries;
+    return selectedApiary
+      ? entries.filter((e) => e.apiary_id === selectedApiary)
+      : entries;
   }, [entries, selectedApiary, inspectionIdFromUrl]);
 
   // If a highlight is present, auto-jump to the correct page (once)
@@ -213,11 +222,10 @@ const LogEntryList = () => {
   }, [filtered, highlightId, highlightType, page]);
 
   const total = filtered.length;
-const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-const startIdx = (page - 1) * PAGE_SIZE;
-const endIdx = Math.min(startIdx + PAGE_SIZE, total);
-const pageItems = filtered.slice(startIdx, endIdx);
-
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  const startIdx = (page - 1) * PAGE_SIZE;
+  const endIdx = Math.min(startIdx + PAGE_SIZE, total);
+  const pageItems = filtered.slice(startIdx, endIdx);
 
   // After pageItems render, scroll highlighted card into view and pulse it
   useEffect(() => {
@@ -229,7 +237,10 @@ const pageItems = filtered.slice(startIdx, endIdx);
         el.scrollIntoView({ behavior: "smooth", block: "center" });
         el.classList.add("ring-2", "ring-amber-400", "bg-amber-50");
         // remove ring after a moment, keep subtle bg
-        setTimeout(() => el.classList.remove("ring-2", "ring-amber-400"), 1600);
+        setTimeout(
+          () => el.classList.remove("ring-2", "ring-amber-400"),
+          1600
+        );
       }
     }, 80);
     return () => clearTimeout(t);
@@ -258,76 +269,84 @@ const pageItems = filtered.slice(startIdx, endIdx);
   return (
     <div className="p-4">
       {/* Header */}
-<div className="mb-4">
-  {/* Heading always on its own line */}
-  <h2 className="text-2xl font-bold mb-3">Logbook Entries</h2>
+      <div className="mb-4">
+        {/* Heading always on its own line */}
+        <h2 className="text-2xl font-bold mb-3">Logbook Entries</h2>
 
-  {/* Controls wrapper – now sits under the heading */}
-  <div className="flex flex-col gap-2 w-full sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
-    {/* Filter by apiary (disabled when inspection filter is active) */}
-    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 w-full">
-      <label className="text-sm font-medium text-gray-700 whitespace-nowrap sm:mr-2 mb-1 sm:mb-0">
-        Filter by Apiary:
-      </label>
+        {/* Controls wrapper – now sits under the heading */}
+        <div className="flex flex-col gap-2 w-full sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
+          {/* Filter by apiary (disabled when inspection filter is active) */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 w-full">
+            <label className="text-sm font-medium text-gray-700 whitespace-nowrap sm:mr-2 mb-1 sm:mb-0">
+              Filter by Apiary:
+            </label>
 
-      <select
-        value={selectedApiary}
-        onChange={(e) => {
-          setSelectedApiary(e.target.value);
-          setPage(1);
-        }}
-        disabled={!!inspectionIdFromUrl}
-        className={`border border-gray-300 rounded px-2 py-1 text-sm w-full sm:w-auto ${
-          inspectionIdFromUrl ? "bg-gray-100 text-gray-500 cursor-not-allowed" : ""
-        }`}
-      >
-        <option value="">All Apiaries</option>
-        {apiaries.map((a) => (
-          <option key={a.id} value={a.id}>
-            {a.name}
-          </option>
-        ))}
-      </select>
-    </div>
+            <select
+              value={selectedApiary}
+              onChange={(e) => {
+                setSelectedApiary(e.target.value);
+                setPage(1);
+              }}
+              disabled={!!inspectionIdFromUrl}
+              className={`border border-gray-300 rounded px-2 py-1 text-sm w-full sm:w-auto ${
+                inspectionIdFromUrl
+                  ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                  : ""
+              }`}
+            >
+              <option value="">All Apiaries</option>
+              {apiaries.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-    {/* View toggle */}
-    <div className="flex border border-gray-300 rounded overflow-hidden self-start sm:self-auto">
-      <button
-        type="button"
-        onClick={() => setViewMode("list")}
-        className={`px-3 py-1 text-sm ${
-          viewMode === "list" ? "bg-green-700 text-white" : "bg-white"
-        }`}
-      >
-        List
-      </button>
-      <button
-        type="button"
-        onClick={() => setViewMode("grid")}
-        className={`px-3 py-1 text-sm ${
-          viewMode === "grid" ? "bg-green-700 text-white" : "bg-white"
-        }`}
-      >
-        Grid
-      </button>
-    </div>
+          {/* View toggle */}
+          <div className="flex border border-gray-300 rounded overflow-hidden self-start sm:self-auto">
+            <button
+              type="button"
+              onClick={() => setViewMode("list")}
+              className={`px-3 py-1 text-sm ${
+                viewMode === "list" ? "bg-green-700 text-white" : "bg-white"
+              }`}
+            >
+              List
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("grid")}
+              className={`px-3 py-1 text-sm ${
+                viewMode === "grid" ? "bg-green-700 text-white" : "bg-white"
+              }`}
+            >
+              Grid
+            </button>
+          </div>
 
-    {/* Add new */}
-    <Link
-      to="/logbook/new"
-      className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded self-start sm:self-auto"
-    >
-      New Log Entry
-    </Link>
-  </div>
-</div>
+          {/* Add new */}
+          <Link
+            to="/logbook/new"
+            className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded self-start sm:self-auto"
+          >
+            New Log Entry
+          </Link>
+        </div>
+      </div>
 
       {/* Filter banner when inspection_id is active */}
       {inspectionIdFromUrl && (
         <div className="mb-4 p-3 rounded border bg-blue-50 border-blue-200 text-blue-900 flex flex-wrap items-center gap-3">
           <span className="text-sm">
-            Showing logbook entries linked to <strong>Inspection #{inspectionIdFromUrl}</strong>
-            {inspectionMeta?.date ? ` (${formatUKDate(inspectionMeta.date)})` : ""}.
+            {inspectionMeta?.date ? (
+              <>
+                Showing logbook entries for the inspection on{" "}
+                <strong>{formatUKDate(inspectionMeta.date)}</strong>.
+              </>
+            ) : (
+              <>Showing logbook entries linked to this inspection.</>
+            )}
           </span>
           <button
             type="button"
@@ -357,7 +376,10 @@ const pageItems = filtered.slice(startIdx, endIdx);
         <div className="space-y-2">
           <p>
             No logbook entries found.{" "}
-            <Link to="/logbook/new" className="text-blue-600 underline hover:text-blue-800">
+            <Link
+              to="/logbook/new"
+              className="text-blue-600 underline hover:text-blue-800"
+            >
               Add one now
             </Link>
           </p>
@@ -368,9 +390,15 @@ const pageItems = filtered.slice(startIdx, endIdx);
             // LIST VIEW
             <div className="divide-y divide-gray-200 bg-white rounded shadow">
               {pageItems.map((e) => {
-                const apiaryName = e.apiary_id ? apiaryNameById.get(e.apiary_id) : null;
-                const hiveName = e.hive_id ? hiveNameById.get(e.hive_id) : null;
-                const inspDate = e.inspection?.date ? formatUKDate(e.inspection.date) : null;
+                const apiaryName = e.apiary_id
+                  ? apiaryNameById.get(e.apiary_id)
+                  : null;
+                const hiveName = e.hive_id
+                  ? hiveNameById.get(e.hive_id)
+                  : null;
+                const inspDate = e.inspection?.date
+                  ? formatUKDate(e.inspection.date)
+                  : null;
 
                 const isHighlighted =
                   highlightId &&
@@ -382,7 +410,9 @@ const pageItems = filtered.slice(startIdx, endIdx);
                     key={e.id}
                     id={`log-${e.id}`}
                     data-highlight={isHighlighted ? "true" : "false"}
-                    className={["p-4", isHighlighted ? "bg-amber-50" : ""].join(" ")}
+                    className={["p-4", isHighlighted ? "bg-amber-50" : ""].join(
+                      " "
+                    )}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -395,12 +425,20 @@ const pageItems = filtered.slice(startIdx, endIdx);
                           )}
                         </div>
                         <p className="text-sm text-gray-600">
-                          <span className="mr-2">Date: {formatUKDate(e.date)}</span>
-                          {apiaryName && <span className="mr-2">Apiary: {apiaryName}</span>}
-                          {!e.all_hives && hiveName && <span>Hive: {hiveName}</span>}
+                          <span className="mr-2">
+                            Date: {formatUKDate(e.date)}
+                          </span>
+                          {apiaryName && (
+                            <span className="mr-2">Apiary: {apiaryName}</span>
+                          )}
+                          {!e.all_hives && hiveName && (
+                            <span>Hive: {hiveName}</span>
+                          )}
                         </p>
                         {e.entry && (
-                          <p className="mt-2 text-gray-800 whitespace-pre-wrap">{e.entry}</p>
+                          <p className="mt-2 text-gray-800 whitespace-pre-wrap">
+                            {e.entry}
+                          </p>
                         )}
                         <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
                           {e.inspection_id && (
@@ -408,7 +446,9 @@ const pageItems = filtered.slice(startIdx, endIdx);
                               to={`/inspections/${e.inspection_id}/edit`}
                               className="bg-green-700 hover:bg-green-800 text-white text-xs px-2 py-1 rounded"
                             >
-                              {inspDate ? `View Inspection (${inspDate})` : "View Inspection"}
+                              {inspDate
+                                ? `View Inspection (${inspDate})`
+                                : "View Inspection"}
                             </Link>
                           )}
                           <Link
@@ -432,7 +472,9 @@ const pageItems = filtered.slice(startIdx, endIdx);
                               src={e.photo_url}
                               alt="Log"
                               className="w-28 h-20 object-cover rounded border hover:opacity-90"
-                              onError={(ev) => (ev.currentTarget.style.display = "none")}
+                              onError={(ev) =>
+                                (ev.currentTarget.style.display = "none")
+                              }
                             />
                           </button>
                         </div>
@@ -446,9 +488,15 @@ const pageItems = filtered.slice(startIdx, endIdx);
             // GRID VIEW
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {pageItems.map((e) => {
-                const apiaryName = e.apiary_id ? apiaryNameById.get(e.apiary_id) : null;
-                const hiveName = e.hive_id ? hiveNameById.get(e.hive_id) : null;
-                const inspDate = e.inspection?.date ? formatUKDate(e.inspection.date) : null;
+                const apiaryName = e.apiary_id
+                  ? apiaryNameById.get(e.apiary_id)
+                  : null;
+                const hiveName = e.hive_id
+                  ? hiveNameById.get(e.hive_id)
+                  : null;
+                const inspDate = e.inspection?.date
+                  ? formatUKDate(e.inspection.date)
+                  : null;
 
                 const isHighlighted =
                   highlightId &&
@@ -478,7 +526,9 @@ const pageItems = filtered.slice(startIdx, endIdx);
                               src={e.photo_url}
                               alt="Log"
                               className="w-28 h-20 object-cover rounded border hover:opacity-90"
-                              onError={(ev) => (ev.currentTarget.style.display = "none")}
+                              onError={(ev) =>
+                                (ev.currentTarget.style.display = "none")
+                              }
                             />
                           </button>
                         </div>
@@ -512,7 +562,9 @@ const pageItems = filtered.slice(startIdx, endIdx);
                           to={`/inspections/${e.inspection_id}/edit`}
                           className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
                         >
-                          {inspDate ? `View Inspection (${inspDate})` : "View Inspection"}
+                          {inspDate
+                            ? `View Inspection (${inspDate})`
+                            : "View Inspection"}
                         </Link>
                       )}
                       <Link
@@ -530,40 +582,43 @@ const pageItems = filtered.slice(startIdx, endIdx);
 
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
-  <div className="text-sm text-gray-600">
-    Showing {total === 0 ? 0 : Math.min((page - 1) * PAGE_SIZE + 1, total)}–
-    {Math.min(page * PAGE_SIZE, total)} of {total}
-  </div>
+            <div className="text-sm text-gray-600">
+              Showing{" "}
+              {total === 0
+                ? 0
+                : Math.min((page - 1) * PAGE_SIZE + 1, total)}
+              –
+              {Math.min(page * PAGE_SIZE, total)} of {total}
+            </div>
 
-  <div className="flex items-center gap-3 sm:justify-end">
-    {totalPages > 1 && (
-      <span className="text-xs text-gray-500">
-        Page {page} of {totalPages}
-      </span>
-    )}
+            <div className="flex items-center gap-3 sm:justify-end">
+              {totalPages > 1 && (
+                <span className="text-xs text-gray-500">
+                  Page {page} of {totalPages}
+                </span>
+              )}
 
-    <button
-      type="button"
-      onClick={() => setPage((p) => Math.max(1, p - 1))}
-      disabled={page === 1}
-      className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
-    >
-      Prev
-    </button>
+              >
+                Prev
+              </button>
 
-    <button
-      type="button"
-      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-      disabled={page === totalPages}
-      className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+              <button
+                type="button"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
-    >
-      Next
-    </button>
-  </div>
-</div>
-
+              >
+                Next
+              </button>
+            </div>
+          </div>
         </>
       )}
 
