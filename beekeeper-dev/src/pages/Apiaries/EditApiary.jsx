@@ -3,7 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import dayjs from "dayjs";
-import { MapContainer, TileLayer, Marker, Circle, useMapEvents, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Circle,
+  useMapEvents,
+  useMap,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { forwardGeocode } from "../../utils/geocode";
@@ -24,9 +31,13 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 function DraggableMarker({ position, onMove }) {
   const map = useMap();
-  useEffect(() => { if (position) map.setView(position, map.getZoom()); }, [position, map]);
+  useEffect(() => {
+    if (position) map.setView(position, map.getZoom());
+  }, [position, map]);
   useMapEvents({
-    click(e) { onMove([e.latlng.lat, e.latlng.lng]); },
+    click(e) {
+      onMove([e.latlng.lat, e.latlng.lng]);
+    },
   });
   return (
     <>
@@ -40,7 +51,11 @@ function DraggableMarker({ position, onMove }) {
           },
         }}
       />
-      <Circle center={position} radius={5000} pathOptions={{ color: "green", fillOpacity: 0.1 }} />
+      <Circle
+        center={position}
+        radius={5000}
+        pathOptions={{ color: "green", fillOpacity: 0.1 }}
+      />
     </>
   );
 }
@@ -89,7 +104,8 @@ const EditApiary = () => {
   // Clean up blob URL when it changes/unmounts
   useEffect(() => {
     return () => {
-      if (previewUrl && previewUrl.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+      if (previewUrl && previewUrl.startsWith("blob:"))
+        URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
 
@@ -114,7 +130,8 @@ const EditApiary = () => {
         latitude: data.latitude ?? "",
         longitude: data.longitude ?? "",
         notes: data.notes || "",
-        established_date: data.established_date || dayjs().format("YYYY-MM-DD"),
+        established_date:
+          data.established_date || dayjs().format("YYYY-MM-DD"),
         location_type: data.location_type || "",
         site_setting: data.site_setting || "",
         is_default: !!data.is_default,
@@ -126,7 +143,10 @@ const EditApiary = () => {
       setPreviewUrl(data.photo_url || null);
       setCurrentObject(parseStoragePublicUrl(data.photo_url));
 
-      if (Number.isFinite(Number(data.latitude)) && Number.isFinite(Number(data.longitude))) {
+      if (
+        Number.isFinite(Number(data.latitude)) &&
+        Number.isFinite(Number(data.longitude))
+      ) {
         const pos = [Number(data.latitude), Number(data.longitude)];
         setMapCenter(pos);
         setOriginalCenter(pos);
@@ -147,7 +167,10 @@ const EditApiary = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleFileChange = (e) => {
@@ -156,10 +179,12 @@ const EditApiary = () => {
 
     if (file) {
       const url = URL.createObjectURL(file);
-      if (previewUrl && previewUrl.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+      if (previewUrl && previewUrl.startsWith("blob:"))
+        URL.revokeObjectURL(previewUrl);
       setPreviewUrl(url);
     } else {
-      if (previewUrl && previewUrl.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+      if (previewUrl && previewUrl.startsWith("blob:"))
+        URL.revokeObjectURL(previewUrl);
       setPreviewUrl(formData.photo_url || null);
     }
   };
@@ -170,12 +195,18 @@ const EditApiary = () => {
       return { url: formData.photo_url, path: currentObject?.path || null };
     }
 
-    const filename = `${id}-${Date.now()}-${selectedFile.name.replace(/\s+/g, "_")}`;
+    const filename = `${id}-${Date.now()}-${selectedFile.name.replace(
+      /\s+/g,
+      "_"
+    )}`;
     const path = `apiaries/${filename}`;
 
     const { error: uploadError } = await supabase.storage
       .from("photos")
-      .upload(path, selectedFile, { upsert: true, contentType: selectedFile.type });
+      .upload(path, selectedFile, {
+        upsert: true,
+        contentType: selectedFile.type,
+      });
 
     if (uploadError) {
       console.error("Photo upload error:", uploadError);
@@ -187,7 +218,9 @@ const EditApiary = () => {
 
   const deletePhoto = async () => {
     if (currentObject?.bucket && currentObject?.path) {
-      const { error } = await supabase.storage.from(currentObject.bucket).remove([currentObject.path]);
+      const { error } = await supabase.storage
+        .from(currentObject.bucket)
+        .remove([currentObject.path]);
       if (error) {
         console.error("Photo delete error:", error);
         alert("Failed to delete photo.");
@@ -197,7 +230,8 @@ const EditApiary = () => {
     setSelectedFile(null);
     setFormData((prev) => ({ ...prev, photo_url: "" }));
 
-    if (previewUrl && previewUrl.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+    if (previewUrl && previewUrl.startsWith("blob:"))
+      URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setCurrentObject(null);
   };
@@ -213,12 +247,18 @@ const EditApiary = () => {
       .is("archived_at", null)
       .neq("id", thisApiaryId);
 
-    await supabase.from("apiaries").update({ is_default: true }).eq("id", thisApiaryId);
+    await supabase
+      .from("apiaries")
+      .update({ is_default: true })
+      .eq("id", thisApiaryId);
 
     const { data: userWrap } = await supabase.auth.getUser();
     const uid = userWrap?.user?.id;
     if (uid && uid === userId) {
-      await supabase.from("profiles").update({ default_apiary_id: thisApiaryId }).eq("user_id", uid);
+      await supabase
+        .from("profiles")
+        .update({ default_apiary_id: thisApiaryId })
+        .eq("user_id", uid);
     }
   };
 
@@ -227,7 +267,11 @@ const EditApiary = () => {
 
     const { url: newUrl, path: newPath } = await uploadPhoto();
 
-    if (newPath && currentObject?.path && (newUrl && newUrl !== formData.photo_url)) {
+    if (
+      newPath &&
+      currentObject?.path &&
+      (newUrl && newUrl !== formData.photo_url)
+    ) {
       await supabase.storage
         .from(currentObject.bucket || "photos")
         .remove([currentObject.path])
@@ -259,7 +303,10 @@ const EditApiary = () => {
     if (wantDefault) {
       await setOnlyDefaultForUser(rest.user_id, id);
     } else {
-      await supabase.from("apiaries").update({ is_default: false }).eq("id", id);
+      await supabase
+        .from("apiaries")
+        .update({ is_default: false })
+        .eq("id", id);
     }
 
     alert("Apiary updated successfully!");
@@ -267,7 +314,10 @@ const EditApiary = () => {
   };
 
   const handleDelete = async () => {
-    const { data, error: checkErr } = await supabase.rpc("check_apiary_children", { apiary_id: id });
+    const { data, error: checkErr } = await supabase.rpc(
+      "check_apiary_children",
+      { apiary_id: id }
+    );
     if (checkErr) {
       console.error(checkErr);
       alert("Could not delete, linked items. Please try again.");
@@ -295,9 +345,18 @@ const EditApiary = () => {
       return;
     }
 
-    if (!window.confirm("Delete this apiary permanently? This cannot be undone.")) return;
+    if (
+      !window.confirm(
+        "Delete this apiary permanently? This cannot be undone."
+      )
+    )
+      return;
 
-    const { error: delErr } = await deleteRowWithPhoto("apiaries", id, "photo_url");
+    const { error: delErr } = await deleteRowWithPhoto(
+      "apiaries",
+      id,
+      "photo_url"
+    );
     if (delErr) {
       alert(humaniseSupabaseError(delErr));
       return;
@@ -307,7 +366,8 @@ const EditApiary = () => {
   };
 
   const handleArchive = async () => {
-    if (!window.confirm("Are you sure you want to archive this apiary?")) return;
+    if (!window.confirm("Are you sure you want to archive this apiary?"))
+      return;
     const { error } = await archiveItem("apiaries", id);
     if (error) {
       console.error("Archive error:", error);
@@ -348,7 +408,9 @@ const EditApiary = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Apiary name */}
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Apiary Name</label>
+            <label className="block text-sm text-gray-600 mb-1">
+              Apiary Name
+            </label>
             <input
               type="text"
               name="name"
@@ -360,35 +422,55 @@ const EditApiary = () => {
           </div>
 
           {/* Hidden lat/lon */}
-          <input type="hidden" name="latitude" value={formData.latitude} readOnly />
-          <input type="hidden" name="longitude" value={formData.longitude} readOnly />
+          <input
+            type="hidden"
+            name="latitude"
+            value={formData.latitude}
+            readOnly
+          />
+          <input
+            type="hidden"
+            name="longitude"
+            value={formData.longitude}
+            readOnly
+          />
 
           {/* Find & Map */}
           <div className="space-y-2">
             <label className="block text-sm text-gray-600">Find location</label>
-            <div className="flex gap-2">
+
+            {/* RESPONSIVE: stack on mobile, row on larger screens */}
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search address or place"
-                className="flex-1 px-3 py-2 border rounded"
+                className="w-full sm:flex-1 px-3 py-2 border rounded"
               />
-              <button
-                type="button"
-                onClick={handleSearch}
-                className="px-3 py-2 bg-yellow-500 text-[#1a3329] rounded hover:bg-yellow-600"
-              >
-                Search
-              </button>
-              <button
-                type="button"
-                onClick={() => (originalCenter ? moveMarker(originalCenter) : alert("No saved location."))}
-                className="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              >
-                Reset Pin
-              </button>
+
+              <div className="flex gap-2 w-full sm:w-auto">
+                <button
+                  type="button"
+                  onClick={handleSearch}
+                  className="flex-1 sm:flex-none px-3 py-2 bg-yellow-500 text-[#1a3329] rounded hover:bg-yellow-600"
+                >
+                  Search
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    originalCenter
+                      ? moveMarker(originalCenter)
+                      : alert("No saved location.")
+                  }
+                  className="flex-1 sm:flex-none px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Reset Pin
+                </button>
+              </div>
             </div>
+
             <div className="h-64 w-full overflow-hidden rounded border">
               <MapContainer
                 center={mapCenter}
@@ -444,13 +526,20 @@ const EditApiary = () => {
 
           {/* Default toggle */}
           <div className="flex items-center gap-2">
-            <input type="checkbox" name="is_default" checked={formData.is_default} onChange={handleChange} />
+            <input
+              type="checkbox"
+              name="is_default"
+              checked={formData.is_default}
+              onChange={handleChange}
+            />
             <label>Set as Default Apiary</label>
           </div>
 
           {/* Established date */}
           <div>
-            <label className="block text-sm text-gray-600 mb-1">Date Apiary Established</label>
+            <label className="block text-sm text-gray-600 mb-1">
+              Date Apiary Established
+            </label>
             <input
               type="date"
               name="established_date"
@@ -493,7 +582,7 @@ const EditApiary = () => {
             <input type="file" accept="image/*" onChange={handleFileChange} />
           </div>
 
-                    {/* Actions */}
+          {/* Actions */}
           <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2">
             <button
               type="submit"
@@ -527,7 +616,6 @@ const EditApiary = () => {
               Cancel
             </button>
           </div>
-
         </form>
       )}
     </div>
