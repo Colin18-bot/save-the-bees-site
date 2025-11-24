@@ -68,7 +68,8 @@ export default function Weather() {
   const [warnings, setWarnings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
-  const [unit, setUnit] = useState("C");
+  const [unit, setUnit] = useState("C"); // C or F for temperature
+  const [windUnit, setWindUnit] = useState("kmh"); // kmh or mph for wind
   const [usedFallback, setUsedFallback] = useState(false);
 
   // Load apiaries and pick default
@@ -329,6 +330,13 @@ export default function Weather() {
   // UI helpers
   const t = (c) => (unit === "C" ? Math.round(c ?? 0) : Math.round((c ?? 0) * 9 / 5 + 32));
   const unitLabel = unit === "C" ? "°C" : "°F";
+  const windDisplay = (k) => {
+    if (!Number.isFinite(k)) return "–";
+    const v = windUnit === "kmh" ? Math.round(k) : Math.round(k * 0.621371);
+    const suffix = windUnit === "kmh" ? "km/h" : "mph";
+    return `${v} ${suffix}`;
+  };
+
   const tz = weather?.timezone || "UTC";
   const hourly = weather?.hourly || {};
   const daily = weather?.daily || {};
@@ -341,8 +349,8 @@ export default function Weather() {
     const now = Date.now();
     let best = 0,
       bestDiff = Infinity;
-    times.forEach((t, i) => {
-      const ms = typeof t === "number" ? t * 1000 : Date.parse(t || 0);
+    times.forEach((tStamp, i) => {
+      const ms = typeof tStamp === "number" ? tStamp * 1000 : Date.parse(tStamp || 0);
       const diff = Math.abs(ms - now);
       if (diff < bestDiff) {
         bestDiff = diff;
@@ -360,20 +368,67 @@ export default function Weather() {
     const tmaxs = safeArr(daily.temperature_2m_max, 0).filter(Number.isFinite);
 
     const out = [];
+
+    const windLabel = windUnit === "kmh" ? "km/h" : "mph";
+    const toF = (c) => Math.round((c * 9) / 5 + 32);
+
+    // Strong wind advisory (logic in km/h)
+    const strongWindThresholdKmh = 40;
     const maxWind = winds.length ? Math.max(...winds) : 0;
-    if (maxWind >= 40) out.push({ icon: "💨", text: "Strong winds (≥40 km/h). Avoid opening hives; strap lids." });
+    if (maxWind >= strongWindThresholdKmh) {
+      const displayThreshold =
+        windUnit === "kmh"
+          ? `≥${strongWindThresholdKmh} ${windLabel}`
+          : `≥${Math.round(strongWindThresholdKmh * 0.621371)} ${windLabel}`;
+      out.push({
+        icon: "💨",
+        text: `Strong winds (${displayThreshold}). Avoid opening hives; strap lids or add extra weights.`,
+      });
+    }
 
+    // Heavy rain advisory
     const heavyRain = precs.some((mm) => mm >= 10);
-    if (heavyRain) out.push({ icon: "🌧️", text: "Heavy rain. Plan feeding/inspections around dry windows." });
+    if (heavyRain) {
+      out.push({
+        icon: "🌧️",
+        text: "Heavy rain expected. Plan inspections and feeding around dry windows.",
+      });
+    }
 
+    // Cool temperature advisory (nights/mornings)
+    const coolThresholdC = 8;
     const minTemp = tmins.length ? Math.min(...tmins) : 99;
-    if (minTemp <= 8) out.push({ icon: "🥶", text: "Cool temps (≤8°C). Foraging low; keep inspections brief." });
+    if (minTemp <= coolThresholdC) {
+      const coolDisplay = unit === "C" ? `≤${coolThresholdC}°C` : `≤${toF(coolThresholdC)}°F`;
+      out.push({
+        icon: "🥶",
+        text: `Cool temps (${coolDisplay}). Foraging will be low; keep any inspections brief and avoid exposing brood for long.`,
+      });
+    }
 
+    // Day never really warms up: avoid full inspections
+    const openThresholdC = 15;
     const maxTemp = tmaxs.length ? Math.max(...tmaxs) : 0;
-    if (maxTemp >= 28) out.push({ icon: "🥵", text: "Hot spell (≥28°C). Provide water and ventilation." });
+    if (maxTemp < openThresholdC) {
+      const openDisplay = unit === "C" ? `<${openThresholdC}°C` : `<${toF(openThresholdC)}°F`;
+      out.push({
+        icon: "🚫🐝",
+        text: `Daytime highs stay below comfortable inspection temps (${openDisplay}). Avoid full hive inspections unless essential to prevent chilling the colony.`,
+      });
+    }
+
+    // Hot spell advisory
+    const hotThresholdC = 28;
+    if (maxTemp >= hotThresholdC) {
+      const hotDisplay = unit === "C" ? `≥${hotThresholdC}°C` : `≥${toF(hotThresholdC)}°F`;
+      out.push({
+        icon: "🥵",
+        text: `Hot spell (${hotDisplay}). Provide plenty of water and ventilation and avoid long inspections in peak heat.`,
+      });
+    }
 
     return out;
-  }, [daily]);
+  }, [daily, windUnit, unit, safeArr]);
 
   const pollenHourly = pollen?.hourly || {};
   const scalePollen = (v) => {
@@ -389,7 +444,7 @@ export default function Weather() {
       {/* Header controls */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 py-4">
         <h2 className="text-xl sm:text-2xl font-bold text-zinc-900">Weather</h2>
-        <div className="flex w-full sm:w-auto gap-2">
+        <div className="flex w-full sm:w-auto gap-2 flex-wrap">
           <label className="sr-only">Apiary</label>
           <select
             className="flex-1 border border-zinc-300 bg-white text-black rounded px-2 py-2 text-sm"
@@ -412,6 +467,13 @@ export default function Weather() {
             className="px-3 py-2 text-sm rounded border border-zinc-300 bg-white hover:bg-zinc-100 text-black"
           >
             {unit === "C" ? "Show °F" : "Show °C"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setWindUnit((w) => (w === "kmh" ? "mph" : "kmh"))}
+            className="px-3 py-2 text-sm rounded border border-zinc-300 bg-white hover:bg-zinc-100 text-black"
+          >
+            {windUnit === "kmh" ? "Show mph" : "Show km/h"}
           </button>
         </div>
       </div>
@@ -475,7 +537,9 @@ export default function Weather() {
                 </div>
                 <div className="p-3 rounded bg-zinc-800">
                   <div className="text-zinc-400">Wind</div>
-                  <div className="font-semibold">{Math.round(weather?.current?.wind_speed_10m ?? 0)} km/h</div>
+                  <div className="font-semibold">
+                    {windDisplay(weather?.current?.wind_speed_10m)}
+                  </div>
                 </div>
                 <div className="p-3 rounded bg-zinc-800">
                   <div className="text-zinc-400">Direction</div>
@@ -517,7 +581,7 @@ export default function Weather() {
                           Rain {Number.isFinite(rainProb) ? `${rainProb}%` : "–"}
                         </div>
                         <div className="text-[11px] sm:text-xs text-zinc-400">
-                          Wind {Number.isFinite(wind10) ? Math.round(wind10) : "–"} km/h
+                          Wind {windDisplay(wind10)}
                         </div>
                       </div>
                     );
@@ -548,7 +612,7 @@ export default function Weather() {
                         Rain {Number.isFinite(psum) ? Math.round(psum) : "–"} mm
                       </div>
                       <div className="text-xs text-zinc-400">
-                        Wind up to {Number.isFinite(wmax) ? Math.round(wmax) : "–"} km/h
+                        Wind up to {windDisplay(wmax)}
                       </div>
                     </div>
                   );
@@ -646,8 +710,8 @@ export default function Weather() {
                       const times = safeArr(hourlyP.time);
                       let best = 0,
                         bestDiff = Infinity;
-                      times.forEach((t, i) => {
-                        const ms = typeof t === "number" ? t * 1000 : Date.parse(t || 0);
+                      times.forEach((tStamp, i) => {
+                        const ms = typeof tStamp === "number" ? tStamp * 1000 : Date.parse(tStamp || 0);
                         const diff = Math.abs(ms - Date.now());
                         if (diff < bestDiff) {
                           bestDiff = diff;
