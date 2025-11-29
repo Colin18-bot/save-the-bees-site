@@ -20,7 +20,7 @@ export default function NFCInstructions() {
             BeezKnees HiveTag NFC — Quick Start
           </h1>
           <p className="text-gray-600 mt-1">
-            Use this page as a printable insert to ship with NFC tags, or save
+            Use this page to read or print out as a handybquick start guide for using your HiveTag NFC, or save
             as PDF to share with your beekeepers.
           </p>
           <p className="text-xs text-gray-500 mt-1 no-print">

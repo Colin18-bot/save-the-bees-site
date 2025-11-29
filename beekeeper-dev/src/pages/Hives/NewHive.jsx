@@ -12,6 +12,12 @@ const NewHive = () => {
   const fileInputRef = useRef(null);
   const successRef = useRef(null);
 
+  // Read query params once on mount
+  const urlParams = new URLSearchParams(location.search);
+  const nfcFromQuery = (urlParams.get("nfc_uid") || "").trim();
+  const apiaryParamFromQuery = urlParams.get("apiary_id");
+  const sourceFromQuery = urlParams.get("source") || "";
+
   const [formData, setFormData] = useState({
     name: "",
     apiary_id: "",
@@ -35,9 +41,8 @@ const NewHive = () => {
   // --------- Load apiaries + defaults + subscription (also pick up nfc from URL) ---------
   useEffect(() => {
     const fetchData = async () => {
-      const urlParams = new URLSearchParams(location.search);
-      const nfcParam = (urlParams.get("nfc_uid") || "").trim();
-      const apiaryParam = urlParams.get("apiary_id");
+      const nfcParam = nfcFromQuery;
+      const apiaryParam = apiaryParamFromQuery;
 
       const [{ data: userWrap }, { data: apiaryData }] = await Promise.all([
         supabase.auth.getUser(),
@@ -324,6 +329,37 @@ const NewHive = () => {
   return (
     <div className="max-w-2xl mx-auto p-6 rounded-xl shadow-lg">
       <h1 className="text-2xl font-bold mb-4">New Hive</h1>
+
+      {/* ✅ NFC banner when coming from a scan */}
+      {subscriptionLevel === "premium" && formData.nfc_uid && (
+        <div className="mb-4 rounded border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-900">
+          <p className="font-semibold">
+            NFC tag will be linked to this hive
+          </p>
+          {sourceFromQuery === "nfc" && nfcFromQuery ? (
+            <>
+              <p className="mt-1">
+                This hive is being created from an NFC scan. Once saved, tapping
+                this tag will jump straight into this hive’s inspection flow.
+              </p>
+              <p className="mt-1">
+                Tag ID:{" "}
+                <code className="px-1.5 py-0.5 bg-white border border-emerald-200 rounded text-[11px] break-all">
+                  {formData.nfc_uid}
+                </code>
+              </p>
+            </>
+          ) : (
+            <p className="mt-1">
+              Tag ID:{" "}
+              <code className="px-1.5 py-0.5 bg-white border border-emerald-200 rounded text-[11px] break-all">
+                {formData.nfc_uid}
+              </code>
+            </p>
+          )}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <select
           name="apiary_id"
@@ -401,19 +437,6 @@ const NewHive = () => {
           placeholder="Add any additional notes..."
           className="w-full px-3 py-2 border rounded min-h-[100px]"
         />
-
-        {/* ✅ Premium-only NFC: auto-assigned from scanner, no manual input */}
-        {subscriptionLevel === "premium" && formData.nfc_uid && (
-          <div className="p-3 border rounded bg-gray-50 text-sm">
-            <span className="font-medium">NFC Tag Linked:</span>{" "}
-            <code className="px-1 py-0.5 bg-white border rounded">
-              {formData.nfc_uid}
-            </code>
-            <div className="text-gray-600 mt-1">
-              This tag was read via NFC and will be linked to this hive.
-            </div>
-          </div>
-        )}
 
         {previewUrl && (
           <div className="relative inline-flex flex-col items-start mb-2 max-w-full">
