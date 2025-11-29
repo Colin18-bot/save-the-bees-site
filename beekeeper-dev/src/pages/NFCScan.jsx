@@ -234,13 +234,12 @@ export default function NFCScan() {
             return;
           }
 
-          // Unknown tag → New Hive with nfc_uid pre-filled
-          setInfoMessage(
-            "This tag isn’t linked to any hive yet. Let’s create a new hive using this tag."
-          );
-          navigate(
-            `/hives/new?nfc_uid=${encodeURIComponent(serial)}&source=nfc`
-          );
+          // Unknown tag → Link screen (choose existing hive or create new)
+setInfoMessage(
+  "This tag isn’t linked to any hive yet. Choose a hive to link it to, or create a new hive."
+);
+navigate(`/nfc/link?nfc_uid=${encodeURIComponent(serial)}`);
+
         };
 
         setIsScanning(true);
