@@ -1,213 +1,447 @@
 // src/pages/NFCScan.jsx
-import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import React, { useEffect, useState, useCallback } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../services/supabase";
-
-// --- Helpers ---------------------------------------------------------------
-
-// Decode NDEF "text" / "mime:text/plain" safely
-function decodeNdefText(record) {
-  try {
-    if (record.recordType === "text") {
-      // record.data is a DataView per spec (Chrome)
-      const dv = record.data;
-      const bytes = dv?.buffer ? new Uint8Array(dv.buffer) : new Uint8Array(dv);
-      if (!bytes.length) return "";
-      const langLen = bytes[0] & 0x3f; // b0..5 = language code length
-      const body = bytes.slice(1 + langLen);
-      return new TextDecoder().decode(body).trim();
-    }
-    if (record.recordType === "mime" && record.mediaType === "text/plain") {
-      return new TextDecoder().decode(record.data).trim();
-    }
-  } catch (_) {}
-  return "";
-}
-
-// Try to extract a useful code from an NDEF reading event
-function extractTagCode(evt) {
-  // 1) Hardware serial (works on some Androids; not on iOS Safari)
-  const serial = (evt?.serialNumber || "").trim();
-  if (serial) return serial;
-
-  // 2) NDEF records
-  try {
-    const recs = evt?.message?.records || [];
-    for (const rec of recs) {
-      // URL record (Chrome returns recordType "url" / "absolute-url")
-      if (rec.recordType === "url" || rec.recordType === "absolute-url") {
-        const dataStr =
-          typeof rec.data === "string"
-            ? rec.data
-            : new TextDecoder().decode(rec.data || new Uint8Array(0));
-        try {
-          const u = new URL(dataStr, window.location.origin);
-          // Prefer ?t / ?nfc / ?tag
-          const q =
-            u.searchParams.get("t") ||
-            u.searchParams.get("nfc") ||
-            u.searchParams.get("tag");
-          if (q) return q;
-          // Else last path segment
-          const segs = u.pathname.split("/").filter(Boolean);
-          if (segs.length) return segs[segs.length - 1];
-          return dataStr;
-        } catch {
-          // Not a full URL? Just return raw string
-          if (dataStr) return dataStr;
-        }
-      }
-      if (rec.recordType === "text" || rec.recordType === "mime") {
-        const s = decodeNdefText(rec);
-        if (s) return s;
-      }
-    }
-  } catch (_) {}
-
-  return "";
-}
-
-const normalizeTag = (s) => (s || "").trim().replace(/\s+/g, "").toLowerCase();
-
-// --------------------------------------------------------------------------
 
 export default function NFCScan() {
   const navigate = useNavigate();
-  const [qs] = useSearchParams();
   const location = useLocation();
 
-  const [message, setMessage] = useState("Waiting for NFC scan…");
-  const [error, setError] = useState("");
-  const startedRef = useRef(false);
+  // Subscription
+  const [subscriptionLevel, setSubscriptionLevel] = useState("free");
+  const [loadingSub, setLoadingSub] = useState(true);
+
+  // NFC + UI state
+  const [supportStatus, setSupportStatus] = useState("unknown"); // "unknown" | "supported" | "unsupported"
+  const [isScanning, setIsScanning] = useState(false);
+  const [infoMessage, setInfoMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // Debug panel
+  const [debugOpen, setDebugOpen] = useState(false);
+  const [debugInfo, setDebugInfo] = useState({
+    supportChecked: false,
+    supported: null,
+    lastSuccessfulScan: null,
+    lastError: null,
+    lastException: null,
+    lastLookup: null,
+  });
 
   useEffect(() => {
-    // If a tag value is already in the URL (?t= / ?nfc= / ?tag=), use that.
-    const fromUrl = qs.get("t") || qs.get("nfc") || qs.get("tag") || "";
-    if (fromUrl && !startedRef.current) {
-      startedRef.current = true;
-      handleLookup(fromUrl);
-      return;
+    document.title = "Scan NFC Tag • BeezKnees";
+  }, []);
+
+  // Detect Web NFC support
+  useEffect(() => {
+    const supported = typeof window !== "undefined" && "NDEFReader" in window;
+    setSupportStatus(supported ? "supported" : "unsupported");
+    setDebugInfo((prev) => ({
+      ...prev,
+      supportChecked: true,
+      supported,
+    }));
+  }, []);
+
+  // Load subscription level (Premium gate)
+  useEffect(() => {
+    const loadSub = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) {
+          setSubscriptionLevel("free");
+          setLoadingSub(false);
+          return;
+        }
+
+        const { data: profile, error } = await supabase
+          .from("profiles")
+          .select("subscription_level")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (error) {
+          console.error("Error loading profile in NFCScan:", error);
+          setSubscriptionLevel("free");
+        } else if (profile?.subscription_level) {
+          setSubscriptionLevel(profile.subscription_level);
+        } else {
+          setSubscriptionLevel("free");
+        }
+      } catch (err) {
+        console.error("Failed to load subscription level in NFCScan:", err);
+        setSubscriptionLevel("free");
+      } finally {
+        setLoadingSub(false);
+      }
+    };
+
+    loadSub();
+  }, []);
+
+  // Show messages when returning from NFC tag checkout
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const purchased = params.get("tags_purchased");
+    const canceled = params.get("canceled");
+
+    if (purchased === "1") {
+      setInfoMessage(
+        "✅ Thank you — your NFC tags order has been received. You’ll get a confirmation email from Stripe shortly."
+      );
+      setErrorMessage("");
     }
 
-    let cancelled = false;
-    (async () => {
-      if (!("NDEFReader" in window)) {
-        setError(
-          "This device/browser can’t scan NFC directly. You can still use tags programmed with a URL that includes a code (e.g. /nfc?t=YOURCODE)."
+    if (canceled === "1") {
+      setErrorMessage(
+        "NFC tag checkout was cancelled — no payment was taken. You can try again at any time."
+      );
+    }
+  }, [location.search]);
+
+  const handleScan = useCallback(
+    async () => {
+      setInfoMessage("");
+      setErrorMessage("");
+
+      if (supportStatus !== "supported") {
+        setErrorMessage(
+          "This device or browser doesn’t support Web NFC. Try Chrome for Android, or use the normal inspection flow."
         );
+        setDebugInfo((prev) => ({
+          ...prev,
+          lastError: {
+            reason: "NotSupported",
+            at: new Date().toISOString(),
+          },
+        }));
+        return;
+      }
+
+      if (isScanning) {
         return;
       }
 
       try {
-        const reader = new window.NDEFReader();
-        await reader.scan();
-        setMessage("Hold a tag near the phone…");
+        // Web NFC setup
+        const ndef = new NDEFReader();
 
-        reader.onreadingerror = () => {
-          if (!cancelled) setError("NFC scan failed. Please try again.");
+        ndef.onreadingerror = () => {
+          setIsScanning(false);
+          setInfoMessage("");
+          setErrorMessage(
+            "We couldn’t read this NFC tag. Try holding your phone closer or try another tag."
+          );
+          setDebugInfo((prev) => ({
+            ...prev,
+            lastError: {
+              reason: "ReadingErrorEvent",
+              at: new Date().toISOString(),
+            },
+          }));
         };
 
-        reader.onreading = async (evt) => {
-          if (cancelled) return;
-          const raw = extractTagCode(evt);
-          const code = normalizeTag(raw);
-          if (!code) {
-            setError(
-              "Couldn’t read a code from this tag. Program it with a URL or text, or use a device that exposes the hardware UID."
+        ndef.onreading = async (event) => {
+          setIsScanning(false);
+          setInfoMessage("");
+          setErrorMessage("");
+
+          const serial = event.serialNumber || "";
+          const records = event.message?.records || [];
+          const recordTypes = records.map((r) => r.recordType);
+
+          const scanDebug = {
+            serialNumber: serial || "(empty)",
+            recordCount: records.length,
+            recordTypes,
+            rawMessageType: event.message?.records?.[0]?.mediaType || null,
+            at: new Date().toISOString(),
+          };
+
+          setDebugInfo((prev) => ({
+            ...prev,
+            lastSuccessfulScan: scanDebug,
+          }));
+
+          if (!serial) {
+            setErrorMessage(
+              "The tag was read but didn’t provide a serial number. Try another tag."
+            );
+            setDebugInfo((prev) => ({
+              ...prev,
+              lastError: {
+                reason: "EmptySerial",
+                at: new Date().toISOString(),
+              },
+            }));
+            return;
+          }
+
+          setInfoMessage(
+            "Tag detected. Looking up the hive linked to this tag…"
+          );
+
+          // Look up hive by NFC UID
+          const { data: hive, error } = await supabase
+            .from("hives")
+            .select("id, apiary_id, name, archived_at")
+            .eq("nfc_uid", serial)
+            .maybeSingle();
+
+          setDebugInfo((prev) => ({
+            ...prev,
+            lastLookup: {
+              serial,
+              at: new Date().toISOString(),
+              error: error ? error.message : null,
+              foundHiveId: hive?.id || null,
+              archivedAt: hive?.archived_at || null,
+            },
+          }));
+
+          if (error) {
+            console.error("Error looking up hive by NFC serial:", error);
+            setErrorMessage(
+              "We read the tag, but there was a problem checking your hives. Please try again."
+            );
+            setInfoMessage("");
+            return;
+          }
+
+          if (hive && !hive.archived_at) {
+            // Known + active hive → New Inspection
+            setInfoMessage(
+              `Found hive “${hive.name}”. Opening a new inspection for this hive…`
+            );
+            navigate(
+              `/inspections/new?hive_id=${encodeURIComponent(
+                hive.id
+              )}&apiary_id=${encodeURIComponent(
+                hive.apiary_id
+              )}&source=nfc`
             );
             return;
           }
-          setMessage("Tag detected. Looking up hive…");
-          await handleLookup(code, raw);
+
+          if (hive && hive.archived_at) {
+            // Tag linked to archived hive
+            setErrorMessage(
+              "This tag is linked to an archived hive. Unarchive or update the hive first, or assign this tag to a new hive."
+            );
+            setInfoMessage("");
+            return;
+          }
+
+          // Unknown tag → New Hive with nfc_uid pre-filled
+          setInfoMessage(
+            "This tag isn’t linked to any hive yet. Let’s create a new hive using this tag."
+          );
+          navigate(
+            `/hives/new?nfc_uid=${encodeURIComponent(serial)}&source=nfc`
+          );
         };
-      } catch (e) {
-        console.error(e);
-        setError(
-          "Could not start NFC scan (permission or browser support). If your tag opens a URL, include the code as ?t=YOURCODE."
-        );
+
+        setIsScanning(true);
+        setInfoMessage("Hold your phone close to the NFC tag…");
+        setErrorMessage("");
+
+        await ndef.scan();
+      } catch (err) {
+        console.error("Error starting NFC scan:", err);
+        setIsScanning(false);
+        setInfoMessage("");
+
+        let userMsg =
+          "Something went wrong while starting the NFC scan. Please try again.";
+
+        if (err && err.name === "NotAllowedError") {
+          userMsg =
+            "NFC permission was blocked. Please allow NFC access for your browser and try again.";
+        } else if (err && err.name === "NotSupportedError") {
+          userMsg =
+            "This device or browser doesn’t support Web NFC. Try Chrome for Android, or use the normal inspection flow.";
+          setSupportStatus("unsupported");
+        } else if (err && err.name === "AbortError") {
+          userMsg =
+            "The NFC scan was cancelled before a tag was read. Try again when you’re ready.";
+        }
+
+        setErrorMessage(userMsg);
+
+        setDebugInfo((prev) => ({
+          ...prev,
+          lastException: {
+            name: err?.name || "UnknownError",
+            message: err?.message || String(err),
+            at: new Date().toISOString(),
+          },
+        }));
       }
-    })();
+    },
+    [supportStatus, isScanning, navigate]
+  );
 
-    return () => {
-      cancelled = true;
-    };
-  }, [qs]);
+  const disabledReason =
+    supportStatus !== "supported"
+      ? "NFC is not supported in this browser/device."
+      : loadingSub
+      ? "Checking your plan…"
+      : subscriptionLevel !== "premium"
+      ? "NFC scanning is a Premium feature."
+      : null;
 
-  async function handleLookup(codeMaybeLower, originalRaw = null) {
-    setError("");
-    const rawCode = (originalRaw ?? codeMaybeLower) || "";
-    const code = normalizeTag(codeMaybeLower);
-    if (!code) {
-      setError("Empty tag.");
-      return;
-    }
-
-    // Require auth, but keep the deep link so we come back here.
-    const { data: userData } = await supabase.auth.getUser();
-    const userId = userData?.user?.id;
-    if (!userId) {
-      const next = encodeURIComponent(`/nfc?nfc=${encodeURIComponent(rawCode)}`);
-      navigate(`/login?redirect=${next}`);
-      return;
-    }
-
-    // Prefer exact lowercase match (uses your lower(nfc_uid) unique index if rows are normalised)
-    let hive = null;
-
-    let resp = await supabase
-      .from("hives")
-      .select("id, apiary_id, name")
-      .eq("user_id", userId)
-      .eq("nfc_uid", code)
-      .is("archived_at", null)
-      .maybeSingle();
-
-    if (resp.error) {
-      console.error(resp.error);
-      setError("Lookup failed. Please try again.");
-      return;
-    }
-    hive = resp.data || null;
-
-    // Fallback to case-insensitive equality for any legacy rows not lowercased yet
-    if (!hive) {
-      const fallback = await supabase
-        .from("hives")
-        .select("id, apiary_id, name")
-        .eq("user_id", userId)
-        .ilike("nfc_uid", rawCode.trim())
-        .is("archived_at", null)
-        .maybeSingle();
-
-      if (fallback.error) {
-        console.error(fallback.error);
-        setError("Lookup failed. Please try again.");
-        return;
-      }
-      hive = fallback.data || null;
-    }
-
-    if (hive) {
-      // Found → go straight to New Inspection
-      const url = `/inspections/new?hive_id=${hive.id}` +
-        `&apiary_id=${hive.apiary_id || ""}` +
-        `&nfc_uid=${encodeURIComponent(rawCode)}`;
-      navigate(url, { replace: true });
-    } else {
-      // Not found → New Hive with nfc prefilled
-      navigate(`/hives/new?nfc_uid=${encodeURIComponent(rawCode)}`, { replace: true });
-    }
-  }
+  const canScan =
+    supportStatus === "supported" &&
+    !loadingSub &&
+    subscriptionLevel === "premium" &&
+    !isScanning;
 
   return (
-    <div className="max-w-xl mx-auto p-6 text-center">
-      <h1 className="text-2xl font-bold mb-4">Scan NFC Tag</h1>
-      <p className="text-yellow-700 font-medium mb-3">{message}</p>
-      {error && <p className="text-red-600">{error}</p>}
-      <div className="text-xs text-zinc-500 mt-6">
-        Tip: you can also write a URL to the tag like&nbsp;
-        <code>/nfc?t=&lt;your-code&gt;</code>&nbsp;so iOS opens the right page without Web NFC.
+    <main className="p-6">
+      <div className="max-w-2xl mx-auto space-y-6">
+        <header>
+          <h1 className="text-2xl font-bold mb-1">Scan NFC Tag</h1>
+          <p className="text-gray-600 text-sm">
+            Tap a HiveTag NFC label with your phone to jump straight into that
+            hive’s inspection flow. Works best with Chrome on Android.
+          </p>
+
+          {/* NFC helper links: instructions + tag manager + store */}
+          <div className="mt-3 mb-1 flex flex-wrap items-center gap-2 text-xs">
+            <Link
+              to="/nfc/instructions"
+              className="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-blue-800 hover:bg-blue-100"
+            >
+              <span aria-hidden="true">🖨️</span>
+              <span>NFC setup card</span>
+            </Link>
+
+            <Link
+              to="/nfc/manage"
+              className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-amber-800 hover:bg-amber-100"
+            >
+              <span aria-hidden="true">📋</span>
+              <span>Manage NFC tags</span>
+            </Link>
+
+            <Link
+              to="/nfc/tags"
+              className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-emerald-800 hover:bg-emerald-100"
+            >
+              <span aria-hidden="true">🛒</span>
+              <span>Buy NFC tags</span>
+            </Link>
+          </div>
+
+          <p className="text-xs text-gray-600 mt-1">
+            Need more detail?{" "}
+            <Link to="/help#nfc" className="text-blue-600 hover:underline">
+              Read NFC help →
+            </Link>
+          </p>
+        </header>
+
+        {/* Main NFC card */}
+        <section className="bg-white rounded-lg shadow p-5 space-y-4">
+          {loadingSub ? (
+            <p className="text-sm text-gray-600">
+              Checking your plan and NFC support…
+            </p>
+          ) : subscriptionLevel !== "premium" ? (
+            <div className="space-y-3">
+              <p className="text-sm text-gray-700">
+                NFC tap-to-log is a{" "}
+                <span className="font-semibold text-blue-700">Premium</span>{" "}
+                feature. Upgrade to link HiveTag NFC labels to your hives and
+                jump straight into inspections from a tap.
+              </p>
+              <Link
+                to="/pricing"
+                className="inline-flex items-center justify-center px-4 py-2 rounded bg-yellow-400 text-[#1a3329] text-sm font-semibold hover:bg-yellow-300 border border-yellow-500"
+              >
+                View plans &amp; upgrade →
+              </Link>
+            </div>
+          ) : (
+            <>
+              {supportStatus === "unsupported" && (
+                <div className="mb-2 rounded border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
+                  This device or browser doesn’t support Web NFC. You can still
+                  use HiveTag labels if they’re encoded with a URL that opens
+                  this page, or use the normal inspection flow instead.
+                </div>
+              )}
+
+              {infoMessage && (
+                <div className="rounded border border-blue-200 bg-blue-50 px-3 py-2 text-xs text-blue-800">
+                  {infoMessage}
+                </div>
+              )}
+
+              {errorMessage && (
+                <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
+                  {errorMessage}
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={handleScan}
+                  disabled={!canScan}
+                  className={`inline-flex items-center justify-center px-4 py-2 rounded text-sm font-semibold transition-colors ${
+                    canScan
+                      ? "bg-green-700 text-white hover:bg-green-800"
+                      : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  }`}
+                  title={disabledReason || undefined}
+                >
+                  {isScanning
+                    ? "Scanning… Hold near the tag"
+                    : "Scan NFC Tag"}
+                </button>
+                <p className="text-xs text-gray-500">
+                  Make sure NFC is enabled on your phone. Hold the tag near the
+                  back of your device until it beeps or vibrates.
+                </p>
+              </div>
+            </>
+          )}
+        </section>
+
+        {/* Debug panel – Premium only, for you as the app builder */}
+        {subscriptionLevel === "premium" && (
+          <section className="border rounded-lg bg-white p-4">
+            <button
+              type="button"
+              onClick={() => setDebugOpen((v) => !v)}
+              className="text-xs text-gray-600 hover:text-gray-800 underline"
+            >
+              {debugOpen
+                ? "Hide debug info"
+                : "Show debug info (for troubleshooting)"}
+            </button>
+
+            {debugOpen && (
+              <div className="mt-3 text-xs bg-slate-900 text-slate-100 rounded p-3 overflow-x-auto">
+                {debugInfo &&
+                (debugInfo.lastSuccessfulScan ||
+                  debugInfo.lastError ||
+                  debugInfo.lastException ||
+                  debugInfo.lastLookup) ? (
+                  <pre className="whitespace-pre-wrap">
+                    {JSON.stringify(debugInfo, null, 2)}
+                  </pre>
+                ) : (
+                  <p>No scans attempted yet.</p>
+                )}
+              </div>
+            )}
+          </section>
+        )}
       </div>
-    </div>
+    </main>
   );
 }

@@ -53,7 +53,7 @@ const NavBar = ({ isMobileMenuOpen, setIsMobileMenuOpen, displayName, avatarUrl 
               alt="HiveTag Logo"
               className="h-12 w-12 md:h-14 md:w-14"
             />
-            <span className="text-green-800 text-xl font-bold">HiveTag</span>
+            <span className="text-green-800 text-xl font-bold">BeezKnees HiveTag</span>
           </a>
 
           {/* Desktop Navigation Links + Welcome + Avatar */}

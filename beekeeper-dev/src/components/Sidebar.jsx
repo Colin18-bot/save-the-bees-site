@@ -105,6 +105,16 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     { to: "/inspections/new", label: "New Inspection" },
     { to: "/logbook/new", label: "New Log Entry" },
     { to: "/todos/new", label: "New Task" },
+    // Premium-only NFC scan (visually highlighted)
+    ...(userIsPremium
+      ? [
+          {
+            to: "/nfc",
+            label: "Scan NFC Tag",
+            premiumNfc: true,
+          },
+        ]
+      : []),
   ];
 
   const businessListLinks = [
@@ -170,15 +180,33 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
                 key={item.to}
                 to={item.to}
                 onClick={handleLinkClick}
-                className={({ isActive }) =>
-                  `block px-4 py-2 rounded text-sm font-medium transition-colors duration-150 ${
-                    isActive
-                      ? "bg-yellow-400 text-[#1a3329]"
-                      : "text-white hover:bg-yellow-400 hover:text-[#1a3329]"
-                  }`
-                }
+                className={({ isActive }) => {
+                  const basePremiumClasses =
+                    "bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300 text-[#1a3329] border border-white shadow-md shadow-amber-500/40";
+                  const hoverPremiumClasses =
+                    "hover:from-yellow-300 hover:via-amber-300 hover:to-yellow-300";
+                  const baseNormalClasses =
+                    "text-white hover:bg-yellow-400 hover:text-[#1a3329]";
+
+                  const activePremiumClasses = "bg-yellow-300 text-[#1a3329]";
+                  const activeNormalClasses = "bg-yellow-400 text-[#1a3329]";
+
+                  const isPremiumNfc = item.premiumNfc;
+
+                  const baseClasses = isPremiumNfc ? basePremiumClasses : baseNormalClasses;
+                  const activeClasses = isPremiumNfc ? activePremiumClasses : activeNormalClasses;
+
+                  return `flex px-4 py-2 rounded text-sm font-medium transition-colors duration-150 items-center justify-between gap-2 ${
+                    isActive ? activeClasses : baseClasses
+                  } ${isPremiumNfc ? hoverPremiumClasses : ""}`;
+                }}
               >
-                {item.label}
+                <span>{item.label}</span>
+                {item.premiumNfc && (
+                  <span className="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-[#1a3329] text-amber-200 border border-amber-500">
+                    NFC • Premium
+                  </span>
+                )}
               </NavLink>
             ))}
           </div>

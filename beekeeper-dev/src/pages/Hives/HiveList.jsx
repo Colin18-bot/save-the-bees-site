@@ -7,7 +7,6 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { reverseGeocodeMany } from "../../utils/geocode";
-import { Info } from "lucide-react";
 
 const PAGE_SIZE = 3;
 
@@ -41,6 +40,9 @@ const HiveList = () => {
   const [noInspectionBanner, setNoInspectionBanner] = useState("");
   const [inspectionCounts, setInspectionCounts] = useState({});
   const [page, setPage] = useState(1);
+
+  // NEW: filter to show only NFC-tagged hives
+  const [showTaggedOnly, setShowTaggedOnly] = useState(false);
 
   const [lightbox, setLightbox] = useState({
     isOpen: false,
@@ -198,24 +200,35 @@ const HiveList = () => {
     }
   };
 
-  const total = hives.length;
+  // NEW: derive tagged hives info
+  const taggedCount = useMemo(
+    () => hives.filter((h) => !!h.nfc_uid).length,
+    [hives]
+  );
+
+  const filteredHives = useMemo(
+    () => (showTaggedOnly ? hives.filter((h) => !!h.nfc_uid) : hives),
+    [hives, showTaggedOnly]
+  );
+
+  const total = filteredHives.length;
 
   useEffect(() => {
     if (!highlightId || (highlightType && highlightType !== "HIVE")) return;
     if (jumpedToHighlightPageRef.current) return;
-    if (!hives.length) return;
+    if (!filteredHives.length) return;
 
-    const idx = hives.findIndex((h) => String(h.id) === String(highlightId));
+    const idx = filteredHives.findIndex((h) => String(h.id) === String(highlightId));
     if (idx >= 0) {
       const targetPage = Math.floor(idx / PAGE_SIZE) + 1;
       if (targetPage !== page) setPage(targetPage);
       jumpedToHighlightPageRef.current = true;
     }
-  }, [hives, highlightId, highlightType, page]);
+  }, [filteredHives, highlightId, highlightType, page]);
 
   const startIdx = (page - 1) * PAGE_SIZE;
   const endIdx = Math.min(startIdx + PAGE_SIZE, total);
-  const pageItems = hives.slice(startIdx, endIdx);
+  const pageItems = filteredHives.slice(startIdx, endIdx);
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   const statusClasses = {
@@ -328,13 +341,34 @@ const HiveList = () => {
             ))}
           </select>
         </div>
+
+        {/* NEW: NFC tagged filter + summary */}
+        <div className="flex items-center gap-2">
+          <label className="inline-flex items-center text-sm">
+            <input
+              type="checkbox"
+              className="mr-2"
+              checked={showTaggedOnly}
+              onChange={(e) => {
+                setShowTaggedOnly(e.target.checked);
+                setPage(1);
+                jumpedToHighlightPageRef.current = false;
+              }}
+            />
+            Show only tagged hives
+          </label>
+          <span className="text-xs text-gray-600">
+            Tagged hives: <span className="font-semibold">{taggedCount}</span>{" "}
+            of <span className="font-semibold">{hives.length}</span>
+          </span>
+        </div>
       </div>
 
       {loading ? (
         <div className="flex justify-center items-center h-32">
           <div className="w-8 h-8 border-4 border-blue-500 border-dotted rounded-full animate-spin"></div>
         </div>
-      ) : hives.length === 0 ? (
+      ) : filteredHives.length === 0 ? (
         <p>
           No hives found,{" "}
           <Link to="/hives/new" className="underline text-blue-600">
@@ -369,8 +403,8 @@ const HiveList = () => {
                     <MapContainer
                       center={[lat, lon]}
                       zoom={13}
-                      scrollWheelZoom={true}   // zoom stays enabled
-                      dragging={false}         // prevents accidental map movement
+                      scrollWheelZoom={true}
+                      dragging={false}
                       className="h-32 w-full mb-2 rounded"
                     >
                       <TileLayer
@@ -414,14 +448,20 @@ const HiveList = () => {
                     </button>
                   )}
 
-                  <h2 className="text-lg font-semibold flex items-center gap-2">
-                    {hive.name}
+                  {/* Name + NFC tag badge */}
+                  <h2 className="text-lg font-semibold flex flex-col gap-1">
+                    <span>{hive.name}</span>
                     {hive.nfc_uid && (
                       <span
-                        className="flex items-center text-blue-600"
-                        title={`NFC Tag: ${hive.nfc_uid}`}
+                        className="inline-flex items-center gap-2 text-[11px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200 max-w-full"
+                        title={`NFC tag: ${hive.nfc_uid}`}
                       >
-                        <Info size={16} />
+                        <span className="font-semibold uppercase tracking-wide">
+                          NFC tag
+                        </span>
+                        <span className="font-mono truncate max-w-[170px]">
+                          {hive.nfc_uid}
+                        </span>
                       </span>
                     )}
                   </h2>
@@ -430,7 +470,9 @@ const HiveList = () => {
                     Apiary: {hive.apiaries?.name || "Unknown"}
                   </p>
                   <p className="text-sm text-gray-600">
-                    Location: {addresses[hive.id] || (canMap ? "Fetching location..." : "—")}
+                    Location:{" "}
+                    {addresses[hive.id] ||
+                      (canMap ? "Fetching location..." : "—")}
                   </p>
 
                   {hive.date_established && (
@@ -453,7 +495,6 @@ const HiveList = () => {
                   )}
 
                   <div className="mt-3 flex flex-col gap-2">
-                    {/* Keep EDIT green (standard) */}
                     <Link
                       to={`/hives/${hive.id}/edit`}
                       className="text-sm px-3 py-2 bg-green-700 hover:bg-green-800 text-white rounded text-center
@@ -462,7 +503,6 @@ const HiveList = () => {
                       Edit Hive
                     </Link>
 
-                    {/* REVERTED: yellow new-inspection (original colour), but with consistent padding + focus ring */}
                     <Link
                       to={`/inspections/new?hive_id=${hive.id}&apiary_id=${hive.apiary_id}`}
                       className="text-sm px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-center
@@ -471,7 +511,6 @@ const HiveList = () => {
                       New Inspection
                     </Link>
 
-                    {/* REVERTED: blue view-inspections (original colour), with consistent padding + focus ring */}
                     <button
                       type="button"
                       onClick={() => checkInspectionsAndNavigate(hive.id)}
@@ -492,7 +531,7 @@ const HiveList = () => {
             })}
           </ul>
 
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
             <div className="text-sm text-gray-600">
               Showing {total === 0 ? 0 : startIdx + 1}–{endIdx} of {total}
             </div>
@@ -525,7 +564,6 @@ const HiveList = () => {
               </button>
             </div>
           </div>
-
         </>
       )}
 

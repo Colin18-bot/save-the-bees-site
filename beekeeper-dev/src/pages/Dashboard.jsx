@@ -5,28 +5,64 @@ import { Link, useLocation } from "react-router-dom";
 
 // Weather label/icon maps (for 5-day forecast)
 const WX_LABEL = {
-  0: "Clear", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast",
-  45: "Fog", 48: "Rime fog",
-  51: "Drizzle", 53: "Drizzle", 55: "Drizzle",
-  56: "Freezing drizzle", 57: "Freezing drizzle",
-  61: "Rain", 63: "Rain", 65: "Heavy rain",
-  66: "Freezing rain", 67: "Freezing rain",
-  71: "Snow", 73: "Snow", 75: "Heavy snow", 77: "Snow grains",
-  80: "Showers", 81: "Showers", 82: "Heavy showers",
-  85: "Snow showers", 86: "Snow showers",
-  95: "Thunderstorm", 96: "Thundery rain", 99: "Thundery rain",
+  0: "Clear",
+  1: "Mainly clear",
+  2: "Partly cloudy",
+  3: "Overcast",
+  45: "Fog",
+  48: "Rime fog",
+  51: "Drizzle",
+  53: "Drizzle",
+  55: "Drizzle",
+  56: "Freezing drizzle",
+  57: "Freezing drizzle",
+  61: "Rain",
+  63: "Rain",
+  65: "Heavy rain",
+  66: "Freezing rain",
+  67: "Freezing rain",
+  71: "Snow",
+  73: "Snow",
+  75: "Heavy snow",
+  77: "Snow grains",
+  80: "Showers",
+  81: "Showers",
+  82: "Heavy showers",
+  85: "Snow showers",
+  86: "Snow showers",
+  95: "Thunderstorm",
+  96: "Thundery rain",
+  99: "Thundery rain",
 };
 const WX_ICON = {
-  0: "☀️", 1: "🌤️", 2: "⛅", 3: "☁️",
-  45: "🌫️", 48: "🌫️",
-  51: "🌦️", 53: "🌦️", 55: "🌦️",
-  56: "🌧️❄️", 57: "🌧️❄️",
-  61: "🌧️", 63: "🌧️", 65: "🌧️",
-  66: "🌧️❄️", 67: "🌧️❄️",
-  71: "❄️", 73: "❄️", 75: "❄️", 77: "❄️",
-  80: "🌦️", 81: "🌦️", 82: "🌧️",
-  85: "🌨️", 86: "🌨️",
-  95: "⛈️", 96: "⛈️", 99: "⛈️",
+  0: "☀️",
+  1: "🌤️",
+  2: "⛅",
+  3: "☁️",
+  45: "🌫️",
+  48: "🌫️",
+  51: "🌦️",
+  53: "🌦️",
+  55: "🌦️",
+  56: "🌧️❄️",
+  57: "🌧️❄️",
+  61: "🌧️",
+  63: "🌧️",
+  65: "🌧️",
+  66: "🌧️❄️",
+  67: "🌧️❄️",
+  71: "❄️",
+  73: "❄️",
+  75: "❄️",
+  77: "❄️",
+  80: "🌦️",
+  81: "🌦️",
+  82: "🌧️",
+  85: "🌨️",
+  86: "🌨️",
+  95: "⛈️",
+  96: "⛈️",
+  99: "⛈️",
 };
 
 const statusPill = (status = "") => {
@@ -66,6 +102,9 @@ const Dashboard = () => {
   // Filter
   const [selectedApiaryId, setSelectedApiaryId] = useState("all");
 
+  // Stripe upgrade banner
+  const [stripeMessage, setStripeMessage] = useState("");
+
   // Stats
   const [stats, setStats] = useState({
     apiaries: 0,
@@ -75,10 +114,19 @@ const Dashboard = () => {
     logbook: 0,
   });
 
+  // NFC summary (filter-aware)
+  const [nfcSummary, setNfcSummary] = useState({
+    tagged: 0,
+    total: 0,
+  });
+
   // Recent lists
   const [recentInspections, setRecentInspections] = useState([]);
   const [recentTodos, setRecentTodos] = useState([]);
   const [recentLogs, setRecentLogs] = useState([]);
+
+  // Recent NFC-tagged hives
+  const [recentNfcHives, setRecentNfcHives] = useState([]);
 
   // Loading flags for recent sections
   const [loadingInspections, setLoadingInspections] = useState(true);
@@ -96,15 +144,18 @@ const Dashboard = () => {
   const [apiaryNameById, setApiaryNameById] = useState({});
   const [hiveNameById, setHiveNameById] = useState({});
 
+  // Subscription level (for NFC visibility etc.)
+  const [subscriptionLevel, setSubscriptionLevel] = useState("free");
+
   const formatUKDate = (d) => {
-  if (!d) return "No date";
-  const dt = new Date(d);
-  if (isNaN(dt)) return d;
-  const dd = String(dt.getDate()).padStart(2, "0");
-  const mm = String(dt.getMonth() + 1).padStart(2, "0");
-  const yyyy = dt.getFullYear();
-  return `${dd}/${mm}/${yyyy}`;
-};
+    if (!d) return "No date";
+    const dt = new Date(d);
+    if (isNaN(dt)) return d;
+    const dd = String(dt.getDate()).padStart(2, "0");
+    const mm = String(dt.getMonth() + 1).padStart(2, "0");
+    const yyyy = dt.getFullYear();
+    return `${dd}/${mm}/${yyyy}`;
+  };
 
   // Build report link with current filter
   const reportHref = useMemo(() => {
@@ -117,16 +168,33 @@ const Dashboard = () => {
   useEffect(() => {
     if (location.hash === "#print" && printAnchorRef.current) {
       setTimeout(() => {
-        printAnchorRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        printAnchorRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       }, 0);
     }
   }, [location]);
+
+  // Stripe upgrade banner: show after returning from checkout
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("upgraded") === "1") {
+      setStripeMessage(
+        "Thanks for upgrading to Premium. NFC tap-to-log and unlimited apiaries/hives are now enabled on your account."
+      );
+    }
+  }, [location.search]);
 
   // ---- Lookups (names + list for filter) ----
   useEffect(() => {
     const fetchNameLookups = async () => {
       const [{ data: apiaries }, { data: hives }] = await Promise.all([
-        supabase.from("apiaries").select("id, name").is("archived_at", null).order("name"),
+        supabase
+          .from("apiaries")
+          .select("id, name")
+          .is("archived_at", null)
+          .order("name"),
         supabase.from("hives").select("id, name").is("archived_at", null),
       ]);
       const aMap = {};
@@ -147,23 +215,90 @@ const Dashboard = () => {
       .select("*", { count: "exact", head: true })
       .is("archived_at", null);
 
-    let hivesQ = supabase.from("hives").select("*", { count: "exact", head: true }).is("archived_at", null);
+    let hivesQ = supabase
+      .from("hives")
+      .select("*", { count: "exact", head: true })
+      .is("archived_at", null);
     if (apiaryId !== "all") hivesQ = hivesQ.eq("apiary_id", apiaryId);
     const { count: hives } = await hivesQ;
 
-    let inspQ = supabase.from("inspections").select("*", { count: "exact", head: true }).is("archived_at", null);
+    let inspQ = supabase
+      .from("inspections")
+      .select("*", { count: "exact", head: true })
+      .is("archived_at", null);
     if (apiaryId !== "all") inspQ = inspQ.eq("apiary_id", apiaryId);
     const { count: inspections } = await inspQ;
 
-    let todosQ = supabase.from("todos").select("*", { count: "exact", head: true });
+    let todosQ = supabase
+      .from("todos")
+      .select("*", { count: "exact", head: true });
     if (apiaryId !== "all") todosQ = todosQ.eq("apiary_id", apiaryId);
     const { count: todos } = await todosQ;
 
-    let logsQ = supabase.from("logbook").select("*", { count: "exact", head: true }).is("archived_at", null);
+    let logsQ = supabase
+      .from("logbook")
+      .select("*", { count: "exact", head: true })
+      .is("archived_at", null);
     if (apiaryId !== "all") logsQ = logsQ.eq("apiary_id", apiaryId);
     const { count: logbook } = await logsQ;
 
     setStats({ apiaries, hives, inspections, todos, logbook });
+  };
+
+  // ---- NFC summary counts (filter-aware) ----
+  const fetchNfcSummary = async (apiaryId = "all") => {
+    try {
+      // total active hives
+      let totalQ = supabase
+        .from("hives")
+        .select("*", { count: "exact", head: true })
+        .is("archived_at", null);
+      if (apiaryId !== "all") totalQ = totalQ.eq("apiary_id", apiaryId);
+      const { count: total } = await totalQ;
+
+      // tagged active hives (nfc_uid not null)
+      let taggedQ = supabase
+        .from("hives")
+        .select("*", { count: "exact", head: true })
+        .is("archived_at", null)
+        .not("nfc_uid", "is", null);
+      if (apiaryId !== "all") taggedQ = taggedQ.eq("apiary_id", apiaryId);
+      const { count: tagged } = await taggedQ;
+
+      setNfcSummary({
+        tagged: tagged || 0,
+        total: total || 0,
+      });
+    } catch (e) {
+      console.error("Failed to load NFC summary:", e);
+      setNfcSummary({ tagged: 0, total: 0 });
+    }
+  };
+
+  // ---- Recent NFC-tagged hives (filter-aware) ----
+  const fetchRecentNfcHives = async (apiaryId = "all") => {
+    try {
+      let q = supabase
+        .from("hives")
+        .select("id, name, apiary_id, nfc_uid, archived_at")
+        .is("archived_at", null)
+        .not("nfc_uid", "is", null)
+        .order("created_at", { ascending: false })
+        .limit(6);
+
+      if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
+
+      const { data, error } = await q;
+      if (error) {
+        console.error("Failed to load recent NFC hives:", error);
+        setRecentNfcHives([]);
+      } else {
+        setRecentNfcHives(data || []);
+      }
+    } catch (err) {
+      console.error("Failed to load recent NFC hives:", err);
+      setRecentNfcHives([]);
+    }
   };
 
   // ---- Recent lists (filter-aware) ----
@@ -238,7 +373,10 @@ const Dashboard = () => {
       let lat = Number(chosen?.latitude);
       let lon = Number(chosen?.longitude);
       const bad =
-        !Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180;
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lon) ||
+        Math.abs(lat) > 90 ||
+        Math.abs(lon) > 180;
 
       if (bad) {
         // London fallback
@@ -290,12 +428,14 @@ const Dashboard = () => {
     }
   };
 
-  // Initial + whenever filter changes (for lists/stats)
+  // Initial + whenever filter changes (for lists/stats + NFC summary + NFC list)
   useEffect(() => {
     fetchStats(selectedApiaryId);
     fetchRecentInspections(selectedApiaryId);
     fetchRecentTodos(selectedApiaryId);
     fetchRecentLogs(selectedApiaryId);
+    fetchNfcSummary(selectedApiaryId);
+    fetchRecentNfcHives(selectedApiaryId);
   }, [selectedApiaryId]);
 
   // Weather loads once (default apiary)
@@ -303,26 +443,87 @@ const Dashboard = () => {
     fetchWeather();
   }, []);
 
+  // Subscription level for this user (for NFC visibility)
+  useEffect(() => {
+    const fetchSubscriptionLevel = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { data: profile, error } = await supabase
+          .from("profiles")
+          .select("subscription_level")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (error) {
+          console.error("Error loading profile for dashboard:", error);
+          return;
+        }
+
+        if (profile?.subscription_level) {
+          setSubscriptionLevel(profile.subscription_level);
+        }
+      } catch (err) {
+        console.error("Failed to load subscription level:", err);
+      }
+    };
+
+    fetchSubscriptionLevel();
+  }, []);
+
   // Helpers for building list links with highlight + filter
   const toInspectionsList = (id) =>
     `/inspections?highlight=${encodeURIComponent(id)}&type=INSPECTION${
-      selectedApiaryId !== "all" ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
+      selectedApiaryId !== "all"
+        ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}`
+        : ""
     }`;
   const toTodosList = (id) =>
     `/todos?highlight=${encodeURIComponent(id)}&type=TODO${
-      selectedApiaryId !== "all" ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
+      selectedApiaryId !== "all"
+        ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}`
+        : ""
     }`;
   const toLogbookList = (id) =>
     `/logbook?highlight=${encodeURIComponent(id)}&type=LOGBOOK${
-      selectedApiaryId !== "all" ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
+      selectedApiaryId !== "all"
+        ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}`
+        : ""
     }`;
 
-  const seeAllInspectionsHref =
-    `/inspections${selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""}`;
-  const seeAllTodosHref =
-    `/todos${selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""}`;
-  const seeAllLogbookHref =
-    `/logbook${selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""}`;
+  // NEW: helper to jump into HiveList with highlight on a specific hive
+  const toHiveInList = (id) =>
+    `/hives?highlight=${encodeURIComponent(id)}&type=HIVE${
+      selectedApiaryId !== "all"
+        ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}`
+        : ""
+    }`;
+
+  const seeAllInspectionsHref = `/inspections${
+    selectedApiaryId !== "all"
+      ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}`
+      : ""
+  }`;
+  const seeAllTodosHref = `/todos${
+    selectedApiaryId !== "all"
+      ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}`
+      : ""
+  }`;
+  const seeAllLogbookHref = `/logbook${
+    selectedApiaryId !== "all"
+      ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}`
+      : ""
+  }`;
+
+  // Hives link for NFC "See all tagged hives" (goes to normal HiveList, not filtered to NFC only)
+  const hivesHref = `/hives${
+    selectedApiaryId !== "all"
+      ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}`
+      : ""
+  }`;
 
   return (
     <div className="p-6 space-y-6">
@@ -353,6 +554,53 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Stripe upgrade banner */}
+      {stripeMessage && (
+        <div className="no-print rounded-lg border border-green-200 bg-green-50 px-4 py-3 flex items-start justify-between text-sm text-green-800">
+          <p>{stripeMessage}</p>
+          <button
+            type="button"
+            onClick={() => setStripeMessage("")}
+            className="ml-4 text-green-700 hover:text-green-900"
+            aria-label="Dismiss message"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
+      {/* NFC instructions + CTA (Premium only) */}
+      {subscriptionLevel === "premium" && (
+        <div className="bg-blue-50 border border-blue-200 rounded-md p-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="text-sm text-blue-900">
+            <span className="inline-flex items-center gap-1 font-semibold">
+              <span role="img" aria-label="NFC">
+                📶
+              </span>
+              HiveTag NFC
+            </span>
+            <span className="ml-1">
+              – print or download your NFC setup guide, then tap{" "}
+              <strong>Scan NFC Tag</strong> to start using your tags.
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              to="/nfc/instructions"
+              className="px-3 py-1.5 rounded text-xs font-semibold bg-blue-600 text-white hover:bg-blue-700"
+            >
+              Open NFC instructions
+            </Link>
+            <Link
+              to="/nfc"
+              className="px-3 py-1.5 rounded text-xs font-semibold bg-amber-400 text-[#1a3329] hover:bg-amber-300 border border-amber-500/70"
+            >
+              Scan NFC Tag
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* Reports & Export */}
       <div
         ref={printAnchorRef}
@@ -362,7 +610,8 @@ const Dashboard = () => {
         <div>
           <h2 className="text-lg font-semibold">Reports &amp; Export</h2>
           <p className="text-gray-600 mt-1">
-            Open Reports or Export Inspections, Tasks, and Logbook by Apiary/Hive and date range.
+            Open Reports or Export Inspections, Tasks, and Logbook by
+            Apiary/Hive and date range.
           </p>
         </div>
         <div className="flex gap-3">
@@ -375,8 +624,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Stats cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
+      {/* Stats cards (now 6 on large screens, including NFC tags for premium users) */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4">
         <div className="bg-white rounded shadow p-4">
           <p className="text-sm text-gray-500">Apiaries</p>
           {selectedApiaryId === "all" ? (
@@ -387,7 +636,9 @@ const Dashboard = () => {
           ) : (
             <>
               <p className="text-2xl font-bold">1 / {stats.apiaries}</p>
-              <p className="text-xs text-gray-400 mt-1">(this apiary / total)</p>
+              <p className="text-xs text-gray-400 mt-1">
+                (this apiary / total)
+              </p>
             </>
           )}
         </div>
@@ -408,7 +659,94 @@ const Dashboard = () => {
           <p className="text-sm text-gray-500">Logbook</p>
           <p className="text-2xl font-bold">{stats.logbook}</p>
         </div>
+
+        {/* NEW: NFC Tagged Hives count in stats (Premium only) */}
+        {subscriptionLevel === "premium" && (
+          <div className="bg-white rounded shadow p-4">
+            <p className="text-sm text-gray-500">NFC Tagged Hives</p>
+            <p className="text-2xl font-bold">{nfcSummary.tagged}</p>
+            <p className="text-xs text-gray-400 mt-1">
+              of {nfcSummary.total} hives
+              {selectedApiaryId !== "all" ? " (this filter)" : ""}
+            </p>
+          </div>
+        )}
       </div>
+
+      {/* NFC Tagged Hives list (Premium only) */}
+      {subscriptionLevel === "premium" && (
+        <div className="bg-white rounded shadow p-4">
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <h2 className="text-lg font-semibold">NFC Tagged Hives</h2>
+            <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200 text-xs font-semibold">
+              <span role="img" aria-label="NFC">
+                📶
+              </span>
+              <span className="font-mono">
+                {nfcSummary.tagged} / {nfcSummary.total}
+              </span>
+              {selectedApiaryId !== "all" && (
+                <span className="text-[10px] uppercase tracking-wide text-blue-700/80">
+                  this filter
+                </span>
+              )}
+            </span>
+          </div>
+
+          {recentNfcHives.length === 0 ? (
+            <p className="text-sm text-gray-500">
+              No NFC tags assigned yet.{" "}
+              <Link to="/nfc" className="text-blue-600 underline">
+                Scan a tag to link your first hive.
+              </Link>
+            </p>
+          ) : (
+            <>
+              <ul className="space-y-2 text-sm">
+                {recentNfcHives.map((hive) => (
+                  <li
+                    key={hive.id}
+                    className="border p-2 rounded flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"
+                  >
+                    <div className="min-w-0">
+                      <div className="font-semibold truncate">
+                        {hive.name ||
+                          hiveNameById[hive.id] ||
+                          "Unnamed hive"}
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        {hive.apiary_id && apiaryNameById[hive.apiary_id]
+                          ? `Apiary: ${apiaryNameById[hive.apiary_id]}`
+                          : "Apiary: —"}
+                      </div>
+                      <div className="mt-1 text-[11px] font-mono text-gray-700 break-all">
+                        Tag: {hive.nfc_uid}
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <Link
+                        to={toHiveInList(hive.id)}
+                        className="text-xs text-blue-600 hover:underline whitespace-nowrap"
+                        aria-label={`Open hive ${hive.name || hive.id} in hive list`}
+                      >
+                        Open hive →
+                      </Link>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-3 text-right">
+                <Link
+                  to={hivesHref}
+                  className="text-sm text-blue-600 hover:underline"
+                >
+                  See all tagged hives →
+                </Link>
+              </div>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Recent Inspections */}
       <div className="bg-white rounded shadow p-4">
@@ -423,12 +761,16 @@ const Dashboard = () => {
               {recentInspections.map((i) => (
                 <li
                   key={i.id}
-                  className={`border p-2 rounded text-sm ${i.archived_at ? "opacity-60" : ""}`}
+                  className={`border p-2 rounded text-sm ${
+                    i.archived_at ? "opacity-60" : ""
+                  }`}
                   title={i.archived_at ? "Archived inspection" : ""}
                 >
                   {/* Text row */}
                   <div className="min-w-0">
-                    <strong className="mr-1">{formatUKDate(i.date)}</strong>
+                    <strong className="mr-1">
+                      {formatUKDate(i.date)}
+                    </strong>
                     {i.apiary_id && apiaryNameById[i.apiary_id]
                       ? ` • Apiary: ${apiaryNameById[i.apiary_id]}`
                       : ""}
@@ -446,14 +788,18 @@ const Dashboard = () => {
                         <Link
                           to={toInspectionsList(i.id)}
                           className="text-blue-600 hover:underline whitespace-nowrap"
-                          aria-label={`Open inspection ${formatUKDate(i.date)} in list`}
+                          aria-label={`Open inspection ${formatUKDate(
+                            i.date
+                          )} in list`}
                         >
                           Open →
                         </Link>
                         <Link
                           to={`/inspections/${i.id}/edit`}
                           className="text-xs text-gray-600 hover:underline whitespace-nowrap"
-                          aria-label={`Edit inspection ${formatUKDate(i.date)}`}
+                          aria-label={`Edit inspection ${formatUKDate(
+                            i.date
+                          )}`}
                         >
                           ✎ Edit
                         </Link>
@@ -464,7 +810,10 @@ const Dashboard = () => {
               ))}
             </ul>
             <div className="mt-3 text-right">
-              <Link to={seeAllInspectionsHref} className="text-sm text-blue-600 hover:underline">
+              <Link
+                to={seeAllInspectionsHref}
+                className="text-sm text-blue-600 hover:underline"
+              >
                 See all inspections →
               </Link>
             </div>
@@ -487,16 +836,26 @@ const Dashboard = () => {
                 return (
                   <li
                     key={t.id}
-                    className={`border p-2 rounded text-sm ${t.archived_at ? "opacity-60" : ""}`}
+                    className={`border p-2 rounded text-sm ${
+                      t.archived_at ? "opacity-60" : ""
+                    }`}
                     title={t.archived_at ? "Archived task" : ""}
                   >
                     {/* Text row */}
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <strong>{t.due_date ? formatUKDate(t.due_date) : "No date"}</strong>
-                        <span className={statusPill(t.status)}>{t.status || "Pending"}</span>
+                        <strong>
+                          {t.due_date
+                            ? formatUKDate(t.due_date)
+                            : "No date"}
+                        </strong>
+                        <span className={statusPill(t.status)}>
+                          {t.status || "Pending"}
+                        </span>
                         {overdue && (
-                          <span className="text-red-700 text-xs font-semibold">Overdue</span>
+                          <span className="text-red-700 text-xs font-semibold">
+                            Overdue
+                          </span>
                         )}
                       </div>
                       <div className="truncate">
@@ -535,7 +894,10 @@ const Dashboard = () => {
               })}
             </ul>
             <div className="mt-3 text-right">
-              <Link to={seeAllTodosHref} className="text-sm text-blue-600 hover:underline">
+              <Link
+                to={seeAllTodosHref}
+                className="text-sm text-blue-600 hover:underline"
+              >
                 See all tasks →
               </Link>
             </div>
@@ -556,13 +918,18 @@ const Dashboard = () => {
               {recentLogs.map((l) => (
                 <li
                   key={l.id}
-                  className={`border p-2 rounded text-sm ${l.archived_at ? "opacity-60" : ""}`}
+                  className={`border p-2 rounded text-sm ${
+                    l.archived_at ? "opacity-60" : ""
+                  }`}
                   title={l.archived_at ? "Archived log entry" : ""}
                 >
                   {/* Text row */}
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <strong className="mr-1">{formatUKDate(l.date)}</strong>: {l.log_type}
+                      <strong className="mr-1">
+                        {formatUKDate(l.date)}
+                      </strong>
+                      : {l.log_type}
                     </div>
                     {l.apiary_id && apiaryNameById[l.apiary_id]
                       ? ` • Apiary: ${apiaryNameById[l.apiary_id]}`
@@ -590,7 +957,6 @@ const Dashboard = () => {
                           to={toLogbookList(l.id)}
                           className="text-blue-600 hover:underline whitespace-nowrap"
                           aria-label={`Open log entry ${l.id}`}
-
                         >
                           Open →
                         </Link>
@@ -608,7 +974,10 @@ const Dashboard = () => {
               ))}
             </ul>
             <div className="mt-3 text-right">
-              <Link to={seeAllLogbookHref} className="text-sm text-blue-600 hover:underline">
+              <Link
+                to={seeAllLogbookHref}
+                className="text-sm text-blue-600 hover:underline"
+              >
                 See all log entries →
               </Link>
             </div>
@@ -630,7 +999,8 @@ const Dashboard = () => {
             <>
               {" "}
               <span className="text-amber-700">
-                (No coordinates set for the default apiary — showing a default location: London.)
+                (No coordinates set for the default apiary — showing a default
+                location: London.)
               </span>
             </>
           )}
@@ -651,16 +1021,20 @@ const Dashboard = () => {
               <strong>Next 5 Days:</strong>
             </p>
             <ul className="grid grid-cols-1 gap-x-6">
-              {Array.isArray(weather?.forecast?.time) && weather.forecast.time.length ? (
+              {Array.isArray(weather?.forecast?.time) &&
+              weather.forecast.time.length ? (
                 weather.forecast.time.slice(0, 5).map((day, index) => {
                   const wc = weather?.forecast?.weather_code?.[index];
                   const icon = WX_ICON[wc] || "⛅";
                   const label = WX_LABEL[wc] || "";
-                  const tmin = weather?.forecast?.temperature_2m_min?.[index] ?? "N/A";
-                  const tmax = weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
+                  const tmin =
+                    weather?.forecast?.temperature_2m_min?.[index] ?? "N/A";
+                  const tmax =
+                    weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
                   return (
                     <li key={day ?? index}>
-                      {formatUKDate(day)}: {icon} {label && `${label} — `}
+                      {formatUKDate(day)}: {icon}{" "}
+                      {label && `${label} — `}
                       {tmin}°C → {tmax}°C
                     </li>
                   );
@@ -686,6 +1060,11 @@ const Dashboard = () => {
           <Link to="/inspections/new" className="text-blue-600 underline">
             New Inspection
           </Link>
+          {subscriptionLevel === "premium" && (
+            <Link to="/nfc" className="text-blue-600 underline">
+              Scan NFC Tag (Premium)
+            </Link>
+          )}
           <Link to="/archive" className="text-blue-600 underline">
             View Archive
           </Link>

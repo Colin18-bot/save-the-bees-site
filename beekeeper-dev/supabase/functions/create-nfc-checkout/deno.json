@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "lib": ["deno.ns", "dom"]
+  },
+  "imports": {
+    "serve": "https://deno.land/std@0.208.0/http/server.ts",
+    "stripe": "https://esm.sh/stripe@13.11.0?target=deno"
+  },
+  "env": [
+    "STRIPE_SECRET_KEY",
+    "STRIPE_NFC_SHIPPING_RATE_ID"
+  ]
+}

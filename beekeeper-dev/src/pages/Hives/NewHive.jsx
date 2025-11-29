@@ -51,33 +51,68 @@ const NewHive = () => {
       setApiaries(apiaryData || []);
 
       const uid = userWrap?.user?.id || null;
-      if (uid) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("subscription_level")
-          .eq("user_id", uid)
-          .maybeSingle();
+      if (!uid) return;
 
-        const level = profile?.subscription_level || "free";
-        setSubscriptionLevel(level);
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("subscription_level")
+        .eq("user_id", uid)
+        .maybeSingle();
 
-        // ✅ Only premium can link NFC; set from URL (scanner flow) if provided
-        if (level === "premium" && nfcParam) {
+      const level = profile?.subscription_level || "free";
+      setSubscriptionLevel(level);
+
+      // ✅ NFC behaviour:
+      // - Premium + ?nfc_uid present:
+      //    * If tag already linked to an ACTIVE hive → go straight to NEW INSPECTION
+      //    * If not linked → prefill nfc_uid on the new hive form
+      if (level === "premium" && nfcParam) {
+        const { data: existingHives, error: existingErr } = await supabase
+          .from("hives")
+          .select("id, apiary_id")
+          .ilike("nfc_uid", nfcParam) // case-insensitive exact match
+          .is("archived_at", null);
+
+        if (!existingErr && Array.isArray(existingHives)) {
+          if (existingHives.length === 1) {
+            const hive = existingHives[0];
+            // 🔁 Hive already exists for this tag → ALWAYS start a NEW inspection
+            navigate(
+              `/inspections/new?hive_id=${encodeURIComponent(
+                hive.id
+              )}&nfc_uid=${encodeURIComponent(nfcParam)}`,
+              { replace: true }
+            );
+            return; // stop initialisation here
+          }
+
+          if (existingHives.length > 1) {
+            setErrorMessage(
+              "This NFC tag is linked to multiple hives. Please resolve duplicates first."
+            );
+            // Do NOT prefill nfc_uid in this case
+          } else {
+            // No existing hive for this tag → treat as new link
+            setFormData((prev) => ({ ...prev, nfc_uid: nfcParam }));
+          }
+        } else if (existingErr) {
+          console.error("NFC lookup error in NewHive:", existingErr);
+          // Fallback: allow creating, but keep error visible if you want
           setFormData((prev) => ({ ...prev, nfc_uid: nfcParam }));
         }
+      }
 
-        // Choose apiary: URL > default apiary > single option
-        let chosenApiaryId = "";
-        if (apiaryParam && (apiaryData || []).some((a) => a.id === apiaryParam)) {
-          chosenApiaryId = apiaryParam;
-        } else {
-          const def = (apiaryData || []).find((a) => a.is_default);
-          if (def) chosenApiaryId = def.id;
-          else if ((apiaryData || []).length === 1) chosenApiaryId = apiaryData[0].id;
-        }
-        if (chosenApiaryId) {
-          setFormData((prev) => ({ ...prev, apiary_id: chosenApiaryId }));
-        }
+      // Choose apiary: URL > default apiary > single option
+      let chosenApiaryId = "";
+      if (apiaryParam && (apiaryData || []).some((a) => a.id === apiaryParam)) {
+        chosenApiaryId = apiaryParam;
+      } else {
+        const def = (apiaryData || []).find((a) => a.is_default);
+        if (def) chosenApiaryId = def.id;
+        else if ((apiaryData || []).length === 1) chosenApiaryId = apiaryData[0].id;
+      }
+      if (chosenApiaryId) {
+        setFormData((prev) => ({ ...prev, apiary_id: chosenApiaryId }));
       }
     };
 
@@ -152,7 +187,9 @@ const NewHive = () => {
 
     if (uploadError) return null;
 
-    const { data: publicUrlData } = supabase.storage.from("photos").getPublicUrl(filename);
+    const { data: publicUrlData } = supabase.storage
+      .from("photos")
+      .getPublicUrl(filename);
     return publicUrlData.publicUrl;
   };
 
@@ -279,7 +316,7 @@ const NewHive = () => {
     setSuccessMessage("Hive saved successfully!");
     setLoading(false);
     successRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    // await new Promise((resolve) => setTimeout(resolve, 1200));
+
     // Return to the filtered hive list for this apiary
     navigate(`/hives?apiary_id=${inserted.apiary_id}`);
   };
@@ -369,7 +406,9 @@ const NewHive = () => {
         {subscriptionLevel === "premium" && formData.nfc_uid && (
           <div className="p-3 border rounded bg-gray-50 text-sm">
             <span className="font-medium">NFC Tag Linked:</span>{" "}
-            <code className="px-1 py-0.5 bg-white border rounded">{formData.nfc_uid}</code>
+            <code className="px-1 py-0.5 bg-white border rounded">
+              {formData.nfc_uid}
+            </code>
             <div className="text-gray-600 mt-1">
               This tag was read via NFC and will be linked to this hive.
             </div>

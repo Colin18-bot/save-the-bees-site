@@ -238,6 +238,15 @@ const NewApiary = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage("");
+
+    // Require a pin on the map before saving
+    if (latitude == null || longitude == null) {
+      setErrorMessage(
+        "Please click on the map to place the pin for your apiary location before saving."
+      );
+      return;
+    }
+
     setSaving(true);
 
     try {
@@ -522,8 +531,26 @@ const NewApiary = () => {
           </MapContainer>
         </div>
 
+        {/* Tip about pin + zoom/foraging area */}
+        <div className="mt-2 text-xs text-gray-700 bg-yellow-50 border border-yellow-200 rounded p-2">
+          <strong className="block font-semibold mb-1">Tip</strong>
+          <p>
+            After searching for an address, you still need to{" "}
+            <span className="font-semibold">click on the map</span> to drop the
+            pin exactly where your apiary is. You can zoom and drag the map –
+            zoom out to see the green circle, which shows the approximate
+            foraging area around your apiary.
+          </p>
+        </div>
+
         {/* Country under the map (autofills from the pin; editable) */}
         <div>
+          {latitude != null && longitude != null && (
+            <div className="text-xs text-gray-600 mb-1">
+              Selected location: {latitude.toFixed(5)},{" "}
+              {longitude.toFixed(5)} (approx.)
+            </div>
+          )}
           <label className="block text-sm font-medium mb-1">Country</label>
           <input
             value={country}

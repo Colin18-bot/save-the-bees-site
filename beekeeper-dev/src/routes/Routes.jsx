@@ -51,6 +51,10 @@ import ContactSent from "../pages/ContactSent.jsx";
 
 // NFC
 import NFCScan from "../pages/NFCScan.jsx";
+import NFCInstructions from "../pages/NFC/NFCInstructions.jsx";
+import NFCTagManager from "../pages/NFC/NFCTagManager.jsx";
+// NEW: NFC Tag Store (product page)
+import NFCTagStore from "../pages/NFC/NFCTagStore.jsx";
 
 // Inventory / Finance / Sales
 import InventoryList from "../pages/Inventory/InventoryList.jsx";
@@ -158,8 +162,11 @@ function AppRoutes() {
       <Route path="/archive" element={<Guarded><Archive /></Guarded>} />
       <Route path="/help" element={<Guarded><Help /></Guarded>} />
 
-      {/* NFC scan */}
+      {/* NFC scan + instructions + manager + tag store */}
       <Route path="/nfc" element={<Guarded><NFCScan /></Guarded>} />
+      <Route path="/nfc/instructions" element={<Guarded><NFCInstructions /></Guarded>} />
+      <Route path="/nfc/manage" element={<Guarded><NFCTagManager /></Guarded>} />
+      <Route path="/nfc/tags" element={<Guarded><NFCTagStore /></Guarded>} />
 
       {/* Inventory */}
       <Route path="/inventory" element={<Guarded><InventoryList /></Guarded>} />

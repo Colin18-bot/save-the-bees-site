@@ -29,6 +29,7 @@ function PlanCard({
   highlight = false,
   footnote,
   currentLabel = "Current Plan",
+  busy = false,
 }) {
   return (
     <div
@@ -63,9 +64,9 @@ function PlanCard({
         <button
           type="button"
           onClick={onClick}
-          disabled={disabled}
+          disabled={disabled || busy}
           className={`w-full py-2 rounded-lg font-semibold transition ${
-            disabled
+            disabled || busy
               ? "bg-gray-300 text-gray-600 cursor-not-allowed"
               : highlight
               ? "bg-green-700 hover:bg-green-800 text-white"
@@ -89,6 +90,7 @@ export default function Pricing() {
   const [subscriptionLevel, setSubscriptionLevel] = useState("free");
   const [message, setMessage] = useState("");
   const [upgrading, setUpgrading] = useState(false);
+  const [openingBilling, setOpeningBilling] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -113,15 +115,29 @@ export default function Pricing() {
     })();
   }, []);
 
+  // Handle messages coming back from protected routes or Stripe
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const messageParam = params.get("message");
+    const canceled = params.get("canceled");
+    const upgraded = params.get("upgraded");
+
     if (messageParam === "login_required") {
       setMessage("Please log in to access that page.");
     } else if (messageParam === "subscription_required") {
-      setMessage("This feature is only available on a paid plan.");
+      setMessage("This feature is only available on a Premium plan.");
+    } else if (upgraded === "1") {
+      setMessage(
+        "🎉 Your Premium subscription is active — thank you for supporting BeezKnees!"
+      );
+    } else if (canceled === "1") {
+      setMessage(
+        "Checkout was cancelled. No changes have been made to your subscription — you can restart the upgrade at any time."
+      );
+    } else {
+      setMessage("");
     }
-  }, [location]);
+  }, [location.search]);
 
   const params = new URLSearchParams(location.search);
   const redirectParam = params.get("redirect");
@@ -143,6 +159,7 @@ export default function Pricing() {
       } = await supabase.auth.getSession();
       if (!session?.access_token) {
         navigate("/login?redirect=/pricing");
+        setUpgrading(false);
         return;
       }
       const token = session.access_token;
@@ -182,11 +199,15 @@ export default function Pricing() {
   };
 
   const handleManageBilling = async () => {
+    if (openingBilling) return;
+    setOpeningBilling(true);
+
     const {
       data: { session },
     } = await supabase.auth.getSession();
     if (!session?.access_token) {
       navigate("/login?redirect=/pricing");
+      setOpeningBilling(false);
       return;
     }
     const token = session.access_token;
@@ -196,8 +217,16 @@ export default function Pricing() {
       `?token=${encodeURIComponent(token)}` +
       `&return_url=${encodeURIComponent(returnUrl)}`;
 
-    window.location.href = portalUrl;
+    try {
+      window.location.href = portalUrl;
+    } catch (e) {
+      console.error(e);
+      alert("Could not open billing portal. Please try again.");
+      setOpeningBilling(false);
+    }
   };
+
+  const lowerMessage = message.toLowerCase();
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
@@ -215,9 +244,10 @@ export default function Pricing() {
           <button
             type="button"
             onClick={handleManageBilling}
-            className="text-sm px-3 py-2 rounded border border-gray-300 hover:bg-gray-50"
+            disabled={openingBilling}
+            className="text-sm px-3 py-2 rounded border border-gray-300 hover:bg-gray-50 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            Manage billing
+            {openingBilling ? "Opening billing… ⏳" : "Manage billing"}
           </button>
         ) : (
           <button
@@ -241,7 +271,18 @@ export default function Pricing() {
       </header>
 
       {message && (
-        <div className="mb-8 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-blue-800 text-center">
+        <div
+          className={`
+      mb-8 rounded-lg px-4 py-3 text-center
+      ${
+        lowerMessage.includes("upgraded")
+          ? "border border-green-300 bg-green-50 text-green-800"
+          : lowerMessage.includes("cancel")
+          ? "border border-amber-300 bg-amber-50 text-amber-800"
+          : "border border-blue-200 bg-blue-50 text-blue-800"
+      }
+    `}
+        >
           {message}
         </div>
       )}
@@ -263,6 +304,7 @@ export default function Pricing() {
             "1 apiary • Up to 2 hives",
           ]}
           disabled={subscriptionLevel === "free" && !!user}
+          busy={false}
           onClick={() => navigate(user ? "/dashboard" : "/register?redirect=/dashboard")}
           cta={user ? "Use Free plan" : "Get started — free"}
           footnote="No credit card required."
@@ -274,24 +316,55 @@ export default function Pricing() {
         <PlanCard
           title="Premium"
           price={PREMIUM_PRICE_TEXT}
-          description="Everything in Free — without limits. Grow your apiaries at your own pace and support BeezKnees development."
+          description="Everything in Free — without limits, plus NFC tap-to-log inspections and a dashboard view of your tagged hives."
           features={[
             "Unlimited apiaries",
             "Unlimited hives",
+            "HiveTag NFC tap-to-log inspections (Scan NFC page)",
+            "NFC quick-select in New Inspection",
+            "NFC dashboard summary & tagged hives list",
             "All features included — nothing locked",
             "Advanced seasonal & per-apiary reporting",
             "Ideal for growing hobbyists & sideline/commercial setups",
             "Priority support",
             "Directly supports ongoing development of BeezKnees",
           ]}
-          disabled={!isPremium && upgrading}
+          disabled={false}
+          busy={upgrading || openingBilling}
           onClick={() => (isPremium ? handleManageBilling() : handleUpgrade())}
-          cta={isPremium ? "Manage billing" : upgrading ? "Redirecting…" : "Upgrade to Premium"}
+          cta={
+            isPremium
+              ? openingBilling
+                ? "Opening billing… ⏳"
+                : "Manage billing"
+              : upgrading
+              ? "Redirecting… ⏳"
+              : "Upgrade to Premium"
+          }
           highlight
           currentLabel="Current Plan"
-          footnote="Cancel anytime. All prices include VAT where applicable."
+          footnote="Cancel anytime. All prices include VAT where applicable. NFC features require compatible devices and separately purchased tags."
         />
       </div>
+
+      {/* NFC tags cross-sell strip */}
+      <section className="mt-8 rounded-2xl bg-amber-50 border border-amber-200 p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-sm">
+        <div>
+          <p className="font-semibold text-amber-900">
+            Need physical HiveTag NFC labels?
+          </p>
+          <p className="mt-1 text-amber-900/80">
+            Order outdoor-rated, on-metal compatible NFC tags directly from BeezKnees — perfect for your Premium NFC features.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => navigate("/nfc/tags")}
+          className="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-semibold text-[#1a3329] bg-yellow-400 hover:bg-yellow-300 border border-yellow-500"
+        >
+          View NFC tags →
+        </button>
+      </section>
 
       {/* Benefit strip */}
       <section className="mt-12 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
@@ -337,11 +410,12 @@ export default function Pricing() {
       </section>
 
       {/* FAQ */}
-      <section className="mt-10 grid grid-cols-1 md-grid-cols-2 gap-6 text-sm">
+      <section className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
         <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5">
           <h3 className="font-semibold text-green-900">Can I switch plans anytime?</h3>
           <p className="mt-2 text-gray-600">
-            Yes. Upgrade or cancel whenever you like. If you cancel Premium, you’ll keep access until the end of your billing period.
+            Yes. Upgrade or cancel whenever you like. If you cancel Premium, you’ll keep access until the end of your
+            billing period.
           </p>
         </div>
         <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5">
