@@ -8,6 +8,86 @@ dayjs.locale("en-gb");
 
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
+ 
+
+ {
+  version: "1.0.3",
+  released_at: "2025-11-29T09:00:00Z",
+  summary:
+    "Complete NFC system (scan, manage, store), new Stripe checkout for NFC tags, UK shipping support, Premium gating UX, privacy updates, and NFC-related UI polish across the platform.",
+
+  added: [
+    // NFC System
+    "New **Scan NFC Tag** page with Premium-only gating, permission handling, Web NFC support detection and friendly fallbacks.",
+    "New **NFC Tag Manager** to view, search, and clear linked NFC UIDs for hives.",
+    "New **NFC Setup Card** (printable) linked from the NFC Scan page.",
+    "New **Buy NFC Tags** store page with quantity selector, estimated totals, technical specs, and product image.",
+    "New **NFC tag UID linking**: unknown tags automatically open **New Hive** with `nfc_uid` pre-filled.",
+    "New **tap-to-log inspections**: known tags jump straight into **New Inspection** with hive + apiary pre-filled.",
+    "Added **NFC UIDs** to Hive records and database lookup for fast tag→hive resolution.",
+
+    // Stripe + Checkout
+    "New **create-nfc-checkout** Supabase Edge Function for tag purchases.",
+    "Stripe checkout now includes **UK-only fixed shipping (£1.55)** via Stripe Shipping Rates.",
+    "Stripe metadata added for NFC orders (user ID + quantity).",
+    "Support added for live Stripe mode without requiring development mode keys.",
+
+    // UI/UX
+    "NFCScan includes new quick links: **Setup card**, **Tag manager**, **Buy tags**.",
+    "New NFC debug panel (Premium only) showing raw scan data, exceptions, and lookup results.",
+    "Added public image `/public/nfctag.webp` for the NFC store product preview."
+  ],
+
+  changed: [
+    // NFC UX
+    "Improved Web NFC error handling with clearer messages for NotAllowed, Abort, NotSupported and empty UIDs.",
+    "NFCScan redesigned with clearer Premium messaging, improved device-browser warnings, and polished layout.",
+    "Updated New Inspection and New Hive flows to correctly handle NFC-origin navigation (`source=nfc`).",
+
+    // Privacy Policy
+    "Privacy Policy updated with a new **NFC Tags** section explaining UID storage and non-tracking behaviour.",
+    "Clarified third-party references (Stripe billing, LocationIQ, OpenStreetMap).",
+
+    // Routing
+    "Added new protected route **/nfc/tags** for the NFC Store.",
+    "Grouped NFC routes together for clarity: `/nfc`, `/nfc/manage`, `/nfc/instructions`, `/nfc/tags`."
+  ],
+
+  fixed: [
+    "Fixed redirect issues when purchasing NFC tags while logged out (now routes you through login and back).",
+    "Fixed cases where NFCScan could run with stale subscription state.",
+    "Resolved misreported NFC support on certain Android browsers.",
+    "Fixed UI flicker when checking subscription level on NFCScan.",
+    "Fixed missing image reference by adding `nfctag.webp` to `/public`.",
+    "Corrected layout spacing on mobile for NFC pages."
+  ],
+
+  removed: [],
+
+  security: [
+    "Enhanced CORS and header handling in `create-nfc-checkout`.",
+    "Edge Function now safely validates quantity, user ID, and price ID."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Scan NFC Tag", to: "/nfc" },
+    { label: "Manage NFC Tags", to: "/nfc/manage" },
+    { label: "Buy NFC Tags", to: "/nfc/tags" },
+    { label: "Premium Pricing", to: "/pricing" },
+    { label: "Hives", to: "/hives" },
+    { label: "Inspections", to: "/inspections" },
+    { label: "Privacy Policy", to: "/legal/privacy" }
+  ],
+
+  known_issues: [
+    "Web NFC support varies across devices: iOS Safari still does not support Web NFC scanning.",
+    "If a tag UID is locked by the manufacturer, it cannot be rewritten (but still works for read-only flows).",
+    "Shipping address fields depend on Stripe and may not pre-fill on some browsers."
+  ]
+},
+
   {
     version: "1.0.2",
     released_at: "2025-11-01T11:30:00Z",
