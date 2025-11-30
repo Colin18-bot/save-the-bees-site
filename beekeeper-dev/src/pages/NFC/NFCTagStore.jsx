@@ -151,23 +151,19 @@ export default function NFCTagStore() {
         <header className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-extrabold text-green-800">
-              BeezKnees HiveTag NFC Labels
+              HiveTag NFC Labels
             </h1>
             <p className="mt-2 text-sm text-gray-700">
               Commercial-grade NFC tags for your hives. Tap your phone on a tag
               to jump straight into that hive’s inspection flow.
             </p>
-            <p className="mt-2 text-xs text-gray-600">
-              Works best with a{" "}
-              <span className="font-semibold">Premium</span> BeezKnees plan
-              (NFC tap-to-log), but you can buy tags on any plan.
-            </p>
+           
           </div>
           <div className="shrink-0">
             <div className="w-40 h-40 rounded-full border border-gray-200 bg-gradient-to-br from-amber-50 to-yellow-100 shadow-sm flex items-center justify-center overflow-hidden">
               <img
                 src="/nfctag.webp"
-                alt="BeezKnees HiveTag NFC round disc tag"
+                alt="HiveTag NFC round disc tag"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -341,14 +337,14 @@ export default function NFCTagStore() {
               </li>
               <li>
                 iOS: NFC read support on iPhone&nbsp;7 and newer for URL-based
-                tags that open BeezKnees.
+                tags that open HiveTag.
               </li>
             </ul>
           </div>
 
           <div>
             <h2 className="text-lg font-semibold text-green-900">
-              How it works with BeezKnees
+              How it works with HiveTag
             </h2>
             <ol className="mt-2 list-decimal pl-5 space-y-1">
               <li>
@@ -356,7 +352,7 @@ export default function NFCTagStore() {
                 small screw through the central hole.
               </li>
               <li>
-                In BeezKnees, go to <strong>Scan NFC Tag</strong> (Premium).
+                In HiveTag, go to <strong>Scan NFC Tag</strong> (Premium).
               </li>
               <li>Tap your phone on the tag and assign it to a hive once.</li>
               <li>

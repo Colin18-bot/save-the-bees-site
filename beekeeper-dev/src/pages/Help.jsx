@@ -50,7 +50,7 @@ export default function Help() {
         <header className="mb-8">
           <h1 className="text-3xl font-bold">HiveTag Help &amp; How-To</h1>
           <p className="mt-2 text-gray-600">
-            Clear, practical guidance for every part of BeezKnees—from your
+            Clear, practical guidance for every part of HiveTag—from your
             first apiary to tap-to-log NFC inspections.
           </p>
           <p className="mt-2 text-sm text-gray-600">
@@ -93,7 +93,7 @@ export default function Help() {
                 </li>
                 <li>
                   <strong>Hive</strong> — an individual hive in an apiary
-                  (photo, type, status, optional NFC).
+                  (photo, type, status, optional NFC tag).
                 </li>
                 <li>
                   <strong>Inspection</strong> — a dated record about a hive
@@ -145,7 +145,7 @@ export default function Help() {
                         <strong>Unlimited Inspections</strong>
                       </li>
                       <li>
-                        <strong>Weather forecasts</strong> (Dashboard snapshot &
+                        <strong>Weather forecasts</strong> (Dashboard snapshot &amp;
                         inspection auto-fill)
                       </li>
                       <li>
@@ -173,21 +173,26 @@ export default function Help() {
                     </h3>
                     <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
                       <li>
-                        <strong>Unlimited apiaries & hives</strong>
+                        <strong>Unlimited apiaries &amp; hives</strong>
                       </li>
                       <li>
                         <strong>NFC tap-to-log</strong> (link a tag to a hive;
                         scan to jump into that hive’s inspection flow)
                       </li>
                       <li>
+                        <strong>NFC tools</strong>: Scan NFC Tag, NFC Tag
+                        Manager, and a printable NFC setup card.
+                      </li>
+                      <li>
                         <strong>NFC quick-select</strong> in New Inspection
+                        (when arriving from a scan).
                       </li>
                       <li>
                         <strong>Stripe Customer Portal</strong>:{" "}
                         <em>Settings → Manage billing</em>
                       </li>
                       <li>
-                        Priority enhancements & future advanced features
+                        Priority enhancements &amp; future advanced features
                       </li>
                     </ul>
                   </div>
@@ -265,7 +270,7 @@ export default function Help() {
                       <span className="ml-1 mr-1">
                         <Badge tone="amber">Archived</Badge>
                       </span>
-                      pill on the far right and **do not** show{" "}
+                      pill on the far right and <strong>do not</strong> show{" "}
                       <em>Open</em> or <em>Edit</em> links. Use the{" "}
                       <em>Archive</em> page to view/manage them.
                     </li>
@@ -290,20 +295,10 @@ export default function Help() {
                       Apiary filter.
                     </li>
                     <li>
-                      <strong>NFC summary (Premium):</strong> Premium users see
-                      a small NFC banner showing{" "}
-                      <strong>“NFC tagged hives: X / Y”</strong>, filtered by
-                      the Dashboard’s Apiary selector. Clicking it takes you to
-                      the Hives page with the same filter applied.{" "}
+                      <strong>NFC summary (Premium):</strong> Premium users may
+                      see small NFC indicators for tagged hives and NFC-related
+                      shortcuts depending on their Dashboard layout.{" "}
                       <Badge tone="blue">Premium</Badge>
-                    </li>
-                    <li>
-                      <strong>NFC tagged hives list (Premium):</strong> Premium
-                      users also see a short list of recently tagged hives on
-                      the Dashboard, including the Apiary, Hive name and tag.
-                      “Open hive →” jumps to the Hives list focused on that
-                      hive, and “See all tagged hives →” takes you to the full
-                      Hives list. <Badge tone="blue">Premium</Badge>
                     </li>
                   </ul>
                 </div>
@@ -334,7 +329,7 @@ export default function Help() {
                   <h3 className="font-semibold">Hives</h3>
                   <ul className="list-disc pl-6">
                     <li>
-                      List by apiary; shows inspection count; actions for Edit /
+                      List by apiary; shows inspection count; actions for Edit /{" "}
                       New Inspection.
                     </li>
                     <li>
@@ -383,14 +378,15 @@ export default function Help() {
                       Unlimited on Free. <Badge>Free</Badge>
                     </li>
                     <li>
-                      NFC quick-select available in New Inspection{" "}
+                      NFC quick-select available in New Inspection when you
+                      arrive from a scan.{" "}
                       <Badge tone="blue">Premium</Badge>
                     </li>
                   </ul>
                 </div>
 
                 <div>
-                  <h3 className="font-semibold">Tasks & Calendar</h3>
+                  <h3 className="font-semibold">Tasks &amp; Calendar</h3>
                   <ul className="list-disc pl-6">
                     <li>
                       Create tasks with due dates and statuses; filter by
@@ -441,9 +437,9 @@ export default function Help() {
                       <em>Clear inspection filter</em> action.
                     </li>
                     <li>
-                      <strong>Deep-links & highlights:</strong> when you’re sent
-                      to a list by “Open →” the target item briefly highlights
-                      so it’s easy to spot.
+                      <strong>Deep-links &amp; highlights:</strong> when you’re
+                      sent to a list by “Open →” the target item briefly
+                      highlights so it’s easy to spot.
                     </li>
                   </ul>
                 </div>
@@ -489,7 +485,7 @@ export default function Help() {
                   <h3 className="font-semibold">Settings</h3>
                   <ul className="list-disc pl-6">
                     <li>
-                      <strong>Profile</strong> (name & avatar),{" "}
+                      <strong>Profile</strong> (name &amp; avatar),{" "}
                       <strong>Password</strong>, <strong>Default Apiary</strong>
                       , language/timezone.
                     </li>
@@ -542,9 +538,9 @@ export default function Help() {
                 </p>
                 <ul className="list-disc pl-6 space-y-1">
                   <li>
-                    <strong>Sales & Profit/Loss:</strong> totals are shown using
-                    your default currency for display. (No FX conversion is
-                    performed.)
+                    <strong>Sales &amp; Profit/Loss:</strong> totals are shown
+                    using your default currency for display. (No FX conversion
+                    is performed.)
                   </li>
                   <li>
                     <strong>New Expense:</strong> the Currency field is
@@ -578,12 +574,39 @@ export default function Help() {
               <h2 className="text-2xl font-bold mb-3">Reports</h2>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
-                  Open <strong>Reports</strong> from the Sidebar to access
-                  printable summaries.
+                  Open <strong>Reports</strong> from the Sidebar to access the
+                  main <strong>Reports &amp; Exports</strong> page.
                 </li>
                 <li>
-                  Use filters (where available) to scope your view, then print
-                  or export as needed.
+                  On <strong>Reports &amp; Exports</strong> you can:
+                  <ul className="list-disc pl-6 mt-1 space-y-1">
+                    <li>
+                      Filter by <strong>apiary</strong> and <strong>hive</strong>
+                      .
+                    </li>
+                    <li>
+                      Choose a date range and select which sections to include:
+                      <strong> Inspections</strong>, <strong>Tasks</strong>,{" "}
+                      <strong>Logbook</strong>, and{" "}
+                      <strong>NFC tagged hives</strong>.
+                    </li>
+                    <li>
+                      Print the page for a clean, multi-section report.
+                    </li>
+                    <li>
+                      Download CSV:
+                      <ul className="list-disc pl-6 mt-1">
+                        <li>
+                          <strong>Combined CSV</strong> with a <code>type</code>{" "}
+                          column.
+                        </li>
+                        <li>
+                          Separate CSVs for Inspections, Tasks, Logbook, and NFC
+                          tags.
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
                 </li>
                 <li>
                   You can also use the <strong>Dashboard → Print</strong> for a
@@ -652,7 +675,7 @@ export default function Help() {
                   </p>
                   <p className="text-gray-700 mt-2">
                     When you arrive from NFC and view inspection history for
-                    that hive, you’ll also see a small{" "}
+                    that hive, you may also see a small{" "}
                     <strong>NFC Tag</strong> pill on relevant rows to remind you
                     that this hive is tagged.
                   </p>
@@ -701,15 +724,29 @@ export default function Help() {
                     happened and what to try next.
                   </li>
                   <li>
-                    When viewing a tagged hive or its inspections, you’ll see a
-                    small <strong>NFC Tag</strong> pill on the hive and, where
-                    applicable, on related inspection cards so it’s clear which
-                    records belong to NFC-tagged hives.
+                    When viewing a tagged hive or its inspections, you’ll often
+                    see a small <strong>NFC Tag</strong> pill on the hive and,
+                    where applicable, on related inspection cards so it’s clear
+                    which records belong to NFC-tagged hives.
+                  </li>
+                  <li>
+                    <strong>NFC Tag Manager:</strong> use the{" "}
+                    <strong>Manage NFC Tags</strong> page to see all tagged
+                    hives, filter by apiary/hive, and clear a tag from a hive if
+                    you want to re-use it. Clearing a tag doesn’t remove any
+                    inspections; it simply frees that UID so it can be linked to
+                    a different hive later.
                   </li>
                   <li>
                     <strong>Duplicates:</strong> two active hives cannot share
                     the same tag. Archive or clear the old hive’s tag first, or
                     re-link the tag to a different hive via the edit flow.
+                  </li>
+                  <li>
+                    <strong>Buy tags:</strong> the <strong>Buy NFC Tags</strong>{" "}
+                    page uses Stripe checkout with quantity selection and
+                    UK-only flat shipping via Stripe Shipping Rates. Orders are
+                    currently limited to UK shipping addresses.
                   </li>
                   <li>
                     <strong>Troubleshooting:</strong> enable NFC; hold the tag
@@ -784,9 +821,9 @@ export default function Help() {
                   content lives in the <em>Archive</em> page.
                 </li>
                 <li>
-                  <strong>Dashboard recent lists & archiving:</strong> archived
-                  rows display an <Badge tone="amber">Archived</Badge> pill on
-                  the far right and have no <em>Open</em>/
+                  <strong>Dashboard recent lists &amp; archiving:</strong>{" "}
+                  archived rows display an <Badge tone="amber">Archived</Badge>{" "}
+                  pill on the far right and have no <em>Open</em>/
                   <em>Edit</em> actions. Use the <em>Archive</em> page to view
                   details or restore (where allowed).
                 </li>
@@ -964,8 +1001,8 @@ export default function Help() {
                   </p>
                   <p className="text-gray-700">
                     <strong>Settings → Delete Account</strong> cancels your
-                    subscription, removes your photos & data, and deletes your
-                    account. This is permanent and cannot be undone.
+                    subscription, removes your photos &amp; data, and deletes
+                    your account. This is permanent and cannot be undone.
                   </p>
                 </div>
                 <div>
@@ -984,6 +1021,16 @@ export default function Help() {
                   <p className="text-gray-700">
                     Weather uses your <strong>default apiary</strong>. Edit the
                     correct apiary and set as default.
+                  </p>
+                </div>
+                <div>
+                  <p className="font-medium">
+                    Where can I buy compatible NFC tags?
+                  </p>
+                  <p className="text-gray-700">
+                    Use the <strong>Buy NFC Tags</strong> page in the app. It
+                    uses Stripe Checkout with quantity selection and UK-only
+                    flat shipping. Non-UK shipping isn’t currently supported.
                   </p>
                 </div>
               </div>
@@ -1037,8 +1084,9 @@ export default function Help() {
                   <strong>Tag read but no serial/unknown tag:</strong> if a tag
                   doesn’t provide a usable ID, you’ll see a message explaining
                   that the tag couldn’t be identified. If the tag is readable
-                  but not yet linked, the app will say it’s unlinked and send
-                  you to <strong>New Hive</strong> with the tag ID pre-filled.
+                  and has a usable ID but isn’t yet linked, the app will say
+                  it’s unlinked and send you to <strong>New Hive</strong> with
+                  the tag ID pre-filled and locked.
                 </li>
                 <li>
                   <strong>NFC tag already linked:</strong> if a tag belongs to
@@ -1068,6 +1116,13 @@ export default function Help() {
                 <li>
                   <strong>Photos are public URLs</strong> for fast loading; your
                   CSV export includes links to these files.
+                </li>
+                <li>
+                  <strong>NFC UIDs:</strong> only the tag’s unique ID and its
+                  hive linkage are stored, used solely to route you to the
+                  correct hive/inspection. NFC tags are{" "}
+                  <strong>not tracked for location</strong>, and no movement
+                  history is recorded.
                 </li>
                 <li>
                   <strong>Export</strong>: use <em>Settings → Export</em> to
@@ -1102,11 +1157,18 @@ export default function Help() {
                 </li>
                 <li>
                   <strong>Duplicate NFC guard:</strong> enforced when creating a
-                  hive and in NFC quick-select.
+                  hive and in NFC quick-select / Tag Manager flows so one UID
+                  cannot belong to two active hives.
                 </li>
                 <li>
                   <strong>Dashboard export:</strong> CSV export respects the
                   Apiary filter; great for per-yard summaries.
+                </li>
+                <li>
+                  <strong>Print Report:</strong> the Reports → Print page is
+                  designed for clean PDF/printouts of Inspections, Tasks,
+                  Logbook entries and NFC-tagged hives, with matching CSV
+                  exports.
                 </li>
                 <li>
                   <strong>CSV export (Settings):</strong> one CSV per table +{" "}

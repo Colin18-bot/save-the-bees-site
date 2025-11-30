@@ -1065,12 +1065,7 @@ const Dashboard = () => {
               Scan NFC Tag (Premium)
             </Link>
           )}
-          <Link to="/archive" className="text-blue-600 underline">
-            View Archive
-          </Link>
-          <Link to={reportHref} className="text-blue-600 underline">
-            Report / Export
-          </Link>
+          
         </div>
       </div>
     </div>

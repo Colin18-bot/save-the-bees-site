@@ -17,7 +17,7 @@ export default function NFCInstructions() {
         {/* Header */}
         <header className="mb-4 border-b pb-3">
           <h1 className="text-2xl font-bold">
-            BeezKnees HiveTag NFC — Quick Start
+            HiveTag NFC — Quick Start
           </h1>
           <p className="text-gray-600 mt-1">
             Use this page to read or print out as a handybquick start guide for using your HiveTag NFC, or save
@@ -52,7 +52,7 @@ export default function NFCInstructions() {
                 it.
               </li>
               <li>
-                <strong>Open BeezKnees on your phone.</strong> Sign in and go to{" "}
+                <strong>Open HiveTag on your phone.</strong> Sign in and go to{" "}
                 <em>Scan NFC Tag (Premium)</em>.
               </li>
               <li>
@@ -66,7 +66,7 @@ export default function NFCInstructions() {
               </li>
               <li>
                 <strong>Next visits:</strong> open <em>Scan NFC Tag</em> again
-                and tap the tag. BeezKnees jumps straight into that hive’s
+                and tap the tag. HiveTag jumps straight into that hive’s
                 inspection flow – either a new inspection or the hive’s
                 inspection history.
               </li>
@@ -81,7 +81,7 @@ export default function NFCInstructions() {
                 10&nbsp;°C / 50&nbsp;°F.
               </li>
               <li>
-                Use the <strong>Weather</strong> page in BeezKnees to plan
+                Use the <strong>Weather</strong> page in HiveTag to plan
                 inspection days around calmer, warmer conditions.
               </li>
               <li>
@@ -105,7 +105,7 @@ export default function NFCInstructions() {
                 available.
               </li>
               <li>
-                If you see “Tag already linked”, open that hive in BeezKnees and
+                If you see “Tag already linked”, open that hive in HiveTag and
                 update or clear the tag from the hive’s settings before
                 re-assigning it.
               </li>
