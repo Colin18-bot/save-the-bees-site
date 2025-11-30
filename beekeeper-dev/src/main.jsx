@@ -5,9 +5,15 @@ import App from "./App.jsx";
 import AnalyticsGate from "./pages/Legal/AnalyticsGate.jsx";
 import "./index.css";
 
+// Only enable AnalyticsGate when:
+// - we are in production, AND
+// - a GA measurement ID is configured
+const enableAnalytics =
+  import.meta.env.PROD && !!import.meta.env.VITE_GA_MEASUREMENT_ID;
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AnalyticsGate />
+    {enableAnalytics && <AnalyticsGate />}
     <App />
   </React.StrictMode>
 );
