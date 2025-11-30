@@ -1096,6 +1096,17 @@ export default function Help() {
                   or update the hive before re-using the tag.
                 </li>
                 <li>
+                  <strong>
+                    Android shows “New tag collected / Empty tag”:
+                  </strong>{" "}
+                  this message comes from Android’s built-in NFC handler, not
+                  BeezKnees. It appears when your browser isn’t actively
+                  scanning. Open the <strong>Scan NFC</strong> page again, tap{" "}
+                  <strong>Scan NFC Tag</strong>, then tap the tag—your phone
+                  will route the tap to HiveTag and you’ll go straight into the
+                  correct hive’s inspection flow.
+                </li>
+                <li>
                   <strong>Weather didn’t load:</strong> add coordinates to the
                   apiary and retry; occasional provider outages can happen.
                 </li>
