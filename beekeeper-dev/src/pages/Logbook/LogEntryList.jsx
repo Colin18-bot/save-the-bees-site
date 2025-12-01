@@ -441,16 +441,19 @@ const LogEntryList = () => {
                           </p>
                         )}
                         <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
-                          {e.inspection_id && (
-                            <Link
-                              to={`/inspections/${e.inspection_id}/edit`}
-                              className="bg-green-700 hover:bg-green-800 text-white text-xs px-2 py-1 rounded"
-                            >
-                              {inspDate
-                                ? `View Inspection (${inspDate})`
-                                : "View Inspection"}
-                            </Link>
-                          )}
+                         {e.inspection_id && (
+  <Link
+    to={`/inspections?highlight=${encodeURIComponent(
+      e.inspection_id
+    )}&type=INSPECTION`}
+    className="bg-green-700 hover:bg-green-800 text-white text-xs px-2 py-1 rounded"
+  >
+    {inspDate
+      ? `View Inspection (${inspDate})`
+      : "View Inspection"}
+  </Link>
+)}
+
                           <Link
                             to={`/logbook/${e.id}/edit`}
                             className="bg-green-700 hover:bg-green-800 text-white text-xs px-2 py-1 rounded"
@@ -557,16 +560,19 @@ const LogEntryList = () => {
                     )}
 
                     <div className="mt-4 flex gap-2">
-                      {e.inspection_id && (
-                        <Link
-                          to={`/inspections/${e.inspection_id}/edit`}
-                          className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
-                        >
-                          {inspDate
-                            ? `View Inspection (${inspDate})`
-                            : "View Inspection"}
-                        </Link>
-                      )}
+                 {e.inspection_id && (
+  <Link
+    to={`/inspections?highlight=${encodeURIComponent(
+      e.inspection_id
+    )}&type=INSPECTION`}
+    className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
+  >
+    {inspDate
+      ? `View Inspection (${inspDate})`
+      : "View Inspection"}
+  </Link>
+)}
+
                       <Link
                         to={`/logbook/${e.id}/edit`}
                         className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
