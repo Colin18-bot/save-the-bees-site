@@ -89,8 +89,55 @@ export default function NFCLinkHive() {
     try {
       setSaving(true);
 
-      // Optional: you could clear this UID from any other hive first
-      // to keep one-to-one mapping. For now we just set it on the chosen hive.
+      // 1) Check if this NFC tag is already linked to some other active hive.
+      const { data: existing, error: existingErr } = await supabase
+        .from("hives")
+        .select("id, name, apiary_id")
+        .eq("nfc_uid", nfcUid)
+        .neq("id", selectedHiveId)
+        .is("archived_at", null);
+
+      if (existingErr) {
+        console.error("Failed to check existing NFC tag links:", existingErr);
+        setError(
+          "We read the tag, but couldn’t validate existing links. Please try again."
+        );
+        return;
+      }
+
+      if (existing && existing.length > 0) {
+        const other = existing[0];
+        setError(
+          `This NFC tag is already linked to hive “${
+            other.name || "another hive"
+          }”. Clear it from that hive in NFC Tag Manager before assigning it here.`
+        );
+        return;
+      }
+
+      // 2) Check if the selected hive already has a (different) NFC tag.
+      const { data: chosen, error: chosenErr } = await supabase
+        .from("hives")
+        .select("id, name, nfc_uid")
+        .eq("id", selectedHiveId)
+        .single();
+
+      if (chosenErr) {
+        console.error("Failed to load selected hive:", chosenErr);
+        setError("Could not load the selected hive. Please try again.");
+        return;
+      }
+
+      if (chosen?.nfc_uid && chosen.nfc_uid !== nfcUid) {
+        setError(
+          `The selected hive “${
+            chosen.name || "this hive"
+          }” already has a different NFC tag. Clear or change it on that hive before assigning a new tag.`
+        );
+        return;
+      }
+
+      // 3) Safe to assign: write the tag to this hive.
       const { error: updErr } = await supabase
         .from("hives")
         .update({ nfc_uid: nfcUid })
@@ -98,13 +145,16 @@ export default function NFCLinkHive() {
 
       if (updErr) throw updErr;
 
-      const assignedHive = hives.find((h) => h.id === selectedHiveId);
+      const assignedHive =
+        chosen || hives.find((h) => h.id === selectedHiveId) || null;
+
       setStatus(
-        `Tag linked to hive “${assignedHive?.name || "Selected hive"}”. You can now tap this tag to open that hive.`
+        `Tag linked to hive “${
+          assignedHive?.name || "Selected hive"
+        }”. You can now tap this tag to open that hive.`
       );
 
-      // Optional: send them back to NFC Scan after a short delay
-      // or just leave them here with the success message.
+      // Optionally redirect back to the scanner:
       // navigate("/nfc");
     } catch (e) {
       console.error("Failed to assign NFC tag to hive:", e);
@@ -257,7 +307,8 @@ export default function NFCLinkHive() {
               </h2>
               <p className="text-sm text-gray-700">
                 Prefer to create a brand new hive record for this tag? We’ll
-                carry the tag ID into the **New Hive** form for you.
+                carry the tag ID into the <strong>New Hive</strong> form for
+                you.
               </p>
               <button
                 type="button"
