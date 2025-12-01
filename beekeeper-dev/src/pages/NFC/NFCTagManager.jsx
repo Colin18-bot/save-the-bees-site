@@ -206,84 +206,143 @@ export default function NFCTagManager() {
               page to link your first hive.
             </p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm border-t border-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="text-left px-3 py-2 font-medium text-gray-700">
-                      Hive
-                    </th>
-                    <th className="text-left px-3 py-2 font-medium text-gray-700">
-                      Apiary
-                    </th>
-                    <th className="text-left px-3 py-2 font-medium text-gray-700">
-                      Tag ID
-                    </th>
-                    <th className="text-right px-3 py-2 font-medium text-gray-700">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredTags.map((hive) => (
-                    <tr
-                      key={hive.id}
-                      className="border-b border-gray-100 last:border-b-0"
-                    >
-                      <td className="px-3 py-2 align-top">
-                        <div className="font-semibold">
-                          {hive.name || "Unnamed hive"}
-                        </div>
-                        <div className="text-xs text-gray-500">
-                          Created:{" "}
-                          {hive.created_at
-                            ? new Date(
-                                hive.created_at
-                              ).toLocaleDateString("en-GB")
-                            : "—"}
-                        </div>
-                      </td>
-                      <td className="px-3 py-2 align-top">
-                        {hive.apiary_id && apiaryNameById[hive.apiary_id]
-                          ? apiaryNameById[hive.apiary_id]
-                          : "—"}
-                      </td>
-                      <td className="px-3 py-2 align-top">
-                        <code className="text-xs break-all bg-gray-50 px-1.5 py-0.5 rounded border border-gray-200">
-                          {hive.nfc_uid}
-                        </code>
-                      </td>
-                      <td className="px-3 py-2 align-top">
-                        <div className="flex flex-col items-end gap-1">
-                          <Link
-                            to={`/hives?highlight=${encodeURIComponent(
-                              hive.id
-                            )}&type=HIVE${
-                              hive.apiary_id
-                                ? `&apiary_id=${encodeURIComponent(
-                                    hive.apiary_id
-                                  )}`
-                                : ""
-                            }`}
-                            className="text-blue-600 hover:underline text-xs"
-                          >
-                            Open hive in list →
-                          </Link>
-                          <button
-                            type="button"
-                            onClick={() => handleClearTag(hive.id)}
-                            disabled={saving}
-                            className="text-xs text-rose-700 hover:text-rose-800 disabled:text-gray-400"
-                          >
-                            {saving ? "Working…" : "Clear tag from hive"}
-                          </button>
-                        </div>
-                      </td>
+            <>
+              {/* MOBILE: stacked cards */}
+              <div className="space-y-3 md:hidden">
+                {filteredTags.map((hive) => (
+                  <div
+                    key={hive.id}
+                    className="border border-gray-200 rounded-lg p-3 text-sm space-y-1"
+                  >
+                    <div className="font-semibold">
+                      {hive.name || "Unnamed hive"}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Created:{" "}
+                      {hive.created_at
+                        ? new Date(hive.created_at).toLocaleDateString("en-GB")
+                        : "—"}
+                    </div>
+                    <div className="text-xs text-gray-600 mt-1">
+                      <span className="font-medium">Apiary:</span>{" "}
+                      {hive.apiary_id && apiaryNameById[hive.apiary_id]
+                        ? apiaryNameById[hive.apiary_id]
+                        : "—"}
+                    </div>
+                    <div className="text-xs text-gray-600">
+                      <span className="font-medium">Tag ID:</span>{" "}
+                      <code className="break-all bg-gray-50 px-1.5 py-0.5 rounded border border-gray-200">
+                        {hive.nfc_uid}
+                      </code>
+                    </div>
+                    <div className="pt-2 flex flex-col items-stretch gap-1">
+                      <Link
+                        to={`/hives?highlight=${encodeURIComponent(
+                          hive.id
+                        )}&type=HIVE${
+                          hive.apiary_id
+                            ? `&apiary_id=${encodeURIComponent(
+                                hive.apiary_id
+                              )}`
+                            : ""
+                        }`}
+                        className="text-xs text-blue-600 hover:underline text-left"
+                      >
+                        Open hive in list →
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => handleClearTag(hive.id)}
+                        disabled={saving}
+                        className="text-xs text-rose-700 hover:text-rose-800 disabled:text-gray-400 text-left"
+                      >
+                        {saving ? "Working…" : "Clear tag from hive"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* DESKTOP/TABLET: table view */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="min-w-full text-sm border-t border-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="text-left px-3 py-2 font-medium text-gray-700">
+                        Hive
+                      </th>
+                      <th className="text-left px-3 py-2 font-medium text-gray-700">
+                        Apiary
+                      </th>
+                      <th className="text-left px-3 py-2 font-medium text-gray-700">
+                        Tag ID
+                      </th>
+                      <th className="text-right px-3 py-2 font-medium text-gray-700">
+                        Actions
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {filteredTags.map((hive) => (
+                      <tr
+                        key={hive.id}
+                        className="border-b border-gray-100 last:border-b-0"
+                      >
+                        <td className="px-3 py-2 align-top">
+                          <div className="font-semibold">
+                            {hive.name || "Unnamed hive"}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            Created:{" "}
+                            {hive.created_at
+                              ? new Date(
+                                  hive.created_at
+                                ).toLocaleDateString("en-GB")
+                              : "—"}
+                          </div>
+                        </td>
+                        <td className="px-3 py-2 align-top">
+                          {hive.apiary_id && apiaryNameById[hive.apiary_id]
+                            ? apiaryNameById[hive.apiary_id]
+                            : "—"}
+                        </td>
+                        <td className="px-3 py-2 align-top">
+                          <code className="text-xs break-all bg-gray-50 px-1.5 py-0.5 rounded border border-gray-200">
+                            {hive.nfc_uid}
+                          </code>
+                        </td>
+                        <td className="px-3 py-2 align-top">
+                          <div className="flex flex-col items-end gap-1">
+                            <Link
+                              to={`/hives?highlight=${encodeURIComponent(
+                                hive.id
+                              )}&type=HIVE${
+                                hive.apiary_id
+                                  ? `&apiary_id=${encodeURIComponent(
+                                      hive.apiary_id
+                                    )}`
+                                  : ""
+                              }`}
+                              className="text-blue-600 hover:underline text-xs"
+                            >
+                              Open hive in list →
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => handleClearTag(hive.id)}
+                              disabled={saving}
+                              className="text-xs text-rose-700 hover:text-rose-800 disabled:text-gray-400"
+                            >
+                              {saving ? "Working…" : "Clear tag from hive"}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </section>
       </div>
