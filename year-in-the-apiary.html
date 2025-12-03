@@ -4,39 +4,79 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-		<title>Year in the Apiary – Monthly Beekeeping Calendar</title>
+		<title>Year in the Apiary – Weather & Monthly Beekeeping Calendar</title>
 
 		<!-- Hamburger button -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+			referrerpolicy="no-referrer"
+		/>
 
 		<!-- Your CSS file -->
 		<link rel="stylesheet" href="css/style.css" />
 
+		<!-- Page-specific table styling to improve readability -->
+		<style>
+			.table-wrapper {
+				overflow-x: auto;
+				margin: 1.5rem 0;
+			}
+
+			.weather-table {
+				width: 100%;
+				border-collapse: collapse;
+				border-spacing: 0;
+			}
+
+			.weather-table th,
+			.weather-table td {
+				border: 1px solid #d4d4d4;
+				padding: 0.75rem;
+				text-align: left;
+				vertical-align: top;
+			}
+
+			.weather-table thead th {
+				background-color: #f3f3f3;
+				font-weight: 700;
+			}
+
+			.weather-table tbody tr:nth-child(even) {
+				background-color: #fafafa;
+			}
+
+			@media (max-width: 768px) {
+				.weather-table th,
+				.weather-table td {
+					font-size: 0.875rem;
+				}
+			}
+		</style>
+
 		<!-- SEO Meta Tags -->
 		<meta
 			name="description"
-			content="Follow a seasonal beekeeping calendar with monthly tasks, tips for hive management, swarming, winter prep, 
-  and healthy colony maintenance."
+			content="Weather-based beekeeping calendar with month-by-month tasks, typical temperatures, hive inspection guidance, swarm management, winter feeding and seasonal honey bee care for UK-style climates."
 		/>
 		<meta
 			name="keywords"
-			content="beekeeping calendar, monthly hive care, year in the apiary, seasonal beekeeping tips, honeybee hive inspection, 
-  swarm control, winter beekeeping, spring bee tasks"
+			content="beekeeping calendar, monthly hive care, weather for bees, bee flight temperature, seasonal beekeeping tips, winter feeding fondant, hive inspection temperature, swarm control, year in the apiary, spring beekeeping, winter beekeeping, autumn beekeeping, summer beekeeping"
 		/>
 		<meta name="author" content="Colin Chorley" />
 
 		<!-- Favicons -->
-    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
-    <!-- 16x16 and 32x32 for classic tabs -->
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
-    <!-- Apple touch icon for iOS -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
-    <!-- Android home screen icons -->
-    <link rel="icon" type="image/png" sizes="192x192" href="/images/android-chrome-192x192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/images/android-chrome-512x512.png" />
-    <!-- Android / PWA -->
-    <link rel="manifest" href="/site.webmanifest" />
+		<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+		<!-- 16x16 and 32x32 for classic tabs -->
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
+		<!-- Apple touch icon for iOS -->
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+		<!-- Android home screen icons -->
+		<link rel="icon" type="image/png" sizes="192x192" href="/images/android-chrome-192x192.png" />
+		<link rel="icon" type="image/png" sizes="512x512" href="/images/android-chrome-512x512.png" />
+		<!-- Android / PWA -->
+		<link rel="manifest" href="/site.webmanifest" />
 
 		<!-- Schema.org Structured Data -->
 		<script type="application/ld+json">
@@ -44,9 +84,8 @@
 			  {
 			    "@context": "https://schema.org",
 			    "@type": "Article",
-			    "headline": "Year in the Apiary – Monthly Beekeeping Calendar",
-			    "description": "Follow a seasonal beekeeping calendar with monthly tasks, tips for hive management, swarming, winter prep,
-			    and healthy colony maintenance for UK beekeepers.",
+			    "headline": "Year in the Apiary – Weather & Monthly Beekeeping Calendar",
+			    "description": "A practical, weather-based beekeeping calendar with month-by-month hive tasks, typical temperatures, inspection guidance, swarm management and winter feeding advice for beekeepers in UK-style climates.",
 			    "author": {
 			      "@type": "Person",
 			      "name": "Colin Chorley",
@@ -66,7 +105,7 @@
 			    },
 			    "image": "https://www.beezknees.co.uk/images/autumn.jpg",
 			    "datePublished": "2024-06-01",
-			    "dateModified": "2024-06-01",
+			    "dateModified": "2025-12-03",
 			    "inLanguage": "en-GB"
 			  },
 			  {
@@ -186,107 +225,363 @@
 					</ul>
 				</li>
 
-		<li><a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members Area</a></li>
-				
+				<li>
+					<a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard"
+						>Members Area</a
+					>
+				</li>
 			</ul>
 		</nav>
 
 		<!-- Hero Banner with Image and Alt Fallback -->
 		<section role="region" aria-label="Homepage Banner">
 			<div class="banner">
-				<img src="images/autumn.jpg" alt="Beekeeping banner showing hives and nature" />
+				<img src="images/autumn.jpg" alt="Beekeeping banner showing hives in an autumn landscape" />
 			</div>
 		</section>
 
 		<!-- Main Content -->
 		<main class="content">
-			<h1>A YEAR IN THE APIARY - SEASONAL</h1>
-			<h2>Hive Management for Beekeepers</h2>
+			<h1>Year in the Apiary – Weather &amp; Seasonal Beekeeping Calendar</h1>
+			<h2>How Weather Shapes Hive Management</h2>
+
 			<p>
-				Successful beekeeping requires year-round attention, and understanding how seasonal changes affect your hives is essential to maintaining healthy, productive colonies. As a beekeeper, your responsibilities evolve throughout
-				the year based on your geographical location, local climate, and specific hive conditions. Whether you’re a <em><a href="/getting-started.html" title="Begin your beekeeping journey">beginner</a></em> or an experienced
-				apiarist, staying ahead of <em><a href="/hive-management.html" title="Manage your hive effectively">seasonal tasks</a></em> helps ensure your bees thrive — not just survive.
+				Honey bees live in the same weather that we do, but they experience it very differently. A few degrees of temperature, a change in wind speed, or a spell of rain can make the difference between a busy foraging day and a
+				clustered colony relying entirely on stored food. Understanding how weather and season work together is one of the most powerful tools a beekeeper can use.
 			</p>
 
-			<h2>Climate and Regional Differences</h2>
 			<p>
-				The tasks you perform will vary depending on where you live. In colder regions, preparing hives for winter with proper insulation and food stores is a top priority. In warmer climates, you’ll likely focus more on swarm
-				prevention, queen management, and maintaining ventilation during the hot summer months.
+				This year-round beekeeping calendar is written with a cool, temperate climate in mind (such as much of the UK), but the principles apply wherever you keep bees. Always adjust your timing to suit your own weather, forage,
+				altitude and micro-climate.
 			</p>
 
-			<h2>Hive Needs Vary by Season</h2>
-			<p>Beyond weather, your colony's strength, pest pressure, and honey production goals all influence what you should be doing each month.</p>
+			<section aria-labelledby="weather-basics">
+				<h2 id="weather-basics">Weather Basics for Beekeepers</h2>
+				<p>
+					As a simple rule of thumb, bees fly confidently on calm, bright days with mild temperatures. When it is chilly, wet or windy, they stay at home and live off their stores. That means the weather forecast affects almost
+					every beekeeping decision you make, including:
+				</p>
+				<div class="indented-list">
+					<ul>
+						<li>Whether it is safe to open a hive without chilling brood</li>
+						<li>How much natural forage is available on any given day</li>
+						<li>When to feed syrup or fondant, and in what quantity</li>
+						<li>When to carry out inspections, swarm control and queen assessments</li>
+						<li>How urgently you need to strap, weight or move hives because of storms</li>
+					</ul>
+				</div>
 
-			<h3>Key considerations include:</h3>
+				<h3>Approximate Temperature Guide</h3>
+				<p>
+					Every colony is different, but these rough ranges are useful when reading the weather forecast. They are not hard limits, just practical working guides you can adapt to your own bees and conditions:
+				</p>
 
-			<div class="indented-list">
-				<ul>
-					<li>
-						<em><a href="/varroa-management.html" title="control varroa mite infestations">Monitoring and treating for Varroa mites</a></em> and other pests
-					</li>
-					<li>Supporting queen health and egg-laying patterns</li>
-					<li>Ensuring honey stores are sufficient before winter</li>
-					<li>Managing brood expansion in spring</li>
-					<li>
-						Performing hive inspections and <em><a href="/hive-management.html" title="Manage your hive effectively">keeping good records</a></em>
-					</li>
-				</ul>
-			</div>
+				<div class="table-wrapper">
+					<table class="weather-table" aria-label="Approximate temperature guide for beekeeping decisions">
+						<thead>
+							<tr>
+								<th scope="col">Outside temperature</th>
+								<th scope="col">Bee activity</th>
+								<th scope="col">Beekeeper guidance</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>Below ~10&nbsp;°C</td>
+								<td>Very little foraging, bees mostly clustered in the hive.</td>
+								<td>Avoid full inspections. Use “hefting” and entrance observations. Suitable for emergency checks only.</td>
+							</tr>
+							<tr>
+								<td>10–14&nbsp;°C</td>
+								<td>Short cleansing flights and light foraging in sunny, calm spells.</td>
+								<td>Only carry out brief, targeted checks if really needed. Keep brood exposure as short as possible.</td>
+							</tr>
+							<tr>
+								<td>15&nbsp;°C and above</td>
+								<td>Comfortable flying and foraging on calm days.</td>
+								<td>Reasonable conditions for normal inspections, swarm control and general hive management.</td>
+							</tr>
+							<tr>
+								<td>Hot weather (around 28&nbsp;°C and above)</td>
+								<td>Bees fan at the entrance, beard on the front of the hive and seek water.</td>
+								<td>Ensure good ventilation and a safe water source. Avoid long inspections in the hottest part of the day.</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 
-			<h2>Hemisphere Consideration</h2>
-			<p>Keep in mind, seasonal timelines shift depending on your hemisphere:</p>
+				<div class="callout">
+					<p>
+						<strong>Important:</strong> This page is for guidance only. Weather, forage and nectar flows vary by region and each colony behaves differently. Always use your own judgement and experience, and follow any advice from
+						your local beekeeping association, mentor or inspector.
+					</p>
+				</div>
+			</section>
 
-			<h2>In the Northern Hemisphere......</h2>
+			<section aria-labelledby="monthly-weather-chart">
+				<h2 id="monthly-weather-chart">Monthly Beekeeping &amp; Weather Chart (Northern Hemisphere)</h2>
+				<p>
+					The chart below gives an overview of typical priorities and weather patterns through the beekeeping year for a cool, temperate climate. You can click through to each month’s dedicated page for more detailed tasks and
+					checklists.
+				</p>
 
-			<div class="grid">
-				<div class="card">
-					<img src="images/spring.jpg" alt="Image of Spring Season" />
-					<div class="card-content">
-						<h3>SPRING</h3>
-						<ul class="indented-list">
-							<li><a href="/march.html" title="March beekeeping tasks">March</a></li>
-							<li><a href="/april.html" title="April beekeeping tasks">April</a></li>
-							<li><a href="/may.html" title="May beekeeping tasks">May</a></li>
-						</ul>
+				<div class="table-wrapper">
+					<table class="weather-table" aria-label="Monthly beekeeping and weather chart">
+						<thead>
+							<tr>
+								<th scope="col">Month</th>
+								<th scope="col">Typical focus</th>
+								<th scope="col">Weather &amp; temperature notes</th>
+								<th scope="col">Hive &amp; feeding considerations</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row">
+									<a href="/january.html" title="January beekeeping tasks">January</a>
+								</th>
+								<td>Mid-winter survival</td>
+								<td>Often cold, frosty and wet. Daytime temperatures frequently below 10&nbsp;°C.</td>
+								<td>
+									No routine inspections. Heft hives; add fondant if light. Check straps, roofs and entrances after storms, snow or high winds.
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<a href="/february.html" title="February beekeeping tasks">February</a>
+								</th>
+								<td>Early brood rearing</td>
+								<td>Unsettled weather. Occasional mild days but still many cold snaps.</td>
+								<td>
+									Brood rearing increases food demand. Continue with fondant if needed. Avoid opening the brood nest unless essential and conditions are calm and mild.
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<a href="/march.html" title="March beekeeping tasks">March</a>
+								</th>
+								<td>Spring build-up begins</td>
+								<td>More frequent days above 10&nbsp;°C, but wind and showers are common.</td>
+								<td>
+									On the warmest days, consider a quick inspection to assess brood pattern and stores. Emergency feeding may still be required if colonies are light after bad weather.
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<a href="/april.html" title="April beekeeping tasks">April</a>
+								</th>
+								<td>Strong brood expansion</td>
+								<td>Milder temperatures; some days suitable for full inspections.</td>
+								<td>
+									Begin regular inspections in good weather. Ensure colonies have space for brood and nectar and watch for signs of congestion and early swarming.
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<a href="/may.html" title="May beekeeping tasks">May</a>
+								</th>
+								<td>Swarm season</td>
+								<td>Generally good flying weather, though heavy showers are still possible.</td>
+								<td>
+									Carry out full inspections in settled weather. Apply swarm control methods, add supers and ensure plenty of space for nectar and brood.
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<a href="/june.html" title="June beekeeping tasks">June</a>
+								</th>
+								<td>Peak nectar flow</td>
+								<td>Long, warm days with excellent foraging when dry and calm.</td>
+								<td>
+									Manage supers, continue to monitor swarming impulses and maintain good ventilation. Make sure colonies are strong and healthy for the main flow.
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<a href="/july.html" title="July beekeeping tasks">July</a>
+								</th>
+								<td>Honey production and heat</td>
+								<td>Often hot; bees may beard on the front of the hive.</td>
+								<td>
+									Provide shade and ventilation where needed. Avoid long inspections in the hottest part of the day. Check water sources and continue to manage supers.
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<a href="/august.html" title="August beekeeping tasks">August</a>
+								</th>
+								<td>End of main flow &amp; health checks</td>
+								<td>Warm but starting to cool at night. Drought or heavy rain can both affect forage.</td>
+								<td>
+									Remove honey as appropriate. Assess colony strength and health, and plan late-summer treatments. Begin to think about winter stores and hive condition.
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<a href="/september.html" title="September beekeeping tasks">September</a>
+								</th>
+								<td>Autumn feeding begins</td>
+								<td>Cooler nights, shorter days and more unsettled weather.</td>
+								<td>
+									Start autumn feeding with syrup while temperatures are still warm enough for bees to ripen and cap stores. Aim to build up sufficient winter food.
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<a href="/october.html" title="October beekeeping tasks">October</a>
+								</th>
+								<td>Preparing for winter</td>
+								<td>Increasingly cold and wet; many days unsuitable for inspections.</td>
+								<td>
+									Finish syrup feeding early. Switch to fondant if colonies are still underweight. Check hive stands, roofs, entrances and insulation. Minimise disturbance to the brood nest.
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<a href="/november.html" title="November beekeeping tasks">November</a>
+								</th>
+								<td>Settling for winter</td>
+								<td>Frequent days below 10&nbsp;°C and little or no forage.</td>
+								<td>
+									No routine inspections. Heft hives on dry days, top up fondant if required and ensure hives are secure against wind, frost and wildlife.
+								</td>
+							</tr>
+							<tr>
+								<th scope="row">
+									<a href="/december.html" title="December beekeeping tasks">December</a>
+								</th>
+								<td>Minimal disturbance</td>
+								<td>Cold, dark and often stormy. Bees remain clustered for long periods.</td>
+								<td>
+									Leave colonies undisturbed except for urgent checks and post-storm inspections. Make sure entrances are clear and roofs and straps are intact.
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+
+			<section aria-labelledby="hemisphere-section">
+				<h2 id="hemisphere-section">Hemisphere and Regional Differences</h2>
+				<p>
+					This “year in the apiary” is written for the Northern Hemisphere, where spring runs roughly from March to May and winter from December to February. In the Southern Hemisphere, the seasons are reversed, and even within one
+					country, coastal and inland areas can be weeks apart in terms of flowering and temperature.
+				</p>
+				<p>
+					If you keep bees outside the UK or at higher altitude, shift the timings in this calendar forwards or backwards to match your own first blossoms, main nectar flow and usual winter length. Local beekeepers are often the
+					best source of information about how the weather behaves in your area.
+				</p>
+			</section>
+
+			<section aria-labelledby="key-considerations">
+				<h2 id="key-considerations">Key Seasonal Considerations for Hive Management</h2>
+				<p>
+					Weather is only one part of the picture. Your colony’s strength, health status and your beekeeping goals all influence what you should be doing each month. Use this page together with the more detailed monthly task lists
+					for a complete view of the year in your apiary.
+				</p>
+
+				<h3>Core areas to monitor all year round</h3>
+				<div class="indented-list">
+					<ul>
+						<li>Monitoring and managing pests such as Varroa mites and other hive threats</li>
+						<li>Supporting queen health, brood pattern and temperament</li>
+						<li>Checking honey stores before, during and after winter</li>
+						<li>Managing brood expansion and providing space at the right time</li>
+						<li>Carrying out regular hive inspections in suitable weather and keeping good records</li>
+					</ul>
+				</div>
+
+				<h3>Weather-Aware Inspection Tips</h3>
+				<div class="indented-list">
+					<ul>
+						<li>Avoid opening hives on cold, wet or very windy days – especially when brood is present.</li>
+						<li>Plan full inspections for calm, bright days when temperatures are comfortably into the mid-teens Celsius or higher.</li>
+						<li>In marginal weather, keep inspections short and focused: check the essentials and close the hive promptly.</li>
+						<li>After storms, snow or gales, carry out quick external checks to confirm stands, roofs and entrances are still sound.</li>
+					</ul>
+				</div>
+			</section>
+
+			<section aria-labelledby="season-links">
+				<h2 id="season-links">Explore the Seasons in More Detail</h2>
+				<p>
+					Use the quick links below to dive deeper into each part of the beekeeping year. Every seasonal section links to the dedicated monthly pages so you can see what to prioritise in your apiary right now.
+				</p>
+
+				<h3>In the Northern Hemisphere...</h3>
+
+				<div class="grid">
+					<div class="card">
+						<img src="images/spring.jpg" alt="Spring beekeeping with flowering plants and active hives" />
+						<div class="card-content">
+							<h3>Spring – Build-Up and Brood Expansion</h3>
+							<ul class="indented-list">
+								<li>
+									<strong><a href="/march.html" title="March beekeeping tasks">March</a></strong> – first inspections and checking winter survivors
+								</li>
+								<li>
+									<strong><a href="/april.html" title="April beekeeping tasks">April</a></strong> – rapid brood growth and space management
+								</li>
+								<li>
+									<strong><a href="/may.html" title="May beekeeping tasks">May</a></strong> – main start of swarm control for many beekeepers
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="card">
+						<img src="images/Summer.jpg" alt="Summer bees foraging on colourful flowers" />
+						<div class="card-content">
+							<h3>Summer – Nectar Flow and Swarm Control</h3>
+							<ul class="indented-list">
+								<li>
+									<strong><a href="/june.html" title="June beekeeping tasks">June</a></strong> – peak nectar flow and strong colonies
+								</li>
+								<li>
+									<strong><a href="/july.html" title="July beekeeping tasks">July</a></strong> – heat management and honey production
+								</li>
+								<li>
+									<strong><a href="/august.html" title="August beekeeping tasks">August</a></strong> – honey removal and colony health checks
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="card">
+						<img src="images/Autumn_2.jpg" alt="Autumn hives surrounded by trees with golden leaves" />
+						<div class="card-content">
+							<h3>Autumn – Feeding and Winter Preparation</h3>
+							<ul class="indented-list">
+								<li>
+									<strong><a href="/september.html" title="September beekeeping tasks">September</a></strong> – assessing stores and starting autumn feeding
+								</li>
+								<li>
+									<strong><a href="/october.html" title="October beekeeping tasks">October</a></strong> – finalise winter weight and check hive hardware
+								</li>
+								<li>
+									<strong><a href="/november.html" title="November beekeeping tasks">November</a></strong> – minimal disturbance, security and weatherproofing
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="card">
+						<img src="images/Winter.jpg" alt="Winter apiary scene with frosted hives" />
+						<div class="card-content">
+							<h3>Winter – Survival and Planning Ahead</h3>
+							<ul class="indented-list">
+								<li>
+									<strong><a href="/december.html" title="December beekeeping tasks">December</a></strong> – leave colonies in peace, check after storms
+								</li>
+								<li>
+									<strong><a href="/january.html" title="January beekeeping tasks">January</a></strong> – emergency fondant and hive security
+								</li>
+								<li>
+									<strong><a href="/february.html" title="February beekeeping tasks">February</a></strong> – brood begins to build and food use increases
+								</li>
+							</ul>
+						</div>
 					</div>
 				</div>
-				<div class="card">
-					<img src="images/Summer.jpg" alt="Image of Summer Season" />
-					<div class="card-content">
-						<h3>SUMMER</h3>
-						<ul class="indented-list">
-							<li><a href="/june.html" title="June beekeeping tasks">June</a></li>
-							<li><a href="/july.html" title="July beekeeping tasks">July</a></li>
-							<li><a href="/august.html" title="August beekeeping tasks">August</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="card">
-					<img src="images/Autumn_2.jpg" alt="Image of Autumn Season" />
-					<div class="card-content">
-						<h3>AUTUMN</h3>
-						<ul class="indented-list">
-							<li><a href="/september.html" title="September beekeeping tasks">September</a></li>
-							<li><a href="/october.html" title="October beekeeping tasks">October</a></li>
-							<li><a href="/november.html" title="November beekeeping tasks">November</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="card">
-					<img src="images/Winter.jpg" alt="Image of Winter Season" />
-					<div class="card-content">
-						<h3>WINTER</h3>
-						<ul class="indented-list">
-							<li><a href="/december.html" title="December beekeeping tasks">December</a></li>
-							<li><a href="/january.html" title="January beekeeping tasks">January</a></li>
-							<li><a href="/february.html" title="February beekeeping tasks">February</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
+			</section>
 		</main>
-
-		
 
 		<!-- Footer -->
 		<footer class="site-footer" role="region" aria-label="Site Footer">
@@ -397,9 +692,6 @@
 			⬆ Top
 		</button>
 
-	
 		<script src="js/menu.v2.js" defer></script>
-
-		
 	</body>
 </html>
