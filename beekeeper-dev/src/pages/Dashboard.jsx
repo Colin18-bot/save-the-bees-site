@@ -208,7 +208,7 @@ const Dashboard = () => {
     fetchNameLookups();
   }, []);
 
-  // ---- Stats (filter-aware for hives/inspections/todos/logbook; apiaries stays global) ----
+  // ---- Stats (filter-aware) ----
   const fetchStats = async (apiaryId = "all") => {
     const { count: apiaries } = await supabase
       .from("apiaries")
@@ -248,7 +248,6 @@ const Dashboard = () => {
   // ---- NFC summary counts (filter-aware) ----
   const fetchNfcSummary = async (apiaryId = "all") => {
     try {
-      // total active hives
       let totalQ = supabase
         .from("hives")
         .select("*", { count: "exact", head: true })
@@ -256,7 +255,6 @@ const Dashboard = () => {
       if (apiaryId !== "all") totalQ = totalQ.eq("apiary_id", apiaryId);
       const { count: total } = await totalQ;
 
-      // tagged active hives (nfc_uid not null)
       let taggedQ = supabase
         .from("hives")
         .select("*", { count: "exact", head: true })
@@ -356,7 +354,7 @@ const Dashboard = () => {
   const fetchWeather = async () => {
     const lastFail = localStorage.getItem("weather_last_fail");
     const now = Date.now();
-    if (lastFail && now - parseInt(lastFail) < 30 * 60 * 1000) {
+    if (lastFail && now - parseInt(lastFail, 10) < 30 * 60 * 1000) {
       setWeatherError("Weather temporarily unavailable (last attempt failed).");
       return;
     }
@@ -406,10 +404,15 @@ const Dashboard = () => {
       const daily = json.daily || {};
       if (!current) throw new Error("No current weather in response");
 
+      const windMph = Number.isFinite(current.wind_speed_10m)
+        ? Math.round(current.wind_speed_10m * 0.621371)
+        : null;
+
       setWeather({
         current: {
           temperature_2m: current.temperature_2m,
           wind_speed_10m: current.wind_speed_10m,
+          wind_speed_mph: windMph,
           weather_code: current.weather_code,
         },
         forecast: {
@@ -431,7 +434,7 @@ const Dashboard = () => {
     }
   };
 
-  // Initial + whenever filter changes (for lists/stats + NFC summary + NFC list)
+  // Initial + whenever filter changes
   useEffect(() => {
     fetchStats(selectedApiaryId);
     fetchRecentInspections(selectedApiaryId);
@@ -521,7 +524,7 @@ const Dashboard = () => {
       : ""
   }`;
 
-  // Hives link for NFC "See all tagged hives" (goes to normal HiveList, not filtered to NFC only)
+  // Hives link for NFC "See all tagged hives"
   const hivesHref = `/hives${
     selectedApiaryId !== "all"
       ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}`
@@ -879,7 +882,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Stats cards (now 6 on large screens, including NFC tags for premium users) */}
+      {/* Stats cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4">
         <div className="bg-white rounded shadow p-4">
           <p className="text-sm text-gray-500">Apiaries</p>
@@ -915,7 +918,7 @@ const Dashboard = () => {
           <p className="text-2xl font-bold">{stats.logbook}</p>
         </div>
 
-        {/* NEW: NFC Tagged Hives count in stats (Premium only) */}
+        {/* NFC Tagged Hives count (Premium only) */}
         {subscriptionLevel === "premium" && (
           <div className="bg-white rounded shadow p-4">
             <p className="text-sm text-gray-500">NFC Tagged Hives</p>
@@ -1021,7 +1024,6 @@ const Dashboard = () => {
                   }`}
                   title={i.archived_at ? "Archived inspection" : ""}
                 >
-                  {/* Text row */}
                   <div className="min-w-0">
                     <strong className="mr-1">
                       {formatUKDate(i.date)}
@@ -1035,7 +1037,6 @@ const Dashboard = () => {
                     {i.notes ? ` — ${i.notes.slice(0, 80)}` : ""}
                   </div>
 
-                  {/* Actions row at bottom */}
                   <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
                     <ArchivedPill at={i.archived_at} />
                     {!i.archived_at && (
@@ -1096,7 +1097,6 @@ const Dashboard = () => {
                     }`}
                     title={t.archived_at ? "Archived task" : ""}
                   >
-                    {/* Text row */}
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <strong>
@@ -1122,7 +1122,6 @@ const Dashboard = () => {
                       </div>
                     </div>
 
-                    {/* Actions row at bottom */}
                     <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
                       {t.archived_at && <ArchivedPill at={t.archived_at} />}
                       {!t.archived_at && (
@@ -1178,7 +1177,6 @@ const Dashboard = () => {
                   }`}
                   title={l.archived_at ? "Archived log entry" : ""}
                 >
-                  {/* Text row */}
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <strong className="mr-1">
@@ -1203,7 +1201,6 @@ const Dashboard = () => {
                     )}
                   </div>
 
-                  {/* Actions row at bottom */}
                   <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
                     {l.archived_at && <ArchivedPill at={l.archived_at} />}
                     {!l.archived_at && (
@@ -1271,7 +1268,7 @@ const Dashboard = () => {
               <p>
                 <strong>Now:</strong>{" "}
                 {weather?.current?.temperature_2m ?? "N/A"}°C, Wind{" "}
-                {weather?.current?.wind_speed_10m ?? "N/A"} km/h
+                {weather?.current?.wind_speed_mph ?? "N/A"} mph
               </p>
               <p className="mt-2">
                 <strong>Next 5 Days:</strong>
