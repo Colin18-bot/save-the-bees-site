@@ -391,7 +391,8 @@ const Dashboard = () => {
         latitude: String(lat),
         longitude: String(lon),
         current: "temperature_2m,weather_code,wind_speed_10m",
-        daily: "temperature_2m_max,temperature_2m_min,weather_code",
+        daily:
+          "temperature_2m_max,temperature_2m_min,weather_code,wind_speed_10m_max,precipitation_sum",
         timezone: "auto",
         timeformat: "unixtime",
       }).toString();
@@ -416,6 +417,8 @@ const Dashboard = () => {
           temperature_2m_min: daily.temperature_2m_min || [],
           temperature_2m_max: daily.temperature_2m_max || [],
           weather_code: daily.weather_code || daily.weathercode || [],
+          wind_speed_10m_max: daily.wind_speed_10m_max || [],
+          precipitation_sum: daily.precipitation_sum || [],
         },
       });
       setWeatherError(null);
@@ -524,6 +527,258 @@ const Dashboard = () => {
       ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}`
       : ""
   }`;
+
+  // --- Beekeeper Notes (Dashboard version, default apiary or London) ---
+  const safeArr = (a) => (Array.isArray(a) ? a : []);
+  const beekeeperNotes = useMemo(() => {
+    if (!weather || !weather.forecast) return [];
+
+    const daily = weather.forecast;
+    const tempsMin = safeArr(daily.temperature_2m_min).filter(Number.isFinite);
+    const tempsMax = safeArr(daily.temperature_2m_max).filter(Number.isFinite);
+    const windsMax = safeArr(daily.wind_speed_10m_max).filter(Number.isFinite);
+    const precs = safeArr(daily.precipitation_sum).filter(Number.isFinite);
+
+    const out = [];
+
+    // Fixed units on dashboard: °C + km/h
+    const unit = "C";
+    const windUnit = "kmh";
+    const toF = (c) => Math.round((c * 9) / 5 + 32);
+    const tempLabel = (c) =>
+      unit === "C" ? `${c}°C` : `${toF(c)}°F`;
+    const windLabel = windUnit === "kmh" ? "km/h" : "mph";
+
+    // Month / season profile
+    const nowDate = new Date();
+    const month = nowDate.getMonth(); // 0 = Jan
+
+    if (month === 11 || month === 0 || month === 1) {
+      // Dec–Feb
+      if (month === 0) {
+        out.push({
+          icon: "📆",
+          text:
+            "January – deep winter. Avoid full inspections unless there is a clear emergency such as suspected starvation or damage.",
+        });
+      } else if (month === 1) {
+        out.push({
+          icon: "📆",
+          text:
+            "February – colonies are building up brood but weather is still unreliable. Keep the hive closed except for quick emergency checks.",
+        });
+      } else {
+        out.push({
+          icon: "📆",
+          text:
+            "December – mid-winter. Colonies should be settled with adequate stores and secure hive hardware.",
+        });
+      }
+
+      out.push({
+        icon: "🍬",
+        text:
+          "Winter feeding – use fondant above the crown board hole. Judge food by hefting the hive rather than pulling frames.",
+      });
+      out.push({
+        icon: "❄️",
+        text: `Foraging is very limited below about ${tempLabel(
+          10
+        )}. Expect little or no flight; bees will rely heavily on stored food.`,
+      });
+      out.push({
+        icon: "🛠️",
+        text:
+          "After storms, frost or snow, check entrances are clear, roofs are secure, and stands are stable.",
+      });
+    } else if (month >= 2 && month <= 4) {
+      // Mar–May
+      if (month === 2) {
+        out.push({
+          icon: "📆",
+          text:
+            "March – early spring. Brood is expanding but cold snaps are common. Only open colonies on the best, calm days and keep inspections short.",
+        });
+      } else if (month === 3) {
+        out.push({
+          icon: "📆",
+          text:
+            "April – main build-up. Inspections become more regular when it is mild and calm; avoid chilling brood.",
+        });
+      } else {
+        out.push({
+          icon: "📆",
+          text:
+            "May – strong build-up and early swarm season. Regular inspections in suitable weather are usually required.",
+        });
+      }
+
+      out.push({
+        icon: "🍯",
+        text: `Below around ${tempLabel(
+          10
+        )} there is limited foraging: light colonies can still starve quickly after cold or wet spells.`,
+      });
+      out.push({
+        icon: "🔍",
+        text: `Full inspections are comfortable once day-time highs are around ${tempLabel(
+          15
+        )} and conditions are calm. Between ${tempLabel(
+          10
+        )}–${tempLabel(14)} keep checks brief and focused.`,
+      });
+      out.push({
+        icon: "⚠️",
+        text:
+          "Monitor colony weight and brood pattern; use emergency fondant or warm syrup on mild days if colonies feel worryingly light.",
+      });
+    } else if (month >= 5 && month <= 7) {
+      // Jun–Aug
+      if (month === 5) {
+        out.push({
+          icon: "📆",
+          text:
+            "June – peak season. Expect strong colonies and active swarm control in suitable weather.",
+        });
+      } else if (month === 6) {
+        out.push({
+          icon: "📆",
+          text:
+            "July – main honey flow in many areas. Balance space, supers and swarm prevention.",
+        });
+      } else {
+        out.push({
+          icon: "📆",
+          text:
+            "August – main flow tapers in many regions. Focus on honey removal, colony strength and planning treatments.",
+        });
+      }
+
+      out.push({
+        icon: "🌼",
+        text:
+          "Warm, light-wind days with temperatures above about 15°C are generally good for inspections and foraging.",
+      });
+      out.push({
+        icon: "🪱",
+        text:
+          "Late summer is a key window for Varroa treatment. Always follow product temperature and timing guidance.",
+      });
+    } else if (month >= 8 && month <= 10) {
+      // Sep–Nov
+      if (month === 8) {
+        out.push({
+          icon: "📆",
+          text:
+            "September – early autumn. Assess brood, colony strength and winter stores; begin autumn feeding if needed.",
+        });
+      } else if (month === 9) {
+        out.push({
+          icon: "📆",
+          text:
+            "October – late autumn. Finish syrup feeding while it is still warm enough for bees to ripen and cap it.",
+        });
+      } else {
+        out.push({
+          icon: "📆",
+          text:
+            "November – early winter. Avoid disturbing the brood nest; use hefting and fondant if colonies feel light.",
+        });
+      }
+
+      out.push({
+        icon: "🍯",
+        text:
+          "Autumn feeding – use syrup during warmer spells; once consistently colder, switch to fondant for top-up feeding.",
+      });
+      out.push({
+        icon: "💧",
+        text:
+          "Moisture kills more bees than cold. Keep roofs sound, hives off the ground, and ensure modest ventilation without big draughts.",
+      });
+    }
+
+    // Live, simple weather-based guidance
+    const strongWindThresholdKmh = 40;
+    const maxWind = windsMax.length ? Math.max(...windsMax) : 0;
+    const heavyRain = precs.some((mm) => mm >= 10);
+    const minTemp = tempsMin.length ? Math.min(...tempsMin) : 99;
+    const maxTemp = tempsMax.length ? Math.max(...tempsMax) : 0;
+
+    if (maxWind >= strongWindThresholdKmh) {
+      const displayThreshold =
+        windUnit === "kmh"
+          ? `≥${strongWindThresholdKmh} ${windLabel}`
+          : `≥${Math.round(strongWindThresholdKmh * 0.621371)} ${windLabel}`;
+      out.push({
+        icon: "💨",
+        text: `Strong winds expected (${displayThreshold}). Avoid opening hives; secure roofs and add straps or weights if needed.`,
+      });
+    }
+
+    if (heavyRain) {
+      out.push({
+        icon: "🌧️",
+        text:
+          "Heavy rain in the forecast. Foraging will be poor; plan manipulations for drier, calmer windows.",
+      });
+    }
+
+    if (minTemp <= 5 || maxTemp < 10) {
+      out.push({
+        icon: "🥶",
+        text: `Forecast highs below about ${tempLabel(
+          10
+        )}. Expect little or no foraging – colonies will mainly rely on stored food.`,
+      });
+    } else if (maxTemp >= 10 && maxTemp < 15) {
+      out.push({
+        icon: "🍃",
+        text: `Daytime highs between roughly ${tempLabel(
+          10
+        )} and ${tempLabel(
+          15
+        )}. Short checks are possible in bright, calm spells but avoid long brood exposure.`,
+      });
+    }
+
+    if (maxTemp < 10) {
+      out.push({
+        icon: "🚫🐝",
+        text: `Daytime highs below ${tempLabel(
+          10
+        )}. Full inspections risk chilling brood and stressing the colony – avoid unless absolutely essential.`,
+      });
+    } else if (maxTemp >= 10 && maxTemp < 15) {
+      out.push({
+        icon: "⚠️",
+        text: `Daytime highs around ${tempLabel(
+          10
+        )}–${tempLabel(
+          15
+        )}. Only open colonies when necessary and keep the brood nest exposed for the shortest possible time.`,
+      });
+    } else if (maxTemp >= 15 && maxWind < strongWindThresholdKmh) {
+      out.push({
+        icon: "✅",
+        text: `At least one mild, calmer day near ${tempLabel(
+          15
+        )} or above is forecast. Conditions are generally suitable for normal inspections if needed.`,
+      });
+    }
+
+    const hotThresholdC = 28;
+    if (maxTemp >= hotThresholdC) {
+      out.push({
+        icon: "🥵",
+        text: `Hot spell likely (around ${tempLabel(
+          hotThresholdC
+        )} or above). Ensure plenty of water and ventilation and avoid long inspections in the middle of the day.`,
+      });
+    }
+
+    return out;
+  }, [weather]);
 
   return (
     <div className="p-6 space-y-6">
@@ -985,7 +1240,7 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Weather Snapshot */}
+      {/* Weather Snapshot + Beekeeper Notes */}
       <div className="bg-white rounded shadow p-4">
         <h2 className="text-lg font-semibold mb-1">Weather Snapshot</h2>
         <p className="text-xs text-gray-600 mb-3">
@@ -1011,39 +1266,70 @@ const Dashboard = () => {
         ) : !weather ? (
           <p className="text-gray-500">Loading weather...</p>
         ) : (
-          <div className="text-sm">
-            <p>
-              <strong>Now:</strong>{" "}
-              {weather?.current?.temperature_2m ?? "N/A"}°C, Wind{" "}
-              {weather?.current?.wind_speed_10m ?? "N/A"} km/h
-            </p>
-            <p className="mt-2">
-              <strong>Next 5 Days:</strong>
-            </p>
-            <ul className="grid grid-cols-1 gap-x-6">
-              {Array.isArray(weather?.forecast?.time) &&
-              weather.forecast.time.length ? (
-                weather.forecast.time.slice(0, 5).map((day, index) => {
-                  const wc = weather?.forecast?.weather_code?.[index];
-                  const icon = WX_ICON[wc] || "⛅";
-                  const label = WX_LABEL[wc] || "";
-                  const tmin =
-                    weather?.forecast?.temperature_2m_min?.[index] ?? "N/A";
-                  const tmax =
-                    weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
-                  return (
-                    <li key={day ?? index}>
-                      {formatUKDate(day)}: {icon}{" "}
-                      {label && `${label} — `}
-                      {tmin}°C → {tmax}°C
+          <>
+            <div className="text-sm">
+              <p>
+                <strong>Now:</strong>{" "}
+                {weather?.current?.temperature_2m ?? "N/A"}°C, Wind{" "}
+                {weather?.current?.wind_speed_10m ?? "N/A"} km/h
+              </p>
+              <p className="mt-2">
+                <strong>Next 5 Days:</strong>
+              </p>
+              <ul className="grid grid-cols-1 gap-x-6">
+                {Array.isArray(weather?.forecast?.time) &&
+                weather.forecast.time.length ? (
+                  weather.forecast.time.slice(0, 5).map((day, index) => {
+                    const wc = weather?.forecast?.weather_code?.[index];
+                    const icon = WX_ICON[wc] || "⛅";
+                    const label = WX_LABEL[wc] || "";
+                    const tmin =
+                      weather?.forecast?.temperature_2m_min?.[index] ?? "N/A";
+                    const tmax =
+                      weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
+                    return (
+                      <li key={day ?? index}>
+                        {formatUKDate(day)}: {icon}{" "}
+                        {label && `${label} — `}
+                        {tmin}°C → {tmax}°C
+                      </li>
+                    );
+                  })
+                ) : (
+                  <li>No forecast.</li>
+                )}
+              </ul>
+            </div>
+
+            {/* Dashboard Beekeeper Notes (default apiary / London) */}
+            <div className="mt-4 pt-3 border-t border-gray-200">
+              <h3 className="text-sm font-semibold mb-1">Beekeeper Notes</h3>
+              <p className="text-[11px] text-gray-500 mb-2">
+                Guide only – this is general beekeeping advice linked to the
+                forecast for your default apiary (or a default London location
+                if no coordinates are set). Weather, forage and nectar flows
+                vary by region, altitude and micro-climate, and every colony
+                behaves differently. Always use your own judgement, local
+                experience and any guidance from your beekeeping association or
+                mentor. Never rely on this panel alone for critical decisions
+                about inspections, feeding or treatments.
+              </p>
+              {beekeeperNotes.length ? (
+                <ul className="space-y-1 text-xs text-gray-800">
+                  {beekeeperNotes.map((n, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <span>{n.icon}</span>
+                      <span>{n.text}</span>
                     </li>
-                  );
-                })
+                  ))}
+                </ul>
               ) : (
-                <li>No forecast.</li>
+                <p className="text-xs text-gray-500">
+                  No special notes today.
+                </p>
               )}
-            </ul>
-          </div>
+            </div>
+          </>
         )}
       </div>
 
@@ -1065,7 +1351,6 @@ const Dashboard = () => {
               Scan NFC Tag (Premium)
             </Link>
           )}
-          
         </div>
       </div>
     </div>
