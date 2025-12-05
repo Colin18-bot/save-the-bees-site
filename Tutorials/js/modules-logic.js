@@ -161,28 +161,30 @@ export function initModulesLogic() {
         progressEl.setAttribute("data-training-percent", String(status.percent));
       }
 
-      // Progress bar (sibling in DOM, not inside the label)
+      // Progress bar
       const bar = container.querySelector("[data-progress-bar-inner]");
       if (bar) {
         bar.style.width = `${status.percent}%`;
       }
 
-      // Sections + buttons
+      // Sections – add/remove tk-section-complete
       const sections = container.querySelectorAll(SECTION_SELECTOR);
       sections.forEach((sectionEl) => {
         const numAttr = sectionEl.getAttribute("data-training-section");
         const num = Number(numAttr);
         const isComplete = status.completedSections.includes(num);
-
-        // Section-level class (optional, if you want to style the whole block)
         sectionEl.classList.toggle("tk-section-complete", isComplete);
+      });
 
-        // Button inside the section
-        const btn = sectionEl.querySelector(COMPLETE_BTN_SELECTOR);
-        if (btn) {
-          btn.classList.toggle("is-complete", isComplete);
-          btn.setAttribute("aria-pressed", isComplete ? "true" : "false");
-        }
+      // Buttons – drive .is-complete so CSS can make them yellow
+      const buttons = container.querySelectorAll(COMPLETE_BTN_SELECTOR);
+      buttons.forEach((btn) => {
+        const sectionStr = btn.getAttribute("data-mark-complete");
+        const num = Number(sectionStr);
+        const isComplete = status.completedSections.includes(num);
+
+        btn.classList.toggle("is-complete", isComplete);
+        btn.setAttribute("aria-pressed", isComplete ? "true" : "false");
       });
     }
 
