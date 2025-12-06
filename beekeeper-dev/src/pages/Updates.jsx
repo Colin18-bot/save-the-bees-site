@@ -8,6 +8,50 @@ dayjs.locale("en-gb");
 
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
+{
+  version: "1.0.5",
+  released_at: "2025-12-06T18:00:00Z",
+  summary:
+    "Seasonal advice has been refactored into a shared helper so Dashboard and Weather now use a single, safer ‘Seasonal Advice – Beekeeper Notes’ system, with a short snapshot on the Dashboard and a full deep-dive on the Weather page.",
+
+  added: [
+    "New shared `buildBeekeeperNotes` helper that turns month + forecast data (temperatures, wind, rain) into structured Seasonal Advice items `{ icon, text }` for reuse across the app.",
+    "Dashboard now shows a **Seasonal Advice – Beekeeper Notes** section beneath the Weather Snapshot, giving a concise seasonal + forecast-based summary for the default apiary.",
+    "Dashboard Seasonal Advice includes a direct **“View full notes →”** link to the Weather page, so users can jump straight from the snapshot into the full deep-dive guidance."
+  ],
+
+  changed: [
+    "Weather page and Dashboard now rely on the same `buildBeekeeperNotes` logic, reducing duplication and keeping seasonal guidance consistent across views.",
+    "Dashboard Seasonal Advice has been shortened to show only a small number of key notes by default, keeping the main page focused while still surfacing useful context.",
+    "The Seasonal Advice disclaimer text has been strengthened and expanded, with a clear one-line explanation that the notes combine forecast data with typical cool-temperate UK hobbyist conditions and must not be used as the sole basis for decisions."
+  ],
+
+  fixed: [
+    "Reduced the risk of guidance drift between Dashboard and Weather by centralising the rules that generate seasonal/forecast notes into a single helper.",
+    "Tidied up wording around inspections, feeding and Varroa treatments to keep the tone clearly advisory rather than prescriptive, especially for newer beekeepers."
+  ],
+
+  removed: [],
+
+  security: [
+    "No security-sensitive changes in this release. All changes are limited to UI-level guidance, wording, and internal refactoring of seasonal advice logic."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Weather", to: "/weather" },
+    { label: "Settings", to: "/settings" },
+    { label: "Help", to: "/help" }
+  ],
+
+  known_issues: [
+    "Seasonal Advice still assumes cool-temperate UK-style conditions; beekeepers in very different climates should treat the notes as general background only.",
+    "The Dashboard snapshot only shows a subset of notes; for the full context (including stronger wind/cold/hot-spell wording), users should follow the link to the Weather page."
+  ]
+},
+
   {
     version: "1.0.4",
     released_at: "2025-12-03T18:00:00Z",
