@@ -1,399 +1,368 @@
 // src/utils/buildBeekeeperNotes.js
-// Option B – Weather-aware notes based on the live forecast,
-// plus simple seasonal context. Designed to feed both the
-// Weather page (full panel) and a shorter Dashboard snapshot.
 
-/**
- * Safe array helper – always returns an array.
- */
-function asArray(value) {
-  return Array.isArray(value) ? value : [];
-}
-
-/**
- * Convert °C to °F.
- */
-function toF(c) {
-  if (!Number.isFinite(c)) return null;
-  return (c * 9) / 5 + 32;
-}
-
-/**
- * Convert km/h to mph.
- */
-function kmhToMph(kmh) {
-  if (!Number.isFinite(kmh)) return null;
-  return kmh * 0.621371;
-}
-
-/**
- * Format a temperature value using the chosen unit.
- */
-function formatTemp(celsius, unit) {
-  if (!Number.isFinite(celsius)) return "–";
-  if (unit === "F") {
-    const f = Math.round(toF(celsius));
-    return `${f}°F`;
-  }
-  return `${Math.round(celsius)}°C`;
-}
-
-/**
- * Format a wind value using the chosen unit.
- */
-function formatWind(kmh, windUnit) {
-  if (!Number.isFinite(kmh)) return "–";
-  if (windUnit === "mph") {
-    const mph = Math.round(kmhToMph(kmh));
-    return `${mph} mph`;
-  }
-  return `${Math.round(kmh)} km/h`;
-}
-
-/**
- * Derive a rough "local" Date from the weather data.
- * We don't need perfect timezone math here – just enough
- * to know the month and broad season.
- */
-function deriveLocalDate(weather) {
-  const t =
-    weather?.current?.time ||
-    (asArray(weather?.daily?.time)[0] ?? null);
-
-  if (!t) return new Date();
-
-  // Open-Meteo with timeformat=unixtime → seconds
-  if (typeof t === "number") {
-    return new Date(t * 1000);
-  }
-
-  // ISO string fallback
-  const parsed = new Date(t);
-  if (!isNaN(parsed)) return parsed;
-
-  return new Date();
-}
-
-/**
- * Build seasonal / month-based context. This is deliberately
- * high-level and *not* prescriptive treatment advice.
- */
-function buildSeasonalNotes(date) {
-  const month = date.getMonth() + 1; // 1–12
-  const items = [];
-  const icon = "📅";
-
-  if (month === 12 || month === 1 || month === 2) {
-    items.push(
-      "Mid-winter: minimal brood, colonies are conserving heat. Avoid opening hives unless absolutely necessary and only on calm, milder days.",
-      "Check heft and stores from the outside; consider fondant if colonies feel light.",
-      "If you plan a mid-winter varroa treatment, only use products approved in your country and follow the label and local association guidance."
-    );
-  } else if (month === 3 || month === 4) {
-    items.push(
-      "Early spring build-up: brood usually increasing but weather can still swing cold. Choose calm, dry days above inspection temperatures before opening hives.",
-      "Starvation risk can be high as colonies expand – keep an eye on stores and consider top-ups if frames feel light.",
-      "Make a note of varroa management plans for the season (timing, products, and any post-treatment checks you intend to do)."
-    );
-  } else if (month === 5 || month === 6) {
-    items.push(
-      "Main swarm season: be ready to check for queen cells regularly when the weather allows full inspections.",
-      "Ensure plenty of space (extra supers or brood boxes) during strong flows to reduce congestion.",
-      "If you normally treat for varroa after the main honey flow, note likely windows now so you can work around supers and local regulations."
-    );
-  } else if (month === 7 || month === 8) {
-    items.push(
-      "Later summer / potential dearth: forage can drop in some areas even when the weather is warm.",
-      "Monitor colony strength and stores; robbing pressure can increase when nectar is scarce.",
-      "Post-harvest is a common varroa treatment window – only use authorised products and follow label and local association advice."
-    );
-  } else if (month === 9 || month === 10) {
-    items.push(
-      "Autumn: focus on healthy winter bees, adequate stores and good queens.",
-      "Reduce entrances if robbing or wasp pressure is high, and check hive weight before winter.",
-      "Many beekeepers complete main varroa treatments in this period; keep records of what you used and how colonies responded."
-    );
-  } else if (month === 11) {
-    items.push(
-      "Early winter: brood area is usually shrinking; colonies should be settled on winter stores.",
-      "Avoid unnecessary disturbance; quick external checks and hefting are normally enough.",
-      "If planning any winter varroa treatment, follow approved guidance and avoid opening hives in poor weather."
-    );
-  }
-
-  if (!items.length) return null;
-
-  return {
-    id: "season",
-    title: "Seasonal context",
-    icon,
-    items
-  };
-}
-
-/**
- * Core weather-aware inspection & hive notes.
- * Looks at daily max/min temp, rain and wind for the next few days.
- */
-function buildWeatherDrivenNotes(weather, unit, windUnit) {
-  const daily = weather?.daily || {};
-  const tMax = asArray(daily.temperature_2m_max);
-  const tMin = asArray(daily.temperature_2m_min);
-  const rain = asArray(daily.precipitation_sum);
-  const windMax = asArray(daily.wind_speed_10m_max);
-
-  const todayMax = Number.isFinite(tMax[0]) ? tMax[0] : null;
-  const todayMin = Number.isFinite(tMin[0]) ? tMin[0] : null;
-  const todayRain = Number.isFinite(rain[0]) ? rain[0] : null;
-  const todayWind = Number.isFinite(windMax[0]) ? windMax[0] : null;
-
-  const sectionConditions = {
-    id: "conditions",
-    title: "Conditions & inspection windows",
-    icon: "🌦️",
-    items: []
-  };
-
-  const sectionHiveCare = {
-    id: "hive",
-    title: "Hive & feeding considerations",
-    icon: "🐝",
-    items: []
-  };
-
-  // Simple thresholds (in °C and km/h) – we only use them as
-  // triggers for *guidance*, not hard rules.
-  const comfortableInspectMinC = 15; // below this → marginal for full inspections
-  const chillyNightC = 8;           // cold nights / brood chilling risk
-  const hotDayC = 28;               // heat stress / ventilation
-  const strongWindKmh = 40;         // very blustery at the hive
-  const heavyRainMm = 10;           // significant daily rainfall
-
-  // --- Conditions / inspection window notes ---
-
-  if (todayMax != null) {
-    if (todayMax >= comfortableInspectMinC && todayRain !== null && todayRain < heavyRainMm && todayWind !== null && todayWind < strongWindKmh) {
-      sectionConditions.items.push(
-        `Today looks broadly inspection-friendly (${formatTemp(todayMax, unit)} max, light rain and moderate winds). If colonies are otherwise healthy, this may be a reasonable window for routine checks.`
-      );
-    } else if (todayMax < comfortableInspectMinC) {
-      sectionConditions.items.push(
-        `Daytime highs stay below comfortable inspection temperatures (${formatTemp(todayMax, unit)}). Consider postponing full brood inspections unless you have an urgent reason.`
-      );
-    }
-  }
-
-  if (todayWind != null && todayWind >= strongWindKmh) {
-    sectionConditions.items.push(
-      `Strong winds forecast (around ${formatWind(todayWind, windUnit)}). Avoid opening hives on exposed stands; lids may need extra weights or straps.`
-    );
-  }
-
-  if (todayRain != null && todayRain >= heavyRainMm) {
-    sectionConditions.items.push(
-      `Heavy rain is expected (around ${Math.round(todayRain)} mm today). Plan inspections, feeding or moves around dry spells if you can.`
-    );
-  }
-
-  // --- Hive & feeding notes ---
-
-  if (todayMin != null && todayMin <= chillyNightC) {
-    sectionHiveCare.items.push(
-      `Cool nights down to about ${formatTemp(todayMin, unit)}. Brood could chill quickly if frames are open for long – keep any inspections brisk and avoid splitting the cluster.`
-    );
-  }
-
-  if (todayMax != null && todayMax >= hotDayC) {
-    sectionHiveCare.items.push(
-      `Hot spell expected (up to about ${formatTemp(todayMax, unit)}). Ensure good ventilation, provide water sources and try to avoid extended inspections in the hottest part of the day.`
-    );
-  }
-
-  // Look slightly ahead across the next few days for patterns.
-  if (tMax.length >= 3 && rain.length >= 3) {
-    const next3WarmDays = tMax.slice(0, 3).filter((v) => Number.isFinite(v) && v >= comfortableInspectMinC);
-    const next3WetDays = rain.slice(0, 3).filter((v) => Number.isFinite(v) && v >= heavyRainMm);
-
-    if (next3WarmDays.length >= 2 && next3WetDays.length === 0) {
-      sectionConditions.items.push(
-        "The next few days look mostly mild and fairly dry. You may be able to spread inspections across several visits instead of doing everything at once."
-      );
-    } else if (next3WetDays.length >= 2) {
-      sectionHiveCare.items.push(
-        "Several wet days are showing in the forecast. Forage flights may be limited at times, so keep an eye on colonies with small stores or recent splits."
-      );
-    }
-  }
-
-  // If either section ended up empty, drop it completely.
-  const sections = [];
-  if (sectionConditions.items.length) sections.push(sectionConditions);
-  if (sectionHiveCare.items.length) sections.push(sectionHiveCare);
-  return sections;
-}
-
-/**
- * Optional varroa awareness notes. These are *not* treatment
- * instructions – just prompts to think about monitoring and
- * timing around your existing plan.
- */
-function buildVarroaNotes(date) {
-  const month = date.getMonth() + 1;
-  const items = [];
-
-  if (month === 7 || month === 8 || month === 9) {
-    items.push(
-      "Later summer into early autumn is a common time to assess varroa levels after removing supers. If mite loads are high, plan authorised treatments promptly.",
-      "Use methods recommended by your local association (for example, sugar roll or alcohol wash) if you want a clearer picture of colony mite levels."
-    );
-  } else if (month === 12 || month === 1) {
-    items.push(
-      "Some beekeepers treat for varroa in the brood-light or broodless period. Only use authorised products and follow label directions and association guidance.",
-      "Always consider colony condition, temperature and local advice when planning any varroa treatment."
-    );
-  } else {
-    items.push(
-      "Keep simple notes on what varroa treatments you’ve used and when. This makes it easier to spot patterns and plan future treatments around honey flows."
-    );
-  }
-
-  return {
-    id: "varroa",
-    title: "Varroa & health prompts",
-    icon: "🧪",
-    items
-  };
-}
-
-/**
- * Build beekeeper-facing notes for the current weather.
- *
- * @param {Object} options
- * @param {Object} options.weather - Open-Meteo style weather object (with `current`, `daily`, `timezone` etc.)
- * @param {"C"|"F"} [options.unit="C"] - Temperature unit for display.
- * @param {"kmh"|"mph"} [options.windUnit="kmh"] - Wind unit for display.
- *
- * @returns {{
- *   sections: Array<{ id: string, title: string, icon?: string, items: string[] }>,
- *   disclaimer: string
- * }}
- */
-export function buildBeekeeperNotes({ weather, unit = "C", windUnit = "kmh" }) {
-  if (!weather || !weather.daily) {
-    return {
-      sections: [],
-      disclaimer:
-        "These notes are general guidance only. Always base your beekeeping decisions on what you see inside each colony, local conditions and advice from trusted sources."
-    };
-  }
-
-  const localDate = deriveLocalDate(weather);
-
-  const sections = [];
-
-  // Weather-driven sections
-  sections.push(...buildWeatherDrivenNotes(weather, unit, windUnit));
-
-  // Seasonal context
-  const seasonal = buildSeasonalNotes(localDate);
-  if (seasonal) sections.push(seasonal);
-
-  // Varroa prompts
-  sections.push(buildVarroaNotes(localDate));
-
-  const disclaimer =
-    "These notes are automatically generated from forecast data and simple rules. They are not professional or veterinary advice. " +
-    "Always inspect colonies safely, follow product labels and local regulations, and consult your local association or a qualified advisor if you’re unsure.";
-
-  return {
-    sections,
-    disclaimer
-  };
-}
-
-export default buildBeekeeperNotes;
-// src/utils/buildBeekeeperNotes.js
-
-// Inputs: forecast arrays + options (units, date override)
-// Output: array of { icon, text }
-
+// Build the array of advisory notes for the Weather & Seasonal Beekeeping panel.
+// This is deliberately pure and UI-agnostic so you can reuse it on the Dashboard, etc.
 export function buildBeekeeperNotes({
-  tempsMin = [],
-  tempsMax = [],
-  windsMax = [],
-  precs = [],
-  nowDate = new Date(),
-  unit = "C",        // "C" or "F"
-  windUnit = "kmh",  // "kmh" or "mph"
+  daily,
+  weather,
+  unit = "C",       // "C" | "F"
+  windUnit = "kmh", // "kmh" | "mph"
+  warnings = [],
+  pollen = null,
+  timezone = "UTC", // currently unused, but passed in for future tweaks if needed
+  now = null,       // optional Date override (useful for testing)
 } = {}) {
   const out = [];
 
-  const toF = (c) => Math.round((c * 9) / 5 + 32);
-  const tempLabel = (c) => (unit === "C" ? `${c}°C` : `${toF(c)}°F`);
+  const safeArr = (a) => (Array.isArray(a) ? a : []);
+
+  // --- Time / season helpers ---
+  let nowDate = now instanceof Date ? now : new Date();
+  const currentTs = weather?.current?.time;
+  if (currentTs) {
+    if (typeof currentTs === "number") {
+      nowDate = new Date(currentTs * 1000);
+    } else {
+      const parsed = Date.parse(currentTs);
+      if (!Number.isNaN(parsed)) {
+        nowDate = new Date(parsed);
+      }
+    }
+  }
+  const month = nowDate.getMonth(); // 0 = Jan … 11 = Dec
+
+  const winds = safeArr(daily?.wind_speed_10m_max).filter(Number.isFinite);
+  const precs = safeArr(daily?.precipitation_sum).filter(Number.isFinite);
+  const tmins = safeArr(daily?.temperature_2m_min).filter(Number.isFinite);
+  const tmaxs = safeArr(daily?.temperature_2m_max).filter(Number.isFinite);
+
   const windLabel = windUnit === "kmh" ? "km/h" : "mph";
+  const toF = (c) => Math.round((c * 9) / 5 + 32);
+  const tempLabel = (c) => {
+    if (!Number.isFinite(c)) return "–";
+    return unit === "C" ? `${c}°C` : `${toF(c)}°F`;
+  };
 
-  const month = nowDate.getMonth(); // 0–11
+  // --- Seasonal / month profile (lifted from your existing logic) ---
 
-  // ---------- MONTH / SEASON PROFILE ----------
   if (month === 11 || month === 0 || month === 1) {
-    // Dec–Feb
+    // Dec–Feb: winter
     if (month === 0) {
       out.push({
         icon: "📆",
         text:
-          "January – deep winter. Avoid full inspections unless there is a clear emergency such as suspected starvation or damage.",
+          "January – deep winter. Do not open colonies unless there is an emergency (for example, suspected starvation or damage).",
       });
     } else if (month === 1) {
       out.push({
         icon: "📆",
         text:
-          "February – colonies are building up brood but weather is still unreliable. Keep the hive closed except for quick emergency checks.",
+          "February – colonies are starting to brood up but weather is still unreliable. Continue to avoid full inspections.",
       });
     } else {
       out.push({
         icon: "📆",
-        text:
-          "December – mid-winter. Colonies should be settled with adequate stores and secure hive hardware.",
+        text: "December – mid-winter. Colonies should be settled with good stores and secure hives.",
       });
     }
 
     out.push({
       icon: "🍬",
       text:
-        "Winter feeding – use fondant above the crown board hole. Judge food by hefting the hive rather than pulling frames.",
+        "Winter feeding – use fondant above the crown board hole. Check hive weight by hefting rather than opening boxes.",
     });
     out.push({
       icon: "❄️",
-      text: `Foraging is very limited below about ${tempLabel(
+      text: `Foraging is minimal below about ${tempLabel(
         10
-      )}. Expect little or no flight; bees will rely heavily on stored food.`,
+      )}. Expect very little flight; bees will mainly rely on stored food.`,
     });
     out.push({
       icon: "🛠️",
+      text: "After storms, frost or snow, check straps, roofs and entrances and clear any blockages.",
+    });
+  } else if (month >= 2 && month <= 4) {
+    // Mar–May: spring
+    if (month === 2) {
+      out.push({
+        icon: "📆",
+        text:
+          "March – early spring. Brood is expanding, but cold snaps are still likely. Only inspect on the warmest, calmest days.",
+      });
+    } else if (month === 3) {
+      out.push({
+        icon: "📆",
+        text:
+          "April – main build-up. Choose mild, calm days for full inspections and keep them efficient to avoid chilling brood.",
+      });
+    } else {
+      out.push({
+        icon: "📆",
+        text:
+          "May – strong build-up and early swarm season. Regular inspections are usually possible in suitable weather.",
+      });
+    }
+
+    out.push({
+      icon: "🍯",
+      text: `Below around ${tempLabel(
+        10
+      )} there will be little foraging; colonies depend heavily on stored food if the weather turns wet or cold.`,
+    });
+    out.push({
+      icon: "🔍",
+      text: `Full inspections are comfortable once daytime highs approach ${tempLabel(
+        15
+      )} and it is calm. Between ${tempLabel(10)}–${tempLabel(14)} keep any checks brief.`,
+    });
+    out.push({
+      icon: "⚠️",
       text:
-        "After storms, frost or snow, check entrances are clear, roofs are secure, and stands are stable.",
+        "Spring build-up – watch for starvation in light colonies after cold or wet spells; emergency fondant or warm syrup on mild days may be needed.",
+    });
+  } else if (month >= 5 && month <= 7) {
+    // Jun–Aug: summer
+    if (month === 5) {
+      out.push({
+        icon: "📆",
+        text: "June – peak season. Swarm control and regular inspections in suitable weather are usually required.",
+      });
+    } else if (month === 6) {
+      out.push({
+        icon: "📆",
+        text: "July – main honey flow for many areas. Manage supers, ventilation and space.",
+      });
+    } else {
+      out.push({
+        icon: "📆",
+        text:
+          "August – end of main flow in many areas. Focus on honey removal, colony assessment and treatment planning.",
+      });
+    }
+
+    out.push({
+      icon: "🌼",
+      text:
+        "Most days with light winds and temperatures above roughly 15°C are suitable for full inspections and good foraging.",
+    });
+    out.push({
+      icon: "🪱",
+      text:
+        "Late summer is a key time for Varroa treatment. Always follow product instructions, including any temperature limits.",
+    });
+  } else if (month >= 8 && month <= 10) {
+    // Sep–Nov: autumn
+    if (month === 8) {
+      out.push({
+        icon: "📆",
+        text:
+          "September – early autumn. Assess stores and start autumn feeding if colonies are underweight.",
+      });
+    } else if (month === 9) {
+      out.push({
+        icon: "📆",
+        text:
+          "October – late autumn. Finish syrup feeding early; switch to fondant if colonies are still light.",
+      });
+    } else {
+      out.push({
+        icon: "📆",
+        text:
+          "November – early winter. Avoid opening the brood nest; rely on hefting and external checks.",
+      });
+    }
+
+    out.push({
+      icon: "🍯",
+      text:
+        "Autumn feeding – syrup while it is still warm enough for bees to ripen and cap it; once colder, rely on fondant only.",
+    });
+    out.push({
+      icon: "💧",
+      text:
+        "Damp kills more bees than cold. Keep hives off the ground, roofs sound and ventilation modest but not draughty.",
     });
   }
 
-  // ... (rest of your spring / summer / autumn logic)
-  // ... (strong wind, heavy rain, hot spell etc.)
+  // --- Live, temperature & wind-driven guidance (as before) ---
 
-  // Example of wind bit:
   const strongWindThresholdKmh = 40;
-  const maxWind = windsMax.length ? Math.max(...windsMax) : 0;
+  const maxWind = winds.length ? Math.max(...winds) : 0;
+
+  const strongWindDisplay =
+    windUnit === "kmh"
+      ? `≥${strongWindThresholdKmh} ${windLabel}`
+      : `≥${Math.round(strongWindThresholdKmh * 0.621371)} ${windLabel}`;
 
   if (maxWind >= strongWindThresholdKmh) {
-    const thresholdText =
-      windUnit === "kmh"
-        ? `≥${strongWindThresholdKmh} ${windLabel}`
-        : `≥${Math.round(strongWindThresholdKmh * 0.621371)} ${windLabel}`;
     out.push({
       icon: "💨",
-      text: `Strong winds expected (${thresholdText}). Avoid opening hives; secure roofs and add straps or weights if needed.`,
+      text: `Strong winds expected (${strongWindDisplay}). Avoid opening hives; ensure lids are strapped or weighted and stands are stable.`,
     });
   }
 
-  // ...etc
+  // Heavy rain advisory
+  const heavyRain = precs.some((mm) => mm >= 10);
+  if (heavyRain) {
+    out.push({
+      icon: "🌧️",
+      text:
+        "Heavy rain in the forecast. Foraging will be poor; plan inspections and manipulations for dry, calmer windows.",
+    });
+  }
+
+  // Temperature-based inspection & foraging notes
+  const minTemp = tmins.length ? Math.min(...tmins) : 99;
+  const maxTemp = tmaxs.length ? Math.max(...tmaxs) : 0;
+
+  if (minTemp <= 5 || maxTemp < 10) {
+    out.push({
+      icon: "🥶",
+      text: `Forecast highs stay below about ${tempLabel(
+        10
+      )}. Expect very little foraging – colonies will mainly rely on stored food.`,
+    });
+  } else if (maxTemp >= 10 && maxTemp < 15) {
+    out.push({
+      icon: "🍃",
+      text: `Daytime highs between about ${tempLabel(10)} and ${tempLabel(
+        15
+      )}. Some foraging is possible in bright spells, but keep any hive checks very brief.`,
+    });
+  }
+
+  if (maxTemp < 10) {
+    out.push({
+      icon: "🚫🐝",
+      text: `Daytime highs below ${tempLabel(
+        10
+      )}. Avoid full inspections – opening the brood nest risks chilling and stressing the colony.`,
+    });
+  } else if (maxTemp >= 10 && maxTemp < 15) {
+    out.push({
+      icon: "⚠️",
+      text: `Daytime highs between ${tempLabel(10)} and ${tempLabel(
+        15
+      )}. Only open colonies if absolutely necessary and keep brood exposure as short as possible.`,
+    });
+  } else if (maxTemp >= 15 && maxWind < strongWindThresholdKmh) {
+    out.push({
+      icon: "✅",
+      text: `Forecast includes at least one mild, calmer day (around ${tempLabel(
+        15
+      )} or above). This is generally suitable for normal inspections if needed.`,
+    });
+  }
+
+  // Hot spell advisory
+  const hotThresholdC = 28;
+  if (maxTemp >= hotThresholdC) {
+    out.push({
+      icon: "🥵",
+      text: `Hot spell forecast (around ${tempLabel(
+        hotThresholdC
+      )} or above). Ensure bees have good ventilation and a reliable water source and avoid long inspections in peak heat.`,
+    });
+  }
+
+  // --- Warnings-driven notes (new) ---
+
+  if (Array.isArray(warnings) && warnings.length) {
+    const anySevere = warnings.some((w) => {
+      const sev = (
+        w.severity_text ||
+        w.severity ||
+        w.level ||
+        ""
+      )
+        .toString()
+        .toLowerCase();
+      return (
+        sev.includes("red") ||
+        sev.includes("orange") ||
+        sev === "3" ||
+        sev === "2"
+      );
+    });
+
+    const anyYellow = warnings.some((w) => {
+      const sev = (
+        w.severity_text ||
+        w.severity ||
+        w.level ||
+        ""
+      )
+        .toString()
+        .toLowerCase();
+      return sev.includes("yellow") || sev === "1";
+    });
+
+    if (anySevere) {
+      out.push({
+        icon: "⚠️",
+        text:
+          "Official severe weather warnings are active for this area. Many beekeepers postpone non-essential hive work during severe conditions and double-check straps, roofs and stands afterwards, while following any official safety guidance.",
+      });
+    } else if (anyYellow) {
+      out.push({
+        icon: "⚠️",
+        text:
+          "Official weather alerts are active for this location. Consider local conditions at your apiary and follow guidance from official forecast providers when planning inspections.",
+      });
+    }
+  }
+
+  // --- Pollen-driven notes (new) ---
+
+  const pollenHourly = pollen?.hourly || null;
+  if (pollenHourly && Array.isArray(pollenHourly.time) && pollenHourly.time.length) {
+    const times = pollenHourly.time;
+    let best = 0;
+    let bestDiff = Infinity;
+    const nowMs = nowDate.getTime();
+
+    times.forEach((tStamp, i) => {
+      const ms =
+        typeof tStamp === "number" ? tStamp * 1000 : Date.parse(tStamp || 0);
+      const diff = Math.abs(ms - nowMs);
+      if (diff < bestDiff) {
+        bestDiff = diff;
+        best = i;
+      }
+    });
+
+    const getVal = (key) => {
+      const arr = pollenHourly[key];
+      return Array.isArray(arr) ? arr[best] : undefined;
+    };
+
+    const getPeakNext12 = (key) => {
+      const arr = Array.isArray(pollenHourly[key]) ? pollenHourly[key] : [];
+      const slice = arr.slice(best, best + 12).filter(Number.isFinite);
+      return slice.length ? Math.max(...slice) : undefined;
+    };
+
+    const keys = ["tree_pollen", "grass_pollen", "weed_pollen"];
+    let highest = 0;
+
+    keys.forEach((k) => {
+      const vNow = getVal(k);
+      const vPeak = getPeakNext12(k);
+      [vNow, vPeak].forEach((v) => {
+        if (Number.isFinite(v) && v > highest) highest = v;
+      });
+    });
+
+    // Same thresholds as your scalePollen helper
+    if (highest >= 60) {
+      const levelText = highest >= 150 ? "very high" : "high";
+      out.push({
+        icon: "🌾",
+        text:
+          `Pollen levels are ${levelText} over the next few hours. This often coincides with strong forage, but if you or visitors have allergies you may want to plan apiary visits carefully and follow any medical advice you have been given.`,
+      });
+    }
+  }
 
   return out;
 }

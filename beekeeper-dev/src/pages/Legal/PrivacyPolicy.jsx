@@ -34,7 +34,7 @@ export default function PrivacyPolicy() {
           <li>
             <strong>App data you add</strong> (apiaries including optional
             lat/lng, hives including optional photos &amp; NFC tag IDs, inspections,
-            logbook entries, to-dos).
+            logbook entries, tasks/to-dos).
           </li>
           <li>
             <strong>Billing &amp; orders</strong> when you upgrade your plan or buy
@@ -49,6 +49,12 @@ export default function PrivacyPolicy() {
           <li>
             <strong>Geocoding</strong> via LocationIQ; <strong>map tiles</strong>{" "}
             via OpenStreetMap providers.
+          </li>
+          <li>
+            <strong>Weather lookups</strong> using your saved apiary coordinates
+            and dates to request forecasts, pollen levels and warnings from a
+            third-party weather API. We do not send your name, email or payment
+            details with these requests.
           </li>
           <li>
             <strong>Support</strong> communications if you contact us (for example,
@@ -76,6 +82,10 @@ export default function PrivacyPolicy() {
           </li>
           <li>
             Show place names for coordinates (LocationIQ) and maps (OpenStreetMap).
+          </li>
+          <li>
+            Show weather forecasts, warnings and pollen levels for your apiaries,
+            using their saved coordinates and a third-party weather provider.
           </li>
           <li>
             Improve the service via aggregated analytics (Google Analytics, if you
@@ -185,6 +195,11 @@ export default function PrivacyPolicy() {
               OpenStreetMap
             </a>{" "}
             (map tiles &amp; attribution)
+          </li>
+          <li>
+            Weather API providers (currently a third-party forecast service used to
+            fetch weather, pollen and warning data using your apiary coordinates;
+            no names, emails or card details are sent).
           </li>
         </ul>
       </section>

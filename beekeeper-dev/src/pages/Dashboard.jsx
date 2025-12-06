@@ -1237,7 +1237,7 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Weather Snapshot + Beekeeper Notes */}
+      {/* Weather Snapshot + Seasonal Beekeeper Notes teaser */}
       <div className="bg-white rounded shadow p-4">
         <h2 className="text-lg font-semibold mb-1">Weather Snapshot</h2>
         <p className="text-xs text-gray-600 mb-3">
@@ -1298,31 +1298,48 @@ const Dashboard = () => {
               </ul>
             </div>
 
-            {/* Dashboard Beekeeper Notes (default apiary / London) */}
+            {/* Dashboard Seasonal Beekeeper Notes teaser */}
             <div className="mt-4 pt-3 border-t border-gray-200">
-              <h3 className="text-sm font-semibold mb-1">Beekeeper Notes</h3>
+              <h3 className="text-sm font-semibold mb-1">
+                Seasonal Beekeeper Notes
+              </h3>
               <p className="text-[11px] text-gray-500 mb-2">
-                Guide only – this is general beekeeping advice linked to the
-                forecast for your default apiary (or a default London location
-                if no coordinates are set). Weather, forage and nectar flows
-                vary by region, altitude and micro-climate, and every colony
-                behaves differently. Always use your own judgement, local
-                experience and any guidance from your beekeeping association or
-                mentor. Never rely on this panel alone for critical decisions
-                about inspections, feeding or treatments.
+                Guide only – this panel gives general beekeeping information
+                based on typical cool–temperate conditions and average colony
+                behaviour. Any comments about inspections, feeding, Varroa
+                control or other treatments are purely advisory and are not
+                instructions. Weather, forage, pollen and alert data come from
+                third-party services and may be inaccurate or change at short
+                notice. Conditions vary by region, altitude and micro-climate
+                and every colony is different, so always use your own judgement
+                and follow the product label, official guidance and advice from
+                your local beekeeping association, Bee Inspectors, vets and
+                experienced mentors. Do not rely on this panel alone when
+                deciding whether to inspect, feed or treat your bees.
               </p>
               {beekeeperNotes.length ? (
-                <ul className="space-y-1 text-xs text-gray-800">
-                  {beekeeperNotes.map((n, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <span>{n.icon}</span>
-                      <span>{n.text}</span>
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  <ul className="space-y-1 text-xs text-gray-800">
+                    {beekeeperNotes.slice(0, 3).map((n, i) => (
+                      <li key={i} className="flex items-start gap-2">
+                        <span>{n.icon}</span>
+                        <span>{n.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-2 text-[11px] text-gray-600">
+                    This is just a short preview.{" "}
+                    <Link to="/weather" className="text-blue-600 underline">
+                      View full Seasonal Beekeeper Notes and detailed weather →
+                    </Link>
+                  </p>
+                </>
               ) : (
                 <p className="text-xs text-gray-500">
-                  No special notes today.
+                  No special notes today.{" "}
+                  <Link to="/weather" className="text-blue-600 underline">
+                    Open the Weather page for full Seasonal Beekeeper Notes →
+                  </Link>
                 </p>
               )}
             </div>

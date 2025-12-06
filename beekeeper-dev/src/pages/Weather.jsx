@@ -144,7 +144,7 @@ export default function Weather() {
   function currentFromHourly(json) {
     const tz = json?.timezone || "UTC";
     const h = json?.hourly || {};
-       const times = Array.isArray(h.time) ? h.time : [];
+    const times = Array.isArray(h.time) ? h.time : [];
     if (!times.length) return null;
 
     const now = Date.now();
@@ -360,7 +360,7 @@ export default function Weather() {
     return best;
   }, [hourly.time]);
 
-  // Beekeeper Notes
+  // Beekeeper Notes (including seasonal treatment guidance)
   const advisories = useMemo(() => {
     const winds = safeArr(daily.wind_speed_10m_max, 0).filter(Number.isFinite);
     const precs = safeArr(daily.precipitation_sum, 0).filter(Number.isFinite);
@@ -381,7 +381,7 @@ export default function Weather() {
     }
     const month = nowDate.getMonth(); // 0 = Jan, 11 = Dec
 
-    // --- Month / season profile ---
+    // --- Month / season profile + treatments overview ---
     if (month === 11 || month === 0 || month === 1) {
       // Dec–Feb: winter
       if (month === 0) {
@@ -413,6 +413,10 @@ export default function Weather() {
         icon: "🛠️",
         text: "After storms, frost or snow, check straps, roofs and entrances and clear any blockages.",
       });
+      out.push({
+        icon: "🧪",
+        text: "Many beekeepers use an authorised oxalic-acid based winter Varroa treatment when colonies have little or no brood (often late December or January). Only use products approved in your country, follow the label and official guidance, and never treat when honey supers are on.",
+      });
     } else if (month >= 2 && month <= 4) {
       // Mar–May: spring
       if (month === 2) {
@@ -438,13 +442,17 @@ export default function Weather() {
       });
       out.push({
         icon: "🔍",
-        text: `Full inspections are comfortable once daytime highs approach ${tempLabel(15)} and it is calm. Between ${tempLabel(
-          10
-        )}–${tempLabel(14)} keep any checks brief.`,
+        text: `Full inspections are comfortable once daytime highs approach ${tempLabel(
+          15
+        )} and it is calm. Between ${tempLabel(10)}–${tempLabel(14)} keep any checks brief.`,
       });
       out.push({
         icon: "⚠️",
         text: "Spring build-up – watch for starvation in light colonies after cold or wet spells; emergency fondant or warm syrup on mild days may be needed.",
+      });
+      out.push({
+        icon: "🧫",
+        text: "Spring is a good time to monitor Varroa levels using recognised methods (for example natural mite drop, sugar-roll or alcohol-wash) and to plan any post-honey-crop treatments. Avoid using strong Varroa treatments while honey supers are on unless the product label specifically allows it.",
       });
     } else if (month >= 5 && month <= 7) {
       // Jun–Aug: summer
@@ -471,7 +479,7 @@ export default function Weather() {
       });
       out.push({
         icon: "🪱",
-        text: "Late summer is a key time for Varroa treatment. Always follow product instructions, including any temperature limits.",
+        text: "Late summer and early autumn are key times for Varroa control once the main honey crop is removed. Many beekeepers apply an authorised late-summer treatment at this stage. Remove honey supers if required, follow the product label, respect any temperature limits and ensure good hive ventilation.",
       });
     } else if (month >= 8 && month <= 10) {
       // Sep–Nov: autumn
@@ -499,6 +507,10 @@ export default function Weather() {
       out.push({
         icon: "💧",
         text: "Damp kills more bees than cold. Keep hives off the ground, roofs sound and ventilation modest but not draughty.",
+      });
+      out.push({
+        icon: "🧮",
+        text: "Aim to complete your main Varroa treatment early enough that the long-lived winter bees develop with a low mite load. If monitoring still shows high Varroa levels after treatment, seek advice from your local association, Bee Inspector or vet before repeating or changing products.",
       });
     }
 
@@ -773,15 +785,18 @@ export default function Weather() {
 
           {/* ===== Sidebar column ===== */}
           <aside className="space-y-4">
-            {/* Beekeeper Notes */}
+            {/* Seasonal Beekeeper Notes */}
             <div className="bg-zinc-900 text-zinc-100 rounded shadow p-4 border border-zinc-800">
-              <h3 className="text-lg font-semibold mb-1">Beekeeper Notes</h3>
+              <h3 className="text-lg font-semibold mb-1">Seasonal Beekeeper Notes</h3>
               <p className="text-xs text-zinc-400 mb-2">
-                Guide only – this is general beekeeping advice based on typical cool–temperate conditions and average
-                colony behaviour. Weather, forage and nectar flows vary by region, altitude and micro-climate, and every
-                colony is different, so always use your own judgement and follow any guidance from your local beekeeping
-                association or mentor. Never rely on this panel alone for critical decisions about inspections, feeding
-                or treatments.
+                Guide only – this panel gives general beekeeping information based on typical cool–temperate conditions
+                and average colony behaviour. Any comments about inspections, feeding, Varroa control or other
+                treatments are purely advisory and are not instructions. Weather, forage, pollen and alert data come
+                from third-party services and may be inaccurate or change at short notice. Conditions vary by region,
+                altitude and micro-climate and every colony is different, so always use your own judgement and follow
+                the product label, official guidance and advice from your local beekeeping association, Bee Inspectors,
+                vets and experienced mentors. Do not rely on this panel alone when deciding whether to inspect, feed or
+                treat your bees.
               </p>
               {advisories.length ? (
                 <ul className="space-y-1 text-sm">

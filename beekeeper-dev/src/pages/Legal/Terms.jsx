@@ -199,6 +199,10 @@ export default function Terms() {
           <li>Stripe (payments and billing)</li>
           <li>Google Analytics (optional usage analytics)</li>
           <li>LocationIQ and OpenStreetMap (geocoding and map tiles)</li>
+          <li>
+            Weather API providers (forecast, warning and pollen data fetched using
+            your apiary coordinates)
+          </li>
         </ul>
         <p>
           Your use of those third-party services may be subject to their own terms
@@ -276,7 +280,7 @@ export default function Terms() {
         </ul>
       </section>
 
-      {/* 13. Termination */}
+      {/* 13. Suspension and termination */}
       <section className="space-y-3 mt-6">
         <h2 className="text-lg font-semibold">13. Suspension and termination</h2>
         <p>
@@ -331,8 +335,7 @@ export default function Terms() {
         </p>
       </section>
 
-
-            <div className="pt-8">
+      <div className="pt-8">
         <a
           href="#top"
           className="inline-block text-sm text-blue-700 hover:underline"
@@ -340,8 +343,6 @@ export default function Terms() {
           ↑ Back to top
         </a>
       </div>
-
-
     </div>
   );
 }

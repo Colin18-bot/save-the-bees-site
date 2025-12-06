@@ -145,8 +145,9 @@ export default function Help() {
                         <strong>Unlimited Inspections</strong>
                       </li>
                       <li>
-                        <strong>Weather forecasts</strong> (Dashboard snapshot &amp;
-                        inspection auto-fill)
+                        <strong>Weather tools</strong> (Weather page,
+                        Dashboard snapshot, inspection auto-fill, Seasonal
+                        Beekeeper Notes preview)
                       </li>
                       <li>
                         <strong>Calendar</strong>
@@ -290,15 +291,24 @@ export default function Help() {
                       temporary London placeholder is shown.
                     </li>
                     <li>
-                      <strong>Open · Print · Export</strong>: the toolbar lets
-                      you print the page or export CSV; exports respect the
-                      Apiary filter.
+                      <strong>Seasonal Beekeeper Notes (preview):</strong>{" "}
+                      small panel under the snapshot showing the first few
+                      season-aware notes (e.g., winter feeding, spring build-up,
+                      late-summer Varroa timing) with a{" "}
+                      <strong>“View full notes”</strong> link that takes you to
+                      the full Weather page.
                     </li>
                     <li>
-                      <strong>NFC summary (Premium):</strong> Premium users may
-                      see small NFC indicators for tagged hives and NFC-related
-                      shortcuts depending on their Dashboard layout.{" "}
-                      <Badge tone="blue">Premium</Badge>
+                      <strong>Reports &amp; Export card:</strong> opens the{" "}
+                      <em>Reports &amp; Exports</em> page, where you can print
+                      multi-section reports and download CSVs using the same
+                      Apiary/Hive/date filters.
+                    </li>
+                    <li>
+                      <strong>NFC summary (Premium):</strong> Premium users see
+                      an <strong>NFC Tagged Hives</strong> panel showing how
+                      many hives have tags and a short list of recent tagged
+                      hives. <Badge tone="blue">Premium</Badge>
                     </li>
                   </ul>
                 </div>
@@ -357,8 +367,10 @@ export default function Help() {
                       info and photos.
                     </li>
                     <li>
-                      Compliance call-outs appear for notifiable diseases or
-                      varroa.
+                      Fields are provided for varroa and disease checks so you
+                      can record what you observe; always follow official
+                      guidance and your association’s advice on notifiable
+                      diseases.
                     </li>
                     <li>
                       Where the inspection belongs to a hive with an NFC tag,
@@ -370,8 +382,8 @@ export default function Help() {
                       <strong>Linked Logbook:</strong> where logbook entries
                       reference an inspection, the card shows a count with a{" "}
                       <em>View logbook</em> link. Clicking it opens the{" "}
-                      <strong>Logbook</strong> list
-                      <em> filtered to that inspection</em> with a blue banner
+                      <strong>Logbook</strong> list{" "}
+                      <em>filtered to that inspection</em> with a blue banner
                       and a one-click “Clear inspection filter”.
                     </li>
                     <li>
@@ -523,6 +535,95 @@ export default function Help() {
               </div>
             </section>
 
+            {/* Inventory, Sales & Expenses (overview) */}
+            <section id="business-inventory">
+              <h2 className="text-2xl font-bold mb-3">
+                Inventory, Sales &amp; Expenses
+              </h2>
+              <p className="text-gray-700 mb-2">
+                The business tools are optional but handy if you sell honey,
+                nucleus colonies, equipment, or want to track what your beekeeping
+                is costing you.
+              </p>
+              <div className="space-y-3">
+                <div>
+                  <h3 className="font-semibold">Inventory</h3>
+                  <ul className="list-disc pl-6 space-y-1">
+                    <li>
+                      The <strong>Inventory</strong> list lets you track items
+                      such as hives, frames, feeders, jars, labels and other kit.
+                    </li>
+                    <li>
+                      <strong>New Item:</strong> record category (e.g. “Bee
+                      equipment”, “Bottling”, “Other”), purchase date, quantity,
+                      unit price, total cost, supplier/invoice and optional link
+                      to an apiary/hive.
+                    </li>
+                    <li>
+                      Items can be marked as <em>consumable</em> or as tracked
+                      stock so you can see how much you have left.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold">Sales</h3>
+                  <ul className="list-disc pl-6 space-y-1">
+                    <li>
+                      <strong>Sales</strong> shows each sale with customer,
+                      channel (e.g. farm shop, direct), invoice reference and
+                      totals.
+                    </li>
+                    <li>
+                      <strong>New Sale:</strong> add line items including
+                      product name, type, unit, quantity, unit price, optional
+                      discount and cost-per-unit (for profit calculations).
+                    </li>
+                    <li>
+                      Amounts are displayed using your{" "}
+                      <strong>default currency</strong>.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold">Expenses</h3>
+                  <ul className="list-disc pl-6 space-y-1">
+                    <li>
+                      <strong>Expenses</strong> records your outgoings such as
+                      feed, medication, equipment, fuel and{" "}
+                      <strong>Training</strong>.
+                    </li>
+                    <li>
+                      Each expense has a category, vendor, invoice/receipt
+                      reference, date, amount and a currency (defaulted from
+                      your chosen currency in Settings).
+                    </li>
+                    <li>
+                      These feed into the <strong>Profit &amp; Loss</strong>{" "}
+                      view so you can see income versus costs at a glance.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold">Profit &amp; Loss</h3>
+                  <ul className="list-disc pl-6 space-y-1">
+                    <li>
+                      The dedicated <strong>Profit &amp; Loss</strong> page
+                      brings together your Sales and Expenses and shows a simple
+                      summary using your default currency.
+                    </li>
+                    <li>
+                      Use this when preparing accounts, talking to your
+                      accountant, or just checking how your beekeeping hobby or
+                      business is performing.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
             {/* Default Currency */}
             <section id="currency-defaults">
               <h2 className="text-2xl font-bold mb-3">
@@ -609,8 +710,13 @@ export default function Help() {
                   </ul>
                 </li>
                 <li>
-                  You can also use the <strong>Dashboard → Print</strong> for a
-                  quick summary of current metrics and recent items.
+                  Use the dedicated <strong>Profit &amp; Loss</strong> view to
+                  see a simple summary of income versus expenses, formatted with
+                  your default currency.
+                </li>
+                <li>
+                  You can also use the <strong>Dashboard → Reports &amp; Export</strong>{" "}
+                  card to jump straight into a filtered print/export view.
                 </li>
                 <li>
                   For raw data, go to <strong>Settings → Export</strong> to
@@ -709,7 +815,7 @@ export default function Help() {
                   </li>
                   <li>
                     <strong>Routing:</strong> once a tag is linked to a hive,
-                    every tap always opens a{" "}
+                      every tap always opens a{" "}
                     <strong>New Inspection</strong> for that hive. This keeps
                     the NFC flow fast and predictable during real-life apiary
                     visits. You can still review history from the hive or
@@ -785,12 +891,40 @@ export default function Help() {
               </h2>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
-                  <strong>Weather</strong> is fetched by apiary coordinates for
-                  the inspection date. <Badge>Free</Badge>
+                  <strong>Weather page:</strong> shows your current conditions,
+                  a “Today, hour by hour” strip, and the next 5 days for the
+                  selected apiary. It can also show{" "}
+                  <strong>official weather warnings</strong> and{" "}
+                  <strong>pollen levels</strong> where the provider supplies
+                  them. Temperature and wind units can be toggled between °C/°F
+                  and km/h/mph.
+                </li>
+                <li>
+                  <strong>Seasonal Beekeeper Notes (full):</strong> the Weather
+                  page includes a full “Seasonal Beekeeper Notes” panel giving
+                  season-aware guidance (e.g. winter feeding, spring build-up,
+                  late-summer Varroa treatment windows, autumn feeding and
+                  moisture control). All notes are advisory and assume typical
+                  cool–temperate conditions—always follow product labels,
+                  official guidance and local association advice.
+                </li>
+                <li>
+                  <strong>Dashboard snapshot:</strong> shows a small “now +
+                  next 5 days” summary for your default apiary and a{" "}
+                  <strong>preview</strong> of the Seasonal Beekeeper Notes (a
+                  few key points). Use the “View full notes” link on the
+                  Dashboard to jump straight to the Weather page.
+                </li>
+                <li>
+                  <strong>Inspections:</strong> when you create a new
+                  inspection, the weather section uses the apiary’s coordinates
+                  and the inspection date to auto-fill basic conditions for that
+                  day.
                 </li>
                 <li>
                   <strong>Maps:</strong> set coordinates by clicking the map or
-                  searching by address.
+                  searching by address. This improves weather forecasts and
+                  gives you location context for each apiary.
                 </li>
                 <li>
                   <strong>Photos:</strong> Apiary/Hive support one optional
@@ -798,6 +932,13 @@ export default function Help() {
                   photos to open a <strong>lightbox</strong>.
                 </li>
               </ul>
+              <p className="mt-3 text-xs text-gray-600">
+                Weather, warnings, pollen and notes all depend on third-party
+                providers and are for guidance only. Conditions, forage and
+                disease pressure vary by region and micro-climate; always use
+                your own judgement and any instructions from product labels,
+                Bee Inspectors, vets or your local association.
+              </p>
             </section>
 
             {/* Filters, Counts & Archives */}
@@ -813,8 +954,9 @@ export default function Help() {
                   respect the selected apiary filter.
                 </li>
                 <li>
-                  <strong>Export from Dashboard:</strong> CSV export respects
-                  the apiary filter so you can download focused views.
+                  <strong>Exports from Reports:</strong> CSV exports on the{" "}
+                  <em>Reports &amp; Exports</em> page respect your Apiary/Hive
+                  and date filters so you can download focused views.
                 </li>
                 <li>
                   <strong>List pages show active items</strong>; archived
@@ -951,8 +1093,9 @@ export default function Help() {
                   </p>
                   <p className="text-gray-700">
                     1 active apiary, 2 active hives total, unlimited
-                    inspections, weather forecasts, calendar, tasks, logbook
-                    entries, and CSV export from Settings.
+                    inspections, weather tools (Weather page, snapshot and
+                    auto-fill), calendar, tasks, logbook entries, and CSV export
+                    from Settings.
                   </p>
                 </div>
                 <div>
@@ -1107,8 +1250,11 @@ export default function Help() {
                   correct hive’s inspection flow.
                 </li>
                 <li>
-                  <strong>Weather didn’t load:</strong> add coordinates to the
-                  apiary and retry; occasional provider outages can happen.
+                  <strong>Weather didn’t load or is very slow:</strong> check
+                  that the apiary has valid coordinates saved. Occasionally the
+                  forecast provider is slow or unavailable; try again in a few
+                  minutes, or switch apiary. The app may briefly pause new
+                  requests after a failed attempt to keep the UI responsive.
                 </li>
                 <li>
                   <strong>Export didn’t download:</strong> check your browser’s
@@ -1172,8 +1318,9 @@ export default function Help() {
                   cannot belong to two active hives.
                 </li>
                 <li>
-                  <strong>Dashboard export:</strong> CSV export respects the
-                  Apiary filter; great for per-yard summaries.
+                  <strong>Reports export:</strong> CSV exports on the{" "}
+                  <em>Reports &amp; Exports</em> page respect the Apiary/Hive
+                  filter; ideal for per-yard summaries.
                 </li>
                 <li>
                   <strong>Print Report:</strong> the Reports → Print page is
@@ -1186,8 +1333,8 @@ export default function Help() {
                   <code>photos.csv</code> with public URLs (images not bundled).
                 </li>
                 <li>
-                  <strong>Print:</strong> Dashboard “Print” renders a clean
-                  report of the current view.
+                  <strong>Print:</strong> Dashboard → Reports card gives a quick
+                  route into a printable, filter-aware view.
                 </li>
               </ul>
             </section>

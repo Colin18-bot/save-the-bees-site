@@ -8,6 +8,55 @@ dayjs.locale("en-gb");
 
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
+{
+  version: "1.0.5",
+  released_at: "2025-12-06T18:00:00Z",
+  summary:
+    "Seasonal Beekeeper Notes unified across Weather and Dashboard, new treatment advisories added, disclaimers strengthened, dashboard preview added, and multiple stability improvements to weather behaviour.",
+
+  added: [
+    "New **Seasonal Beekeeper Notes** system providing season-aware guidance for winter, spring, summer and autumn, now including **Varroa/treatment advisory cues** in a legally safe, non-prescriptive form.",
+    "Dashboard now shows a **Beekeeper Notes preview** (first 3 items) with a **“View full notes”** link taking the user directly to the Weather page.",
+    "New strengthened **disclaimer** text across Weather and Dashboard, clarifying that notes are advisory only, not treatment instructions, and depend on local conditions.",
+    "Dashboard preview now uses the same seasonal engine as the Weather page to ensure **identical logic** between both views."
+  ],
+
+  changed: [
+    "The Weather page ‘Beekeeper Notes’ heading is now **Seasonal Beekeeper Notes** for clarity and consistency.",
+    "Advisories have been expanded to incorporate **season-specific treatment planning guidance** (e.g., late-summer Varroa timing, winter monitoring), while avoiding product-specific recommendations.",
+    "Dashboard now renders a reduced version of the notes without altering layout or tile structure.",
+    "Disclaimer wording revised to ensure stronger alignment with best-practice and to avoid ambiguity around inspections, feeding and chemical treatments."
+  ],
+
+  fixed: [
+    "Resolved mismatches between Dashboard and Weather advisory text where headings, disclaimers or preview formatting previously diverged.",
+    "Fixed cases where the Dashboard would temporarily show empty notes even when Weather notes were available.",
+    "Improved consistency in wind-speed displays (mph on Dashboard snapshot) to prevent UK/US unit confusion."
+  ],
+
+  removed: [],
+
+  security: [
+    "Hardened language around treatments to avoid accidental interpretation as prescriptive instructions, reducing liability exposure.",
+    "Ensured external weather data is handled safely with defensive parsing on Dashboard as well as Weather."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Weather", to: "/weather" },
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Apiaries", to: "/apiaries" },
+    { label: "Help", to: "/help" }
+  ],
+
+  known_issues: [
+    "Weather loading time can still be slow when the forecast provider responds late; further optimisation planned (timeouts + fewer fallback calls).",
+    "Seasonal notes depend on the user's system date; incorrect device date/time may result in mismatched seasonal advice.",
+    "Dashboard preview shows only the first 3 notes by design — full context always requires visiting the Weather page."
+  ]
+},
+  
    {
     version: "1.0.4",
     released_at: "2025-12-03T18:00:00Z",
