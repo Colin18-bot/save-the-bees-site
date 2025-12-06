@@ -8,173 +8,78 @@ dayjs.locale("en-gb");
 
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
-{
-  version: "1.0.5",
-  released_at: "2025-12-06T18:00:00Z",
+ 
+
+ {
+  version: "1.0.3",
+  released_at: "2025-11-29T09:00:00Z",
   summary:
-    "Seasonal advice has been refactored into a shared helper so Dashboard and Weather now use a single, safer ‘Seasonal Advice – Beekeeper Notes’ system, with a short snapshot on the Dashboard and a full deep-dive on the Weather page.",
+    "Complete NFC system (scan, manage, store), new Stripe checkout for NFC tags, UK-only NFC shipping, Premium gating UX, privacy updates, and NFC-related UI polish across the platform.",
 
   added: [
-    "New shared `buildBeekeeperNotes` helper that turns month + forecast data (temperatures, wind, rain) into structured Seasonal Advice items `{ icon, text }` for reuse across the app.",
-    "Dashboard now shows a **Seasonal Advice – Beekeeper Notes** section beneath the Weather Snapshot, giving a concise seasonal + forecast-based summary for the default apiary.",
-    "Dashboard Seasonal Advice includes a direct **“View full notes →”** link to the Weather page, so users can jump straight from the snapshot into the full deep-dive guidance."
+    // NFC System
+    "New **Scan NFC Tag** page with Premium-only gating, permission handling, Web NFC support detection and friendly fallbacks.",
+    "New **NFC Tag Manager** to view, filter, and clear linked NFC UIDs for hives.",
+    "New **NFC Setup Card** (printable A4-style instructions) linked from the NFC Scan page.",
+    "New **Buy NFC Tags** store page with quantity selector, estimated totals, technical specs, and product image.",
+    "New **NFC tag UID linking**: unknown tags automatically open **New Hive** with `nfc_uid` pre-filled and locked.",
+    "New **tap-to-log inspections**: known tags jump straight into **New Inspection** with hive + apiary pre-filled.",
+    "Added **NFC UIDs** to Hive records and database lookup for fast tag→hive resolution.",
+    "Reports → **Print Report** now includes a dedicated **NFC Tags** section and CSV export, respecting apiary/hive + archived filters.",
   ],
 
+  // Stripe + Checkout
   changed: [
-    "Weather page and Dashboard now rely on the same `buildBeekeeperNotes` logic, reducing duplication and keeping seasonal guidance consistent across views.",
-    "Dashboard Seasonal Advice has been shortened to show only a small number of key notes by default, keeping the main page focused while still surfacing useful context.",
-    "The Seasonal Advice disclaimer text has been strengthened and expanded, with a clear one-line explanation that the notes combine forecast data with typical cool-temperate UK hobbyist conditions and must not be used as the sole basis for decisions."
+    // NFC UX
+    "Improved Web NFC error handling with clearer messages for NotAllowed, Abort, NotSupported and empty UIDs.",
+    "NFCScan redesigned with clearer Premium messaging, improved device-browser warnings, and polished layout.",
+    "Updated New Inspection and New Hive flows to correctly handle NFC-origin navigation (`source=nfc`) so scans route cleanly into the right hive.",
+
+    // Privacy Policy
+    "Privacy Policy updated with a new **NFC Tags** section explaining UID storage, lookup behaviour, and non-tracking use.",
+    "Clarified third-party references (Stripe billing, LocationIQ, OpenStreetMap).",
+
+    // Routing & Checkout
+    "Added new protected route **/nfc/tags** for the NFC store checkout screen.",
+    "Grouped NFC routes together for clarity: `/nfc`, `/nfc/manage`, `/nfc/instructions`, `/nfc/tags`.",
+    "NFC checkout now uses a Stripe Shipping Rate for **UK-only flat shipping (£1.55)** and reads Stripe keys from environment for easy test/live switching.",
   ],
 
   fixed: [
-    "Reduced the risk of guidance drift between Dashboard and Weather by centralising the rules that generate seasonal/forecast notes into a single helper.",
-    "Tidied up wording around inspections, feeding and Varroa treatments to keep the tone clearly advisory rather than prescriptive, especially for newer beekeepers."
+    "Fixed redirect issues when purchasing NFC tags while logged out (now routes you through login and back to the NFC store).",
+    "Fixed cases where NFCScan could run with stale subscription state.",
+    "Resolved misreported NFC support on certain Android browsers by tightening feature detection.",
+    "Fixed UI flicker when checking subscription level on NFCScan.",
+    "Fixed missing image reference by adding `nfctag.webp` to `/public` for the NFC product preview.",
+    "Corrected layout spacing on mobile for NFC pages.",
   ],
 
   removed: [],
 
   security: [
-    "No security-sensitive changes in this release. All changes are limited to UI-level guidance, wording, and internal refactoring of seasonal advice logic."
+    "Enhanced CORS and header handling in `create-nfc-checkout` based on Supabase Edge best practices.",
+    "Edge Function now validates quantity and ensures a logged-in user before creating a Checkout Session.",
   ],
 
   breaking: [],
 
   links: [
-    { label: "Dashboard", to: "/dashboard" },
-    { label: "Weather", to: "/weather" },
-    { label: "Settings", to: "/settings" },
-    { label: "Help", to: "/help" }
+    { label: "Scan NFC Tag", to: "/nfc" },
+    { label: "Manage NFC Tags", to: "/nfc/manage" },
+    { label: "Buy NFC Tags", to: "/nfc/tags" },
+    { label: "Premium Pricing", to: "/pricing" },
+    { label: "Hives", to: "/hives" },
+    { label: "Inspections", to: "/inspections" },
+    { label: "Privacy Policy", to: "/legal/privacy" },
   ],
 
   known_issues: [
-    "Seasonal Advice still assumes cool-temperate UK-style conditions; beekeepers in very different climates should treat the notes as general background only.",
-    "The Dashboard snapshot only shows a subset of notes; for the full context (including stronger wind/cold/hot-spell wording), users should follow the link to the Weather page."
-  ]
+    "Web NFC support varies across devices: iOS Safari still does not support Web NFC scanning.",
+    "If a tag UID is locked by the manufacturer, it cannot be rewritten (but still works for read-only flows).",
+    "Shipping for NFC tag orders is currently UK-only, and Stripe’s address auto-fill may not pre-fill on some browsers.",
+  ],
 },
 
-  {
-    version: "1.0.4",
-    released_at: "2025-12-03T18:00:00Z",
-    summary:
-      "Weather page rebuilt with apiary-aware forecasts, beekeeper-focused guidance, live pollen levels, official weather warnings, unit toggles, and more resilient error handling.",
-
-    added: [
-      "New **Weather** page layout with a clear ‘Now’, **Today (hour by hour)** strip, and **Next 5 days** forecast cards.",
-      "Weather is now **apiary-aware**: forecasts are pulled per-apiary using stored latitude/longitude, with a safe London fallback if coordinates are missing or invalid.",
-      "New **Beekeeper Notes** sidebar that turns raw weather into practical guidance (strong wind alerts, heavy rain, cold nights, hot spells, and inspection-friendly days).",
-      "Temperature **unit toggle** (°C/°F) and wind **speed toggle** (km/h ↔ mph) added, wired through all current + forecast panels and beekeeper notes.",
-      "New **Official Weather Warnings** panel that surfaces severe-weather alerts for the selected apiary when the forecast provider supplies them.",
-      "New **Pollen** cards showing current and peak **tree**, **grass** and **weed** pollen levels for the next few hours, based on the selected apiary location.",
-      "“Weather temporarily unavailable (provider error)” now includes a quiet **circuit breaker**: we back off for a short time after provider failures to keep the UI responsive."
-    ],
-
-    changed: [
-      "Weather page UX fully refreshed to use darker cards, clearer icons, and responsive horizontal scrolling for the hourly forecast on mobile.",
-      "Current conditions now include **feels-like temperature**, humidity, wind speed and direction, with local time zone handled by the forecast provider.",
-      "Behind the scenes, the app now tries multiple Open-Meteo forecast shapes (modern `current`, legacy `current_weather=true`, and a derived-from-hourly fallback) before giving up.",
-      "Weather errors are now less noisy and more consistent, and successful calls clear any previous circuit-breaker lockout automatically."
-    ],
-
-    fixed: [
-      "Fixed cases where apiaries with missing or out-of-range coordinates caused confusing or broken weather displays.",
-      "Resolved layout issues where the **Weather & temperature notes** and **Hive & feeding considerations** style logic in Beekeeper Notes could misalign under certain thresholds.",
-      "Addressed occasional UI flicker when switching between apiaries on slower connections."
-    ],
-
-    removed: [],
-
-    security: [
-      "Hardened weather fetching by enforcing JSON-only responses and defensive parsing to avoid crashes on unexpected provider output."
-    ],
-
-    breaking: [],
-
-    links: [
-      { label: "Weather", to: "/weather" },
-      { label: "Apiaries", to: "/apiaries" },
-      { label: "Dashboard", to: "/dashboard" },
-      { label: "Help", to: "/help" }
-    ],
-
-    known_issues: [
-      "Official weather warnings and pollen feeds depend on external providers; in some regions they may show “No data” even when other services report something.",
-      "If a provider outage occurs, the circuit breaker will temporarily suppress repeated calls; try again a little later or switch apiary once things recover.",
-      "Accurate local forecasts still depend on you saving correct coordinates for each apiary."
-    ]
-  },
-
-
-  // ...keep your existing 1.0.3, 1.0.2, 1.0.1 entries exactly as they are below
-
-  {
-    version: "1.0.3",
-    released_at: "2025-11-29T09:00:00Z",
-    summary:
-      "Complete NFC system (scan, manage, store), new Stripe checkout for NFC tags, UK-only NFC shipping, Premium gating UX, privacy updates, and NFC-related UI polish across the platform.",
-
-    added: [
-      // NFC System
-      "New **Scan NFC Tag** page with Premium-only gating, permission handling, Web NFC support detection and friendly fallbacks.",
-      "New **NFC Tag Manager** to view, filter, and clear linked NFC UIDs for hives.",
-      "New **NFC Setup Card** (printable A4-style instructions) linked from the NFC Scan page.",
-      "New **Buy NFC Tags** store page with quantity selector, estimated totals, technical specs, and product image.",
-      "New **NFC tag UID linking**: unknown tags automatically open **New Hive** with `nfc_uid` pre-filled and locked.",
-      "New **tap-to-log inspections**: known tags jump straight into **New Inspection** with hive + apiary pre-filled.",
-      "Added **NFC UIDs** to Hive records and database lookup for fast tag→hive resolution.",
-      "Reports → **Print Report** now includes a dedicated **NFC Tags** section and CSV export, respecting apiary/hive + archived filters."
-    ],
-
-    // Stripe + Checkout
-    changed: [
-      // NFC UX
-      "Improved Web NFC error handling with clearer messages for NotAllowed, Abort, NotSupported and empty UIDs.",
-      "NFCScan redesigned with clearer Premium messaging, improved device-browser warnings, and polished layout.",
-      "Updated New Inspection and New Hive flows to correctly handle NFC-origin navigation (`source=nfc`) so scans route cleanly into the right hive.",
-
-      // Privacy Policy
-      "Privacy Policy updated with a new **NFC Tags** section explaining UID storage, lookup behaviour, and non-tracking use.",
-      "Clarified third-party references (Stripe billing, LocationIQ, OpenStreetMap).",
-
-      // Routing & Checkout
-      "Added new protected route **/nfc/tags** for the NFC store checkout screen.",
-      "Grouped NFC routes together for clarity: `/nfc`, `/nfc/manage`, `/nfc/instructions`, `/nfc/tags`.",
-      "NFC checkout now uses a Stripe Shipping Rate for **UK-only flat shipping (£1.55)** and reads Stripe keys from environment for easy test/live switching."
-    ],
-
-    fixed: [
-      "Fixed redirect issues when purchasing NFC tags while logged out (now routes you through login and back to the NFC store).",
-      "Fixed cases where NFCScan could run with stale subscription state.",
-      "Resolved misreported NFC support on certain Android browsers by tightening feature detection.",
-      "Fixed UI flicker when checking subscription level on NFCScan.",
-      "Fixed missing image reference by adding `nfctag.webp` to `/public` for the NFC product preview.",
-      "Corrected layout spacing on mobile for NFC pages."
-    ],
-
-    removed: [],
-
-    security: [
-      "Enhanced CORS and header handling in `create-nfc-checkout` based on Supabase Edge best practices.",
-      "Edge Function now validates quantity and ensures a logged-in user before creating a Checkout Session."
-    ],
-
-    breaking: [],
-
-    links: [
-      { label: "Scan NFC Tag", to: "/nfc" },
-      { label: "Manage NFC Tags", to: "/nfc/manage" },
-      { label: "Buy NFC Tags", to: "/nfc/tags" },
-      { label: "Premium Pricing", to: "/pricing" },
-      { label: "Hives", to: "/hives" },
-      { label: "Inspections", to: "/inspections" },
-      { label: "Privacy Policy", to: "/legal/privacy" }
-    ],
-
-    known_issues: [
-      "Web NFC support varies across devices: iOS Safari still does not support Web NFC scanning.",
-      "If a tag UID is locked by the manufacturer, it cannot be rewritten (but still works for read-only flows).",
-      "Shipping for NFC tag orders is currently UK-only, and Stripe’s address auto-fill may not pre-fill on some browsers."
-    ]
-  },
 
   {
     version: "1.0.2",
@@ -300,9 +205,7 @@ export default function Updates() {
         to="/dashboard"
         className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-4"
       >
-        <span className="mr-2" aria-hidden="true">
-          ←
-        </span>
+        <span className="mr-2" aria-hidden="true">←</span>
         Back to Dashboard
       </Link>
 
@@ -340,10 +243,7 @@ export default function Updates() {
 
                 {(n.removed?.length > 0 || n.security?.length > 0) && (
                   <>
-                    <NoteSection
-                      title="Removed/Deprecated"
-                      items={n.removed}
-                    />
+                    <NoteSection title="Removed/Deprecated" items={n.removed} />
                     <NoteSection title="Security" items={n.security} />
                   </>
                 )}

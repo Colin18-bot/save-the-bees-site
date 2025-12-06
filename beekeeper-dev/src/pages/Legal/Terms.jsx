@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Terms() {
   return (
-    <div id="top" className="max-w-3xl mx-auto p-6">
+    <div className="max-w-3xl mx-auto p-6">
       <h1 className="text-2xl font-bold">Terms of Use</h1>
       <p className="text-gray-600">
         <strong>Effective date:</strong> 14 June 2025
@@ -26,8 +26,7 @@ export default function Terms() {
             title="Open the members contact form"
           >
             BeezKnees
-          </a>
-          .
+          </a>.
         </p>
       </section>
 
@@ -60,8 +59,7 @@ export default function Terms() {
           information, please see our{" "}
           <a href="/legal/privacy" className="underline text-amber-700">
             Privacy Policy
-          </a>
-          .
+          </a>.
         </p>
       </section>
 
@@ -103,7 +101,7 @@ export default function Terms() {
           </li>
           <li>
             Premium subscriptions automatically renew at the end of each billing
-            period unless you cancel through the billing or account settings
+            period unless you cancel through the Billing or account settings
             managed by Stripe.
           </li>
           <li>
@@ -124,23 +122,15 @@ export default function Terms() {
         </h2>
         <p>
           The Service is intended as a tool to help you record, organise and
-          manage your beekeeping activities. It includes features such as
-          inspections, tasks, logbook entries, weather forecasts, pollen and
-          warning information, and seasonal &quot;Beekeeper Notes&quot; or similar
-          guidance panels.
-        </p>
-        <p>
-          These features, including any weather-driven notes or &quot;Seasonal Advice&quot;
-          panels, are for <strong>general information only</strong>. They do not
-          take account of your specific circumstances and they do not constitute
-          veterinary, legal, regulatory, safety or professional beekeeping advice.
+          manage your beekeeping activities. It does not provide veterinary,
+          legal, or professional beekeeping advice.
         </p>
         <p>
           You remain responsible for your own beekeeping decisions, compliance
-          with local laws and regulations (including any notifiable disease
-          requirements), and for seeking professional advice where necessary.
-          BeezKnees is not responsible for any loss or damage arising from how you
-          choose to act on information stored in or presented by the Service.
+          with local laws and regulations, and for seeking professional advice
+          where necessary. BeezKnees is not responsible for any loss or damage
+          arising from how you choose to act on information stored in or presented
+          by the Service.
         </p>
       </section>
 
@@ -206,13 +196,9 @@ export default function Terms() {
         </p>
         <ul className="list-disc pl-6 space-y-1">
           <li>Supabase (authentication, database, storage)</li>
-          <li>Stripe (payments, billing, order handling)</li>
+          <li>Stripe (payments and billing)</li>
           <li>Google Analytics (optional usage analytics)</li>
           <li>LocationIQ and OpenStreetMap (geocoding and map tiles)</li>
-          <li>
-            Weather and pollen providers (for example, Open-Meteo or similar
-            APIs) for forecasts, pollen levels and weather warnings
-          </li>
         </ul>
         <p>
           Your use of those third-party services may be subject to their own terms
@@ -233,8 +219,7 @@ export default function Terms() {
           other reasons.
         </p>
         <p>
-          We may add, change or remove features over time (for example, changing
-          data providers or adding new beekeeping tools). Where such changes are
+          We may add, change or remove features over time. Where such changes are
           significant, we will endeavour to give reasonable notice within the
           app or on our website.
         </p>
@@ -280,8 +265,7 @@ export default function Terms() {
           <li>
             BeezKnees is not liable for any loss or damage resulting from your
             reliance on data stored in the Service, including inspection records,
-            hive data, tasks, reminders, weather forecasts, pollen information or
-            any &quot;Seasonal Advice&quot; / Beekeeper Notes panels.
+            hive data or reminders.
           </li>
           <li>
             If we are found liable for any claim arising out of or in connection
@@ -292,7 +276,7 @@ export default function Terms() {
         </ul>
       </section>
 
-      {/* 13. Suspension and termination */}
+      {/* 13. Termination */}
       <section className="space-y-3 mt-6">
         <h2 className="text-lg font-semibold">13. Suspension and termination</h2>
         <p>
@@ -310,8 +294,7 @@ export default function Terms() {
             title="Open the members contact form"
           >
             BeezKnees
-          </a>
-          .
+          </a>.
         </p>
       </section>
 
@@ -344,12 +327,12 @@ export default function Terms() {
             title="Open the members contact form"
           >
             BeezKnees
-          </a>
-          .
+          </a>.
         </p>
       </section>
 
-      <div className="pt-8">
+
+            <div className="pt-8">
         <a
           href="#top"
           className="inline-block text-sm text-blue-700 hover:underline"
@@ -357,6 +340,8 @@ export default function Terms() {
           ↑ Back to top
         </a>
       </div>
+
+
     </div>
   );
 }

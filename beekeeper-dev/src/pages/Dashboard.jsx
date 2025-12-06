@@ -2,7 +2,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../services/supabase";
 import { Link, useLocation } from "react-router-dom";
-import { buildBeekeeperNotes } from "../utils/buildBeekeeperNotes";
 
 // Weather label/icon maps (for 5-day forecast)
 const WX_LABEL = {
@@ -209,7 +208,7 @@ const Dashboard = () => {
     fetchNameLookups();
   }, []);
 
-  // ---- Stats (filter-aware) ----
+  // ---- Stats (filter-aware for hives/inspections/todos/logbook; apiaries stays global) ----
   const fetchStats = async (apiaryId = "all") => {
     const { count: apiaries } = await supabase
       .from("apiaries")
@@ -249,6 +248,7 @@ const Dashboard = () => {
   // ---- NFC summary counts (filter-aware) ----
   const fetchNfcSummary = async (apiaryId = "all") => {
     try {
+      // total active hives
       let totalQ = supabase
         .from("hives")
         .select("*", { count: "exact", head: true })
@@ -256,6 +256,7 @@ const Dashboard = () => {
       if (apiaryId !== "all") totalQ = totalQ.eq("apiary_id", apiaryId);
       const { count: total } = await totalQ;
 
+      // tagged active hives (nfc_uid not null)
       let taggedQ = supabase
         .from("hives")
         .select("*", { count: "exact", head: true })
@@ -331,8 +332,7 @@ const Dashboard = () => {
     setLoadingLogs(true);
     let q = supabase
       .from("logbook")
-      .select(
-        `
+      .select(`
         id,
         log_type,
         entry,
@@ -343,8 +343,7 @@ const Dashboard = () => {
         photo_url,
         archived_at,
         inspection:inspection_id ( id, date )
-      `
-      )
+      `)
       .order("date", { ascending: false })
       .limit(6);
     if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
@@ -357,7 +356,7 @@ const Dashboard = () => {
   const fetchWeather = async () => {
     const lastFail = localStorage.getItem("weather_last_fail");
     const now = Date.now();
-    if (lastFail && now - parseInt(lastFail, 10) < 30 * 60 * 1000) {
+    if (lastFail && now - parseInt(lastFail) < 30 * 60 * 1000) {
       setWeatherError("Weather temporarily unavailable (last attempt failed).");
       return;
     }
@@ -392,8 +391,7 @@ const Dashboard = () => {
         latitude: String(lat),
         longitude: String(lon),
         current: "temperature_2m,weather_code,wind_speed_10m",
-        daily:
-          "temperature_2m_max,temperature_2m_min,weather_code,wind_speed_10m_max,precipitation_sum",
+        daily: "temperature_2m_max,temperature_2m_min,weather_code",
         timezone: "auto",
         timeformat: "unixtime",
       }).toString();
@@ -407,15 +405,10 @@ const Dashboard = () => {
       const daily = json.daily || {};
       if (!current) throw new Error("No current weather in response");
 
-      const windMph = Number.isFinite(current.wind_speed_10m)
-        ? Math.round(current.wind_speed_10m * 0.621371)
-        : null;
-
       setWeather({
         current: {
           temperature_2m: current.temperature_2m,
           wind_speed_10m: current.wind_speed_10m,
-          wind_speed_mph: windMph,
           weather_code: current.weather_code,
         },
         forecast: {
@@ -423,8 +416,6 @@ const Dashboard = () => {
           temperature_2m_min: daily.temperature_2m_min || [],
           temperature_2m_max: daily.temperature_2m_max || [],
           weather_code: daily.weather_code || daily.weathercode || [],
-          wind_speed_10m_max: daily.wind_speed_10m_max || [],
-          precipitation_sum: daily.precipitation_sum || [],
         },
       });
       setWeatherError(null);
@@ -437,7 +428,7 @@ const Dashboard = () => {
     }
   };
 
-  // Initial + whenever filter changes
+  // Initial + whenever filter changes (for lists/stats + NFC summary + NFC list)
   useEffect(() => {
     fetchStats(selectedApiaryId);
     fetchRecentInspections(selectedApiaryId);
@@ -485,9 +476,7 @@ const Dashboard = () => {
 
   // Helpers for building list links with highlight + filter
   const toInspectionsList = (id) =>
-    `/inspections?highlight=${encodeURIComponent(
-      id
-    )}&type=INSPECTION${
+    `/inspections?highlight=${encodeURIComponent(id)}&type=INSPECTION${
       selectedApiaryId !== "all"
         ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}`
         : ""
@@ -529,36 +518,12 @@ const Dashboard = () => {
       : ""
   }`;
 
-  // Hives link for NFC "See all tagged hives"
+  // Hives link for NFC "See all tagged hives" (goes to normal HiveList, not filtered to NFC only)
   const hivesHref = `/hives${
     selectedApiaryId !== "all"
       ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}`
       : ""
   }`;
-
-  // --- Beekeeper Notes (Dashboard version, default apiary or London) ---
-  const safeArr = (a) => (Array.isArray(a) ? a : []);
-  const beekeeperNotes = useMemo(() => {
-    if (!weather || !weather.forecast) return [];
-
-    const daily = weather.forecast;
-    const tempsMin = safeArr(daily.temperature_2m_min).filter(Number.isFinite);
-    const tempsMax = safeArr(daily.temperature_2m_max).filter(Number.isFinite);
-    const windsMax = safeArr(daily.wind_speed_10m_max).filter(Number.isFinite);
-    const precs = safeArr(daily.precipitation_sum).filter(Number.isFinite);
-
-    const monthIndex = new Date().getMonth();
-
-    return buildBeekeeperNotes({
-      monthIndex,
-      tempsMin,
-      tempsMax,
-      windsMax,
-      precs,
-      unit: "C",
-      windUnit: "kmh",
-    });
-  }, [weather]);
 
   return (
     <div className="p-6 space-y-6">
@@ -659,7 +624,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Stats cards */}
+      {/* Stats cards (now 6 on large screens, including NFC tags for premium users) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4">
         <div className="bg-white rounded shadow p-4">
           <p className="text-sm text-gray-500">Apiaries</p>
@@ -695,7 +660,7 @@ const Dashboard = () => {
           <p className="text-2xl font-bold">{stats.logbook}</p>
         </div>
 
-        {/* NFC Tagged Hives count (Premium only) */}
+        {/* NEW: NFC Tagged Hives count in stats (Premium only) */}
         {subscriptionLevel === "premium" && (
           <div className="bg-white rounded shadow p-4">
             <p className="text-sm text-gray-500">NFC Tagged Hives</p>
@@ -745,7 +710,9 @@ const Dashboard = () => {
                   >
                     <div className="min-w-0">
                       <div className="font-semibold truncate">
-                        {hive.name || hiveNameById[hive.id] || "Unnamed hive"}
+                        {hive.name ||
+                          hiveNameById[hive.id] ||
+                          "Unnamed hive"}
                       </div>
                       <div className="text-xs text-gray-600">
                         {hive.apiary_id && apiaryNameById[hive.apiary_id]
@@ -760,9 +727,7 @@ const Dashboard = () => {
                       <Link
                         to={toHiveInList(hive.id)}
                         className="text-xs text-blue-600 hover:underline whitespace-nowrap"
-                        aria-label={`Open hive ${
-                          hive.name || hive.id
-                        } in hive list`}
+                        aria-label={`Open hive ${hive.name || hive.id} in hive list`}
                       >
                         Open hive →
                       </Link>
@@ -801,6 +766,7 @@ const Dashboard = () => {
                   }`}
                   title={i.archived_at ? "Archived inspection" : ""}
                 >
+                  {/* Text row */}
                   <div className="min-w-0">
                     <strong className="mr-1">
                       {formatUKDate(i.date)}
@@ -814,6 +780,7 @@ const Dashboard = () => {
                     {i.notes ? ` — ${i.notes.slice(0, 80)}` : ""}
                   </div>
 
+                  {/* Actions row at bottom */}
                   <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
                     <ArchivedPill at={i.archived_at} />
                     {!i.archived_at && (
@@ -874,10 +841,13 @@ const Dashboard = () => {
                     }`}
                     title={t.archived_at ? "Archived task" : ""}
                   >
+                    {/* Text row */}
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <strong>
-                          {t.due_date ? formatUKDate(t.due_date) : "No date"}
+                          {t.due_date
+                            ? formatUKDate(t.due_date)
+                            : "No date"}
                         </strong>
                         <span className={statusPill(t.status)}>
                           {t.status || "Pending"}
@@ -897,6 +867,7 @@ const Dashboard = () => {
                       </div>
                     </div>
 
+                    {/* Actions row at bottom */}
                     <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
                       {t.archived_at && <ArchivedPill at={t.archived_at} />}
                       {!t.archived_at && (
@@ -952,6 +923,7 @@ const Dashboard = () => {
                   }`}
                   title={l.archived_at ? "Archived log entry" : ""}
                 >
+                  {/* Text row */}
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <strong className="mr-1">
@@ -976,6 +948,7 @@ const Dashboard = () => {
                     )}
                   </div>
 
+                  {/* Actions row at bottom */}
                   <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
                     {l.archived_at && <ArchivedPill at={l.archived_at} />}
                     {!l.archived_at && (
@@ -1012,7 +985,7 @@ const Dashboard = () => {
         )}
       </div>
 
-      {/* Weather Snapshot + Seasonal Advice – Beekeeper Notes */}
+      {/* Weather Snapshot */}
       <div className="bg-white rounded shadow p-4">
         <h2 className="text-lg font-semibold mb-1">Weather Snapshot</h2>
         <p className="text-xs text-gray-600 mb-3">
@@ -1038,85 +1011,39 @@ const Dashboard = () => {
         ) : !weather ? (
           <p className="text-gray-500">Loading weather...</p>
         ) : (
-          <>
-            <div className="text-sm">
-              <p>
-                <strong>Now:</strong>{" "}
-                {weather?.current?.temperature_2m ?? "N/A"}°C, Wind{" "}
-                {weather?.current?.wind_speed_mph ?? "N/A"} mph
-              </p>
-              <p className="mt-2">
-                <strong>Next 5 Days:</strong>
-              </p>
-              <ul className="grid grid-cols-1 gap-x-6">
-                {Array.isArray(weather?.forecast?.time) &&
-                weather.forecast.time.length ? (
-                  weather.forecast.time.slice(0, 5).map((day, index) => {
-                    const wc = weather?.forecast?.weather_code?.[index];
-                    const icon = WX_ICON[wc] || "⛅";
-                    const label = WX_LABEL[wc] || "";
-                    const tmin =
-                      weather?.forecast?.temperature_2m_min?.[index] ?? "N/A";
-                    const tmax =
-                      weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
-                    return (
-                      <li key={day ?? index}>
-                        {formatUKDate(day)}: {icon}{" "}
-                        {label && `${label} — `}
-                        {tmin}°C → {tmax}°C
-                      </li>
-                    );
-                  })
-                ) : (
-                  <li>No forecast.</li>
-                )}
-              </ul>
-            </div>
-
-            {/* Dashboard Seasonal Advice – Beekeeper Notes (summary) */}
-            <div className="mt-4 pt-3 border-t border-gray-200">
-              <h3 className="text-sm font-semibold mb-1">
-                Seasonal Advice – Beekeeper Notes
-              </h3>
-              <p className="text-[11px] text-gray-500 mb-2">
-                These notes combine the forecast for your default apiary (or a
-                default London location if no coordinates are set) with typical
-                seasonal patterns for hobbyist beekeepers in cool-temperate UK
-                conditions. Guide only – this is general beekeeping advice
-                linked to the forecast for your default apiary (or a default
-                London location if no coordinates are set). Weather, forage and
-                nectar flows vary by region, altitude and micro-climate, and
-                every colony behaves differently. Always use your own judgement,
-                local experience and any guidance from your beekeeping
-                association or mentor. Never rely on this panel alone for
-                critical decisions about inspections, feeding or treatments.
-              </p>
-              {beekeeperNotes.length ? (
-                <>
-                  <ul className="space-y-1 text-xs text-gray-800">
-                    {beekeeperNotes.slice(0, 4).map((n, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span>{n.icon}</span>
-                        <span>{n.text}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  {beekeeperNotes.length > 4 && (
-                    <p className="mt-2 text-[11px] text-gray-500">
-                      Showing a short seasonal snapshot.{" "}
-                      <Link to="/weather" className="text-blue-600 underline">
-                        View full notes →
-                      </Link>
-                    </p>
-                  )}
-                </>
+          <div className="text-sm">
+            <p>
+              <strong>Now:</strong>{" "}
+              {weather?.current?.temperature_2m ?? "N/A"}°C, Wind{" "}
+              {weather?.current?.wind_speed_10m ?? "N/A"} km/h
+            </p>
+            <p className="mt-2">
+              <strong>Next 5 Days:</strong>
+            </p>
+            <ul className="grid grid-cols-1 gap-x-6">
+              {Array.isArray(weather?.forecast?.time) &&
+              weather.forecast.time.length ? (
+                weather.forecast.time.slice(0, 5).map((day, index) => {
+                  const wc = weather?.forecast?.weather_code?.[index];
+                  const icon = WX_ICON[wc] || "⛅";
+                  const label = WX_LABEL[wc] || "";
+                  const tmin =
+                    weather?.forecast?.temperature_2m_min?.[index] ?? "N/A";
+                  const tmax =
+                    weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
+                  return (
+                    <li key={day ?? index}>
+                      {formatUKDate(day)}: {icon}{" "}
+                      {label && `${label} — `}
+                      {tmin}°C → {tmax}°C
+                    </li>
+                  );
+                })
               ) : (
-                <p className="text-xs text-gray-500">
-                  No special notes today.
-                </p>
+                <li>No forecast.</li>
               )}
-            </div>
-          </>
+            </ul>
+          </div>
         )}
       </div>
 
@@ -1138,6 +1065,7 @@ const Dashboard = () => {
               Scan NFC Tag (Premium)
             </Link>
           )}
+          
         </div>
       </div>
     </div>

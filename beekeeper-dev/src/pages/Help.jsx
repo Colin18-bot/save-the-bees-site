@@ -290,20 +290,6 @@ export default function Help() {
                       temporary London placeholder is shown.
                     </li>
                     <li>
-                      <strong>
-                        Seasonal Advice – Beekeeper Notes (Dashboard snapshot)
-                      </strong>{" "}
-                      sits just under the Weather Snapshot and shows a short
-                      set of notes based on the forecast for your default
-                      apiary and time of year. It’s{" "}
-                      <strong>
-                        general guidance only, not a checklist or instruction
-                      </strong>
-                      . Use{" "}
-                      <strong>“View full notes →”</strong> to jump straight to
-                      the Weather page for the full Seasonal Advice panel.
-                    </li>
-                    <li>
                       <strong>Open · Print · Export</strong>: the toolbar lets
                       you print the page or export CSV; exports respect the
                       Apiary filter.
@@ -764,7 +750,7 @@ export default function Help() {
                   </li>
                   <li>
                     <strong>Troubleshooting:</strong> enable NFC; hold the tag
-                      near the phone’s antenna; try another supported phone if
+                    near the phone’s antenna; try another supported phone if
                     needed. If the app reports the tag is already linked, look
                     up that hive and adjust your setup before re-using the tag.
                   </li>
@@ -799,45 +785,8 @@ export default function Help() {
               </h2>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
-                  <strong>Weather:</strong> the dedicated{" "}
-                  <strong>Weather</strong> page uses the selected apiary’s
-                  coordinates to show:
-                  <ul className="list-disc pl-6 mt-1 space-y-1">
-                    <li>
-                      <strong>Now</strong> (conditions, temperature, “feels
-                      like”, wind, humidity).
-                    </li>
-                    <li>
-                      <strong>Today, hour by hour</strong> – a horizontal strip
-                      for the next few hours.
-                    </li>
-                    <li>
-                      <strong>Next 5 days</strong> – daily high/low, rain and
-                      wind.
-                    </li>
-                    <li>
-                      Optional <strong>pollen</strong> levels (tree, grass,
-                      weed) and <strong>official weather warnings</strong> when
-                      the provider supplies them.
-                    </li>
-                    <li>
-                      A full <strong>Seasonal Advice – Beekeeper Notes</strong>{" "}
-                      panel that combines the forecast and time of year into
-                      plain-language guidance (cold snaps, hot spells, strong
-                      winds, inspection-friendly days, feeding reminders, etc.).
-                      This panel is{" "}
-                      <strong>
-                        advisory only, not a set of instructions or legal
-                        guidance
-                      </strong>
-                      ; always use your own judgement and any advice from your
-                      local association or mentor.
-                    </li>
-                  </ul>
-                  Weather is also used to auto-fill inspections (by apiary
-                  + date), and the Dashboard shows a smaller snapshot +
-                  short Seasonal Advice list for your <em>default apiary</em>.
-                  <Badge>Free</Badge>
+                  <strong>Weather</strong> is fetched by apiary coordinates for
+                  the inspection date. <Badge>Free</Badge>
                 </li>
                 <li>
                   <strong>Maps:</strong> set coordinates by clicking the map or
@@ -972,7 +921,7 @@ export default function Help() {
                 </li>
                 <li>
                   Set a <strong>default apiary</strong> to power Dashboard
-                  weather, Seasonal Advice snapshot and fallback logic.
+                  weather and fallback logic.
                 </li>
                 <li>
                   Click photos on cards to open a <strong>lightbox</strong> for
@@ -1070,11 +1019,8 @@ export default function Help() {
                     Why is Dashboard weather a different location?
                   </p>
                   <p className="text-gray-700">
-                    Dashboard weather and the Seasonal Advice snapshot both use
-                    your <strong>default apiary</strong>. Edit the correct
-                    apiary, set its coordinates, mark it as default, and use the{" "}
-                    <strong>Weather</strong> page for full per-apiary details
-                    and the deeper Seasonal Advice panel.
+                    Weather uses your <strong>default apiary</strong>. Edit the
+                    correct apiary and set as default.
                   </p>
                 </div>
                 <div>
@@ -1162,9 +1108,7 @@ export default function Help() {
                 </li>
                 <li>
                   <strong>Weather didn’t load:</strong> add coordinates to the
-                  apiary and retry; occasional forecast-provider outages can
-                  happen and the app may temporarily back off after repeated
-                  errors—try again a little later or pick a different apiary.
+                  apiary and retry; occasional provider outages can happen.
                 </li>
                 <li>
                   <strong>Export didn’t download:</strong> check your browser’s
