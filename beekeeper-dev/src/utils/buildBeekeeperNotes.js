@@ -312,3 +312,88 @@ export function buildBeekeeperNotes({ weather, unit = "C", windUnit = "kmh" }) {
 }
 
 export default buildBeekeeperNotes;
+// src/utils/buildBeekeeperNotes.js
+
+// Inputs: forecast arrays + options (units, date override)
+// Output: array of { icon, text }
+
+export function buildBeekeeperNotes({
+  tempsMin = [],
+  tempsMax = [],
+  windsMax = [],
+  precs = [],
+  nowDate = new Date(),
+  unit = "C",        // "C" or "F"
+  windUnit = "kmh",  // "kmh" or "mph"
+} = {}) {
+  const out = [];
+
+  const toF = (c) => Math.round((c * 9) / 5 + 32);
+  const tempLabel = (c) => (unit === "C" ? `${c}°C` : `${toF(c)}°F`);
+  const windLabel = windUnit === "kmh" ? "km/h" : "mph";
+
+  const month = nowDate.getMonth(); // 0–11
+
+  // ---------- MONTH / SEASON PROFILE ----------
+  if (month === 11 || month === 0 || month === 1) {
+    // Dec–Feb
+    if (month === 0) {
+      out.push({
+        icon: "📆",
+        text:
+          "January – deep winter. Avoid full inspections unless there is a clear emergency such as suspected starvation or damage.",
+      });
+    } else if (month === 1) {
+      out.push({
+        icon: "📆",
+        text:
+          "February – colonies are building up brood but weather is still unreliable. Keep the hive closed except for quick emergency checks.",
+      });
+    } else {
+      out.push({
+        icon: "📆",
+        text:
+          "December – mid-winter. Colonies should be settled with adequate stores and secure hive hardware.",
+      });
+    }
+
+    out.push({
+      icon: "🍬",
+      text:
+        "Winter feeding – use fondant above the crown board hole. Judge food by hefting the hive rather than pulling frames.",
+    });
+    out.push({
+      icon: "❄️",
+      text: `Foraging is very limited below about ${tempLabel(
+        10
+      )}. Expect little or no flight; bees will rely heavily on stored food.`,
+    });
+    out.push({
+      icon: "🛠️",
+      text:
+        "After storms, frost or snow, check entrances are clear, roofs are secure, and stands are stable.",
+    });
+  }
+
+  // ... (rest of your spring / summer / autumn logic)
+  // ... (strong wind, heavy rain, hot spell etc.)
+
+  // Example of wind bit:
+  const strongWindThresholdKmh = 40;
+  const maxWind = windsMax.length ? Math.max(...windsMax) : 0;
+
+  if (maxWind >= strongWindThresholdKmh) {
+    const thresholdText =
+      windUnit === "kmh"
+        ? `≥${strongWindThresholdKmh} ${windLabel}`
+        : `≥${Math.round(strongWindThresholdKmh * 0.621371)} ${windLabel}`;
+    out.push({
+      icon: "💨",
+      text: `Strong winds expected (${thresholdText}). Avoid opening hives; secure roofs and add straps or weights if needed.`,
+    });
+  }
+
+  // ...etc
+
+  return out;
+}
