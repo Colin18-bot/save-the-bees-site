@@ -358,6 +358,17 @@ a {
   border-radius: 8px;
 }
 
+/* --- INLINE CONTENT IMAGES (CENTERED, NOT FULL-SCREEN) --- */
+.content img.inline-img {
+  display: block;
+  max-width: 600px;   /* tweak smaller or larger if you like */
+  width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+  border-radius: 8px;
+}
+
+
 /* 📱 Donation QR Code Resize */
 .qr-code {
   max-width: 250px;
