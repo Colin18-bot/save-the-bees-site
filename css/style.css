@@ -8,7 +8,7 @@
 }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   background-color: #fdf6ec;
   color: #333;
   line-height: 1.6;
@@ -20,13 +20,11 @@ a {
   color: inherit;
 }
 
-/* ---------- BANNER ----------*/
+/* ---------- BANNER ---------- */
 .banner img {
   width: 100%;
-  height: 450px;
-  /* Set your desired height */
-  object-fit: cover;
-  /* Keeps image filling the space and crops excess */
+  height: 450px;      /* Set your desired height */
+  object-fit: cover;  /* Keeps image filling the space and crops excess */
 }
 
 /* -------------------------------------------------- */
@@ -34,11 +32,12 @@ a {
 /* -------------------------------------------------- */
 .navbar {
   background-color: #000;
-  display: flex; /* ✅ Hide by default */
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
   position: relative;
 }
+
 
 .nav-menu {
   list-style: none;
@@ -618,6 +617,14 @@ main.not-found {
     padding-left: 0;
   }
 }
+
+/* Extra indent for cost list on Getting Started */
+ul.extra-indent {
+  padding-left: 3rem !important;  /* pushes bullets + text to the right */
+  margin-left: 0;                  /* optional: reset margin if needed */
+}
+
+
 
 /* ---------- DESKTOP FLOATS: LEFT / RIGHT IMAGE WRAP ---------- */
 @media (min-width: 769px) {
