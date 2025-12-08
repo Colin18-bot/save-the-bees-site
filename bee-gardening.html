@@ -28,31 +28,42 @@
         text-align: center;
       }
 
-      #plant-selector table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 0.75rem;
-      }
+     /* Make plant selector scroll inside its own container on small screens */
+#plant-selector {
+  width: 100%;
+  overflow-x: auto;
+}
 
-      #plant-selector th,
-      #plant-selector td {
-        border: 1px solid #ddd;
-        padding: 0.5rem 0.75rem;
-        vertical-align: top;
-      }
+/* Table styles */
+#plant-selector table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+  table-layout: fixed;      /* helps wrap long text */
+  min-width: 480px;         /* prevents columns becoming impossibly thin */
+}
 
-      #plant-selector thead th {
-        background-color: #f0f0f0;
-        font-weight: 600;
-      }
+#plant-selector th,
+#plant-selector td {
+  border: 1px solid #ddd;
+  padding: 0.5rem 0.75rem;
+  vertical-align: top;
+  word-wrap: break-word;
+}
 
-      #plant-selector tbody tr:nth-child(odd) {
-        background-color: #ffffff;
-      }
+#plant-selector thead th {
+  background-color: #f0f0f0;
+  font-weight: 600;
+}
 
-      #plant-selector tbody tr:nth-child(even) {
-        background-color: #fdf6ec;
-      }
+#plant-selector tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+#plant-selector tbody tr:nth-child(even) {
+  background-color: #fdf6ec;
+}
+
 
       @media (max-width: 768px) {
         #plant-selector th,
