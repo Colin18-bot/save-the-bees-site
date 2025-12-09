@@ -1,399 +1,1026 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-		<title>Hive Hygiene | Keep Your Beehive Clean and Healthy | BeezKnees UK</title>
+    <title>Hive Hygiene – Keep Your Beehive Clean and Healthy | BeezKnees UK</title>
 
-		<!-- Hamburger button -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
+    <!-- Hamburger button -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      referrerpolicy="no-referrer"
+    />
 
-		<!-- Your CSS file -->
-		<link rel="stylesheet" href="css/style.css" />
+    <!-- Your CSS file -->
+    <link rel="stylesheet" href="css/style.css" />
 
-		<!-- SEO Meta Tags -->
-		<meta
-			name="description"
-			content="Learn essential hive hygiene practices to protect your bees from disease and pests. Discover how to clean 
-  beekeeping equipment, manage contamination, and support colony health with BeezKnees."
-		/>
-		<meta
-			name="keywords"
-			content="hive hygiene, beehive cleaning, beekeeping UK, disease prevention bees, clean beekeeping practices, bee health, 
-  hive maintenance, apiary hygiene, chalkbrood prevention, foulbrood control, Colin Chorley, BeezKnees"
-		/>
-		<meta name="author" content="Colin Chorley" />
+    <!-- Page-specific styling for callouts and small tables -->
+    <style>
+      .callout {
+        border-left: 4px solid #f4b41a;
+        background-color: #fff7e6;
+        padding: 0.75rem 1rem;
+        margin: 1rem 0;
+      }
 
-		<!-- Favicons -->
+      .table-wrapper {
+        overflow-x: auto;
+        margin: 1.5rem 0;
+      }
+
+      .simple-table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+      }
+
+      .simple-table th,
+      .simple-table td {
+        border: 1px solid #d4d4d4;
+        padding: 0.75rem;
+        vertical-align: top;
+        text-align: left;
+      }
+
+      .simple-table thead th {
+        background-color: #f3f3f3;
+        font-weight: 700;
+      }
+
+      .simple-table tbody tr:nth-child(even) {
+        background-color: #fafafa;
+      }
+
+      @media (max-width: 768px) {
+        .simple-table th,
+        .simple-table td {
+          font-size: 0.875rem;
+        }
+      }
+    </style>
+
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="Practical UK guide to hive hygiene – how to keep your beehive clean, rotate comb, avoid cross-contamination and work safely after disease. Learn simple habits that protect honey bee health all year round."
+    />
+    <meta
+      name="keywords"
+      content="hive hygiene, beehive cleaning, beekeeping UK, disease prevention bees, clean beekeeping practices, hive maintenance, apiary hygiene, chalkbrood prevention, foulbrood control, comb replacement, brood box cleaning"
+    />
+    <meta name="author" content="Colin Chorley" />
+
+    <!-- Favicons -->
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
     <!-- 16x16 and 32x32 for classic tabs -->
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/images/favicon-16x16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/images/favicon-32x32.png"
+    />
     <!-- Apple touch icon for iOS -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/images/apple-touch-icon.png"
+    />
     <!-- Android home screen icons -->
-    <link rel="icon" type="image/png" sizes="192x192" href="/images/android-chrome-192x192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="/images/android-chrome-512x512.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="/images/android-chrome-192x192.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="512x512"
+      href="/images/android-chrome-512x512.png"
+    />
     <!-- Android / PWA -->
     <link rel="manifest" href="/site.webmanifest" />
 
-		<!-- Schema.org Structured Data -->
-		<script type="application/ld+json">
-			[
-			  {
-			    "@context": "https://schema.org",
-			    "@type": "Article",
-			    "headline": "Hive Hygiene – Beekeeping Tips to Keep Your Beehive Clean and Healthy",
-			    "description": "Learn how to maintain hive hygiene and prevent disease. Discover best practices for cleaning beekeeping equipment,
-			    rotating combs, and controlling pests in your beehive.",
-			    "author": {
-			      "@type": "Person",
-			      "name": "Colin Chorley"
-			    },
-			    "publisher": {
-			      "@type": "Organization",
-			      "name": "BeezKnees",
-			      "logo": {
-			        "@type": "ImageObject",
-			        "url": "https://www.beezknees.co.uk/images/BeezKnees-Logo.png"
-			      }
-			    },
-			    "mainEntityOfPage": {
-			      "@type": "WebPage",
-			      "@id": "https://www.beezknees.co.uk/hygiene.html"
-			    },
-			    "image": "https://www.beezknees.co.uk/images/frame-close-up.jpg",
-			    "datePublished": "2024-06-01T00:00:00+00:00",
-			    "dateModified": "2024-06-01T00:00:00+00:00",
-			    "articleSection": "Beekeeping Guides",
-			    "keywords": [
-			      "hive hygiene",
-			      "beehive cleaning",
-			      "bee health",
-			      "apiary maintenance",
-			      "clean beekeeping",
-			      "chalkbrood prevention",
-			      "foulbrood control"
-			    ]
-			  },
-			  {
-			    "@context": "https://schema.org",
-			    "@type": "BreadcrumbList",
-			    "itemListElement": [
-			      {
-			        "@type": "ListItem",
-			        "position": 1,
-			        "name": "Home",
-			        "item": "https://www.beezknees.co.uk/"
-			      },
-			      {
-			        "@type": "ListItem",
-			        "position": 2,
-			        "name": "Hygiene",
-			        "item": "https://www.beezknees.co.uk/hygiene.html"
-			      }
-			    ]
-			  }
-			]
-		</script>
-	</head>
-	<body>
-		<!-- Fixed Header and Nav Container -->
-		<div class="fixed-header">
-			<header class="site-header" role="region" aria-label="Site Header">
-				<div class="header-container" role="region" aria-label="Site Branding">
-					<a href="https://www.beezknees.co.uk">
-						<img src="images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
-					</a>
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": "Hive Hygiene – Beekeeping Tips to Keep Your Beehive Clean and Healthy",
+          "description": "Learn how to maintain hive hygiene and prevent disease in UK-style climates. Discover best practices for cleaning beekeeping equipment, rotating combs, avoiding cross-contamination and working safely after disease.",
+          "author": {
+            "@type": "Person",
+            "name": "Colin Chorley"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "BeezKnees",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.beezknees.co.uk/images/BeezKnees-Logo.png"
+            }
+          },
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://www.beezknees.co.uk/hygiene.html"
+          },
+          "image": "https://www.beezknees.co.uk/images/frame-close-up.jpg",
+          "datePublished": "2024-06-01T00:00:00+00:00",
+          "dateModified": "2025-12-09T00:00:00+00:00",
+          "articleSection": "Beekeeping Guides",
+          "keywords": [
+            "hive hygiene",
+            "beehive cleaning",
+            "bee health",
+            "apiary maintenance",
+            "clean beekeeping",
+            "chalkbrood prevention",
+            "foulbrood control",
+            "comb rotation",
+            "UK beekeeping"
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Why is hive hygiene so important in beekeeping?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Good hive hygiene reduces the build-up and spread of diseases and pests such as foulbrood, chalkbrood, Nosema and varroa-associated viruses. Clean equipment, sensible comb rotation and avoiding cross-contamination all help colonies stay stronger and more productive."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How often should I replace brood comb in my hive?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Many UK beekeepers aim to replace brood comb on a 3–5 year cycle, or sooner if comb is badly damaged or contaminated. Dark, brittle or heavily patched comb is a sign it may be time to cycle frames out and give the colony fresh foundation."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is the safest way to clean beekeeping tools?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Hive tools can be scraped and flame-cleaned with a blowtorch between hives, or washed in hot soda solution where appropriate. Gloves and hive tools should be cleaned more thoroughly after working any suspect colony to reduce the risk of spreading disease."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What should I do if I suspect American or European foulbrood?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "If you suspect AFB or EFB, do not move frames, bees or equipment between colonies. Close the hive, make notes and contact your local bee inspector or use the BeeBase website for current UK guidance. Notifiable diseases must be handled according to official instructions."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does hive hygiene help with varroa management?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Hygiene and varroa control go hand in hand. Monitoring mite levels, removing heavily infested brood where appropriate, changing old comb and cleaning equipment all support your formal varroa treatment plan."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can digital records help with bee health and hygiene?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Consistent records make it easier to spot patterns such as recurring chalkbrood, high varroa counts or hives that always struggle. Tools like the HiveTag web app can help track inspections, treatments and comb changes across the whole apiary."
+              }
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.beezknees.co.uk/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Hygiene",
+              "item": "https://www.beezknees.co.uk/hygiene.html"
+            }
+          ]
+        }
+      ]
+    </script>
+  </head>
+  <body>
+    <!-- Fixed Header and Nav Container -->
+    <div class="fixed-header">
+      <header class="site-header" role="region" aria-label="Site Header">
+        <div class="header-container" role="region" aria-label="Site Branding">
+          <a href="https://www.beezknees.co.uk">
+            <img
+              src="images/BeezKnees-Logo.png"
+              alt="BeezKnees logo"
+              class="site-logo"
+            />
+          </a>
 
-					<h1 class="site-title">BeezKnees</h1>
-					<!-- ✅ WORKING HAMBURGER ICON BUTTON -->
-					<button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-						<i class="fas fa-bars"></i>
-					</button>
-				</div>
-			</header>
-		</div>
+          <h1 class="site-title">BeezKnees</h1>
+          <!-- ✅ WORKING HAMBURGER ICON BUTTON -->
+          <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </header>
+    </div>
 
-		<!-- Navigation Bar -->
-		<nav class="navbar" role="navigation" aria-label="Main navigation">
-			<ul class="nav-menu" role="region" aria-label="Main Navigation Links">
-				<li><a href="/index.html" title="Visit the homepage">Home</a></li>
+    <!-- Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+        <li><a href="/index.html" title="Visit the homepage">Home</a></li>
 
-				<li class="dropdown">
-					<a href="/about-us.html" title="Learn more about us">About</a>
-				</li>
+        <li class="dropdown">
+          <a href="/about-us.html" title="Learn more about us">About</a>
+        </li>
 
-				<li class="dropdown">
-					<a href="/donate.html" title="Support out mission">Donate</a>
-				</li>
+        <li class="dropdown">
+          <a href="/donate.html" title="Support out mission">Donate</a>
+        </li>
 
-				<li class="dropdown">
-					<a href="/beekeeping-guides.html" title="Explore our beekeeping guides">Beekeeping</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/getting-started.html" title="Begin your beekeeping journey">Getting Started</a></li>
-						<li><a href="/equipment.html" title="Essential beekeeping equipment">Equipment</a></li>
-						<li><a href="/hive-management.html" title="Manage your hive effectively">Hive Management</a></li>
-						<li><a href="/varroa-management.html" title="control varroa mite infestations">Varroa Management</a></li>
-						<li><a href="/hygiene.html" title="Keep your hive clean and healthy">Hygiene</a></li>
-						<li><a href="/bee-stings.html" title="Understand and treat bee stings">Bee Stings</a></li>
-					</ul>
-				</li>
+        <li class="dropdown">
+          <a href="/beekeeping-guides.html" title="Explore our beekeeping guides"
+            >Beekeeping</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li>
+              <a
+                href="/getting-started.html"
+                title="Begin your beekeeping journey"
+                >Getting Started</a
+              >
+            </li>
+            <li>
+              <a href="/equipment.html" title="Essential beekeeping equipment"
+                >Equipment</a
+              >
+            </li>
+            <li>
+              <a href="/hive-management.html" title="Manage your hive effectively"
+                >Hive Management</a
+              >
+            </li>
+            <li>
+              <a
+                href="/varroa-management.html"
+                title="Control varroa mite infestations"
+                >Varroa Management</a
+              >
+            </li>
+            <li>
+              <a href="/hygiene.html" title="Keep your hive clean and healthy"
+                >Hygiene</a
+              >
+            </li>
+            <li>
+              <a href="/bee-stings.html" title="Understand and treat bee stings"
+                >Bee Stings</a
+              >
+            </li>
+          </ul>
+        </li>
 
-				<li class="dropdown">
-					<a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary">Apiary Calendar</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/january.html" title="January beekeeping tasks">January</a></li>
-						<li><a href="/february.html" title="February beekeeping tasks">February</a></li>
-						<li><a href="/march.html" title="March beekeeping tasks">March</a></li>
-						<li><a href="/april.html" title="April beekeeping tasks">April</a></li>
-						<li><a href="/may.html" title="May beekeeping tasks">May</a></li>
-						<li><a href="/june.html" title="June beekeeping tasks">June</a></li>
-						<li><a href="/july.html" title="July beekeeping tasks">July</a></li>
-						<li><a href="/august.html" title="August beekeeping tasks">August</a></li>
-						<li><a href="/september.html" title="September beekeeping tasks">September</a></li>
-						<li><a href="/october.html" title="October beekeeping tasks">October</a></li>
-						<li><a href="/november.html" title="November beekeeping tasks">November</a></li>
-						<li><a href="/december.html" title="December beekeeping tasks">December</a></li>
-					</ul>
-				</li>
+        <li class="dropdown">
+          <a href="/year-in-the-apiary.html" title="Monthly tasks in the apiary"
+            >Apiary Calendar</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/january.html" title="January beekeeping tasks">January</a>
+            </li>
+            <li>
+              <a href="/february.html" title="February beekeeping tasks"
+                >February</a
+              >
+            </li>
+            <li>
+              <a href="/march.html" title="March beekeeping tasks">March</a>
+            </li>
+            <li>
+              <a href="/april.html" title="April beekeeping tasks">April</a>
+            </li>
+            <li><a href="/may.html" title="May beekeeping tasks">May</a></li>
+            <li><a href="/june.html" title="June beekeeping tasks">June</a></li>
+            <li><a href="/july.html" title="July beekeeping tasks">July</a></li>
+            <li>
+              <a href="/august.html" title="August beekeeping tasks">August</a>
+            </li>
+            <li>
+              <a href="/september.html" title="September beekeeping tasks"
+                >September</a
+              >
+            </li>
+            <li>
+              <a href="/october.html" title="October beekeeping tasks">October</a>
+            </li>
+            <li>
+              <a href="/november.html" title="November beekeeping tasks"
+                >November</a
+              >
+            </li>
+            <li>
+              <a href="/december.html" title="December beekeeping tasks"
+                >December</a
+              >
+            </li>
+          </ul>
+        </li>
 
-				<li class="dropdown">
-					<a href="/bee-diseases.html" title="Bee diseases and pests overview">Diseases and Pests</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/bacterial-diseases.html" title="Learn about bacterial bee diseases">Bacterial</a></li>
-						<li><a href="/viral-diseases.html" title="Learn about viral bee diseases">Viral</a></li>
-						<li><a href="/bee-pests.html" title="Common pests affecting bees">Pests</a></li>
-						<li><a href="/parasitic-mites.html" title="Parasitic mites in bee colonies">Mites</a></li>
-						<li><a href="/other-conditions.html" title="Other bee health conditions">Other Conditions</a></li>
-					</ul>
-				</li>
+        <li class="dropdown">
+          <a href="/bee-diseases.html" title="Bee diseases and pests overview"
+            >Diseases and Pests</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li>
+              <a
+                href="/bacterial-diseases.html"
+                title="Learn about bacterial bee diseases"
+                >Bacterial</a
+              >
+            </li>
+            <li>
+              <a
+                href="/viral-diseases.html"
+                title="Learn about viral bee diseases"
+                >Viral</a
+              >
+            </li>
+            <li>
+              <a href="/bee-pests.html" title="Common pests affecting bees"
+                >Pests</a
+              >
+            </li>
+            <li>
+              <a href="/parasitic-mites.html" title="Parasitic mites in bee colonies"
+                >Mites</a
+              >
+            </li>
+            <li>
+              <a href="/other-conditions.html" title="Other bee health conditions"
+                >Other Conditions</a
+              >
+            </li>
+          </ul>
+        </li>
 
-				<li class="dropdown">
-					<a href="/honeybee-facts.html" title="Interesting facts about honeybees">Honeybee Facts</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/anatomy.html" title="Honeybee anatomy explained">Anatomy</a></li>
-						<li><a href="/behaviour.html" title="Learn about honeybee behaviour">Behaviour</a></li>
-						<li><a href="/how-bees-make-honey.html" title="How bees make honey">Make Honey</a></li>
-						<li><a href="/pollination.html" title="Honeybee role in pollination">Pollination</a></li>
-					</ul>
-				</li>
+        <li class="dropdown">
+          <a href="/honeybee-facts.html" title="Interesting facts about honeybees"
+            >Honeybee Facts</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/anatomy.html" title="Honeybee anatomy explained">Anatomy</a>
+            </li>
+            <li>
+              <a href="/behaviour.html" title="Learn about honeybee behaviour"
+                >Behaviour</a
+              >
+            </li>
+            <li>
+              <a href="/how-bees-make-honey.html" title="How bees make honey"
+                >Make Honey</a
+              >
+            </li>
+            <li>
+              <a href="/pollination.html" title="Honeybee role in pollination"
+                >Pollination</a
+              >
+            </li>
+          </ul>
+        </li>
 
-				<li class="dropdown">
-					<a href="/help-the-bees.html" title="How you can help save the bees">Help Bees</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/bee-gardening.html" title="Make your garden bee friendly">Gardening</a></li>
-						<li><a href="/donate.html" title="Make a donation to support bees">Donate</a></li>
-						<li><a href="/report-a-swarm.html" title="Report a bee swarm">Report a Swarm</a></li>
-					</ul>
-				</li>
+        <li class="dropdown">
+          <a href="/help-the-bees.html" title="How you can help save the bees"
+            >Help Bees</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/bee-gardening.html" title="Make your garden bee friendly"
+                >Gardening</a
+              >
+            </li>
+            <li>
+              <a href="/donate.html" title="Make a donation to support bees"
+                >Donate</a
+              >
+            </li>
+            <li>
+              <a href="/report-a-swarm.html" title="Report a bee swarm"
+                >Report a Swarm</a
+              >
+            </li>
+          </ul>
+        </li>
 
-		<li><a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members Area</a></li>
-				
-			</ul>
-		</nav>
+        <li>
+          <a
+            href="https://beezknees-members.netlify.app/login"
+            title="Login or Register for HiveTag Dashboard"
+            >Members Area</a
+          >
+        </li>
+      </ul>
+    </nav>
 
-		<!-- Hero Banner with Image and Alt Fallback -->
-		<section role="region" aria-label="Homepage Banner">
-			<div class="banner">
-				<img src="images/frame-close-up.jpg" alt="Picture of a frame from a beehive" />
-			</div>
-		</section>
+    <!-- Hero Banner with Image and Alt Fallback -->
+    <section role="region" aria-label="Hive hygiene banner">
+      <div class="banner">
+        <img
+          src="images/frame-close-up.jpg"
+          alt="Close-up of brood frame in a clean beehive showing healthy comb"
+        />
+      </div>
+    </section>
 
-		<!-- Main Content -->
-		<main class="content">
-			<h1>Hive Hygiene: Keeping Your Beehive Clean and Healthy</h1>
+    <!-- Main Content -->
+    <main class="content">
+      <h1>Hive Hygiene – Keeping Your Beehive Clean and Healthy</h1>
 
-			<p>Maintaining hive hygiene is essential for preventing disease, boosting colony health, and ensuring productive beekeeping. A clean hive creates a safe environment for honeybees and supports long-term sustainability.</p>
+      <img
+        src="images/beekeeper-inspecting-frames.jpg"
+        alt="Beekeeper inspecting brood frames while checking for disease and hive hygiene"
+        class="float-right-img"
+      />
 
-			<strong><p>Why Hive Hygiene Matters</p></strong>
-			<p>
-				Bees are naturally hygienic, but poor management can lead to contamination and the spread of pests and diseases such as foulbrood, chalkbrood, and
-				<em><a href="/varroa-management.html" title="control varroa mite infestations">Varroa mites</a></em>. Practicing good hive hygiene is one of the most effective ways to support your bees’ immune systems and colony strength.
-				Learn more in our <em><a href="/bee-diseases.html">bee disease guide</a></em>.
-			</p>
+      <p>
+        Hive hygiene is one of the simplest but most powerful tools a beekeeper has.
+        Clean equipment, thoughtful comb rotation and careful handling of frames all
+        help reduce the risk of disease and keep colonies strong. This guide focuses
+        on practical, UK-style beekeeping where weather, forage and regulations shape
+        how we look after bees.
+      </p>
 
-			<strong><p>Best Practices for Hive Hygiene</p></strong>
+      <p>
+        Bees are naturally good housekeepers, but they can only work with the hive
+        you give them. Old comb, contaminated equipment and poor apiary habits make
+        life harder for colonies and easier for pests and pathogens. The aim of this
+        page is to give you a clear set of routines you can build into your
+        <em
+          ><a href="/hive-management.html" title="Manage your hive effectively"
+            >day-to-day hive management</a
+          ></em
+        >
+        from your very first season.
+      </p>
 
-			<div class="indented-list">
-				<ul>
-					<li>
-						<p>
-							<strong>Regular Cleaning:</strong> Remove burr comb, propolis build-up, and debris from hive parts. Clean your tools and smoker regularly to avoid spreading pathogens between colonies. See our
-							<em><a href="/equipment.html" title="Essential beekeeping equipment">equipment page</a></em> for more tips on proper tool care.
-						</p>
-					</li>
-					<li>
-						<p><strong>Sterilising Equipment:</strong> Use a blowtorch or scalding water to sterilise hive tools, frames, and boxes between uses—especially after dealing with disease outbreaks.</p>
-					</li>
-					<li>
-						<p><strong>Replacing Old Combs:</strong> Rotate out old, darkened combs every 3–5 years to reduce spore build-up and maintain brood health. Disease spores and pesticides can accumulate in wax.</p>
-					</li>
-					<li>
-						<p>
-							<strong>Avoid Cross-Contamination:</strong> Don’t transfer frames or tools between colonies without cleaning. This prevents the spread of pests like
-							<em><a href="/varroa-management.html" title="control varroa mite infestations">Varroa</a></em> or small hive beetles.
-						</p>
-					</li>
-					<li>
-						<p><strong>Monitor for Dead Bees:</strong> Regularly clear dead bees from entrances and bottom boards to discourage pests and maintain ventilation.</p>
-					</li>
-				</ul>
-			</div>
+      <section aria-labelledby="why-hygiene-matters">
+        <h2 id="why-hygiene-matters">Why Hive Hygiene Matters</h2>
+        <p>
+          Many common honey bee problems have a hygiene element – either in how they
+          spread or how easily they take hold. That includes:
+        </p>
 
-			<strong><p>Hygienic Behaviour in Bees</p></strong>
-			<p>
-				Some bee strains, such as hygienic Italian or Carniolan bees, are bred for their ability to detect and remove diseased brood. Choosing hygienic bee stock is another layer of disease prevention and can support broader
-				<em><a href="/hive-management.html" title="Manage your hive effectively">hive management</a></em> strategies.
-			</p>
+        <div class="indented-list">
+          <ul>
+            <li>
+              <strong>Bacterial diseases</strong> such as American foulbrood (AFB)
+              and European foulbrood (EFB)
+            </li>
+            <li>
+              <strong>Fungal and gut problems</strong> such as chalkbrood or Nosema
+            </li>
+            <li>
+              <strong>Varroa-linked viral issues</strong> that damage both brood and
+              adult bees
+            </li>
+            <li>
+              <strong>Pests and predators</strong> like wax moth or small hive
+              beetle, which thrive on neglected comb and debris
+            </li>
+          </ul>
+        </div>
 
-			<strong><p>Cleaning After Disease</p></strong>
+        <p>
+          Good hygiene will not magically prevent every disease, but it reduces the
+          background level of contamination and makes early signs easier to spot. It
+          also supports the
+          <em
+            ><a
+              href="/bee-diseases.html"
+              title="Overview of honey bee diseases and pests"
+              >diseases and pests</a
+            ></em
+          >
+          work you do elsewhere in the apiary.
+        </p>
+      </section>
 
-			<div class="indented-list">
-				<ul>
-					<li>
-						<p>
-							<strong>American or European Foulbrood:</strong> Contact your local bee inspector. Infected hives often need to be destroyed or thoroughly sterilised with acetic acid or scorching. See our
-							<em><a href="/bee-diseases.html" title="Bee diseases and pests overview">bacterial disease section</a></em> for more info.
-						</p>
-					</li>
-					<li>
-						<p><strong>Chalkbrood or Nosema:</strong> Improve ventilation, feed supplements to support immunity, and clean bottom boards to reduce spores.</p>
-					</li>
-				</ul>
-			</div>
+      <section aria-labelledby="everyday-housekeeping">
+        <h2 id="everyday-housekeeping">Everyday Hive Housekeeping</h2>
 
-			<strong><p>Tools for Good Hive Hygiene</p></strong>
-			<p>
-				Consider using screen bottom boards to improve airflow and reduce mite populations. Use disposable gloves, clean bee suits, and colour-coded tools to prevent cross-hive contamination. If you're new to beekeeping, our
-				<em><a href="/getting-started.html" title="Begin your beekeeping journey">beginner's guide</a></em> covers hygiene basics from day one.
-			</p>
+        <p>
+          Think of hive hygiene as a set of routines built into every inspection
+          rather than a separate job. A few minutes spent tidying each visit adds up
+          over the season.
+        </p>
 
-			<strong><p>Summary</p></strong>
-			<p>Hive hygiene is a core part of responsible beekeeping. By keeping your equipment clean, rotating old comb, and observing your colonies carefully, you can protect your bees from disease and help them thrive.</p>
-		</main>
+        <div class="indented-list">
+          <ul>
+            <li>
+              <strong>Scrape and tidy surfaces:</strong> Remove loose burr comb,
+              brace comb and lumps of propolis that make inspections messy. Keep the
+              top bars and frame lugs clear so frames can be moved without crushing
+              bees.
+            </li>
+            <li>
+              <strong>Clean your hive tool between hives:</strong> A quick scrape
+              followed by flame-cleaning with a blowtorch (where safe) helps prevent
+              spreading pathogens around the apiary.
+            </li>
+            <li>
+              <strong>Manage the floor:</strong> Clear dead bees and cappings from
+              solid floors. If you use open mesh floors, inspect the insert boards
+              for debris patterns and varroa drop.
+            </li>
+            <li>
+              <strong>Look after gloves and suits:</strong> Wash your bee suit
+              regularly and clean or change gloves, especially after working any
+              colony you are concerned about.
+            </li>
+          </ul>
+        </div>
 
-		
- 
-  
-		<!-- Footer -->
-		<footer class="site-footer" role="region" aria-label="Site Footer">
-			<div class="footer-columns">
-				<div class="footer-column" role="region" aria-label="Contact Information">
-					<h3>Contact</h3>
-					<address>
-						<p>Email: <a href="/contact.html" title="Send us a message via our contact page">Contact</a></p>
-					</address>
-				</div>
+        <p>
+          These small actions make inspections smoother and support the more
+          structured hygiene work explained below.
+        </p>
+      </section>
 
-				<div class="footer-column" role="region" aria-label="Useful Site Links">
-					<h3>Useful Links</h3>
-					<ul>
-						<li><a href="/privacy.html" title="Read our privacy policy">Privacy Policy</a></li>
-						<li><a href="/site-map.html" title="View a map of our entire website">Site Map</a></li>
-					</ul>
-				</div>
+      <section aria-labelledby="comb-rotation">
+        <h2 id="comb-rotation">Comb Rotation and Box Changes</h2>
 
-				<div class="footer-column" role="region" aria-label="Beekeeping Resources">
-					<h3>Resources</h3>
-					<ul>
-						<li>
-							<a
-								href="https://www.bbka.org.uk/"
-								target="_blank"
-								rel="noopener noreferrer"
-								title="Visit the British Beekeepers Association 
-            website"
-							>
-								British Beekeepers Association
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://www.cardiffbeekeepers.co.uk/"
-								target="_blank"
-								rel="noopener noreferrer"
-								title="Visit the Cardiff Beekeepers 
-            Association site"
-							>
-								Cardiff, Vale and Valleys Beekeepers Association
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
-								target="_blank"
-								rel="noopener 
-            noreferrer"
-								title="Read the Honey (Wales) Regulations 2015"
-							>
-								The Honey (Wales) Regulations 2015
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://www.biodiversitywales.org.uk/Bee-Friendly"
-								target="_blank"
-								rel="noopener noreferrer"
-								title="Explore 
-            Bee-Friendly programme by Wales Biodiversity Partnership"
-							>
-								Wales Biodiversity Partnership
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://www.nationalbeeunit.com/"
-								target="_blank"
-								rel="noopener noreferrer"
-								title="Access BeeBase for beekeeping 
-          information"
-							>
-								BeeBase
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div>
+        <p>
+          Brood comb acts like a long-term diary of everything your bees encounter:
+          pollen, pesticides, spores and general debris all build up over time. Old
+          comb can harbour disease and may become harder for queens to lay in.
+        </p>
 
-			<div class="footer-bottom" role="region" aria-label="Copyright">
-				&copy; 2023 Practical Beekeeping. All rights reserved.
-			</div>
-		</footer>
+        <div class="table-wrapper">
+          <table
+            class="simple-table"
+            aria-label="Guide to brood comb condition and replacement timing"
+          >
+            <thead>
+              <tr>
+                <th scope="col">Comb condition</th>
+                <th scope="col">Typical age</th>
+                <th scope="col">What to consider</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Light to mid-brown, open cell pattern</td>
+                <td>1–2 seasons</td>
+                <td>Usually fine to keep in the brood nest if healthy.</td>
+              </tr>
+              <tr>
+                <td>Dark brown, heavy cocoon build-up</td>
+                <td>3–5 seasons</td>
+                <td>
+                  Plan to cycle these frames out using shook swarm, Bailey change or
+                  gradual replacement.
+                </td>
+              </tr>
+              <tr>
+                <td>Very black, patched or damaged comb</td>
+                <td>Often unknown / very old</td>
+                <td>
+                  Prioritise removal and destruction or safe processing. Do not move
+                  into other colonies.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-		<!-- Cookie Consent Popup -->
-		<div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
-			<div class="cookie-content" role="region" aria-label="Cookie Consent Options">
-				<h2>🍪 We Use Cookies</h2>
-				<p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
+        <p>
+          Many UK beekeepers aim to replace a proportion of brood comb each season
+          so that no frame stays in the hive for more than three to five years. You
+          can link comb changes to swarm control or queen replacement so that hygiene
+          work fits naturally into your
+          <em
+            ><a
+              href="/year-in-the-apiary.html"
+              title="Weather-based beekeeping calendar"
+              >year-in-the-apiary plan</a
+            ></em
+          >.
+        </p>
+      </section>
 
-				<form id="cookie-options">
-					<label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
-					<label><input type="checkbox" id="analytics" /> Analytics</label><br />
-					<label><input type="checkbox" id="marketing" /> Marketing</label><br />
-				</form>
+      <section aria-labelledby="cross-contamination">
+        <h2 id="cross-contamination">
+          Avoiding Cross-Contamination Between Colonies
+        </h2>
 
-				<div class="cookie-buttons">
-					<button id="accept-selected">Accept Selected</button>
-					<button id="accept-all">Accept All</button>
-				</div>
-			</div>
-		</div>
+        <p>
+          Many problems spread because equipment is moved too casually between
+          hives. A few simple boundaries make a big difference:
+        </p>
 
-		<!-- Back to Top Button -->
-		<button id="backToTop" title="Back to top" aria-label="Back to top">
-			⬆ Top
-		</button>
+        <div class="indented-list">
+          <ul>
+            <li>
+              <strong>Keep suspect colonies separate:</strong> If you are worried
+              about disease in one hive, finish the rest of your inspections first
+              and handle that colony last with dedicated gloves and a freshly cleaned
+              hive tool.
+            </li>
+            <li>
+              <strong>Be cautious with second-hand kit:</strong> Only buy frames,
+              brood boxes or supers from trusted sources, and disinfect them before
+              use. Unknown comb can import someone else’s problem into your apiary.
+            </li>
+            <li>
+              <strong>Label boxes and frames:</strong> Simple markings help you keep
+              track of which equipment has been used where and when it was last
+              changed.
+            </li>
+            <li>
+              <strong>Control robbing:</strong> Reduce entrances on weak colonies
+              and avoid leaving exposed honey or comb near hives, especially during
+              dearths or in late summer.
+            </li>
+          </ul>
+        </div>
+      </section>
 
-		
-		<script src="js/menuv2.js" defer></script>
+      <section aria-labelledby="cleaning-after-disease">
+        <h2 id="cleaning-after-disease">Cleaning After Disease</h2>
 
-		
-	</body>
+        <div class="callout" role="note">
+          <strong>Important:</strong> Always follow current UK guidance for
+          notifiable diseases such as AFB and EFB. If you are unsure, contact your
+          local bee inspector or check the
+          <a
+            href="https://www.nationalbeeunit.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Visit BeeBase for official UK bee health information"
+            >BeeBase</a
+          >
+          website for up-to-date instructions.
+        </div>
+
+        <p>
+          When you have had a confirmed disease, or you are cleaning up after a
+          serious suspicion, hive hygiene steps become more specific:
+        </p>
+
+        <div class="indented-list">
+          <ul>
+            <li>
+              <strong>American or European foulbrood:</strong> Follow the
+              inspector’s directions exactly. Some equipment may need to be
+              destroyed; other parts may be sterilised by scorching or approved
+              disinfection methods.
+            </li>
+            <li>
+              <strong>Chalkbrood, Nosema or general brood issues:</strong> Improve
+              ventilation, change old comb and clean floors. Re-queening with more
+              hygienic stock can help in chronic cases.
+            </li>
+            <li>
+              <strong>Varroa-related problems:</strong> Combine effective varroa
+              treatments with better monitoring, comb changes and improved nutrition
+              to give colonies a chance to recover.
+            </li>
+          </ul>
+        </div>
+
+        <p>
+          Our
+          <em
+            ><a
+              href="/varroa-management.html"
+              title="Varroa monitoring and treatment options"
+              >varroa management guide</a
+            ></em
+          >
+          and
+          <em
+            ><a href="/bee-diseases.html" title="Bee diseases and pests overview"
+              >bee diseases overview</a
+            ></em
+          >
+          pages go into more detail on specific conditions.
+        </p>
+      </section>
+
+      <section aria-labelledby="hygienic-bees">
+        <h2 id="hygienic-bees">Hygienic Behaviour and Bee Genetics</h2>
+
+        <img
+          src="images/cluster-of-bees.jpg"
+          alt="Cluster of honey bees on a clean brood frame showing good colony health"
+          class="float-left-img"
+        />
+
+        <p>
+          Not all colonies are equally tidy. Some lines of bees show strong
+          <em>hygienic behaviour</em> – they detect and remove diseased or dead brood
+          quickly, breaking the cycle of infection. Others are slower or less
+          thorough, which can allow diseases to spread.
+        </p>
+
+        <p>
+          When you are choosing queens or buying nucs, it is worth asking how the
+          breeder selects for hygiene. Combined with good management, more hygienic
+          stock can:
+        </p>
+
+        <div class="indented-list">
+          <ul>
+            <li>Reduce chalkbrood and brood-pattern problems</li>
+            <li>Help control varroa-related viruses</li>
+            <li>Support recovery after disease treatment</li>
+          </ul>
+        </div>
+
+        <p>
+          Hygienic traits are only one part of the picture – you still need
+          practical routines – but they can tilt the odds in your favour over the
+          long term.
+        </p>
+      </section>
+
+      <section aria-labelledby="hygiene-and-records">
+        <h2 id="hygiene-and-records">Linking Hygiene with Records and Planning</h2>
+
+        <p>
+          It is difficult to improve what you do not track. Simple notes can turn
+          hive hygiene from a vague good intention into a clear plan:
+        </p>
+
+        <div class="indented-list">
+          <ul>
+            <li>Mark frames or boxes with the year they were introduced.</li>
+            <li>
+              Record any suspected or confirmed disease and how equipment was
+              treated.
+            </li>
+            <li>Note how often you clean floors and change comb.</li>
+            <li>
+              Link hygiene notes to your
+              <em
+                ><a
+                  href="/year-in-the-apiary.html"
+                  title="Weather-based beekeeping calendar"
+                  >seasonal calendar</a
+                ></em
+              >
+              so tasks are spread across the year.
+            </li>
+          </ul>
+        </div>
+
+        <p>
+          Some beekeepers are perfectly happy using a notebook in the bee shed.
+          Others like more structure. Digital tools such as the
+          <em
+            ><a href="/hivetag-app.html" title="HiveTag beekeeping records app"
+              >HiveTag web app</a
+            ></em
+          >
+          make it easy to log inspections, varroa counts, comb changes and disease
+          treatments so that patterns become obvious over time.
+        </p>
+      </section>
+
+      <section aria-labelledby="hygiene-faq">
+        <h2 id="hygiene-faq">Hive Hygiene – Frequently Asked Questions</h2>
+
+        <p>
+          These quick questions summarise some of the points above and are also
+          marked up as FAQ schema to help search engines understand the page:
+        </p>
+
+        <div class="indented-list">
+          <ul>
+            <li>
+              <strong>How clean does a hive really need to be?</strong> – It does
+              not need to look new, but comb should be serviceable, floors clear and
+              equipment free from obvious contamination.
+            </li>
+            <li>
+              <strong>Is bleach safe on bee equipment?</strong> – Some items can be
+              cleaned with suitable disinfectants, but always follow product
+              guidance and rinse thoroughly. Wooden brood boxes are more often
+              scorched than bleached.
+            </li>
+            <li>
+              <strong>Can I re-use frames from a dead colony?</strong> – Only if you
+              are confident there was no serious disease. When in doubt, seek advice
+              from a mentor or inspector; sometimes destruction is the safest option.
+            </li>
+            <li>
+              <strong>How often should I deep-clean the apiary?</strong> – A good
+              tidy-up at the start and end of the active season, plus light
+              housekeeping on each visit, keeps things under control.
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section aria-labelledby="summary">
+        <h2 id="summary">Summary – Clean Hives, Healthier Bees</h2>
+
+        <p>
+          Hive hygiene is not about perfection; it is about consistent, practical
+          habits. By keeping floors tidy, rotating old comb, avoiding
+          cross-contamination and following official guidance after disease, you
+          give your colonies the best chance to stay healthy and productive.
+        </p>
+
+        <p>
+          Use this page alongside the guides on
+          <em
+            ><a href="/bee-diseases.html" title="Bee diseases and pests overview"
+              >diseases and pests</a
+            ></em
+          >,
+          <em
+            ><a href="/varroa-management.html" title="Varroa mite control"
+              >varroa management</a
+            ></em
+          >
+          and the
+          <em
+            ><a
+              href="/year-in-the-apiary.html"
+              title="Seasonal beekeeping calendar"
+              >year in the apiary</a
+            ></em
+          >
+          to build a joined-up approach to bee health in your own apiary.
+        </p>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" role="region" aria-label="Site Footer">
+      <div class="footer-columns">
+        <div class="footer-column" role="region" aria-label="Contact Information">
+          <h3>Contact</h3>
+          <address>
+            <p>
+              Email:
+              <a href="/contact.html" title="Send us a message via our contact page"
+                >Contact</a
+              >
+            </p>
+          </address>
+        </div>
+
+        <div class="footer-column" role="region" aria-label="Useful Site Links">
+          <h3>Useful Links</h3>
+          <ul>
+            <li>
+              <a href="/privacy.html" title="Read our privacy policy"
+                >Privacy Policy</a
+              >
+            </li>
+            <li>
+              <a href="/site-map.html" title="View a map of our entire website"
+                >Site Map</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-column" role="region" aria-label="Beekeeping Resources">
+          <h3>Resources</h3>
+          <ul>
+            <li>
+              <a
+                href="https://www.bbka.org.uk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Visit the British Beekeepers Association website"
+              >
+                British Beekeepers Association
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.cardiffbeekeepers.co.uk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Visit the Cardiff Beekeepers Association site"
+              >
+                Cardiff, Vale and Valleys Beekeepers Association
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Read the Honey (Wales) Regulations 2015"
+              >
+                The Honey (Wales) Regulations 2015
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.biodiversitywales.org.uk/Bee-Friendly"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Explore Bee-Friendly programme by Wales Biodiversity Partnership"
+              >
+                Wales Biodiversity Partnership
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.nationalbeeunit.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Access BeeBase for UK bee health information"
+              >
+                BeeBase
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom" role="region" aria-label="Copyright">
+        &copy; 2025 BeezKnees. All rights reserved.
+      </div>
+    </footer>
+
+    <!-- Cookie Consent Popup -->
+    <div
+      id="cookie-consent"
+      class="cookie-popup"
+      role="region"
+      aria-label="Cookie Consent Settings"
+    >
+      <div
+        class="cookie-content"
+        role="region"
+        aria-label="Cookie Consent Options"
+      >
+        <h2>🍪 We Use Cookies</h2>
+        <p>
+          We use essential cookies for site functionality. With your consent, we may
+          also use cookies for analytics and marketing purposes.
+        </p>
+
+        <form id="cookie-options">
+          <label
+            ><input type="checkbox" checked disabled />
+            Essential (always active)</label
+          ><br />
+          <label
+            ><input type="checkbox" id="analytics" />
+            Analytics</label
+          ><br />
+          <label
+            ><input type="checkbox" id="marketing" />
+            Marketing</label
+          ><br />
+        </form>
+
+        <div class="cookie-buttons">
+          <button id="accept-selected">Accept Selected</button>
+          <button id="accept-all">Accept All</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" title="Back to top" aria-label="Back to top">
+      ⬆ Top
+    </button>
+
+    <script src="js/menuv2.js" defer></script>
+  </body>
 </html>
