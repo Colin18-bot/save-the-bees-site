@@ -4,7 +4,7 @@
 
 ## 🌐 Live Website
 
-🔗 [www.beezknees.co.uk](https://www.beezknees.co.uk)
+🔗 [www.beezknees.co.uk](https://beezknees.co.uk)
 
 ---
 
