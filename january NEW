@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>January Beekeeping Tasks in the UK – Monthly Beekeeping Calendar | BeezKnees</title>
+
+		<!-- Hamburger button -->
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+			referrerpolicy="no-referrer"
+		/>
+
+		<!-- Your CSS file -->
+		<link rel="stylesheet" href="css/style.css" />
+
+		<!-- Canonical URL -->
+		<link rel="canonical" href="https://www.beezknees.co.uk/january" />
+
+		<!-- SEO Meta Tags -->
+		<meta
+			name="description"
+			content="January beekeeping tasks in the UK – part of the monthly beekeeping calendar. Learn how to feed bees in winter, control varroa mites, protect hives from cold weather and prepare your apiary for spring."
+		/>
+		<meta
+			name="keywords"
+			content="January beekeeping, monthly beekeeping calendar UK, hive maintenance, feeding bees in winter UK, varroa mite treatment January, apiary calendar, winter hive checks, cold weather beekeeping, preparing hives for spring"
+		/>
+		<meta name="author" content="Colin Chorley" />
+
+		<!-- Open Graph -->
+		<meta property="og:type" content="article" />
+		<meta
+			property="og:title"
+			content="January Beekeeping Tasks in the UK – Monthly Beekeeping Calendar"
+		/>
+		<meta
+			property="og:description"
+			content="Part of the BeezKnees monthly beekeeping calendar for the UK. Discover key January hive checks, winter feeding, varroa control and planning tasks to keep your bees healthy."
+		/>
+		<meta property="og:url" content="https://www.beezknees.co.uk/january" />
+		<meta
+			property="og:image"
+			content="https://www.beezknees.co.uk/images/making-frames.jpg"
+		/>
+
+		<!-- Twitter Card -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta
+			name="twitter:title"
+			content="January Beekeeping Tasks in the UK – Monthly Beekeeping Calendar"
+		/>
+		<meta
+			name="twitter:description"
+			content="January hive checks, winter feeding, varroa control and planning tasks for UK beekeepers – part of the BeezKnees monthly beekeeping calendar."
+		/>
+		<meta
+			name="twitter:image"
+			content="https://www.beezknees.co.uk/images/making-frames.jpg"
+		/>
+
+		<!-- Favicons -->
+		<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+		<!-- 16x16 and 32x32 for classic tabs -->
+		<link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
+		<!-- Apple touch icon for iOS -->
+		<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+		<!-- Android home screen icons -->
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="192x192"
+			href="/images/android-chrome-192x192.png"
+		/>
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="512x512"
+			href="/images/android-chrome-512x512.png"
+		/>
+		<!-- Android / PWA -->
+		<link rel="manifest" href="/site.webmanifest" />
+
+		<!-- Schema.org Structured Data -->
+		<script type="application/ld+json">
+			[
+				{
+					"@context": "https://schema.org",
+					"@type": "Article",
+					"headline": "January Beekeeping Tasks in the UK – Monthly Beekeeping Calendar",
+					"description": "January beekeeping tasks for UK beekeepers, including winter feeding, varroa control, hive insulation, weather checks and planning ahead as part of a month-by-month apiary calendar.",
+					"author": {
+						"@type": "Person",
+						"name": "Colin Chorley"
+					},
+					"publisher": {
+						"@type": "Organization",
+						"name": "BeezKnees",
+						"logo": {
+							"@type": "ImageObject",
+							"url": "https://www.beezknees.co.uk/images/BeezKnees-Logo.png"
+						}
+					},
+					"mainEntityOfPage": {
+						"@type": "WebPage",
+						"@id": "https://www.beezknees.co.uk/january"
+					},
+					"image": "https://www.beezknees.co.uk/images/making-frames.jpg",
+					"datePublished": "2024-01-01",
+					"dateModified": "2025-12-09",
+					"articleSection": [
+						"January beekeeping tasks",
+						"Winter hive checks",
+						"Feeding bees in winter",
+						"Varroa mite management",
+						"Planning for spring",
+						"Monthly beekeeping calendar UK"
+					]
+				},
+				{
+					"@context": "https://schema.org",
+					"@type": "FAQPage",
+					"mainEntity": [
+						{
+							"@type": "Question",
+							"name": "What should I do with my beehives in January in the UK?",
+							"acceptedAnswer": {
+								"@type": "Answer",
+								"text": "January is a quiet but important month for UK beekeepers. Focus on checking hive security after bad weather, monitoring food levels by hefting, treating for varroa if appropriate and planning equipment and frames for spring, rather than opening hives for full inspections."
+							}
+						},
+						{
+							"@type": "Question",
+							"name": "Should I open my hive for a full inspection in January?",
+							"acceptedAnswer": {
+								"@type": "Answer",
+								"text": "In most parts of the UK, January is too cold for a full brood inspection. Opening the hive for long periods risks chilling the cluster. Instead, carry out quick external checks, listen for activity and only lift the crownboard briefly if absolutely necessary and the weather is calm and mild."
+							}
+						},
+						{
+							"@type": "Question",
+							"name": "How can I tell if my bees need feeding in January?",
+							"acceptedAnswer": {
+								"@type": "Answer",
+								"text": "Hefting the hive from the back or side is the usual method. If the hive feels noticeably light compared with earlier in winter, it is a sign that stores may be low and you should consider feeding fondant. Many UK beekeepers place fondant directly above the cluster in January so bees can access it on cold days."
+							}
+						},
+						{
+							"@type": "Question",
+							"name": "Is January a good time to treat for varroa?",
+							"acceptedAnswer": {
+								"@type": "Answer",
+								"text": "January is often a broodless or low-brood period, which can make certain oxalic acid treatments more effective because more mites are on the adult bees. You should follow current UK guidance and manufacturer instructions, and never apply oxalic acid to honey supers intended for human consumption."
+							}
+						},
+						{
+							"@type": "Question",
+							"name": "How much food do bees use in January?",
+							"acceptedAnswer": {
+								"@type": "Answer",
+								"text": "Consumption depends on colony size, hive type and weather, but a strong colony can use several kilograms of stores in January alone. Many UK sources suggest that colonies may consume around 10–12 kg over the whole winter, with a significant share used in mid-winter. Regular hefting helps you decide if extra fondant is needed."
+							}
+						},
+						{
+							"@type": "Question",
+							"name": "What maintenance jobs can I do in January for my apiary?",
+							"acceptedAnswer": {
+								"@type": "Answer",
+								"text": "January is ideal for indoor beekeeping jobs such as building frames, cleaning or repairing boxes, preparing equipment for spring splits, catching up on record keeping and reviewing your notes from the previous season so you can plan changes for the year ahead."
+							}
+						},
+						{
+							"@type": "Question",
+							"name": "Which plants help support bees in January in the UK?",
+							"acceptedAnswer": {
+								"@type": "Answer",
+								"text": "Winter-flowering heather, mahonia, winter-flowering honeysuckle, hellebores and early crocus varieties can all provide nectar and pollen on milder days. Planting for winter forage is part of creating a garden that supports bees throughout the year."
+							}
+						},
+						{
+							"@type": "Question",
+							"name": "How does January fit into the monthly beekeeping calendar for the UK?",
+							"acceptedAnswer": {
+								"@type": "Answer",
+								"text": "In the BeezKnees monthly beekeeping calendar, January is mainly about protecting and supporting your existing colonies rather than making big changes. Good winter feeding, weatherproofing and varroa control now make it easier to carry out brood inspections, swarm control and honey production once temperatures rise."
+							}
+						},
+						{
+							"@type": "Question",
+							"name": "Can keeping good records help with January hive decisions?",
+							"acceptedAnswer": {
+								"@type": "Answer",
+								"text": "Yes. Notes from the previous season on colony strength, temperament, disease history and feeding mean you can judge winter risks more accurately. Consistent record-keeping, whether on paper or in a digital log such as the HiveTag web app, makes it easier to decide which colonies need extra care in January."
+							}
+						}
+					]
+				},
+				{
+					"@context": "https://schema.org",
+					"@type": "BreadcrumbList",
+					"itemListElement": [
+						{
+							"@type": "ListItem",
+							"position": 1,
+							"name": "Home",
+							"item": "https://www.beezknees.co.uk/"
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"name": "Year in the Apiary",
+							"item": "https://www.beezknees.co.uk/year-in-the-apiary"
+						},
+						{
+							"@type": "ListItem",
+							"position": 3,
+							"name": "January",
+							"item": "https://www.beezknees.co.uk/january"
+						}
+					]
+				}
+			]
+		</script>
+	</head>
+	<body>
+		<!-- Fixed Header and Nav Container -->
+		<div class="fixed-header">
+			<header class="site-header" role="region" aria-label="Site Header">
+				<div class="header-container" role="region" aria-label="Site Branding">
+					<a href="https://www.beezknees.co.uk">
+						<img src="images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
+					</a>
+
+					<h1 class="site-title">BeezKnees</h1>
+					<!-- ✅ WORKING HAMBURGER ICON BUTTON -->
+					<button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+						<i class="fas fa-bars"></i>
+					</button>
+				</div>
+			</header>
+		</div>
+
+		<!-- Navigation Bar -->
+		<nav class="navbar" role="navigation" aria-label="Main navigation">
+			<ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+				<li><a href="/" title="Visit the homepage">Home</a></li>
+
+				<li class="dropdown">
+					<a href="/about-us" title="Learn more about us">About</a>
+				</li>
+
+				<li class="dropdown">
+					<a href="/donate" title="Support out mission">Donate</a>
+				</li>
+
+				<li class="dropdown">
+					<a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a></li>
+						<li><a href="/equipment" title="Essential beekeeping equipment">Equipment</a></li>
+						<li><a href="/hive-management" title="Manage your hive effectively">Hive Management</a></li>
+						<li><a href="/varroa-management" title="control varroa mite infestations">Varroa Management</a></li>
+						<li><a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a></li>
+						<li><a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/january" title="January beekeeping tasks">January</a></li>
+						<li><a href="/february" title="February beekeeping tasks">February</a></li>
+						<li><a href="/march" title="March beekeeping tasks">March</a></li>
+						<li><a href="/april" title="April beekeeping tasks">April</a></li>
+						<li><a href="/may" title="May beekeeping tasks">May</a></li>
+						<li><a href="/june" title="June beekeeping tasks">June</a></li>
+						<li><a href="/july" title="July beekeeping tasks">July</a></li>
+						<li><a href="/august" title="August beekeeping tasks">August</a></li>
+						<li><a href="/september" title="September beekeeping tasks">September</a></li>
+						<li><a href="/october" title="October beekeeping tasks">October</a></li>
+						<li><a href="/november" title="November beekeeping tasks">November</a></li>
+						<li><a href="/december" title="December beekeeping tasks">December</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a></li>
+						<li><a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a></li>
+						<li><a href="/bee-pests" title="Common pests affecting bees">Pests</a></li>
+						<li><a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a></li>
+						<li><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a></li>
+						<li><a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a></li>
+						<li><a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a></li>
+						<li><a href="/pollination" title="Honeybee role in pollination">Pollination</a></li>
+					</ul>
+				</li>
+
+				<li class="dropdown">
+					<a href="/help-the-bees" title="How you can help save the bees">Help Bees</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a></li>
+						<li><a href="/donate" title="Make a donation to support bees">Donate</a></li>
+						<li><a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a></li>
+					</ul>
+				</li>
+
+				<li>
+					<a
+						href="https://beezknees-members.netlify.app/login"
+						title="Login or Register for HiveTag Dashboard"
+						>Members Area</a
+					>
+				</li>
+			</ul>
+		</nav>
+
+		<!-- Hero Banner with Image and Alt Fallback -->
+		<section role="region" aria-label="January apiary banner">
+			<div class="banner">
+				<img
+					src="images/making-frames.jpg"
+					alt="Beekeeper assembling wooden brood frames as part of winter hive preparation"
+				/>
+			</div>
+		</section>
+
+		<!-- Main Content -->
+		<main class="content">
+			<h1>January Beekeeping Tasks – Monthly Beekeeping Calendar (UK)</h1>
+
+			<p>
+				In the UK, January is one of the quietest months in the apiary – but it still plays a crucial role
+				in your year-round beekeeping. The bees are clustered, brood is often limited and the weather can be
+				unforgiving. Rather than full inspections, the focus shifts to keeping colonies secure, well-fed and
+				as stress-free as possible, while you prepare equipment and plans for the season ahead.
+			</p>
+
+			<p>
+				This page is part of the BeezKnees
+				<em
+					><a href="/year-in-the-apiary" title="View the full year-round beekeeping calendar"
+						>Year in the Apiary – monthly beekeeping calendar</a
+					></em
+				>.
+				It summarises what your bees are doing in January, practical weather-based guidance, a checklist of
+				key jobs and ways to support your colonies until spring inspections begin.
+			</p>
+
+			<!-- January at a glance cards -->
+			<section aria-label="January beekeeping at a glance">
+				<h2>January at a Glance – What Matters Most</h2>
+				<div class="grid">
+					<div class="card">
+						<div class="card-content">
+							<h3>Bee Behaviour</h3>
+							<ul class="indented-list">
+								<li>Clustered on remaining stores</li>
+								<li>Little or no foraging except on mild days</li>
+								<li>Brood area small or temporarily broodless</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="card">
+						<div class="card-content">
+							<h3>Key Jobs for the Beekeeper</h3>
+							<ul class="indented-list">
+								<li>Heft hives and add fondant if needed</li>
+								<li>Check roofs, straps and stands after storms</li>
+								<li>Complete winter varroa treatment (if due)</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="card">
+						<div class="card-content">
+							<h3>What to Avoid</h3>
+							<ul class="indented-list">
+								<li>Full inspections or removing frames</li>
+								<li>Leaving roofs unsecured in high winds</li>
+								<li>Starvation through lack of monitoring</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- What your bees are doing -->
+			<section aria-label="Bee behaviour in January">
+				<h2>What Your Bees Are Doing in January</h2>
+
+				<img
+					src="images/beekeeper_2.jpg"
+					alt="Beekeeper checking winter hive stands and entrances in the apiary"
+					class="float-left-img"
+				/>
+
+				<p>
+					Inside the hive, bees form a tight cluster around any remaining stores and, where present, a
+					small patch of brood. They generate heat by vibrating their flight muscles, gradually consuming
+					honey or syrup. On still, sunny days above flying temperature, you may see cleansing flights –
+					short trips to defecate away from the hive.
+				</p>
+
+				<p>
+					A healthy colony at this time of year usually appears calm from the outside: occasional flights
+					on mild days, a steady background hum when you listen at the entrance and no unusual debris on
+					the landing board. If a hive is silent, very light when hefted or shows signs of disturbance, it
+					may need closer attention.
+				</p>
+
+				<div class="callout">
+					<strong>Tip:</strong> Make a habit of standing quietly beside each hive for a minute. Listening
+					and observing from the outside is one of the most valuable skills in winter beekeeping.
+				</div>
+			</section>
+
+			<!-- Weather and inspections -->
+			<section aria-label="Weather and hive checks in January">
+				<h2>January Weather and Hive Checks</h2>
+
+				<p>
+					January weather in the UK is typically cold, damp and unsettled. Strong winds, heavy rain and
+					overnight frosts are more of a threat than deep snow for many beekeepers. Rather than routine
+					inspections, most of your work is about ensuring hives remain safe and weatherproof.
+				</p>
+
+				<div class="callout">
+					<strong>Weather-based guidance:</strong>
+					<ul class="indented-list">
+						<li>After gales – check roofs, straps and stands for movement.</li>
+						<li>After prolonged rain – ensure water is not pooling around hive stands.</li>
+						<li>After snow or frost – make sure entrances are clear of ice, dead bees or vegetation.</li>
+					</ul>
+				</div>
+
+				<p>
+					A quick visual check from the outside, combined with a gentle heft from the back or side, tells
+					you most of what you need to know in January. Save full inspections for spring, when temperatures
+					are consistently suitable – see the main
+					<em
+						><a href="/hive-management" title="Manage your hive effectively"
+							>hive management guide</a
+						></em
+					>
+					for inspection temperatures and techniques.
+				</p>
+			</section>
+
+			<!-- Key tasks checklist -->
+			<section aria-label="Key January beekeeping tasks">
+				<h2>January Beekeeping Checklist – UK Monthly Tasks</h2>
+
+				<ul class="checklist">
+					<li>✅ Heft each hive to assess food reserves.</li>
+					<li>✅ Add fondant above the cluster if a colony feels light.</li>
+					<li>✅ Check straps, bricks and roofs after storms.</li>
+					<li>✅ Confirm entrances are clear and mouseguards secure.</li>
+					<li>✅ Complete any planned winter varroa treatment (if not yet done).</li>
+					<li>✅ Tidy the apiary, trim vegetation and clear debris around stands.</li>
+					<li>✅ Work through winter DIY jobs – frames, boxes and equipment repairs.</li>
+					<li>✅ Catch up on record keeping and review notes from the previous season.</li>
+				</ul>
+
+				<p>
+					You can find more on inspections, feeding and seasonal maintenance in the
+					<em
+						><a href="/hive-management" title="Manage your hive effectively"
+							>hive management</a
+						></em
+					>
+					and
+					<em
+						><a href="/hygiene" title="Keep your hive clean and healthy"
+							>hygiene</a
+						></em
+					>
+					guides.
+				</p>
+			</section>
+
+			<!-- Feeding and starvation risk -->
+			<section aria-label="Feeding bees in January">
+				<h2>Feeding Bees in January – Fondant and Food Reserves</h2>
+
+				<p>
+					Ensuring that bees have sufficient food reserves is one of the most important winter tasks.
+					Colonies rely on stored honey or syrup to fuel the cluster and maintain brood when the queen
+					resumes laying. A strong colony can consume several kilograms of stores over the month, especially
+					towards the end of winter.
+				</p>
+
+				<div class="callout">
+					<strong>How to judge food levels:</strong>
+					<ul class="indented-list">
+						<li>Heft the hive from the back or side and compare with earlier in winter.</li>
+						<li>
+							If it feels noticeably lighter, consider adding a block of fondant above the cluster –
+							often under an upturned feeder or eke.
+						</li>
+						<li>
+							Re-check at intervals during cold spells. It is easier to prevent starvation than to
+							rescue a starving colony.
+						</li>
+					</ul>
+				</div>
+
+				<p>
+					For a deeper look at feeding options and how they fit into the season, see the
+					<em
+						><a href="/hive-management" title="Manage your hive effectively"
+							>hive management guide</a
+						></em
+					>.
+				</p>
+			</section>
+
+			<!-- Varroa and disease -->
+			<section aria-label="Varroa and disease management in January">
+				<h2>Varroa and Disease Management in January</h2>
+
+				<p>
+					January is often a broodless or low-brood period, which can make certain varroa treatments more
+					effective. Many UK beekeepers use this window for an oxalic acid-based treatment, following
+					current guidance and manufacturer instructions. With fewer capped cells, more mites are exposed on
+					adult bees.
+				</p>
+
+				<div class="callout">
+					<strong>Important safety reminders:</strong>
+					<ul class="indented-list">
+						<li>Only use approved products and follow label instructions carefully.</li>
+						<li>Do not treat honey supers intended for human consumption.</li>
+						<li>
+							Record the date and product used in your hive notes so you can track treatment history.
+						</li>
+					</ul>
+				</div>
+
+				<p>
+					Keep an eye out for signs of disease such as unusual smells, dead bees around the entrance or
+					suspect brood once inspections resume. The
+					<em
+						><a href="/bee-diseases" title="Bee diseases and pests overview"
+							>diseases and pests overview</a
+						></em
+					>,
+					<em
+						><a href="/varroa-management" title="Varroa mite management guide"
+							>varroa management</a
+						></em
+					>
+					and
+					<em
+						><a href="/hygiene" title="Keep your hive clean and healthy"
+							>hygiene guide</a
+						></em
+					>
+					explain these topics in more detail.
+				</p>
+			</section>
+
+			<!-- Equipment, DIY and planning -->
+			<section aria-label="Equipment preparation and winter DIY">
+				<h2>Equipment Preparation, DIY Jobs and Planning Ahead</h2>
+
+				<p>
+					January is a natural time to move some of your beekeeping indoors. Many of the jobs that save time
+					in spring can be tackled now, when the apiary itself needs only quick external checks.
+				</p>
+
+				<ul class="indented-list">
+					<li>Assemble new brood and super frames.</li>
+					<li>Repair or repaint boxes, floors, roofs and stands.</li>
+					<li>Sort and label spare kit ready for splits or nucs.</li>
+					<li>Review last season’s notes and decide which queens or colonies to prioritise.</li>
+					<li>Check and clean smokers, hive tools and clothing.</li>
+				</ul>
+
+				<p>
+					For ideas on tools and set-up, explore the
+					<em
+						><a href="/equipment" title="Essential beekeeping equipment"
+							>equipment and tools guide</a
+						></em
+					>.
+				</p>
+			</section>
+
+			<!-- Pests and wildlife -->
+			<section aria-label="Pests and wildlife around hives in January">
+				<h2>Pests and Wildlife to Watch For in January</h2>
+
+				<p>
+					Most flying pests are quiet in mid-winter, but there are still a few things to keep an eye on:
+				</p>
+
+				<ul class="indented-list">
+					<li>
+						<strong>Mice:</strong> Ensure mouseguards are fitted and entrances are not chewed or widened.
+					</li>
+					<li>
+						<strong>Woodpeckers:</strong> In some areas, hives may need protection such as netting or
+						temporary wraps.
+					</li>
+					<li>
+						<strong>Livestock and pets:</strong> Check hives are protected from rubbing, knocking or
+						scratching by animals.
+					</li>
+				</ul>
+
+				<p>
+					More detail on pests and predators is available in the
+					<em><a href="/bee-pests" title="Common pests affecting bees">bee pests guide</a></em>.
+				</p>
+			</section>
+
+			<!-- Garden and forage -->
+			<section aria-label="Garden and forage for bees in January">
+				<h2>Garden and Forage – Supporting Bees in January</h2>
+
+				<p>
+					There are fewer natural food sources in January, but you can still plan and plant with bees in
+					mind. Winter-flowering heather, mahonia, hellebores, crocus and winter-flowering honeysuckle can
+					all provide valuable nectar and pollen during milder spells.
+				</p>
+
+				<div class="callout">
+					<strong>Winter planting ideas:</strong>
+					<ul class="indented-list">
+						<li>Plant clumps of early crocus and snowdrops near the apiary.</li>
+						<li>Add winter-flowering shrubs such as mahonia to provide nectar in cold months.</li>
+						<li>Plan a succession of flowering plants to support pollinators all year.</li>
+					</ul>
+				</div>
+
+				<p>
+					See the
+					<em
+						><a href="/bee-gardening" title="Make your garden bee friendly"
+							>bee gardening guide</a
+						></em
+					>
+					and
+					<em
+						><a href="/help-the-bees" title="How you can help save the bees"
+							>Help the Bees</a
+						></em
+					>
+					for more ideas on creating wildlife-friendly spaces.
+				</p>
+			</section>
+
+			<!-- Emergency scenarios -->
+			<section aria-label="Emergency scenarios for bees in January">
+				<h2>Emergency Scenarios – When Things Go Wrong in January</h2>
+
+				<div class="callout">
+					<strong>If you suspect starvation:</strong>
+					<ul class="indented-list">
+						<li>Heft is very light, or you see bees head-first in cells.</li>
+						<li>Act immediately – add fondant directly over the cluster.</li>
+						<li>Avoid prolonged opening of the hive; work quickly and gently.</li>
+					</ul>
+				</div>
+
+				<p>
+					If a colony has died out, try to understand why. Check for obvious disease, high varroa levels
+					or signs of queen failure, then close the hive to prevent robbing until you can decide how to
+					handle the remaining combs. The
+					<em
+						><a href="/bee-diseases" title="Bee diseases and pests overview"
+							>bee diseases and pests</a
+						></em
+					>
+					section and
+					<em
+						><a href="/bee-stings" title="Understand and treat bee stings"
+							>bee stings and safety</a
+						></em
+					>
+					page both include advice on working safely and knowing when to seek further guidance.
+				</p>
+			</section>
+
+			<!-- Visible FAQ section -->
+			<section aria-label="January beekeeping FAQ" id="january-faq">
+				<h2>January Beekeeping FAQ – UK Beekeepers</h2>
+
+				<details>
+					<summary>Do I ever need to open the hive in January?</summary>
+					<p>
+						Usually, no. Most checks in January can be done from the outside – listening, watching for
+						flights, checking entrances and hefting. Only consider briefly lifting the crownboard if you
+						have a specific reason and the weather is mild and calm.
+					</p>
+				</details>
+
+				<details>
+					<summary>Is syrup or fondant better for winter feeding?</summary>
+					<p>
+						In mid-winter, fondant is generally preferred because bees can eat it without having to
+						process water, which would create unnecessary moisture and effort. Syrup is more suitable for
+						autumn feeding when temperatures are higher.
+					</p>
+				</details>
+
+				<details>
+					<summary>Can I move hives in January?</summary>
+					<p>
+						Unless absolutely necessary, avoid moving hives in winter. If you must move them, do so on a
+						cold day when bees are tightly clustered and keep the move short and gentle to minimise
+						disturbance.
+					</p>
+				</details>
+
+				<details>
+					<summary>How does January fit into swarm control planning?</summary>
+					<p>
+						Swarm control itself does not start until spring, but January is the time to make sure you
+						have spare equipment, extra frames and a clear plan for how you will manage strong colonies
+						once the season begins. See the
+						<em
+							><a href="/hive-management" title="Manage your hive effectively"
+								>hive management guide</a
+							></em
+						>
+						for swarm control methods.
+					</p>
+				</details>
+
+				<details>
+					<summary>Should I worry if I do not see bees flying for several weeks?</summary>
+					<p>
+						Not necessarily. In cold, wet or windy weather, colonies may remain inside for long periods.
+						The key checks are hive weight, security and signs of life when you listen close to the
+						entrance.
+					</p>
+				</details>
+			</section>
+
+			<p>
+				Use this January guide alongside the rest of the
+				<em
+					><a href="/year-in-the-apiary" title="Year-round beekeeping calendar"
+						>Year in the Apiary calendar</a
+					></em
+				>
+				to build a clear, weather-aware routine for your bees throughout the year.
+			</p>
+		</main>
+
+		<!-- Footer -->
+		<footer class="site-footer" role="region" aria-label="Site Footer">
+			<div class="footer-columns">
+				<div class="footer-column" role="region" aria-label="Contact Information">
+					<h3>Contact</h3>
+					<address>
+						<p>
+							Email:
+							<a href="/contact" title="Send us a message via our contact page">Contact</a>
+						</p>
+					</address>
+				</div>
+
+				<div class="footer-column" role="region" aria-label="Useful Site Links">
+					<h3>Useful Links</h3>
+					<ul>
+						<li><a href="/privacy" title="Read our privacy policy">Privacy Policy</a></li>
+						<li><a href="/site-map" title="View a map of our entire website">Site Map</a></li>
+					</ul>
+				</div>
+
+				<div class="footer-column" role="region" aria-label="Beekeeping Resources">
+					<h3>Resources</h3>
+					<ul>
+						<li>
+							<a
+								href="https://www.bbka.org.uk/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Visit the British Beekeepers Association website"
+							>
+								British Beekeepers Association
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.cardiffbeekeepers.co.uk/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Visit the Cardiff Beekeepers Association site"
+							>
+								Cardiff, Vale and Valleys Beekeepers Association
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Read the Honey (Wales) Regulations 2015"
+							>
+								The Honey (Wales) Regulations 2015
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.biodiversitywales.org.uk/Bee-Friendly"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Explore Bee-Friendly programme by Wales Biodiversity Partnership"
+							>
+								Wales Biodiversity Partnership
+							</a>
+						</li>
+						<li>
+							<a
+								href="https://www.nationalbeeunit.com/"
+								target="_blank"
+								rel="noopener noreferrer"
+								title="Access BeeBase for UK bee health information"
+							>
+								BeeBase
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="footer-bottom" role="region" aria-label="Copyright">
+				&copy; 2025 BeezKnees. All rights reserved.
+			</div>
+		</footer>
+
+		<!-- Cookie Consent Popup -->
+		<div
+			id="cookie-consent"
+			class="cookie-popup"
+			role="region"
+			aria-label="Cookie Consent Settings"
+		>
+			<div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+				<h2>🍪 We Use Cookies</h2>
+				<p>
+					We use essential cookies for site functionality. With your consent, we may also use cookies for
+					analytics and marketing purposes.
+				</p>
+
+				<form id="cookie-options">
+					<label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
+					<label><input type="checkbox" id="analytics" /> Analytics</label><br />
+					<label><input type="checkbox" id="marketing" /> Marketing</label><br />
+				</form>
+
+				<div class="cookie-buttons">
+					<button id="accept-selected">Accept Selected</button>
+					<button id="accept-all">Accept All</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Back to Top Button -->
+		<button id="backToTop" title="Back to top" aria-label="Back to top">
+			⬆ Top
+		</button>
+
+		<script src="js/menuv2.js" defer></script>
+	</body>
+</html>
