@@ -37,23 +37,23 @@
 
 ```
 /
-├── index.html
-├── about-us.html
-├── year-in-the-apiary.html
-├── [january–december].html
-├── beekeeping-guides.html
-├── getting-started.html
-├── equipment.html
-├── hive-management.html
-├── varroa-management.html
-├── hygiene.html
-├── bee-diseases.html
-├── [bacterial|viral|pests|mites|other-conditions].html
-├── honeybee-facts.html
-├── [anatomy|behaviour|how-bees-make-honey|pollination].html
-├── help-the-bees.html
-├── [bee-gardening|donate|report-a-swarm].html
-├── 404.html
+├── index
+├── about-us
+├── year-in-the-apiary
+├── [january–december]
+├── beekeeping-guides
+├── getting-started
+├── equipment
+├── hive-management
+├── varroa-management
+├── hygiene
+├── bee-diseases
+├── [bacterial|viral|pests|mites|other-conditions]
+├── honeybee-facts
+├── [anatomy|behaviour|how-bees-make-honey|pollination]
+├── help-the-bees
+├── [bee-gardening|donate|report-a-swarm]
+├── 404
 ├── /images/
 ├── /css/
 │   └── style.css
@@ -81,4 +81,4 @@ Deployed via **Netlify** or **GitHub Pages**.
 
 ## 📬 Contact
 
-For questions, feedback, or swarm reports, visit [Report a Swarm](report-a-swarm.html) or email **cchorley19@gmail.co.uk**
+For questions, feedback, or swarm reports, visit [Report a Swarm](report-a-swarm) or email **cchorley19@gmail.co.uk**
