@@ -1,416 +1,921 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-		<title>Honeybee Facts – Queen, Worker, and Drone Bee Behaviour</title>
+    <title>
+      Honeybee Facts (UK) – Queen, Worker & Drone Differences, Lifecycle & Hive Roles | BeezKnees
+    </title>
 
-		<!-- Hamburger button -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" />
+    <!-- Hamburger button -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      referrerpolicy="no-referrer"
+    />
 
-		<!-- Your CSS file -->
-		<link rel="stylesheet" href="css/style.css" />
+    <!-- Your CSS file -->
+    <link rel="stylesheet" href="css/style.css" />
 
-		<!-- SEO Meta Tags -->
-		<meta
-			name="description"
-			content="Explore fascinating honeybee facts including the roles of queen, drone, and worker bees. Learn about honey 
-  production, pollination, hive life, communication, and more with BeezKnees."
-		/>
-		<meta
-			name="keywords"
-			content="honeybee facts, queen bee, drone bee, worker bee, honeybee behaviour, bee communication, honey production, 
-  pollination, hive roles, beekeeping education, BeezKnees bees, Colin Chorley"
-		/>
-		<meta name="author" content="Colin Chorley" />
+    <!-- Canonical (no www, no .html, no trailing slash) -->
+    <link rel="canonical" href="https://beezknees.co.uk/honeybee-facts" />
 
-		<!-- Favicons -->
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="A UK-focused guide to honeybee facts: the difference between queen, worker and drone bees (including appearance), the full honeybee lifecycle timings, communication, foraging, swarming, and how a colony works — with FAQs for beginners and beekeepers."
+    />
+    <meta
+      name="keywords"
+      content="honeybee facts UK, queen bee vs worker bee vs drone bee, drone bee eyes bigger, honeybee lifecycle days, queen development 16 days, worker bee 21 days, drone bee 24 days, honeybee roles, waggle dance, honeybee communication, swarming behaviour UK, beekeeping UK facts, apis mellifera facts"
+    />
+    <meta name="author" content="Colin Chorley" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="BeezKnees" />
+    <meta property="og:locale" content="en_GB" />
+    <meta
+      property="og:title"
+      content="Honeybee Facts (UK) – Queen, Worker & Drone Differences + Lifecycle"
+    />
+    <meta
+      property="og:description"
+      content="Learn the difference between queen, worker and drone bees, full lifecycle timings, colony roles and key honeybee facts — written for UK beginners and beekeepers."
+    />
+    <meta property="og:url" content="https://beezknees.co.uk/honeybee-facts" />
+    <meta
+      property="og:image"
+      content="https://beezknees.co.uk/images/bees-honey.jpg"
+    />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Honeybee Facts (UK) – Queen, Worker & Drone Differences + Lifecycle"
+    />
+    <meta
+      name="twitter:description"
+      content="UK honeybee facts: queen vs worker vs drone, lifecycle timings, hive roles, communication, swarming and more."
+    />
+    <meta
+      name="twitter:image"
+      content="https://beezknees.co.uk/images/bees-honey.jpg"
+    />
+
+    <!-- Favicons -->
     <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
-    <!-- 16x16 and 32x32 for classic tabs -->
     <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png" />
-    <!-- Apple touch icon for iOS -->
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
-    <!-- Android home screen icons -->
     <link rel="icon" type="image/png" sizes="192x192" href="/images/android-chrome-192x192.png" />
     <link rel="icon" type="image/png" sizes="512x512" href="/images/android-chrome-512x512.png" />
-    <!-- Android / PWA -->
     <link rel="manifest" href="/site.webmanifest" />
 
-		<!-- Schema.org Structured Data -->
-		<script type="application/ld+json">
-			[
-			  {
-			    "@context": "https://schema.org",
-			    "@type": "Article",
-			    "headline": "Honeybee Facts – Queen, Drone, and Worker Bee Behaviour Explained",
-			    "description": "Discover fascinating honeybee facts about queens, drones, and workers. Learn how bees make honey, communicate,
-			    pollinate crops, and survive in the wild.",
-			    "author": {
-			      "@type": "Person",
-			      "name": "Colin Chorley"
-			    },
-			    "publisher": {
-			      "@type": "Organization",
-			      "name": "BeezKnees",
-			      "logo": {
-			        "@type": "ImageObject",
-			        "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
-			      }
-			    },
-			    "mainEntityOfPage": {
-			      "@type": "WebPage",
-			      "@id": "https://beezknees.co.uk/honeybee-facts"
-			    },
-			    "image": "https://beezknees.co.uk/images/bees-honey.jpg",
-			    "datePublished": "2024-06-01T00:00:00+00:00",
-			    "dateModified": "2024-06-01T00:00:00+00:00"
-			  },
-			  {
-			    "@context": "https://schema.org",
-			    "@type": "BreadcrumbList",
-			    "itemListElement": [
-			      {
-			        "@type": "ListItem",
-			        "position": 1,
-			        "name": "Home",
-			        "item": "https://beezknees.co.uk/"
-			      },
-			      {
-			        "@type": "ListItem",
-			        "position": 2,
-			        "name": "Honeybee Facts",
-			        "item": "https://beezknees.co.uk/honeybee-facts"
-			      }
-			    ]
-			  }
-			]
-		</script>
-	</head>
-	<body>
-		<!-- Fixed Header and Nav Container -->
-		<div class="fixed-header">
-			<header class="site-header" role="region" aria-label="Site Header">
-				<div class="header-container" role="region" aria-label="Site Branding">
-					<a href="https://beezknees.co.uk">
-						<img src="images/BeezKnees-Logo.png" alt="BeezKnees-Logo" class="site-logo" />
-					</a>
-
-					<h1 class="site-title">BeezKnees</h1>
-					<!-- ✅ WORKING HAMBURGER ICON BUTTON -->
-					<button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-						<i class="fas fa-bars"></i>
-					</button>
-				</div>
-			</header>
-		</div>
-
-		<!-- Navigation Bar -->
-		<nav class="navbar" role="navigation" aria-label="Main navigation">
-			<ul class="nav-menu" role="region" aria-label="Main Navigation Links">
-				<li><a href="/" title="Visit the homepage">Home</a></li>
-
-				<li class="dropdown">
-					<a href="/about-us" title="Learn more about us">About</a>
-				</li>
-
-				<li class="dropdown">
-					<a href="/donate" title="Support out mission">Donate</a>
-				</li>
-
-				<li class="dropdown">
-					<a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a></li>
-						<li><a href="/equipment" title="Essential beekeeping equipment">Equipment</a></li>
-						<li><a href="/hive-management" title="Manage your hive effectively">Hive Management</a></li>
-						<li><a href="/varroa-management" title="control varroa mite infestations">Varroa Management</a></li>
-						<li><a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a></li>
-						<li><a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a></li>
-					</ul>
-				</li>
-
-				<li class="dropdown">
-					<a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/january" title="January beekeeping tasks">January</a></li>
-						<li><a href="/february" title="February beekeeping tasks">February</a></li>
-						<li><a href="/march" title="March beekeeping tasks">March</a></li>
-						<li><a href="/april" title="April beekeeping tasks">April</a></li>
-						<li><a href="/may" title="May beekeeping tasks">May</a></li>
-						<li><a href="/june" title="June beekeeping tasks">June</a></li>
-						<li><a href="/july" title="July beekeeping tasks">July</a></li>
-						<li><a href="/august" title="August beekeeping tasks">August</a></li>
-						<li><a href="/september" title="September beekeeping tasks">September</a></li>
-						<li><a href="/october" title="October beekeeping tasks">October</a></li>
-						<li><a href="/november" title="November beekeeping tasks">November</a></li>
-						<li><a href="/december" title="December beekeeping tasks">December</a></li>
-					</ul>
-				</li>
-
-				<li class="dropdown">
-					<a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a></li>
-						<li><a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a></li>
-						<li><a href="/bee-pests" title="Common pests affecting bees">Pests</a></li>
-						<li><a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a></li>
-						<li><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></li>
-					</ul>
-				</li>
-
-				<li class="dropdown">
-					<a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a></li>
-						<li><a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a></li>
-						<li><a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a></li>
-						<li><a href="/pollination" title="Honeybee role in pollination">Pollination</a></li>
-					</ul>
-				</li>
-
-				<li class="dropdown">
-					<a href="/help-the-bees" title="How you can help save the bees">Help Bees</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a></li>
-						<li><a href="/donate" title="Make a donation to support bees">Donate</a></li>
-						<li><a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a></li>
-					</ul>
-				</li>
-
-				
-		<li><a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members Area</a></li>
-			</ul>
-		</nav>
-
-		<!-- Hero Banner with Image and Alt Fallback -->
-		<section role="region" aria-label="Homepage Banner">
-			<div class="banner">
-				<img src="images/bees-honey.jpg" alt="Honeybee Close-Up" />
-			</div>
-		</section>
-
-		<!-- Main Content -->
-		<main class="content">
-			<h2>Honeybee Facts</h2>
-
-			<p>Honeybees are the only insect that produce food that humans consume.</p>
-
-			<p>Bees can fly at speeds of up to 15 miles per hour.</p>
-
-			<p>A single honeybee will only produce about 1/2 of a teaspoon of honey in its lifetime.</p>
-
-			<p>Honeybees communicate with each other by dancing.</p>
-
-			<p>Bees see in color, and are able to see ultraviolet light, which is invisible to humans.</p>
-
-			<p>Bees play a vital role in pollinating crops, and are responsible for pollinating one-third of the food that we eat.</p>
-
-			<p>A typical beehive can house anywhere from 20,000 to 60,000 bees.</p>
-
-			<p>Honeybees are able to recognise human faces.</p>
-
-			<p>Bees are able to navigate using the Earth's magnetic field.</p>
-
-			<p>A bee's wings beat about 200 times per second.</p>
-
-			<p>Bees have a special stomach called a "honey stomach" which they use to transport nectar back to the hive.</p>
-
-			<p>Bees are able to communicate the location of nectar sources to other bees through a series of dances and pheromones.</p>
-
-			<p>Honey has been used for medicinal purposes for thousands of years.</p>
-
-			<p>Beeswax is used in a variety of products, including candles, cosmetics, and furniture polish.</p>
-
-			<p>The queen bee can lay up to 2,000 eggs per day.</p>
-
-			<h2>Queen Bee Facts</h2>
-
-			<p>The queen bee is the only bee in the hive that can lay eggs.</p>
-
-			<p>The queen bee is larger and longer than the worker bees, with a longer abdomen.</p>
-
-			<p>The queen bee has a special gland called the "mandibular gland" that produces pheromones that regulate the behaviour and development of the other bees in the hive.</p>
-
-			<p>The queen bee can live for up to five years, although the average lifespan is usually closer to two to three years.</p>
-
-			<p>The queen bee can lay up to 2,000 eggs per day during peak laying season.</p>
-
-			<p>The queen bee is fed a special diet of royal jelly, which is produced by the worker bees.</p>
-
-			<p>If the queen bee dies or is removed from the hive, the worker bees will select one of the female larvae and feed it a special diet of royal jelly to develop it into a new queen.</p>
-
-			<p>The queen bee can mate with up to 20 drones (male bees) during a single mating flight, storing their sperm in a special organ called the "spermatheca" for use in fertilizing eggs later on.</p>
-
-			<p>The queen bee is able to control the sex of the eggs she lays, by fertilizing them with sperm from the drones as needed.</p>
-
-			<p>The queen bee does not leave the hive very often, and spends most of her time laying eggs and being attended to by the worker bees.</p>
-
-			<h2>Drone Bee Facts</h2>
-
-			<p>Drones are male bees that are larger than worker bees, but smaller than queen bees.</p>
-
-			<p>Drones are produced by the queen bee laying unfertilized eggs.</p>
-
-			<p>Drones do not have stingers and are unable to collect nectar or pollen like worker bees.</p>
-
-			<p>Drones have large eyes to help them locate queen bees during mating flights.</p>
-
-			<p>Drones are typically expelled from the hive during the fall or winter, as they are not needed for mating or other tasks.</p>
-
-			<p>Drones do not have a long lifespan and typically only live for a few months.</p>
-
-			<p>Drones will mate with a queen bee during a mating flight, and will die soon afterwards.</p>
-
-			<p>Drones are not responsible for any tasks inside the hive, and rely on the worker bees to bring them food.</p>
-
-			<p>Drones are not able to help defend the hive or produce honey, wax, or royal jelly like worker bees do.</p>
-
-			<p>Drones are crucial for the survival of the colony, as they play a key role in the mating process, ensuring genetic diversity and the health of the colony.</p>
-
-			<h2>Worker Bee Facts</h2>
-
-			<p>Worker bees are female bees that make up the vast majority of the bees in a hive.</p>
-
-			<p>Worker bees are responsible for collecting nectar and pollen, caring for the young bees, and defending the hive.</p>
-
-			<p>Worker bees have a barbed stinger that they use to defend the hive, and they will die shortly after stinging a human or animal.</p>
-
-			<p>Worker bees communicate with each other through a combination of pheromones, touch, and sound.</p>
-
-			<p>Worker bees have different roles depending on their age, with younger bees typically working inside the hive and older bees foraging for food outside.</p>
-
-			<p>Worker bees typically live for several weeks during the spring and summer, but their lifespan is shorter in the fall and winter.</p>
-
-			<p>Worker bees produce beeswax, which is used to build the honeycomb in the hive.</p>
-
-			<p>Worker bees collect nectar from flowers and use enzymes to convert it into honey, which they store in the hive for food.</p>
-
-			<p>Worker bees have a special gland in their head that produces royal jelly, which is used to feed young larvae and help them develop into queen bees.</p>
-
-			<p>Worker bees are essential for the survival of the colony, as they perform many of the tasks necessary for the hive to thrive and produce honey.</p>
-		</main>
-
-		
-
-		<!-- Footer -->
-		<footer class="site-footer" role="region" aria-label="Site Footer">
-			<div class="footer-columns">
-				<div class="footer-column" role="region" aria-label="Contact Information">
-					<h3>Contact</h3>
-					<address>
-						<p>Email: <a href="/contact" title="Send us a message via our contact page">Contact</a></p>
-					</address>
-				</div>
-
-				<div class="footer-column" role="region" aria-label="Useful Site Links">
-					<h3>Useful Links</h3>
-					<ul>
-						<li><a href="/privacy" title="Read our privacy policy">Privacy Policy</a></li>
-						<li><a href="/site-map" title="View a map of our entire website">Site Map</a></li>
-					</ul>
-				</div>
-
-				<div class="footer-column" role="region" aria-label="Beekeeping Resources">
-					<h3>Resources</h3>
-					<ul>
-						<li>
-							<a
-								href="https://www.bbka.org.uk/"
-								target="_blank"
-								rel="noopener noreferrer"
-								title="Visit the British Beekeepers Association 
-            website"
-							>
-								British Beekeepers Association
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://www.cardiffbeekeepers.co.uk/"
-								target="_blank"
-								rel="noopener noreferrer"
-								title="Visit the Cardiff Beekeepers 
-            Association site"
-							>
-								Cardiff, Vale and Valleys Beekeepers Association
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
-								target="_blank"
-								rel="noopener 
-            noreferrer"
-								title="Read the Honey (Wales) Regulations 2015"
-							>
-								The Honey (Wales) Regulations 2015
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://www.biodiversitywales.org.uk/Bee-Friendly"
-								target="_blank"
-								rel="noopener noreferrer"
-								title="Explore 
-            Bee-Friendly programme by Wales Biodiversity Partnership"
-							>
-								Wales Biodiversity Partnership
-							</a>
-						</li>
-						<li>
-							<a
-								href="https://www.nationalbeeunit.com/"
-								target="_blank"
-								rel="noopener noreferrer"
-								title="Access BeeBase for beekeeping 
-          information"
-							>
-								BeeBase
-							</a>
-						</li>
-					</ul>
-				</div>
-			</div>
-
-			<div class="footer-bottom" role="region" aria-label="Copyright">
-				&copy; 2023 Practical Beekeeping. All rights reserved.
-			</div>
-		</footer>
-
-		<!-- Cookie Consent Popup -->
-		<div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
-			<div class="cookie-content" role="region" aria-label="Cookie Consent Options">
-				<h2>🍪 We Use Cookies</h2>
-				<p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
-
-				<form id="cookie-options">
-					<label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
-					<label><input type="checkbox" id="analytics" /> Analytics</label><br />
-					<label><input type="checkbox" id="marketing" /> Marketing</label><br />
-				</form>
-
-				<div class="cookie-buttons">
-					<button id="accept-selected">Accept Selected</button>
-					<button id="accept-all">Accept All</button>
-				</div>
-			</div>
-		</div>
-
-		<!-- Back to Top Button -->
-		<button id="backToTop" title="Back to top" aria-label="Back to top">
-			⬆ Top
-		</button>
-
-		
-		<script src="js/menuv2.js" defer></script>
-
-		
-	</body>
+    <!-- Page-only styling (keeps your theme, improves layout, prevents mobile sideways scroll) -->
+    <style>
+      .callout {
+        border-left: 4px solid #f4b41a;
+        background-color: #fff7e6;
+        padding: 0.9rem 1rem;
+        margin: 1rem 0;
+        border-radius: 10px;
+      }
+
+      .fact-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 1rem;
+        margin: 1rem 0;
+      }
+      .fact-card {
+        grid-column: span 12;
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 14px;
+        padding: 1rem;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.04);
+      }
+      .fact-card h3 {
+        margin: 0 0 0.35rem;
+      }
+      .fact-card p {
+        margin: 0.35rem 0 0;
+      }
+
+      @media (min-width: 740px) {
+        .fact-card.span-6 { grid-column: span 6; }
+        .fact-card.span-4 { grid-column: span 4; }
+      }
+
+      .table-wrap {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 1rem 0;
+        border-radius: 14px;
+        border: 1px solid #eee;
+        background: #fff;
+      }
+
+      table.pretty-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 760px; /* forces scroll on small screens instead of page shifting */
+      }
+      table.pretty-table th,
+      table.pretty-table td {
+        padding: 0.85rem 0.9rem;
+        border-bottom: 1px solid #f0f0f0;
+        vertical-align: top;
+        text-align: left;
+      }
+      table.pretty-table thead th {
+        background: #f3f3f3;
+        font-weight: 800;
+      }
+      table.pretty-table tbody tr:nth-child(odd) td {
+        background: #fff;
+      }
+      table.pretty-table tbody tr:nth-child(even) td {
+        background: #fdf6ec; /* matches your site background tone */
+      }
+
+      details {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 12px;
+        padding: 0.65rem 0.9rem;
+        margin: 0.6rem 0;
+      }
+      details summary {
+        cursor: pointer;
+        font-weight: 800;
+      }
+      details p {
+        margin: 0.6rem 0 0.2rem;
+      }
+
+      .quick-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0.5rem 0 1rem;
+      }
+      .quick-links a {
+        display: inline-block;
+        background: #fff;
+        border: 1px solid #eee;
+        padding: 0.45rem 0.7rem;
+        border-radius: 999px;
+      }
+
+      .small-note {
+        font-size: 0.98em;
+        opacity: 0.92;
+      }
+    </style>
+
+    <!-- Schema.org Structured Data -->
+    <script type="application/ld+json">
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": "Honeybee Facts (UK) – Queen, Worker & Drone Differences, Lifecycle & Hive Roles",
+          "description": "A UK-focused guide to honeybee facts: queen, worker and drone differences, full lifecycle timings, colony roles, communication, foraging and swarming — plus FAQs for beginners.",
+          "image": "https://beezknees.co.uk/images/bees-honey.jpg",
+          "author": {
+            "@type": "Person",
+            "name": "Colin Chorley"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "BeezKnees",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+            }
+          },
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://beezknees.co.uk/honeybee-facts"
+          },
+          "datePublished": "2024-06-01",
+          "dateModified": "2025-12-12",
+          "articleSection": [
+            "Quick honeybee facts",
+            "Queen, worker and drone differences",
+            "Honeybee lifecycle timings",
+            "Communication and behaviour",
+            "Swarming basics",
+            "FAQs"
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How long does it take for a queen bee to hatch?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A queen bee typically develops from egg to adult in about 16 days. This includes egg, larval feeding on royal jelly, and pupation inside a sealed queen cell."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How long does it take for a worker bee to hatch?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A worker bee usually develops from egg to adult in about 21 days, progressing through egg, larva and pupa stages under a sealed capping."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How long does it take for a drone bee to hatch?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A drone (male bee) typically develops from egg to adult in about 24 days, making drones the slowest of the three castes to mature."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How can I tell a drone bee from a worker bee?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Drones are usually bulkier, with a broader abdomen and very large eyes that meet at the top of the head. Workers are slimmer, with smaller eyes and pollen baskets on their hind legs."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do drones sting?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Drones do not have stingers. Only female bees (workers and queens) have a stinger."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is the waggle dance?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The waggle dance is a honeybee communication behaviour used to share direction and approximate distance to good forage. It helps the colony focus foraging on the best nectar and pollen sources."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why do bees swarm in the UK?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Swarming is the colony’s natural reproduction method. It often happens in late spring and early summer in the UK when colonies grow rapidly and space, queen status and conditions align."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How many bees are in a typical hive?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "In the active season, a healthy colony commonly ranges from around 20,000 to 60,000 bees, depending on forage, hive space and time of year."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do bees really recognise faces?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Bees can learn to distinguish complex visual patterns. In practical terms, they also learn landmarks around the apiary and use them to navigate back to the hive entrance."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Where can I learn more and keep records of my hives?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "You can explore BeezKnees guides for UK-focused advice and use HiveTag to record inspections, treatments and hive notes in one place."
+              }
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://beezknees.co.uk" },
+            { "@type": "ListItem", "position": 2, "name": "Honeybee Facts", "item": "https://beezknees.co.uk/honeybee-facts" }
+          ]
+        }
+      ]
+    </script>
+  </head>
+
+  <body>
+    <!-- Fixed Header and Nav Container -->
+    <div class="fixed-header">
+      <header class="site-header" role="region" aria-label="Site Header">
+        <div class="header-container" role="region" aria-label="Site Branding">
+          <a href="https://beezknees.co.uk">
+            <img
+              src="images/BeezKnees-Logo.png"
+              alt="BeezKnees logo"
+              class="site-logo"
+            />
+          </a>
+
+          <h1 class="site-title">BeezKnees</h1>
+          <!-- ✅ WORKING HAMBURGER ICON BUTTON -->
+          <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+            <i class="fas fa-bars"></i>
+          </button>
+        </div>
+      </header>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+        <li><a href="/" title="Visit the BeezKnees homepage">Home</a></li>
+
+        <li class="dropdown">
+          <a href="/about-us" title="Learn more about us">About</a>
+        </li>
+
+        <li class="dropdown">
+          <a href="/donate" title="Support out mission">Donate</a>
+        </li>
+
+        <li class="dropdown">
+          <a href="/beekeeping-guides" title="Explore our beekeeping guides"
+            >Beekeeping</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a></li>
+            <li><a href="/equipment" title="Essential beekeeping equipment">Equipment</a></li>
+            <li><a href="/hive-management" title="Manage your hive effectively">Hive Management</a></li>
+            <li><a href="/varroa-management" title="Control varroa mite infestations">Varroa Management</a></li>
+            <li><a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a></li>
+            <li><a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a></li>
+            <li><a href="/honey-extraction" title="How to harvest and bottle honey safely">Extracting Honey</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/year-in-the-apiary" title="Monthly tasks in the apiary"
+            >Apiary Calendar</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/january" title="January beekeeping tasks">January</a></li>
+            <li><a href="/february" title="February beekeeping tasks">February</a></li>
+            <li><a href="/march" title="March beekeeping tasks">March</a></li>
+            <li><a href="/april" title="April beekeeping tasks">April</a></li>
+            <li><a href="/may" title="May beekeeping tasks">May</a></li>
+            <li><a href="/june" title="June beekeeping tasks">June</a></li>
+            <li><a href="/july" title="July beekeeping tasks">July</a></li>
+            <li><a href="/august" title="August beekeeping tasks">August</a></li>
+            <li><a href="/september" title="September beekeeping tasks">September</a></li>
+            <li><a href="/october" title="October beekeeping tasks">October</a></li>
+            <li><a href="/november" title="November beekeeping tasks">November</a></li>
+            <li><a href="/december" title="December beekeeping tasks">December</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/bee-diseases" title="Bee diseases and pests overview"
+            >Diseases and Pests</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/veterinary-medicine-records" title="How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a></li>
+            <li><a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a></li>
+            <li><a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a></li>
+            <li><a href="/bee-pests" title="Common pests affecting bees">Pests</a></li>
+            <li><a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a></li>
+            <li><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/honeybee-facts" title="Interesting facts about honeybees"
+            >Honeybee Facts</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a></li>
+            <li><a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a></li>
+            <li><a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a></li>
+            <li><a href="/pollination" title="Honeybee role in pollination">Pollination</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="/help-the-bees" title="How you can help save the bees"
+            >Help Bees</a
+          >
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a></li>
+            <li><a href="/donate" title="Make a donation to support bees">Donate</a></li>
+            <li><a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <a
+            href="https://beezknees-members.netlify.app/login"
+            title="Login or Register for HiveTag Dashboard"
+            >Members Area</a
+          >
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Hero Banner with Image and Alt Fallback -->
+    <section role="region" aria-label="Honeybee facts banner">
+      <div class="banner">
+        <img
+          src="images/bees-honey.jpg"
+          alt="Close-up of honeybees working on honeycomb, showing colony life and honey production"
+        />
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="content">
+      <h1>Honeybee Facts (UK) – Queen, Worker & Drone Bees Explained</h1>
+
+      <p>
+        Honeybees are one of the best examples of a “superorganism” — a colony where
+        thousands of individuals behave like a single living system. If you’re new to
+        beekeeping in the UK, understanding the difference between the <strong>queen</strong>,
+        <strong>workers</strong> and <strong>drones</strong> makes everything else easier:
+        inspections, swarm control, colony strength checks, and knowing what you’re looking at
+        on a frame.
+      </p>
+
+      <div class="quick-links" aria-label="Quick links">
+        <a href="#queen-worker-drone" title="Jump to queen worker drone differences">Queen vs Worker vs Drone</a>
+        <a href="#lifecycle" title="Jump to honeybee lifecycle timings">Lifecycle Timings</a>
+        <a href="#behaviour" title="Jump to behaviour facts">Behaviour & Communication</a>
+        <a href="#swarming" title="Jump to swarming facts">Swarming Basics</a>
+        <a href="#faqs" title="Jump to honeybee facts FAQs">FAQs</a>
+      </div>
+
+      <div class="callout">
+        <strong>UK context (quick reality check):</strong>
+        <p class="small-note">
+          In Britain, weather can compress foraging into short windows and push swarming into a few intense weeks.
+          That’s why the same colony can look “quiet” one week and “booming” the next — and why good records matter.
+          If you want structured inspection notes, see <a href="/hivetag-app" title="HiveTag beekeeping records app">HiveTag</a>.
+        </p>
+      </div>
+
+      <h2 id="quick-facts">Quick honeybee facts you can actually use</h2>
+
+      <div class="fact-grid">
+        <div class="fact-card span-6">
+          <h3>Bees make food people eat</h3>
+          <p>
+            Honeybees are the only insect that produces a major food humans routinely harvest and store
+            (honey), and they also create wax that beekeepers use in frames and foundation.
+          </p>
+        </div>
+
+        <div class="fact-card span-6">
+          <h3>A colony is huge in summer</h3>
+          <p>
+            A strong colony in season commonly sits in the tens of thousands of bees, depending on time of year,
+            forage and hive space. That’s why hive organisation and role-sharing matters so much.
+          </p>
+        </div>
+
+        <div class="fact-card span-4">
+          <h3>Wings beat incredibly fast</h3>
+          <p>
+            A honeybee’s wings beat so quickly that you hear a steady buzz rather than individual flaps.
+            This is part of how they ventilate the hive too (fanning behaviour).
+          </p>
+        </div>
+
+        <div class="fact-card span-4">
+          <h3>They navigate by landmarks</h3>
+          <p>
+            Bees learn the “map” around your apiary. Orientation flights (hovering and circling) are normal,
+            especially on warm afternoons.
+          </p>
+        </div>
+
+        <div class="fact-card span-4">
+          <h3>Pollination happens by accident</h3>
+          <p>
+            While collecting nectar and pollen, bees transfer pollen between flowers. That’s the basis of
+            <a href="/pollination" title="Honeybee role in pollination">pollination</a>.
+          </p>
+        </div>
+      </div>
+
+      <h2 id="queen-worker-drone">Queen vs Worker vs Drone – how to spot the difference</h2>
+
+      <p>
+        New beekeepers often know the names but struggle with real-world identification. Here’s what to look for
+        on the frame — including the subtle bits like drone eye size and the shape of drone brood cappings.
+      </p>
+
+      <div class="table-wrap" aria-label="Queen worker drone comparison table wrapper">
+        <table class="pretty-table" aria-label="Queen worker drone comparison table">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Queen (female)</th>
+              <th>Worker (female)</th>
+              <th>Drone (male)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Main role</strong></td>
+              <td>Egg-laying + colony cohesion via pheromones</td>
+              <td>All work: nursing, comb building, guarding, foraging</td>
+              <td>Mating with a virgin queen (genetic diversity)</td>
+            </tr>
+            <tr>
+              <td><strong>Body shape</strong></td>
+              <td>Long abdomen; often extends beyond wing tips</td>
+              <td>Slimmer; built for varied tasks</td>
+              <td>Chunkier “barrel” body; blunt abdomen</td>
+            </tr>
+            <tr>
+              <td><strong>Eyes (big clue)</strong></td>
+              <td>Normal size</td>
+              <td>Normal size</td>
+              <td><strong>Very large eyes</strong> that meet at the top of the head (helps locate queens in flight)</td>
+            </tr>
+            <tr>
+              <td><strong>Sting</strong></td>
+              <td>Yes (rarely used; mainly against rival queens)</td>
+              <td>Yes (barbed; used for defence)</td>
+              <td><strong>No sting</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Pollen baskets</strong></td>
+              <td>No</td>
+              <td><strong>Yes</strong> (hind legs)</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td><strong>Brood cell cappings</strong></td>
+              <td>Queen cells are peanut-shaped, hanging</td>
+              <td>Worker brood is flat/slightly domed</td>
+              <td><strong>Drone brood is noticeably domed</strong> (often described as “bullet-shaped” cappings)</td>
+            </tr>
+            <tr>
+              <td><strong>Typical lifespan</strong></td>
+              <td>Often years (varies by management)</td>
+              <td>Weeks in peak season; longer over winter</td>
+              <td>Usually months at most; often removed in autumn (“drone eviction”)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Beginner tip:</strong>
+        <p class="small-note">
+          If you’re struggling to find the queen, look for a moving “retinue” of workers facing her and feeding her.
+          Also check areas with fresh eggs — queens tend to work where they’re laying.
+        </p>
+      </div>
+
+      <h2 id="lifecycle">Honeybee lifecycle timings (Queen vs Worker vs Drone)</h2>
+
+      <p>
+        In UK beekeeping, lifecycle timing is practical: it helps you interpret what you see during inspections,
+        estimate when a virgin queen might emerge, and understand why drone brood appears and disappears seasonally.
+      </p>
+
+      <div class="table-wrap" aria-label="Honeybee lifecycle timings wrapper">
+        <table class="pretty-table" aria-label="Honeybee lifecycle timings table">
+          <thead>
+            <tr>
+              <th>Caste</th>
+              <th>Egg stage</th>
+              <th>Larva stage</th>
+              <th>Pupa stage (sealed)</th>
+              <th>Total time (egg → adult)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Queen</strong></td>
+              <td>~3 days</td>
+              <td>~5–6 days (fed royal jelly)</td>
+              <td>~7–8 days</td>
+              <td><strong>~16 days</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Worker</strong></td>
+              <td>~3 days</td>
+              <td>~6 days</td>
+              <td>~12 days</td>
+              <td><strong>~21 days</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Drone</strong></td>
+              <td>~3 days</td>
+              <td>~6–7 days</td>
+              <td>~14–15 days</td>
+              <td><strong>~24 days</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Why this matters in real life:</strong>
+        <p class="small-note">
+          If a colony is queenless, timing helps you plan checks without constantly disturbing them.
+          It also helps you understand when brood should start appearing again after a re-queening or swarm event.
+        </p>
+      </div>
+
+      <h2 id="behaviour">Behaviour & communication facts (the “how” behind the hive)</h2>
+
+      <p>
+        Honeybees communicate using movement, scent and touch. The colony’s behaviour changes with forage,
+        weather, space and stress — especially in the UK where conditions can swing quickly.
+      </p>
+
+      <div class="fact-grid">
+        <div class="fact-card span-6">
+          <h3>Waggle dance (direction + distance)</h3>
+          <p>
+            Foragers recruit other bees when they find good forage. The dance shares directional information
+            and a rough idea of distance. Learn more in
+            <a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a>.
+          </p>
+        </div>
+
+        <div class="fact-card span-6">
+          <h3>Pheromones (chemical messaging)</h3>
+          <p>
+            The queen’s pheromones help maintain colony cohesion. Alarm pheromone can trigger defensive behaviour
+            fast — which is why calm handling matters.
+          </p>
+        </div>
+
+        <div class="fact-card span-6">
+          <h3>Temperature control (fanning + clustering)</h3>
+          <p>
+            Bees fan to ventilate and help ripen nectar. In cold weather, they cluster to conserve heat and keep
+            the brood nest stable.
+          </p>
+        </div>
+
+        <div class="fact-card span-6">
+          <h3>Hygienic behaviour (health protection)</h3>
+          <p>
+            Some colonies are better at detecting and removing unhealthy brood. This matters in disease management.
+            See <a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a> and
+            <a href="/bee-diseases" title="Bee diseases and pests overview">Diseases & Pests</a>.
+          </p>
+        </div>
+      </div>
+
+      <h2 id="swarming">Swarming basics (UK-friendly, no panic)</h2>
+
+      <p>
+        Swarming is a natural colony reproduction strategy. Beekeepers manage it to avoid losing flying bees and
+        honey production — but seeing swarm signs doesn’t mean you’ve failed.
+      </p>
+
+      <div class="callout">
+        <strong>Swarm sign checklist:</strong>
+        <div class="indented-list">
+          <ul>
+            <li><p>Rapid colony expansion and crowding.</p></li>
+            <li><p>Queen cells appearing (context matters: swarm, supersedure, or emergency).</p></li>
+            <li><p>Changes in “feel” — busy, restless colonies on warm days.</p></li>
+          </ul>
+        </div>
+        <p class="small-note">
+          Management is covered in <a href="/hive-management" title="Manage your hive effectively">Hive Management</a>.
+          Public safety guidance is on <a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a>.
+        </p>
+      </div>
+
+      <h2 id="faqs">Honeybee Facts FAQs</h2>
+
+      <details>
+        <summary>How do I tell a drone from a worker on the frame?</summary>
+        <p>
+          Look for the <strong>huge eyes</strong> (often meeting at the top of the head) and a bulkier body. Workers
+          are slimmer and often show pollen baskets on their hind legs.
+        </p>
+      </details>
+
+      <details>
+        <summary>Do drones sting?</summary>
+        <p>
+          No — drones do not have a sting. Only females (workers and queens) have a stinger.
+        </p>
+      </details>
+
+      <details>
+        <summary>How long does it take for a queen to hatch?</summary>
+        <p>
+          Roughly <strong>16 days</strong> from egg to adult queen. Timing varies slightly with conditions, but it’s a
+          reliable planning guide.
+        </p>
+      </details>
+
+      <details>
+        <summary>How long does it take for a worker to hatch?</summary>
+        <p>
+          Roughly <strong>21 days</strong> from egg to adult worker.
+        </p>
+      </details>
+
+      <details>
+        <summary>How long does it take for a drone to hatch?</summary>
+        <p>
+          Roughly <strong>24 days</strong> from egg to adult drone.
+        </p>
+      </details>
+
+      <details>
+        <summary>Why is drone brood capped like a “bullet” shape?</summary>
+        <p>
+          Drones are larger than workers, so the cappings are more domed. This is one of the fastest visual clues
+          beginners use when learning frames.
+        </p>
+      </details>
+
+      <details>
+        <summary>Why do bees fan at the hive entrance?</summary>
+        <p>
+          Fanning helps regulate temperature and humidity and can help ripen nectar by improving airflow through the hive.
+        </p>
+      </details>
+
+      <details>
+        <summary>What is the waggle dance in simple terms?</summary>
+        <p>
+          It’s a way for bees to share the direction and approximate distance to a good food source so more bees can forage efficiently.
+        </p>
+      </details>
+
+      <details>
+        <summary>Why do bees swarm in the UK?</summary>
+        <p>
+          Swarming commonly peaks in late spring and early summer when colonies grow rapidly. It’s a natural process, and beekeepers
+          manage it with space, inspections and swarm control methods.
+        </p>
+      </details>
+
+      <details>
+        <summary>How can I keep better records as a beginner?</summary>
+        <p>
+          Record brood pattern, temperament, stores, queen status, treatments and weather. If you want a structured option,
+          try <a href="/hivetag-app" title="HiveTag beekeeping records app">HiveTag</a>.
+        </p>
+      </details>
+
+      <details>
+        <summary>Where should I go next on BeezKnees?</summary>
+        <p>
+          If you’re starting out, use <a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a>.
+          If you want deeper knowledge, explore <a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a>,
+          <a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a> and
+          <a href="/pollination" title="Honeybee role in pollination">Pollination</a>.
+        </p>
+      </details>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer" role="region" aria-label="Site Footer">
+      <div class="footer-columns">
+        <div class="footer-column" role="region" aria-label="Contact Information">
+          <h3>Contact</h3>
+          <address>
+            <p>
+              Email:
+              <a href="/contact" title="Send us a message via our contact page"
+                >Contact</a
+              >
+            </p>
+          </address>
+        </div>
+
+        <div class="footer-column" role="region" aria-label="Useful Site Links">
+          <h3>Useful Links</h3>
+          <ul>
+            <li><a href="/privacy" title="Read our privacy policy">Privacy Policy</a></li>
+            <li><a href="/site-map" title="View a map of our entire website">Site Map</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column" role="region" aria-label="Beekeeping Resources">
+          <h3>Resources</h3>
+          <ul>
+            <li>
+              <a
+                href="https://www.bbka.org.uk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Visit the British Beekeepers Association website"
+              >
+                British Beekeepers Association
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.cardiffbeekeepers.co.uk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Visit the Cardiff Beekeepers Association site"
+              >
+                Cardiff, Vale and Valleys Beekeepers Association
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Read the Honey (Wales) Regulations 2015"
+              >
+                The Honey (Wales) Regulations 2015
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.biodiversitywales.org.uk/Bee-Friendly"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Explore Bee-Friendly programme by Wales Biodiversity Partnership"
+              >
+                Wales Biodiversity Partnership
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.nationalbeeunit.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Access BeeBase for UK bee health information"
+              >
+                BeeBase
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom" role="region" aria-label="Copyright">
+        &copy; 2025 BeezKnees. All rights reserved.
+      </div>
+    </footer>
+
+    <!-- Cookie Consent Popup -->
+    <div
+      id="cookie-consent"
+      class="cookie-popup"
+      role="region"
+      aria-label="Cookie Consent Settings"
+    >
+      <div
+        class="cookie-content"
+        role="region"
+        aria-label="Cookie Consent Options"
+      >
+        <h2>🍪 We Use Cookies</h2>
+        <p>
+          We use essential cookies for site functionality. With your consent, we may
+          also use cookies for analytics and marketing purposes.
+        </p>
+
+        <form id="cookie-options">
+          <label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
+          <label><input type="checkbox" id="analytics" /> Analytics</label><br />
+          <label><input type="checkbox" id="marketing" /> Marketing</label><br />
+        </form>
+
+        <div class="cookie-buttons">
+          <button id="accept-selected">Accept Selected</button>
+          <button id="accept-all">Accept All</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" title="Back to top" aria-label="Back to top">
+      ⬆ Top
+    </button>
+
+    <script src="js/menuv2.js" defer></script>
+  </body>
 </html>

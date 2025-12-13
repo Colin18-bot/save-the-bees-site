@@ -607,9 +607,15 @@ main.not-found {
 /* 📃 INDENTED LISTS                                 */
 /* -------------------------------------------------- */
 .indented-list {
-  margin-left: 2em;
+  margin-left: em;
   padding-left: 1em;
   list-style-type: disc;
+}
+
+/* Extra indent for bullet lists inside callouts */
+.callout .indented-list {
+  margin-left: 3em;   /* increase this if you want even more space */
+  padding-left: 1.5em;
 }
 
 .indented-list li {

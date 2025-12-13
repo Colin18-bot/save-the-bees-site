@@ -8,6 +8,12 @@
       Year in the Apiary – Monthly Beekeeping Calendar UK & Seasonal Hive Tasks | BeezKnees
     </title>
 
+
+
+
+
+
+    
     <!-- Hamburger button -->
     <link
       rel="stylesheet"
@@ -52,16 +58,15 @@
         background-color: #fdf6ec; /* matches site background */
       }
 
-	  /* Centre headings inside the Seasonal Apiary Tasks cards only */
-		#seasonal-tasks .card h3 {
-  		text-align: center;
-	  }
+      /* Centre headings inside the Seasonal Apiary Tasks cards only */
+      #seasonal-tasks .card h3 {
+        text-align: center;
+      }
 
-	  /* Centre all text inside the Swarm Control cards */
-		#swarm-control .card {
-  		text-align: center;
-	  }
-
+      /* Centre all text inside the Swarm Control cards */
+      #swarm-control .card {
+        text-align: center;
+      }
 
       @media (max-width: 768px) {
         .weather-table th,
@@ -157,7 +162,7 @@
       [
         {
           "@context": "https://schema.org",
-          "@type": "Article",
+          "@type": "TechArticle",
           "headline": "Year in the Apiary – Monthly Beekeeping Calendar UK",
           "description": "A UK-focused monthly beekeeping calendar explaining what to do in the apiary each month, how weather and nectar flow affect colonies, and how to adapt hive management to your local climate.",
           "image": "https://beezknees.co.uk/images/autumn.jpg",
@@ -178,9 +183,10 @@
             "@id": "https://beezknees.co.uk/year-in-the-apiary"
           },
           "datePublished": "2024-06-01",
-          "dateModified": "2025-12-08",
+          "dateModified": "2025-12-11",
           "articleSection": [
             "Monthly beekeeping calendar UK overview",
+            "Printable Year in the Apiary PDF calendar",
             "How seasons and weather affect honey bees",
             "Nectar flow and regional variation",
             "Seasonal apiary tasks and quick links",
@@ -353,198 +359,88 @@
     </div>
 
     <!-- Navigation Bar -->
-    <nav class="navbar" role="navigation" aria-label="Main navigation">
-      <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
-        <li><a href="/" title="Visit the homepage">Home</a></li>
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+			<ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+				<li><a href="/" title="Visit the homepage">Home</a></li>
 
-        <li class="dropdown">
-          <a href="/about-us" title="Learn more about us">About</a>
-        </li>
+				<li class="dropdown">
+					<a href="/about-us" title="Learn more about us">About</a>
+				</li>
 
-        <li class="dropdown">
-          <a href="/donate" title="Support out mission">Donate</a>
-        </li>
+				<li class="dropdown">
+					<a href="/donate" title="Support out mission">Donate</a>
+				</li>
 
-        <li class="dropdown">
-          <a href="/beekeeping-guides" title="Explore our beekeeping guides"
-            >Beekeeping</a
-          >
-          <button class="dropdown-toggle" aria-label="Toggle Submenu">
-            ▼
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <a
-                href="/getting-started"
-                title="Begin your beekeeping journey"
-                >Getting Started</a
-              >
-            </li>
-            <li>
-              <a href="/equipment" title="Essential beekeeping equipment"
-                >Equipment</a
-              >
-            </li>
-            <li>
-              <a href="/hive-management" title="Manage your hive effectively"
-                >Hive Management</a
-              >
-            </li>
-            <li>
-              <a href="/varroa-management" title="control varroa mite infestations"
-                >Varroa Management</a
-              >
-            </li>
-            <li>
-              <a href="/hygiene" title="Keep your hive clean and healthy"
-                >Hygiene</a
-              >
-            </li>
-            <li>
-              <a href="/bee-stings" title="Understand and treat bee stings"
-                >Bee Stings</a
-              >
-            </li>
-          </ul>
-        </li>
+				<li class="dropdown">
+					<a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a></li>
+						<li><a href="/equipment" title="Essential beekeeping equipment">Equipment</a></li>
+						<li><a href="/hive-management" title="Manage your hive effectively">Hive Management</a></li>
+						<li><a href="/varroa-management" title="control varroa mite infestations">Varroa Management</a></li>
+						<li><a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a></li>
+						<li><a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a></li>
+						<li><a href="/honey-extraction" title="how to harvest and bottle honey safely">Extracting Honey</a></li>
+					</ul>
+				</li>
 
-        <li class="dropdown">
-          <a href="/year-in-the-apiary" title="Monthly tasks in the apiary"
-            >Apiary Calendar</a
-          >
-          <button class="dropdown-toggle" aria-label="Toggle Submenu">
-            ▼
-          </button>
-          <ul class="dropdown-menu">
-            <li><a href="/january" title="January beekeeping tasks">January</a></li>
-            <li>
-              <a href="/february" title="February beekeeping tasks">February</a>
-            </li>
-            <li><a href="/march" title="March beekeeping tasks">March</a></li>
-            <li><a href="/april" title="April beekeeping tasks">April</a></li>
-            <li><a href="/may" title="May beekeeping tasks">May</a></li>
-            <li><a href="/june" title="June beekeeping tasks">June</a></li>
-            <li><a href="/july" title="July beekeeping tasks">July</a></li>
-            <li><a href="/august" title="August beekeeping tasks">August</a></li>
-            <li>
-              <a href="/september" title="September beekeeping tasks"
-                >September</a
-              >
-            </li>
-            <li><a href="/october" title="October beekeeping tasks">October</a></li>
-            <li>
-              <a href="/november" title="November beekeeping tasks">November</a>
-            </li>
-            <li>
-              <a href="/december" title="December beekeeping tasks">December</a>
-            </li>
-          </ul>
-        </li>
+				<li class="dropdown">
+					<a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+					  <li><a href="/january" title="January beekeeping tasks">January</a></li>
+						<li><a href="/february" title="February beekeeping tasks">February</a></li>
+						<li><a href="/march" title="March beekeeping tasks">March</a></li>
+						<li><a href="/april" title="April beekeeping tasks">April</a></li>
+						<li><a href="/may" title="May beekeeping tasks">May</a></li>
+						<li><a href="/june" title="June beekeeping tasks">June</a></li>
+						<li><a href="/july" title="July beekeeping tasks">July</a></li>
+						<li><a href="/august" title="August beekeeping tasks">August</a></li>
+						<li><a href="/september" title="September beekeeping tasks">September</a></li>
+						<li><a href="/october" title="October beekeeping tasks">October</a></li>
+						<li><a href="/november" title="November beekeeping tasks">November</a></li>
+						<li><a href="/december" title="December beekeeping tasks">December</a></li>
+					</ul>
+				</li>
 
-        <li class="dropdown">
-          <a href="/bee-diseases" title="Bee diseases and pests overview"
-            >Diseases and Pests</a
-          >
-          <button class="dropdown-toggle" aria-label="Toggle Submenu">
-            ▼
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <a
-                href="/bacterial-diseases"
-                title="Learn about bacterial bee diseases"
-                >Bacterial</a
-              >
-            </li>
-            <li>
-              <a
-                href="/viral-diseases"
-                title="Learn about viral bee diseases"
-                >Viral</a
-              >
-            </li>
-            <li>
-              <a href="/bee-pests" title="Common pests affecting bees"
-                >Pests</a
-              >
-            </li>
-            <li>
-              <a href="/parasitic-mites" title="Parasitic mites in bee colonies"
-                >Mites</a
-              >
-            </li>
-            <li>
-              <a href="/other-conditions" title="Other bee health conditions"
-                >Other Conditions</a
-              >
-            </li>
-          </ul>
-        </li>
+				<li class="dropdown">
+					<a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/veterinary-medicine-records" title="How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a></li>
+            <li><a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a></li>
+						<li><a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a></li>
+						<li><a href="/bee-pests" title="Common pests affecting bees">Pests</a></li>
+						<li><a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a></li>
+						<li><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></li>
+					</ul>
+				</li>
 
-        <li class="dropdown">
-          <a href="/honeybee-facts" title="Interesting facts about honeybees"
-            >Honeybee Facts</a
-          >
-          <button class="dropdown-toggle" aria-label="Toggle Submenu">
-            ▼
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a>
-            </li>
-            <li>
-              <a href="/behaviour" title="Learn about honeybee behaviour"
-                >Behaviour</a
-              >
-            </li>
-            <li>
-              <a href="/how-bees-make-honey" title="How bees make honey"
-                >Make Honey</a
-              >
-            </li>
-            <li>
-              <a href="/pollination" title="Honeybee role in pollination"
-                >Pollination</a
-              >
-            </li>
-          </ul>
-        </li>
+				<li class="dropdown">
+					<a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a></li>
+						<li><a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a></li>
+						<li><a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a></li>
+						<li><a href="/pollination" title="Honeybee role in pollination">Pollination</a></li>
+					</ul>
+				</li>
 
-        <li class="dropdown">
-          <a href="/help-the-bees" title="How you can help save the bees"
-            >Help Bees</a
-          >
-          <button class="dropdown-toggle" aria-label="Toggle Submenu">
-            ▼
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <a href="/bee-gardening" title="Make your garden bee friendly"
-                >Gardening</a
-              >
-            </li>
-            <li>
-              <a href="/donate" title="Make a donation to support bees"
-                >Donate</a
-              >
-            </li>
-            <li>
-              <a href="/report-a-swarm" title="Report a bee swarm"
-                >Report a Swarm</a
-              >
-            </li>
-          </ul>
-        </li>
+				<li class="dropdown">
+					<a href="/help-the-bees" title="How you can help save the bees">Help Bees</a>
+					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+					<ul class="dropdown-menu">
+						<li><a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a></li>
+						<li><a href="/donate" title="Make a donation to support bees">Donate</a></li>
+						<li><a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a></li>
+					</ul>
+				</li>
 
-        <li>
-          <a
-            href="https://beezknees-members.netlify.app/login"
-            title="Login or Register for HiveTag Dashboard"
-            >Members Area</a
-          >
-        </li>
-      </ul>
-    </nav>
+			<li><a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members Area</a></li>
+			</ul>
+		</nav>
 
     <!-- Hero Banner -->
     <section role="region" aria-label="Year in the Apiary banner">
@@ -609,6 +505,7 @@
       >
         <h2 id="on-this-page">On this page</h2>
         <ul>
+          <li><a href="#printable-calendar">Download printable PDF calendar</a></li>
           <li><a href="#at-a-glance">At a glance – UK beekeeping year</a></li>
           <li><a href="#seasons-and-weather">How seasons and weather affect bees</a></li>
           <li><a href="#nectar-flow">Nectar flow and regional variation</a></li>
@@ -620,6 +517,44 @@
           <li><a href="#faq">Year in the apiary – FAQs</a></li>
         </ul>
       </nav>
+
+      <!-- Printable calendar section -->
+      <section id="printable-calendar" aria-labelledby="printable-calendar-heading">
+  <h2 id="printable-calendar-heading">Download the printable Year in the Apiary calendar</h2>
+
+  <p>
+    Prefer something you can pin to the shed door or keep in your beekeeping folder?
+    Use either the quick PDF overview or the full detailed strategy document below.
+  </p>
+
+  <!-- Quick PDF button -->
+  <p>
+    <a
+      href="/downloads/year-in-the-apiary-uk-beekeeping-calendar.pdf"
+      class="btn-primary"
+      title="Download the printable Year in the Apiary PDF calendar"
+    >
+      📄 Download Quick PDF Overview
+    </a>
+  </p>
+
+  <!-- Full Word Strategy button -->
+  <p>
+    <a
+      href="/downloads/year-in-the-apiary-monthly-seasonal-strategy.docx"
+      class="btn-primary"
+      title="Download the detailed Year in the Apiary monthly and seasonal strategy (Word document)"
+    >
+      📘 Download Full Strategy (Word)
+    </a>
+  </p>
+
+  <p>
+    Use these alongside the detailed monthly pages below when planning your inspections,
+    feeding, swarm control and winter preparation.
+  </p>
+</section>
+
 
       <!-- At a glance section -->
       <section id="at-a-glance" aria-labelledby="at-a-glance-heading">
@@ -982,6 +917,15 @@
                   – minimal disturbance, security and weatherproofing.
                 </li>
               </ul>
+
+              <p>
+  <strong>Quick reminder:</strong> If you carry out any varroa treatments using veterinary medicines,
+  keep a treatment record and retain it for <strong>at least five years</strong>. See
+  <a href="/veterinary-medicine-records" title="UK hive treatment record keeping (keep for 5 years)">
+    veterinary medicine records
+  </a>.
+</p>
+
             </div>
           </div>
 
@@ -1216,8 +1160,7 @@
         <p>
           These questions summarise some of the most common queries from new and
           intermediate beekeepers about using a <strong>UK beekeeping calendar</strong>.
-          They complement the detailed information above and the monthly “What to do in
-          the apiary” pages.
+          They complement the detailed information above and the monthly “What to do in the apiary” pages.
         </p>
 
         <div class="indented-list">
