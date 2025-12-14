@@ -1,1134 +1,836 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>
-      Hive Management and Beekeeping Inspections in the UK | BeezKnees
-    </title>
-
-    <!-- Hamburger button -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-      referrerpolicy="no-referrer"
-    />
-
-    <!-- Your CSS file -->
-    <link rel="stylesheet" href="css/style.css" />
-
-    <!-- Page-specific layout tweaks -->
-    <style>
-      .callout {
-        border-left: 4px solid #f4b41a;
-        background-color: #fff7e6;
-        padding: 0.75rem 1rem;
-        margin: 1rem 0;
-      }
-
-      .howto-steps ol {
-        padding-left: 1.25rem;
-      }
-
-      .howto-steps li {
-        margin-bottom: 0.75rem;
-      }
-
-      /* Seasonal management headings centred only */
-      #seasonal-management .card h3 {
-        text-align: center;
-      }
-    </style>
-
-    <!-- Canonical URL -->
-    <link
-      rel="canonical"
-      href="https://beezknees.co.uk/hive-management"
-    />
-
-    <!-- SEO Meta Tags -->
-    <meta
-      name="description"
-      content="Practical guide to hive management and beekeeping inspections in the UK. Learn how to inspect a hive step by step, when not to inspect, what to look for on frames and how hive management changes through the seasons."
-    />
-    <meta
-      name="keywords"
-      content="beekeeping inspections UK, hive management, how to inspect a hive, hive inspection checklist, seasonal hive management UK, beekeeping for beginners"
-    />
-    <meta name="author" content="Colin Chorley" />
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="article" />
-    <meta
-      property="og:title"
-      content="Hive Management and Beekeeping Inspections in the UK"
-    />
-    <meta
-      property="og:description"
-      content="Step by step UK guide to hive management and beekeeping inspections – what to check, when to open a hive and how to read frames, brood pattern and stores."
-    />
-    <meta
-      property="og:url"
-      content="https://beezknees.co.uk/hive-management"
-    />
-    <meta
-      property="og:image"
-      content="https://beezknees.co.uk/images/beekeeper-inspecting-frames.jpg"
-    />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Hive Management and Beekeeping Inspections in the UK"
-    />
-    <meta
-      name="twitter:description"
-      content="Learn how to carry out beekeeping inspections in the UK with a practical hive management checklist and seasonal tips."
-    />
-    <meta
-      name="twitter:image"
-      content="https://beezknees.co.uk/images/beekeeper-inspecting-frames.jpg"
-    />
-
-    <!-- Favicons -->
-    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/images/favicon-16x16.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/images/favicon-32x32.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/images/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="/images/android-chrome-192x192.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="512x512"
-      href="/images/android-chrome-512x512.png"
-    />
-    <link rel="manifest" href="/site.webmanifest" />
-
-    <!-- Schema.org Structured Data -->
-    <script type="application/ld+json">
-      [
-        {
-          "@context": "https://schema.org",
-          "@type": "Article",
-          "headline": "Hive Management and Beekeeping Inspections in the UK",
-          "description": "A practical UK guide to hive management and beekeeping inspections, covering when to inspect, how to inspect a hive step by step, what to look for on brood frames and how hive management changes with the seasons.",
-          "image": "https://beezknees.co.uk/images/beekeeper-inspecting-frames.jpg",
-          "author": {
-            "@type": "Person",
-            "name": "Colin Chorley"
-          },
-          "publisher": {
-            "@type": "Organization",
-            "name": "BeezKnees",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
-            }
-          },
-          "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": "https://beezknees.co.uk/hive-management"
-          },
-          "datePublished": "2024-06-01",
-          "dateModified": "2025-12-08",
-          "articleSection": [
-            "What hive management means",
-            "Pre inspection checks and safety",
-            "How to inspect a hive step by step",
-            "When not to inspect a hive",
-            "Reading brood frames and bee behaviour",
-            "Managing comb, space and stores",
-            "Seasonal hive management in the UK",
-            "Hive management frequently asked questions"
-          ]
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "HowTo",
-          "name": "How to carry out a beekeeping inspection in the UK",
-          "description": "Step by step instructions for carrying out a routine hive inspection, including what to look for on brood frames, stores and bee behaviour.",
-          "totalTime": "PT30M",
-          "supply": [
-            {
-              "@type": "HowToSupply",
-              "name": "Smoker and suitable fuel"
-            },
-            {
-              "@type": "HowToSupply",
-              "name": "Hive tool"
-            },
-            {
-              "@type": "HowToSupply",
-              "name": "Bee suit and gloves"
-            },
-            {
-              "@type": "HowToSupply",
-              "name": "Record card or digital inspection app"
-            }
-          ],
-          "tool": [
-            {
-              "@type": "HowToTool",
-              "name": "Smoker"
-            },
-            {
-              "@type": "HowToTool",
-              "name": "Hive tool"
-            }
-          ],
-          "step": [
-            {
-              "@type": "HowToStep",
-              "name": "Check weather and timing",
-              "text": "Choose a dry, calm period with temperatures warm enough for bees to fly, usually 14°C or above, and avoid late evenings or very early mornings."
-            },
-            {
-              "@type": "HowToStep",
-              "name": "Light the smoker safely",
-              "text": "Light the smoker so it produces cool, steady smoke. Have water or a safe surface ready for when you finish."
-            },
-            {
-              "@type": "HowToStep",
-              "name": "Approach and open the hive calmly",
-              "text": "Approach from the side or back, give a small puff of smoke at the entrance and under the crownboard, then gently remove the roof and crownboard."
-            },
-            {
-              "@type": "HowToStep",
-              "name": "Work through frames in order",
-              "text": "Remove and set aside one outside frame if needed to make space, then inspect each frame in turn, looking at both sides."
-            },
-            {
-              "@type": "HowToStep",
-              "name": "Check brood, queen signs and disease",
-              "text": "Look for eggs, all stages of brood, a good laying pattern, queen cells and any signs of disease such as sunken or discoloured cappings."
-            },
-            {
-              "@type": "HowToStep",
-              "name": "Assess stores and space",
-              "text": "Check the amount of honey and pollen, the number of frames covered with bees and whether the colony needs more space or feed."
-            },
-            {
-              "@type": "HowToStep",
-              "name": "Reassemble and record findings",
-              "text": "Rebuild the hive in the same order, close carefully, extinguish the smoker safely and write up your inspection notes while they are fresh."
-            }
-          ]
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "How often should I inspect a hive in the UK?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "In a typical UK season, routine hive inspections are often carried out every 7 to 10 days during the main spring and summer build up to monitor brood, stores and signs of swarming. Outside the main season, inspections are less frequent and weather dependent."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "What should I look for during a beekeeping inspection?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "During an inspection you should look for eggs and brood in all stages, a good laying pattern, the presence of queen cells, adequate stores of honey and pollen, signs of disease or pests and the general strength and temperament of the colony."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "When should I avoid opening a hive?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Avoid opening a hive in heavy rain, strong cold wind, during very low temperatures or when it is nearly dark. Inspections are also best delayed if there is a strong nectar dearth and robbing is likely, unless there is a welfare concern."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How long should a hive inspection take?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "A routine hive inspection for a single colony often takes between 10 and 30 minutes depending on experience, colony strength and what you find. The aim is to work methodically but not keep the hive open longer than necessary."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Do I need to see the queen at every inspection?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "You do not need to see the queen at every visit. If you can see freshly laid eggs and a good pattern of brood, you know a queen has been present recently. Marking the queen when you do find her can make future inspections easier."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How do hive inspections link to swarm control?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Regular inspections allow you to spot queen cells and crowded conditions before a swarm issues. By understanding brood pattern, space and queen cell development, you can apply an appropriate swarm control method if required."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "What records should I keep after each inspection?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Simple notes on brood pattern, queen status, strength of the colony, stores, temperament, varroa treatments and any action taken are usually enough. These can be kept on paper or in a digital tool such as the HiveTag web app."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How does hive management change through the seasons?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "In spring the focus is on building brood and preventing starvation, in summer on swarm control and honey production, in autumn on ensuring sufficient stores and healthy bees and in winter on protection, ventilation and minimal disturbance."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Is it safe to inspect a hive as a beginner?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "With suitable protective clothing, a lit smoker, basic training and support from a mentor or association, beginners can inspect hives safely. Learning good handling early builds confidence and reduces stress for both bees and beekeeper."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How do hive inspections help with disease control?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Careful inspections make it easier to spot unusual brood patterns, smells or adult bee symptoms that might indicate disease. Combined with good hygiene and support from official guidance, inspections play an important role in early detection."
-              }
-            }
-          ]
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://beezknees.co.uk/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Hive Management",
-              "item": "https://beezknees.co.uk/hive-management"
-            }
-          ]
-        }
-      ]
-    </script>
-  </head>
-  <body>
-    <!-- Fixed Header and Nav Container -->
-    <div class="fixed-header">
-      <header class="site-header" role="region" aria-label="Site Header">
-        <div class="header-container" role="region" aria-label="Site Branding">
-          <a href="https://beezknees.co.uk">
-            <img
-              src="images/BeezKnees-Logo.png"
-              alt="BeezKnees logo"
-              class="site-logo"
-            />
-          </a>
-
-          <h1 class="site-title">BeezKnees</h1>
-          <!-- Hamburger Icon Button -->
-          <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-            <i class="fas fa-bars"></i>
-          </button>
-        </div>
-      </header>
-    </div>
-
-    <!-- Navigation Bar -->
-   <nav class="navbar" role="navigation" aria-label="Main navigation">
-			<ul class="nav-menu" role="region" aria-label="Main Navigation Links">
-				<li><a href="/" title="Visit the homepage">Home</a></li>
-
-				<li class="dropdown">
-					<a href="/about-us" title="Learn more about us">About</a>
-				</li>
-
-				<li class="dropdown">
-					<a href="/donate" title="Support out mission">Donate</a>
-				</li>
-
-				<li class="dropdown">
-					<a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a></li>
-						<li><a href="/equipment" title="Essential beekeeping equipment">Equipment</a></li>
-						<li><a href="/hive-management" title="Manage your hive effectively">Hive Management</a></li>
-						<li><a href="/varroa-management" title="control varroa mite infestations">Varroa Management</a></li>
-						<li><a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a></li>
-						<li><a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a></li>
-						<li><a href="/honey-extraction" title="how to harvest and bottle honey safely">Extracting Honey</a></li>
-					</ul>
-				</li>
-
-				<li class="dropdown">
-					<a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-					  <li><a href="/january" title="January beekeeping tasks">January</a></li>
-						<li><a href="/february" title="February beekeeping tasks">February</a></li>
-						<li><a href="/march" title="March beekeeping tasks">March</a></li>
-						<li><a href="/april" title="April beekeeping tasks">April</a></li>
-						<li><a href="/may" title="May beekeeping tasks">May</a></li>
-						<li><a href="/june" title="June beekeeping tasks">June</a></li>
-						<li><a href="/july" title="July beekeeping tasks">July</a></li>
-						<li><a href="/august" title="August beekeeping tasks">August</a></li>
-						<li><a href="/september" title="September beekeeping tasks">September</a></li>
-						<li><a href="/october" title="October beekeeping tasks">October</a></li>
-						<li><a href="/november" title="November beekeeping tasks">November</a></li>
-						<li><a href="/december" title="December beekeeping tasks">December</a></li>
-					</ul>
-				</li>
-
-				<li class="dropdown">
-					<a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/veterinary-medicine-records" title="How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a></li>
-            <li><a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a></li>
-						<li><a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a></li>
-						<li><a href="/bee-pests" title="Common pests affecting bees">Pests</a></li>
-						<li><a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a></li>
-						<li><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></li>
-					</ul>
-				</li>
-
-				<li class="dropdown">
-					<a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a></li>
-						<li><a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a></li>
-						<li><a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a></li>
-						<li><a href="/pollination" title="Honeybee role in pollination">Pollination</a></li>
-					</ul>
-				</li>
-
-				<li class="dropdown">
-					<a href="/help-the-bees" title="How you can help save the bees">Help Bees</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a></li>
-						<li><a href="/donate" title="Make a donation to support bees">Donate</a></li>
-						<li><a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a></li>
-					</ul>
-				</li>
-
-			<li><a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members Area</a></li>
-			</ul>
-		</nav>
-
-    <!-- Hero Banner -->
-    <section role="region" aria-label="Hive management banner">
-      <div class="banner">
-        <img
-          src="images/beekeeper-inspecting-frames.jpg"
-          alt="Beekeeper inspecting brood frames during a routine hive inspection in the UK"
-        />
+   <head>
+      <meta name="generator" content="HTML Tidy for HTML5 for Windows version 5.9.14">
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Hive Management and Beekeeping Inspections in the UK | BeezKnees</title>
+      <!-- Hamburger button -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+         referrerpolicy="no-referrer">
+      <!-- Your CSS file -->
+      <link rel="stylesheet" href="css/style.css">
+      <!-- Page-specific layout tweaks -->
+      <!-- Canonical URL -->
+      <link rel="canonical" href="https://beezknees.co.uk/hive-management">
+      <!-- SEO Meta Tags -->
+      <meta name="description" content=
+         "Practical guide to hive management and beekeeping inspections in the UK. Learn how to inspect a hive step by step, when not to inspect, what to look for on frames and how hive management changes through the seasons.">
+      <meta name="keywords" content=
+         "beekeeping inspections UK, hive management, how to inspect a hive, hive inspection checklist, seasonal hive management UK, beekeeping for beginners">
+      <meta name="author" content="Colin Chorley">
+      <!-- Open Graph -->
+      <meta property="og:type" content="article">
+      <meta property="og:title" content="Hive Management and Beekeeping Inspections in the UK">
+      <meta property="og:description" content=
+         "Step by step UK guide to hive management and beekeeping inspections – what to check, when to open a hive and how to read frames, brood pattern and stores.">
+      <meta property="og:url" content="https://beezknees.co.uk/hive-management">
+      <meta property="og:image" content="https://beezknees.co.uk/images/beekeeper-inspecting-frames.jpg">
+      <!-- Twitter Card -->
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="Hive Management and Beekeeping Inspections in the UK">
+      <meta name="twitter:description" content=
+         "Learn how to carry out beekeeping inspections in the UK with a practical hive management checklist and seasonal tips.">
+      <meta name="twitter:image" content="https://beezknees.co.uk/images/beekeeper-inspecting-frames.jpg">
+      <!-- Favicons -->
+      <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+      <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+      <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="192x192" href="/images/android-chrome-192x192.png">
+      <link rel="icon" type="image/png" sizes="512x512" href="/images/android-chrome-512x512.png">
+      <link rel="manifest" href="/site.webmanifest">
+      <!-- Schema.org Structured Data -->
+      <script type="application/ld+json">
+         [
+           {
+             "@context": "https://schema.org",
+             "@type": "Article",
+             "headline": "Hive Management and Beekeeping Inspections in the UK",
+             "description": "A practical UK guide to hive management and beekeeping inspections, covering when to inspect, how to inspect a hive step by step, what to look for on brood frames and how hive management changes with the seasons.",
+             "image": "https://beezknees.co.uk/images/beekeeper-inspecting-frames.jpg",
+             "author": {
+               "@type": "Person",
+               "name": "Colin Chorley"
+             },
+             "publisher": {
+               "@type": "Organization",
+               "name": "BeezKnees",
+               "logo": {
+                 "@type": "ImageObject",
+                 "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+               }
+             },
+             "mainEntityOfPage": {
+               "@type": "WebPage",
+               "@id": "https://beezknees.co.uk/hive-management"
+             },
+             "datePublished": "2024-06-01",
+             "dateModified": "2025-12-08",
+             "articleSection": [
+               "What hive management means",
+               "Pre inspection checks and safety",
+               "How to inspect a hive step by step",
+               "When not to inspect a hive",
+               "Reading brood frames and bee behaviour",
+               "Managing comb, space and stores",
+               "Seasonal hive management in the UK",
+               "Hive management frequently asked questions"
+             ]
+           },
+           {
+             "@context": "https://schema.org",
+             "@type": "HowTo",
+             "name": "How to carry out a beekeeping inspection in the UK",
+             "description": "Step by step instructions for carrying out a routine hive inspection, including what to look for on brood frames, stores and bee behaviour.",
+             "totalTime": "PT30M",
+             "supply": [
+               {
+                 "@type": "HowToSupply",
+                 "name": "Smoker and suitable fuel"
+               },
+               {
+                 "@type": "HowToSupply",
+                 "name": "Hive tool"
+               },
+               {
+                 "@type": "HowToSupply",
+                 "name": "Bee suit and gloves"
+               },
+               {
+                 "@type": "HowToSupply",
+                 "name": "Record card or digital inspection app"
+               }
+             ],
+             "tool": [
+               {
+                 "@type": "HowToTool",
+                 "name": "Smoker"
+               },
+               {
+                 "@type": "HowToTool",
+                 "name": "Hive tool"
+               }
+             ],
+             "step": [
+               {
+                 "@type": "HowToStep",
+                 "name": "Check weather and timing",
+                 "text": "Choose a dry, calm period with temperatures warm enough for bees to fly, usually 14°C or above, and avoid late evenings or very early mornings."
+               },
+               {
+                 "@type": "HowToStep",
+                 "name": "Light the smoker safely",
+                 "text": "Light the smoker so it produces cool, steady smoke. Have water or a safe surface ready for when you finish."
+               },
+               {
+                 "@type": "HowToStep",
+                 "name": "Approach and open the hive calmly",
+                 "text": "Approach from the side or back, give a small puff of smoke at the entrance and under the crownboard, then gently remove the roof and crownboard."
+               },
+               {
+                 "@type": "HowToStep",
+                 "name": "Work through frames in order",
+                 "text": "Remove and set aside one outside frame if needed to make space, then inspect each frame in turn, looking at both sides."
+               },
+               {
+                 "@type": "HowToStep",
+                 "name": "Check brood, queen signs and disease",
+                 "text": "Look for eggs, all stages of brood, a good laying pattern, queen cells and any signs of disease such as sunken or discoloured cappings."
+               },
+               {
+                 "@type": "HowToStep",
+                 "name": "Assess stores and space",
+                 "text": "Check the amount of honey and pollen, the number of frames covered with bees and whether the colony needs more space or feed."
+               },
+               {
+                 "@type": "HowToStep",
+                 "name": "Reassemble and record findings",
+                 "text": "Rebuild the hive in the same order, close carefully, extinguish the smoker safely and write up your inspection notes while they are fresh."
+               }
+             ]
+           },
+           {
+             "@context": "https://schema.org",
+             "@type": "FAQPage",
+             "mainEntity": [
+               {
+                 "@type": "Question",
+                 "name": "How often should I inspect a hive in the UK?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "In a typical UK season, routine hive inspections are often carried out every 7 to 10 days during the main spring and summer build up to monitor brood, stores and signs of swarming. Outside the main season, inspections are less frequent and weather dependent."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "What should I look for during a beekeeping inspection?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "During an inspection you should look for eggs and brood in all stages, a good laying pattern, the presence of queen cells, adequate stores of honey and pollen, signs of disease or pests and the general strength and temperament of the colony."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "When should I avoid opening a hive?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Avoid opening a hive in heavy rain, strong cold wind, during very low temperatures or when it is nearly dark. Inspections are also best delayed if there is a strong nectar dearth and robbing is likely, unless there is a welfare concern."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "How long should a hive inspection take?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "A routine hive inspection for a single colony often takes between 10 and 30 minutes depending on experience, colony strength and what you find. The aim is to work methodically but not keep the hive open longer than necessary."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "Do I need to see the queen at every inspection?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "You do not need to see the queen at every visit. If you can see freshly laid eggs and a good pattern of brood, you know a queen has been present recently. Marking the queen when you do find her can make future inspections easier."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "How do hive inspections link to swarm control?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Regular inspections allow you to spot queen cells and crowded conditions before a swarm issues. By understanding brood pattern, space and queen cell development, you can apply an appropriate swarm control method if required."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "What records should I keep after each inspection?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Simple notes on brood pattern, queen status, strength of the colony, stores, temperament, varroa treatments and any action taken are usually enough. These can be kept on paper or in a digital tool such as the HiveTag web app."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "How does hive management change through the seasons?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "In spring the focus is on building brood and preventing starvation, in summer on swarm control and honey production, in autumn on ensuring sufficient stores and healthy bees and in winter on protection, ventilation and minimal disturbance."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "Is it safe to inspect a hive as a beginner?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "With suitable protective clothing, a lit smoker, basic training and support from a mentor or association, beginners can inspect hives safely. Learning good handling early builds confidence and reduces stress for both bees and beekeeper."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "How do hive inspections help with disease control?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Careful inspections make it easier to spot unusual brood patterns, smells or adult bee symptoms that might indicate disease. Combined with good hygiene and support from official guidance, inspections play an important role in early detection."
+                 }
+               }
+             ]
+           },
+           {
+             "@context": "https://schema.org",
+             "@type": "BreadcrumbList",
+             "itemListElement": [
+               {
+                 "@type": "ListItem",
+                 "position": 1,
+                 "name": "Home",
+                 "item": "https://beezknees.co.uk/"
+               },
+               {
+                 "@type": "ListItem",
+                 "position": 2,
+                 "name": "Hive Management",
+                 "item": "https://beezknees.co.uk/hive-management"
+               }
+             ]
+           }
+         ]
+      </script>
+   </head>
+   <body>
+      <!-- Fixed Header and Nav Container -->
+      <div class="fixed-header">
+         <header class="site-header" role="region" aria-label="Site Header">
+            <div class="header-container" role="region" aria-label="Site Branding">
+               <a href="https://beezknees.co.uk"><img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class=
+                  "site-logo"></a>
+               <h1 class="site-title">BeezKnees</h1>
+               <!-- Hamburger Icon Button -->
+               <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"></button>
+            </div>
+         </header>
       </div>
-    </section>
-
-    <!-- Main Content -->
-    <main class="content">
-      <h1>Hive Management and Beekeeping Inspections in the UK</h1>
-
-      <p>
-        Good hive management is mostly about <strong>paying attention</strong>. By
-        carrying out regular <strong>beekeeping inspections</strong>, you build up a
-        picture of how each colony develops through the year, how strong it is, how
-        healthy it looks and when it might need help. This guide explains what hive
-        management means in practice, how to inspect a hive step by step and how your
-        approach changes across the UK season.
-      </p>
-
-      <p>
-        The advice here is written for mixed experience beekeepers – from newer keepers
-        who want a clear structure for inspections, through to improvers who want to
-        tighten up their hive management and record keeping.
-      </p>
-
-      <div class="callout">
-        <strong>In short:</strong> effective hive management is a combination of safe,
-        regular inspections, good hygiene, appropriate feeding and space management,
-        backed up by honest records.
-      </div>
-
-      <!-- On this page navigation -->
-      <nav
-        aria-label="On this page"
-        class="indented-list"
-        style="margin-top: 1.5rem; margin-bottom: 1.5rem"
-      >
-        <h2 id="on-this-page">On this page</h2>
-        <ul>
-          <li><a href="#what-is-hive-management">What hive management means</a></li>
-          <li><a href="#pre-inspection">Before you inspect – pre inspection checks</a></li>
-          <li><a href="#when-not">When not to inspect a hive</a></li>
-          <li><a href="#howto-inspection">How to inspect a hive step by step</a></li>
-          <li><a href="#reading-frames">Reading brood frames and bee behaviour</a></li>
-          <li><a href="#space-stores">Space, comb and stores management</a></li>
-          <li><a href="#seasonal-management">Seasonal hive management overview</a></li>
-          <li><a href="#faq">Hive management – frequently asked questions</a></li>
-        </ul>
+      <!-- Navigation Bar -->
+      <nav class="navbar" role="navigation" aria-label="Main navigation">
+         <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+            <li>
+               <a href="/" title="Visit the homepage">Home</a>
+            </li>
+            <li class="dropdown">
+               <a href="/about-us" title="Learn more about us">About</a>
+            </li>
+            <li class="dropdown">
+               <a href="/donate" title="Support out mission">Donate</a>
+            </li>
+            <li class="dropdown">
+               <a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a> <button class=
+                  "dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a>
+                  </li>
+                  <li>
+                     <a href="/equipment" title="Essential beekeeping equipment">Equipment</a>
+                  </li>
+                  <li>
+                     <a href="/hive-management" title="Manage your hive effectively">Hive Management</a>
+                  </li>
+                  <li>
+                     <a href="/varroa-management" title="control varroa mite infestations">Varroa Management</a>
+                  </li>
+                  <li>
+                     <a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a>
+                  </li>
+                  <li>
+                     <a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a>
+                  </li>
+                  <li>
+                     <a href="/honey-extraction" title="how to harvest and bottle honey safely">Extracting Honey</a>
+                  </li>
+               </ul>
+            </li>
+            <li class="dropdown">
+               <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a> <button class=
+                  "dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/january" title="January beekeeping tasks">January</a>
+                  </li>
+                  <li>
+                     <a href="/february" title="February beekeeping tasks">February</a>
+                  </li>
+                  <li>
+                     <a href="/march" title="March beekeeping tasks">March</a>
+                  </li>
+                  <li>
+                     <a href="/april" title="April beekeeping tasks">April</a>
+                  </li>
+                  <li>
+                     <a href="/may" title="May beekeeping tasks">May</a>
+                  </li>
+                  <li>
+                     <a href="/june" title="June beekeeping tasks">June</a>
+                  </li>
+                  <li>
+                     <a href="/july" title="July beekeeping tasks">July</a>
+                  </li>
+                  <li>
+                     <a href="/august" title="August beekeeping tasks">August</a>
+                  </li>
+                  <li>
+                     <a href="/september" title="September beekeeping tasks">September</a>
+                  </li>
+                  <li>
+                     <a href="/october" title="October beekeeping tasks">October</a>
+                  </li>
+                  <li>
+                     <a href="/november" title="November beekeeping tasks">November</a>
+                  </li>
+                  <li>
+                     <a href="/december" title="December beekeeping tasks">December</a>
+                  </li>
+               </ul>
+            </li>
+            <li class="dropdown">
+               <a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a> <button class=
+                  "dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/veterinary-medicine-records" title=
+                        "How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a>
+                  </li>
+                  <li>
+                     <a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a>
+                  </li>
+                  <li>
+                     <a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a>
+                  </li>
+                  <li>
+                     <a href="/bee-pests" title="Common pests affecting bees">Pests</a>
+                  </li>
+                  <li>
+                     <a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a>
+                  </li>
+                  <li>
+                     <a href="/other-conditions" title="Other bee health conditions">Other Conditions</a>
+                  </li>
+               </ul>
+            </li>
+            <li class="dropdown">
+               <a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a> <button class=
+                  "dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a>
+                  </li>
+                  <li>
+                     <a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a>
+                  </li>
+                  <li>
+                     <a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a>
+                  </li>
+                  <li>
+                     <a href="/pollination" title="Honeybee role in pollination">Pollination</a>
+                  </li>
+               </ul>
+            </li>
+            <li class="dropdown">
+               <a href="/help-the-bees" title="How you can help save the bees">Help Bees</a> <button class="dropdown-toggle"
+                  aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a>
+                  </li>
+                  <li>
+                     <a href="/donate" title="Make a donation to support bees">Donate</a>
+                  </li>
+                  <li>
+                     <a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a>
+                  </li>
+               </ul>
+            </li>
+            <li>
+               <a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members
+               Area</a>
+            </li>
+         </ul>
       </nav>
-
-      <!-- What hive management means -->
-      <section
-        id="what-is-hive-management"
-        aria-labelledby="what-is-hive-management-heading"
-      >
-        <h2 id="what-is-hive-management-heading">What Hive Management Really Means</h2>
-
-        <p>
-          New beekeepers sometimes imagine hive management is all about doing things to
-          bees – feeding, treating, requeening, moving hives. In reality, most of the
-          work is observation and small adjustments. The bees do the heavy lifting; the
-          beekeeper’s job is to give them a suitable home, understand what is happening
-          inside and step in when needed.
-        </p>
-
-        <p>Good hive management usually aims to:</p>
-
-        <div class="indented-list">
-          <ul>
-            <li>Keep colonies healthy and strong.</li>
-            <li>Reduce the risk of disease spreading between hives.</li>
-            <li>Provide enough space at the right time.</li>
-            <li>
-              Manage queen quality and swarming so colonies remain workable and safe.
-            </li>
-            <li>Protect bees from starvation, robbing and weather extremes.</li>
-          </ul>
-        </div>
-
-        <p>
-          Most of these decisions are informed by what you see during
-          <strong>beekeeping inspections</strong>. The next sections focus on how to make
-          those inspections effective and bee friendly.
-        </p>
+      <!-- Hero Banner -->
+      <section role="region" aria-label="Hive management banner">
+         <div class="banner"><img src="images/beekeeper-inspecting-frames-hero.webp" alt=
+            "Beekeeper inspecting brood frames during a routine hive inspection in the UK"></div>
       </section>
-
-      <!-- Pre inspection -->
-      <section id="pre-inspection" aria-labelledby="pre-inspection-heading">
-        <h2 id="pre-inspection-heading">Before You Inspect – Pre Inspection Checks</h2>
-
-        <p>
-          A calm, efficient inspection starts before you crack the first propolis seal.
-          Running through the same quick checks each time makes hive management feel
-          more predictable and less stressful.
-        </p>
-
-        <div class="indented-list">
-          <ul>
-            <li>
-              <strong>Weather:</strong> aim for dry, fairly calm conditions with a
-              temperature warm enough for bees to fly (often 14°C or above).
-            </li>
-            <li>
-              <strong>Time of day:</strong> mid morning to mid afternoon on a good day is
-              often ideal. Avoid very late evenings and cold, dull windows.
-            </li>
-            <li>
-              <strong>Equipment:</strong> clean hive tool, lit smoker, fuel, spare box or
-              nuc if you might need it, queen marking kit if appropriate.
-            </li>
-            <li>
-              <strong>Protective clothing:</strong> bee suit or jacket, veil and gloves
-              in good condition.
-            </li>
-            <li>
-              <strong>Records:</strong> inspection sheet, notebook or digital tool such
-              as the
-              <a href="/hivetag-app" title="HiveTag beekeeping records app"
-                >HiveTag web app</a
-              >
-              ready to use.
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- When NOT to inspect -->
-      <section id="when-not" aria-labelledby="when-not-heading">
-        <h2 id="when-not-heading">When Not to Inspect a Hive</h2>
-
-        <div class="callout">
-          <strong>Key principle:</strong> opening a hive always disrupts the colony.
-          Sometimes the welfare cost outweighs the benefit of looking inside.
-        </div>
-
-        <p>It is usually best to delay a routine inspection when:</p>
-
-        <div class="indented-list">
-          <ul>
-            <li>
-              Weather is very poor – heavy rain, strong cold wind, sleet or very low
-              temperatures.
-            </li>
-            <li>
-              It is nearly dark, or the temperature will drop quickly while the hive is
-              open.
-            </li>
-            <li>
-              There is a strong nectar dearth and many bees are robbing – opening hives
-              can trigger fights and store losses.
-            </li>
-            <li>
-              You are not able to inspect safely – for example, if you do not have
-              adequate clothing or you are unwell.
-            </li>
-          </ul>
-        </div>
-
-        <p>
-          The exception is when you have a clear welfare concern – signs of starvation,
-          severe queenlessness or disease. In those cases, a brief, targeted inspection
-          may still be necessary despite imperfect conditions.
-        </p>
-      </section>
-
-      <!-- How to inspect -->
-      <section
-        id="howto-inspection"
-        aria-labelledby="howto-inspection-heading"
-      >
-        <h2 id="howto-inspection-heading">
-          How to Inspect a Hive – Step by Step (UK Focus)
-        </h2>
-
-        <img
-          src="images/beekeeper-inspecting-frames.jpg"
-          alt="Beekeeper carefully examining brood frames during a hive inspection in the UK"
-          class="float-right-img"
-        />
-
-        <p>
-          This walkthrough describes a typical full inspection of a single brood box
-          colony. You can adapt it for double brood, nucs or different hive patterns,
-          but the principles are the same.
-        </p>
-
-        <div class="howto-steps">
-          <ol>
-            <li>
-              <strong>Approach the hive calmly.</strong> Stand to the side or back of
-              the hive, not directly in front of the entrance. Watch the bees for a few
-              moments to get a feel for their activity and mood.
-            </li>
-            <li>
-              <strong>Give a small puff of smoke at the entrance.</strong> Use cool
-              smoke. The aim is not to fill the hive, but to encourage bees to move down
-              slightly.
-            </li>
-            <li>
-              <strong>Remove the roof and crownboard.</strong> Lift the roof off and set
-              it down safely. Crack any propolis seals, give a small puff of smoke under
-              the crownboard, wait a few seconds, then gently remove it.
-            </li>
-            <li>
-              <strong>Check the top of the frames.</strong> Note how many frames are
-              covered with bees. Look for burr comb or brace comb that might need
-              tidying.
-            </li>
-            <li>
-              <strong>Create space if needed.</strong> In a crowded hive, remove one
-              outside frame, inspect it and place it temporarily in a spare box or frame
-              holder. This gives you room to work through the brood nest.
-            </li>
-            <li>
-              <strong>Inspect each frame in turn.</strong> Lift frames slowly, keeping
-              them over the hive. Rotate or tilt to see the brood clearly in good light.
-              Check both sides before moving on.
-            </li>
-            <li>
-              <strong>Look for eggs, brood pattern and queen signs.</strong> Eggs show a
-              queen has been present recently. A solid pattern of brood at different
-              stages is usually a good sign. Note queen cells, play cups or charged
-              cells.
-            </li>
-            <li>
-              <strong>Check for disease indicators.</strong> Watch for irregular brood
-              patterns, sunken or perforated cappings, discoloured larvae or unusual
-              smells. If you suspect disease, refer to the
-              <a href="/bee-diseases" title="Bee diseases and pests overview"
-                >Bee Diseases and Pests</a
-              >
-              pages and official guidance.
-            </li>
-            <li>
-              <strong>Assess stores and space.</strong> Note how many frames contain
-              honey and pollen, how heavy they feel and whether the colony is short of
-              food or restricted for laying space.
-            </li>
-            <li>
-              <strong>Reassemble the hive carefully.</strong> Return frames in order,
-              close up the brood box, replace the crownboard and roof and ensure the
-              hive is weather tight.
-            </li>
-            <li>
-              <strong>Record your findings.</strong> Write brief notes while they are
-              fresh. Over time, these records become one of your most valuable hive
-              management tools.
-            </li>
-          </ol>
-        </div>
-
-        <p>
-          The same basic structure underpins many inspection checklists, including
-          digital tools like the
-          <a href="/hivetag-app" title="HiveTag beekeeping records app"
-            >HiveTag web app</a
-          >, which lets you record inspections against individual hives and apiaries.
-        </p>
-      </section>
-
-      <!-- Reading frames -->
-      <section id="reading-frames" aria-labelledby="reading-frames-heading">
-        <h2 id="reading-frames-heading">
-          Reading Brood Frames, Bee Behaviour and Queen Status
-        </h2>
-
-        <p>
-          Over time, hive management becomes less about ticking boxes and more about
-          reading what the bees are telling you. The following clues are especially
-          useful.
-        </p>
-
-        <div class="indented-list">
-          <ul>
-            <li>
-              <strong>Brood pattern:</strong> a compact area of brood with few empty
-              cells often suggests a well mated, productive queen. Scattered brood, many
-              empty cells or multiple eggs per cell may indicate problems.
-            </li>
-            <li>
-              <strong>Distribution of brood stages:</strong> seeing eggs, very young
-              larvae, older larvae and sealed brood in the same area usually means the
-              queen has been laying steadily.
-            </li>
-            <li>
-              <strong>Presence of queen cells:</strong> location and number matter.
-              Queen cells on the bottom or sides of frames can suggest swarming
-              preparation; emergency cells may appear mid frame after queen loss.
-            </li>
-            <li>
-              <strong>Temperament and behaviour:</strong> bees that are calm on the comb,
-              do not run excessively and are not overly defensive are easier to work and
-              often reflect a stable queen situation.
-            </li>
-            <li>
-              <strong>Smell and sound:</strong> many experienced beekeepers learn to
-              notice when a hive “sounds wrong” – a higher pitched roar can signal
-              queenlessness or stress.
-            </li>
-          </ul>
-        </div>
-
-        <p>
-          For more on recognising disease and brood issues, see the dedicated
-          <a href="/bee-diseases" title="Bee diseases and pests overview"
-            >Bee Diseases and Pests</a
-          >
-          pages and the linked guides on bacterial, viral and other conditions.
-        </p>
-      </section>
-
-      <!-- Space, comb, stores -->
-      <section id="space-stores" aria-labelledby="space-stores-heading">
-        <h2 id="space-stores-heading">Space, Comb and Stores Management</h2>
-
-        <p>
-          Hive management also involves looking beyond the brood nest to the physical
-          structure of the hive.
-        </p>
-
-        <h3>Comb Management</h3>
-        <div class="indented-list">
-          <ul>
-            <li>
-              Replace very dark, misshapen or damaged comb gradually to reduce disease
-              build up and improve brood rearing conditions.
-            </li>
-            <li>
-              Use a planned comb rotation system so that old frames are cycled out over a
-              few seasons.
-            </li>
-            <li>
-              Refer to the
-              <a href="/hygiene" title="Learn more about beekeeping hygiene"
-                >Hygiene</a
-              >
-              page for more on cleaning and comb change.
-            </li>
-          </ul>
-        </div>
-
-        <h3>Space and Swarm Management</h3>
-        <div class="indented-list">
-          <ul>
-            <li>
-              Ensure the queen has sufficient laying space, especially in spring build
-              up. Overcrowding can push colonies towards swarming.
-            </li>
-            <li>
-              Add supers or additional brood space when appropriate, based on colony
-              strength and nectar availability.
-            </li>
-            <li>
-              Link your inspection findings with the
-              <a
-                href="/year-in-the-apiary"
-                title="Monthly tasks in the apiary"
-                >Year in the Apiary</a
-              >
-              page to time swarm control checks effectively.
-            </li>
-          </ul>
-        </div>
-
-        <h3>Food Stores</h3>
-        <div class="indented-list">
-          <ul>
-            <li>
-              In early spring, watch for starvation risk. Even strong colonies can run
-              out of food quickly in poor weather.
-            </li>
-            <li>
-              In autumn, ensure colonies have adequate winter stores before reducing
-              inspections.
-            </li>
-            <li>
-              Inspections should balance checking stores with avoiding unnecessary
-              disturbance in cold conditions.
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- Seasonal management -->
-      <section
-        id="seasonal-management"
-        aria-labelledby="seasonal-management-heading"
-      >
-        <h2 id="seasonal-management-heading">
-          Seasonal Hive Management Overview (UK Conditions)
-        </h2>
-
-        <p>
-          The details differ between regions and forage types, but many UK beekeepers
-          recognise a similar seasonal rhythm. This is a high level overview – the
-          <a
-            href="/year-in-the-apiary"
-            title="Monthly tasks in the apiary"
-            >Year in the Apiary</a
-          >
-          page breaks the year down month by month.
-        </p>
-
-        <div class="grid">
-          <div class="card">
-            <h3>Spring – Build Up and Risk of Starvation</h3>
-            <p>
-              Monitor food carefully as brood rearing ramps up. Increase inspections as
-              weather improves, check brood pattern, look for early signs of swarming and
-              ensure the queen has space to lay.
+      <!-- Main Content -->
+      <main class="content">
+         <h1>Hive Management and Beekeeping Inspections in the UK</h1>
+         <p>Good hive management is mostly about <strong>paying attention</strong>. By carrying out regular
+            <strong>beekeeping inspections</strong>, you build up a picture of how each colony develops through the year, how
+            strong it is, how healthy it looks and when it might need help. This guide explains what hive management means in
+            practice, how to inspect a hive step by step and how your approach changes across the UK season.
+         </p>
+         <p>The advice here is written for mixed experience beekeepers – from newer keepers who want a clear structure for
+            inspections, through to improvers who want to tighten up their hive management and record keeping.
+         </p>
+         <div class="callout">
+            <strong>In short:</strong> effective hive management is a combination of safe, regular inspections, good hygiene,
+            appropriate feeding and space management, backed up by honest records.
+         </div>
+         <!-- On this page navigation -->
+         <nav aria-label="On this page" class="indented-list u-my-1_5rem">
+            <h2 id="on-this-page">On this page</h2>
+            <ul>
+               <li>
+                  <a href="#what-is-hive-management">What hive management means</a>
+               </li>
+               <li>
+                  <a href="#pre-inspection">Before you inspect – pre inspection checks</a>
+               </li>
+               <li>
+                  <a href="#when-not">When not to inspect a hive</a>
+               </li>
+               <li>
+                  <a href="#howto-inspection">How to inspect a hive step by step</a>
+               </li>
+               <li>
+                  <a href="#reading-frames">Reading brood frames and bee behaviour</a>
+               </li>
+               <li>
+                  <a href="#space-stores">Space, comb and stores management</a>
+               </li>
+               <li>
+                  <a href="#seasonal-management">Seasonal hive management overview</a>
+               </li>
+               <li>
+                  <a href="#faq">Hive management – frequently asked questions</a>
+               </li>
+            </ul>
+         </nav>
+         <!-- What hive management means -->
+         <section id="what-is-hive-management" aria-labelledby="what-is-hive-management-heading">
+            <h2 id="what-is-hive-management-heading">What Hive Management Really Means</h2>
+            <p>New beekeepers sometimes imagine hive management is all about doing things to bees – feeding, treating,
+               requeening, moving hives. In reality, most of the work is observation and small adjustments. The bees do the
+               heavy lifting; the beekeeper’s job is to give them a suitable home, understand what is happening inside and step
+               in when needed.
             </p>
-          </div>
-
-          <div class="card">
-            <h3>Summer – Swarm Control and Honey Production</h3>
-            <p>
-              At the peak of the season, focus on swarm control, supering and monitoring
-              for any signs of disease or stress. Inspections may be more frequent while
-              colonies are at full strength.
+            <p>Good hive management usually aims to:</p>
+            <div class="indented-list">
+               <ul>
+                  <li>Keep colonies healthy and strong.</li>
+                  <li>Reduce the risk of disease spreading between hives.</li>
+                  <li>Provide enough space at the right time.</li>
+                  <li>Manage queen quality and swarming so colonies remain workable and safe.</li>
+                  <li>Protect bees from starvation, robbing and weather extremes.</li>
+               </ul>
+            </div>
+            <p>Most of these decisions are informed by what you see during <strong>beekeeping inspections</strong>. The next
+               sections focus on how to make those inspections effective and bee friendly.
             </p>
-          </div>
-
-          <div class="card">
-            <h3>Autumn – Feeding and Health Checks</h3>
-            <p>
-              As brood rearing declines, ensure colonies have adequate stores, carry out
-              health checks and apply varroa management according to current guidance.
-              Reduce unnecessary disturbance as temperatures fall.
+         </section>
+         <!-- Pre inspection -->
+         <section id="pre-inspection" aria-labelledby="pre-inspection-heading">
+            <h2 id="pre-inspection-heading">Before You Inspect – Pre Inspection Checks</h2>
+            <p>A calm, efficient inspection starts before you crack the first propolis seal. Running through the same quick
+               checks each time makes hive management feel more predictable and less stressful.
             </p>
-          </div>
-
-          <div class="card">
-            <h3>Winter – Protection and Observation</h3>
-            <p>
-              In winter, hive management is mostly about protection from weather and
-              pests, monitoring weight and watching flight activity on milder days.
-              Internal inspections are kept to a minimum unless there is a specific
-              concern.
+            <div class="indented-list">
+               <ul>
+                  <li><strong>Weather:</strong> aim for dry, fairly calm conditions with a temperature warm enough for bees to
+                     fly (often 14°C or above).
+                  </li>
+                  <li><strong>Time of day:</strong> mid morning to mid afternoon on a good day is often ideal. Avoid very late
+                     evenings and cold, dull windows.
+                  </li>
+                  <li><strong>Equipment:</strong> clean hive tool, lit smoker, fuel, spare box or nuc if you might need it,
+                     queen marking kit if appropriate.
+                  </li>
+                  <li><strong>Protective clothing:</strong> bee suit or jacket, veil and gloves in good condition.</li>
+                  <li>
+                     <strong>Records:</strong> inspection sheet, notebook or digital tool such as the <a href="/hivetag-app"
+                        title="HiveTag beekeeping records app">HiveTag web app</a> ready to use.
+                  </li>
+               </ul>
+            </div>
+         </section>
+         <!-- When NOT to inspect -->
+         <section id="when-not" aria-labelledby="when-not-heading">
+            <h2 id="when-not-heading">When Not to Inspect a Hive</h2>
+            <div class="callout">
+               <strong>Key principle:</strong> opening a hive always disrupts the colony. Sometimes the welfare cost outweighs
+               the benefit of looking inside.
+            </div>
+            <p>It is usually best to delay a routine inspection when:</p>
+            <div class="indented-list">
+               <ul>
+                  <li>Weather is very poor – heavy rain, strong cold wind, sleet or very low temperatures.</li>
+                  <li>It is nearly dark, or the temperature will drop quickly while the hive is open.</li>
+                  <li>There is a strong nectar dearth and many bees are robbing – opening hives can trigger fights and store
+                     losses.
+                  </li>
+                  <li>You are not able to inspect safely – for example, if you do not have adequate clothing or you are
+                     unwell.
+                  </li>
+               </ul>
+            </div>
+            <p>The exception is when you have a clear welfare concern – signs of starvation, severe queenlessness or disease.
+               In those cases, a brief, targeted inspection may still be necessary despite imperfect conditions.
             </p>
-          </div>
-        </div>
-
-        <p>
-          For more detail on managing varroa through the year, see the dedicated
-          <a href="/varroa-management" title="Control varroa mite infestations"
-            >Varroa Management</a
-          >
-          page.
-        </p>
-      </section>
-
-      <!-- FAQ section -->
-      <section id="faq" aria-labelledby="faq-heading">
-        <h2 id="faq-heading">Hive Management – Frequently Asked Questions</h2>
-
-        <p>
-          These questions reflect common searches such as “beekeeping inspections UK”,
-          “how often should I inspect a hive” and “what should I look for during a hive
-          inspection”.
-        </p>
-
-        <div class="indented-list">
-          <ul>
-            <li>
-              <strong>How often should I inspect my hives during the season?</strong
-              ><br />
-              Many UK beekeepers aim for inspections every 7–10 days during spring and
-              early summer, when colonies are building quickly and swarming is most
-              likely. In late summer and autumn, inspections often become less frequent
-              and more targeted.
-            </li>
-            <li>
-              <strong>Do I need to open hives in winter?</strong><br />
-              In most cases, no. Winter checks usually involve monitoring weight, looking
-              at entrance activity and checking for damage or water ingress. Only open a
-              hive in winter if there is a strong reason and the conditions are suitable.
-            </li>
-            <li>
-              <strong>What is the minimum I should record after an inspection?</strong
-              ><br />
-              Date, hive identity, queen status, brood and stores, temperament, any
-              queen cells or disease concerns and actions taken are a solid minimum.
-              Additional notes on weather or forage can also be helpful for future
-              reference.
-            </li>
-            <li>
-              <strong>How do hive inspections link to disease management?</strong><br />
-              Regular inspections help you notice changes in brood pattern, smell or bee
-              behaviour that may indicate disease. Combined with good hygiene and
-              up-to-date guidance from official sources, they are a key part of disease
-              control.
-            </li>
-            <li>
-              <strong>Can I manage hives without a smoker?</strong><br />
-              Some beekeepers work with minimal smoke in very calm conditions, but a
-              properly used smoker is a valuable safety tool. The aim is cool, light
-              smoke used sparingly, not to smoke the bees heavily.
-            </li>
-            <li>
-              <strong>What should I do if my hive is very defensive?</strong><br />
-              Check weather, nectar flow and your own handling first. If the colony is
-              consistently aggressive in good conditions with gentle handling, requeening
-              may be appropriate. Seek advice from an experienced beekeeper or
-              association before taking irreversible steps.
-            </li>
-            <li>
-              <strong>Do I always need to see the queen?</strong><br />
-              No. Seeing eggs and a good brood pattern can be enough to confirm queen
-              presence. Marking the queen when you do see her can make later inspections
-              easier, but is not mandatory at every visit.
-            </li>
-            <li>
-              <strong>How long can I safely keep a hive open?</strong><br />
-              There is no single rule, but most routine inspections aim to be thorough
-              yet efficient. Taking 10–30 minutes for a full check of a strong colony is
-              common; in colder or marginal conditions, focus on the essentials and work
-              more quickly.
-            </li>
-            <li>
-              <strong>What if I am not sure what I am seeing?</strong><br />
-              Take clear photos if safe, make detailed notes and seek help from a mentor,
-              local association or bee inspector if disease is suspected. Over time, your
-              own records will also help you recognise patterns more confidently.
-            </li>
-            <li>
-              <strong>Can digital tools help with hive management?</strong><br />
-              Yes. Apps and web tools such as the
-              <a href="/hivetag-app" title="HiveTag beekeeping records app"
-                >HiveTag web app</a
-              >
-              make it easier to log inspections, track trends and link hive performance
-              to forage and weather. They do not replace good beekeeping, but they can
-              support it.
-            </li>
-          </ul>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="site-footer" role="region" aria-label="Site Footer">
-      <div class="footer-columns">
-        <div class="footer-column" role="region" aria-label="Contact Information">
-          <h3>Contact</h3>
-          <address>
-            <p>
-              Email:
-              <a href="/contact" title="Send us a message via our contact page"
-                >Contact</a
-              >
+         </section>
+         <!-- How to inspect -->
+         <section id="howto-inspection" aria-labelledby="howto-inspection-heading">
+            <h2 id="howto-inspection-heading">How to Inspect a Hive – Step by Step (UK Focus)</h2>
+            <img src=
+               "images/beekeeper-inspecting-frames-4.webp" alt=
+               "Beekeeper carefully examining brood frames during a hive inspection in the UK" class="float-right-img">
+            <p>This walkthrough describes a typical full inspection of a single brood box colony. You can adapt it for double
+               brood, nucs or different hive patterns, but the principles are the same.
             </p>
-          </address>
-        </div>
-
-        <div class="footer-column" role="region" aria-label="Useful Site Links">
-          <h3>Useful Links</h3>
-          <ul>
-            <li>
-              <a href="/privacy" title="Read our privacy policy"
-                >Privacy Policy</a
-              >
-            </li>
-            <li>
-              <a href="/site-map" title="View a map of our entire website"
-                >Site Map</a
-              >
-            </li>
-          </ul>
-        </div>
-
-        <div class="footer-column" role="region" aria-label="Beekeeping Resources">
-          <h3>Resources</h3>
-          <ul>
-            <li>
-              <a
-                href="https://www.bbka.org.uk/"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Visit the British Beekeepers Association website"
-              >
-                British Beekeepers Association
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.cardiffbeekeepers.co.uk/"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Visit the Cardiff Beekeepers Association site"
-              >
-                Cardiff, Vale and Valleys Beekeepers Association
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Read the Honey (Wales) Regulations 2015"
-              >
-                The Honey (Wales) Regulations 2015
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.biodiversitywales.org.uk/Bee-Friendly"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Explore Bee-Friendly programme by Wales Biodiversity Partnership"
-              >
-                Wales Biodiversity Partnership
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.nationalbeeunit.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Access BeeBase for UK bee health information"
-              >
-                BeeBase
-              </a>
-            </li>
-          </ul>
-        </div>
+            <div class="howto-steps">
+               <ol>
+                  <li><strong>Approach the hive calmly.</strong> Stand to the side or back of the hive, not directly in front
+                     of the entrance. Watch the bees for a few moments to get a feel for their activity and mood.
+                  </li>
+                  <li><strong>Give a small puff of smoke at the entrance.</strong> Use cool smoke. The aim is not to fill the
+                     hive, but to encourage bees to move down slightly.
+                  </li>
+                  <li><strong>Remove the roof and crownboard.</strong> Lift the roof off and set it down safely. Crack any
+                     propolis seals, give a small puff of smoke under the crownboard, wait a few seconds, then gently remove
+                     it.
+                  </li>
+                  <li><strong>Check the top of the frames.</strong> Note how many frames are covered with bees. Look for burr
+                     comb or brace comb that might need tidying.
+                  </li>
+                  <li><strong>Create space if needed.</strong> In a crowded hive, remove one outside frame, inspect it and
+                     place it temporarily in a spare box or frame holder. This gives you room to work through the brood nest.
+                  </li>
+                  <li><strong>Inspect each frame in turn.</strong> Lift frames slowly, keeping them over the hive. Rotate or
+                     tilt to see the brood clearly in good light. Check both sides before moving on.
+                  </li>
+                  <li><strong>Look for eggs, brood pattern and queen signs.</strong> Eggs show a queen has been present
+                     recently. A solid pattern of brood at different stages is usually a good sign. Note queen cells, play cups or
+                     charged cells.
+                  </li>
+                  <li>
+                     <strong>Check for disease indicators.</strong> Watch for irregular brood patterns, sunken or perforated
+                     cappings, discoloured larvae or unusual smells. If you suspect disease, refer to the <a href=
+                        "/bee-diseases" title="Bee diseases and pests overview">Bee Diseases and Pests</a> pages and official
+                     guidance.
+                  </li>
+                  <li><strong>Assess stores and space.</strong> Note how many frames contain honey and pollen, how heavy they
+                     feel and whether the colony is short of food or restricted for laying space.
+                  </li>
+                  <li><strong>Reassemble the hive carefully.</strong> Return frames in order, close up the brood box, replace
+                     the crownboard and roof and ensure the hive is weather tight.
+                  </li>
+                  <li><strong>Record your findings.</strong> Write brief notes while they are fresh. Over time, these records
+                     become one of your most valuable hive management tools.
+                  </li>
+               </ol>
+            </div>
+            <p>The same basic structure underpins many inspection checklists, including digital tools like the <a href=
+               "/hivetag-app" title="HiveTag beekeeping records app">HiveTag web app</a>, which lets you record inspections
+               against individual hives and apiaries.
+            </p>
+         </section>
+         <!-- Reading frames -->
+         <section id="reading-frames" aria-labelledby="reading-frames-heading">
+            <h2 id="reading-frames-heading">Reading Brood Frames, Bee Behaviour and Queen Status</h2>
+            <p>Over time, hive management becomes less about ticking boxes and more about reading what the bees are telling
+               you. The following clues are especially useful.
+            </p>
+            <div class="indented-list">
+               <ul>
+                  <li><strong>Brood pattern:</strong> a compact area of brood with few empty cells often suggests a well mated,
+                     productive queen. Scattered brood, many empty cells or multiple eggs per cell may indicate problems.
+                  </li>
+                  <li><strong>Distribution of brood stages:</strong> seeing eggs, very young larvae, older larvae and sealed
+                     brood in the same area usually means the queen has been laying steadily.
+                  </li>
+                  <li><strong>Presence of queen cells:</strong> location and number matter. Queen cells on the bottom or sides
+                     of frames can suggest swarming preparation; emergency cells may appear mid frame after queen loss.
+                  </li>
+                  <li><strong>Temperament and behaviour:</strong> bees that are calm on the comb, do not run excessively and
+                     are not overly defensive are easier to work and often reflect a stable queen situation.
+                  </li>
+                  <li><strong>Smell and sound:</strong> many experienced beekeepers learn to notice when a hive “sounds wrong”
+                     – a higher pitched roar can signal queenlessness or stress.
+                  </li>
+               </ul>
+            </div>
+            <p>For more on recognising disease and brood issues, see the dedicated <a href="/bee-diseases" title=
+               "Bee diseases and pests overview">Bee Diseases and Pests</a> pages and the linked guides on bacterial, viral and
+               other conditions.
+            </p>
+         </section>
+         <!-- Space, comb, stores -->
+         <section id="space-stores" aria-labelledby="space-stores-heading">
+            <h2 id="space-stores-heading">Space, Comb and Stores Management</h2>
+            <p>Hive management also involves looking beyond the brood nest to the physical structure of the hive.</p>
+            <h3>Comb Management</h3>
+            <div class="indented-list">
+               <ul>
+                  <li>Replace very dark, misshapen or damaged comb gradually to reduce disease build up and improve brood
+                     rearing conditions.
+                  </li>
+                  <li>Use a planned comb rotation system so that old frames are cycled out over a few seasons.</li>
+                  <li>Refer to the <a href="/hygiene" title="Learn more about beekeeping hygiene">Hygiene</a> page for more on
+                     cleaning and comb change.
+                  </li>
+               </ul>
+            </div>
+            <h3>Space and Swarm Management</h3>
+            <div class="indented-list">
+               <ul>
+                  <li>Ensure the queen has sufficient laying space, especially in spring build up. Overcrowding can push
+                     colonies towards swarming.
+                  </li>
+                  <li>Add supers or additional brood space when appropriate, based on colony strength and nectar
+                     availability.
+                  </li>
+                  <li>Link your inspection findings with the <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">
+                     Year in the Apiary</a> page to time swarm control checks effectively.
+                  </li>
+               </ul>
+            </div>
+            <h3>Food Stores</h3>
+            <div class="indented-list">
+               <ul>
+                  <li>In early spring, watch for starvation risk. Even strong colonies can run out of food quickly in poor
+                     weather.
+                  </li>
+                  <li>In autumn, ensure colonies have adequate winter stores before reducing inspections.</li>
+                  <li>Inspections should balance checking stores with avoiding unnecessary disturbance in cold conditions.</li>
+               </ul>
+            </div>
+         </section>
+         <!-- Seasonal management -->
+         <section id="seasonal-management" aria-labelledby="seasonal-management-heading">
+            <h2 id="seasonal-management-heading">Seasonal Hive Management Overview (UK Conditions)</h2>
+            <p>The details differ between regions and forage types, but many UK beekeepers recognise a similar seasonal
+               rhythm. This is a high level overview – the <a href="/year-in-the-apiary" title=
+                  "Monthly tasks in the apiary">Year in the Apiary</a> page breaks the year down month by month.
+            </p>
+            <div class="grid">
+               <div class="card">
+                  <h3>Spring – Build Up and Risk of Starvation</h3>
+                  <p>Monitor food carefully as brood rearing ramps up. Increase inspections as weather improves, check brood
+                     pattern, look for early signs of swarming and ensure the queen has space to lay.
+                  </p>
+               </div>
+               <div class="card">
+                  <h3>Summer – Swarm Control and Honey Production</h3>
+                  <p>At the peak of the season, focus on swarm control, supering and monitoring for any signs of disease or
+                     stress. Inspections may be more frequent while colonies are at full strength.
+                  </p>
+               </div>
+               <div class="card">
+                  <h3>Autumn – Feeding and Health Checks</h3>
+                  <p>As brood rearing declines, ensure colonies have adequate stores, carry out health checks and apply varroa
+                     management according to current guidance. Reduce unnecessary disturbance as temperatures fall.
+                  </p>
+               </div>
+               <div class="card">
+                  <h3>Winter – Protection and Observation</h3>
+                  <p>In winter, hive management is mostly about protection from weather and pests, monitoring weight and
+                     watching flight activity on milder days. Internal inspections are kept to a minimum unless there is a
+                     specific concern.
+                  </p>
+               </div>
+            </div>
+            <p>For more detail on managing varroa through the year, see the dedicated <a href="/varroa-management" title=
+               "Control varroa mite infestations">Varroa Management</a> page.</p>
+         </section>
+         <!-- FAQ section -->
+         <section id="faq" aria-labelledby="faq-heading">
+            <h2 id="faq-heading">Hive Management – Frequently Asked Questions</h2>
+            <p>These questions reflect common searches such as “beekeeping inspections UK”, “how often should I inspect a
+               hive” and “what should I look for during a hive inspection”.
+            </p>
+            <div class="indented-list">
+               <ul>
+                  <li><strong>How often should I inspect my hives during the season?</strong><br>
+                     Many UK beekeepers aim for inspections every 7–10 days during spring and early summer, when colonies are
+                     building quickly and swarming is most likely. In late summer and autumn, inspections often become less
+                     frequent and more targeted.
+                  </li>
+                  <li><strong>Do I need to open hives in winter?</strong><br>
+                     In most cases, no. Winter checks usually involve monitoring weight, looking at entrance activity and checking
+                     for damage or water ingress. Only open a hive in winter if there is a strong reason and the conditions are
+                     suitable.
+                  </li>
+                  <li><strong>What is the minimum I should record after an inspection?</strong><br>
+                     Date, hive identity, queen status, brood and stores, temperament, any queen cells or disease concerns and
+                     actions taken are a solid minimum. Additional notes on weather or forage can also be helpful for future
+                     reference.
+                  </li>
+                  <li><strong>How do hive inspections link to disease management?</strong><br>
+                     Regular inspections help you notice changes in brood pattern, smell or bee behaviour that may indicate
+                     disease. Combined with good hygiene and up-to-date guidance from official sources, they are a key part of
+                     disease control.
+                  </li>
+                  <li><strong>Can I manage hives without a smoker?</strong><br>
+                     Some beekeepers work with minimal smoke in very calm conditions, but a properly used smoker is a valuable
+                     safety tool. The aim is cool, light smoke used sparingly, not to smoke the bees heavily.
+                  </li>
+                  <li><strong>What should I do if my hive is very defensive?</strong><br>
+                     Check weather, nectar flow and your own handling first. If the colony is consistently aggressive in good
+                     conditions with gentle handling, requeening may be appropriate. Seek advice from an experienced beekeeper or
+                     association before taking irreversible steps.
+                  </li>
+                  <li><strong>Do I always need to see the queen?</strong><br>
+                     No. Seeing eggs and a good brood pattern can be enough to confirm queen presence. Marking the queen when you
+                     do see her can make later inspections easier, but is not mandatory at every visit.
+                  </li>
+                  <li><strong>How long can I safely keep a hive open?</strong><br>
+                     There is no single rule, but most routine inspections aim to be thorough yet efficient. Taking 10–30 minutes
+                     for a full check of a strong colony is common; in colder or marginal conditions, focus on the essentials and
+                     work more quickly.
+                  </li>
+                  <li><strong>What if I am not sure what I am seeing?</strong><br>
+                     Take clear photos if safe, make detailed notes and seek help from a mentor, local association or bee
+                     inspector if disease is suspected. Over time, your own records will also help you recognise patterns more
+                     confidently.
+                  </li>
+                  <li>
+                     <strong>Can digital tools help with hive management?</strong><br>
+                     Yes. Apps and web tools such as the <a href="/hivetag-app" title="HiveTag beekeeping records app">HiveTag
+                     web app</a> make it easier to log inspections, track trends and link hive performance to forage and
+                     weather. They do not replace good beekeeping, but they can support it.
+                  </li>
+               </ul>
+            </div>
+         </section>
+      </main>
+      <!-- Footer -->
+      <footer class="site-footer" role="region" aria-label="Site Footer">
+         <div class="footer-columns">
+            <div class="footer-column" role="region" aria-label="Contact Information">
+               <h3>Contact</h3>
+               <address>
+                  <p>Email: <a href="/contact" title="Send us a message via our contact page">Contact</a></p>
+               </address>
+            </div>
+            <div class="footer-column" role="region" aria-label="Useful Site Links">
+               <h3>Useful Links</h3>
+               <ul>
+                  <li>
+                     <a href="/privacy" title="Read our privacy policy">Privacy Policy</a>
+                  </li>
+                  <li>
+                     <a href="/site-map" title="View a map of our entire website">Site Map</a>
+                  </li>
+               </ul>
+            </div>
+            <div class="footer-column" role="region" aria-label="Beekeeping Resources">
+               <h3>Resources</h3>
+               <ul>
+                  <li>
+                     <a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer" title=
+                        "Visit the British Beekeepers Association website">British Beekeepers Association</a>
+                  </li>
+                  <li>
+                     <a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer" title=
+                        "Visit the Cardiff Beekeepers Association site">Cardiff, Vale and Valleys Beekeepers Association</a>
+                  </li>
+                  <li>
+                     <a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank"
+                        rel="noopener noreferrer" title="Read the Honey (Wales) Regulations 2015">The Honey (Wales) Regulations
+                     2015</a>
+                  </li>
+                  <li>
+                     <a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer"
+                        title="Explore Bee-Friendly programme by Wales Biodiversity Partnership">Wales Biodiversity Partnership</a>
+                  </li>
+                  <li>
+                     <a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title=
+                        "Access BeeBase for UK bee health information">BeeBase</a>
+                  </li>
+               </ul>
+            </div>
+         </div>
+         <div class="footer-bottom" role="region" aria-label="Copyright">
+            © 2025 BeezKnees. All rights reserved.
+         </div>
+      </footer>
+      <!-- Cookie Consent Popup -->
+      <div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
+         <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+            <h2>🍪 We Use Cookies</h2>
+            <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and
+               marketing purposes.
+            </p>
+            <form id="cookie-options" name="cookie-options">
+               <label><input type="checkbox" checked disabled> Essential (always active)</label><br>
+               <label><input type="checkbox" id="analytics"> Analytics</label><br>
+               <label><input type="checkbox" id="marketing"> Marketing</label><br>
+            </form>
+            <div class="cookie-buttons">
+               <button id="accept-selected">Accept Selected</button> <button id="accept-all">Accept All</button>
+            </div>
+         </div>
       </div>
-
-      <div class="footer-bottom" role="region" aria-label="Copyright">
-        &copy; 2025 BeezKnees. All rights reserved.
-      </div>
-    </footer>
-
-    <!-- Cookie Consent Popup -->
-    <div
-      id="cookie-consent"
-      class="cookie-popup"
-      role="region"
-      aria-label="Cookie Consent Settings"
-    >
-      <div
-        class="cookie-content"
-        role="region"
-        aria-label="Cookie Consent Options"
-      >
-        <h2>🍪 We Use Cookies</h2>
-        <p>
-          We use essential cookies for site functionality. With your consent, we may
-          also use cookies for analytics and marketing purposes.
-        </p>
-
-        <form id="cookie-options">
-          <label
-            ><input type="checkbox" checked disabled />
-            Essential (always active)</label
-          ><br />
-          <label
-            ><input type="checkbox" id="analytics" />
-            Analytics</label
-          ><br />
-          <label
-            ><input type="checkbox" id="marketing" />
-            Marketing</label
-          ><br />
-        </form>
-
-        <div class="cookie-buttons">
-          <button id="accept-selected">Accept Selected</button>
-          <button id="accept-all">Accept All</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Back to Top Button -->
-    <button id="backToTop" title="Back to top" aria-label="Back to top">
-      ⬆ Top
-    </button>
-
-    <script src="js/menuv2.js" defer></script>
-  </body>
+      <!-- Back to Top Button -->
+      <button id="backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button> 
+      <script src="js/menuv2.js" defer></script>
+   </body>
 </html>

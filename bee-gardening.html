@@ -1,1298 +1,1007 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>
-      How to Help Bees in the Garden – Bee Friendly Garden Ideas & Plants for Bees UK | BeezKnees
-    </title>
-
-    <!-- Hamburger button -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-      referrerpolicy="no-referrer"
-    />
-
-    <!-- Your CSS file -->
-    <link rel="stylesheet" href="css/style.css" />
-
-    <!-- Page-specific layout tweaks -->
-    <style>
-      /* Centre quick-tip cards and keep them tidy */
-      #quick-ways .card,
-      #planting-plans .card,
-      #nectar-calendar .card,
-      #mistakes .card {
-        text-align: center;
-      }
-
-      /* Make plant selector scroll inside its own container on small screens */
-      #plant-selector {
-        width: 100%;
-        overflow-x: auto;
-      }
-
-      /* Table styles */
-      #plant-selector table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 0.75rem;
-        table-layout: fixed;      /* helps wrap long text */
-        min-width: 480px;         /* prevents columns becoming impossibly thin */
-      }
-
-      #plant-selector th,
-      #plant-selector td {
-        border: 1px solid #ddd;
-        padding: 0.5rem 0.75rem;
-        vertical-align: top;
-        word-wrap: break-word;
-      }
-
-      #plant-selector thead th {
-        background-color: #f0f0f0;
-        font-weight: 600;
-      }
-
-      #plant-selector tbody tr:nth-child(odd) {
-        background-color: #ffffff;
-      }
-
-      #plant-selector tbody tr:nth-child(even) {
-        background-color: #fdf6ec;
-      }
-
-      @media (max-width: 768px) {
-        #plant-selector th,
-        #plant-selector td {
-          font-size: 0.9rem;
-        }
-      }
-
-      /* Simple callout box for ecology explanations */
-      .callout {
-        border-left: 4px solid #f4b41a;
-        background-color: #fff7e6;
-        padding: 0.75rem 1rem;
-        margin: 1rem 0;
-      }
-
-      .howto-steps ol {
-        padding-left: 1.25rem;
-      }
-
-      .howto-steps li {
-        margin-bottom: 0.75rem;
-      }
-    </style>
-
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://beezknees.co.uk/bee-gardening" />
-
-    <!-- SEO Meta Tags -->
-    <meta
-      name="description"
-      content="Learn how to help bees in the garden with bee friendly plants, simple planting plans and practical advice for UK gardens, balconies and wildlife corners. Create a pollinator friendly garden and support honey bees and wild bees all year round."
-    />
-    <meta
-      name="keywords"
-      content="how to help bees in the garden, bee friendly garden UK, plants for bees UK, gardening for pollinators, bee friendly planting plans, nectar rich plants UK"
-    />
-    <meta name="author" content="Colin Chorley" />
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="article" />
-    <meta
-      property="og:title"
-      content="How to Help Bees in the Garden – Bee Friendly Garden Ideas & Plants for Bees UK"
-    />
-    <meta
-      property="og:description"
-      content="Practical UK guide to creating a bee friendly garden with nectar rich plants, seasonal planting plans and simple steps to help honey bees and wild bees in your own outdoor space."
-    />
-    <meta
-      property="og:url"
-      content="https://beezknees.co.uk/bee-gardening"
-    />
-    <meta
-      property="og:image"
-      content="https://beezknees.co.uk/images/lavendar.jpg"
-    />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="How to Help Bees in the Garden – Bee Friendly Garden Ideas & Plants for Bees UK"
-    />
-    <meta
-      name="twitter:description"
-      content="Discover bee friendly planting ideas, UK nectar rich plants and simple steps to help bees in your garden, balcony or wildlife corner."
-    />
-    <meta
-      name="twitter:image"
-      content="https://beezknees.co.uk/images/lavendar.jpg"
-    />
-
-    <!-- Favicons -->
-    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/images/favicon-16x16.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/images/favicon-32x32.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/images/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="/images/android-chrome-192x192.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="512x512"
-      href="/images/android-chrome-512x512.png"
-    />
-    <link rel="manifest" href="/site.webmanifest" />
-
-    <!-- Schema.org Structured Data -->
-    <script type="application/ld+json">
-      [
-        {
-          "@context": "https://schema.org",
-          "@type": "Article",
-          "headline": "How to Help Bees in the Garden – Bee Friendly Garden Ideas & Plants for Bees UK",
-          "description": "A practical UK guide explaining how to help bees in the garden using bee friendly plants, seasonal planting plans, nectar flow awareness and wildlife gardening techniques for honey bees and wild pollinators.",
-          "image": "https://beezknees.co.uk/images/lavendar.jpg",
-          "author": {
-            "@type": "Person",
-            "name": "Colin Chorley"
-          },
-          "publisher": {
-            "@type": "Organization",
-            "name": "BeezKnees",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
-            }
-          },
-          "mainEntityOfPage": {
-            "@type": "WebPage",
-            "@id": "https://beezknees.co.uk/bee-gardening"
-          },
-          "datePublished": "2024-06-01",
-          "dateModified": "2025-12-08",
-          "articleSection": [
-            "Why bee friendly gardens matter in the UK",
-            "Quick ways to help bees in your garden",
-            "Best plants for bees in the UK",
-            "Bee friendly planting plans for different spaces",
-            "Month by month nectar flow in the garden",
-            "Plant selector for sun, shade and soil type",
-            "How to create a bee friendly garden step by step",
-            "Common gardening mistakes that harm bees",
-            "Bee friendly gardening frequently asked questions"
-          ]
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "HowTo",
-          "name": "How to create a bee friendly garden in the UK",
-          "description": "Step by step guide to planning and planting a bee friendly garden using nectar rich plants, water, shelter and wildlife friendly maintenance.",
-          "totalTime": "P1D",
-          "supply": [
-            {
-              "@type": "HowToSupply",
-              "name": "Nectar rich plants suitable for your soil and light"
-            },
-            {
-              "@type": "HowToSupply",
-              "name": "Compost or organic matter"
-            },
-            {
-              "@type": "HowToSupply",
-              "name": "Containers or raised beds if needed"
-            },
-            {
-              "@type": "HowToSupply",
-              "name": "Bee safe water source such as a shallow dish with stones"
-            }
-          ],
-          "tool": [
-            {
-              "@type": "HowToTool",
-              "name": "Hand trowel"
-            },
-            {
-              "@type": "HowToTool",
-              "name": "Watering can"
-            },
-            {
-              "@type": "HowToTool",
-              "name": "Garden fork or spade"
-            }
-          ],
-          "step": [
-            {
-              "@type": "HowToStep",
-              "name": "Observe your garden",
-              "text": "Spend time watching where the sun falls, where the soil stays wet or dry and which areas are sheltered or windy. Notice what already flowers and when."
-            },
-            {
-              "@type": "HowToStep",
-              "name": "Improve soil and structure",
-              "text": "Lightly loosen compacted ground and add compost or organic matter where needed. In very poor or paved areas, plan to use deep containers or raised beds."
-            },
-            {
-              "@type": "HowToStep",
-              "name": "Choose bee friendly plants",
-              "text": "Select a mix of UK suitable plants that flower from early spring to late autumn, including trees, shrubs, perennials, herbs and annuals. Avoid double flowers and sterile cultivars."
-            },
-            {
-              "@type": "HowToStep",
-              "name": "Plan for continuous flowering",
-              "text": "Arrange your plant list so that something is in bloom in every main part of the season, filling gaps between major nectar flows in your area."
-            },
-            {
-              "@type": "HowToStep",
-              "name": "Plant and water in well",
-              "text": "Plant at the correct depth, firm gently and water thoroughly. Mulch where appropriate to conserve moisture and suppress weeds."
-            },
-            {
-              "@type": "HowToStep",
-              "name": "Add water and nesting habitat",
-              "text": "Provide a shallow water source with safe landing places and consider a bee hotel, log pile or undisturbed bank for solitary bees and other insects."
-            },
-            {
-              "@type": "HowToStep",
-              "name": "Maintain without pesticides",
-              "text": "Hand weed where possible, tolerate some nibbled leaves and avoid insecticides. Leave stems and seed heads over winter to provide habitat and food."
-            }
-          ]
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "How can I help bees in my garden in the UK?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "To help bees in a UK garden, plant nectar rich flowers that bloom from early spring to late autumn, avoid using insecticides, provide shallow water with safe landing places and leave some areas a little wilder for nesting and overwintering insects."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "What are the best plants for bees in the UK?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Good plants for bees in the UK include lavender, heather, catmint, crocus, snowdrops, borage, foxglove, thyme, marjoram, sedum, fruit trees and many native wildflowers such as knapweed and field scabious."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Do bees prefer native plants in the garden?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Many native plants support a wide range of pollinators, but bees will also visit non native species that provide accessible nectar and pollen. A mix of native wildflowers, flowering shrubs, herbs and garden perennials usually works well in UK bee friendly gardens."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Can I help bees if I only have a balcony or small space?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes, even a small balcony or patio can help bees if you grow pots of lavender, herbs, trailing flowers and small shrubs, and provide a shallow water dish. Height and shelter can make balconies surprisingly good for pollinators."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Should I buy wildflower seed mixes or bee bombs?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Wildflower seed mixes and bee bombs can be helpful if they are appropriate for your soil and contain genuine nectar rich species, but they are not essential. Checking the species list and choosing mixes suited to your region usually gives better results than buying on name alone."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Do I need a bee hotel to help bees?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Bee hotels can support some species of solitary bees if they are well designed, securely fixed and maintained, but undisturbed banks, old walls, dead stems and log piles are just as valuable. A mix of nesting options is ideal in a wildlife friendly garden."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Are double flowers bad for bees?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Many double flowers produce little or no accessible nectar or pollen because the extra petals replace the fertile parts of the flower. Bees may struggle to use them, so single or semi double varieties are usually better choices for a bee friendly garden."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Do bees need water in the garden?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes, bees collect water for cooling the hive and diluting honey. A shallow dish with stones or marbles for safe landing provides a simple, bee safe water source. Change the water regularly to keep it fresh."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Is a messy garden better for bees?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "A wildlife friendly garden often looks less formal, with some longer grass, dead stems left over winter and areas where leaves and twigs are not tidied away. Structure still matters, but allowing some controlled mess gives bees and other insects places to nest and shelter."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Can I still grow vegetables in a bee friendly garden?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes, many vegetables and fruit crops rely on pollinators. Combining vegetables with flowering herbs and companion plants can support both bees and harvests. The main change is to avoid insecticides and aim for healthy, resilient plants instead."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "How quickly will bees find my new bee friendly garden?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "In many UK areas, bees and other pollinators will begin visiting new flowers within days or weeks once plants start to bloom. It can take a season or two for shrubs and perennials to reach full flowering potential, so bee activity often increases year on year."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Is this advice suitable for both honey bees and wild bees?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes, focusing on diverse, pesticide free planting, continuous flowering, water and nesting habitat supports honey bees, bumblebees and solitary bees. Different species use different flowers and nesting sites, so variety is key in a bee friendly garden."
-              }
-            }
-          ]
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://beezknees.co.uk/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Bee Friendly Gardening",
-              "item": "https://beezknees.co.uk/bee-gardening"
-            }
-          ]
-        }
-      ]
-    </script>
-  </head>
-  <body>
-    <!-- Fixed Header and Nav Container -->
-    <div class="fixed-header">
-      <header class="site-header" role="region" aria-label="Site Header">
-        <div class="header-container" role="region" aria-label="Site Branding">
-          <a href="https://beezknees.co.uk">
-            <img
-              src="images/BeezKnees-Logo.png"
-              alt="BeezKnees logo"
-              class="site-logo"
-            />
-          </a>
-
-          <h1 class="site-title">BeezKnees</h1>
-          <!-- Hamburger Icon Button -->
-          <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-            <i class="fas fa-bars"></i>
-          </button>
-        </div>
-      </header>
-    </div>
-
-    <!-- Navigation Bar -->
-    <nav class="navbar" role="navigation" aria-label="Main navigation">
-			<ul class="nav-menu" role="region" aria-label="Main Navigation Links">
-				<li><a href="/" title="Visit the homepage">Home</a></li>
-
-				<li class="dropdown">
-					<a href="/about-us" title="Learn more about us">About</a>
-				</li>
-
-				<li class="dropdown">
-					<a href="/donate" title="Support out mission">Donate</a>
-				</li>
-
-				<li class="dropdown">
-					<a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a></li>
-						<li><a href="/equipment" title="Essential beekeeping equipment">Equipment</a></li>
-						<li><a href="/hive-management" title="Manage your hive effectively">Hive Management</a></li>
-						<li><a href="/varroa-management" title="control varroa mite infestations">Varroa Management</a></li>
-						<li><a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a></li>
-						<li><a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a></li>
-						<li><a href="/honey-extraction" title="how to harvest and bottle honey safely">Extracting Honey</a></li>
-					</ul>
-				</li>
-
-				<li class="dropdown">
-					<a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-					 <li><a href="/january" title="January beekeeping tasks">January</a></li>
-						<li><a href="/february" title="February beekeeping tasks">February</a></li>
-						<li><a href="/march" title="March beekeeping tasks">March</a></li>
-						<li><a href="/april" title="April beekeeping tasks">April</a></li>
-						<li><a href="/may" title="May beekeeping tasks">May</a></li>
-						<li><a href="/june" title="June beekeeping tasks">June</a></li>
-						<li><a href="/july" title="July beekeeping tasks">July</a></li>
-						<li><a href="/august" title="August beekeeping tasks">August</a></li>
-						<li><a href="/september" title="September beekeeping tasks">September</a></li>
-						<li><a href="/october" title="October beekeeping tasks">October</a></li>
-						<li><a href="/november" title="November beekeeping tasks">November</a></li>
-						<li><a href="/december" title="December beekeeping tasks">December</a></li>
-					</ul>
-				</li>
-
-				<li class="dropdown">
-					<a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						 <li><a href="/veterinary-medicine-records" title="How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a></li>
-            <li><a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a></li>
-						<li><a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a></li>
-						<li><a href="/bee-pests" title="Common pests affecting bees">Pests</a></li>
-						<li><a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a></li>
-						<li><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></li>
-					</ul>
-				</li>
-
-				<li class="dropdown">
-					<a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a></li>
-						<li><a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a></li>
-						<li><a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a></li>
-						<li><a href="/pollination" title="Honeybee role in pollination">Pollination</a></li>
-					</ul>
-				</li>
-
-				<li class="dropdown">
-					<a href="/help-the-bees" title="How you can help save the bees">Help Bees</a>
-					<button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-					<ul class="dropdown-menu">
-						<li><a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a></li>
-						<li><a href="/donate" title="Make a donation to support bees">Donate</a></li>
-						<li><a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a></li>
-					</ul>
-				</li>
-
-			<li><a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members Area</a></li>
-			</ul>
-		</nav>
-
-    <!-- Hero Banner -->
-    <section role="region" aria-label="Bee friendly garden banner">
-      <div class="banner">
-        <img
-          src="images/lavendar.jpg"
-          alt="Lavender and other bee friendly flowers in a UK garden border"
-        />
+   <head>
+      <meta name="generator" content="HTML Tidy for HTML5 for Windows version 5.9.14">
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>How to Help Bees in the Garden – Bee Friendly Garden Ideas & Plants for Bees UK | BeezKnees</title>
+      <!-- Hamburger button -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+         referrerpolicy="no-referrer">
+      <!-- Your CSS file -->
+      <link rel="stylesheet" href="css/style.css">
+      <!-- Page-specific layout tweaks -->
+      <!-- Canonical URL -->
+      <link rel="canonical" href="https://beezknees.co.uk/bee-gardening">
+      <!-- SEO Meta Tags -->
+      <meta name="description" content=
+         "Learn how to help bees in the garden with bee friendly plants, simple planting plans and practical advice for UK gardens, balconies and wildlife corners. Create a pollinator friendly garden and support honey bees and wild bees all year round.">
+      <meta name="keywords" content=
+         "how to help bees in the garden, bee friendly garden UK, plants for bees UK, gardening for pollinators, bee friendly planting plans, nectar rich plants UK">
+      <meta name="author" content="Colin Chorley">
+      <!-- Open Graph -->
+      <meta property="og:type" content="article">
+      <meta property="og:title" content=
+         "How to Help Bees in the Garden – Bee Friendly Garden Ideas &amp; Plants for Bees UK">
+      <meta property="og:description" content=
+         "Practical UK guide to creating a bee friendly garden with nectar rich plants, seasonal planting plans and simple steps to help honey bees and wild bees in your own outdoor space.">
+      <meta property="og:url" content="https://beezknees.co.uk/bee-gardening">
+      <meta property="og:image" content="https://beezknees.co.uk/images/lavendar.jpg">
+      <!-- Twitter Card -->
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content=
+         "How to Help Bees in the Garden – Bee Friendly Garden Ideas &amp; Plants for Bees UK">
+      <meta name="twitter:description" content=
+         "Discover bee friendly planting ideas, UK nectar rich plants and simple steps to help bees in your garden, balcony or wildlife corner.">
+      <meta name="twitter:image" content="https://beezknees.co.uk/images/lavendar.jpg">
+      <!-- Favicons -->
+      <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+      <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+      <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="192x192" href="/images/android-chrome-192x192.png">
+      <link rel="icon" type="image/png" sizes="512x512" href="/images/android-chrome-512x512.png">
+      <link rel="manifest" href="/site.webmanifest">
+      <!-- Schema.org Structured Data -->
+      <script type="application/ld+json">
+         [
+           {
+             "@context": "https://schema.org",
+             "@type": "Article",
+             "headline": "How to Help Bees in the Garden – Bee Friendly Garden Ideas & Plants for Bees UK",
+             "description": "A practical UK guide explaining how to help bees in the garden using bee friendly plants, seasonal planting plans, nectar flow awareness and wildlife gardening techniques for honey bees and wild pollinators.",
+             "image": "https://beezknees.co.uk/images/lavendar.jpg",
+             "author": {
+               "@type": "Person",
+               "name": "Colin Chorley"
+             },
+             "publisher": {
+               "@type": "Organization",
+               "name": "BeezKnees",
+               "logo": {
+                 "@type": "ImageObject",
+                 "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+               }
+             },
+             "mainEntityOfPage": {
+               "@type": "WebPage",
+               "@id": "https://beezknees.co.uk/bee-gardening"
+             },
+             "datePublished": "2024-06-01",
+             "dateModified": "2025-12-08",
+             "articleSection": [
+               "Why bee friendly gardens matter in the UK",
+               "Quick ways to help bees in your garden",
+               "Best plants for bees in the UK",
+               "Bee friendly planting plans for different spaces",
+               "Month by month nectar flow in the garden",
+               "Plant selector for sun, shade and soil type",
+               "How to create a bee friendly garden step by step",
+               "Common gardening mistakes that harm bees",
+               "Bee friendly gardening frequently asked questions"
+             ]
+           },
+           {
+             "@context": "https://schema.org",
+             "@type": "HowTo",
+             "name": "How to create a bee friendly garden in the UK",
+             "description": "Step by step guide to planning and planting a bee friendly garden using nectar rich plants, water, shelter and wildlife friendly maintenance.",
+             "totalTime": "P1D",
+             "supply": [
+               {
+                 "@type": "HowToSupply",
+                 "name": "Nectar rich plants suitable for your soil and light"
+               },
+               {
+                 "@type": "HowToSupply",
+                 "name": "Compost or organic matter"
+               },
+               {
+                 "@type": "HowToSupply",
+                 "name": "Containers or raised beds if needed"
+               },
+               {
+                 "@type": "HowToSupply",
+                 "name": "Bee safe water source such as a shallow dish with stones"
+               }
+             ],
+             "tool": [
+               {
+                 "@type": "HowToTool",
+                 "name": "Hand trowel"
+               },
+               {
+                 "@type": "HowToTool",
+                 "name": "Watering can"
+               },
+               {
+                 "@type": "HowToTool",
+                 "name": "Garden fork or spade"
+               }
+             ],
+             "step": [
+               {
+                 "@type": "HowToStep",
+                 "name": "Observe your garden",
+                 "text": "Spend time watching where the sun falls, where the soil stays wet or dry and which areas are sheltered or windy. Notice what already flowers and when."
+               },
+               {
+                 "@type": "HowToStep",
+                 "name": "Improve soil and structure",
+                 "text": "Lightly loosen compacted ground and add compost or organic matter where needed. In very poor or paved areas, plan to use deep containers or raised beds."
+               },
+               {
+                 "@type": "HowToStep",
+                 "name": "Choose bee friendly plants",
+                 "text": "Select a mix of UK suitable plants that flower from early spring to late autumn, including trees, shrubs, perennials, herbs and annuals. Avoid double flowers and sterile cultivars."
+               },
+               {
+                 "@type": "HowToStep",
+                 "name": "Plan for continuous flowering",
+                 "text": "Arrange your plant list so that something is in bloom in every main part of the season, filling gaps between major nectar flows in your area."
+               },
+               {
+                 "@type": "HowToStep",
+                 "name": "Plant and water in well",
+                 "text": "Plant at the correct depth, firm gently and water thoroughly. Mulch where appropriate to conserve moisture and suppress weeds."
+               },
+               {
+                 "@type": "HowToStep",
+                 "name": "Add water and nesting habitat",
+                 "text": "Provide a shallow water source with safe landing places and consider a bee hotel, log pile or undisturbed bank for solitary bees and other insects."
+               },
+               {
+                 "@type": "HowToStep",
+                 "name": "Maintain without pesticides",
+                 "text": "Hand weed where possible, tolerate some nibbled leaves and avoid insecticides. Leave stems and seed heads over winter to provide habitat and food."
+               }
+             ]
+           },
+           {
+             "@context": "https://schema.org",
+             "@type": "FAQPage",
+             "mainEntity": [
+               {
+                 "@type": "Question",
+                 "name": "How can I help bees in my garden in the UK?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "To help bees in a UK garden, plant nectar rich flowers that bloom from early spring to late autumn, avoid using insecticides, provide shallow water with safe landing places and leave some areas a little wilder for nesting and overwintering insects."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "What are the best plants for bees in the UK?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Good plants for bees in the UK include lavender, heather, catmint, crocus, snowdrops, borage, foxglove, thyme, marjoram, sedum, fruit trees and many native wildflowers such as knapweed and field scabious."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "Do bees prefer native plants in the garden?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Many native plants support a wide range of pollinators, but bees will also visit non native species that provide accessible nectar and pollen. A mix of native wildflowers, flowering shrubs, herbs and garden perennials usually works well in UK bee friendly gardens."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "Can I help bees if I only have a balcony or small space?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Yes, even a small balcony or patio can help bees if you grow pots of lavender, herbs, trailing flowers and small shrubs, and provide a shallow water dish. Height and shelter can make balconies surprisingly good for pollinators."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "Should I buy wildflower seed mixes or bee bombs?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Wildflower seed mixes and bee bombs can be helpful if they are appropriate for your soil and contain genuine nectar rich species, but they are not essential. Checking the species list and choosing mixes suited to your region usually gives better results than buying on name alone."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "Do I need a bee hotel to help bees?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Bee hotels can support some species of solitary bees if they are well designed, securely fixed and maintained, but undisturbed banks, old walls, dead stems and log piles are just as valuable. A mix of nesting options is ideal in a wildlife friendly garden."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "Are double flowers bad for bees?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Many double flowers produce little or no accessible nectar or pollen because the extra petals replace the fertile parts of the flower. Bees may struggle to use them, so single or semi double varieties are usually better choices for a bee friendly garden."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "Do bees need water in the garden?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Yes, bees collect water for cooling the hive and diluting honey. A shallow dish with stones or marbles for safe landing provides a simple, bee safe water source. Change the water regularly to keep it fresh."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "Is a messy garden better for bees?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "A wildlife friendly garden often looks less formal, with some longer grass, dead stems left over winter and areas where leaves and twigs are not tidied away. Structure still matters, but allowing some controlled mess gives bees and other insects places to nest and shelter."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "Can I still grow vegetables in a bee friendly garden?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Yes, many vegetables and fruit crops rely on pollinators. Combining vegetables with flowering herbs and companion plants can support both bees and harvests. The main change is to avoid insecticides and aim for healthy, resilient plants instead."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "How quickly will bees find my new bee friendly garden?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "In many UK areas, bees and other pollinators will begin visiting new flowers within days or weeks once plants start to bloom. It can take a season or two for shrubs and perennials to reach full flowering potential, so bee activity often increases year on year."
+                 }
+               },
+               {
+                 "@type": "Question",
+                 "name": "Is this advice suitable for both honey bees and wild bees?",
+                 "acceptedAnswer": {
+                   "@type": "Answer",
+                   "text": "Yes, focusing on diverse, pesticide free planting, continuous flowering, water and nesting habitat supports honey bees, bumblebees and solitary bees. Different species use different flowers and nesting sites, so variety is key in a bee friendly garden."
+                 }
+               }
+             ]
+           },
+           {
+             "@context": "https://schema.org",
+             "@type": "BreadcrumbList",
+             "itemListElement": [
+               {
+                 "@type": "ListItem",
+                 "position": 1,
+                 "name": "Home",
+                 "item": "https://beezknees.co.uk/"
+               },
+               {
+                 "@type": "ListItem",
+                 "position": 2,
+                 "name": "Bee Friendly Gardening",
+                 "item": "https://beezknees.co.uk/bee-gardening"
+               }
+             ]
+           }
+         ]
+      </script>
+   </head>
+   <body>
+      <!-- Fixed Header and Nav Container -->
+      <div class="fixed-header">
+         <header class="site-header" role="region" aria-label="Site Header">
+            <div class="header-container" role="region" aria-label="Site Branding">
+               <a href="https://beezknees.co.uk"><img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class=
+                  "site-logo"></a>
+               <h1 class="site-title">BeezKnees</h1>
+               <!-- Hamburger Icon Button -->
+               <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"></button>
+            </div>
+         </header>
       </div>
-    </section>
-
-    <!-- Main Content -->
-    <main class="content">
-      <h1>How to Help Bees in the Garden – Bee Friendly Gardening in the UK</h1>
-
-      <p>
-        You do not need to be a beekeeper or have a large garden to help bees. In towns,
-        villages and cities across the UK, <strong>bee friendly gardens</strong>,
-        balconies and wildlife corners provide vital nectar, pollen, water and shelter
-        for honey bees, bumblebees and solitary bees. A few well chosen plants and some
-        simple changes in how you garden can make a bigger difference than most people
-        realise.
-      </p>
-
-      <p>
-        This guide explains <strong>how to help bees in the garden</strong> using
-        evidence based, practical steps. It focuses on a cool, temperate UK climate and
-        is written for anyone who wants to support pollinators – whether you keep hives
-        or simply enjoy watching bees on the flowers outside your door.
-      </p>
-
-      <div class="callout">
-        <strong>Bee friendly gardening in one sentence:</strong>
-        grow a variety of nectar rich plants that flower across the seasons, avoid
-        pesticides, provide water and leave some space a little wilder for wildlife.
-      </div>
-
-      <!-- On this page navigation -->
-      <nav
-        aria-label="On this page"
-        class="indented-list"
-        style="margin-top: 1.5rem; margin-bottom: 1.5rem"
-      >
-        <h2 id="on-this-page">On this page</h2>
-        <ul>
-          <li><a href="#why-gardens-matter">Why bee friendly gardens matter</a></li>
-          <li><a href="#quick-ways">Quick ways to help bees in your garden</a></li>
-          <li><a href="#best-plants">Best plants for bees in the UK</a></li>
-          <li><a href="#planting-plans">Bee friendly planting plans</a></li>
-          <li><a href="#nectar-calendar">Month by month nectar flow in the garden</a></li>
-          <li><a href="#plant-selector">Plant selector for sun, shade and soil</a></li>
-          <li><a href="#howto">How to create a bee friendly garden – step by step</a></li>
-          <li><a href="#mistakes">Common gardening mistakes that harm bees</a></li>
-          <li><a href="#faq">Bee friendly gardening – FAQs</a></li>
-        </ul>
+      <!-- Navigation Bar -->
+      <nav class="navbar" role="navigation" aria-label="Main navigation">
+         <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+            <li>
+               <a href="/" title="Visit the homepage">Home</a>
+            </li>
+            <li class="dropdown">
+               <a href="/about-us" title="Learn more about us">About</a>
+            </li>
+            <li class="dropdown">
+               <a href="/donate" title="Support out mission">Donate</a>
+            </li>
+            <li class="dropdown">
+               <a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a> <button class=
+                  "dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a>
+                  </li>
+                  <li>
+                     <a href="/equipment" title="Essential beekeeping equipment">Equipment</a>
+                  </li>
+                  <li>
+                     <a href="/hive-management" title="Manage your hive effectively">Hive Management</a>
+                  </li>
+                  <li>
+                     <a href="/varroa-management" title="control varroa mite infestations">Varroa Management</a>
+                  </li>
+                  <li>
+                     <a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a>
+                  </li>
+                  <li>
+                     <a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a>
+                  </li>
+                  <li>
+                     <a href="/honey-extraction" title="how to harvest and bottle honey safely">Extracting Honey</a>
+                  </li>
+               </ul>
+            </li>
+            <li class="dropdown">
+               <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a> <button class=
+                  "dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/january" title="January beekeeping tasks">January</a>
+                  </li>
+                  <li>
+                     <a href="/february" title="February beekeeping tasks">February</a>
+                  </li>
+                  <li>
+                     <a href="/march" title="March beekeeping tasks">March</a>
+                  </li>
+                  <li>
+                     <a href="/april" title="April beekeeping tasks">April</a>
+                  </li>
+                  <li>
+                     <a href="/may" title="May beekeeping tasks">May</a>
+                  </li>
+                  <li>
+                     <a href="/june" title="June beekeeping tasks">June</a>
+                  </li>
+                  <li>
+                     <a href="/july" title="July beekeeping tasks">July</a>
+                  </li>
+                  <li>
+                     <a href="/august" title="August beekeeping tasks">August</a>
+                  </li>
+                  <li>
+                     <a href="/september" title="September beekeeping tasks">September</a>
+                  </li>
+                  <li>
+                     <a href="/october" title="October beekeeping tasks">October</a>
+                  </li>
+                  <li>
+                     <a href="/november" title="November beekeeping tasks">November</a>
+                  </li>
+                  <li>
+                     <a href="/december" title="December beekeeping tasks">December</a>
+                  </li>
+               </ul>
+            </li>
+            <li class="dropdown">
+               <a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a> <button class=
+                  "dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/veterinary-medicine-records" title=
+                        "How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a>
+                  </li>
+                  <li>
+                     <a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a>
+                  </li>
+                  <li>
+                     <a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a>
+                  </li>
+                  <li>
+                     <a href="/bee-pests" title="Common pests affecting bees">Pests</a>
+                  </li>
+                  <li>
+                     <a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a>
+                  </li>
+                  <li>
+                     <a href="/other-conditions" title="Other bee health conditions">Other Conditions</a>
+                  </li>
+               </ul>
+            </li>
+            <li class="dropdown">
+               <a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a> <button class=
+                  "dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a>
+                  </li>
+                  <li>
+                     <a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a>
+                  </li>
+                  <li>
+                     <a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a>
+                  </li>
+                  <li>
+                     <a href="/pollination" title="Honeybee role in pollination">Pollination</a>
+                  </li>
+               </ul>
+            </li>
+            <li class="dropdown">
+               <a href="/help-the-bees" title="How you can help save the bees">Help Bees</a> <button class="dropdown-toggle"
+                  aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a>
+                  </li>
+                  <li>
+                     <a href="/donate" title="Make a donation to support bees">Donate</a>
+                  </li>
+                  <li>
+                     <a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a>
+                  </li>
+               </ul>
+            </li>
+            <li>
+               <a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members
+               Area</a>
+            </li>
+         </ul>
       </nav>
-
-      <!-- (content unchanged below this point) -->
-
-      <!-- Why gardens matter -->
-      <section id="why-gardens-matter" aria-labelledby="why-gardens-matter-heading">
-        <h2 id="why-gardens-matter-heading">
-          Why Bee Friendly Gardens Matter for Honey Bees and Wild Bees
-        </h2>
-
-        <p>
-          Bees do not see property boundaries. From their point of view, every garden,
-          verge, park, allotment and hedgerow is part of one large, patchy landscape.
-          When that landscape is rich in flowers and mostly free of pesticides, colonies
-          are more likely to thrive. When it is dominated by hard surfaces, sterile
-          lawns and short bursts of blossom, bees must work harder to find food.
-        </p>
-
-        <div class="callout">
-          <strong>Ecology in brief:</strong> bees need a
-          <em>continuous</em> supply of nectar and pollen, not just a few busy weeks in
-          summer. A bee friendly garden fills gaps between major flowering events in the
-          wider countryside.
-        </div>
-
-        <p>
-          Different pollinators use different parts of the garden. Honey bees may work
-          high flowering trees, while bumblebees prefer deeper, tubular flowers and
-          solitary bees nest in bare soil, stems, walls or dead wood. A
-          <strong>bee friendly garden in the UK</strong> gives them all something:
-        </p>
-
-        <div class="indented-list">
-          <ul>
-            <li>nectar for energy</li>
-            <li>pollen for brood food</li>
-            <li>clean water</li>
-            <li>safe places to nest and overwinter</li>
-          </ul>
-        </div>
-
-        <p>
-          The sections below show how you can provide these in practical, manageable
-          steps, whatever your garden size.
-        </p>
+      <!-- Hero Banner -->
+      <section role="region" aria-label="Bee friendly garden banner">
+         <div class="banner"><img src="images/lavendar-hero.webp" alt=
+            "Lavender and other bee friendly flowers in a UK garden border"></div>
       </section>
-
-      <!-- Quick ways -->
-      <section id="quick-ways" aria-labelledby="quick-ways-heading">
-        <h2 id="quick-ways-heading">Quick Ways to Help Bees in Your Garden</h2>
-
-        <p>
-          If you only change a few things this year, make them these. Each card is a
-          simple, high impact action you can take in a weekend or less.
-        </p>
-
-        <div class="grid">
-          <div class="card">
-            <h3>1. Plant More Nectar Rich Flowers</h3>
-            <p>
-              Choose single, open flowers rather than very double blooms. Aim for a mix
-              of early, mid and late season flowering plants so bees always find
-              something to visit.
+      <!-- Main Content -->
+      <main class="content">
+         <h1>How to Help Bees in the Garden – Bee Friendly Gardening in the UK</h1>
+         <p>You do not need to be a beekeeper or have a large garden to help bees. In towns, villages and cities across the
+            UK, <strong>bee friendly gardens</strong>, balconies and wildlife corners provide vital nectar, pollen, water and
+            shelter for honey bees, bumblebees and solitary bees. A few well chosen plants and some simple changes in how you
+            garden can make a bigger difference than most people realise.
+         </p>
+         <p>This guide explains <strong>how to help bees in the garden</strong> using evidence based, practical steps. It
+            focuses on a cool, temperate UK climate and is written for anyone who wants to support pollinators – whether you
+            keep hives or simply enjoy watching bees on the flowers outside your door.
+         </p>
+         <div class="callout">
+            <strong>Bee friendly gardening in one sentence:</strong> grow a variety of nectar rich plants that flower across
+            the seasons, avoid pesticides, provide water and leave some space a little wilder for wildlife.
+         </div>
+         <!-- On this page navigation -->
+         <nav aria-label="On this page" class="indented-list u-my-1_5rem">
+            <h2 id="on-this-page">On this page</h2>
+            <ul>
+               <li>
+                  <a href="#why-gardens-matter">Why bee friendly gardens matter</a>
+               </li>
+               <li>
+                  <a href="#quick-ways">Quick ways to help bees in your garden</a>
+               </li>
+               <li>
+                  <a href="#best-plants">Best plants for bees in the UK</a>
+               </li>
+               <li>
+                  <a href="#planting-plans">Bee friendly planting plans</a>
+               </li>
+               <li>
+                  <a href="#nectar-calendar">Month by month nectar flow in the garden</a>
+               </li>
+               <li>
+                  <a href="#plant-selector">Plant selector for sun, shade and soil</a>
+               </li>
+               <li>
+                  <a href="#howto">How to create a bee friendly garden – step by step</a>
+               </li>
+               <li>
+                  <a href="#mistakes">Common gardening mistakes that harm bees</a>
+               </li>
+               <li>
+                  <a href="#faq">Bee friendly gardening – FAQs</a>
+               </li>
+            </ul>
+         </nav>
+         <!-- (content unchanged below this point) -->
+         <!-- Why gardens matter -->
+         <section id="why-gardens-matter" aria-labelledby="why-gardens-matter-heading">
+            <h2 id="why-gardens-matter-heading">Why Bee Friendly Gardens Matter for Honey Bees and Wild Bees</h2>
+            <p>Bees do not see property boundaries. From their point of view, every garden, verge, park, allotment and
+               hedgerow is part of one large, patchy landscape. When that landscape is rich in flowers and mostly free of
+               pesticides, colonies are more likely to thrive. When it is dominated by hard surfaces, sterile lawns and short
+               bursts of blossom, bees must work harder to find food.
             </p>
-          </div>
-
-          <div class="card">
-            <h3>2. Stop Using Insecticides</h3>
-            <p>
-              Avoid insecticides, especially products labelled harmful to bees. Healthy,
-              diverse planting and good soil often reduce pest problems without chemicals.
-            </p>
-          </div>
-
-          <div class="card">
-            <h3>3. Provide a Safe Water Source</h3>
-            <p>
-              Use a shallow dish with stones or marbles so bees can drink without
-              drowning. Refresh the water regularly and keep it in light shade if
-              possible.
-            </p>
-          </div>
-
-          <div class="card">
-            <h3>4. Leave Some Wild Corners</h3>
-            <p>
-              Allow a patch of grass to grow longer, leave seed heads over winter and
-              keep a small pile of logs or branches. These micro habitats support
-              solitary bees and other beneficial insects.
-            </p>
-          </div>
-
-          <div class="card">
-            <h3>5. Grow Herbs for Bees</h3>
-            <p>
-              Lavender, thyme, marjoram, sage, chives and mint are all excellent
-              <strong>plants for bees in the UK</strong>. They work well in beds, pots
-              and balcony planters.
-            </p>
-          </div>
-
-          <div class="card">
-            <h3>6. Reduce Lawn Area or Mow Less Often</h3>
-            <p>
-              Allowing clover, selfheal and daisies to flower in parts of the lawn can
-              provide valuable nectar, especially in smaller gardens.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Best plants -->
-      <section id="best-plants" aria-labelledby="best-plants-heading">
-        <h2 id="best-plants-heading">Best Plants for Bees in the UK</h2>
-
-        <p>
-          A good <strong>bee friendly garden</strong> is built on plant choice. Rather
-          than chasing a single “bee plant”, aim for a diverse mix that suits your soil,
-          light and style of gardening. The lists below are not exhaustive, but they
-          give a strong starting palette.
-        </p>
-
-        <h3>Native &amp; Near-Native Wildflowers</h3>
-        <div class="indented-list">
-          <ul>
-            <li>Knapweed, field scabious, oxeye daisy, bird’s foot trefoil</li>
-            <li>Viper’s bugloss, wild marjoram, red clover, yarrow</li>
-            <li>Meadow cranesbill, cowslip, foxglove (care with children and pets)</li>
-          </ul>
-        </div>
-
-        <h3>Garden Perennials &amp; Shrubs</h3>
-        <div class="indented-list">
-          <ul>
-            <li>Lavender, catmint, sedum, echinacea, rudbeckia</li>
-            <li>Hardy geraniums, hebe, heather (especially winter flowering varieties)</li>
-            <li>Buddleia, rockrose, weigela, flowering currant</li>
-          </ul>
-        </div>
-
-        <h3>Herbs for Pots, Beds and Balconies</h3>
-        <div class="indented-list">
-          <ul>
-            <li>Thyme, oregano, marjoram, sage, rosemary</li>
-            <li>Mint (best in pots so it does not spread too far)</li>
-            <li>Chives, borage, fennel, lemon balm</li>
-          </ul>
-        </div>
-
-        <h3>Trees &amp; Larger Shrubs</h3>
-        <div class="indented-list">
-          <ul>
-            <li>Apple, pear, plum and other fruit trees</li>
-            <li>Willow, hawthorn, blackthorn and field maple</li>
-            <li>Lime (some species), rowan, holly and crab apple</li>
-          </ul>
-        </div>
-
-        <div class="callout">
-          <strong>Tip:</strong> avoid very double, highly bred flowers where petals have
-          replaced the stamens. Bees struggle to access nectar and pollen in many of
-          these, even if the plants look spectacular to us.
-        </div>
-      </section>
-
-      <!-- Planting plans -->
-      <section id="planting-plans" aria-labelledby="planting-plans-heading">
-        <h2 id="planting-plans-heading">Bee Friendly Planting Plans for Different Spaces</h2>
-
-        <p>
-          Every outdoor space can be turned into a <strong>bee friendly garden</strong>,
-          even if it is mostly paving or a rented balcony. These example planting plans
-          are not strict designs, but starting points you can adapt.
-        </p>
-
-        <div class="grid">
-          <div class="card">
-            <img
-              src="images/small-garden.jpg"
-              alt="Spring bee friendly planting with wildflowers"
-            />
-            <div class="card-content">
-              <h3>Small Garden (Around 3×3m)</h3>
-              <p><strong>Goal:</strong> one rich, mixed border that flowers for most of the year.</p>
-              <ul class="indented-list">
-                <li>Back: small fruit tree or crab apple; spring flowering shrub.</li>
-                <li>
-                  Middle: lavender, catmint, hardy geraniums, echinacea or rudbeckia.
-                </li>
-                <li>Front: bulbs (crocus, snowdrops, alliums), thyme and low herbs.</li>
-              </ul>
+            <div class="callout">
+               <strong>Ecology in brief:</strong> bees need a <em>continuous</em> supply of nectar and pollen, not just a few
+               busy weeks in summer. A bee friendly garden fills gaps between major flowering events in the wider countryside.
             </div>
-          </div>
-
-          <div class="card">
-            <img
-              src="images/patio-garden.jpg"
-              alt="Summer bee friendly UK garden"
-            />
-            <div class="card-content">
-              <h3>Balcony or Patio Plan</h3>
-              <p><strong>Goal:</strong> layered pots that cope with wind and limited space.</p>
-              <ul class="indented-list">
-                <li>Large pots: small shrubs or dwarf fruit trees.</li>
-                <li>
-                  Medium pots: lavender, rosemary, sage, marjoram, catmint depending on
-                  sun or shade.
-                </li>
-                <li>Window boxes: trailing flowers and compact herbs.</li>
-              </ul>
+            <p>Different pollinators use different parts of the garden. Honey bees may work high flowering trees, while
+               bumblebees prefer deeper, tubular flowers and solitary bees nest in bare soil, stems, walls or dead wood. A
+               <strong>bee friendly garden in the UK</strong> gives them all something:
+            </p>
+            <div class="indented-list">
+               <ul>
+                  <li>nectar for energy</li>
+                  <li>pollen for brood food</li>
+                  <li>clean water</li>
+                  <li>safe places to nest and overwinter</li>
+               </ul>
             </div>
-          </div>
-
-          <div class="card">
-            <img
-              src="images/wildlife.jpg"
-              alt="wildlife corner with seed heads and grasses left for insects"
-            />
-            <div class="card-content">
-              <h3>Wildlife Corner Plan</h3>
-              <p><strong>Goal:</strong> a slightly wilder patch that supports many species.</p>
-              <ul class="indented-list">
-                <li>Longer grass with native wildflowers or a small meadow mix.</li>
-                <li>Log pile, stones or a low wall for nesting and shelter.</li>
-                <li>Hedge or mixed shrubs for blossom, berries and structure.</li>
-              </ul>
+            <p>The sections below show how you can provide these in practical, manageable steps, whatever your garden
+               size.
+            </p>
+         </section>
+         <!-- Quick ways -->
+         <section id="quick-ways" aria-labelledby="quick-ways-heading">
+            <h2 id="quick-ways-heading">Quick Ways to Help Bees in Your Garden</h2>
+            <p>If you only change a few things this year, make them these. Each card is a simple, high impact action you can
+               take in a weekend or less.
+            </p>
+            <div class="grid">
+               <div class="card">
+                  <h3>1. Plant More Nectar Rich Flowers</h3>
+                  <p>Choose single, open flowers rather than very double blooms. Aim for a mix of early, mid and late season
+                     flowering plants so bees always find something to visit.
+                  </p>
+               </div>
+               <div class="card">
+                  <h3>2. Stop Using Insecticides</h3>
+                  <p>Avoid insecticides, especially products labelled harmful to bees. Healthy, diverse planting and good soil
+                     often reduce pest problems without chemicals.
+                  </p>
+               </div>
+               <div class="card">
+                  <h3>3. Provide a Safe Water Source</h3>
+                  <p>Use a shallow dish with stones or marbles so bees can drink without drowning. Refresh the water regularly
+                     and keep it in light shade if possible.
+                  </p>
+               </div>
+               <div class="card">
+                  <h3>4. Leave Some Wild Corners</h3>
+                  <p>Allow a patch of grass to grow longer, leave seed heads over winter and keep a small pile of logs or
+                     branches. These micro habitats support solitary bees and other beneficial insects.
+                  </p>
+               </div>
+               <div class="card">
+                  <h3>5. Grow Herbs for Bees</h3>
+                  <p>Lavender, thyme, marjoram, sage, chives and mint are all excellent <strong>plants for bees in the
+                     UK</strong>. They work well in beds, pots and balcony planters.
+                  </p>
+               </div>
+               <div class="card">
+                  <h3>6. Reduce Lawn Area or Mow Less Often</h3>
+                  <p>Allowing clover, selfheal and daisies to flower in parts of the lawn can provide valuable nectar,
+                     especially in smaller gardens.
+                  </p>
+               </div>
             </div>
-          </div>
-
-          <div class="card">
-            <img
-              src="images/herb-garden.jpg"
-              alt="Winter herb border structure in a bee friendly garden"
-            />
-            <div class="card-content">
-              <h3>Herb &amp; Kitchen Border Plan</h3>
-              <p><strong>Goal:</strong> edible plants that feed people and pollinators.</p>
-              <ul class="indented-list">
-                <li>Back: rosemary, sage, fennel.</li>
-                <li>Middle: oregano, marjoram, chives.</li>
-                <li>Front: thyme, creeping herbs, low flowers around vegetable beds.</li>
-              </ul>
+         </section>
+         <!-- Best plants -->
+         <section id="best-plants" aria-labelledby="best-plants-heading">
+            <h2 id="best-plants-heading">Best Plants for Bees in the UK</h2>
+            <p>A good <strong>bee friendly garden</strong> is built on plant choice. Rather than chasing a single “bee
+               plant”, aim for a diverse mix that suits your soil, light and style of gardening. The lists below are not
+               exhaustive, but they give a strong starting palette.
+            </p>
+            <h3>Native & Near-Native Wildflowers</h3>
+            <div class="indented-list">
+               <ul>
+                  <li>Knapweed, field scabious, oxeye daisy, bird’s foot trefoil</li>
+                  <li>Viper’s bugloss, wild marjoram, red clover, yarrow</li>
+                  <li>Meadow cranesbill, cowslip, foxglove (care with children and pets)</li>
+               </ul>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Nectar calendar -->
-      <section id="nectar-calendar" aria-labelledby="nectar-calendar-heading">
-        <h2 id="nectar-calendar-heading">Month by Month Nectar Flow in the Garden</h2>
-
-        <p>
-          In a <strong>monthly beekeeping calendar</strong>, you often hear about “nectar
-          flows” – periods when many flowers produce abundant nectar. Gardens can
-          strengthen or soften these peaks and troughs. The grid below shows typical
-          garden highlights in a UK climate.
-        </p>
-
-        <div class="grid">
-          <div class="card">
-            <h3>January</h3>
-            <p>Snowdrops, winter heathers, mahonia, early hellebores.</p>
-          </div>
-          <div class="card">
-            <h3>February</h3>
-            <p>Crocus, snowdrops, willow catkins, heather, early bulbs.</p>
-          </div>
-          <div class="card">
-            <h3>March</h3>
-            <p>Flowering currant, blackthorn, primroses, more bulbs, some herbs.</p>
-          </div>
-          <div class="card">
-            <h3>April</h3>
-            <p>Fruit blossom, dandelions, flowering shrubs, early perennials.</p>
-          </div>
-          <div class="card">
-            <h3>May</h3>
-            <p>Hawthorn, apple, alliums, early catmint and geraniums.</p>
-          </div>
-          <div class="card">
-            <h3>June</h3>
-            <p>Lavender, catmint, foxglove, many roses, meadow flowers.</p>
-          </div>
-          <div class="card">
-            <h3>July</h3>
-            <p>Herbs in full flower, buddleia, scabious, knapweed, clovers.</p>
-          </div>
-          <div class="card">
-            <h3>August</h3>
-            <p>Sedums, late lavender, heather, sunflowers, echinacea.</p>
-          </div>
-          <div class="card">
-            <h3>September</h3>
-            <p>Late herbs, ivy coming into flower, some heathers and shrubs.</p>
-          </div>
-          <div class="card">
-            <h3>October</h3>
-            <p>Ivy, autumn asters, some long flowering perennials and shrubs.</p>
-          </div>
-          <div class="card">
-            <h3>November</h3>
-            <p>Late ivy and any sheltered, untrimmed flowers still in bloom.</p>
-          </div>
-          <div class="card">
-            <h3>December</h3>
-            <p>Mahonia, some winter heathers and shrubs in mild spells.</p>
-          </div>
-        </div>
-
-        <p>
-          You do not need all of these plants. The aim is simply to avoid long gaps
-          where nothing in your garden offers nectar or pollen.
-        </p>
-      </section>
-
-      <!-- Plant selector -->
-      <section id="plant-selector" aria-labelledby="plant-selector-heading">
-        <h2 id="plant-selector-heading">Plant Selector for Sun, Shade and Soil Type</h2>
-
-        <p>
-          Use this simple selector to match <strong>plants for bees in the UK</strong> to
-          your conditions. Always check final size and suitability for your exact site.
-        </p>
-
-        <table aria-label="Bee friendly plant selector by conditions">
-          <thead>
-            <tr>
-              <th scope="col">Plant</th>
-              <th scope="col">Light</th>
-              <th scope="col">Soil / Moisture</th>
-              <th scope="col">Season of Interest</th>
-              <th scope="col">Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Lavender</td>
-              <td>Full sun</td>
-              <td>Well drained, not waterlogged</td>
-              <td>Summer</td>
-              <td>Excellent for honey bees and bumblebees; ideal for borders or pots.</td>
-            </tr>
-            <tr>
-              <td>Catmint (Nepeta)</td>
-              <td>Sun to light shade</td>
-              <td>Average, reasonably drained</td>
-              <td>Late spring to summer</td>
-              <td>Long flowering, copes well with many garden soils.</td>
-            </tr>
-            <tr>
-              <td>Heather (spring or winter flowering)</td>
-              <td>Sun</td>
-              <td>Best in acidic, free draining soil</td>
-              <td>Late winter to early spring or late summer</td>
-              <td>Valuable in pots if soil conditions in beds do not suit.</td>
-            </tr>
-            <tr>
-              <td>Foxglove</td>
-              <td>Partial shade</td>
-              <td>Moist, humus rich soil</td>
-              <td>Early to mid summer</td>
-              <td>Attractive to bumblebees; take care with toxicity around children.</td>
-            </tr>
-            <tr>
-              <td>Wild marjoram / oregano</td>
-              <td>Sun</td>
-              <td>Well drained, tolerates poor soils</td>
-              <td>Mid to late summer</td>
-              <td>Excellent nectar source and useful culinary herb.</td>
-            </tr>
-            <tr>
-              <td>Fruit trees (apple, pear, plum)</td>
-              <td>Sun to light shade</td>
-              <td>Average garden soil, not waterlogged</td>
-              <td>Spring blossom</td>
-              <td>Benefit both bees and harvests; good anchors in small gardens.</td>
-            </tr>
-            <tr>
-              <td>Crab apple</td>
-              <td>Sun</td>
-              <td>Most soils except very waterlogged</td>
-              <td>Spring blossom, autumn fruit</td>
-              <td>Compact varieties suit many gardens and support pollinators.</td>
-            </tr>
-            <tr>
-              <td>Thyme</td>
-              <td>Full sun</td>
-              <td>Free draining, poor to average soil</td>
-              <td>Summer</td>
-              <td>Ideal for pots, edging and between paving stones.</td>
-            </tr>
-            <tr>
-              <td>Hawthorn hedge</td>
-              <td>Sun to light shade</td>
-              <td>Many soils, fairly tolerant</td>
-              <td>Spring blossom, autumn berries</td>
-              <td>Supports bees, birds and other wildlife; good boundary plant.</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-      <!-- HowTo steps -->
-      <section id="howto" aria-labelledby="howto-heading">
-        <h2 id="howto-heading">How to Create a Bee Friendly Garden – Step by Step</h2>
-
-        <p>
-          This practical sequence mirrors the <strong>HowTo</strong> guide in the
-          structured data above. You can follow it whether you have a blank plot, an
-          existing garden or only a patio.
-        </p>
-
-        <div class="howto-steps">
-          <ol>
-            <li>
-              <strong>Observe your space.</strong> Spend a few days noticing sun and
-              shade, wind and shelter, damp patches and dry corners. This tells you where
-              plants will thrive without constant intervention.
-            </li>
-            <li>
-              <strong>Decide what you can change and what must stay.</strong> Paths,
-              sheds and boundaries might be fixed, but pots, beds and lawn areas are
-              flexible. Even a narrow strip can become a nectar rich border.
-            </li>
-            <li>
-              <strong>Choose a plant palette.</strong> Select a mix of trees, shrubs,
-              perennials, bulbs and herbs that suit your conditions. Make sure you have
-              flowers in early spring, high summer and autumn as a minimum.
-            </li>
-            <li>
-              <strong>Prepare the ground or containers.</strong> Remove persistent weeds
-              where necessary, add compost to tired soil and use deep pots for long term
-              plants. In very poor soil, raised beds or large containers are often easier.
-            </li>
-            <li>
-              <strong>Plant in groups rather than single specimens.</strong> Bees find
-              it easier to work clusters of the same flower than isolated plants. Aim
-              for small drifts or clumps to make their foraging efficient.
-            </li>
-            <li>
-              <strong>Add water and habitat.</strong> Place a shallow water dish with
-              stones nearby and provide at least one area where stems, leaves or logs are
-              left undisturbed for insects to use.
-            </li>
-            <li>
-              <strong>Maintain gently and avoid pesticides.</strong> Hand weed, mulch,
-              prune lightly and observe which plants are most popular with bees. Over
-              time, favour those and replace less useful plants when gaps appear.
-            </li>
-          </ol>
-        </div>
-      </section>
-
-      <!-- Mistakes -->
-      <section id="mistakes" aria-labelledby="mistakes-heading">
-        <h2 id="mistakes-heading">
-          Common Gardening Mistakes That Accidentally Harm Bees
-        </h2>
-
-        <p>
-          Most gardeners want to help wildlife, but a few common habits can work against
-          that aim. Being aware of them makes it easier to avoid problems.
-        </p>
-
-        <div class="grid">
-          <div class="card">
-            <h3>1. Over tidy gardens</h3>
-            <p>
-              Removing every dead stem, leaf pile and patch of bare soil leaves fewer
-              nesting and overwintering sites for insects.
+            <h3>Garden Perennials & Shrubs</h3>
+            <div class="indented-list">
+               <ul>
+                  <li>Lavender, catmint, sedum, echinacea, rudbeckia</li>
+                  <li>Hardy geraniums, hebe, heather (especially winter flowering varieties)</li>
+                  <li>Buddleia, rockrose, weigela, flowering currant</li>
+               </ul>
+            </div>
+            <h3>Herbs for Pots, Beds and Balconies</h3>
+            <div class="indented-list">
+               <ul>
+                  <li>Thyme, oregano, marjoram, sage, rosemary</li>
+                  <li>Mint (best in pots so it does not spread too far)</li>
+                  <li>Chives, borage, fennel, lemon balm</li>
+               </ul>
+            </div>
+            <h3>Trees & Larger Shrubs</h3>
+            <div class="indented-list">
+               <ul>
+                  <li>Apple, pear, plum and other fruit trees</li>
+                  <li>Willow, hawthorn, blackthorn and field maple</li>
+                  <li>Lime (some species), rowan, holly and crab apple</li>
+               </ul>
+            </div>
+            <div class="callout">
+               <strong>Tip:</strong> avoid very double, highly bred flowers where petals have replaced the stamens. Bees
+               struggle to access nectar and pollen in many of these, even if the plants look spectacular to us.
+            </div>
+         </section>
+         <!-- Planting plans -->
+         <section id="planting-plans" aria-labelledby="planting-plans-heading">
+            <h2 id="planting-plans-heading">Bee Friendly Planting Plans for Different Spaces</h2>
+            <p>Every outdoor space can be turned into a <strong>bee friendly garden</strong>, even if it is mostly paving or
+               a rented balcony. These example planting plans are not strict designs, but starting points you can adapt.
             </p>
-          </div>
-          <div class="card">
-            <h3>2. Heavy pesticide use</h3>
-            <p>
-              Insecticides, some fungicides and weedkillers can all harm bees directly
-              or indirectly. Healthy plants and good soil structure are more resilient.
+            <div class="grid">
+               <div class="card">
+                  <img src="images/small-garden.webp" alt="Spring bee friendly planting with wildflowers">
+                  <div class="card-content">
+                     <h3>Small Garden (Around 3×3m)</h3>
+                     <p><strong>Goal:</strong> one rich, mixed border that flowers for most of the year.</p>
+                     <ul class="indented-list">
+                        <li>Back: small fruit tree or crab apple; spring flowering shrub.</li>
+                        <li>Middle: lavender, catmint, hardy geraniums, echinacea or rudbeckia.</li>
+                        <li>Front: bulbs (crocus, snowdrops, alliums), thyme and low herbs.</li>
+                     </ul>
+                  </div>
+               </div>
+               <div class="card">
+                  <img src="images/patio-garden.webp" alt="Summer bee friendly UK garden">
+                  <div class="card-content">
+                     <h3>Balcony or Patio Plan</h3>
+                     <p><strong>Goal:</strong> layered pots that cope with wind and limited space.</p>
+                     <ul class="indented-list">
+                        <li>Large pots: small shrubs or dwarf fruit trees.</li>
+                        <li>Medium pots: lavender, rosemary, sage, marjoram, catmint depending on sun or shade.</li>
+                        <li>Window boxes: trailing flowers and compact herbs.</li>
+                     </ul>
+                  </div>
+               </div>
+               <div class="card">
+                  <img src="images/wildlife.webp" alt="wildlife corner with seed heads and grasses left for insects">
+                  <div class="card-content">
+                     <h3>Wildlife Corner Plan</h3>
+                     <p><strong>Goal:</strong> a slightly wilder patch that supports many species.</p>
+                     <ul class="indented-list">
+                        <li>Longer grass with native wildflowers or a small meadow mix.</li>
+                        <li>Log pile, stones or a low wall for nesting and shelter.</li>
+                        <li>Hedge or mixed shrubs for blossom, berries and structure.</li>
+                     </ul>
+                  </div>
+               </div>
+               <div class="card">
+                  <img src="images/herb-garden.webp" alt="Winter herb border structure in a bee friendly garden">
+                  <div class="card-content">
+                     <h3>Herb & Kitchen Border Plan</h3>
+                     <p><strong>Goal:</strong> edible plants that feed people and pollinators.</p>
+                     <ul class="indented-list">
+                        <li>Back: rosemary, sage, fennel.</li>
+                        <li>Middle: oregano, marjoram, chives.</li>
+                        <li>Front: thyme, creeping herbs, low flowers around vegetable beds.</li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </section>
+         <!-- Nectar calendar -->
+         <section id="nectar-calendar" aria-labelledby="nectar-calendar-heading">
+            <h2 id="nectar-calendar-heading">Month by Month Nectar Flow in the Garden</h2>
+            <p>In a <strong>monthly beekeeping calendar</strong>, you often hear about “nectar flows” – periods when many
+               flowers produce abundant nectar. Gardens can strengthen or soften these peaks and troughs. The grid below shows
+               typical garden highlights in a UK climate.
             </p>
-          </div>
-          <div class="card">
-            <h3>3. Only planting summer colour</h3>
-            <p>
-              Filling borders with mid summer flowers but neglecting early spring and
-              autumn leaves long gaps in forage availability.
+            <div class="grid">
+               <div class="card">
+                  <h3>January</h3>
+                  <p>Snowdrops, winter heathers, mahonia, early hellebores.</p>
+               </div>
+               <div class="card">
+                  <h3>February</h3>
+                  <p>Crocus, snowdrops, willow catkins, heather, early bulbs.</p>
+               </div>
+               <div class="card">
+                  <h3>March</h3>
+                  <p>Flowering currant, blackthorn, primroses, more bulbs, some herbs.</p>
+               </div>
+               <div class="card">
+                  <h3>April</h3>
+                  <p>Fruit blossom, dandelions, flowering shrubs, early perennials.</p>
+               </div>
+               <div class="card">
+                  <h3>May</h3>
+                  <p>Hawthorn, apple, alliums, early catmint and geraniums.</p>
+               </div>
+               <div class="card">
+                  <h3>June</h3>
+                  <p>Lavender, catmint, foxglove, many roses, meadow flowers.</p>
+               </div>
+               <div class="card">
+                  <h3>July</h3>
+                  <p>Herbs in full flower, buddleia, scabious, knapweed, clovers.</p>
+               </div>
+               <div class="card">
+                  <h3>August</h3>
+                  <p>Sedums, late lavender, heather, sunflowers, echinacea.</p>
+               </div>
+               <div class="card">
+                  <h3>September</h3>
+                  <p>Late herbs, ivy coming into flower, some heathers and shrubs.</p>
+               </div>
+               <div class="card">
+                  <h3>October</h3>
+                  <p>Ivy, autumn asters, some long flowering perennials and shrubs.</p>
+               </div>
+               <div class="card">
+                  <h3>November</h3>
+                  <p>Late ivy and any sheltered, untrimmed flowers still in bloom.</p>
+               </div>
+               <div class="card">
+                  <h3>December</h3>
+                  <p>Mahonia, some winter heathers and shrubs in mild spells.</p>
+               </div>
+            </div>
+            <p>You do not need all of these plants. The aim is simply to avoid long gaps where nothing in your garden offers
+               nectar or pollen.
             </p>
-          </div>
-          <div class="card">
-            <h3>4. Choosing form over function</h3>
-            <p>
-              Very double or sterile flowers may look impressive but often provide little
-              usable nectar or pollen for bees.
+         </section>
+         <!-- Plant selector -->
+         <section id="plant-selector" aria-labelledby="plant-selector-heading">
+            <h2 id="plant-selector-heading">Plant Selector for Sun, Shade and Soil Type</h2>
+            <p>Use this simple selector to match <strong>plants for bees in the UK</strong> to your conditions. Always check
+               final size and suitability for your exact site.
             </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- FAQ section -->
-      <section id="faq" aria-labelledby="faq-heading">
-        <h2 id="faq-heading">Bee Friendly Gardening – Frequently Asked Questions</h2>
-
-        <p>
-          These questions mirror the topics in the structured data above and reflect
-          common searches such as “how to help bees in the garden”, “plants for bees UK”
-          and “do I need a bee hotel?”.
-        </p>
-
-        <div class="indented-list">
-          <ul>
-            <li>
-              <strong>Can I help bees if I do not keep hives?</strong><br />
-              Absolutely. Most UK bee species are wild, and many never live in hives at
-              all. A bee friendly garden that offers flowers, water and nesting habitat
-              supports honey bees from local beekeepers as well as bumblebees and solitary
-              bees.
-            </li>
-            <li>
-              <strong>Is it better to focus on native plants only?</strong><br />
-              Native wildflowers are very valuable, but many non native herbs and
-              perennials also provide excellent forage. A mixed approach usually works
-              best, provided flowers are rich in nectar and pollen and not heavily
-              pesticide treated.
-            </li>
-            <li>
-              <strong>Do I need to plant everything at once?</strong><br />
-              No. Most successful gardens evolve over time. You can add a few plants each
-              season, gradually building up a long flowering, bee friendly mix without
-              overwhelming yourself.
-            </li>
-            <li>
-              <strong>Will a bee friendly garden attract wasps?</strong><br />
-              You are likely to see some wasps where there is food and shelter, but they
-              are part of the natural balance and also control some garden pests. Simple
-              steps such as not leaving sugary drinks uncovered in late summer reduce
-              nuisance.
-            </li>
-            <li>
-              <strong>Can I combine a neat garden with wildlife areas?</strong><br />
-              Yes. Many people prefer a tidy space near the house and deliberately
-              allocate a corner, boundary strip or raised bed as a more relaxed, wildlife
-              focused zone. Clear edges and paths can make even a “wild” area look
-              intentional.
-            </li>
-            <li>
-              <strong>What about lawns – do I have to let them grow long?</strong><br />
-              Not necessarily. Reducing mowing frequency, raising the cut height or
-              allowing a portion of the lawn to flower with clover and daisies can help,
-              even if other areas are kept shorter.
-            </li>
-            <li>
-              <strong>How do I know if my garden is helping bees?</strong><br />
-              Over time you should see more variety in the insects visiting your flowers
-              through the season. Keeping simple notes or photos can help you spot
-              patterns and gaps you might want to fill.
-            </li>
-            <li>
-              <strong>Where can I learn more about bees themselves?</strong><br />
-              For honey bee biology and management, explore the
-              <em
-                ><a href="/honeybee-facts" title="Interesting facts about honeybees"
-                  >Honeybee Facts</a
-                ></em
-              >
-              and
-              <em
-                ><a href="/behaviour" title="Learn about honeybee behaviour"
-                  >behaviour</a
-                ></em
-              >
-              sections on this site. For wider pollinator conservation, your local
-              beekeeping association and wildlife groups are valuable sources of regional
-              advice.
-            </li>
-          </ul>
-        </div>
-
-        <p>
-          If you also keep records of your own hives, the
-          <em
-            ><a href="/hivetag-app" title="HiveTag beekeeping records app"
-              >HiveTag web app</a
-            ></em
-          >
-          can help you connect what is flowering in the garden with what you see inside
-          the hive, creating a clearer picture of your local forage.
-        </p>
-      </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="site-footer" role="region" aria-label="Site Footer">
-      <div class="footer-columns">
-        <div class="footer-column" role="region" aria-label="Contact Information">
-          <h3>Contact</h3>
-          <address>
-            <p>
-              Email:
-              <a href="/contact" title="Send us a message via our contact page"
-                >Contact</a
-              >
+            <table aria-label="Bee friendly plant selector by conditions">
+               <thead>
+                  <tr>
+                     <th scope="col">Plant</th>
+                     <th scope="col">Light</th>
+                     <th scope="col">Soil / Moisture</th>
+                     <th scope="col">Season of Interest</th>
+                     <th scope="col">Notes</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td>Lavender</td>
+                     <td>Full sun</td>
+                     <td>Well drained, not waterlogged</td>
+                     <td>Summer</td>
+                     <td>Excellent for honey bees and bumblebees; ideal for borders or pots.</td>
+                  </tr>
+                  <tr>
+                     <td>Catmint (Nepeta)</td>
+                     <td>Sun to light shade</td>
+                     <td>Average, reasonably drained</td>
+                     <td>Late spring to summer</td>
+                     <td>Long flowering, copes well with many garden soils.</td>
+                  </tr>
+                  <tr>
+                     <td>Heather (spring or winter flowering)</td>
+                     <td>Sun</td>
+                     <td>Best in acidic, free draining soil</td>
+                     <td>Late winter to early spring or late summer</td>
+                     <td>Valuable in pots if soil conditions in beds do not suit.</td>
+                  </tr>
+                  <tr>
+                     <td>Foxglove</td>
+                     <td>Partial shade</td>
+                     <td>Moist, humus rich soil</td>
+                     <td>Early to mid summer</td>
+                     <td>Attractive to bumblebees; take care with toxicity around children.</td>
+                  </tr>
+                  <tr>
+                     <td>Wild marjoram / oregano</td>
+                     <td>Sun</td>
+                     <td>Well drained, tolerates poor soils</td>
+                     <td>Mid to late summer</td>
+                     <td>Excellent nectar source and useful culinary herb.</td>
+                  </tr>
+                  <tr>
+                     <td>Fruit trees (apple, pear, plum)</td>
+                     <td>Sun to light shade</td>
+                     <td>Average garden soil, not waterlogged</td>
+                     <td>Spring blossom</td>
+                     <td>Benefit both bees and harvests; good anchors in small gardens.</td>
+                  </tr>
+                  <tr>
+                     <td>Crab apple</td>
+                     <td>Sun</td>
+                     <td>Most soils except very waterlogged</td>
+                     <td>Spring blossom, autumn fruit</td>
+                     <td>Compact varieties suit many gardens and support pollinators.</td>
+                  </tr>
+                  <tr>
+                     <td>Thyme</td>
+                     <td>Full sun</td>
+                     <td>Free draining, poor to average soil</td>
+                     <td>Summer</td>
+                     <td>Ideal for pots, edging and between paving stones.</td>
+                  </tr>
+                  <tr>
+                     <td>Hawthorn hedge</td>
+                     <td>Sun to light shade</td>
+                     <td>Many soils, fairly tolerant</td>
+                     <td>Spring blossom, autumn berries</td>
+                     <td>Supports bees, birds and other wildlife; good boundary plant.</td>
+                  </tr>
+               </tbody>
+            </table>
+         </section>
+         <!-- HowTo steps -->
+         <section id="howto" aria-labelledby="howto-heading">
+            <h2 id="howto-heading">How to Create a Bee Friendly Garden – Step by Step</h2>
+            <p>This practical sequence mirrors the <strong>HowTo</strong> guide in the structured data above. You can follow
+               it whether you have a blank plot, an existing garden or only a patio.
             </p>
-          </address>
-        </div>
-
-        <div class="footer-column" role="region" aria-label="Useful Site Links">
-          <h3>Useful Links</h3>
-          <ul>
-            <li>
-              <a href="/privacy" title="Read our privacy policy"
-                >Privacy Policy</a
-              >
-            </li>
-            <li>
-              <a href="/site-map" title="View a map of our entire website"
-                >Site Map</a
-              >
-            </li>
-          </ul>
-        </div>
-
-        <div class="footer-column" role="region" aria-label="Beekeeping Resources">
-          <h3>Resources</h3>
-          <ul>
-            <li>
-              <a
-                href="https://www.bbka.org.uk/"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Visit the British Beekeepers Association website"
-              >
-                British Beekeepers Association
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.cardiffbeekeepers.co.uk/"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Visit the Cardiff Beekeepers Association site"
-              >
-                Cardiff, Vale and Valleys Beekeepers Association
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Read the Honey (Wales) Regulations 2015"
-              >
-                The Honey (Wales) Regulations 2015
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.biodiversitywales.org.uk/Bee-Friendly"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Explore Bee-Friendly programme by Wales Biodiversity Partnership"
-              >
-                Wales Biodiversity Partnership
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.nationalbeeunit.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Access BeeBase for UK bee health information"
-              >
-                BeeBase
-              </a>
-            </li>
-          </ul>
-        </div>
+            <div class="howto-steps">
+               <ol>
+                  <li><strong>Observe your space.</strong> Spend a few days noticing sun and shade, wind and shelter, damp
+                     patches and dry corners. This tells you where plants will thrive without constant intervention.
+                  </li>
+                  <li><strong>Decide what you can change and what must stay.</strong> Paths, sheds and boundaries might be
+                     fixed, but pots, beds and lawn areas are flexible. Even a narrow strip can become a nectar rich border.
+                  </li>
+                  <li><strong>Choose a plant palette.</strong> Select a mix of trees, shrubs, perennials, bulbs and herbs that
+                     suit your conditions. Make sure you have flowers in early spring, high summer and autumn as a minimum.
+                  </li>
+                  <li><strong>Prepare the ground or containers.</strong> Remove persistent weeds where necessary, add compost
+                     to tired soil and use deep pots for long term plants. In very poor soil, raised beds or large containers are
+                     often easier.
+                  </li>
+                  <li><strong>Plant in groups rather than single specimens.</strong> Bees find it easier to work clusters of
+                     the same flower than isolated plants. Aim for small drifts or clumps to make their foraging efficient.
+                  </li>
+                  <li><strong>Add water and habitat.</strong> Place a shallow water dish with stones nearby and provide at
+                     least one area where stems, leaves or logs are left undisturbed for insects to use.
+                  </li>
+                  <li><strong>Maintain gently and avoid pesticides.</strong> Hand weed, mulch, prune lightly and observe which
+                     plants are most popular with bees. Over time, favour those and replace less useful plants when gaps
+                     appear.
+                  </li>
+               </ol>
+            </div>
+         </section>
+         <!-- Mistakes -->
+         <section id="mistakes" aria-labelledby="mistakes-heading">
+            <h2 id="mistakes-heading">Common Gardening Mistakes That Accidentally Harm Bees</h2>
+            <p>Most gardeners want to help wildlife, but a few common habits can work against that aim. Being aware of them
+               makes it easier to avoid problems.
+            </p>
+            <div class="grid">
+               <div class="card">
+                  <h3>Over tidy gardens</h3>
+                  <p>Removing every dead stem, leaf pile and patch of bare soil leaves fewer nesting and overwintering sites
+                     for insects.
+                  </p>
+               </div>
+               <div class="card">
+                  <h3>Heavy pesticide use</h3>
+                  <p>Insecticides, some fungicides and weedkillers can all harm bees directly or indirectly. Healthy plants and
+                     good soil structure are more resilient.
+                  </p>
+               </div>
+               <div class="card">
+                  <h3>Only planting summer colour</h3>
+                  <p>Filling borders with mid summer flowers but neglecting early spring and autumn leaves long gaps in forage
+                     availability.
+                  </p>
+               </div>
+               <div class="card">
+                  <h3>Choosing form over function</h3>
+                  <p>Very double or sterile flowers may look impressive but often provide little usable nectar or pollen for
+                     bees.
+                  </p>
+               </div>
+            </div>
+         </section>
+         <!-- FAQ section -->
+         <section id="faq" aria-labelledby="faq-heading">
+            <h2 id="faq-heading">Bee Friendly Gardening – Frequently Asked Questions</h2>
+            <p>These questions mirror the topics in the structured data above and reflect common searches such as “how to
+               help bees in the garden”, “plants for bees UK” and “do I need a bee hotel?”.
+            </p>
+            <div class="indented-list">
+               <ul>
+                  <li><strong>Can I help bees if I do not keep hives?</strong><br>
+                     Absolutely. Most UK bee species are wild, and many never live in hives at all. A bee friendly garden that
+                     offers flowers, water and nesting habitat supports honey bees from local beekeepers as well as bumblebees and
+                     solitary bees.
+                  </li>
+                  <li><strong>Is it better to focus on native plants only?</strong><br>
+                     Native wildflowers are very valuable, but many non native herbs and perennials also provide excellent forage.
+                     A mixed approach usually works best, provided flowers are rich in nectar and pollen and not heavily pesticide
+                     treated.
+                  </li>
+                  <li><strong>Do I need to plant everything at once?</strong><br>
+                     No. Most successful gardens evolve over time. You can add a few plants each season, gradually building up a
+                     long flowering, bee friendly mix without overwhelming yourself.
+                  </li>
+                  <li><strong>Will a bee friendly garden attract wasps?</strong><br>
+                     You are likely to see some wasps where there is food and shelter, but they are part of the natural balance
+                     and also control some garden pests. Simple steps such as not leaving sugary drinks uncovered in late summer
+                     reduce nuisance.
+                  </li>
+                  <li><strong>Can I combine a neat garden with wildlife areas?</strong><br>
+                     Yes. Many people prefer a tidy space near the house and deliberately allocate a corner, boundary strip or
+                     raised bed as a more relaxed, wildlife focused zone. Clear edges and paths can make even a “wild” area look
+                     intentional.
+                  </li>
+                  <li><strong>What about lawns – do I have to let them grow long?</strong><br>
+                     Not necessarily. Reducing mowing frequency, raising the cut height or allowing a portion of the lawn to
+                     flower with clover and daisies can help, even if other areas are kept shorter.
+                  </li>
+                  <li><strong>How do I know if my garden is helping bees?</strong><br>
+                     Over time you should see more variety in the insects visiting your flowers through the season. Keeping simple
+                     notes or photos can help you spot patterns and gaps you might want to fill.
+                  </li>
+                  <li><strong>Where can I learn more about bees themselves?</strong><br>
+                     For honey bee biology and management, explore the <em><a href="/honeybee-facts" title=
+                        "Interesting facts about honeybees">Honeybee Facts</a></em> and <em><a href="/behaviour" title=
+                        "Learn about honeybee behaviour">behaviour</a></em> sections on this site. For wider pollinator conservation,
+                     your local beekeeping association and wildlife groups are valuable sources of regional advice.
+                  </li>
+               </ul>
+            </div>
+            <p>If you also keep records of your own hives, the <em><a href="/hivetag-app" title=
+               "HiveTag beekeeping records app">HiveTag web app</a></em> can help you connect what is flowering in the garden
+               with what you see inside the hive, creating a clearer picture of your local forage.
+            </p>
+         </section>
+      </main>
+      <!-- Footer -->
+      <footer class="site-footer" role="region" aria-label="Site Footer">
+         <div class="footer-columns">
+            <div class="footer-column" role="region" aria-label="Contact Information">
+               <h3>Contact</h3>
+               <address>
+                  <p>Email: <a href="/contact" title="Send us a message via our contact page">Contact</a></p>
+               </address>
+            </div>
+            <div class="footer-column" role="region" aria-label="Useful Site Links">
+               <h3>Useful Links</h3>
+               <ul>
+                  <li>
+                     <a href="/privacy" title="Read our privacy policy">Privacy Policy</a>
+                  </li>
+                  <li>
+                     <a href="/site-map" title="View a map of our entire website">Site Map</a>
+                  </li>
+               </ul>
+            </div>
+            <div class="footer-column" role="region" aria-label="Beekeeping Resources">
+               <h3>Resources</h3>
+               <ul>
+                  <li>
+                     <a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer" title=
+                        "Visit the British Beekeepers Association website">British Beekeepers Association</a>
+                  </li>
+                  <li>
+                     <a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer" title=
+                        "Visit the Cardiff Beekeepers Association site">Cardiff, Vale and Valleys Beekeepers Association</a>
+                  </li>
+                  <li>
+                     <a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank"
+                        rel="noopener noreferrer" title="Read the Honey (Wales) Regulations 2015">The Honey (Wales) Regulations
+                     2015</a>
+                  </li>
+                  <li>
+                     <a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer"
+                        title="Explore Bee-Friendly programme by Wales Biodiversity Partnership">Wales Biodiversity Partnership</a>
+                  </li>
+                  <li>
+                     <a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title=
+                        "Access BeeBase for UK bee health information">BeeBase</a>
+                  </li>
+               </ul>
+            </div>
+         </div>
+         <div class="footer-bottom" role="region" aria-label="Copyright">
+            © 2025 BeezKnees. All rights reserved.
+         </div>
+      </footer>
+      <!-- Cookie Consent Popup -->
+      <div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
+         <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+            <h2>🍪 We Use Cookies</h2>
+            <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and
+               marketing purposes.
+            </p>
+            <form id="cookie-options" name="cookie-options">
+               <label><input type="checkbox" checked disabled> Essential (always active)</label><br>
+               <label><input type="checkbox" id="analytics"> Analytics</label><br>
+               <label><input type="checkbox" id="marketing"> Marketing</label><br>
+            </form>
+            <div class="cookie-buttons">
+               <button id="accept-selected">Accept Selected</button> <button id="accept-all">Accept All</button>
+            </div>
+         </div>
       </div>
-
-      <div class="footer-bottom" role="region" aria-label="Copyright">
-        &copy; 2025 BeezKnees. All rights reserved.
-      </div>
-    </footer>
-
-    <!-- Cookie Consent Popup -->
-    <div
-      id="cookie-consent"
-      class="cookie-popup"
-      role="region"
-      aria-label="Cookie Consent Settings"
-    >
-      <div
-        class="cookie-content"
-        role="region"
-        aria-label="Cookie Consent Options"
-      >
-        <h2>🍪 We Use Cookies</h2>
-        <p>
-          We use essential cookies for site functionality. With your consent, we may
-          also use cookies for analytics and marketing purposes.
-        </p>
-
-        <form id="cookie-options">
-          <label
-            ><input type="checkbox" checked disabled />
-            Essential (always active)</label
-          ><br />
-          <label
-            ><input type="checkbox" id="analytics" />
-            Analytics</label
-          ><br />
-          <label
-            ><input type="checkbox" id="marketing" />
-            Marketing</label
-          ><br />
-        </form>
-
-        <div class="cookie-buttons">
-          <button id="accept-selected">Accept Selected</button>
-          <button id="accept-all">Accept All</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Back to Top Button -->
-    <button id="backToTop" title="Back to top" aria-label="Back to top">
-      ⬆ Top
-    </button>
-
-    <script src="js/menuv2.js" defer></script>
-  </body>
+      <!-- Back to Top Button -->
+      <button id="backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button> 
+      <script src="js/menuv2.js" defer></script>
+   </body>
 </html>

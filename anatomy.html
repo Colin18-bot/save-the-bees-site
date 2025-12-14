@@ -1,856 +1,591 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>
-      Honeybee Anatomy (UK) – Worker vs Drone vs Queen, Brood Patterns & Life Cycle | BeezKnees
-    </title>
-
-    <!-- Hamburger button -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-      referrerpolicy="no-referrer"
-    />
-
-    <!-- Your CSS file -->
-    <link rel="stylesheet" href="css/style.css" />
-
-    <!-- Canonical -->
-    <link rel="canonical" href="https://beezknees.co.uk/anatomy" />
-
-    <!-- SEO Meta Tags -->
-    <meta
-      name="description"
-      content="A detailed UK guide to honeybee anatomy: head, thorax and abdomen, plus how to tell a worker from a drone or queen, how to spot drone brood and queen cells on frames, and the 16/21/24-day life cycle table."
-    />
-    <meta
-      name="keywords"
-      content="honeybee anatomy UK, worker vs drone vs queen, how to identify a queen, drone eyes bigger, drone brood domed cappings, queen cell peanut shape, worker brood cappings, bee head thorax abdomen, proboscis, compound eyes, ocelli, antennae, pollen baskets corbiculae, wax glands, bee stinger, apis mellifera UK, bee life cycle 16 21 24 days, queen hatches 16 days"
-    />
-    <meta name="author" content="Colin Chorley" />
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="article" />
-    <meta property="og:site_name" content="BeezKnees" />
-    <meta property="og:locale" content="en_GB" />
-    <meta
-      property="og:title"
-      content="Honeybee Anatomy (UK) – Worker vs Drone vs Queen + Life Cycle"
-    />
-    <meta
-      property="og:description"
-      content="Understand honeybee anatomy and learn how to identify workers, drones and queens on frames, including drone brood, queen cells and the 16/21/24-day development table."
-    />
-    <meta property="og:url" content="https://beezknees.co.uk/anatomy" />
-    <meta
-      property="og:image"
-      content="https://beezknees.co.uk/images/beehives_9.jpg"
-    />
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Honeybee Anatomy (UK) – Worker vs Drone vs Queen + Life Cycle"
-    />
-    <meta
-      name="twitter:description"
-      content="A practical UK guide to honeybee anatomy, identification on frames, brood patterns and development times (queen 16 days)."
-    />
-    <meta
-      name="twitter:image"
-      content="https://beezknees.co.uk/images/beehives_9.jpg"
-    />
-
-    <!-- Favicons -->
-    <link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="/images/favicon-16x16.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="/images/favicon-32x32.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href="/images/apple-touch-icon.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="192x192"
-      href="/images/android-chrome-192x192.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="512x512"
-      href="/images/android-chrome-512x512.png"
-    />
-    <link rel="manifest" href="/site.webmanifest" />
-
-    <!-- Schema.org Structured Data (single, valid JSON-LD) -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "Organization",
-            "@id": "https://beezknees.co.uk/#organization",
-            "name": "BeezKnees",
-            "url": "https://beezknees.co.uk",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
-            },
-            "sameAs": ["https://www.tiktok.com/@colinchorley"],
-            "contactPoint": [
-              {
-                "@type": "ContactPoint",
-                "contactType": "Customer Service",
-                "email": "info@beezknees.co.uk"
-              }
-            ]
-          },
-          {
-            "@type": "WebPage",
-            "@id": "https://beezknees.co.uk/anatomy#webpage",
-            "url": "https://beezknees.co.uk/anatomy",
-            "name": "Honeybee Anatomy (UK) – Worker vs Drone vs Queen, Brood Patterns & Life Cycle | BeezKnees",
-            "description": "A detailed UK guide to honeybee anatomy and identification on frames, including brood patterns, queen cells, and the worker/drone/queen life cycle timings.",
-            "isPartOf": { "@id": "https://beezknees.co.uk/#organization" },
-            "publisher": { "@id": "https://beezknees.co.uk/#organization" },
-            "primaryImageOfPage": {
-              "@type": "ImageObject",
-              "url": "https://beezknees.co.uk/images/beehives_9.jpg"
-            }
-          },
-          {
-            "@type": "EducationalArticle",
-            "@id": "https://beezknees.co.uk/anatomy#article",
-            "headline": "Honeybee Anatomy (UK) – Worker vs Drone vs Queen, Brood Patterns & Life Cycle",
-            "author": { "@type": "Person", "name": "Colin Chorley" },
-            "publisher": { "@id": "https://beezknees.co.uk/#organization" },
-            "mainEntityOfPage": {
-              "@id": "https://beezknees.co.uk/anatomy#webpage"
-            },
-            "image": "https://beezknees.co.uk/images/beehives_9.jpg",
-            "inLanguage": "en-GB"
-          },
-          {
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://beezknees.co.uk"
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Honeybee Facts",
-                "item": "https://beezknees.co.uk/honeybee-facts"
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "name": "Anatomy",
-                "item": "https://beezknees.co.uk/anatomy"
-              }
-            ]
-          },
-          {
-            "@type": "FAQPage",
-            "@id": "https://beezknees.co.uk/anatomy#faq",
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "How can I tell a drone from a worker bee?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Drones are larger and stouter, with noticeably bigger eyes that almost meet at the top of the head. Workers are slimmer, have pollen baskets on the hind legs, and (unlike drones) can sting."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How can I identify the queen on a frame?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Queens are longer with an extended abdomen that reaches beyond the wing tips. They move with purpose, often surrounded by attendants, and their thorax appears broader and more ‘solid’ than workers."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How long does it take a queen bee to hatch?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "A queen develops from egg to emergence in around 16 days, compared with 21 days for a worker and 24 days for a drone."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What does drone brood look like on comb?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Drone brood cappings are raised and domed (‘bullet’ shaped). Drone comb often appears lumpier, with larger cells that can extend like a shelf from the face of the frame."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Why does 16-day queen development matter for swarm season in the UK?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "During UK swarm season (often spring into early summer), missing inspections can allow a queen cell to be started and a new queen to emerge quickly. Once a virgin queen hatches, a swarm may already have left or be imminent."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Where can UK beekeepers find trusted bee health guidance?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "In the UK, BeeBase (National Bee Unit) and local beekeeping associations provide reliable guidance on bee health, pests and notifiable diseases."
-                }
-              }
-            ]
-          }
-        ]
-      }
-    </script>
-  </head>
-
-  <body>
-    <!-- Fixed Header and Nav Container -->
-    <div class="fixed-header">
-      <header class="site-header" role="region" aria-label="Site Header">
-        <div class="header-container" role="region" aria-label="Site Branding">
-          <a href="https://beezknees.co.uk">
-            <img
-              src="images/BeezKnees-Logo.png"
-              alt="BeezKnees logo"
-              class="site-logo"
-            />
-          </a>
-
-          <h1 class="site-title">BeezKnees</h1>
-
-          <!-- ✅ WORKING HAMBURGER ICON BUTTON -->
-          <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
-            <i class="fas fa-bars"></i>
-          </button>
-        </div>
-      </header>
-    </div>
-
-    <!-- Navigation Bar -->
-    <nav class="navbar" role="navigation" aria-label="Main navigation">
-      <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
-        <li>
-          <a href="/" title="Visit the BeezKnees homepage">Home</a>
-        </li>
-
-        <li class="dropdown">
-          <a href="/about-us" title="Learn more about us">About</a>
-        </li>
-
-        <li class="dropdown">
-          <a href="/donate" title="Support out mission">Donate</a>
-        </li>
-
-        <li class="dropdown">
-          <a href="/beekeeping-guides" title="Explore our beekeeping guides"
-            >Beekeeping</a
-          >
-          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-          <ul class="dropdown-menu">
-            <li>
-              <a href="/getting-started" title="Begin your beekeeping journey"
-                >Getting Started</a
-              >
-            </li>
-            <li>
-              <a href="/equipment" title="Essential beekeeping equipment"
-                >Equipment</a
-              >
-            </li>
-            <li>
-              <a href="/hive-management" title="Manage your hive effectively"
-                >Hive Management</a
-              >
-            </li>
-            <li>
-              <a
-                href="/varroa-management"
-                title="control varroa mite infestations"
-                >Varroa Management</a
-              >
-            </li>
-            <li>
-              <a href="/hygiene" title="Keep your hive clean and healthy"
-                >Hygiene</a
-              >
-            </li>
-            <li>
-              <a href="/bee-stings" title="Understand and treat bee stings"
-                >Bee Stings</a
-              >
-            </li>
-            <li>
-              <a
-                href="/honey-extraction"
-                title="how to harvest and bottle honey safely"
-                >Extracting Honey</a
-              >
-            </li>
-          </ul>
-        </li>
-
-        <li class="dropdown">
-          <a href="/year-in-the-apiary" title="Monthly tasks in the apiary"
-            >Apiary Calendar</a
-          >
-          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-          <ul class="dropdown-menu">
-            <li><a href="/january" title="January beekeeping tasks">January</a></li>
-            <li>
-              <a href="/february" title="February beekeeping tasks">February</a>
-            </li>
-            <li><a href="/march" title="March beekeeping tasks">March</a></li>
-            <li><a href="/april" title="April beekeeping tasks">April</a></li>
-            <li><a href="/may" title="May beekeeping tasks">May</a></li>
-            <li><a href="/june" title="June beekeeping tasks">June</a></li>
-            <li><a href="/july" title="July beekeeping tasks">July</a></li>
-            <li><a href="/august" title="August beekeeping tasks">August</a></li>
-            <li>
-              <a href="/september" title="September beekeeping tasks">September</a>
-            </li>
-            <li><a href="/october" title="October beekeeping tasks">October</a></li>
-            <li>
-              <a href="/november" title="November beekeeping tasks">November</a>
-            </li>
-            <li>
-              <a href="/december" title="December beekeeping tasks">December</a>
-            </li>
-          </ul>
-        </li>
-
-        <li class="dropdown">
-          <a href="/bee-diseases" title="Bee diseases and pests overview"
-            >Diseases and Pests</a
-          >
-          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-          <ul class="dropdown-menu">
-             <li><a href="/veterinary-medicine-records" title="How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a></li>
-            <li>
-              <a
-                href="/bacterial-diseases"
-                title="Learn about bacterial bee diseases"
-                >Bacterial</a
-              >
-            </li>
-            <li>
-              <a href="/viral-diseases" title="Learn about viral bee diseases"
-                >Viral</a
-              >
-            </li>
-            <li>
-              <a href="/bee-pests" title="Common pests affecting bees">Pests</a>
-            </li>
-            <li>
-              <a href="/parasitic-mites" title="Parasitic mites in bee colonies"
-                >Mites</a
-              >
-            </li>
-            <li>
-              <a href="/other-conditions" title="Other bee health conditions"
-                >Other Conditions</a
-              >
-            </li>
-          </ul>
-        </li>
-
-        <li class="dropdown">
-          <a href="/honeybee-facts" title="Interesting facts about honeybees"
-            >Honeybee Facts</a
-          >
-          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-          <ul class="dropdown-menu">
-            <li>
-              <a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a>
-            </li>
-            <li>
-              <a href="/behaviour" title="Learn about honeybee behaviour"
-                >Behaviour</a
-              >
-            </li>
-            <li>
-              <a href="/how-bees-make-honey" title="How bees make honey"
-                >Make Honey</a
-              >
-            </li>
-            <li>
-              <a href="/pollination" title="Honeybee role in pollination"
-                >Pollination</a
-              >
-            </li>
-          </ul>
-        </li>
-
-        <li class="dropdown">
-          <a href="/help-the-bees" title="How you can help save the bees"
-            >Help Bees</a
-          >
-          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-          <ul class="dropdown-menu">
-            <li>
-              <a href="/bee-gardening" title="Make your garden bee friendly"
-                >Gardening</a
-              >
-            </li>
-            <li>
-              <a href="/donate" title="Make a donation to support bees">Donate</a>
-            </li>
-            <li>
-              <a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a>
-            </li>
-          </ul>
-        </li>
-
-        <li>
-          <a
-            href="https://beezknees-members.netlify.app/login"
-            title="Login or Register for HiveTag Dashboard"
-            >Members Area</a
-          >
-        </li>
-      </ul>
-    </nav>
-
-    <!-- Hero Banner -->
-    <section role="region" aria-label="Homepage Banner">
-      <div class="banner">
-        <img
-          src="images/beehives_9.jpg"
-          alt="A row of beehives in a UK apiary, used to explain honeybee anatomy and roles"
-        />
+   <head>
+      <meta name="generator" content="HTML Tidy for HTML5 for Windows version 5.9.14">
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Honeybee Anatomy (UK) – Worker vs Drone vs Queen, Brood Patterns & Life Cycle | BeezKnees</title>
+      <!-- Hamburger button -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+         referrerpolicy="no-referrer">
+      <!-- Your CSS file -->
+      <link rel="stylesheet" href="css/style.css">
+      <!-- Canonical -->
+      <link rel="canonical" href="https://beezknees.co.uk/anatomy">
+      <!-- SEO Meta Tags -->
+      <meta name="description" content=
+         "A detailed UK guide to honeybee anatomy: head, thorax and abdomen, plus how to tell a worker from a drone or queen, how to spot drone brood and queen cells on frames, and the 16/21/24-day life cycle table.">
+      <meta name="keywords" content=
+         "honeybee anatomy UK, worker vs drone vs queen, how to identify a queen, drone eyes bigger, drone brood domed cappings, queen cell peanut shape, worker brood cappings, bee head thorax abdomen, proboscis, compound eyes, ocelli, antennae, pollen baskets corbiculae, wax glands, bee stinger, apis mellifera UK, bee life cycle 16 21 24 days, queen hatches 16 days">
+      <meta name="author" content="Colin Chorley">
+      <!-- Open Graph -->
+      <meta property="og:type" content="article">
+      <meta property="og:site_name" content="BeezKnees">
+      <meta property="og:locale" content="en_GB">
+      <meta property="og:title" content="Honeybee Anatomy (UK) – Worker vs Drone vs Queen + Life Cycle">
+      <meta property="og:description" content=
+         "Understand honeybee anatomy and learn how to identify workers, drones and queens on frames, including drone brood, queen cells and the 16/21/24-day development table.">
+      <meta property="og:url" content="https://beezknees.co.uk/anatomy">
+      <meta property="og:image" content="https://beezknees.co.uk/images/beehives_9.jpg">
+      <!-- Twitter Card -->
+      <meta name="twitter:card" content="summary_large_image">
+      <meta name="twitter:title" content="Honeybee Anatomy (UK) – Worker vs Drone vs Queen + Life Cycle">
+      <meta name="twitter:description" content=
+         "A practical UK guide to honeybee anatomy, identification on frames, brood patterns and development times (queen 16 days).">
+      <meta name="twitter:image" content="https://beezknees.co.uk/images/beehives_9.jpg">
+      <!-- Favicons -->
+      <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+      <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+      <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+      <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+      <link rel="icon" type="image/png" sizes="192x192" href="/images/android-chrome-192x192.png">
+      <link rel="icon" type="image/png" sizes="512x512" href="/images/android-chrome-512x512.png">
+      <link rel="manifest" href="/site.webmanifest">
+      <!-- Schema.org Structured Data (single, valid JSON-LD) -->
+      <script type="application/ld+json">
+         {
+           "@context": "https://schema.org",
+           "@graph": [
+             {
+               "@type": "Organization",
+               "@id": "https://beezknees.co.uk/#organization",
+               "name": "BeezKnees",
+               "url": "https://beezknees.co.uk",
+               "logo": {
+                 "@type": "ImageObject",
+                 "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+               },
+               "sameAs": ["https://www.tiktok.com/@colinchorley"],
+               "contactPoint": [
+                 {
+                   "@type": "ContactPoint",
+                   "contactType": "Customer Service",
+                   "email": "info@beezknees.co.uk"
+                 }
+               ]
+             },
+             {
+               "@type": "WebPage",
+               "@id": "https://beezknees.co.uk/anatomy#webpage",
+               "url": "https://beezknees.co.uk/anatomy",
+               "name": "Honeybee Anatomy (UK) – Worker vs Drone vs Queen, Brood Patterns & Life Cycle | BeezKnees",
+               "description": "A detailed UK guide to honeybee anatomy and identification on frames, including brood patterns, queen cells, and the worker/drone/queen life cycle timings.",
+               "isPartOf": { "@id": "https://beezknees.co.uk/#organization" },
+               "publisher": { "@id": "https://beezknees.co.uk/#organization" },
+               "primaryImageOfPage": {
+                 "@type": "ImageObject",
+                 "url": "https://beezknees.co.uk/images/beehives_9.jpg"
+               }
+             },
+             {
+               "@type": "EducationalArticle",
+               "@id": "https://beezknees.co.uk/anatomy#article",
+               "headline": "Honeybee Anatomy (UK) – Worker vs Drone vs Queen, Brood Patterns & Life Cycle",
+               "author": { "@type": "Person", "name": "Colin Chorley" },
+               "publisher": { "@id": "https://beezknees.co.uk/#organization" },
+               "mainEntityOfPage": {
+                 "@id": "https://beezknees.co.uk/anatomy#webpage"
+               },
+               "image": "https://beezknees.co.uk/images/beehives_9.jpg",
+               "inLanguage": "en-GB"
+             },
+             {
+               "@type": "BreadcrumbList",
+               "itemListElement": [
+                 {
+                   "@type": "ListItem",
+                   "position": 1,
+                   "name": "Home",
+                   "item": "https://beezknees.co.uk"
+                 },
+                 {
+                   "@type": "ListItem",
+                   "position": 2,
+                   "name": "Honeybee Facts",
+                   "item": "https://beezknees.co.uk/honeybee-facts"
+                 },
+                 {
+                   "@type": "ListItem",
+                   "position": 3,
+                   "name": "Anatomy",
+                   "item": "https://beezknees.co.uk/anatomy"
+                 }
+               ]
+             },
+             {
+               "@type": "FAQPage",
+               "@id": "https://beezknees.co.uk/anatomy#faq",
+               "mainEntity": [
+                 {
+                   "@type": "Question",
+                   "name": "How can I tell a drone from a worker bee?",
+                   "acceptedAnswer": {
+                     "@type": "Answer",
+                     "text": "Drones are larger and stouter, with noticeably bigger eyes that almost meet at the top of the head. Workers are slimmer, have pollen baskets on the hind legs, and (unlike drones) can sting."
+                   }
+                 },
+                 {
+                   "@type": "Question",
+                   "name": "How can I identify the queen on a frame?",
+                   "acceptedAnswer": {
+                     "@type": "Answer",
+                     "text": "Queens are longer with an extended abdomen that reaches beyond the wing tips. They move with purpose, often surrounded by attendants, and their thorax appears broader and more ‘solid’ than workers."
+                   }
+                 },
+                 {
+                   "@type": "Question",
+                   "name": "How long does it take a queen bee to hatch?",
+                   "acceptedAnswer": {
+                     "@type": "Answer",
+                     "text": "A queen develops from egg to emergence in around 16 days, compared with 21 days for a worker and 24 days for a drone."
+                   }
+                 },
+                 {
+                   "@type": "Question",
+                   "name": "What does drone brood look like on comb?",
+                   "acceptedAnswer": {
+                     "@type": "Answer",
+                     "text": "Drone brood cappings are raised and domed (‘bullet’ shaped). Drone comb often appears lumpier, with larger cells that can extend like a shelf from the face of the frame."
+                   }
+                 },
+                 {
+                   "@type": "Question",
+                   "name": "Why does 16-day queen development matter for swarm season in the UK?",
+                   "acceptedAnswer": {
+                     "@type": "Answer",
+                     "text": "During UK swarm season (often spring into early summer), missing inspections can allow a queen cell to be started and a new queen to emerge quickly. Once a virgin queen hatches, a swarm may already have left or be imminent."
+                   }
+                 },
+                 {
+                   "@type": "Question",
+                   "name": "Where can UK beekeepers find trusted bee health guidance?",
+                   "acceptedAnswer": {
+                     "@type": "Answer",
+                     "text": "In the UK, BeeBase (National Bee Unit) and local beekeeping associations provide reliable guidance on bee health, pests and notifiable diseases."
+                   }
+                 }
+               ]
+             }
+           ]
+         }
+      </script>
+   </head>
+   <body>
+      <!-- Fixed Header and Nav Container -->
+      <div class="fixed-header">
+         <header class="site-header" role="region" aria-label="Site Header">
+            <div class="header-container" role="region" aria-label="Site Branding">
+               <a href="https://beezknees.co.uk"><img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class=
+                  "site-logo"></a>
+               <h1 class="site-title">BeezKnees</h1>
+               <!-- ✅ WORKING HAMBURGER ICON BUTTON -->
+               <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"></button>
+            </div>
+         </header>
       </div>
-    </section>
-
-    <!-- Main Content -->
-    <main class="content" role="main" aria-label="Honeybee Anatomy Main Content">
-      <h1>Honeybee Anatomy (UK) – Workers, Drones and Queens</h1>
-
-      <p>
-        Honeybees (<em>Apis mellifera</em>) have a highly specialised body built for
-        life in a colony: foraging, wax building, brood rearing, defence and
-        communication. For UK beekeepers, understanding anatomy is not just
-        “interesting biology” — it helps you recognise what you’re seeing on frames,
-        interpret behaviour and spot early warning signs during inspections.
-      </p>
-
-      <p>
-        A honeybee’s body is divided into three main sections: the
-        <strong>head</strong>, <strong>thorax</strong> and <strong>abdomen</strong>.
-        Within those sections are the structures that make pollination possible, allow
-        bees to regulate the hive and enable the colony to raise a queen and (if
-        conditions push them) prepare to swarm.
-      </p>
-
-      <h2>The head: senses, feeding and communication</h2>
-
-      <p>
-        The head contains the brain, two large compound eyes, three small simple eyes
-        (ocelli), antennae and the mouthparts. Compound eyes detect movement and
-        patterns; ocelli help with light levels and orientation. Antennae are critical
-        “multi-tools” for smell, touch and vibration — they detect pheromones that
-        coordinate colony life and are central to how bees interact, learn and respond
-        (see
-        <em
-          ><a href="/behaviour" title="Learn about honeybee behaviour"
-            >bee behaviour</a
-          ></em
-        >).
-      </p>
-
-      <p>
-        Mouthparts combine chewing and lapping. The proboscis (tongue) helps bees
-        collect nectar, while mandibles are used for wax manipulation, feeding larvae
-        and handling debris. These structures link directly to nectar handling and
-        processing — the early stages of
-        <em
-          ><a href="/how-bees-make-honey" title="How bees make honey"
-            >how bees make honey</a
-          ></em
-        >.
-      </p>
-
-      <h2>The thorax: flight muscles and “working” equipment</h2>
-
-      <p>
-        The thorax is the powerhouse. It contains the flight muscles that drive two
-        pairs of wings, and it anchors the six legs. Bees can forage widely when
-        conditions allow, which is essential to their role in
-        <em
-          ><a href="/pollination" title="Honeybee role in pollination"
-            >pollination</a
-          ></em
-        >.
-      </p>
-
-      <p>
-        Worker legs have specialised structures for grooming and pollen collection. The
-        hind legs include <strong>pollen baskets (corbiculae)</strong> — the obvious
-        “pollen saddlebags” you’ll see when a forager returns loaded. That visible
-        pollen is also a useful inspection clue: it often suggests brood is being fed
-        (though it isn’t a guarantee of a laying queen).
-      </p>
-
-      <h2>The abdomen: digestion, wax, scent and defence</h2>
-
-      <p>
-        The abdomen contains the digestive organs, wax glands (in workers), scent
-        glands used in communication, reproductive organs and — in female bees — the
-        sting. Workers produce wax scales from wax glands and use them to build comb.
-        The honey stomach (crop) carries nectar back to the hive before it is processed
-        and ripened.
-      </p>
-
-      <p>
-        Workers have a barbed sting for colony defence. Drones do <strong>not</strong>
-        have a sting. Queens have a sting too, but it is smoother and used primarily in
-        queen-to-queen combat rather than defence.
-      </p>
-
-      <h2>Worker vs Drone vs Queen: how to identify them on a frame</h2>
-
-      <p>
-        All three types share the same basic layout, but their bodies are adapted to
-        different jobs. During UK inspections (especially in spring and early summer),
-        the ability to quickly identify drones, spot a queen and recognise brood types
-        can save time and reduce disruption.
-      </p>
-
-      <h3>Workers: the “engine” of the colony</h3>
-      <p>
-        Workers are the smallest of the three. They are slimmer, with pollen baskets on
-        the hind legs, wax glands and a barbed sting. Most of what you see happening on
-        a frame — nursing, cleaning, storing nectar, building comb — is worker
-        activity.
-      </p>
-
-      <h3>Drones: larger bodies and very large eyes</h3>
-      <p>
-        Drones are noticeably <strong>chunkier</strong> and <strong>fatter</strong>
-        than workers, with a broader abdomen and a “blunt” appearance. The biggest
-        giveaway is the eyes: drone compound eyes are much larger and often appear to
-        meet at the top of the head, helping them locate queens during mating flights.
-        Drones have no pollen baskets and no sting.
-      </p>
-
-      <h3>Queens: longer abdomen and a different “shape”</h3>
-      <p>
-        A queen is longer than a worker, with an abdomen that extends beyond the wing
-        tips. Her thorax often looks broader and more solid, and she moves with
-        purpose. Queens are frequently surrounded by attendants who face her, feed her
-        and clear space. If you are learning to spot a queen, look for the
-        <strong>different silhouette</strong> first — longer and sleeker — rather than
-        trying to find a specific colour.
-      </p>
-
-      <h2>How to spot brood types and comb structure</h2>
-
-      <p>
-        Being able to read comb is one of the fastest ways to understand a colony.
-        You’re not just looking for “bees” — you’re looking at cell size, cappings and
-        patterns. This is where anatomy meets practical beekeeping.
-      </p>
-
-      <h3>Worker brood: flatter cappings and tighter pattern</h3>
-      <p>
-        Worker brood cells are smaller and the cappings are usually flatter and more
-        even. A good worker brood pattern often looks like a tight patch of consistent
-        cappings. (There will always be some variation — don’t expect perfection —
-        especially in UK weather swings that can interrupt laying.)
-      </p>
-
-      <h3>Drone brood: bigger cells and domed “bullet” cappings</h3>
-      <p>
-        Drone brood cells are larger and the cappings are raised and domed — often
-        described as “bullet shaped”. Drone comb can appear as larger, uneven patches,
-        sometimes sticking out like a shelf from the face of the frame, especially on
-        the edges or lower corners.
-      </p>
-
-      <h3>Queen cells: peanut-shaped and easy to recognise</h3>
-      <p>
-        Queen cells are usually easy to spot because they are larger, textured and look
-        like a peanut shell. Position matters:
-        <strong>swarm cells</strong> are often along the bottom edges of frames, while
-        <strong>supersedure cells</strong> may be mid-frame. (Always interpret in
-        context — queen cells alone don’t tell the full story.)
-      </p>
-
-      <h3>Foundation and cell size (why it matters)</h3>
-      <p>
-        Standard worker foundation encourages worker-sized cells. Drone cells are
-        larger and are often built where bees have more freedom (frame edges, gaps, or
-        where foundation is missing or poorly fitted). Seeing patches of drone comb is
-        normal — colonies want some drones — but large areas of drone comb can reduce
-        worker rearing space during key parts of the season.
-      </p>
-
-      <h2>Life cycle timing: worker vs drone vs queen (and why 16 days matters)</h2>
-
-      <p>
-        All honeybees develop through the same stages:
-        <strong>egg → larva → pupa → adult</strong>. The major difference is how fast
-        they develop. This matters for inspections because once a queen cell is
-        started, events move quickly.
-      </p>
-
-      <div class="callout">
-        <strong>Quick reference – the 16 : 21 : 24 pattern</strong>
-        <p>
-          Queens are the fastest to develop, followed by workers and then drones. If
-          you can remember “queen 16, worker 21, drone 24”, you have a powerful mental
-          shortcut when planning UK inspections during swarm season.
-        </p>
-      </div>
-
-      <div class="table-wrapper">
-        <table class="comparison-table">
-          <caption>
-            Honeybee development times (typical values under normal UK conditions)
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Bee type</th>
-              <th scope="col">Egg</th>
-              <th scope="col">Larva</th>
-              <th scope="col">Pupa</th>
-              <th scope="col">Total time (egg to adult)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Queen</strong></td>
-              <td>3 days</td>
-              <td>~5 days</td>
-              <td>~8 days</td>
-              <td><strong>~16 days</strong> (fastest)</td>
-            </tr>
-            <tr>
-              <td><strong>Worker</strong></td>
-              <td>3 days</td>
-              <td>~6 days</td>
-              <td>~12 days</td>
-              <td>~21 days</td>
-            </tr>
-            <tr>
-              <td><strong>Drone</strong></td>
-              <td>3 days</td>
-              <td>~6 days</td>
-              <td>~15 days</td>
-              <td>~24 days (slowest)</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <p>
-        In the UK, swarm season often ramps up in spring and early summer when colonies
-        expand rapidly and weather windows can be short. The key point is simple: a
-        queen can emerge in about <strong>16 days</strong>. If inspections slip during
-        that period — especially if you miss a run of workable weather — a virgin
-        queen may hatch before you have a chance to respond, and the colony may already
-        have swarmed or be on the edge of doing so. This is one reason regular
-        inspections are stressed during the build-up period.
-      </p>
-
-      <p>
-        For trusted UK bee health guidance, BeeBase (National Bee Unit) and local
-        associations (such as BBKA-linked groups) are reliable places to cross-check
-        notifiable disease information and seasonal advice.
-      </p>
-
-      <h2 id="faqs">Frequently Asked Questions</h2>
-
-      <h3>How can I tell a drone from a worker bee?</h3>
-      <p>
-        Drones are larger and stockier with very large eyes that often appear to meet
-        at the top of the head. Workers are slimmer, have pollen baskets on the hind
-        legs and can sting.
-      </p>
-
-      <h3>How can I identify the queen on a frame?</h3>
-      <p>
-        Look for the longer body shape first: the queen’s abdomen extends beyond her
-        wing tips. She often moves steadily across the frame with attendants around
-        her.
-      </p>
-
-      <h3>What does drone brood look like?</h3>
-      <p>
-        Drone brood is capped with raised, domed “bullet” cappings. Drone comb uses
-        larger cells and can appear in patches or protruding areas where bees have more
-        freedom to build.
-      </p>
-
-      <h3>What do queen cells look like?</h3>
-      <p>
-        Queen cells are larger, textured and peanut-shaped. Swarm cells are commonly
-        along the bottom edges of frames, while supersedure cells may appear mid-frame.
-      </p>
-
-      <h3>How long does it take a queen to hatch?</h3>
-      <p>
-        A queen develops from egg to adult in around 16 days, compared with 21 days for
-        a worker and 24 days for a drone.
-      </p>
-
-      <h3>Why does “16 days” matter for UK swarm season?</h3>
-      <p>
-        Because a queen can emerge quickly, delayed inspections (especially when UK
-        weather restricts openings) can allow queen cells to progress to emergence,
-        increasing the chance that a swarm has already left or is imminent.
-      </p>
-
-      <h3>Where can I learn more about how bees behave as a colony?</h3>
-      <p>
-        See our
-        <a href="/behaviour" title="Learn about honeybee behaviour"
-          >bee behaviour</a
-        >
-        page for communication, roles and why colonies make the decisions they do.
-      </p>
-
-      <h3>How does anatomy link to pollination and honey making?</h3>
-      <p>
-        Pollen baskets and sensory equipment support foraging and
-        <a href="/pollination" title="Honeybee role in pollination"
-          >pollination</a
-        >, while mouthparts and the honey stomach are key to nectar handling and
-        <a href="/how-bees-make-honey" title="How bees make honey"
-          >honey production</a
-        >.
-      </p>
-    </main>
-
-   <!-- Footer -->
-    <footer class="site-footer" role="region" aria-label="Site Footer">
-      <div class="footer-columns">
-        <div class="footer-column" role="region" aria-label="Contact Information">
-          <h3>Contact</h3>
-          <address>
-            <p>Email: <a href="/contact" title="Send us a message via our contact page">Contact</a></p>
-          </address>
-        </div>
-
-        <div class="footer-column" role="region" aria-label="Useful Site Links">
-          <h3>Useful Links</h3>
-          <ul>
-            <li><a href="/privacy" title="Read our privacy policy">Privacy Policy</a></li>
-            <li><a href="/site-map" title="View a map of our entire website">Site Map</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-column" role="region" aria-label="Beekeeping Resources">
-          <h3>Resources</h3>
-          <ul>
+      <!-- Navigation Bar -->
+      <nav class="navbar" role="navigation" aria-label="Main navigation">
+         <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
             <li>
-              <a
-                href="https://www.bbka.org.uk/"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Visit the British Beekeepers Association website"
-              >
-                British Beekeepers Association
-              </a>
+               <a href="/" title="Visit the BeezKnees homepage">Home</a>
+            </li>
+            <li class="dropdown">
+               <a href="/about-us" title="Learn more about us">About</a>
+            </li>
+            <li class="dropdown">
+               <a href="/donate" title="Support out mission">Donate</a>
+            </li>
+            <li class="dropdown">
+               <a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a> <button class=
+                  "dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a>
+                  </li>
+                  <li>
+                     <a href="/equipment" title="Essential beekeeping equipment">Equipment</a>
+                  </li>
+                  <li>
+                     <a href="/hive-management" title="Manage your hive effectively">Hive Management</a>
+                  </li>
+                  <li>
+                     <a href="/varroa-management" title="control varroa mite infestations">Varroa Management</a>
+                  </li>
+                  <li>
+                     <a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a>
+                  </li>
+                  <li>
+                     <a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a>
+                  </li>
+                  <li>
+                     <a href="/honey-extraction" title="how to harvest and bottle honey safely">Extracting Honey</a>
+                  </li>
+               </ul>
+            </li>
+            <li class="dropdown">
+               <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a> <button class=
+                  "dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/january" title="January beekeeping tasks">January</a>
+                  </li>
+                  <li>
+                     <a href="/february" title="February beekeeping tasks">February</a>
+                  </li>
+                  <li>
+                     <a href="/march" title="March beekeeping tasks">March</a>
+                  </li>
+                  <li>
+                     <a href="/april" title="April beekeeping tasks">April</a>
+                  </li>
+                  <li>
+                     <a href="/may" title="May beekeeping tasks">May</a>
+                  </li>
+                  <li>
+                     <a href="/june" title="June beekeeping tasks">June</a>
+                  </li>
+                  <li>
+                     <a href="/july" title="July beekeeping tasks">July</a>
+                  </li>
+                  <li>
+                     <a href="/august" title="August beekeeping tasks">August</a>
+                  </li>
+                  <li>
+                     <a href="/september" title="September beekeeping tasks">September</a>
+                  </li>
+                  <li>
+                     <a href="/october" title="October beekeeping tasks">October</a>
+                  </li>
+                  <li>
+                     <a href="/november" title="November beekeeping tasks">November</a>
+                  </li>
+                  <li>
+                     <a href="/december" title="December beekeeping tasks">December</a>
+                  </li>
+               </ul>
+            </li>
+            <li class="dropdown">
+               <a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a> <button class=
+                  "dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/veterinary-medicine-records" title=
+                        "How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a>
+                  </li>
+                  <li>
+                     <a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a>
+                  </li>
+                  <li>
+                     <a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a>
+                  </li>
+                  <li>
+                     <a href="/bee-pests" title="Common pests affecting bees">Pests</a>
+                  </li>
+                  <li>
+                     <a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a>
+                  </li>
+                  <li>
+                     <a href="/other-conditions" title="Other bee health conditions">Other Conditions</a>
+                  </li>
+               </ul>
+            </li>
+            <li class="dropdown">
+               <a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a> <button class=
+                  "dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a>
+                  </li>
+                  <li>
+                     <a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a>
+                  </li>
+                  <li>
+                     <a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a>
+                  </li>
+                  <li>
+                     <a href="/pollination" title="Honeybee role in pollination">Pollination</a>
+                  </li>
+               </ul>
+            </li>
+            <li class="dropdown">
+               <a href="/help-the-bees" title="How you can help save the bees">Help Bees</a> <button class="dropdown-toggle"
+                  aria-label="Toggle Submenu">▼</button>
+               <ul class="dropdown-menu">
+                  <li>
+                     <a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a>
+                  </li>
+                  <li>
+                     <a href="/donate" title="Make a donation to support bees">Donate</a>
+                  </li>
+                  <li>
+                     <a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a>
+                  </li>
+               </ul>
             </li>
             <li>
-              <a
-                href="https://www.cardiffbeekeepers.co.uk/"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Visit the Cardiff Beekeepers Association site"
-              >
-                Cardiff, Vale and Valleys Beekeepers Association
-              </a>
+               <a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members
+               Area</a>
             </li>
-            <li>
-              <a
-                href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&wrap=true"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Read the Honey (Wales) Regulations 2015"
-              >
-                The Honey (Wales) Regulations 2015
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.biodiversitywales.org.uk/Bee-Friendly"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Explore Bee-Friendly programme by Wales Biodiversity Partnership"
-              >
-                Wales Biodiversity Partnership
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.nationalbeeunit.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Access BeeBase for UK bee health information"
-              >
-                BeeBase
-              </a>
-            </li>
-          
-          </ul>
-        </div>
+         </ul>
+      </nav>
+      <!-- Hero Banner -->
+      <section role="region" aria-label="Homepage Banner">
+         <div class="banner"><img src="images/beehives_9-hero.webp" alt=
+            "A row of beehives in a UK apiary, used to explain honeybee anatomy and roles"></div>
+      </section>
+      <!-- Main Content -->
+      <main class="content" role="main" aria-label="Honeybee Anatomy Main Content">
+         <h1>Honeybee Anatomy (UK) – Workers, Drones and Queens</h1>
+         <p>Honeybees (<em>Apis mellifera</em>) have a highly specialised body built for life in a colony: foraging, wax
+            building, brood rearing, defence and communication. For UK beekeepers, understanding anatomy is not just
+            “interesting biology” — it helps you recognise what you’re seeing on frames, interpret behaviour and spot early
+            warning signs during inspections.
+         </p>
+         <p>A honeybee’s body is divided into three main sections: the <strong>head</strong>, <strong>thorax</strong> and
+            <strong>abdomen</strong>. Within those sections are the structures that make pollination possible, allow bees to
+            regulate the hive and enable the colony to raise a queen and (if conditions push them) prepare to swarm.
+         </p>
+         <h2>The head: senses, feeding and communication</h2>
+         <p>The head contains the brain, two large compound eyes, three small simple eyes (ocelli), antennae and the
+            mouthparts. Compound eyes detect movement and patterns; ocelli help with light levels and orientation. Antennae are
+            critical “multi-tools” for smell, touch and vibration — they detect pheromones that coordinate colony life and are
+            central to how bees interact, learn and respond (see <em><a href="/behaviour" title=
+               "Learn about honeybee behaviour">bee behaviour</a></em>).
+         </p>
+         <p>Mouthparts combine chewing and lapping. The proboscis (tongue) helps bees collect nectar, while mandibles are
+            used for wax manipulation, feeding larvae and handling debris. These structures link directly to nectar handling
+            and processing — the early stages of <em><a href="/how-bees-make-honey" title="How bees make honey">how bees make
+            honey</a></em>.
+         </p>
+         <h2>The thorax: flight muscles and “working” equipment</h2>
+         <p>The thorax is the powerhouse. It contains the flight muscles that drive two pairs of wings, and it anchors the
+            six legs. Bees can forage widely when conditions allow, which is essential to their role in <em><a href=
+               "/pollination" title="Honeybee role in pollination">pollination</a></em>.
+         </p>
+         <p>Worker legs have specialised structures for grooming and pollen collection. The hind legs include <strong>pollen
+            baskets (corbiculae)</strong> — the obvious “pollen saddlebags” you’ll see when a forager returns loaded. That
+            visible pollen is also a useful inspection clue: it often suggests brood is being fed (though it isn’t a guarantee
+            of a laying queen).
+         </p>
+         <h2>The abdomen: digestion, wax, scent and defence</h2>
+         <p>The abdomen contains the digestive organs, wax glands (in workers), scent glands used in communication,
+            reproductive organs and — in female bees — the sting. Workers produce wax scales from wax glands and use them to
+            build comb. The honey stomach (crop) carries nectar back to the hive before it is processed and ripened.
+         </p>
+         <p>Workers have a barbed sting for colony defence. Drones do <strong>not</strong> have a sting. Queens have a sting
+            too, but it is smoother and used primarily in queen-to-queen combat rather than defence.
+         </p>
+         <h2>Worker vs Drone vs Queen: how to identify them on a frame</h2>
+         <p>All three types share the same basic layout, but their bodies are adapted to different jobs. During UK
+            inspections (especially in spring and early summer), the ability to quickly identify drones, spot a queen and
+            recognise brood types can save time and reduce disruption.
+         </p>
+         <h3>Workers: the “engine” of the colony</h3>
+         <p>Workers are the smallest of the three. They are slimmer, with pollen baskets on the hind legs, wax glands and a
+            barbed sting. Most of what you see happening on a frame — nursing, cleaning, storing nectar, building comb — is
+            worker activity.
+         </p>
+         <h3>Drones: larger bodies and very large eyes</h3>
+         <p>Drones are noticeably <strong>chunkier</strong> and <strong>fatter</strong> than workers, with a broader abdomen
+            and a “blunt” appearance. The biggest giveaway is the eyes: drone compound eyes are much larger and often appear to
+            meet at the top of the head, helping them locate queens during mating flights. Drones have no pollen baskets and no
+            sting.
+         </p>
+         <h3>Queens: longer abdomen and a different “shape”</h3>
+         <p>A queen is longer than a worker, with an abdomen that extends beyond the wing tips. Her thorax often looks
+            broader and more solid, and she moves with purpose. Queens are frequently surrounded by attendants who face her,
+            feed her and clear space. If you are learning to spot a queen, look for the <strong>different silhouette</strong>
+            first — longer and sleeker — rather than trying to find a specific colour.
+         </p>
+         <h2>How to spot brood types and comb structure</h2>
+         <p>Being able to read comb is one of the fastest ways to understand a colony. You’re not just looking for “bees” —
+            you’re looking at cell size, cappings and patterns. This is where anatomy meets practical beekeeping.
+         </p>
+         <h3>Worker brood: flatter cappings and tighter pattern</h3>
+         <p>Worker brood cells are smaller and the cappings are usually flatter and more even. A good worker brood pattern
+            often looks like a tight patch of consistent cappings. (There will always be some variation — don’t expect
+            perfection — especially in UK weather swings that can interrupt laying.)
+         </p>
+         <h3>Drone brood: bigger cells and domed “bullet” cappings</h3>
+         <p>Drone brood cells are larger and the cappings are raised and domed — often described as “bullet shaped”. Drone
+            comb can appear as larger, uneven patches, sometimes sticking out like a shelf from the face of the frame,
+            especially on the edges or lower corners.
+         </p>
+         <h3>Queen cells: peanut-shaped and easy to recognise</h3>
+         <p>Queen cells are usually easy to spot because they are larger, textured and look like a peanut shell. Position
+            matters: <strong>swarm cells</strong> are often along the bottom edges of frames, while <strong>supersedure
+            cells</strong> may be mid-frame. (Always interpret in context — queen cells alone don’t tell the full story.)
+         </p>
+         <h3>Foundation and cell size (why it matters)</h3>
+         <p>Standard worker foundation encourages worker-sized cells. Drone cells are larger and are often built where bees
+            have more freedom (frame edges, gaps, or where foundation is missing or poorly fitted). Seeing patches of drone
+            comb is normal — colonies want some drones — but large areas of drone comb can reduce worker rearing space during
+            key parts of the season.
+         </p>
+         <h2>Life cycle timing: worker vs drone vs queen (and why 16 days matters)</h2>
+         <p>All honeybees develop through the same stages: <strong>egg → larva → pupa → adult</strong>. The major difference
+            is how fast they develop. This matters for inspections because once a queen cell is started, events move
+            quickly.
+         </p>
+         <div class="callout">
+            <strong>Quick reference – the 16 : 21 : 24 pattern</strong>
+            <p>Queens are the fastest to develop, followed by workers and then drones. If you can remember “queen 16, worker
+               21, drone 24”, you have a powerful mental shortcut when planning UK inspections during swarm season.
+            </p>
+         </div>
+         <div class="table-wrapper">
+            <table class="comparison-table">
+               <caption>
+                  Honeybee development times (typical values under normal UK conditions)
+               </caption>
+               <thead>
+                  <tr>
+                     <th scope="col">Bee type</th>
+                     <th scope="col">Egg</th>
+                     <th scope="col">Larva</th>
+                     <th scope="col">Pupa</th>
+                     <th scope="col">Total time (egg to adult)</th>
+                  </tr>
+               </thead>
+               <tbody>
+                  <tr>
+                     <td><strong>Queen</strong></td>
+                     <td>3 days</td>
+                     <td>~5 days</td>
+                     <td>~8 days</td>
+                     <td><strong>~16 days</strong> (fastest)</td>
+                  </tr>
+                  <tr>
+                     <td><strong>Worker</strong></td>
+                     <td>3 days</td>
+                     <td>~6 days</td>
+                     <td>~12 days</td>
+                     <td>~21 days</td>
+                  </tr>
+                  <tr>
+                     <td><strong>Drone</strong></td>
+                     <td>3 days</td>
+                     <td>~6 days</td>
+                     <td>~15 days</td>
+                     <td>~24 days (slowest)</td>
+                  </tr>
+               </tbody>
+            </table>
+         </div>
+         <p>In the UK, swarm season often ramps up in spring and early summer when colonies expand rapidly and weather
+            windows can be short. The key point is simple: a queen can emerge in about <strong>16 days</strong>. If inspections
+            slip during that period — especially if you miss a run of workable weather — a virgin queen may hatch before you
+            have a chance to respond, and the colony may already have swarmed or be on the edge of doing so. This is one reason
+            regular inspections are stressed during the build-up period.
+         </p>
+         <p>For trusted UK bee health guidance, BeeBase (National Bee Unit) and local associations (such as BBKA-linked
+            groups) are reliable places to cross-check notifiable disease information and seasonal advice.
+         </p>
+         <h2 id="faqs">Frequently Asked Questions</h2>
+         <h3>How can I tell a drone from a worker bee?</h3>
+         <p>Drones are larger and stockier with very large eyes that often appear to meet at the top of the head. Workers
+            are slimmer, have pollen baskets on the hind legs and can sting.
+         </p>
+         <h3>How can I identify the queen on a frame?</h3>
+         <p>Look for the longer body shape first: the queen’s abdomen extends beyond her wing tips. She often moves steadily
+            across the frame with attendants around her.
+         </p>
+         <h3>What does drone brood look like?</h3>
+         <p>Drone brood is capped with raised, domed “bullet” cappings. Drone comb uses larger cells and can appear in
+            patches or protruding areas where bees have more freedom to build.
+         </p>
+         <h3>What do queen cells look like?</h3>
+         <p>Queen cells are larger, textured and peanut-shaped. Swarm cells are commonly along the bottom edges of frames,
+            while supersedure cells may appear mid-frame.
+         </p>
+         <h3>How long does it take a queen to hatch?</h3>
+         <p>A queen develops from egg to adult in around 16 days, compared with 21 days for a worker and 24 days for a
+            drone.
+         </p>
+         <h3>Why does “16 days” matter for UK swarm season?</h3>
+         <p>Because a queen can emerge quickly, delayed inspections (especially when UK weather restricts openings) can
+            allow queen cells to progress to emergence, increasing the chance that a swarm has already left or is imminent.
+         </p>
+         <h3>Where can I learn more about how bees behave as a colony?</h3>
+         <p>See our <a href="/behaviour" title="Learn about honeybee behaviour">bee behaviour</a> page for communication,
+            roles and why colonies make the decisions they do.
+         </p>
+         <h3>How does anatomy link to pollination and honey making?</h3>
+         <p>Pollen baskets and sensory equipment support foraging and <a href="/pollination" title=
+            "Honeybee role in pollination">pollination</a>, while mouthparts and the honey stomach are key to nectar handling
+            and <a href="/how-bees-make-honey" title="How bees make honey">honey production</a>.
+         </p>
+      </main>
+      <!-- Footer -->
+      <footer class="site-footer" role="region" aria-label="Site Footer">
+         <div class="footer-columns">
+            <div class="footer-column" role="region" aria-label="Contact Information">
+               <h3>Contact</h3>
+               <address>
+                  <p>Email: <a href="/contact" title="Send us a message via our contact page">Contact</a></p>
+               </address>
+            </div>
+            <div class="footer-column" role="region" aria-label="Useful Site Links">
+               <h3>Useful Links</h3>
+               <ul>
+                  <li>
+                     <a href="/privacy" title="Read our privacy policy">Privacy Policy</a>
+                  </li>
+                  <li>
+                     <a href="/site-map" title="View a map of our entire website">Site Map</a>
+                  </li>
+               </ul>
+            </div>
+            <div class="footer-column" role="region" aria-label="Beekeeping Resources">
+               <h3>Resources</h3>
+               <ul>
+                  <li>
+                     <a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer" title=
+                        "Visit the British Beekeepers Association website">British Beekeepers Association</a>
+                  </li>
+                  <li>
+                     <a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer" title=
+                        "Visit the Cardiff Beekeepers Association site">Cardiff, Vale and Valleys Beekeepers Association</a>
+                  </li>
+                  <li>
+                     <a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank"
+                        rel="noopener noreferrer" title="Read the Honey (Wales) Regulations 2015">The Honey (Wales) Regulations
+                     2015</a>
+                  </li>
+                  <li>
+                     <a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer"
+                        title="Explore Bee-Friendly programme by Wales Biodiversity Partnership">Wales Biodiversity Partnership</a>
+                  </li>
+                  <li>
+                     <a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title=
+                        "Access BeeBase for UK bee health information">BeeBase</a>
+                  </li>
+               </ul>
+            </div>
+         </div>
+         <div class="footer-bottom" role="region" aria-label="Copyright">
+            © 2025 BeezKnees. All rights reserved.
+         </div>
+      </footer>
+      <!-- Cookie Consent Popup -->
+      <div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
+         <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+            <h2>🍪 We Use Cookies</h2>
+            <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and
+               marketing purposes.
+            </p>
+            <form id="cookie-options" name="cookie-options">
+               <label><input type="checkbox" checked disabled> Essential (always active)</label><br>
+               <label><input type="checkbox" id="analytics"> Analytics</label><br>
+               <label><input type="checkbox" id="marketing"> Marketing</label><br>
+            </form>
+            <div class="cookie-buttons">
+               <button id="accept-selected">Accept Selected</button> <button id="accept-all">Accept All</button>
+            </div>
+         </div>
       </div>
-
-      <div class="footer-bottom" role="region" aria-label="Copyright">
-        &copy; 2025 BeezKnees. All rights reserved.
-      </div>
-    </footer>
-
-    <!-- Cookie Consent Popup -->
-    <div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
-      <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
-        <h2>🍪 We Use Cookies</h2>
-        <p>
-          We use essential cookies for site functionality. With your consent, we may also
-          use cookies for analytics and marketing purposes.
-        </p>
-
-        <form id="cookie-options">
-          <label><input type="checkbox" checked disabled /> Essential (always active)</label><br />
-          <label><input type="checkbox" id="analytics" /> Analytics</label><br />
-          <label><input type="checkbox" id="marketing" /> Marketing</label><br />
-        </form>
-
-        <div class="cookie-buttons">
-          <button id="accept-selected">Accept Selected</button>
-          <button id="accept-all">Accept All</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Back to Top Button -->
-    <button id="backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button>
-
-    <script src="js/menuv2.js" defer></script>
-  </body>
+      <!-- Back to Top Button -->
+      <button id="backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button> 
+      <script src="js/menuv2.js" defer></script>
+   </body>
 </html>
