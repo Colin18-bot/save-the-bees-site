@@ -16,6 +16,11 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://beezknees.co.uk/apiary-risk-assessment</loc>
+    <lastmod>2025-12-18</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://beezknees.co.uk/april</loc>
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
@@ -41,6 +46,15 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://beezknees.co.uk/beekeeping-insurance-uk</loc>
+    <lastmod>2025-12-18</lastmod>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://beezknees.co.uk/beekeeping-responsibilities</loc>
+    <lastmod>2025-12-18</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://beezknees.co.uk/bee-pests</loc>
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
@@ -53,6 +67,11 @@
   <url>
     <loc>https://beezknees.co.uk/beekeeping-guides</loc>
     <lastmod>2025-12-10</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/beekeeping-responsibilities-uk</loc>
+    <lastmod>2025-12-18</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -115,6 +134,11 @@
     <lastmod>2025-12-12</lastmod>
     <priority>0.5</priority>
   </url>
+   <url>
+    <loc>https://beezknees.co.uk/honey-regulations</loc>
+    <lastmod>2025-12-18</lastmod>
+    <priority>0.5</priority>
+  </url>
   <url>
     <loc>https://beezknees.co.uk/honeybee-facts</loc>
     <lastmod>2025-12-10</lastmod>
@@ -143,6 +167,11 @@
   <url>
     <loc>https://beezknees.co.uk/june</loc>
     <lastmod>2025-12-10</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/landowner-beekeeper-agreement</loc>
+    <lastmod>2025-12-18</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -180,7 +209,12 @@
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
   </url>
-   <url>
+  <url>
+    <loc>https://beezknees.co.uk/ppe-varroa-treatments</loc>
+    <lastmod>2025-12-17</lastmod>
+    <priority>0.5</priority>
+  </url> 
+  <url>
     <loc>https://beezknees.co.uk/report-a-swarm</loc>
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
@@ -195,12 +229,37 @@
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
   </url>
-   <url>
+  <url>
+    <loc>https://beezknees.co.uk/swarm-responsibilities-uk</loc>
+    <lastmod>2025-12-18</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/varroa-chemical-treatment</loc>
+    <lastmod>2025-12-17</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://beezknees.co.uk/varroa-management</loc>
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
   </url>
-   <url>
+  <url>
+    <loc>https://beezknees.co.uk/varroa-non-chemical-methods</loc>
+    <lastmod>2025-12-17</lastmod>
+    <priority>0.5</priority>
+  </url> 
+  <url>
+    <loc>https://beezknees.co.uk/varroa-monitoring-methods</loc>
+    <lastmod>2025-12-17</lastmod>
+    <priority>0.5</priority>
+  </url> 
+  <url>
+    <loc>https://beezknees.co.uk/varroa-treatment-calendar-uk</loc>
+    <lastmod>2025-12-17</lastmod>
+    <priority>0.5</priority>
+  </url> 
+  <url>
     <loc>https://beezknees.co.uk/vet-medicine-records</loc>
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
