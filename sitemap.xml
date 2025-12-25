@@ -46,15 +46,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://beezknees.co.uk/beekeeping-insurance-uk</loc>
-    <lastmod>2025-12-18</lastmod>
-    <priority>0.5</priority>
-  </url><url>
-    <loc>https://beezknees.co.uk/beekeeping-responsibilities</loc>
-    <lastmod>2025-12-18</lastmod>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://beezknees.co.uk/bee-pests</loc>
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
@@ -70,7 +61,11 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://beezknees.co.uk/beekeeping-responsibilities-uk</loc>
+    <loc>https://beezknees.co.uk/beekeeping-insurance-uk</loc>
+    <lastmod>2025-12-18</lastmod>
+    <priority>0.5</priority>
+  </url><url>
+    <loc>https://beezknees.co.uk/beekeeping-responsibilities</loc>
     <lastmod>2025-12-18</lastmod>
     <priority>0.5</priority>
   </url>
@@ -245,12 +240,12 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://beezknees.co.uk/varroa-non-chemical-methods</loc>
+    <loc>https://beezknees.co.uk/varroa-monitoring-methods</loc>
     <lastmod>2025-12-17</lastmod>
     <priority>0.5</priority>
-  </url> 
+  </url>
   <url>
-    <loc>https://beezknees.co.uk/varroa-monitoring-methods</loc>
+    <loc>https://beezknees.co.uk/varroa-non-chemical-methods</loc>
     <lastmod>2025-12-17</lastmod>
     <priority>0.5</priority>
   </url> 
