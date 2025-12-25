@@ -274,18 +274,18 @@ a {
 		justify-self: end;
 	}
 
-	/* Mobile dropdown: smooth expand/collapse */
-	.dropdown-menu {
-		max-height: 0;
-		overflow: hidden;
-		transition: max-height 0.4s ease;
-	}
+	/* Mobile dropdowns: allow full height */
+  .dropdown-menu {
+    display: none;
+    position: static;
+    overflow: visible;
+    max-height: none;
+    background-color: #222;
+  }
 
-	.dropdown.open .dropdown-menu {
-		max-height: 500px;
-		/* adjust if you add longer submenus */
-		background-color: #222;
-	}
+  .dropdown.open .dropdown-menu {
+    display: block;
+  }
 }
 
 /* -------------------------------------------------- */
