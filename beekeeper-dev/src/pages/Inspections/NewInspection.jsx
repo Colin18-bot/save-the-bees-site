@@ -582,22 +582,23 @@ const NewInspection = () => {
           </p>
         )}
 
-        {hasVarroa && (
-          <p className="mt-1">
-            <strong>Varroa reporting:</strong> Presence of varroa must be
-            reported to the Agriculture Department for your country (2021
-            amendment). For {reportCountry}, contact{" "}
-            <a
-              href={auth.url}
-              target="_blank"
-              rel="noreferrer"
-              className="underline"
-            >
-              {auth.name}
-            </a>
-            .
-          </p>
-        )}
+       {hasVarroa && (
+  <p className="mt-1">
+    <strong>Varroa (monitoring):</strong> Varroa is <strong>not a notifiable disease</strong>{" "}
+    in the UK. Beekeepers are encouraged to monitor infestation levels, keep
+    treatment records, and share concerns (e.g., unusually high counts or suspected
+    treatment resistance) with{" "}
+    <a
+      href={auth.url}
+      target="_blank"
+      rel="noreferrer"
+      className="underline"
+    >
+      {auth.name}
+    </a>{" "}
+    where appropriate.
+  </p>
+)}
       </div>
     );
   };
