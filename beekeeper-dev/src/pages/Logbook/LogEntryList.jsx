@@ -11,17 +11,27 @@ const LogEntryList = () => {
   const navigate = useNavigate();
 
   // --- highlight/query params (normalize type to UPPERCASE)
-  const { highlightId, highlightType, apiaryFromUrl, inspectionIdFromUrl } =
-    useMemo(() => {
-      const params = new URLSearchParams(location.search || "");
-      const rawType = params.get("type");
-      return {
-        highlightId: params.get("highlight") || null,
-        highlightType: rawType ? rawType.toUpperCase() : null, // "LOGBOOK" expected, but be flexible
-        apiaryFromUrl: params.get("apiary_id") || "", // "" means all
-        inspectionIdFromUrl: params.get("inspection_id") || "", // "" means no inspection filter
-      };
-    }, [location.search]);
+  const {
+    highlightId,
+    highlightType,
+    apiaryFromUrl,
+    hiveFromUrl,
+    inspectionIdFromUrl,
+    fromFromUrl,
+    toFromUrl,
+  } = useMemo(() => {
+    const params = new URLSearchParams(location.search || "");
+    const rawType = params.get("type");
+    return {
+      highlightId: params.get("highlight") || null,
+      highlightType: rawType ? rawType.toUpperCase() : null, // "LOGBOOK"
+      apiaryFromUrl: params.get("apiary_id") || "", // "" means all
+      hiveFromUrl: params.get("hive_id") || "", // "" means all
+      inspectionIdFromUrl: params.get("inspection_id") || "", // "" means no inspection filter
+      fromFromUrl: params.get("from") || "",
+      toFromUrl: params.get("to") || "",
+    };
+  }, [location.search]);
 
   // Avoid loops when auto-jumping to highlight page
   const jumpedToHighlightPageRef = useRef(false);
@@ -31,8 +41,14 @@ const LogEntryList = () => {
   const [hives, setHives] = useState([]);
 
   const [selectedApiary, setSelectedApiary] = useState(apiaryFromUrl); // from URL
+  const [selectedHive, setSelectedHive] = useState(hiveFromUrl); // from URL
+
   const [viewMode, setViewMode] = useState("list"); // "list" | "grid"
   const [page, setPage] = useState(1);
+
+  // date range filters (YYYY-MM-DD)
+  const [dateFrom, setDateFrom] = useState(fromFromUrl);
+  const [dateTo, setDateTo] = useState(toFromUrl);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -67,19 +83,27 @@ const LogEntryList = () => {
     };
   }, [lightbox.isOpen]);
 
-  // Keep selectedApiary in sync if URL changes elsewhere
+  // Keep selected filters in sync if URL changes elsewhere
   useEffect(() => {
     setSelectedApiary(apiaryFromUrl);
-    // Reset highlight jump if filters change from outside
+    setSelectedHive(hiveFromUrl);
+    setDateFrom(fromFromUrl);
+    setDateTo(toFromUrl);
     jumpedToHighlightPageRef.current = false;
-  }, [apiaryFromUrl]);
+    setPage(1);
+  }, [apiaryFromUrl, hiveFromUrl, fromFromUrl, toFromUrl]);
 
-  // Push filter to URL whenever it changes (preserve highlight/type/inspection_id)
+  // Push filters to URL whenever they change (preserve highlight/type/inspection_id)
   useEffect(() => {
     const incoming = new URLSearchParams(location.search || "");
     const params = new URLSearchParams();
 
     if (selectedApiary) params.set("apiary_id", selectedApiary);
+    if (selectedHive) params.set("hive_id", selectedHive);
+
+    if (dateFrom) params.set("from", dateFrom);
+    if (dateTo) params.set("to", dateTo);
+
     if (incoming.get("highlight")) params.set("highlight", incoming.get("highlight"));
     if (incoming.get("type")) params.set("type", incoming.get("type"));
     if (incoming.get("inspection_id"))
@@ -91,7 +115,7 @@ const LogEntryList = () => {
       navigate({ search: next }, { replace: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedApiary]);
+  }, [selectedApiary, selectedHive, dateFrom, dateTo]);
 
   // If an inspection filter is present, fetch a tiny bit of meta for the banner
   useEffect(() => {
@@ -134,20 +158,25 @@ const LogEntryList = () => {
           photo_url,
           all_hives,
           archived_at,
+          created_at,
           inspection:inspection_id ( id, date )
         `
         )
         .is("archived_at", null)
         .order("date", { ascending: false })
         .order("created_at", { ascending: false });
-        
-      // PRIORITY: If inspection filter is present, use it (and ignore apiary filter to avoid conflicts)
+
+      // PRIORITY: If inspection filter is present, use it (and ignore apiary/hive to avoid conflicts)
       if (inspectionIdFromUrl) {
         entriesQuery = entriesQuery.eq("inspection_id", inspectionIdFromUrl);
-      } else if (selectedApiary) {
-        // Otherwise filter by apiary (server-side)
-        entriesQuery = entriesQuery.eq("apiary_id", selectedApiary);
+      } else {
+        if (selectedApiary) entriesQuery = entriesQuery.eq("apiary_id", selectedApiary);
+        if (selectedHive) entriesQuery = entriesQuery.eq("hive_id", selectedHive);
       }
+
+      // Date range filters (logbook.date is DATE)
+      if (dateFrom) entriesQuery = entriesQuery.gte("date", dateFrom);
+      if (dateTo) entriesQuery = entriesQuery.lte("date", dateTo);
 
       const [
         { data: entriesData, error: entriesErr },
@@ -179,12 +208,11 @@ const LogEntryList = () => {
       setHives(hiveData || []);
       setPage(1);
       setLoading(false);
-      // Reset highlight jump when the dataset changes
       jumpedToHighlightPageRef.current = false;
     };
 
     fetchAll();
-  }, [selectedApiary, inspectionIdFromUrl]);
+  }, [selectedApiary, selectedHive, inspectionIdFromUrl, dateFrom, dateTo]);
 
   const apiaryNameById = useMemo(() => {
     const m = new Map();
@@ -198,13 +226,20 @@ const LogEntryList = () => {
     return m;
   }, [hives]);
 
+  // hive dropdown options: if apiary chosen, only show those hives
+  const hivesForSelectedApiary = useMemo(() => {
+    if (!selectedApiary) return hives;
+    return hives.filter((h) => String(h.apiary_id) === String(selectedApiary));
+  }, [hives, selectedApiary]);
+
   // Client-side filter (defensive; server already filters when selected)
   const filtered = useMemo(() => {
     if (inspectionIdFromUrl) return entries; // already scoped to inspection
-    return selectedApiary
-      ? entries.filter((e) => e.apiary_id === selectedApiary)
-      : entries;
-  }, [entries, selectedApiary, inspectionIdFromUrl]);
+    let out = entries;
+    if (selectedApiary) out = out.filter((e) => e.apiary_id === selectedApiary);
+    if (selectedHive) out = out.filter((e) => e.hive_id === selectedHive);
+    return out;
+  }, [entries, selectedApiary, selectedHive, inspectionIdFromUrl]);
 
   // If a highlight is present, auto-jump to the correct page (once)
   useEffect(() => {
@@ -215,9 +250,7 @@ const LogEntryList = () => {
     const idx = filtered.findIndex((e) => String(e.id) === String(highlightId));
     if (idx >= 0) {
       const targetPage = Math.floor(idx / PAGE_SIZE) + 1;
-      if (targetPage !== page) {
-        setPage(targetPage);
-      }
+      if (targetPage !== page) setPage(targetPage);
       jumpedToHighlightPageRef.current = true;
     }
   }, [filtered, highlightId, highlightType, page]);
@@ -231,17 +264,12 @@ const LogEntryList = () => {
   // After pageItems render, scroll highlighted card into view and pulse it
   useEffect(() => {
     if (!highlightId || (highlightType && highlightType !== "LOGBOOK")) return;
-    // small delay to ensure DOM is painted
     const t = setTimeout(() => {
       const el = document.getElementById(`log-${highlightId}`);
       if (el) {
         el.scrollIntoView({ behavior: "smooth", block: "center" });
         el.classList.add("ring-2", "ring-amber-400", "bg-amber-50");
-        // remove ring after a moment, keep subtle bg
-        setTimeout(
-          () => el.classList.remove("ring-2", "ring-amber-400"),
-          1600
-        );
+        setTimeout(() => el.classList.remove("ring-2", "ring-amber-400"), 1600);
       }
     }, 80);
     return () => clearTimeout(t);
@@ -261,9 +289,29 @@ const LogEntryList = () => {
   const clearInspectionFilter = () => {
     const params = new URLSearchParams(location.search || "");
     params.delete("inspection_id");
-    // keep apiary_id, highlight, type if they exist
     navigate({ search: params.toString() || "" }, { replace: true });
   };
+
+  const clearDates = () => {
+    setDateFrom("");
+    setDateTo("");
+    setPage(1);
+  };
+
+  const clearHive = () => {
+    setSelectedHive("");
+    setPage(1);
+  };
+
+  // If apiary changes, clear hive if it no longer belongs
+  useEffect(() => {
+    if (!selectedHive) return;
+    if (!selectedApiary) return;
+    const hv = hives.find((h) => String(h.id) === String(selectedHive));
+    if (hv && String(hv.apiary_id) !== String(selectedApiary)) {
+      setSelectedHive("");
+    }
+  }, [selectedApiary, selectedHive, hives]);
 
   if (loading) return <div className="p-4">Loading logbook…</div>;
 
@@ -271,25 +319,24 @@ const LogEntryList = () => {
     <div className="p-4">
       {/* Header */}
       <div className="mb-4">
-        {/* Heading always on its own line */}
         <h2 className="text-2xl font-bold mb-3">Logbook Entries</h2>
 
-        {/* Controls wrapper – now sits under the heading */}
-        <div className="flex flex-col gap-2 w-full sm:flex-row sm:flex-wrap sm:items-center sm:justify-end">
-          {/* Filter by apiary (disabled when inspection filter is active) */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 w-full">
-            <label className="text-sm font-medium text-gray-700 whitespace-nowrap sm:mr-2 mb-1 sm:mb-0">
+        {/* Controls wrapper (LEFT aligned now) */}
+        <div className="flex flex-col gap-3 w-full sm:flex-row sm:flex-wrap sm:items-end sm:justify-start">
+          {/* Filter by apiary */}
+          <div className="flex flex-col gap-1 w-full sm:w-auto">
+            <label className="text-sm font-medium text-gray-700">
               Filter by Apiary:
             </label>
-
             <select
               value={selectedApiary}
               onChange={(e) => {
                 setSelectedApiary(e.target.value);
+                setSelectedHive(""); // reset hive when apiary changes
                 setPage(1);
               }}
               disabled={!!inspectionIdFromUrl}
-              className={`border border-gray-300 rounded px-2 py-1 text-sm w-full sm:w-auto ${
+              className={`border border-gray-300 rounded px-2 py-2 text-sm w-full sm:w-auto ${
                 inspectionIdFromUrl
                   ? "bg-gray-100 text-gray-500 cursor-not-allowed"
                   : ""
@@ -304,12 +351,87 @@ const LogEntryList = () => {
             </select>
           </div>
 
+       {/* Filter by Hive (Clear Hive sits beside the dropdown like InspectionList) */}
+<div className="flex flex-col gap-1 w-full sm:w-auto">
+  <label className="text-sm font-medium text-gray-700">
+    Filter by Hive:
+  </label>
+
+  <div className="flex items-center gap-2">
+    <select
+      value={selectedHive}
+      onChange={(e) => {
+        setSelectedHive(e.target.value);
+        setPage(1);
+      }}
+      disabled={!!inspectionIdFromUrl || hivesForSelectedApiary.length === 0}
+      className={`border border-gray-300 rounded px-2 py-2 text-sm w-full sm:w-[220px] ${
+        inspectionIdFromUrl
+          ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+          : ""
+      }`}
+    >
+      <option value="">
+        All Hives{selectedApiary ? " in Apiary" : ""}
+      </option>
+      {hivesForSelectedApiary.map((h) => (
+        <option key={h.id} value={h.id}>
+          {h.name}
+        </option>
+      ))}
+    </select>
+
+    {selectedHive && !inspectionIdFromUrl && (
+      <button
+        type="button"
+        onClick={clearHive}
+        className="text-sm px-3 py-2 border rounded hover:bg-gray-100 whitespace-nowrap flex-shrink-0"
+      >
+        Clear hive
+      </button>
+    )}
+  </div>
+</div>
+
+          {/* Date range */}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4 w-full sm:w-auto">
+            <div className="flex flex-col gap-1 w-full sm:w-auto">
+              <label className="text-sm font-medium text-gray-700">Date from:</label>
+              <input
+                type="date"
+                className="border border-gray-300 rounded px-2 py-2 text-sm w-full sm:w-auto"
+                value={dateFrom}
+                onChange={(e) => setDateFrom(e.target.value)}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1 w-full sm:w-auto">
+              <label className="text-sm font-medium text-gray-700">Date to:</label>
+              <input
+                type="date"
+                className="border border-gray-300 rounded px-2 py-2 text-sm w-full sm:w-auto"
+                value={dateTo}
+                onChange={(e) => setDateTo(e.target.value)}
+              />
+            </div>
+
+            {(dateFrom || dateTo) && (
+              <button
+                type="button"
+                onClick={clearDates}
+                className="text-sm px-3 py-2 border rounded hover:bg-gray-100 w-full sm:w-auto"
+              >
+                Clear dates
+              </button>
+            )}
+          </div>
+
           {/* View toggle */}
           <div className="flex border border-gray-300 rounded overflow-hidden self-start sm:self-auto">
             <button
               type="button"
               onClick={() => setViewMode("list")}
-              className={`px-3 py-1 text-sm ${
+              className={`px-3 py-2 text-sm ${
                 viewMode === "list" ? "bg-green-700 text-white" : "bg-white"
               }`}
             >
@@ -318,7 +440,7 @@ const LogEntryList = () => {
             <button
               type="button"
               onClick={() => setViewMode("grid")}
-              className={`px-3 py-1 text-sm ${
+              className={`px-3 py-2 text-sm ${
                 viewMode === "grid" ? "bg-green-700 text-white" : "bg-white"
               }`}
             >
@@ -388,18 +510,11 @@ const LogEntryList = () => {
       ) : (
         <>
           {viewMode === "list" ? (
-            // LIST VIEW
             <div className="divide-y divide-gray-200 bg-white rounded shadow">
               {pageItems.map((e) => {
-                const apiaryName = e.apiary_id
-                  ? apiaryNameById.get(e.apiary_id)
-                  : null;
-                const hiveName = e.hive_id
-                  ? hiveNameById.get(e.hive_id)
-                  : null;
-                const inspDate = e.inspection?.date
-                  ? formatUKDate(e.inspection.date)
-                  : null;
+                const apiaryName = e.apiary_id ? apiaryNameById.get(e.apiary_id) : null;
+                const hiveName = e.hive_id ? hiveNameById.get(e.hive_id) : null;
+                const inspDate = e.inspection?.date ? formatUKDate(e.inspection.date) : null;
 
                 const isHighlighted =
                   highlightId &&
@@ -411,9 +526,7 @@ const LogEntryList = () => {
                     key={e.id}
                     id={`log-${e.id}`}
                     data-highlight={isHighlighted ? "true" : "false"}
-                    className={["p-4", isHighlighted ? "bg-amber-50" : ""].join(
-                      " "
-                    )}
+                    className={["p-4", isHighlighted ? "bg-amber-50" : ""].join(" ")}
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -425,35 +538,28 @@ const LogEntryList = () => {
                             </span>
                           )}
                         </div>
+
                         <p className="text-sm text-gray-600">
-                          <span className="mr-2">
-                            Date: {formatUKDate(e.date)}
-                          </span>
-                          {apiaryName && (
-                            <span className="mr-2">Apiary: {apiaryName}</span>
-                          )}
-                          {!e.all_hives && hiveName && (
-                            <span>Hive: {hiveName}</span>
-                          )}
+                          <span className="mr-2">Date: {formatUKDate(e.date)}</span>
+                          {apiaryName && <span className="mr-2">Apiary: {apiaryName}</span>}
+                          {!e.all_hives && hiveName && <span>Hive: {hiveName}</span>}
                         </p>
+
                         {e.entry && (
-                          <p className="mt-2 text-gray-800 whitespace-pre-wrap">
-                            {e.entry}
-                          </p>
+                          <p className="mt-2 text-gray-800 whitespace-pre-wrap">{e.entry}</p>
                         )}
+
                         <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
-                         {e.inspection_id && (
-  <Link
-    to={`/inspections?highlight=${encodeURIComponent(
-      e.inspection_id
-    )}&type=INSPECTION`}
-    className="bg-green-700 hover:bg-green-800 text-white text-xs px-2 py-1 rounded"
-  >
-    {inspDate
-      ? `View Inspection (${inspDate})`
-      : "View Inspection"}
-  </Link>
-)}
+                          {e.inspection_id && (
+                            <Link
+                              to={`/inspections?highlight=${encodeURIComponent(
+                                e.inspection_id
+                              )}&type=INSPECTION`}
+                              className="bg-green-700 hover:bg-green-800 text-white text-xs px-2 py-1 rounded"
+                            >
+                              {inspDate ? `View Inspection (${inspDate})` : "View Inspection"}
+                            </Link>
+                          )}
 
                           <Link
                             to={`/logbook/${e.id}/edit`}
@@ -476,9 +582,7 @@ const LogEntryList = () => {
                               src={e.photo_url}
                               alt="Log"
                               className="w-28 h-20 object-cover rounded border hover:opacity-90"
-                              onError={(ev) =>
-                                (ev.currentTarget.style.display = "none")
-                              }
+                              onError={(ev) => (ev.currentTarget.style.display = "none")}
                             />
                           </button>
                         </div>
@@ -489,18 +593,11 @@ const LogEntryList = () => {
               })}
             </div>
           ) : (
-            // GRID VIEW
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {pageItems.map((e) => {
-                const apiaryName = e.apiary_id
-                  ? apiaryNameById.get(e.apiary_id)
-                  : null;
-                const hiveName = e.hive_id
-                  ? hiveNameById.get(e.hive_id)
-                  : null;
-                const inspDate = e.inspection?.date
-                  ? formatUKDate(e.inspection.date)
-                  : null;
+                const apiaryName = e.apiary_id ? apiaryNameById.get(e.apiary_id) : null;
+                const hiveName = e.hive_id ? hiveNameById.get(e.hive_id) : null;
+                const inspDate = e.inspection?.date ? formatUKDate(e.inspection.date) : null;
 
                 const isHighlighted =
                   highlightId &&
@@ -530,9 +627,7 @@ const LogEntryList = () => {
                               src={e.photo_url}
                               alt="Log"
                               className="w-28 h-20 object-cover rounded border hover:opacity-90"
-                              onError={(ev) =>
-                                (ev.currentTarget.style.display = "none")
-                              }
+                              onError={(ev) => (ev.currentTarget.style.display = "none")}
                             />
                           </button>
                         </div>
@@ -561,18 +656,16 @@ const LogEntryList = () => {
                     )}
 
                     <div className="mt-4 flex gap-2">
-                 {e.inspection_id && (
-  <Link
-    to={`/inspections?highlight=${encodeURIComponent(
-      e.inspection_id
-    )}&type=INSPECTION`}
-    className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
-  >
-    {inspDate
-      ? `View Inspection (${inspDate})`
-      : "View Inspection"}
-  </Link>
-)}
+                      {e.inspection_id && (
+                        <Link
+                          to={`/inspections?highlight=${encodeURIComponent(
+                            e.inspection_id
+                          )}&type=INSPECTION`}
+                          className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
+                        >
+                          {inspDate ? `View Inspection (${inspDate})` : "View Inspection"}
+                        </Link>
+                      )}
 
                       <Link
                         to={`/logbook/${e.id}/edit`}
@@ -590,11 +683,7 @@ const LogEntryList = () => {
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
             <div className="text-sm text-gray-600">
-              Showing{" "}
-              {total === 0
-                ? 0
-                : Math.min((page - 1) * PAGE_SIZE + 1, total)}
-              –
+              Showing {total === 0 ? 0 : Math.min((page - 1) * PAGE_SIZE + 1, total)}–
               {Math.min(page * PAGE_SIZE, total)} of {total}
             </div>
 
@@ -610,7 +699,7 @@ const LogEntryList = () => {
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
                 className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
- focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
               >
                 Prev
               </button>
@@ -620,7 +709,7 @@ const LogEntryList = () => {
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
                 className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
- focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
               >
                 Next
               </button>

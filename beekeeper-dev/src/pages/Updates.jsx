@@ -9,6 +9,54 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.0.6",
+  released_at: "2026-01-01T12:00:00Z",
+  summary:
+    "List pages unified with a consistent, responsive filter bar (Apiary + Hive + date range), improved Clear Hive behaviour, and server-side date filtering added for Tasks (Todos).",
+
+  added: [
+    "Added **Hive filtering** to Logbook list (LogEntryList) with apiary-aware hive dropdown options.",
+    "Added **date range filtering (From/To)** to Logbook list, using the logbook `date` field (server-side).",
+    "Added **date range filtering (From/To)** to Task list (TodoList), using the `due_date` field (server-side).",
+    "Added **Hive filtering** to Task list (TodoList), with apiary-aware hive dropdown options."
+  ],
+
+  changed: [
+    "Aligned list page controls to a consistent layout: **filters sit under the heading**, run left-to-right on desktop, and **stack cleanly on mobile**.",
+    "Updated Inspection list filter bar to match the same responsive style as Logbook (single-row layout on desktop, stacked on mobile).",
+    "Improved **Clear Hive** behaviour so it appears **beside the Hive dropdown** (instead of dropping below/under other controls).",
+    "Standardised URL-synced filters across lists using shared query params: `apiary_id`, `hive_id`, `from`, `to` (while preserving highlight/type params)."
+  ],
+
+  fixed: [
+    "Fixed responsive layout issues where date inputs could appear misaligned (label left, input right) on smaller screens.",
+    "Fixed cases where **Clear Hive** would appear under the date fields or disappear due to flex wrapping behaviour.",
+    "Improved consistency of filter UX across Inspections, Logbook and Tasks (same stacking rules, spacing, and control sizing)."
+  ],
+
+  removed: [],
+
+  security: [
+    "Filters are now applied defensively using server-side query constraints (`gte/lte`) on DATE fields to reduce edge-case parsing and inconsistent client-side filtering."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Inspections", to: "/inspections" },
+    { label: "Logbook", to: "/logbook" },
+    { label: "Tasks", to: "/todos" },
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Help", to: "/help" }
+  ],
+
+  known_issues: [
+    "If a browser window is extremely narrow, the filter bar may wrap onto multiple rows (by design) to preserve input usability.",
+    "Date filtering relies on saved dates being present; items with no date/due date may not appear when a From/To range is set."
+  ]
+},
+
+  {
   version: "1.0.5",
   released_at: "2025-12-06T18:00:00Z",
   summary:
