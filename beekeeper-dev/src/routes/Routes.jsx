@@ -41,6 +41,9 @@ import Settings from "../pages/Settings.jsx";
 import Archive from "../pages/Archive.jsx";
 import Help from "../pages/Help.jsx";
 
+// Step by Step Inspections
+import StepByStepInspections from "../pages/step-by-step-inspections.jsx";
+
 // Reports
 import PrintReport from "../pages/Reports/PrintReport.jsx";
 import ProfitLoss from "../pages/Reports/ProfitLoss.jsx";
@@ -148,6 +151,8 @@ function AppRoutes() {
       <Route path="/inspections" element={<Guarded><InspectionList /></Guarded>} />
       <Route path="/inspections/new" element={<Guarded><NewInspection /></Guarded>} />
       <Route path="/inspections/:id/edit" element={<Guarded><EditInspection /></Guarded>} />
+
+      <Route path="/inspections/step-by-step" element={<Guarded><StepByStepInspections /></Guarded>} />
 
       <Route path="/logbook" element={<Guarded><Logbook /></Guarded>} />
       <Route path="/logbook/new" element={<Guarded><NewLogEntry /></Guarded>} />

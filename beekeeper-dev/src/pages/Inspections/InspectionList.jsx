@@ -341,8 +341,29 @@ const InspectionList = () => {
   };
 
   return (
+    
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-2">Your Inspection Records</h1>
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-2">
+  <h1 className="text-2xl font-bold">Your Inspection Records</h1>
+
+  <div className="flex flex-col sm:flex-row gap-2">
+    <Link
+      to="/inspections/new"
+      className="inline-flex items-center justify-center bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
+    >
+      Start new inspection
+    </Link>
+
+    <Link
+      to="/inspections/step-by-step"
+      className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100"
+      title="View the step-by-step inspection guide"
+    >
+      Step-by-step inspection guide
+    </Link>
+  </div>
+</div>
+
 
       {/* Filters row (labels above, fields below, left-to-right like LogEntryList) */}
       <div className="mb-6">
