@@ -138,8 +138,9 @@ const LogEntryList = () => {
         `
         )
         .is("archived_at", null)
-        .order("date", { ascending: false });
-
+        .order("date", { ascending: false })
+        .order("created_at", { ascending: false });
+        
       // PRIORITY: If inspection filter is present, use it (and ignore apiary filter to avoid conflicts)
       if (inspectionIdFromUrl) {
         entriesQuery = entriesQuery.eq("inspection_id", inspectionIdFromUrl);
