@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState, useRef } from "react";
 import { supabase } from "../../services/supabase";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 9;
 
 const InspectionList = () => {
   const navigate = useNavigate();

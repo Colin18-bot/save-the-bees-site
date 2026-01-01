@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 9;
 
 const LogEntryList = () => {
   const location = useLocation();

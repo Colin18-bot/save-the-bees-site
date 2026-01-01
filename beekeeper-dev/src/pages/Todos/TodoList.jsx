@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../../services/supabase";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const PAGE_SIZE = 3; // 3 cards per page
+const PAGE_SIZE = 9; // 3 cards per page
 
 // DB truth: 'pending' | 'completed'
 const isDone = (status) => String(status || "").toLowerCase() === "completed";
