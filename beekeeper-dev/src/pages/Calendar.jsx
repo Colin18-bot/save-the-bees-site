@@ -527,10 +527,10 @@ const Calendar = () => {
         <div className="flex flex-wrap items-start gap-3 w-full">
           {/* Apiary + Hive – stack on mobile, inline on larger screens */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full md:w-auto">
-            <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 w-full sm:w-auto">
               <label className="text-sm font-medium">Apiary:</label>
               <select
-                className="flex-1 sm:flex-none border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm"
+                className="w-full sm:w-auto flex-1 sm:flex-none border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm"
                 value={apiaryId}
                 onChange={(e) => setApiaryId(e.target.value)}
               >
@@ -543,10 +543,10 @@ const Calendar = () => {
               </select>
             </div>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 w-full sm:w-auto">
               <label className="text-sm font-medium">Hive:</label>
               <select
-                className="flex-1 sm:flex-none border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm"
+                className="w-full sm:w-auto flex-1 sm:flex-none border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm"
                 value={hiveId}
                 onChange={(e) => setHiveId(e.target.value)}
               >
@@ -591,7 +591,7 @@ const Calendar = () => {
       <div className="flex flex-wrap items-start gap-2">
         {/* Date controls – stack on mobile */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full sm:w-auto">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 w-full sm:w-auto">
             <label className="text-sm font-medium">Month:</label>
             <select
               className="border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm w-full sm:w-auto"
@@ -608,7 +608,7 @@ const Calendar = () => {
             </select>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 w-full sm:w-auto">
             <label className="text-sm font-medium">Year:</label>
             <select
               className="border border-zinc-300 bg-white text-black rounded px-2 py-1 text-sm w-full sm:w-auto"
@@ -788,10 +788,7 @@ const Calendar = () => {
                           );
 
                           return (
-                            <div
-                              key={e.key}
-                              className="flex items-start gap-1"
-                            >
+                            <div key={e.key} className="flex items-start gap-1">
                               <span className={dotClass(e)} />
                               {isDisabled || !e.link ? (
                                 content
