@@ -290,3 +290,53 @@
 .bk-steps .small { font-size: 14px; }
 .bk-steps .hidden-md { display: none; }
 @media (min-width: 768px) { .bk-steps .hidden-md { display: inline-flex; } }
+
+/* ==========================================================
+   FIXES: mobile badge clipping, callout padding, wider layout
+   ========================================================== */
+
+/* Wider layout (still padded so it doesn’t look edge-to-edge) */
+.bk-steps {
+  --maxw: 1400px; /* increase from 1100 */
+}
+
+/* True full-width layout on large screens */
+.bk-steps .container {
+  max-width: 100%;
+}
+
+/* Prevent badge text from being clipped in the header */
+.bk-steps .topbar {
+  overflow: visible; /* stop clipping badge text */
+}
+
+/* Let badges wrap instead of truncating */
+.bk-steps .badge {
+  white-space: normal;     /* allow wrapping */
+  line-height: 1.2;
+  max-width: 100%;
+  display: inline-block;   /* fixes inline-flex wrapping issues */
+}
+
+/* On small screens, stack the H1 + badges cleanly */
+@media (max-width: 520px) {
+  .bk-steps .pill-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bk-steps h1 {
+    width: 100%;
+  }
+}
+
+/* Make sure your bottom callout cards have comfortable padding
+   and lists don't feel jammed against the border */
+.bk-steps .footer-grid .callout {
+  padding: 18px;
+}
+
+.bk-steps .footer-grid .callout ul {
+  margin-top: 10px;
+  padding-left: 20px;
+}
