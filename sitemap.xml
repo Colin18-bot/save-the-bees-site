@@ -80,6 +80,10 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://beezknees.co.uk/brood-pattern-guide</loc>
+    <lastmod>2026-01-02</lastmod>
+    <priority>0.5</priority>
+  </url>
     <loc>https://beezknees.co.uk/contact</loc>
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
@@ -214,6 +218,11 @@
     <lastmod>2025-12-17</lastmod>
     <priority>0.5</priority>
   </url> 
+  <url>
+    <loc>https://beezknees.co.uk/queen-cell-guide</loc>
+    <lastmod>2026-02-02</lastmod>
+    <priority>0.5</priority>
+  </url>
   <url>
     <loc>https://beezknees.co.uk/report-a-swarm</loc>
     <lastmod>2025-12-10</lastmod>
