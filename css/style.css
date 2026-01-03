@@ -275,17 +275,17 @@ a {
 	}
 
 	/* Mobile dropdowns: allow full height */
-  .dropdown-menu {
-    display: none;
-    position: static;
-    overflow: visible;
-    max-height: none;
-    background-color: #222;
-  }
+	.dropdown-menu {
+		display: none;
+		position: static;
+		overflow: visible;
+		max-height: none;
+		background-color: #222;
+	}
 
-  .dropdown.open .dropdown-menu {
-    display: block;
-  }
+	.dropdown.open .dropdown-menu {
+		display: block;
+	}
 }
 
 /* -------------------------------------------------- */
@@ -379,6 +379,55 @@ a {
 	/* Adjust to control the spacing */
 }
 
+/* ✅ CONSISTENT LIST INDENTS (SITE-WIDE IN CONTENT) */
+.content ul,
+.content ol {
+	margin: 0.75rem 0 1rem;
+	padding-left: 1.5rem;          /* consistent desktop indent */
+	list-style-position: outside;  /* bullets sit outside text block */
+}
+
+.content li {
+	line-height: 1.6;
+	margin-bottom: 0.4rem;
+}
+
+/* Contents / in-page anchor lists */
+.anchor-list {
+	margin: 0.75rem 0 1rem;
+	padding-left: 1.5rem;          /* keep consistent with other lists */
+	list-style: disc;
+	list-style-position: outside;
+}
+
+.anchor-list li {
+	margin-bottom: 0.4rem;
+}
+
+/* Extra indent for bullet lists inside callouts */
+.callout ul,
+.callout ol,
+.warning-callout ul,
+.warning-callout ol {
+	margin: 0.5rem 0 0.75rem;
+	padding-left: 1.5rem;          /* match baseline indent */
+	list-style-position: outside;
+}
+
+/* Wrapper helper used on some pages (do NOT add extra indent here) */
+.indented-list {
+	margin-left: 0;
+	padding-left: 0;
+	list-style: none;
+}
+
+@media (max-width: 600px) {
+	.content ul,
+	.content ol {
+		padding-left: 1.25rem;       /* slightly tighter on mobile */
+	}
+}
+
 /* --- ADDING AN IMAGE IN MAIN CONTENT AREA (LEFT) --- */
 .content img.float-left-img {
 	float: left;
@@ -407,7 +456,6 @@ a {
 	margin: 1.5rem auto;
 	border-radius: 8px;
 }
-
 
 /* 📱 Donation QR Code Resize */
 .qr-code {
@@ -583,9 +631,9 @@ a {
 		text-align: center;
 	}
 
+	/* ✅ Keep consistent gutter on mobile (avoid edge-to-edge) */
 	.container {
-		padding: 0;
-		/* 🔁 Remove default side padding */
+		padding: 0 1rem;
 	}
 
 	/* ---------- FLOATING IMAGES: MOBILE FIRST ---------- */
@@ -598,7 +646,6 @@ a {
 		margin: 1rem auto;
 		border-radius: 8px;
 	}
-
 }
 
 /* -------------------------------------------------- */
@@ -646,58 +693,6 @@ a {
 
 main.not-found {
 	padding: 200px 0;
-}
-
-/* -------------------------------------------------- */
-/* 📃 INDENTED LISTS                                 */
-/* -------------------------------------------------- */
-.indented-list {
-	margin-left: 1em;
-	padding-left: 1em;
-	list-style-type: disc;
-}
-
-/* Contents / in-page anchor lists */
-.anchor-list {
-	margin: 0.75rem 0 1rem;
-	padding-left: 2.25rem;
-	/* increase to push further right */
-	list-style: disc;
-	list-style-position: outside;
-}
-
-.anchor-list li {
-	margin-bottom: 0.4rem;
-}
-
-/* Extra indent for bullet lists inside callouts */
-.callout .indented-list {
-	margin-left: 0;
-	/* increase this if you want even more space */
-	padding-left: 0;
-}
-
-.container ul {
-	padding-left: 2.5em;
-}
-
-.indented-list li {
-	line-height: 1.6;
-	margin-bottom: 0.5em;
-}
-
-@media (max-width: 600px) {
-	.indented-list {
-		margin-left: 1em;
-		padding-left: 0.5em;
-		list-style-position: outside;
-		/* 🔁 ensures the dot is outside */
-	}
-
-	.indented-list li {
-		padding-left: 0;
-	}
-
 }
 
 /* Extra indent for cost list on Getting Started */
@@ -1016,7 +1011,7 @@ button:focus,
 .callout ol,
 .warning-callout ul,
 .warning-callout ol {
-	padding-left: 1.75rem;
+	padding-left: 1.5rem; /* ✅ corrected to match global content lists */
 	margin-left: 0;
 }
 
@@ -1061,7 +1056,6 @@ details summary {
 details p {
 	margin: 0.6rem 0 0.2rem;
 }
-
 
 /* =====================================================
    Embedded CSS extracted from root HTML (2025-12-13 17:12:35)
@@ -1115,7 +1109,6 @@ details p {
 }
 
 @media (max-width: 768px) {
-
 	#plant-selector th,
 	#plant-selector td {
 		font-size: 0.9rem;
@@ -1202,7 +1195,6 @@ details p {
 	border: 1px solid #f4b41a;
 	font-size: 0.9rem;
 }
-
 
 /* Seasonal management headings centred only */
 #seasonal-management .card h3 {
@@ -1607,10 +1599,7 @@ body {
 	color: #ffffff;
 }
 
-
 /* ---- Extracted from: honeybee-facts.html ---- */
-
-
 .fact-grid {
 	display: grid;
 	grid-template-columns: repeat(12, 1fr);
@@ -1881,7 +1870,6 @@ table.pretty-table tbody tr:nth-child(even) td {
 	}
 }
 
-
 /* ---- Extracted from: pollination.html ---- */
 /* Callout boxes (matches your site palette) */
 
@@ -1926,7 +1914,6 @@ table.pretty-table tbody tr:nth-child(even) td {
 	/* your cream background tone */
 }
 
-
 /* ---- Extracted from: site-map.html ---- */
 .seo-hidden {
 	position: absolute;
@@ -1936,7 +1923,6 @@ table.pretty-table tbody tr:nth-child(even) td {
 	height: 1px;
 	overflow: hidden;
 }
-
 
 /* ---- Extracted from: varroa-management.html ---- */
 /* Callout boxes */
@@ -2001,7 +1987,6 @@ table.pretty-table tbody tr:nth-child(even) td {
 	margin-bottom: 0.5rem;
 }
 
-
 /* ---- Extracted from: vet-medicine-records.html ---- */
 .soft-card {
 	background: #fff;
@@ -2059,7 +2044,6 @@ table.pretty-table tbody tr:nth-child(even) td {
 }
 
 @media (max-width: 768px) {
-
 	.weather-table th,
 	.weather-table td {
 		font-size: 0.9rem;
