@@ -702,12 +702,11 @@ main.not-found {
 
 /* Extra indent for cost list on Getting Started */
 ul.extra-indent {
-	padding-left: 3rem !important;
+	padding-left: 1.25rem !important;
 	/* pushes bullets + text to the right */
 	margin-left: 0;
 	/* optional: reset margin if needed */
 }
-
 
 /* ---------- DESKTOP FLOATS: LEFT / RIGHT IMAGE WRAP ---------- */
 @media (min-width: 769px) {
