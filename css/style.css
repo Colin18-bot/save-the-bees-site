@@ -795,7 +795,7 @@ ul.extra-indent {
 /* Responsive Improvements */
 @media (max-width: 600px) {
 	.contact-container {
-		padding: 1.5rem;
+		padding: 2rem 1rem;
 	}
 
 	.contact-container button {
