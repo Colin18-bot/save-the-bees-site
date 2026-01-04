@@ -1737,14 +1737,12 @@ table.pretty-table tbody tr:nth-child(even) td {
 	background-color: #14532d;
 }
 
-/* Make HiveTag section visually match the other “cards” */
+/* Keep HiveTag sections visually simple but retain gutters */
 .hivetag-section {
-	background-color: transparent;
-	border-radius: 0;
-	padding: 0;
-	/* let the row / inner card control padding */
-	margin-top: 2rem;
-	/* keep vertical spacing consistent */
+  background-color: transparent;
+  border-radius: 0;
+  padding: 1.5rem 1.25rem 2.5rem; /* ✅ restores the spacing you intended */
+  margin-top: 2rem;
 }
 
 /* Make the image/text “cards” align and fill nicely */
