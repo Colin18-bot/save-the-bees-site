@@ -2137,3 +2137,29 @@ table.pretty-table tbody tr:nth-child(even) td {
 		text-align: center;
 	}
 }
+
+/* =====================================================
+   HiveTag page: tighten vertical spacing between sections
+   ===================================================== */
+
+/* Reduce the big bottom padding that creates “blank gaps” */
+.hivetag-section {
+  padding: 1.25rem 1.25rem 1.5rem; /* was 1.5rem 1.25rem 2.5rem */
+}
+
+/* Reduce the gap specifically BETWEEN consecutive sections */
+.hivetag-section + .hivetag-section {
+  padding-top: 0.75rem; /* was 1.5rem (via .hivetag-section) */
+}
+
+/* Your grids add a big margin underneath; tighten for HiveTag only */
+.hivetag-section .grid {
+  margin: 1.25rem 0; /* was 2rem 0 */
+}
+
+/* Prevent “extra air” at the bottom of sections if the last item is a paragraph/list */
+.hivetag-section p:last-child,
+.hivetag-section ul:last-child,
+.hivetag-section ol:last-child {
+  margin-bottom: 0;
+}
