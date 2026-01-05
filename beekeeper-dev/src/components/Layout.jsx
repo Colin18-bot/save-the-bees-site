@@ -1,19 +1,23 @@
 // src/components/Layout.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import NavBar from "../components/NavBar";
 import Sidebar from "../components/Sidebar";
+import BackToTop from "../components/BackToTop";
 import bannerImage from "../assets/banner.webp";
 import { supabase } from "../services/supabase";
 
 // ✅ Legal/consent
 import AnalyticsGate from "../pages/Legal/AnalyticsGate";
-import GAReporter from "../pages/Legal/GAReporter"; // ← NEW
+import GAReporter from "../pages/Legal/GAReporter";
 import CookieBanner from "../pages/Legal/CookieBanner";
 
 const Layout = ({ children }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
+
+  // ✅ Main scroll container ref (we scroll inside <main>, not window)
+  const mainScrollRef = useRef(null);
 
   // Initial fetch
   useEffect(() => {
@@ -95,7 +99,7 @@ const Layout = ({ children }) => {
           - On mobile: block layout (no flex), so sidebar width doesn’t fight with content
           - On md+: flex layout with sidebar on the left as before
       */}
-      <div className="flex-1 relative overflow-hidden md:flex">
+      <div className="flex-1 relative overflow-hidden md:flex min-h-0">
         {/* Backdrop Blur when Sidebar is open on mobile */}
         {isMobileMenuOpen && (
           <div
@@ -117,7 +121,7 @@ const Layout = ({ children }) => {
         </div>
 
         {/* Main Content */}
-        <div className="md:flex-1 flex flex-col min-h-screen">
+        <div className="md:flex-1 flex flex-col min-h-0">
           {/* Banner */}
           <div className="relative z-0">
             <img
@@ -128,9 +132,22 @@ const Layout = ({ children }) => {
           </div>
 
           {/* Page Content */}
-          <main className="flex-1 p-4 sm:p-6 overflow-auto bg-white z-10 max-w-full">
+          <main
+            ref={mainScrollRef}
+            className="flex-1 p-4 sm:p-6 overflow-auto bg-white z-10 max-w-full"
+          >
             {children}
           </main>
+
+          {/* ✅ Back to top
+              - Uses <main> scrolling when available
+              - Falls back to window scrolling if needed (handled inside BackToTop.jsx)
+          */}
+          <BackToTop
+            containerRef={mainScrollRef}
+            showAfter={100}
+            minOverflow={200}
+          />
         </div>
       </div>
 

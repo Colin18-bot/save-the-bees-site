@@ -1364,16 +1364,6 @@ export default function Help() {
                 </div>
               </dl>
             </section>
-
-            <div className="pt-6">
-              <a
-                href="#top"
-                className="inline-block text-sm text-blue-700 hover:underline"
-                aria-label="Back to top"
-              >
-                ↑ Back to top
-              </a>
-            </div>
           </article>
         </div>
       </div>

@@ -457,15 +457,7 @@ export default function Updates() {
         </div>
       )}
 
-      {/* Back to top link */}
-      <div className="pt-6">
-        <a
-          href="#top"
-          className="inline-block text-sm text-blue-700 hover:underline"
-        >
-          ↑ Back to top
-        </a>
-      </div>
+     
     </div>
   );
 }
