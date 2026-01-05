@@ -9,6 +9,49 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.0.7",
+  released_at: "2026-01-04T12:00:00Z",
+  summary:
+    "Fixed cross-page navigation between Inspections and Logbook so highlighted items reliably jump to the correct page, and return-to-page behaviour is preserved when moving between linked records.",
+
+  added: [
+    "Added **return-to-page context** (`return_page`) when navigating from **Inspections → Logbook**, allowing **Logbook → View Inspection** to return to the exact inspection list page you came from.",
+    "Added deterministic **page alignment for highlighted inspections** in InspectionList by fetching ordered IDs under the current filters and calculating the correct page for the highlighted record."
+  ],
+
+  changed: [
+    "Inspections pagination is now **URL-driven** (`?page=`) as the source of truth, improving consistency across refreshes and deep links.",
+    "Updated Logbook → “View Inspection” links to include the original `page` when available, ensuring the inspection highlight is visible immediately on return.",
+    "Standardised cross-list navigation params (`highlight`, `type`, `page`, `return_page`) to reduce unexpected page jumps and stale list state."
+  ],
+
+  fixed: [
+    "Fixed cases where **View Inspection** from a highlighted logbook entry would land on the wrong inspection page (record not visible until paging around).",
+    "Fixed inconsistent ordering/page results caused by list views not aligning the highlight target with the current filter+sort set.",
+    "Fixed navigation loops/edge cases by preventing repeated highlight-page alignment triggers for the same URL state."
+  ],
+
+  removed: [],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+    { label: "Inspections", to: "/inspections" },
+    { label: "Logbook", to: "/logbook" },
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Help", to: "/help" },
+    { label: "Release Notes", to: "/updates" }
+  ],
+
+  known_issues: [
+    "If you click the sidebar **Inspections** link while already on /inspections, React Router may preserve the current query string (including `page=`) depending on navigation behaviour; this is expected unless the link is changed to explicitly reset `?page=1`.",
+    "Highlight alignment relies on the same filters/sort used by the list; changing filters after following a deep link may move the highlighted record to a different page."
+  ]
+},
+
+  {
   version: "1.0.6",
   released_at: "2026-01-01T12:00:00Z",
   summary:

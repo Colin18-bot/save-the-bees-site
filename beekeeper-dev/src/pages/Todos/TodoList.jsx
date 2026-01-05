@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../../services/supabase";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const PAGE_SIZE = 9; // 3 cards per page
+const PAGE_SIZE = 9;
 
 // DB truth: 'pending' | 'completed'
 const isDone = (status) => String(status || "").toLowerCase() === "completed";
@@ -30,7 +30,7 @@ const TodoList = () => {
     const params = new URLSearchParams(location.search || "");
     return {
       highlightId: params.get("highlight") || null,
-      highlightType: params.get("type") || null, // expect "TODO"
+      highlightType: (params.get("type") || "").toUpperCase() || null, // ✅ normalize: "TODO"
       apiaryFromUrl: params.get("apiary_id") || "",
       hiveFromUrl: params.get("hive_id") || "",
       fromFromUrl: params.get("from") || "",
@@ -40,6 +40,12 @@ const TodoList = () => {
 
   // Prevent infinite loops when auto-jumping to the page with the highlight
   const jumpedRef = useRef(false);
+
+  // Track filter signature so we only reset pagination when REAL filters change
+  const filterSigRef = useRef("");
+
+  // Track whether we've already scrolled to the highlighted card for this page/load
+  const hasScrolledRef = useRef(false);
 
   const [todos, setTodos] = useState([]);
   const [apiaries, setApiaries] = useState([]);
@@ -57,14 +63,25 @@ const TodoList = () => {
   const [page, setPage] = useState(1);
   const [view, setView] = useState("list"); // "grid" or "list"
 
-  // Keep selected filters in sync if URL changes elsewhere
+  // ✅ Sync filters from URL, but ONLY reset page when filters actually change
+  // (so adding highlight/type won't kick you back to page 1)
   useEffect(() => {
+    const nextSig = `${apiaryFromUrl || ""}|${hiveFromUrl || ""}|${fromFromUrl || ""}|${
+      toFromUrl || ""
+    }`;
+
     setSelectedApiary(apiaryFromUrl);
     setSelectedHive(hiveFromUrl);
     setDateFrom(fromFromUrl);
     setDateTo(toFromUrl);
-    jumpedRef.current = false;
-    setPage(1);
+
+    if (filterSigRef.current !== nextSig) {
+      filterSigRef.current = nextSig;
+      setPage(1);
+      jumpedRef.current = false;
+      hasScrolledRef.current = false;
+    }
+    // If only highlight/type changed, do NOT reset page/refs
   }, [apiaryFromUrl, hiveFromUrl, fromFromUrl, toFromUrl]);
 
   // Push current filters back to URL, preserving highlight/type
@@ -77,14 +94,14 @@ const TodoList = () => {
     if (dateFrom) params.set("from", dateFrom);
     if (dateTo) params.set("to", dateTo);
 
+    // Preserve context params exactly as they arrived
     if (incoming.get("highlight")) params.set("highlight", incoming.get("highlight"));
     if (incoming.get("type")) params.set("type", incoming.get("type"));
 
     const next = params.toString();
     const curr = (location.search || "").replace(/^\?/, "");
     if (next !== curr) navigate({ search: next }, { replace: true });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedApiary, selectedHive, dateFrom, dateTo]);
+  }, [selectedApiary, selectedHive, dateFrom, dateTo, location.search, navigate]);
 
   const fetchAll = async () => {
     setLoading(true);
@@ -135,8 +152,11 @@ const TodoList = () => {
     setHives(hiveData || []);
 
     setLoading(false);
+
+    // Dataset changed; allow highlight/page/scroll to run again
+    jumpedRef.current = false;
+    hasScrolledRef.current = false;
     setPage(1);
-    jumpedRef.current = false; // reset highlight jump when dataset changes
   };
 
   useEffect(() => {
@@ -163,10 +183,13 @@ const TodoList = () => {
     const hv = hives.find((h) => String(h.id) === String(selectedHive));
     if (hv && String(hv.apiary_id) !== String(selectedApiary)) {
       setSelectedHive("");
+      jumpedRef.current = false;
+      hasScrolledRef.current = false;
+      setPage(1);
     }
   }, [selectedApiary, selectedHive, hives]);
 
-  // Auto-jump to page containing highlighted TODO (once)
+  // Auto-jump to page containing highlighted TODO (once per dataset/filter set)
   useEffect(() => {
     if (!highlightId || (highlightType && highlightType !== "TODO")) return;
     if (jumpedRef.current) return;
@@ -175,7 +198,10 @@ const TodoList = () => {
     const idx = todos.findIndex((t) => String(t.id) === String(highlightId));
     if (idx >= 0) {
       const targetPage = Math.floor(idx / PAGE_SIZE) + 1;
-      if (targetPage !== page) setPage(targetPage);
+      if (targetPage !== page) {
+        setPage(targetPage);
+        hasScrolledRef.current = false; // allow scroll after page switches
+      }
       jumpedRef.current = true;
     }
   }, [todos, highlightId, highlightType, page]);
@@ -186,17 +212,21 @@ const TodoList = () => {
   const endIdx = Math.min(startIdx + PAGE_SIZE, total);
   const pageTodos = todos.slice(startIdx, endIdx);
 
-  // After page renders, if a task is highlighted, scroll it into view.
+  // After page renders, if a task is highlighted, scroll it into view (once)
   useEffect(() => {
     if (!highlightId || (highlightType && highlightType !== "TODO")) return;
+    if (hasScrolledRef.current) return;
+
     const t = setTimeout(() => {
       const el = document.getElementById(`todo-${highlightId}`);
       if (el) {
+        hasScrolledRef.current = true;
         el.scrollIntoView({ behavior: "smooth", block: "center" });
         el.classList.add("ring-2", "ring-amber-400", "bg-amber-50");
         setTimeout(() => el.classList.remove("ring-2", "ring-amber-400"), 1600);
       }
     }, 80);
+
     return () => clearTimeout(t);
   }, [pageTodos, highlightId, highlightType]);
 
@@ -224,11 +254,15 @@ const TodoList = () => {
     setDateFrom("");
     setDateTo("");
     setPage(1);
+    jumpedRef.current = false;
+    hasScrolledRef.current = false;
   };
 
   const clearHive = () => {
     setSelectedHive("");
     setPage(1);
+    jumpedRef.current = false;
+    hasScrolledRef.current = false;
   };
 
   /**
@@ -282,7 +316,11 @@ const TodoList = () => {
         setTodos((prev) =>
           prev.map((t) =>
             String(t.id) === String(id)
-              ? { ...t, status: data.status || "completed", completed_at: data.completed_at || t.completed_at }
+              ? {
+                  ...t,
+                  status: data.status || "completed",
+                  completed_at: data.completed_at || t.completed_at,
+                }
               : t
           )
         );
@@ -315,6 +353,8 @@ const TodoList = () => {
                 setSelectedApiary(e.target.value);
                 setSelectedHive("");
                 setPage(1);
+                jumpedRef.current = false;
+                hasScrolledRef.current = false;
               }}
               className="border border-gray-300 rounded px-2 py-2 text-sm w-full sm:w-[220px]"
             >
@@ -339,6 +379,8 @@ const TodoList = () => {
                 onChange={(e) => {
                   setSelectedHive(e.target.value);
                   setPage(1);
+                  jumpedRef.current = false;
+                  hasScrolledRef.current = false;
                 }}
                 disabled={hivesForSelectedApiary.length === 0}
                 className="border border-gray-300 rounded px-2 py-2 text-sm w-full sm:w-[220px]"
@@ -373,7 +415,12 @@ const TodoList = () => {
                 type="date"
                 className="border border-gray-300 rounded px-2 py-2 text-sm w-full sm:w-[170px]"
                 value={dateFrom}
-                onChange={(e) => setDateFrom(e.target.value)}
+                onChange={(e) => {
+                  setDateFrom(e.target.value);
+                  setPage(1);
+                  jumpedRef.current = false;
+                  hasScrolledRef.current = false;
+                }}
               />
             </div>
 
@@ -383,7 +430,12 @@ const TodoList = () => {
                 type="date"
                 className="border border-gray-300 rounded px-2 py-2 text-sm w-full sm:w-[170px]"
                 value={dateTo}
-                onChange={(e) => setDateTo(e.target.value)}
+                onChange={(e) => {
+                  setDateTo(e.target.value);
+                  setPage(1);
+                  jumpedRef.current = false;
+                  hasScrolledRef.current = false;
+                }}
               />
             </div>
 
@@ -403,14 +455,18 @@ const TodoList = () => {
             <button
               type="button"
               onClick={() => setView("list")}
-              className={`px-3 py-2 text-sm ${view === "list" ? "bg-green-700 text-white" : "bg-white"}`}
+              className={`px-3 py-2 text-sm ${
+                view === "list" ? "bg-green-700 text-white" : "bg-white"
+              }`}
             >
               List
             </button>
             <button
               type="button"
               onClick={() => setView("grid")}
-              className={`px-3 py-2 text-sm ${view === "grid" ? "bg-green-700 text-white" : "bg-white"}`}
+              className={`px-3 py-2 text-sm ${
+                view === "grid" ? "bg-green-700 text-white" : "bg-white"
+              }`}
             >
               Grid
             </button>
@@ -524,11 +580,16 @@ const TodoList = () => {
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
             <div className="text-sm text-gray-600">
-              Showing {Math.min((page - 1) * PAGE_SIZE + 1, total)}–{Math.min(page * PAGE_SIZE, total)} of {total}
+              Showing {Math.min((page - 1) * PAGE_SIZE + 1, total)}–
+              {Math.min(page * PAGE_SIZE, total)} of {total}
             </div>
 
             <div className="flex items-center gap-3 sm:justify-end">
-              {totalPages > 1 && <span className="text-xs text-gray-500">Page {page} of {totalPages}</span>}
+              {totalPages > 1 && (
+                <span className="text-xs text-gray-500">
+                  Page {page} of {totalPages}
+                </span>
+              )}
 
               <button
                 type="button"
@@ -573,13 +634,20 @@ const TodoList = () => {
                   key={todo.id}
                   id={`todo-${todo.id}`}
                   data-highlight={isHighlighted ? "true" : "false"}
-                  className={["p-4", isHighlighted ? "bg-amber-50 ring-2 ring-amber-400" : ""].join(" ")}
+                  className={[
+                    "p-4",
+                    isHighlighted ? "bg-amber-50 ring-2 ring-amber-400" : "",
+                  ].join(" ")}
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
                         <h3 className="font-bold text-lg">{todo.title}</h3>
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${badgeClass(todo.status)}`}>
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${badgeClass(
+                            todo.status
+                          )}`}
+                        >
                           {displayStatus}
                         </span>
                       </div>
@@ -591,7 +659,9 @@ const TodoList = () => {
                         {hiveLabel && <span>Hive: {hiveLabel}</span>}
                       </p>
 
-                      {todo.notes && <p className="mt-2 text-gray-800 whitespace-pre-wrap">{todo.notes}</p>}
+                      {todo.notes && (
+                        <p className="mt-2 text-gray-800 whitespace-pre-wrap">{todo.notes}</p>
+                      )}
 
                       <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
                         <Link
@@ -630,11 +700,16 @@ const TodoList = () => {
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
             <div className="text-sm text-gray-600">
-              Showing {Math.min((page - 1) * PAGE_SIZE + 1, total)}–{Math.min(page * PAGE_SIZE, total)} of {total}
+              Showing {Math.min((page - 1) * PAGE_SIZE + 1, total)}–
+              {Math.min(page * PAGE_SIZE, total)} of {total}
             </div>
 
             <div className="flex items-center gap-3 sm:justify-end">
-              {totalPages > 1 && <span className="text-xs text-gray-500">Page {page} of {totalPages}</span>}
+              {totalPages > 1 && (
+                <span className="text-xs text-gray-500">
+                  Page {page} of {totalPages}
+                </span>
+              )}
 
               <button
                 type="button"

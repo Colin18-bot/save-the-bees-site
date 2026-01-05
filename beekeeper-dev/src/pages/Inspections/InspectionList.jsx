@@ -1,9 +1,16 @@
 // src/pages/Inspections/InspectionList.jsx
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../../services/supabase";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
 const PAGE_SIZE = 9;
+
+const clampInt = (v, fallback = 1) => {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return fallback;
+  const i = Math.floor(n);
+  return i >= 1 ? i : fallback;
+};
 
 const InspectionList = () => {
   const navigate = useNavigate();
@@ -22,6 +29,7 @@ const InspectionList = () => {
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
 
+  // IMPORTANT: page is driven from URL now
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
 
@@ -35,20 +43,6 @@ const InspectionList = () => {
     index: 0,
   });
 
-  // Track whether we've already auto-scrolled to the highlighted card
-  const hasScrolledRef = useRef(false);
-
-  // Read highlight + NFC params
-  const { highlightId, highlightType, nfcUid } = useMemo(() => {
-    const params = new URLSearchParams(location.search || "");
-    return {
-      highlightId: params.get("highlight") || null,
-      highlightType: params.get("type") || null,
-      nfcUid: params.get("nfc_uid") || null,
-    };
-  }, [location.search]);
-
-  // Close / navigate helpers
   const closeLightbox = () =>
     setLightbox((s) => ({ ...s, isOpen: false, urls: [], index: 0 }));
   const showPrev = () =>
@@ -59,7 +53,39 @@ const InspectionList = () => {
   const showNext = () =>
     setLightbox((s) => ({ ...s, index: (s.index + 1) % s.urls.length }));
 
-  // Esc / Arrow keys
+  // Track whether we've already auto-scrolled to the highlighted card
+  const hasScrolledRef = useRef(false);
+
+  // prevent highlight-page alignment running repeatedly for same URL state
+  const alignedKeyRef = useRef("");
+
+  // Read query params (including page)
+  const {
+    highlightId,
+    highlightType,
+    nfcUid,
+    apiaryFromUrl,
+    hiveFromUrl,
+    fromFromUrl,
+    toFromUrl,
+    pageFromUrl,
+  } = useMemo(() => {
+    const params = new URLSearchParams(location.search || "");
+    const rawType = params.get("type");
+    return {
+      highlightId: params.get("highlight") || null,
+      highlightType: (rawType || "").toUpperCase() || null,
+      nfcUid: params.get("nfc_uid") || null,
+
+      apiaryFromUrl: params.get("apiary_id") || "",
+      hiveFromUrl: params.get("hive_id") || "",
+      fromFromUrl: params.get("from") || "",
+      toFromUrl: params.get("to") || "",
+      pageFromUrl: clampInt(params.get("page") || "1", 1),
+    };
+  }, [location.search]);
+
+  // Esc / Arrow keys (lightbox)
   useEffect(() => {
     if (!lightbox.isOpen) return;
     const onKey = (e) => {
@@ -69,6 +95,7 @@ const InspectionList = () => {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lightbox.isOpen]);
 
   // Load lookup options (ACTIVE only)
@@ -92,66 +119,109 @@ const InspectionList = () => {
     loadLookups();
   }, []);
 
-  // Read URL params for filters (ignore highlight/type/nfc here)
+  // Sync local filter state + page state FROM URL
   useEffect(() => {
-    const params = new URLSearchParams(location.search || "");
-    const hiveId = params.get("hive_id") || "";
-    const apiaryId = params.get("apiary_id") || "";
+    setSelectedApiary(apiaryFromUrl);
+    setSelectedHive(hiveFromUrl);
+    setDateFrom(fromFromUrl);
+    setDateTo(toFromUrl);
 
-    const fromParam = params.get("from") || "";
-    const toParam = params.get("to") || "";
-    setDateFrom(fromParam);
-    setDateTo(toParam);
+    // page is always from URL
+    setPage(pageFromUrl);
 
-    if (hiveId) {
-      const hv = hives.find((h) => String(h.id) === String(hiveId));
-      if (hv) {
-        setSelectedHive(hiveId);
-        setSelectedApiary(hv.apiary_id || "");
-      } else {
-        setSelectedHive("");
-        setSelectedApiary(apiaryId || "");
-      }
-    } else if (apiaryId) {
-      setSelectedApiary(apiaryId);
-      setSelectedHive("");
-    } else {
-      setSelectedApiary("");
-      setSelectedHive("");
-    }
-
-    setPage(1);
+    // allow re-scroll when navigation happens
     hasScrolledRef.current = false;
-  }, [location.search, hives]);
+  }, [apiaryFromUrl, hiveFromUrl, fromFromUrl, toFromUrl, pageFromUrl]);
 
-  // Push current filters to URL (preserve highlight, type & nfc_uid if present)
-  useEffect(() => {
+  // Helper: write params back to URL (single place)
+  const setSearchParams = (updates) => {
     const incoming = new URLSearchParams(location.search || "");
     const params = new URLSearchParams();
 
-    if (selectedApiary) params.set("apiary_id", selectedApiary);
-    if (selectedHive) params.set("hive_id", selectedHive);
+    // keep filters
+    const apiary_id = updates.apiary_id ?? incoming.get("apiary_id") ?? "";
+    const hive_id = updates.hive_id ?? incoming.get("hive_id") ?? "";
+    const from = updates.from ?? incoming.get("from") ?? "";
+    const to = updates.to ?? incoming.get("to") ?? "";
 
-    if (dateFrom) params.set("from", dateFrom);
-    if (dateTo) params.set("to", dateTo);
+    if (apiary_id) params.set("apiary_id", apiary_id);
+    if (hive_id) params.set("hive_id", hive_id);
+    if (from) params.set("from", from);
+    if (to) params.set("to", to);
 
+    // page
+    const pageNext = updates.page ?? incoming.get("page") ?? "1";
+    const pInt = clampInt(pageNext, 1);
+    params.set("page", String(pInt));
+
+    // preserve context
     if (incoming.get("highlight")) params.set("highlight", incoming.get("highlight"));
     if (incoming.get("type")) params.set("type", incoming.get("type"));
     if (incoming.get("nfc_uid")) params.set("nfc_uid", incoming.get("nfc_uid"));
 
     const next = params.toString();
     const curr = (location.search || "").replace(/^\?/, "");
-    if (next !== curr) {
-      navigate({ search: next }, { replace: true });
-    }
-  }, [selectedApiary, selectedHive, dateFrom, dateTo, location.search, navigate]);
+    if (next !== curr) navigate({ search: next }, { replace: true });
+  };
 
-  // Reset to page 1 when filters change
+  // ✅ If highlight is present: compute the correct page deterministically
+  // Approach: fetch ordered IDs under current filters, find index, set URL page.
   useEffect(() => {
-    setPage(1);
-  }, [selectedApiary, selectedHive, dateFrom, dateTo]);
+    if (!highlightId) return;
+    if (highlightType && highlightType !== "INSPECTION") return;
 
-  // Fetch inspections with pagination (ACTIVE ONLY)
+    const key = `${highlightId}|${apiaryFromUrl}|${hiveFromUrl}|${fromFromUrl}|${toFromUrl}|size:${PAGE_SIZE}`;
+    if (alignedKeyRef.current === key) return;
+    alignedKeyRef.current = key;
+
+    let cancelled = false;
+
+    (async () => {
+      try {
+        // build the same filter set as list
+        let q = supabase
+          .from("inspections")
+          .select("id")
+          .is("archived_at", null)
+          .order("date", { ascending: false })
+          .order("created_at", { ascending: false })
+          .order("id", { ascending: false });
+
+        if (hiveFromUrl) q = q.eq("hive_id", hiveFromUrl);
+        else if (apiaryFromUrl) q = q.eq("apiary_id", apiaryFromUrl);
+
+        if (fromFromUrl) q = q.gte("date", fromFromUrl);
+        if (toFromUrl) q = q.lte("date", toFromUrl);
+
+        const { data, error } = await q;
+        if (cancelled) return;
+        if (error) {
+          console.warn("Highlight page-align: failed to fetch ids", error);
+          return;
+        }
+
+        const ids = (data || []).map((x) => String(x.id));
+        const idx = ids.findIndex((id) => id === String(highlightId));
+        if (idx < 0) return;
+
+        const targetPage = Math.floor(idx / PAGE_SIZE) + 1;
+
+        // if URL page isn't the target, update it
+        if (targetPage !== pageFromUrl) {
+          setSearchParams({ page: targetPage });
+        }
+      } catch (e) {
+        if (!cancelled) console.warn("Highlight page-align threw:", e);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // IMPORTANT: use URL-derived vars only
+  }, [highlightId, highlightType, apiaryFromUrl, hiveFromUrl, fromFromUrl, toFromUrl, pageFromUrl]);
+
+  // Fetch inspections with pagination (ACTIVE ONLY) — now uses pageFromUrl as truth
   useEffect(() => {
     const fetchInspections = async () => {
       setLoading(true);
@@ -162,11 +232,11 @@ const InspectionList = () => {
         .select("id", { count: "exact", head: true })
         .is("archived_at", null);
 
-      if (selectedHive) countQuery = countQuery.eq("hive_id", selectedHive);
-      else if (selectedApiary) countQuery = countQuery.eq("apiary_id", selectedApiary);
+      if (hiveFromUrl) countQuery = countQuery.eq("hive_id", hiveFromUrl);
+      else if (apiaryFromUrl) countQuery = countQuery.eq("apiary_id", apiaryFromUrl);
 
-      if (dateFrom) countQuery = countQuery.gte("date", dateFrom);
-      if (dateTo) countQuery = countQuery.lte("date", dateTo);
+      if (fromFromUrl) countQuery = countQuery.gte("date", fromFromUrl);
+      if (toFromUrl) countQuery = countQuery.lte("date", toFromUrl);
 
       const { count } = await countQuery;
       const totalCount = count || 0;
@@ -174,9 +244,11 @@ const InspectionList = () => {
 
       // Clamp page
       const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
-      const safePage = Math.min(page, totalPages);
-      if (safePage !== page) {
-        setPage(safePage);
+      const safePage = Math.min(pageFromUrl, totalPages);
+
+      // if clamped differs, write it to URL
+      if (safePage !== pageFromUrl) {
+        setSearchParams({ page: safePage });
         setLoading(false);
         return;
       }
@@ -192,13 +264,14 @@ const InspectionList = () => {
         )
         .is("archived_at", null)
         .order("date", { ascending: false })
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .order("id", { ascending: false });
 
-      if (selectedHive) dataQuery = dataQuery.eq("hive_id", selectedHive);
-      else if (selectedApiary) dataQuery = dataQuery.eq("apiary_id", selectedApiary);
+      if (hiveFromUrl) dataQuery = dataQuery.eq("hive_id", hiveFromUrl);
+      else if (apiaryFromUrl) dataQuery = dataQuery.eq("apiary_id", apiaryFromUrl);
 
-      if (dateFrom) dataQuery = dataQuery.gte("date", dateFrom);
-      if (dateTo) dataQuery = dataQuery.lte("date", dateTo);
+      if (fromFromUrl) dataQuery = dataQuery.gte("date", fromFromUrl);
+      if (toFromUrl) dataQuery = dataQuery.lte("date", toFromUrl);
 
       dataQuery = dataQuery.range(from, to);
 
@@ -227,27 +300,15 @@ const InspectionList = () => {
         } else {
           setLogMap({});
         }
+      } else {
+        console.warn("fetchInspections error:", error);
       }
 
       setLoading(false);
     };
 
     fetchInspections();
-  }, [selectedApiary, selectedHive, dateFrom, dateTo, page]);
-
-  // Auto-scroll to highlighted card once
-  useEffect(() => {
-    if (loading || !highlightId || (highlightType && highlightType !== "INSPECTION")) return;
-    if (hasScrolledRef.current) return;
-
-    const el = document.getElementById(`insp-${highlightId}`);
-    if (el) {
-      hasScrolledRef.current = true;
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-      el.classList.add("ring-4", "ring-amber-400");
-      setTimeout(() => el.classList.remove("ring-4", "ring-amber-400"), 1500);
-    }
-  }, [loading, highlightId, highlightType, inspections]);
+  }, [apiaryFromUrl, hiveFromUrl, fromFromUrl, toFromUrl, pageFromUrl]);
 
   // Lookup helpers
   const apiaryName = useMemo(() => {
@@ -261,10 +322,10 @@ const InspectionList = () => {
   }, [hives]);
 
   const selectedHiveHasNfc = useMemo(() => {
-    if (!selectedHive) return false;
-    const hv = hives.find((h) => String(h.id) === String(selectedHive));
+    if (!hiveFromUrl) return false;
+    const hv = hives.find((h) => String(h.id) === String(hiveFromUrl));
     return !!hv?.nfc_uid;
-  }, [hives, selectedHive]);
+  }, [hives, hiveFromUrl]);
 
   const formatDate = (primary, fallback) => {
     const value = primary || fallback;
@@ -279,12 +340,43 @@ const InspectionList = () => {
     return hives.filter((h) => String(h.apiary_id) === String(selectedApiary));
   }, [hives, selectedApiary]);
 
-  const handleHiveChange = (nextHiveId) => {
-    setSelectedHive(nextHiveId);
-    if (!nextHiveId) return;
-    const hv = hives.find((h) => String(h.id) === String(nextHiveId));
-    if (hv?.apiary_id) setSelectedApiary(hv.apiary_id);
+  // ✅ Build logbook link that includes return_page
+  const buildLogbookLink = (inspectionId, highlightLogId) => {
+    const params = new URLSearchParams();
+
+    params.set("inspection_id", inspectionId);
+
+    // preserve current InspectionList filters from URL (not state)
+    if (apiaryFromUrl) params.set("apiary_id", apiaryFromUrl);
+    if (hiveFromUrl) params.set("hive_id", hiveFromUrl);
+    if (fromFromUrl) params.set("from", fromFromUrl);
+    if (toFromUrl) params.set("to", toFromUrl);
+
+    // ✅ CRITICAL
+    params.set("return_page", String(pageFromUrl));
+
+    if (highlightLogId) {
+      params.set("highlight", highlightLogId);
+      params.set("type", "LOGBOOK");
+    }
+
+    return `/logbook?${params.toString()}`;
   };
+
+  // Auto-scroll to highlighted card once (after data is loaded)
+  useEffect(() => {
+    if (loading) return;
+    if (!highlightId || (highlightType && highlightType !== "INSPECTION")) return;
+    if (hasScrolledRef.current) return;
+
+    const el = document.getElementById(`insp-${highlightId}`);
+    if (el) {
+      hasScrolledRef.current = true;
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.classList.add("ring-4", "ring-amber-400");
+      setTimeout(() => el.classList.remove("ring-4", "ring-amber-400"), 1500);
+    }
+  }, [loading, highlightId, highlightType, inspections]);
 
   const buildSummary = (insp) => {
     const out = [];
@@ -305,14 +397,12 @@ const InspectionList = () => {
         : insp.colony_behavior
     );
     pushIf("Env. signs", insp.environmental_signs);
-    if (insp.environmental_signs?.includes("Other"))
-      pushIf("Env. other", insp.environmental_signs_other);
+    if (insp.environmental_signs?.includes("Other")) pushIf("Env. other", insp.environmental_signs_other);
     pushIf("Population", insp.hive_population);
     pushIf("Brood", insp.brood_pattern);
     pushIf("Stores", insp.food_stores);
     pushIf("Queen", insp.queen_status);
-    if (insp.queen_status?.includes("Other"))
-      pushIf("Queen other", insp.queen_status_other);
+    if (insp.queen_status?.includes("Other")) pushIf("Queen other", insp.queen_status_other);
     if (insp.signs_pests) {
       pushIf("Pests", insp.pest_types);
       pushIf("Pest other", insp.pest_other);
@@ -335,37 +425,33 @@ const InspectionList = () => {
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   const clearDates = () => {
-    setDateFrom("");
-    setDateTo("");
-    setPage(1);
+    setSearchParams({ from: "", to: "", page: 1 });
   };
 
   return (
-    
     <div className="p-6">
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-2">
-  <h1 className="text-2xl font-bold">Your Inspection Records</h1>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-2">
+        <h1 className="text-2xl font-bold">Your Inspection Records</h1>
 
-  <div className="flex flex-col sm:flex-row gap-2">
-    <Link
-      to="/inspections/new"
-      className="inline-flex items-center justify-center bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
-    >
-      Start new inspection
-    </Link>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Link
+            to="/inspections/new"
+            className="inline-flex items-center justify-center bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
+          >
+            Start new inspection
+          </Link>
 
-    <Link
-      to="/inspections/step-by-step"
-      className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100"
-      title="View the step-by-step inspection guide"
-    >
-      Step-by-step inspection guide
-    </Link>
-  </div>
-</div>
+          <Link
+            to="/inspections/step-by-step"
+            className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100"
+            title="View the step-by-step inspection guide"
+          >
+            Step-by-step inspection guide
+          </Link>
+        </div>
+      </div>
 
-
-      {/* Filters row (labels above, fields below, left-to-right like LogEntryList) */}
+      {/* Filters row */}
       <div className="mb-6">
         <div className="flex flex-col gap-3 w-full sm:flex-row sm:flex-wrap sm:items-end sm:gap-4">
           {/* Apiary */}
@@ -377,8 +463,9 @@ const InspectionList = () => {
               className="border border-gray-300 rounded px-3 py-2 text-sm w-full sm:w-[220px]"
               value={selectedApiary}
               onChange={(e) => {
-                setSelectedApiary(e.target.value);
-                setSelectedHive("");
+                const nextApiary = e.target.value;
+                // write to URL + reset page
+                setSearchParams({ apiary_id: nextApiary, hive_id: "", page: 1 });
               }}
             >
               <option value="">All Apiaries</option>
@@ -390,7 +477,7 @@ const InspectionList = () => {
             </select>
           </div>
 
-          {/* Hive (Clear Hive appears to the RIGHT of the dropdown) */}
+          {/* Hive */}
           <div className="flex flex-col gap-1 w-full sm:w-auto">
             <label className="text-sm font-medium text-gray-700">
               Filter by Hive:
@@ -399,7 +486,17 @@ const InspectionList = () => {
               <select
                 className="border border-gray-300 rounded px-3 py-2 text-sm w-full sm:w-[220px]"
                 value={selectedHive}
-                onChange={(e) => handleHiveChange(e.target.value)}
+                onChange={(e) => {
+                  const nextHive = e.target.value;
+                  // keep apiary in sync (if hive selected)
+                  if (!nextHive) {
+                    setSearchParams({ hive_id: "", page: 1 });
+                    return;
+                  }
+                  const hv = hives.find((h) => String(h.id) === String(nextHive));
+                  const nextApiary = hv?.apiary_id || apiaryFromUrl || "";
+                  setSearchParams({ hive_id: nextHive, apiary_id: nextApiary, page: 1 });
+                }}
                 disabled={hivesForSelectedApiary.length === 0}
               >
                 <option value="">
@@ -415,7 +512,7 @@ const InspectionList = () => {
               {selectedHive && (
                 <button
                   type="button"
-                  onClick={() => setSelectedHive("")}
+                  onClick={() => setSearchParams({ hive_id: "", page: 1 })}
                   className="text-sm px-3 py-2 border rounded hover:bg-gray-100 whitespace-nowrap flex-shrink-0"
                 >
                   Clear Hive
@@ -426,27 +523,31 @@ const InspectionList = () => {
 
           {/* Date from */}
           <div className="flex flex-col gap-1 w-full sm:w-auto">
-            <label className="text-sm font-medium text-gray-700">Date from:</label>
+            <label className="text-sm font-medium text-gray-700">
+              Date from:
+            </label>
             <input
               type="date"
               className="border border-gray-300 rounded px-3 py-2 text-sm w-full sm:w-[170px]"
               value={dateFrom}
-              onChange={(e) => setDateFrom(e.target.value)}
+              onChange={(e) => setSearchParams({ from: e.target.value, page: 1 })}
             />
           </div>
 
           {/* Date to */}
           <div className="flex flex-col gap-1 w-full sm:w-auto">
-            <label className="text-sm font-medium text-gray-700">Date to:</label>
+            <label className="text-sm font-medium text-gray-700">
+              Date to:
+            </label>
             <input
               type="date"
               className="border border-gray-300 rounded px-3 py-2 text-sm w-full sm:w-[170px]"
               value={dateTo}
-              onChange={(e) => setDateTo(e.target.value)}
+              onChange={(e) => setSearchParams({ to: e.target.value, page: 1 })}
             />
           </div>
 
-          {/* Clear dates stays at the end */}
+          {/* Clear dates */}
           {(dateFrom || dateTo) && (
             <button
               type="button"
@@ -459,19 +560,22 @@ const InspectionList = () => {
         </div>
       </div>
 
-      {/* NFC context banner when arriving via tag for a tagged hive */}
-      {selectedHive && selectedHiveHasNfc && nfcUid && (
+      {/* NFC context banner */}
+      {hiveFromUrl && selectedHiveHasNfc && nfcUid && (
         <div className="mb-4 p-3 border rounded bg-green-50 text-green-900 text-sm">
-          <p className="font-semibold">NFC tag recognised for hive "{hiveName(selectedHive)}".</p>
+          <p className="font-semibold">
+            NFC tag recognised for hive "{hiveName(hiveFromUrl)}".
+          </p>
           <p className="mt-1">
-            You’re viewing this hive’s inspection history. Tap this hive’s NFC tag again to start a new inspection, or use the button below.
+            You’re viewing this hive’s inspection history. Tap this hive’s NFC
+            tag again to start a new inspection, or use the button below.
           </p>
           <div className="mt-2">
             <button
               type="button"
               onClick={() =>
                 navigate(
-                  `/inspections/new?hive_id=${encodeURIComponent(selectedHive)}${
+                  `/inspections/new?hive_id=${encodeURIComponent(hiveFromUrl)}${
                     nfcUid ? `&nfc_uid=${encodeURIComponent(nfcUid)}` : ""
                   }`
                 )
@@ -508,12 +612,14 @@ const InspectionList = () => {
 
               const logs = logMap[insp.id] || { count: 0, recent: [] };
 
-              const hiveForCard = hives.find((h) => String(h.id) === String(insp.hive_id));
+              const hiveForCard = hives.find(
+                (h) => String(h.id) === String(insp.hive_id)
+              );
               const showNfcHeaderPill =
                 hiveForCard &&
                 hiveForCard.nfc_uid &&
-                selectedHive &&
-                String(selectedHive) === String(insp.hive_id);
+                hiveFromUrl &&
+                String(hiveFromUrl) === String(insp.hive_id);
 
               return (
                 <div
@@ -527,7 +633,9 @@ const InspectionList = () => {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <h2 className="text-lg font-semibold">{hiveName(insp.hive_id)}</h2>
+                      <h2 className="text-lg font-semibold">
+                        {hiveName(insp.hive_id)}
+                      </h2>
                       {showNfcHeaderPill && (
                         <span className="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200">
                           NFC tag
@@ -539,7 +647,9 @@ const InspectionList = () => {
                     </span>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-2">{apiaryName(insp.apiary_id)}</p>
+                  <p className="text-sm text-gray-600 mb-2">
+                    {apiaryName(insp.apiary_id)}
+                  </p>
 
                   <div className="mb-2 flex items-center gap-3">
                     <span
@@ -548,16 +658,16 @@ const InspectionList = () => {
                           ? "bg-gray-100 text-gray-800 border-gray-200"
                           : "bg-gray-50 text-gray-400 border-gray-100"
                       }`}
-                      title={`${logs.count} linked logbook entr${logs.count === 1 ? "y" : "ies"}`}
+                      title={`${logs.count} linked logbook entr${
+                        logs.count === 1 ? "y" : "ies"
+                      }`}
                     >
                       {logs.count} log{logs.count === 1 ? "" : "s"}
                     </span>
 
                     {logs.count > 0 && (
                       <Link
-                        to={`/logbook?inspection_id=${insp.id}${
-                          logs.recent[0]?.id ? `&highlight=${logs.recent[0].id}&type=logbook` : ""
-                        }`}
+                        to={buildLogbookLink(insp.id, logs.recent[0]?.id)}
                         className="text-blue-600 hover:underline text-sm"
                         aria-label="View related logbook entries"
                       >
@@ -572,8 +682,12 @@ const InspectionList = () => {
                         className="inline-flex items-center gap-2 text-[11px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200 max-w-full"
                         title={`NFC tag: ${hiveForCard.nfc_uid}`}
                       >
-                        <span className="font-semibold uppercase tracking-wide">NFC tag</span>
-                        <span className="font-mono truncate max-w-[170px]">{hiveForCard.nfc_uid}</span>
+                        <span className="font-semibold uppercase tracking-wide">
+                          NFC tag
+                        </span>
+                        <span className="font-mono truncate max-w-[170px]">
+                          {hiveForCard.nfc_uid}
+                        </span>
                       </span>
                     </div>
                   )}
@@ -623,11 +737,13 @@ const InspectionList = () => {
                       ⚠️ Notifiable disease suspected (AFB/EFB). Report to the relevant authority.
                     </div>
                   )}
-                  {insp.signs_disease && !diseaseInfo?.notifiable && diseaseInfo?.hasVarroa && (
-                    <div className="mb-3 p-2 text-sm rounded border bg-amber-50 border-amber-200 text-amber-900">
-                      Varroa present — reporting required per national rules.
-                    </div>
-                  )}
+                  {insp.signs_disease &&
+                    !diseaseInfo?.notifiable &&
+                    diseaseInfo?.hasVarroa && (
+                      <div className="mb-3 p-2 text-sm rounded border bg-amber-50 border-amber-200 text-amber-900">
+                        Varroa present — reporting required per national rules.
+                      </div>
+                    )}
 
                   {photos.length > 0 && (
                     <div className="flex gap-2 flex-wrap mb-3">
@@ -635,7 +751,9 @@ const InspectionList = () => {
                         <button
                           key={i}
                           type="button"
-                          onClick={() => setLightbox({ isOpen: true, urls: photos, index: i })}
+                          onClick={() =>
+                            setLightbox({ isOpen: true, urls: photos, index: i })
+                          }
                           className="focus:outline-none"
                           aria-label={`Open photo ${i + 1} of ${photos.length}`}
                         >
@@ -665,21 +783,21 @@ const InspectionList = () => {
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
             <div className="text-sm text-gray-600">
-              Showing {Math.min((page - 1) * PAGE_SIZE + 1, total)}–
-              {Math.min(page * PAGE_SIZE, total)} of {total}
+              Showing {Math.min((pageFromUrl - 1) * PAGE_SIZE + 1, total)}–
+              {Math.min(pageFromUrl * PAGE_SIZE, total)} of {total}
             </div>
 
             <div className="flex items-center gap-3 sm:justify-end">
               {totalPages > 1 && (
                 <span className="text-xs text-gray-500">
-                  Page {page} of {totalPages}
+                  Page {pageFromUrl} of {totalPages}
                 </span>
               )}
 
               <button
                 type="button"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
+                onClick={() => setSearchParams({ page: Math.max(1, pageFromUrl - 1) })}
+                disabled={pageFromUrl === 1}
                 className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
               >
@@ -688,8 +806,8 @@ const InspectionList = () => {
 
               <button
                 type="button"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
+                onClick={() => setSearchParams({ page: Math.min(totalPages, pageFromUrl + 1) })}
+                disabled={pageFromUrl === totalPages}
                 className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
                   focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
               >

@@ -19,17 +19,24 @@ const LogEntryList = () => {
     inspectionIdFromUrl,
     fromFromUrl,
     toFromUrl,
+    returnPageFromUrl,
   } = useMemo(() => {
     const params = new URLSearchParams(location.search || "");
     const rawType = params.get("type");
+
+    // return_page = page we were on in InspectionList when we clicked "View logs"
+    // (we preserve it so "View Inspection" can jump back to that page)
+    const rp = params.get("return_page") || "";
+
     return {
       highlightId: params.get("highlight") || null,
-      highlightType: rawType ? rawType.toUpperCase() : null, // "LOGBOOK"
+      highlightType: (rawType || "").toUpperCase() || null, // "LOGBOOK"
       apiaryFromUrl: params.get("apiary_id") || "", // "" means all
       hiveFromUrl: params.get("hive_id") || "", // "" means all
       inspectionIdFromUrl: params.get("inspection_id") || "", // "" means no inspection filter
       fromFromUrl: params.get("from") || "",
       toFromUrl: params.get("to") || "",
+      returnPageFromUrl: rp, // keep as string, validate when used
     };
   }, [location.search]);
 
@@ -93,7 +100,7 @@ const LogEntryList = () => {
     setPage(1);
   }, [apiaryFromUrl, hiveFromUrl, fromFromUrl, toFromUrl]);
 
-  // Push filters to URL whenever they change (preserve highlight/type/inspection_id)
+  // Push filters to URL whenever they change (preserve highlight/type/inspection_id/return_page)
   useEffect(() => {
     const incoming = new URLSearchParams(location.search || "");
     const params = new URLSearchParams();
@@ -104,18 +111,22 @@ const LogEntryList = () => {
     if (dateFrom) params.set("from", dateFrom);
     if (dateTo) params.set("to", dateTo);
 
+    // Preserve context params (keep exactly what's already there)
     if (incoming.get("highlight")) params.set("highlight", incoming.get("highlight"));
     if (incoming.get("type")) params.set("type", incoming.get("type"));
     if (incoming.get("inspection_id"))
       params.set("inspection_id", incoming.get("inspection_id"));
+
+    // ✅ CRITICAL: preserve return_page so InspectionList can jump back correctly
+    if (incoming.get("return_page"))
+      params.set("return_page", incoming.get("return_page"));
 
     const next = params.toString();
     const curr = (location.search || "").replace(/^\?/, "");
     if (next !== curr) {
       navigate({ search: next }, { replace: true });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedApiary, selectedHive, dateFrom, dateTo]);
+  }, [selectedApiary, selectedHive, dateFrom, dateTo, location.search, navigate]);
 
   // If an inspection filter is present, fetch a tiny bit of meta for the banner
   useEffect(() => {
@@ -196,12 +207,9 @@ const LogEntryList = () => {
           .order("name", { ascending: true }),
       ]);
 
-      if (entriesErr)
-        setError(entriesErr.message || "Failed to load logbook entries.");
-      if (apiaryErr)
-        setError((prev) => prev || apiaryErr.message || "Failed to load apiaries.");
-      if (hiveErr)
-        setError((prev) => prev || hiveErr.message || "Failed to load hives.");
+      if (entriesErr) setError(entriesErr.message || "Failed to load logbook entries.");
+      if (apiaryErr) setError((prev) => prev || apiaryErr.message || "Failed to load apiaries.");
+      if (hiveErr) setError((prev) => prev || hiveErr.message || "Failed to load hives.");
 
       setEntries(entriesData || []);
       setApiaries(apiaryData || []);
@@ -313,6 +321,31 @@ const LogEntryList = () => {
     }
   }, [selectedApiary, selectedHive, hives]);
 
+  // ✅ Build "View Inspection" link and include the ORIGINAL InspectionList page (return_page)
+  const buildInspectionListLink = (inspectionId) => {
+    const params = new URLSearchParams();
+
+    // If we are NOT in inspection-scoped mode, preserve current list filters
+    if (!inspectionIdFromUrl) {
+      if (selectedApiary) params.set("apiary_id", selectedApiary);
+      if (selectedHive) params.set("hive_id", selectedHive);
+    }
+
+    if (dateFrom) params.set("from", dateFrom);
+    if (dateTo) params.set("to", dateTo);
+
+    // ✅ jump back to the same page the user was on in InspectionList
+    const rpNum = Number(returnPageFromUrl || "");
+    if (Number.isFinite(rpNum) && rpNum >= 1) {
+      params.set("page", String(Math.floor(rpNum)));
+    }
+
+    params.set("highlight", inspectionId);
+    params.set("type", "INSPECTION");
+
+    return `/inspections?${params.toString()}`;
+  };
+
   if (loading) return <div className="p-4">Loading logbook…</div>;
 
   return (
@@ -351,47 +384,47 @@ const LogEntryList = () => {
             </select>
           </div>
 
-       {/* Filter by Hive (Clear Hive sits beside the dropdown like InspectionList) */}
-<div className="flex flex-col gap-1 w-full sm:w-auto">
-  <label className="text-sm font-medium text-gray-700">
-    Filter by Hive:
-  </label>
+          {/* Filter by Hive */}
+          <div className="flex flex-col gap-1 w-full sm:w-auto">
+            <label className="text-sm font-medium text-gray-700">
+              Filter by Hive:
+            </label>
 
-  <div className="flex items-center gap-2">
-    <select
-      value={selectedHive}
-      onChange={(e) => {
-        setSelectedHive(e.target.value);
-        setPage(1);
-      }}
-      disabled={!!inspectionIdFromUrl || hivesForSelectedApiary.length === 0}
-      className={`border border-gray-300 rounded px-2 py-2 text-sm w-full sm:w-[220px] ${
-        inspectionIdFromUrl
-          ? "bg-gray-100 text-gray-500 cursor-not-allowed"
-          : ""
-      }`}
-    >
-      <option value="">
-        All Hives{selectedApiary ? " in Apiary" : ""}
-      </option>
-      {hivesForSelectedApiary.map((h) => (
-        <option key={h.id} value={h.id}>
-          {h.name}
-        </option>
-      ))}
-    </select>
+            <div className="flex items-center gap-2">
+              <select
+                value={selectedHive}
+                onChange={(e) => {
+                  setSelectedHive(e.target.value);
+                  setPage(1);
+                }}
+                disabled={!!inspectionIdFromUrl || hivesForSelectedApiary.length === 0}
+                className={`border border-gray-300 rounded px-2 py-2 text-sm w-full sm:w-[220px] ${
+                  inspectionIdFromUrl
+                    ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                    : ""
+                }`}
+              >
+                <option value="">
+                  All Hives{selectedApiary ? " in Apiary" : ""}
+                </option>
+                {hivesForSelectedApiary.map((h) => (
+                  <option key={h.id} value={h.id}>
+                    {h.name}
+                  </option>
+                ))}
+              </select>
 
-    {selectedHive && !inspectionIdFromUrl && (
-      <button
-        type="button"
-        onClick={clearHive}
-        className="text-sm px-3 py-2 border rounded hover:bg-gray-100 whitespace-nowrap flex-shrink-0"
-      >
-        Clear hive
-      </button>
-    )}
-  </div>
-</div>
+              {selectedHive && !inspectionIdFromUrl && (
+                <button
+                  type="button"
+                  onClick={clearHive}
+                  className="text-sm px-3 py-2 border rounded hover:bg-gray-100 whitespace-nowrap flex-shrink-0"
+                >
+                  Clear hive
+                </button>
+              )}
+            </div>
+          </div>
 
           {/* Date range */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4 w-full sm:w-auto">
@@ -459,33 +492,35 @@ const LogEntryList = () => {
       </div>
 
       {/* Filter banner when inspection_id is active */}
-      {inspectionIdFromUrl && (
-        <div className="mb-4 p-3 rounded border bg-blue-50 border-blue-200 text-blue-900 flex flex-wrap items-center gap-3">
-          <span className="text-sm">
-            {inspectionMeta?.date ? (
-              <>
-                Showing logbook entries for the inspection on{" "}
-                <strong>{formatUKDate(inspectionMeta.date)}</strong>.
-              </>
-            ) : (
-              <>Showing logbook entries linked to this inspection.</>
-            )}
-          </span>
-          <button
-            type="button"
-            onClick={clearInspectionFilter}
-            className="text-sm underline text-blue-800 hover:text-blue-900"
-          >
-            Clear inspection filter
-          </button>
-          <Link
-            to={`/inspections/${inspectionIdFromUrl}/edit`}
-            className="text-sm underline text-blue-800 hover:text-blue-900"
-          >
-            Back to that inspection
-          </Link>
-        </div>
+{inspectionIdFromUrl && (
+  <div className="mb-4 p-3 rounded border bg-blue-50 border-blue-200 text-blue-900 flex flex-wrap items-center gap-3">
+    <span className="text-sm">
+      {inspectionMeta?.date ? (
+        <>
+          Showing logbook entries for the inspection on{" "}
+          <strong>{formatUKDate(inspectionMeta.date)}</strong>.
+        </>
+      ) : (
+        <>Showing logbook entries linked to this inspection.</>
       )}
+    </span>
+
+    <button
+      type="button"
+      onClick={clearInspectionFilter}
+      className="text-sm underline text-blue-800 hover:text-blue-900"
+    >
+      Clear inspection filter
+    </button>
+
+    <Link
+      to={`/inspections/${inspectionIdFromUrl}/edit`}
+      className="text-sm underline text-blue-800 hover:text-blue-900"
+    >
+      Edit this inspection
+    </Link>
+  </div>
+)}
 
       {/* Error */}
       {error && (
@@ -552,9 +587,7 @@ const LogEntryList = () => {
                         <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
                           {e.inspection_id && (
                             <Link
-                              to={`/inspections?highlight=${encodeURIComponent(
-                                e.inspection_id
-                              )}&type=INSPECTION`}
+                              to={buildInspectionListLink(e.inspection_id)}
                               className="bg-green-700 hover:bg-green-800 text-white text-xs px-2 py-1 rounded"
                             >
                               {inspDate ? `View Inspection (${inspDate})` : "View Inspection"}
@@ -658,9 +691,7 @@ const LogEntryList = () => {
                     <div className="mt-4 flex gap-2">
                       {e.inspection_id && (
                         <Link
-                          to={`/inspections?highlight=${encodeURIComponent(
-                            e.inspection_id
-                          )}&type=INSPECTION`}
+                          to={buildInspectionListLink(e.inspection_id)}
                           className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
                         >
                           {inspDate ? `View Inspection (${inspDate})` : "View Inspection"}
