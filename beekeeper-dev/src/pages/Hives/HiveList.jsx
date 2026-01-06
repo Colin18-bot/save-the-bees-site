@@ -8,7 +8,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { reverseGeocodeMany } from "../../utils/geocode";
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 9;
 
 const HiveList = () => {
   const location = useLocation();
