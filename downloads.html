@@ -23,7 +23,7 @@
     <!-- SEO Meta Tags -->
     <meta
       name="description"
-      content="Free BeezKnees downloads for UK beekeepers: bee health checker (PDF/Word), varroa chemical and non-chemical guides, PPE checklist, veterinary medicine record template, apiary risk assessment templates (Word + PDF), and Year in the Apiary planning PDFs."
+      content="Free BeezKnees downloads for UK beekeepers: bee health checker (PDF/Word), varroa chemical and non-chemical guides, PPE checklist, official veterinary medicine record form (external), apiary risk assessment templates (Word + PDF), and Year in the Apiary planning PDFs."
     />
     <meta
       name="keywords"
@@ -67,7 +67,7 @@
           "@context": "https://schema.org",
           "@type": "CollectionPage",
           "name": "Free Beekeeping Downloads (UK) – BeezKnees",
-          "description": "A collection of free printable downloads for UK beekeepers, including bee health checker resources, varroa treatment guides, PPE guidance, record-keeping templates, Word/PDF templates, and planning PDFs.",
+          "description": "A collection of free printable downloads for UK beekeepers, including bee health checker resources, varroa treatment guides, PPE guidance, record-keeping resources, Word/PDF templates, and planning PDFs.",
           "url": "https://beezknees.co.uk/downloads",
           "publisher": {
             "@type": "Organization",
@@ -83,6 +83,12 @@
           },
           "dateModified": "2025-12-29",
           "hasPart": [
+            {
+              "@type": "DigitalDocument",
+              "name": "Veterinary Medicine Administration Record (official PDF – BeeBase / National Bee Unit)",
+              "fileFormat": "application/pdf",
+              "url": "https://www.nationalbeeunit.com/assets/PDFs/3_Resources_for_beekeepers/Fact_Sheets/Fact_28_Veterinary_Medicine_Administration_Record.pdf"
+            },
             {
               "@type": "DigitalDocument",
               "name": "Bee Health Checker (UK) – Printable Checklist (PDF)",
@@ -112,12 +118,6 @@
               "name": "Personal Protective Equipment (PPE) for Varroa Treatments – Safety Guide (PDF)",
               "fileFormat": "application/pdf",
               "url": "https://beezknees.co.uk/downloads/BeezKnees_PPE_for_Varroa_Treatments.pdf"
-            },
-            {
-              "@type": "DigitalDocument",
-              "name": "Veterinary Medicine Administration Record – Template (PDF)",
-              "fileFormat": "application/pdf",
-              "url": "https://beezknees.co.uk/downloads/Veterinary-Medicine-Administration-Record.pdf"
             },
             {
               "@type": "DigitalDocument",
@@ -187,129 +187,125 @@
         </div>
       </header>
     </div>
-<!-- Navigation Bar -->
-<nav class="navbar" role="navigation" aria-label="Main navigation">
-  <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
-    <li>
-      <a href="/" title="Visit the homepage">Home</a>
-    </li>
+    <!-- Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+        <li>
+          <a href="/" title="Visit the homepage">Home</a>
+        </li>
 
-    <li class="dropdown">
-      <a href="/about-us" title="Learn more about us">About</a>
-    </li>
+        <li class="dropdown">
+          <a href="/about-us" title="Learn more about us">About</a>
+        </li>
 
-    <!-- Beekeeping (foundations) -->
-    <li class="dropdown">
-      <a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a></li>
-        <li><a href="/equipment" title="Essential beekeeping equipment">Equipment</a></li>
-        <li><a href="/hive-management" title="Manage your hive effectively">Hive Management</a></li>
-        <li><a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">Step-by-Step Inspections</a></li>
-        <li><a href="/queen-cell-guide" title="Queen cell identification and swarm vs supersedure guidance (UK)">Queen Cells Guide</a></li>
-        <li><a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">Brood Pattern Guide</a></li>
-        <li><a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a></li>
-        <li><a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a></li>
-        <li><a href="/honey-extraction" title="How to harvest and bottle honey safely">Extracting Honey</a></li>
-      </ul>
-    </li>
+        <!-- Beekeeping (foundations) -->
+        <li class="dropdown">
+          <a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a></li>
+            <li><a href="/equipment" title="Essential beekeeping equipment">Equipment</a></li>
+            <li><a href="/hive-management" title="Manage your hive effectively">Hive Management</a></li>
+            <li><a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">Step-by-Step Inspections</a></li>
+            <li><a href="/queen-cell-guide" title="Queen cell identification and swarm vs supersedure guidance (UK)">Queen Cells Guide</a></li>
+            <li><a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">Brood Pattern Guide</a></li>
+            <li><a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a></li>
+            <li><a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a></li>
+            <li><a href="/honey-extraction" title="How to harvest and bottle honey safely">Extracting Honey</a></li>
+          </ul>
+        </li>
 
-     <!-- Varroa cluster -->
+        <!-- Varroa cluster -->
         <li class="dropdown">
           <a href="/varroa-management" title="Control varroa mite infestations">Varroa</a>
           <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
           <ul class="dropdown-menu">
-           <li><a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">Varroa Overview (5-min)</a></li>
-           <li><a href="/varroa-chemical-treatments" title="Chemical varroa treatments and safe seasonal use in the UK">Chemical Treatments</a></li>
-           <li><a href="/varroa-non-chemical-methods" title="Non-chemical varroa control and IPM methods">Non-chemical Methods (IPM)</a></li>
-           <li><a href="/ppe-varroa-treatments" title="PPE and safety guidance for varroa treatments">PPE for Treatments</a></li>
-           <li><a href="/varroa-monitoring-methods" title="How to monitor varroa levels using common methods">Monitoring Methods</a></li>
-           <li><a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Treatment Calendar (UK)</a></li>
+            <li><a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">Varroa Overview (5-min)</a></li>
+            <li><a href="/varroa-chemical-treatments" title="Chemical varroa treatments and safe seasonal use in the UK">Chemical Treatments</a></li>
+            <li><a href="/varroa-non-chemical-methods" title="Non-chemical varroa control and IPM methods">Non-chemical Methods (IPM)</a></li>
+            <li><a href="/ppe-varroa-treatments" title="PPE and safety guidance for varroa treatments">PPE for Treatments</a></li>
+            <li><a href="/varroa-monitoring-methods" title="How to monitor varroa levels using common methods">Monitoring Methods</a></li>
+            <li><a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Treatment Calendar (UK)</a></li>
           </ul>
         </li>
-        
-    <!-- Apiary calendar (months) -->
-    <li class="dropdown">
-      <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/january" title="January beekeeping tasks">January</a></li>
-        <li><a href="/february" title="February beekeeping tasks">February</a></li>
-        <li><a href="/march" title="March beekeeping tasks">March</a></li>
-        <li><a href="/april" title="April beekeeping tasks">April</a></li>
-        <li><a href="/may" title="May beekeeping tasks">May</a></li>
-        <li><a href="/june" title="June beekeeping tasks">June</a></li>
-        <li><a href="/july" title="July beekeeping tasks">July</a></li>
-        <li><a href="/august" title="August beekeeping tasks">August</a></li>
-        <li><a href="/september" title="September beekeeping tasks">September</a></li>
-        <li><a href="/october" title="October beekeeping tasks">October</a></li>
-        <li><a href="/november" title="November beekeeping tasks">November</a></li>
-        <li><a href="/december" title="December beekeeping tasks">December</a></li>
-      </ul>
-    </li>
 
-    <!-- Diseases + records + responsibilities (keeps “legal” from becoming a new top-level) -->
-    <li class="dropdown">
-      <a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li>
-          <a href="/veterinary-medicine-records"
-             title="How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a>
+        <!-- Apiary calendar (months) -->
+        <li class="dropdown">
+          <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/january" title="January beekeeping tasks">January</a></li>
+            <li><a href="/february" title="February beekeeping tasks">February</a></li>
+            <li><a href="/march" title="March beekeeping tasks">March</a></li>
+            <li><a href="/april" title="April beekeeping tasks">April</a></li>
+            <li><a href="/may" title="May beekeeping tasks">May</a></li>
+            <li><a href="/june" title="June beekeeping tasks">June</a></li>
+            <li><a href="/july" title="July beekeeping tasks">July</a></li>
+            <li><a href="/august" title="August beekeeping tasks">August</a></li>
+            <li><a href="/september" title="September beekeeping tasks">September</a></li>
+            <li><a href="/october" title="October beekeeping tasks">October</a></li>
+            <li><a href="/november" title="November beekeeping tasks">November</a></li>
+            <li><a href="/december" title="December beekeeping tasks">December</a></li>
+          </ul>
         </li>
-        <li><a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a></li>
-        <li><a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a></li>
-        <li><a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a></li>
-        <li><a href="/bee-pests" title="Common pests affecting bees">Pests</a></li>
-        <li><a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a></li>
-        <li><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></li>
 
-        <!-- Responsibilities & compliance cluster (locked in) -->
-        <li><a href="/beekeeping-responsibilities-uk" title="Beekeeping responsibilities, safety and good practice in the UK">Beekeeping Responsibilities (UK)</a></li>
-        <li><a href="/apiary-risk-assessment" title="Apiary risk assessment guidance and templates for UK beekeepers">Apiary Risk Assessment</a></li>
-        <li><a href="/landowner-beekeeper-agreement" title="Landowner and beekeeper agreement guidance and template">Landowner Agreement</a></li>
-        <li><a href="/beekeeping-insurance-uk" title="Beekeeping insurance and public liability overview for the UK">Insurance (UK)</a></li>
+        <!-- Diseases + records + responsibilities -->
+        <li class="dropdown">
+          <a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li>
+              <a href="/veterinary-medicine-records" title="How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a>
+            </li>
+            <li><a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a></li>
+            <li><a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a></li>
+            <li><a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a></li>
+            <li><a href="/bee-pests" title="Common pests affecting bees">Pests</a></li>
+            <li><a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a></li>
+            <li><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></li>
+
+            <li><a href="/beekeeping-responsibilities-uk" title="Beekeeping responsibilities, safety and good practice in the UK">Beekeeping Responsibilities (UK)</a></li>
+            <li><a href="/apiary-risk-assessment" title="Apiary risk assessment guidance and templates for UK beekeepers">Apiary Risk Assessment</a></li>
+            <li><a href="/landowner-beekeeper-agreement" title="Landowner and beekeeper agreement guidance and template">Landowner Agreement</a></li>
+            <li><a href="/beekeeping-insurance-uk" title="Beekeeping insurance and public liability overview for the UK">Insurance (UK)</a></li>
+          </ul>
+        </li>
+
+        <!-- Honeybee facts -->
+        <li class="dropdown">
+          <a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a></li>
+            <li><a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a></li>
+            <li><a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a></li>
+            <li><a href="/pollination" title="Honeybee role in pollination">Pollination</a></li>
+          </ul>
+        </li>
+
+        <!-- Help bees -->
+        <li class="dropdown">
+          <a href="/help-the-bees" title="How you can help save the bees">Help Bees</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a></li>
+            <li><a href="/donate" title="Make a donation to support bees">Donate</a></li>
+            <li><a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a></li>
+          </ul>
+        </li>
+
+        <!-- Free downloads -->
+        <li>
+          <a href="/downloads" title="Free beekeeping downloads and printable guides" aria-label="Free beekeeping downloads including varroa guides and record templates">Free Downloads</a>
+        </li>
+
+        <!-- Members area -->
+        <li>
+          <a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members Area</a>
+        </li>
       </ul>
-    </li>
+    </nav>
 
-    <!-- Honeybee facts -->
-    <li class="dropdown">
-      <a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a></li>
-        <li><a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a></li>
-        <li><a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a></li>
-        <li><a href="/pollination" title="Honeybee role in pollination">Pollination</a></li>
-      </ul>
-    </li>
-
-    <!-- Help bees -->
-    <li class="dropdown">
-      <a href="/help-the-bees" title="How you can help save the bees">Help Bees</a>
-      <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-      <ul class="dropdown-menu">
-        <li><a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a></li>
-        <li><a href="/donate" title="Make a donation to support bees">Donate</a></li>
-        <li><a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a></li>
-      </ul>
-    </li>
-
-    <!-- Free downloads (top-level, as requested) -->
-    <li>
-      <a href="/downloads"
-         title="Free beekeeping downloads and printable guides"
-         aria-label="Free beekeeping downloads including varroa guides and record templates">Free Downloads</a>
-    </li>
-
-    <!-- Members area -->
-    <li>
-      <a href="https://beezknees-members.netlify.app/login"
-         title="Login or Register for HiveTag Dashboard">Members Area</a>
-    </li>
-  </ul>
-</nav>
     <!-- Hero Banner -->
     <section role="region" aria-label="Downloads banner">
       <div class="banner">
@@ -334,7 +330,7 @@
             <li>Bee Health Checker (printable checklist: confirming checks + severity + mini callouts)</li>
             <li>Varroa treatment guides (chemical + non-chemical IPM)</li>
             <li>PPE checklist and safe handling notes for treatments</li>
-            <li>Veterinary medicine record template (plus official source)</li>
+            <li>Official veterinary medicine record form (linked to BeeBase)</li>
             <li>Apiary risk assessment template (PDF + Word)</li>
             <li>Landowner–beekeeper agreement template (Word)</li>
             <li>Year-in-the-apiary planning downloads (calendar + seasonal strategy)</li>
@@ -343,7 +339,7 @@
         </div>
       </div>
 
-      <!-- NEW: Bee Health Checker download section (anchor target) -->
+      <!-- Bee Health Checker download section (anchor target) -->
       <section id="bee-health-checker-download" aria-labelledby="bee-health-checker-download-heading">
         <h2 id="bee-health-checker-download-heading">Bee Health Checker (UK) – Printable Checklist</h2>
 
@@ -356,15 +352,9 @@
         <div class="callout callout-tip" role="region" aria-label="Bee health checker download links">
           <strong>Download options:</strong>
           <p>
-            <a class="hero-cta" href="/downloads/BeezKnees_Bee_Health_Checker_UK.pdf" title="Download Bee Health Checker (UK) printable checklist (PDF)">
-              Download PDF
-            </a>
-            <a class="hero-cta secondary" href="/downloads/BeezKnees_Bee_Health_Checker_UK.docx" title="Download Bee Health Checker (UK) printable checklist (Word)">
-              Download Word
-            </a>
-            <a class="hero-cta secondary" href="/bee-health-checker" title="Read the Bee Health Checker online">
-              Read online
-            </a>
+            <a class="hero-cta" href="/downloads/BeezKnees_Bee_Health_Checker_UK.pdf" title="Download Bee Health Checker (UK) printable checklist (PDF)">Download PDF</a>
+            <a class="hero-cta secondary" href="/downloads/BeezKnees_Bee_Health_Checker_UK.docx" title="Download Bee Health Checker (UK) printable checklist (Word)">Download Word</a>
+            <a class="hero-cta secondary" href="/bee-health-checker" title="Read the Bee Health Checker online">Read online</a>
           </p>
         </div>
 
@@ -377,7 +367,7 @@
         </div>
       </section>
 
-      <!-- NEW: Read online guides -->
+      <!-- Read online guides -->
       <section aria-labelledby="read-online-heading">
         <h2 id="read-online-heading">Read online guides (recommended)</h2>
         <p>
@@ -388,9 +378,7 @@
         <div class="indented-list">
           <ul>
             <li>
-              <a href="/beekeeping-responsibilities-uk" title="Beekeeping responsibilities in the UK"
-                >Beekeeping Responsibilities (UK)</a
-              >
+              <a href="/beekeeping-responsibilities-uk" title="Beekeeping responsibilities in the UK">Beekeeping Responsibilities (UK)</a>
               (the main hub for safety, records and good practice)
             </li>
             <li>
@@ -433,7 +421,7 @@
               </tr>
             </thead>
             <tbody>
-              <!-- NEW: Bee Health Checker -->
+              <!-- Bee Health Checker -->
               <tr>
                 <td><strong>Bee Health Checker (UK) – printable checklist</strong></td>
                 <td>PDF / Word</td>
@@ -442,17 +430,9 @@
                   and mini callouts for red flags and common UK issues. Designed to use at the apiary alongside inspection notes.
                 </td>
                 <td>
-                  <a
-                    href="/downloads/BeezKnees_Bee_Health_Checker_UK.pdf"
-                    title="Download Bee Health Checker (UK) printable checklist (PDF document)"
-                    >Download PDF</a
-                  >
+                  <a href="/downloads/BeezKnees_Bee_Health_Checker_UK.pdf" title="Download Bee Health Checker (UK) printable checklist (PDF document)">Download PDF</a>
                   <br />
-                  <a
-                    href="/downloads/BeezKnees_Bee_Health_Checker_UK.docx"
-                    title="Download Bee Health Checker (UK) printable checklist (Word document)"
-                    >Download Word</a
-                  >
+                  <a href="/downloads/BeezKnees_Bee_Health_Checker_UK.docx" title="Download Bee Health Checker (UK) printable checklist (Word document)">Download Word</a>
                   <br />
                   <a href="/bee-health-checker" title="Read the Bee Health Checker online">Read online</a>
                 </td>
@@ -466,11 +446,7 @@
                   planning considerations (including resistance awareness).
                 </td>
                 <td>
-                  <a
-                    href="/downloads/BeezKnees_Varroa_Chemical_Treatments_Overview.pdf"
-                    title="Download BeezKnees chemical varroa treatments overview (PDF document)"
-                    >Download</a
-                  >
+                  <a href="/downloads/BeezKnees_Varroa_Chemical_Treatments_Overview.pdf" title="Download BeezKnees chemical varroa treatments overview (PDF document)">Download</a>
                 </td>
               </tr>
 
@@ -482,11 +458,7 @@
                   management approach.
                 </td>
                 <td>
-                  <a
-                    href="/downloads/BeezKnees_Varroa_Non_Chemical_Methods.pdf"
-                    title="Download BeezKnees non-chemical varroa methods (PDF document)"
-                    >Download</a
-                  >
+                  <a href="/downloads/BeezKnees_Varroa_Non_Chemical_Methods.pdf" title="Download BeezKnees non-chemical varroa methods (PDF document)">Download</a>
                 </td>
               </tr>
 
@@ -498,40 +470,29 @@
                   clean-up when using treatments.
                 </td>
                 <td>
-                  <a
-                    href="/downloads/BeezKnees_PPE_for_Varroa_Treatments.pdf"
-                    title="Download BeezKnees PPE guide for varroa treatments (PDF document)"
-                    >Download</a
-                  >
+                  <a href="/downloads/BeezKnees_PPE_for_Varroa_Treatments.pdf" title="Download BeezKnees PPE guide for varroa treatments (PDF document)">Download</a>
                 </td>
               </tr>
 
               <tr>
-                <td><strong>Veterinary Medicine Administration Record (template)</strong></td>
+                <td><strong>Veterinary Medicine Administration Record (official form)</strong></td>
                 <td>PDF</td>
                 <td>
-                  A record-keeping template for hive treatments and veterinary medicines (dates, product details, hive ID, batch
-                  number and notes). Keeping records supports good practice and may be a legal requirement depending on the product
-                  used.
+                  An official record-keeping form for veterinary medicines (dates, product details, hive ID, batch number and notes).
+                  For convenience, we link to the official BeeBase / National Bee Unit PDF so you always get the latest version.
                 </td>
                 <td>
-                  <a
-                    href="/downloads/Veterinary-Medicine-Administration-Record.pdf"
-                    title="Download Veterinary Medicine Administration Record (local copy)"
-                    >Download (site copy)</a
-                  >
-                  <br />
                   <a
                     href="https://www.nationalbeeunit.com/assets/PDFs/3_Resources_for_beekeepers/Fact_Sheets/Fact_28_Veterinary_Medicine_Administration_Record.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
-                    title="Open the official National Bee Unit template (external)"
-                    >Official source</a
+                    title="Open the official Veterinary Medicine Administration Record (PDF) on the National Bee Unit / BeeBase website"
+                    >Open official PDF (BeeBase / National Bee Unit)</a
                   >
                 </td>
               </tr>
 
-              <!-- NEW: Apiary Risk Assessment Template -->
+              <!-- Apiary Risk Assessment Template -->
               <tr>
                 <td><strong>Apiary risk assessment (template)</strong></td>
                 <td>PDF / Word</td>
@@ -540,23 +501,15 @@
                   alone, weather and access). Useful for landowner reassurance and your own planning.
                 </td>
                 <td>
-                  <a
-                    href="/downloads/apiary-risk-assessment-template.pdf"
-                    title="Download apiary risk assessment template (PDF document)"
-                    >Download PDF</a
-                  >
+                  <a href="/downloads/apiary-risk-assessment-template.pdf" title="Download apiary risk assessment template (PDF document)">Download PDF</a>
                   <br />
-                  <a
-                    href="/downloads/apiary-risk-assessment-template.docx"
-                    title="Download apiary risk assessment template (Word document)"
-                    >Download Word</a
-                  >
+                  <a href="/downloads/apiary-risk-assessment-template.docx" title="Download apiary risk assessment template (Word document)">Download Word</a>
                   <br />
                   <a href="/apiary-risk-assessment" title="Read the apiary risk assessment guidance online">Read online</a>
                 </td>
               </tr>
 
-              <!-- NEW: Landowner–Beekeeper Agreement (Word) -->
+              <!-- Landowner–Beekeeper Agreement (Word) -->
               <tr>
                 <td><strong>Landowner–beekeeper agreement (template)</strong></td>
                 <td>Word</td>
@@ -565,15 +518,9 @@
                   details, expectations and basic ground rules).
                 </td>
                 <td>
-                  <a
-                    href="/downloads/landowner-beekeeper-agreement.docx"
-                    title="Download landowner–beekeeper agreement template (Word document)"
-                    >Download Word</a
-                  >
+                  <a href="/downloads/landowner-beekeeper-agreement.docx" title="Download landowner–beekeeper agreement template (Word document)">Download Word</a>
                   <br />
-                  <a href="/landowner-beekeeper-agreement" title="Read the landowner–beekeeper agreement guidance online"
-                    >Read online</a
-                  >
+                  <a href="/landowner-beekeeper-agreement" title="Read the landowner–beekeeper agreement guidance online">Read online</a>
                 </td>
               </tr>
 
@@ -585,11 +532,7 @@
                   checks, feeding, swarm control and seasonal tasks.
                 </td>
                 <td>
-                  <a
-                    href="/downloads/year-in-the-apiary-uk-beekeeping-calendar.pdf"
-                    title="Download Year in the Apiary UK beekeeping calendar (PDF document)"
-                    >Download</a
-                  >
+                  <a href="/downloads/year-in-the-apiary-uk-beekeeping-calendar.pdf" title="Download Year in the Apiary UK beekeeping calendar (PDF document)">Download</a>
                   <br />
                   <a href="/year-in-the-apiary" title="Read the Year in the Apiary pages">Read online</a>
                 </td>
@@ -603,11 +546,7 @@
                   designed to sit alongside the monthly pages.
                 </td>
                 <td>
-                  <a
-                    href="/downloads/year-in-the-apiary-monthly-seasonal-strategy.pdf"
-                    title="Download Year in the Apiary monthly seasonal strategy (PDF document)"
-                    >Download</a
-                  >
+                  <a href="/downloads/year-in-the-apiary-monthly-seasonal-strategy.pdf" title="Download Year in the Apiary monthly seasonal strategy (PDF document)">Download</a>
                 </td>
               </tr>
             </tbody>
@@ -624,16 +563,14 @@
         </div>
       </section>
 
-      <!-- Expanded related pages (includes all the new pages we built) -->
+      <!-- Related pages -->
       <section aria-labelledby="more-help-heading">
         <h2 id="more-help-heading">Related pages</h2>
 
         <div class="indented-list">
           <ul>
             <li>
-              <a href="/beekeeping-responsibilities-uk" title="Beekeeping responsibilities in the UK"
-                >Beekeeping Responsibilities (UK)</a
-              >
+              <a href="/beekeeping-responsibilities-uk" title="Beekeeping responsibilities in the UK">Beekeeping Responsibilities (UK)</a>
               (safety, records and good practice hub)
             </li>
             <li>
@@ -670,9 +607,7 @@
             <li><a href="/ppe-varroa-treatments" title="PPE for varroa treatments">PPE for Varroa Treatments</a></li>
 
             <li>
-              <a href="/veterinary-medicine-records" title="Veterinary medicine records for beekeepers in the UK"
-                >Veterinary Medicine Records</a
-              >
+              <a href="/veterinary-medicine-records" title="Veterinary medicine records for beekeepers in the UK">Veterinary Medicine Records</a>
               (what to record and why)
             </li>
             <li><a href="/bee-health-checker" title="Bee health checker (UK)">Bee Health Checker (UK)</a> (symptoms → causes → actions)</li>
@@ -681,26 +616,23 @@
         </div>
       </section>
     </main>
-    
+
     <!-- Footer -->
-      <footer class="site-footer" role="region" aria-label="Site Footer">
-         <div class="footer-columns">
-            <div class="footer-column" role="region" aria-label="Contact Information">
-               <h3>Contact</h3>
-               <address>
-                  <p>Email: <a href="/contact" title="Send us a message via our contact page">Contact</a></p>
-               </address>
-           <p>
-               <i class="fab fa-facebook-square" aria-hidden="true"></i>
-               Facebook:
-               <a href="https://www.facebook.com/beezkneesbeekeeping"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="BeezKnees on Facebook">
-                  BeezKnees
-               </a>
-            </p>
-         </div>
+    <footer class="site-footer" role="region" aria-label="Site Footer">
+      <div class="footer-columns">
+        <div class="footer-column" role="region" aria-label="Contact Information">
+          <h3>Contact</h3>
+          <address>
+            <p>Email: <a href="/contact" title="Send us a message via our contact page">Contact</a></p>
+          </address>
+          <p>
+            <i class="fab fa-facebook-square" aria-hidden="true"></i>
+            Facebook:
+            <a href="https://www.facebook.com/beezkneesbeekeeping" target="_blank" rel="noopener noreferrer" aria-label="BeezKnees on Facebook">
+              BeezKnees
+            </a>
+          </p>
+        </div>
 
         <div class="footer-column" role="region" aria-label="Useful Site Links">
           <h3>Useful Links</h3>
@@ -715,41 +647,19 @@
           <h3>Resources</h3>
           <ul>
             <li>
-              <a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer" title="Visit the British Beekeepers Association website"
-                >British Beekeepers Association</a
-              >
+              <a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer" title="Visit the British Beekeepers Association website">British Beekeepers Association</a>
             </li>
             <li>
-              <a
-                href="https://www.cardiffbeekeepers.co.uk/"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Visit the Cardiff Beekeepers Association site"
-                >Cardiff, Vale and Valleys Beekeepers Association</a
-              >
+              <a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer" title="Visit the Cardiff Beekeepers Association site">Cardiff, Vale and Valleys Beekeepers Association</a>
             </li>
             <li>
-              <a
-                href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Read the Honey (Wales) Regulations 2015"
-                >The Honey (Wales) Regulations 2015</a
-              >
+              <a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank" rel="noopener noreferrer" title="Read the Honey (Wales) Regulations 2015">The Honey (Wales) Regulations 2015</a>
             </li>
             <li>
-              <a
-                href="https://www.biodiversitywales.org.uk/Bee-Friendly"
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Explore Bee-Friendly programme by Wales Biodiversity Partnership"
-                >Wales Biodiversity Partnership</a
-              >
+              <a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer" title="Explore Bee-Friendly programme by Wales Biodiversity Partnership">Wales Biodiversity Partnership</a>
             </li>
             <li>
-              <a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title="Access BeeBase for UK bee health information"
-                >BeeBase</a
-              >
+              <a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title="Access BeeBase for UK bee health information">BeeBase</a>
             </li>
           </ul>
         </div>
