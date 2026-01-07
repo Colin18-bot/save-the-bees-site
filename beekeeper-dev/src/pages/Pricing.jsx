@@ -301,6 +301,8 @@ export default function Pricing() {
             "Photo uploads",
             "Printable reports",
             "Logbook & archive",
+            "Seasonal & per-apiary reporting",
+            "Step-by-step inspection guide",
             "1 apiary • Up to 2 hives",
           ]}
           disabled={subscriptionLevel === "free" && !!user}
@@ -324,7 +326,6 @@ export default function Pricing() {
             "NFC quick-select in New Inspection",
             "NFC dashboard summary & tagged hives list",
             "All features included — nothing locked",
-            "Advanced seasonal & per-apiary reporting",
             "Ideal for growing hobbyists & sideline/commercial setups",
             "Priority support",
             "Directly supports ongoing development of BeezKnees",
