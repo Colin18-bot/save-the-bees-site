@@ -68,7 +68,7 @@ const Archive = () => {
       logbook: logbookArch,
     });
 
-        // apiaries for filter dropdown – only those that are archived
+    // apiaries for filter dropdown – only those that are archived
     const apiaryOptionsFromArchived = (apiariesArch || [])
       .map((a) => ({
         id: a.id,
@@ -89,8 +89,12 @@ const Archive = () => {
       new Map((hivesAll || []).map((h) => [h.id, { name: h.name || "Unnamed Hive", apiary_id: h.apiary_id }]))
     );
 
-    // clear any stale per-item restore errors after a refresh
-    setRestoreErrors({});
+    // ✅ IMPORTANT:
+    // Do NOT clear restoreErrors here.
+    // When restore is blocked (e.g. Free-plan limits), we want the message to remain readable
+    // even if the page refreshes data after the failed request.
+    //
+    // setRestoreErrors({});
   };
 
   // ----- helpers -----
@@ -150,6 +154,8 @@ const Archive = () => {
   // Map raw DB error text to a friendly inline message (uses singular labels)
   const friendlyRestoreError = (table, errMsg) => {
     const lower = String(errMsg || "").toLowerCase();
+
+    // Parent/relationship messages (your existing ones)
     if (lower.includes("cannot restore hive")) {
       return "Cannot restore hive: its apiary is archived. Restore the apiary first.";
     }
@@ -162,6 +168,19 @@ const Archive = () => {
     if (lower.includes("cannot restore log entry")) {
       return "Cannot restore log entry: its parent hive/apiary is archived. Restore parent first.";
     }
+
+    // ✅ NEW: Free-plan restore blocked often surfaces as generic RLS/permission errors.
+    // Convert those into a readable message.
+    if (lower.includes("row-level security") || lower.includes("permission denied")) {
+      if (table === "apiaries") {
+        return "Cannot restore apiary: Free plan allows 1 active apiary. Archive an active apiary or upgrade to Premium.";
+      }
+      if (table === "hives") {
+        return "Cannot restore hive: Free plan allows 2 active hives. Archive an active hive or upgrade to Premium.";
+      }
+      return "Cannot restore: your plan limit would be exceeded. Archive an active item or upgrade to Premium.";
+    }
+
     const label = SINGULAR[table] || table;
     return `Restore failed${table ? ` for ${label.toLowerCase()}` : ""}: ${errMsg}`;
   };
@@ -174,35 +193,34 @@ const Archive = () => {
 
   // Make a human-friendly label + sublines per type
   const describeItem = (type, item) => {
-  const errKey = `${type}-${item.id}`;
+    const errKey = `${type}-${item.id}`;
 
-  // Make sure every item has a consistent apiary_id for filtering
-  const resolvedApiaryId =
-    type === "apiaries"
-      ? item.id // an apiary "belongs" to itself for filtering
-      : item.apiary_id || (item.hive_id ? hiveApiaryId(item.hive_id) : "");
+    // Make sure every item has a consistent apiary_id for filtering
+    const resolvedApiaryId =
+      type === "apiaries"
+        ? item.id // an apiary "belongs" to itself for filtering
+        : item.apiary_id || (item.hive_id ? hiveApiaryId(item.hive_id) : "");
 
-  const common = {
-    errKey,
-    type,
-    table: type,
-    id: item.id,
-    archived_at: item.archived_at,
-    created_at: item.created_at,
-    apiary_id: resolvedApiaryId,
-    hive_id: item.hive_id || "",
-    inspection_id: item.inspection_id || "",
-    raw: item,
-  };
+    const common = {
+      errKey,
+      type,
+      table: type,
+      id: item.id,
+      archived_at: item.archived_at,
+      created_at: item.created_at,
+      apiary_id: resolvedApiaryId,
+      hive_id: item.hive_id || "",
+      inspection_id: item.inspection_id || "",
+      raw: item,
+    };
 
-  if (type === "apiaries") {
-  return {
-    ...common,
-    title: item.name || `Apiary (${shortId(item.id)})`,
-    meta: [], // no extra "Apiary" line under the pill
-  };
-}
-
+    if (type === "apiaries") {
+      return {
+        ...common,
+        title: item.name || `Apiary (${shortId(item.id)})`,
+        meta: [], // no extra "Apiary" line under the pill
+      };
+    }
 
     if (type === "hives") {
       const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
@@ -228,8 +246,7 @@ const Archive = () => {
     if (type === "todos") {
       const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
       const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
-      const due =
-        item.due_date ? `Due: ${new Date(item.due_date).toLocaleDateString("en-GB")}` : null;
+      const due = item.due_date ? `Due: ${new Date(item.due_date).toLocaleDateString("en-GB")}` : null;
       return {
         ...common,
         title: item.title || `To-Do (${shortId(item.id)})`,
@@ -239,21 +256,17 @@ const Archive = () => {
 
     // logbook: try notes/content preview; always show linked hive/apiary
     if (type === "logbook") {
-  const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
-  const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
-  const preview =
-    item.notes || item.note || item.content || item.text || item.message || "";
-  const clipped = String(preview).trim().slice(0, 80);
+      const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
+      const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
+      const preview = item.notes || item.note || item.content || item.text || item.message || "";
+      const clipped = String(preview).trim().slice(0, 80);
 
-  return {
-    ...common,
-    title: clipped
-      ? `Log: ${clipped}${preview.length > 80 ? "…" : ""}`
-      : "Log entry", // simple human-readable fallback
-    meta: [`Hive: ${hive}`, `Apiary: ${apiary}`],
-  };
-}
-
+      return {
+        ...common,
+        title: clipped ? `Log: ${clipped}${preview.length > 80 ? "…" : ""}` : "Log entry",
+        meta: [`Hive: ${hive}`, `Apiary: ${apiary}`],
+      };
+    }
 
     // fallback
     return {
@@ -284,9 +297,7 @@ const Archive = () => {
 
       // filter by apiary (if we can resolve an apiary_id)
       if (selectedApiary) {
-        filtered = filtered.filter(
-          (x) => String(x.apiary_id || "") === String(selectedApiary)
-        );
+        filtered = filtered.filter((x) => String(x.apiary_id || "") === String(selectedApiary));
       }
 
       // sort by archived_at (fallback created_at)
@@ -307,7 +318,6 @@ const Archive = () => {
         ...applyFilters(lists.todos, "todos"),
         ...applyFilters(lists.logbook, "logbook"),
       ];
-      // already sorted inside applyFilters, but we merged — sort once more globally
       merged.sort((a, b) => {
         const da = new Date(a.archived_at || a.created_at || 0).getTime();
         const db = new Date(b.archived_at || b.created_at || 0).getTime();
@@ -369,13 +379,11 @@ const Archive = () => {
     const ai = item.apiary_id || hiveApiaryId(item.hive_id);
 
     if (isArchived("hives", hi)) {
-      const label =
-        table === "inspections" ? "inspection" : table === "todos" ? "to-do" : "log entry";
+      const label = table === "inspections" ? "inspection" : table === "todos" ? "to-do" : "log entry";
       return `Cannot restore ${label}: its hive is archived. Restore the hive (and apiary) first.`;
     }
     if (isArchived("apiaries", ai)) {
-      const label =
-        table === "inspections" ? "inspection" : table === "todos" ? "to-do" : "log entry";
+      const label = table === "inspections" ? "inspection" : table === "todos" ? "to-do" : "log entry";
       return `Cannot restore ${label}: its apiary is archived. Restore the apiary first.`;
     }
     return null;
@@ -444,10 +452,7 @@ const Archive = () => {
         await clearProfileDefaultIfArchiving(item.id, item.user_id, !!item.is_default);
       } catch (_) {}
     }
-    const { error } = await supabase
-      .from(table)
-      .update({ archived_at: new Date().toISOString() })
-      .eq("id", item.id);
+    const { error } = await supabase.from(table).update({ archived_at: new Date().toISOString() }).eq("id", item.id);
     if (!error) fetchData();
   };
 
@@ -693,7 +698,7 @@ const Archive = () => {
         </div>
       )}
 
-            {/* Bulk actions (when there are results) */}
+      {/* Bulk actions (when there are results) */}
       {total > 0 && (
         <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           {/* Left: selection count – fixed height + no wrapping so layout doesn't jump */}
@@ -721,7 +726,6 @@ const Archive = () => {
         </div>
       )}
 
-
       {/* List */}
       {total === 0 ? (
         <p className="text-gray-500">No archived {activeType === "all" ? "items" : activeType}.</p>
@@ -734,41 +738,40 @@ const Archive = () => {
           </ul>
 
           {/* Pagination – unified style with other pages */}
-<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
-  <div className="text-sm text-gray-600">
-    Showing {total === 0 ? 0 : Math.min(startIdx + 1, total)}–
-    {Math.min(currentPage * PAGE_SIZE, total)} of {total}
-  </div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
+            <div className="text-sm text-gray-600">
+              Showing {total === 0 ? 0 : Math.min(startIdx + 1, total)}–
+              {Math.min(currentPage * PAGE_SIZE, total)} of {total}
+            </div>
 
-  <div className="flex items-center gap-3 sm:justify-end">
-    {totalPages > 1 && (
-      <span className="text-xs text-gray-500">
-        Page {currentPage} of {totalPages}
-      </span>
-    )}
+            <div className="flex items-center gap-3 sm:justify-end">
+              {totalPages > 1 && (
+                <span className="text-xs text-gray-500">
+                  Page {currentPage} of {totalPages}
+                </span>
+              )}
 
-    <button
-      type="button"
-      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-      disabled={currentPage === 1}
-      className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
-      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
-    >
-      Prev
-    </button>
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+                className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+              >
+                Prev
+              </button>
 
-    <button
-      type="button"
-      onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-      disabled={currentPage === totalPages}
-      className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
-      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
-    >
-      Next
-    </button>
-  </div>
-</div>
-
+              <button
+                type="button"
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+                className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+              >
+                Next
+              </button>
+            </div>
+          </div>
         </>
       )}
     </div>
