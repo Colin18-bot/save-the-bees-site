@@ -41,7 +41,10 @@ const HiveList = () => {
   const [inspectionCounts, setInspectionCounts] = useState({});
   const [page, setPage] = useState(1);
 
-  // NEW: filter to show only NFC-tagged hives
+  // ✅ plan gating
+  const [isPremium, setIsPremium] = useState(false);
+
+  // Filter to show only NFC-tagged hives (Premium only in UI)
   const [showTaggedOnly, setShowTaggedOnly] = useState(false);
 
   const [lightbox, setLightbox] = useState({
@@ -91,6 +94,47 @@ const HiveList = () => {
 
     navigate({ search: params.toString() }, { replace: true });
   };
+
+  // ✅ Determine plan from profiles.subscription_level
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadPlan = async () => {
+      const { data: userRes } = await supabase.auth.getUser();
+      const uid = userRes?.user?.id;
+      if (!uid) {
+        if (!cancelled) setIsPremium(false);
+        return;
+      }
+
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("subscription_level")
+        .eq("user_id", uid)
+        .maybeSingle();
+
+      if (cancelled) return;
+
+      if (error) {
+        // Safe default: treat as Free if anything goes wrong
+        setIsPremium(false);
+        return;
+      }
+
+      const level = String(profile?.subscription_level || "free").toLowerCase();
+      setIsPremium(level === "premium");
+    };
+
+    loadPlan();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // ✅ If user is not Premium, force this feature off (avoids confusing state)
+  useEffect(() => {
+    if (!isPremium && showTaggedOnly) setShowTaggedOnly(false);
+  }, [isPremium, showTaggedOnly]);
 
   useEffect(() => {
     const fetchApiaries = async () => {
@@ -200,16 +244,14 @@ const HiveList = () => {
     }
   };
 
-  // NEW: derive tagged hives info
-  const taggedCount = useMemo(
-    () => hives.filter((h) => !!h.nfc_uid).length,
-    [hives]
-  );
+  // Tagged hives info (only shown in UI for Premium, but safe to compute always)
+  const taggedCount = useMemo(() => hives.filter((h) => !!h.nfc_uid).length, [hives]);
 
-  const filteredHives = useMemo(
-    () => (showTaggedOnly ? hives.filter((h) => !!h.nfc_uid) : hives),
-    [hives, showTaggedOnly]
-  );
+  // ✅ Only allow tagged-only filtering when Premium
+  const filteredHives = useMemo(() => {
+    if (!isPremium) return hives;
+    return showTaggedOnly ? hives.filter((h) => !!h.nfc_uid) : hives;
+  }, [hives, showTaggedOnly, isPremium]);
 
   const total = filteredHives.length;
 
@@ -342,26 +384,28 @@ const HiveList = () => {
           </select>
         </div>
 
-        {/* NEW: NFC tagged filter + summary */}
-        <div className="flex items-center gap-2">
-          <label className="inline-flex items-center text-sm">
-            <input
-              type="checkbox"
-              className="mr-2"
-              checked={showTaggedOnly}
-              onChange={(e) => {
-                setShowTaggedOnly(e.target.checked);
-                setPage(1);
-                jumpedToHighlightPageRef.current = false;
-              }}
-            />
-            Show only tagged hives
-          </label>
-          <span className="text-xs text-gray-600">
-            Tagged hives: <span className="font-semibold">{taggedCount}</span>{" "}
-            of <span className="font-semibold">{hives.length}</span>
-          </span>
-        </div>
+        {/* ✅ Premium-only: NFC tagged filter + summary */}
+        {isPremium && (
+          <div className="flex items-center gap-2">
+            <label className="inline-flex items-center text-sm">
+              <input
+                type="checkbox"
+                className="mr-2"
+                checked={showTaggedOnly}
+                onChange={(e) => {
+                  setShowTaggedOnly(e.target.checked);
+                  setPage(1);
+                  jumpedToHighlightPageRef.current = false;
+                }}
+              />
+              Show only tagged hives
+            </label>
+            <span className="text-xs text-gray-600">
+              Tagged hives: <span className="font-semibold">{taggedCount}</span>{" "}
+              of <span className="font-semibold">{hives.length}</span>
+            </span>
+          </div>
+        )}
       </div>
 
       {loading ? (
@@ -448,10 +492,11 @@ const HiveList = () => {
                     </button>
                   )}
 
-                  {/* Name + NFC tag badge */}
+                  {/* Name + NFC tag badge (Premium-only) */}
                   <h2 className="text-lg font-semibold flex flex-col gap-1">
                     <span>{hive.name}</span>
-                    {hive.nfc_uid && (
+
+                    {isPremium && hive.nfc_uid && (
                       <span
                         className="inline-flex items-center gap-2 text-[11px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200 max-w-full"
                         title={`NFC tag: ${hive.nfc_uid}`}
