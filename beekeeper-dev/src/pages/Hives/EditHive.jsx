@@ -232,8 +232,7 @@ const EditHive = () => {
     // If we uploaded a new file and we had a previous storage object, clean the old one
     if (newPath && currentObject?.path && newUrl !== formData.photo_url) {
       try {
-        await supabase
-          .storage
+        await supabase.storage
           .from(currentObject.bucket || "photos")
           .remove([currentObject.path]);
       } catch {
@@ -307,7 +306,7 @@ const EditHive = () => {
     if (!window.confirm("Delete this hive permanently? This cannot be undone.")) return;
     const { error: delErr } = await deleteRowWithPhoto("hives", id, "photo_url");
     if (delErr) {
-      alert(humaniseSupabaseError(delErr));
+      alert(humaniseSupabaseError(delErr, { table: "hives" }));
       return;
     }
     alert("Hive deleted.");
@@ -462,9 +461,8 @@ const EditHive = () => {
 
         {error && <p className="text-red-600 text-sm">{error}</p>}
 
-                {/* Actions */}
+        {/* Actions */}
         <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2">
-          {/* ✅ Standard green submit button */}
           <button
             type="submit"
             className="w-full sm:w-auto bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
@@ -497,7 +495,6 @@ const EditHive = () => {
             Cancel
           </button>
         </div>
-
       </form>
     </div>
   );

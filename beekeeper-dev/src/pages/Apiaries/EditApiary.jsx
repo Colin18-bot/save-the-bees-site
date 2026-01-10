@@ -345,20 +345,12 @@ const EditApiary = () => {
       return;
     }
 
-    if (
-      !window.confirm(
-        "Delete this apiary permanently? This cannot be undone."
-      )
-    )
+    if (!window.confirm("Delete this apiary permanently? This cannot be undone."))
       return;
 
-    const { error: delErr } = await deleteRowWithPhoto(
-      "apiaries",
-      id,
-      "photo_url"
-    );
+    const { error: delErr } = await deleteRowWithPhoto("apiaries", id, "photo_url");
     if (delErr) {
-      alert(humaniseSupabaseError(delErr));
+      alert(humaniseSupabaseError(delErr, { table: "apiaries" }));
       return;
     }
     alert("Apiary deleted.");

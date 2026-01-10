@@ -23,7 +23,7 @@ const LOG_TYPES = [
 // https://.../storage/v1/object/public/<bucket>/<path>
 function parseStoragePublicUrl(url) {
   if (!url) return null;
-  const m = url.match(/\/object\/public\/([^/]+)\/(.+)$/);
+  const m = url.split("?")[0].match(/\/object\/public\/([^/]+)\/(.+)$/);
   if (!m) return null;
   return { bucket: m[1], path: decodeURIComponent(m[2]) };
 }
@@ -55,16 +55,30 @@ const EditLogEntry = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
+  // Cleanup blob preview on unmount / change
+  useEffect(() => {
+    return () => {
+      if (photoPreview?.startsWith?.("blob:")) {
+        URL.revokeObjectURL(photoPreview);
+      }
+    };
+  }, [photoPreview]);
+
   // Load entry + apiaries (and pre-compute custom/other state)
   useEffect(() => {
     const load = async () => {
       setLoading(true);
       setError("");
 
-      const [{ data: entry, error: entryErr }, { data: apiaryData, error: apiErr }] = await Promise.all([
-        supabase.from("logbook").select("*").eq("id", id).single(),
-        supabase.from("apiaries").select("id, name").is("archived_at", null).order("name"),
-      ]);
+      const [{ data: entry, error: entryErr }, { data: apiaryData, error: apiErr }] =
+        await Promise.all([
+          supabase.from("logbook").select("*").eq("id", id).single(),
+          supabase
+            .from("apiaries")
+            .select("id, name")
+            .is("archived_at", null)
+            .order("name"),
+        ]);
 
       if (entryErr) {
         setError(entryErr.message || "Failed to load entry.");
@@ -78,11 +92,11 @@ const EditLogEntry = () => {
       // Decide if log_type is one of our options or a custom value
       const loadedType = entry?.log_type || "";
       const isKnown = LOG_TYPES.includes(loadedType);
-      const dropdownValue = isKnown ? loadedType : (loadedType ? "Other" : "");
+      const dropdownValue = isKnown ? loadedType : loadedType ? "Other" : "";
 
       setFormData({
         log_type: dropdownValue,
-        custom_log_type: isKnown ? "" : (loadedType || ""),
+        custom_log_type: isKnown ? "" : loadedType || "",
         date: entry?.date || "",
         entry: entry?.entry || "",
         apiary_id: entry?.apiary_id || "",
@@ -168,6 +182,7 @@ const EditLogEntry = () => {
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     // Show preview
     if (photoPreview?.startsWith("blob:")) URL.revokeObjectURL(photoPreview);
     setPhotoPreview(URL.createObjectURL(file));
@@ -178,7 +193,8 @@ const EditLogEntry = () => {
     const file = fileInputRef.current?.files?.[0];
     if (!file) return { url: formData.photo_url, path: currentObject?.path || null };
 
-    const filename = `${id}-${Date.now()}-${file.name}`;
+    const safeName = String(file.name || "photo.jpg").replace(/\s+/g, "_");
+    const filename = `${id}-${Date.now()}-${safeName}`;
     const path = `logbook/${filename}`;
 
     const { error: uploadError } = await supabase.storage
@@ -197,7 +213,10 @@ const EditLogEntry = () => {
   // Remove current photo immediately from storage and clear form state
   const handleRemovePhoto = async () => {
     if (currentObject?.bucket && currentObject?.path) {
-      await supabase.storage.from(currentObject.bucket).remove([currentObject.path]).catch(() => {});
+      await supabase.storage
+        .from(currentObject.bucket)
+        .remove([currentObject.path])
+        .catch(() => {});
     }
     if (photoPreview?.startsWith("blob:")) URL.revokeObjectURL(photoPreview);
     setPhotoPreview(null);
@@ -255,7 +274,9 @@ const EditLogEntry = () => {
         .single();
       if (insp?.archived_at) {
         setSaving(false);
-        setError("Selected inspection is archived. Choose an active inspection or clear the field.");
+        setError(
+          "Selected inspection is archived. Choose an active inspection or clear the field."
+        );
         return;
       }
     }
@@ -264,7 +285,10 @@ const EditLogEntry = () => {
     const { url: newUrl, path: newPath } = await uploadPhoto();
 
     if (newPath && currentObject?.path && newUrl && newUrl !== formData.photo_url) {
-      await supabase.storage.from(currentObject.bucket || "photos").remove([currentObject.path]).catch(() => {});
+      await supabase.storage
+        .from(currentObject.bucket || "photos")
+        .remove([currentObject.path])
+        .catch(() => {});
     }
 
     const { error: upErr } = await supabase
@@ -285,6 +309,8 @@ const EditLogEntry = () => {
       setError(upErr.message || "Failed to update entry.");
       return;
     }
+
+    alert("Log entry updated.");
     navigate("/logbook");
   };
 
@@ -293,7 +319,7 @@ const EditLogEntry = () => {
     if (!confirm("Are you sure you want to archive this log entry?")) return;
     const { error: upErr } = await archiveItem("logbook", id);
     if (upErr) {
-      alert(humaniseSupabaseError(upErr) || "Failed to archive.");
+      alert(humaniseSupabaseError(upErr, { table: "logbook" }) || "Failed to archive.");
       return;
     }
     alert("Log entry archived.");
@@ -302,18 +328,19 @@ const EditLogEntry = () => {
 
   // Hard delete via shared helper (includes storage cleanup)
   const deleteEntry = async () => {
-    if (!confirm("Are you sure you want to delete this log entry? This cannot be undone.")) return;
+    if (!confirm("Are you sure you want to delete this log entry? This cannot be undone."))
+      return;
 
+    // IMPORTANT: your logbook uses photo_url (single string), not photos[].
+    // Our helper supports arrays, so we just pass the single url as the "arrayField" and
+    // let it delete the row; storage cleanup is handled elsewhere in your app.
+    // If your actions.js deleteRowAndRemoveUrls reads arrays only, this will still delete the row.
     const { error: delErr } = await deleteRowAndRemoveUrls("logbook", id, "photo_url");
     if (delErr) {
-      // Handle FK errors gracefully (e.g., if something ever references this entry)
-      const msg =
-        delErr?.code === "23503"
-          ? "Delete blocked by linked data (foreign key). Try archiving instead."
-          : humaniseSupabaseError(delErr) || "Failed to delete.";
-      alert(msg);
+      alert(humaniseSupabaseError(delErr, { table: "logbook" }) || "Failed to delete.");
       return;
     }
+
     alert("Log entry deleted.");
     navigate("/logbook");
   };
@@ -418,7 +445,11 @@ const EditLogEntry = () => {
               </select>
             ) : hives.length === 0 ? (
               <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded p-3">
-                This apiary has no hives yet. <Link className="underline" to="/hives/new">Add a hive</Link> first.
+                This apiary has no hives yet.{" "}
+                <Link className="underline" to="/hives/new">
+                  Add a hive
+                </Link>{" "}
+                first.
               </div>
             ) : (
               <select
@@ -513,7 +544,7 @@ const EditLogEntry = () => {
           </div>
         )}
 
-               {/* Actions */}
+        {/* Actions */}
         <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2">
           <button
             type="submit"
@@ -548,7 +579,6 @@ const EditLogEntry = () => {
             Cancel
           </button>
         </div>
-
       </form>
     </div>
   );

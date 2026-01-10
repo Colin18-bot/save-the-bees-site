@@ -2,10 +2,68 @@
 import { supabase } from "./supabase.js"; // ← add .js for Deno
 
 /** Nicely format Supabase errors for toasts/alerts */
-export function humaniseSupabaseError(err) {
+export function humaniseSupabaseError(err, context = {}) {
   if (!err) return "";
   if (typeof err === "string") return err;
-  return err.message || "Unexpected error";
+  return fkFriendlyMessage(err, context) || err.message || err.hint || "Unexpected error";
+}
+
+/** FK-safe, user-friendly messages (used by humaniseSupabaseError) */
+function fkFriendlyMessage(err, context = {}) {
+  const code = err.code || err.status || err.error_code || "";
+  const message = String(err.message || "");
+  const details = String(err.details || "");
+
+  // Postgres FK violation (23503) often surfaces as: violates foreign key constraint "xyz"
+  if (String(code) !== "23503" && !/foreign key constraint/i.test(message)) return "";
+
+  const constraint =
+    (message.match(/constraint\s+\"([^\"]+)\"/i)?.[1] ||
+      details.match(/constraint\s+\"([^\"]+)\"/i)?.[1] ||
+      "");
+
+  const MAP = {
+    // Apiary children
+    hives_apiary_id_fkey:
+      "You can’t delete this apiary because it still has hives (including any in the archive). Delete those hives first, or archive the apiary instead.",
+    inspections_apiary_id_fkey:
+      "You can’t delete this apiary because it still has inspections (including any in the archive). Delete those inspections first, or archive the apiary instead.",
+    todos_apiary_id_fkey:
+      "You can’t delete this apiary because it still has to-dos (including any in the archive). Delete those to-dos first, or archive the apiary instead.",
+    logbook_apiary_id_fkey:
+      "You can’t delete this apiary because it still has logbook entries (including any in the archive). Delete those logbook entries first, or archive the apiary instead.",
+
+    // Hive children
+    inspections_hive_id_fkey:
+      "You can’t delete this hive because it still has inspections (including any in the archive). Delete those inspections first, or archive the hive instead.",
+    todos_hive_id_fkey:
+      "You can’t delete this hive because it still has to-dos (including any in the archive). Delete those to-dos first, or archive the hive instead.",
+    logbook_hive_id_fkey:
+      "You can’t delete this hive because it still has logbook entries (including any in the archive). Delete those logbook entries first, or archive the hive instead.",
+
+    // Inspection children
+    logbook_inspection_id_fkey:
+      "You can’t delete this inspection because it still has logbook entries linked to it (including any in the archive). Delete those logbook entries first, or archive the inspection instead.",
+
+    // Todo children (if you ever FK logbook to todos etc.)
+    logbook_todo_id_fkey:
+      "You can’t delete this to-do because it still has logbook entries linked to it (including any in the archive). Delete those logbook entries first, or archive the to-do instead.",
+  };
+
+  if (constraint && MAP[constraint]) return MAP[constraint];
+
+  // Generic fallback based on the table being deleted (if provided)
+  const table = context.table || "";
+  if (table === "apiaries")
+    return "You can’t delete this apiary because other records still reference it (including archived records). Delete those linked items first, or archive the apiary instead.";
+  if (table === "hives")
+    return "You can’t delete this hive because other records still reference it (including archived records). Delete those linked items first, or archive the hive instead.";
+  if (table === "inspections")
+    return "You can’t delete this inspection because other records still reference it (including archived records). Delete those linked items first, or archive the inspection instead.";
+  if (table === "todos")
+    return "You can’t delete this to-do because other records still reference it (including archived records). Delete those linked items first, or archive the to-do instead.";
+
+  return "You can’t delete this item because other records still reference it (including archived records). Delete the linked items first, or archive it instead.";
 }
 
 /** Extract { bucket, path } from a Supabase public URL */
@@ -109,11 +167,13 @@ export async function setOnlyDefaultApiaryForUser(userId, apiaryId) {
 export async function smartDeleteApiary(id) {
   let hasChildren = false;
   try {
-    const { data, error } = await supabase.rpc("check_apiary_children", { apiary_id: id });
+    const { data, error } = await supabase.rpc("check_apiary_children", {
+      apiary_id: id,
+    });
     if (!error) {
       const row = Array.isArray(data) ? data[0] : data;
       const { hives = 0, inspections = 0, todos = 0, logs = 0 } = row || {};
-      hasChildren = (hives + inspections + todos + logs) > 0;
+      hasChildren = hives + inspections + todos + logs > 0;
     }
   } catch {
     /* RPC may not exist — ignore */
@@ -135,11 +195,13 @@ export async function smartDeleteApiary(id) {
 export async function smartDeleteHive(id) {
   let hasChildren = false;
   try {
-    const { data, error } = await supabase.rpc("check_hive_children", { hive_id: id });
+    const { data, error } = await supabase.rpc("check_hive_children", {
+      hive_id: id,
+    });
     if (!error) {
       const row = Array.isArray(data) ? data[0] : data;
       const { inspections = 0, todos = 0, logs = 0 } = row || {};
-      hasChildren = (inspections + todos + logs) > 0;
+      hasChildren = inspections + todos + logs > 0;
     }
   } catch {
     /* RPC may not exist — ignore */
@@ -173,11 +235,13 @@ export async function smartDeleteTodo(id) {
   // 1) Try to detect children via RPC (ignore if the function doesn’t exist)
   let hasChildren = false;
   try {
-    const { data, error } = await supabase.rpc("check_todo_children", { todo_id: id });
+    const { data, error } = await supabase.rpc("check_todo_children", {
+      todo_id: id,
+    });
     if (!error) {
       const row = Array.isArray(data) ? data[0] : data;
       const { logs = 0, attachments = 0 } = row || {};
-      hasChildren = (logs + attachments) > 0;
+      hasChildren = logs + attachments > 0;
     }
   } catch {
     /* RPC may not exist — ignore */

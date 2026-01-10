@@ -1,6 +1,6 @@
 // src/pages/Todos/EditTodo.jsx
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import { archiveItem, humaniseSupabaseError } from "../../services/actions";
 
@@ -19,7 +19,6 @@ const EditTodo = () => {
   });
 
   const [apiaries, setApiaries] = useState([]);
-  const [hives, setHives] = useState([]);
   const [allHivesForApiary, setAllHivesForApiary] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -37,10 +36,15 @@ const EditTodo = () => {
       setLoading(true);
       setError("");
 
-      const [{ data: todo, error: todoErr }, { data: apiaryData }] = await Promise.all([
+      const [
+        { data: todo, error: todoErr },
+        { data: apiaryData, error: apiErr },
+      ] = await Promise.all([
         supabase
           .from("todos")
-          .select("id, title, due_date, status, apiary_id, hive_id, hive_name, notes, archived_at")
+          .select(
+            "id, title, due_date, status, apiary_id, hive_id, hive_name, notes, archived_at"
+          )
           .eq("id", id)
           .single(),
         supabase
@@ -56,11 +60,17 @@ const EditTodo = () => {
         return;
       }
 
+      if (apiErr) {
+        setError(apiErr.message || "Failed to load apiaries");
+      }
+
       let dueDateStr = todo?.due_date || "";
       if (dueDateStr) {
         try {
           dueDateStr = new Date(dueDateStr).toISOString().slice(0, 10);
-        } catch {}
+        } catch {
+          // ignore
+        }
       }
 
       setForm({
@@ -83,7 +93,6 @@ const EditTodo = () => {
   useEffect(() => {
     const fetchHives = async () => {
       setAllHivesForApiary([]);
-      setHives([]);
 
       if (!form.apiary_id) return;
 
@@ -95,7 +104,6 @@ const EditTodo = () => {
         .order("name");
 
       setAllHivesForApiary(hiveRows || []);
-      setHives(hiveRows || []);
     };
 
     fetchHives();
@@ -103,6 +111,7 @@ const EditTodo = () => {
 
   const onChange = (e) => {
     const { name, value } = e.target;
+
     if (name === "apiary_id") {
       setForm((p) => ({
         ...p,
@@ -110,16 +119,24 @@ const EditTodo = () => {
         hive_id: "",
         hive_name: "",
       }));
-    } else if (name === "hive_id") {
+      return;
+    }
+
+    if (name === "hive_id") {
       if (value === "ALL_SPECIAL") {
         setForm((p) => ({ ...p, hive_id: "", hive_name: "ALL" }));
-      } else {
-        const hiveName = value ? (allHivesForApiary.find((h) => h.id === value)?.name || "") : "";
-        setForm((p) => ({ ...p, hive_id: value, hive_name: hiveName }));
+        return;
       }
-    } else {
-      setForm((p) => ({ ...p, [name]: value }));
+
+      const hiveName = value
+        ? allHivesForApiary.find((h) => h.id === value)?.name || ""
+        : "";
+
+      setForm((p) => ({ ...p, hive_id: value, hive_name: hiveName }));
+      return;
     }
+
+    setForm((p) => ({ ...p, [name]: value }));
   };
 
   const onSubmit = async (e) => {
@@ -150,6 +167,7 @@ const EditTodo = () => {
         return;
       }
 
+      // Defensive: block saving into archived parents
       if (form.apiary_id) {
         const { data: parentApiary } = await supabase
           .from("apiaries")
@@ -169,7 +187,9 @@ const EditTodo = () => {
           .eq("id", form.hive_id)
           .single();
         if (parentHive?.archived_at) {
-          setError("Selected hive is archived. Choose an active hive or select All Hives.");
+          setError(
+            "Selected hive is archived. Choose an active hive or select All Hives."
+          );
           setSaving(false);
           return;
         }
@@ -182,8 +202,8 @@ const EditTodo = () => {
         due_date: form.due_date || null,
         status: statusSafe,
         apiary_id: form.apiary_id || null,
-        hive_id: isAllHives ? null : (form.hive_id || null),
-        hive_name: isAllHives ? "ALL" : (form.hive_name || null),
+        hive_id: isAllHives ? null : form.hive_id || null,
+        hive_name: isAllHives ? "ALL" : form.hive_name || null,
         notes: form.notes || null,
       };
 
@@ -197,7 +217,7 @@ const EditTodo = () => {
       if (form.apiary_id) qs.set("apiary_id", form.apiary_id);
       navigate(`/todos?${qs.toString()}`);
     } catch (err) {
-      setError(humaniseSupabaseError(err) || err.message || "Failed to update task");
+      setError(humaniseSupabaseError(err) || err?.message || "Failed to update task");
     } finally {
       setSaving(false);
     }
@@ -207,7 +227,9 @@ const EditTodo = () => {
     if (!window.confirm("Are you sure you want to archive this task?")) return;
     setSaving(true);
     setError("");
+
     const { error: upErr } = await archiveItem("todos", id);
+
     setSaving(false);
     if (upErr) {
       setError(humaniseSupabaseError(upErr) || "Failed to archive task");
@@ -223,9 +245,10 @@ const EditTodo = () => {
     setError("");
 
     try {
+      // optional: ensure the row exists (helps avoid weird edge cases)
       const { data: row, error: getErr } = await supabase
         .from("todos")
-        .select("id, user_id")
+        .select("id")
         .eq("id", id)
         .single();
 
@@ -241,11 +264,11 @@ const EditTodo = () => {
       alert("Task deleted.");
       navigate("/todos");
     } catch (err) {
-      setError(
-        humaniseSupabaseError(err) ||
-          err.message ||
-          "Failed to delete task. If this persists, check your RLS DELETE policy for todos."
-      );
+      // Friendly FK error message (plus whatever else)
+      const msg = humaniseSupabaseError(err, { table: "todos" }) ||
+        err?.message ||
+        "Failed to delete task. If this persists, check your RLS DELETE policy for todos.";
+      setError(msg);
     } finally {
       setSaving(false);
     }
@@ -257,11 +280,17 @@ const EditTodo = () => {
     <div className="p-6 max-w-xl mx-auto bg-white rounded shadow">
       <h1 className="text-2xl font-bold mb-4">Edit Task</h1>
 
-      {error && <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-3 rounded">{error}</div>}
+      {error && (
+        <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-3 rounded">
+          {error}
+        </div>
+      )}
 
       <form onSubmit={onSubmit} className="space-y-4">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium mb-1">Title</label>
+          <label htmlFor="title" className="block text-sm font-medium mb-1">
+            Title
+          </label>
           <input
             id="title"
             name="title"
@@ -274,7 +303,9 @@ const EditTodo = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div>
-            <label htmlFor="due_date" className="block text-sm font-medium mb-1">Due Date</label>
+            <label htmlFor="due_date" className="block text-sm font-medium mb-1">
+              Due Date
+            </label>
             <input
               id="due_date"
               name="due_date"
@@ -287,7 +318,9 @@ const EditTodo = () => {
           </div>
 
           <div>
-            <label htmlFor="status" className="block text-sm font-medium mb-1">Status</label>
+            <label htmlFor="status" className="block text-sm font-medium mb-1">
+              Status
+            </label>
             <select
               id="status"
               name="status"
@@ -302,7 +335,9 @@ const EditTodo = () => {
         </div>
 
         <div>
-          <label htmlFor="apiary_id" className="block text-sm font-medium mb-1">Apiary</label>
+          <label htmlFor="apiary_id" className="block text-sm font-medium mb-1">
+            Apiary
+          </label>
           <select
             id="apiary_id"
             name="apiary_id"
@@ -321,7 +356,10 @@ const EditTodo = () => {
         </div>
 
         <div>
-          <label htmlFor="hive_id" className="block text-sm font-medium mb-1">Hive</label>
+          <label htmlFor="hive_id" className="block text-sm font-medium mb-1">
+            Hive
+          </label>
+
           {noHives ? (
             <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded p-3">
               This apiary has no hives yet.
@@ -330,18 +368,23 @@ const EditTodo = () => {
             <select
               id="hive_id"
               name="hive_id"
-              value={isAllHives ? "ALL_SPECIAL" : (form.hive_id || "")}
+              value={isAllHives ? "ALL_SPECIAL" : form.hive_id || ""}
               onChange={onChange}
               className="w-full px-3 py-2 border rounded focus:outline-none"
               disabled={!form.apiary_id}
             >
               <option value="">Select Hive (optional)</option>
-              {allHivesForApiary.length > 0 && <option value="ALL_SPECIAL">All Hives</option>}
+              {allHivesForApiary.length > 0 && (
+                <option value="ALL_SPECIAL">All Hives</option>
+              )}
               {allHivesForApiary.map((h) => (
-                <option key={h.id} value={h.id}>{h.name}</option>
+                <option key={h.id} value={h.id}>
+                  {h.name}
+                </option>
               ))}
             </select>
           )}
+
           {isAllHives && (
             <p className="text-xs text-gray-600 mt-1">
               Currently set to <strong>All Hives</strong> for this apiary.
@@ -350,7 +393,9 @@ const EditTodo = () => {
         </div>
 
         <div>
-          <label htmlFor="notes" className="block text-sm font-medium mb-1">Notes</label>
+          <label htmlFor="notes" className="block text-sm font-medium mb-1">
+            Notes
+          </label>
           <textarea
             id="notes"
             name="notes"
@@ -361,7 +406,6 @@ const EditTodo = () => {
         </div>
 
         {/* Actions */}
-              {/* Actions */}
         <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2">
           <button
             type="submit"
@@ -396,7 +440,6 @@ const EditTodo = () => {
             Cancel
           </button>
         </div>
-
       </form>
     </div>
   );

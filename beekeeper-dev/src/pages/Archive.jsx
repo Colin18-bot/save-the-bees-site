@@ -1,6 +1,7 @@
 // src/pages/Archive.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { supabase } from "../services/supabase";
+import { humaniseSupabaseError } from "../services/actions";
 
 const PAGE_SIZE = 9;
 
@@ -89,12 +90,8 @@ const Archive = () => {
       new Map((hivesAll || []).map((h) => [h.id, { name: h.name || "Unnamed Hive", apiary_id: h.apiary_id }]))
     );
 
-    // ✅ IMPORTANT:
-    // Do NOT clear restoreErrors here.
-    // When restore is blocked (e.g. Free-plan limits), we want the message to remain readable
-    // even if the page refreshes data after the failed request.
-    //
-    // setRestoreErrors({});
+    // clear any stale per-item restore errors after a refresh
+    setRestoreErrors({});
   };
 
   // ----- helpers -----
@@ -154,8 +151,6 @@ const Archive = () => {
   // Map raw DB error text to a friendly inline message (uses singular labels)
   const friendlyRestoreError = (table, errMsg) => {
     const lower = String(errMsg || "").toLowerCase();
-
-    // Parent/relationship messages (your existing ones)
     if (lower.includes("cannot restore hive")) {
       return "Cannot restore hive: its apiary is archived. Restore the apiary first.";
     }
@@ -168,19 +163,6 @@ const Archive = () => {
     if (lower.includes("cannot restore log entry")) {
       return "Cannot restore log entry: its parent hive/apiary is archived. Restore parent first.";
     }
-
-    // ✅ NEW: Free-plan restore blocked often surfaces as generic RLS/permission errors.
-    // Convert those into a readable message.
-    if (lower.includes("row-level security") || lower.includes("permission denied")) {
-      if (table === "apiaries") {
-        return "Cannot restore apiary: Free plan allows 1 active apiary. Archive an active apiary or upgrade to Premium.";
-      }
-      if (table === "hives") {
-        return "Cannot restore hive: Free plan allows 2 active hives. Archive an active hive or upgrade to Premium.";
-      }
-      return "Cannot restore: your plan limit would be exceeded. Archive an active item or upgrade to Premium.";
-    }
-
     const label = SINGULAR[table] || table;
     return `Restore failed${table ? ` for ${label.toLowerCase()}` : ""}: ${errMsg}`;
   };
@@ -246,7 +228,8 @@ const Archive = () => {
     if (type === "todos") {
       const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
       const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
-      const due = item.due_date ? `Due: ${new Date(item.due_date).toLocaleDateString("en-GB")}` : null;
+      const due =
+        item.due_date ? `Due: ${new Date(item.due_date).toLocaleDateString("en-GB")}` : null;
       return {
         ...common,
         title: item.title || `To-Do (${shortId(item.id)})`,
@@ -258,12 +241,15 @@ const Archive = () => {
     if (type === "logbook") {
       const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
       const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
-      const preview = item.notes || item.note || item.content || item.text || item.message || "";
+      const preview =
+        item.notes || item.note || item.content || item.text || item.message || "";
       const clipped = String(preview).trim().slice(0, 80);
 
       return {
         ...common,
-        title: clipped ? `Log: ${clipped}${preview.length > 80 ? "…" : ""}` : "Log entry",
+        title: clipped
+          ? `Log: ${clipped}${preview.length > 80 ? "…" : ""}`
+          : "Log entry", // simple human-readable fallback
         meta: [`Hive: ${hive}`, `Apiary: ${apiary}`],
       };
     }
@@ -297,7 +283,9 @@ const Archive = () => {
 
       // filter by apiary (if we can resolve an apiary_id)
       if (selectedApiary) {
-        filtered = filtered.filter((x) => String(x.apiary_id || "") === String(selectedApiary));
+        filtered = filtered.filter(
+          (x) => String(x.apiary_id || "") === String(selectedApiary)
+        );
       }
 
       // sort by archived_at (fallback created_at)
@@ -379,11 +367,13 @@ const Archive = () => {
     const ai = item.apiary_id || hiveApiaryId(item.hive_id);
 
     if (isArchived("hives", hi)) {
-      const label = table === "inspections" ? "inspection" : table === "todos" ? "to-do" : "log entry";
+      const label =
+        table === "inspections" ? "inspection" : table === "todos" ? "to-do" : "log entry";
       return `Cannot restore ${label}: its hive is archived. Restore the hive (and apiary) first.`;
     }
     if (isArchived("apiaries", ai)) {
-      const label = table === "inspections" ? "inspection" : table === "todos" ? "to-do" : "log entry";
+      const label =
+        table === "inspections" ? "inspection" : table === "todos" ? "to-do" : "log entry";
       return `Cannot restore ${label}: its apiary is archived. Restore the apiary first.`;
     }
     return null;
@@ -397,7 +387,6 @@ const Archive = () => {
 
   // ----- single-item actions -----
   const restoreItem = async (table, item) => {
-    // preflight: skip PATCH if parents are archived
     const { ok, reason } = preflightRestore(table, item);
     if (!ok) {
       setRestoreErrors((prev) => ({ ...prev, [`${table}-${item.id}`]: reason }));
@@ -414,7 +403,6 @@ const Archive = () => {
       return;
     }
 
-    // success → clear any error message for this item
     setRestoreErrors((prev) => {
       const copy = { ...prev };
       delete copy[`${table}-${item.id}`];
@@ -442,7 +430,11 @@ const Archive = () => {
     }
 
     const { error } = await supabase.from(table).delete().eq("id", item.id);
-    if (!error) fetchData();
+    if (error) {
+      alert(humaniseSupabaseError(error, { table }));
+      return;
+    }
+    fetchData();
   };
 
   // Archive an item (special-case for apiaries)
@@ -452,7 +444,10 @@ const Archive = () => {
         await clearProfileDefaultIfArchiving(item.id, item.user_id, !!item.is_default);
       } catch (_) {}
     }
-    const { error } = await supabase.from(table).update({ archived_at: new Date().toISOString() }).eq("id", item.id);
+    const { error } = await supabase
+      .from(table)
+      .update({ archived_at: new Date().toISOString() })
+      .eq("id", item.id);
     if (!error) fetchData();
   };
 
@@ -462,11 +457,10 @@ const Archive = () => {
     for (const { table, item } of selectedItems) {
       if (!allData[table]) continue;
 
-      // preflight each item to avoid 400s
       const { ok, reason } = preflightRestore(table, item);
       if (!ok) {
         newErrors[`${table}-${item.id}`] = reason;
-        continue; // do not send PATCH
+        continue;
       }
 
       const { error } = await supabase.from(table).update({ archived_at: null }).eq("id", item.id);
@@ -503,7 +497,12 @@ const Archive = () => {
           await clearProfileDefaultIfDeleting(item.id, item.user_id, !!item.is_default);
         } catch (_) {}
       }
-      await supabase.from(table).delete().eq("id", item.id);
+
+      const { error: delErr } = await supabase.from(table).delete().eq("id", item.id);
+      if (delErr) {
+        alert(humaniseSupabaseError(delErr, { table }));
+        // keep going so the user can still delete what they can
+      }
     }
     setSelectedItems([]);
     fetchData();
@@ -538,7 +537,6 @@ const Archive = () => {
     const checked = selectedItems.some((sel) => sel.item.id === x.id && sel.table === x.table);
     const errKey = `${x.table}-${x.id}`;
 
-    // preflight for button state
     const pre = preflightRestore(x.table, x.raw);
 
     return (
@@ -701,12 +699,10 @@ const Archive = () => {
       {/* Bulk actions (when there are results) */}
       {total > 0 && (
         <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          {/* Left: selection count – fixed height + no wrapping so layout doesn't jump */}
           <div className="text-sm text-gray-600 whitespace-nowrap min-h-[1.25rem]">
             {selectedItems.length > 0 ? `${selectedItems.length} selected` : "\u00A0"}
           </div>
 
-          {/* Right: buttons */}
           <div className="flex flex-wrap gap-2 sm:justify-end">
             <button
               onClick={restoreSelectedItems}
@@ -756,7 +752,7 @@ const Archive = () => {
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
                 className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
               >
                 Prev
               </button>
@@ -766,7 +762,7 @@ const Archive = () => {
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
                 className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
               >
                 Next
               </button>

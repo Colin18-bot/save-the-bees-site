@@ -48,24 +48,42 @@ const toArray = (v) => {
 /** Extract { bucket, path } from a Supabase public URL */
 function parseStoragePublicUrl(url) {
   if (!url) return null;
-  const m = url.match(/\/object\/public\/([^/]+)\/(.+)$/);
+  const noQuery = String(url).split("?")[0];
+  const m = noQuery.match(/\/object\/public\/([^/]+)\/(.+)$/);
   if (!m) return null;
   return { bucket: m[1], path: decodeURIComponent(m[2]) };
 }
 
 // WMO code map
 const weatherCodeMap = {
-  0: "Clear sky", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast",
-  45: "Fog", 48: "Depositing rime fog",
-  51: "Light drizzle", 53: "Moderate drizzle", 55: "Dense drizzle",
-  56: "Light freezing drizzle", 57: "Dense freezing drizzle",
-  61: "Slight rain", 63: "Moderate rain", 65: "Heavy rain",
-  66: "Light freezing rain", 67: "Heavy freezing rain",
-  71: "Slight snow fall", 73: "Moderate snow fall", 75: "Heavy snow fall",
+  0: "Clear sky",
+  1: "Mainly clear",
+  2: "Partly cloudy",
+  3: "Overcast",
+  45: "Fog",
+  48: "Depositing rime fog",
+  51: "Light drizzle",
+  53: "Moderate drizzle",
+  55: "Dense drizzle",
+  56: "Light freezing drizzle",
+  57: "Dense freezing drizzle",
+  61: "Slight rain",
+  63: "Moderate rain",
+  65: "Heavy rain",
+  66: "Light freezing rain",
+  67: "Heavy freezing rain",
+  71: "Slight snow fall",
+  73: "Moderate snow fall",
+  75: "Heavy snow fall",
   77: "Snow grains",
-  80: "Slight rain showers", 81: "Moderate rain showers", 82: "Violent rain showers",
-  85: "Slight snow showers", 86: "Heavy snow showers",
-  95: "Thunderstorm", 96: "Thunderstorm with slight hail", 99: "Thunderstorm with heavy hail",
+  80: "Slight rain showers",
+  81: "Moderate rain showers",
+  82: "Violent rain showers",
+  85: "Slight snow showers",
+  86: "Heavy snow showers",
+  95: "Thunderstorm",
+  96: "Thunderstorm with slight hail",
+  99: "Thunderstorm with heavy hail",
 };
 
 const EditInspection = () => {
@@ -74,10 +92,13 @@ const EditInspection = () => {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
   const [apiaries, setApiaries] = useState([]);
   const [hives, setHives] = useState([]);
+
   const [apiaryLocation, setApiaryLocation] = useState(null);
   const [humanAddress, setHumanAddress] = useState("");
+
   const [errorMsg, setErrorMsg] = useState("");
   const [saveError, setSaveError] = useState("");
 
@@ -86,7 +107,7 @@ const EditInspection = () => {
     hive_id: "",
     date: "",
     weather: "",
-    weather_code: "", // ⬅️ keep code in sync with NewInspection
+    weather_code: "",
     colony_behavior: "",
     colony_behavior_other: "",
     environmental_signs: [],
@@ -108,6 +129,7 @@ const EditInspection = () => {
 
   const [originalPhotos, setOriginalPhotos] = useState([]);
   const fileInputRef = useRef(null);
+
   const [newFiles, setNewFiles] = useState([]);
   const [newPreviews, setNewPreviews] = useState([]);
 
@@ -121,9 +143,14 @@ const EditInspection = () => {
   // Weather helper
   const fetchWeather = async (apiary, dateStr) => {
     if (!apiary?.latitude || !apiary?.longitude || !dateStr) {
-      setFormData((f) => ({ ...f, weather: f.weather || "", weather_code: f.weather_code || "" }));
+      setFormData((f) => ({
+        ...f,
+        weather: f.weather || "",
+        weather_code: f.weather_code || "",
+      }));
       return;
     }
+
     try {
       const day = new Date(dateStr).toISOString().slice(0, 10);
       const qs = new URLSearchParams({
@@ -138,10 +165,12 @@ const EditInspection = () => {
       const res = await fetch(`https://api.open-meteo.com/v1/forecast?${qs}`);
       if (!res.ok) throw new Error(`Open-Meteo HTTP ${res.status}`);
       const data = await res.json();
+
       const times = data?.daily?.time || [];
       const idx = times.indexOf(day);
+
       if (idx !== -1 && idx != null) {
-        const codes = data.daily.weather_code || data.daily.weathercode || [];
+        const codes = data?.daily?.weather_code || data?.daily?.weathercode || [];
         const code = codes[idx];
         setFormData((f) => ({
           ...f,
@@ -173,6 +202,7 @@ const EditInspection = () => {
     const loadAll = async () => {
       setLoading(true);
       setSaveError("");
+      setErrorMsg("");
 
       // Profile (premium)
       const { data: userWrap } = await supabase.auth.getUser();
@@ -185,29 +215,49 @@ const EditInspection = () => {
         setSubscriptionLevel(profile?.subscription_level || "free");
       }
 
-      const [apiaryRes, hiveRes] = await Promise.all([
-        supabase.from("apiaries").select("id, name, latitude, longitude").is("archived_at", null),
-        supabase.from("hives").select("id, name, apiary_id, nfc_uid, archived_at").is("archived_at", null),
+      const [apiaryRes, hiveRes, inspRes] = await Promise.all([
+        supabase
+          .from("apiaries")
+          .select("id, name, latitude, longitude")
+          .is("archived_at", null)
+          .order("name"),
+        supabase
+          .from("hives")
+          .select("id, name, apiary_id, nfc_uid, archived_at")
+          .is("archived_at", null)
+          .order("name"),
+        supabase.from("inspections").select("*").eq("id", id).single(),
       ]);
+
       setApiaries(apiaryRes.data || []);
       setHives(hiveRes.data || []);
 
-      const { data, error } = await supabase.from("inspections").select("*").eq("id", id).single();
-
-      if (error) {
-        console.error("Error loading inspection:", error);
+      if (inspRes.error) {
+        console.error("Error loading inspection:", inspRes.error);
         setSaveError("Failed to load inspection.");
         setLoading(false);
         return;
       }
 
+      const data = inspRes.data || {};
       const loadedPhotos = Array.isArray(data.photos) ? data.photos : [];
+
+      // normalise date for <input type="date">
+      let dateStr = data.date || "";
+      if (dateStr) {
+        try {
+          dateStr = new Date(dateStr).toISOString().slice(0, 10);
+        } catch {
+          // ignore
+        }
+      }
+
       setFormData({
         apiary_id: data.apiary_id || "",
         hive_id: data.hive_id || "",
-        date: data.date || "",
+        date: dateStr || "",
         weather: data.weather || "",
-        weather_code: data.weather_code ?? "", // ⬅️ keep code if present
+        weather_code: data.weather_code ?? "",
         colony_behavior: String(data.colony_behavior ?? ""),
         colony_behavior_other: data.colony_behavior_other || "",
         environmental_signs: toArray(data.environmental_signs),
@@ -226,34 +276,42 @@ const EditInspection = () => {
         notes: data.notes || "",
         photos: loadedPhotos,
       });
+
       setOriginalPhotos(loadedPhotos);
 
       // initial location + reverse geocode + weather
       if (data.apiary_id) {
-        const apiary = apiaryRes.data?.find((a) => a.id === data.apiary_id);
+        const apiary = (apiaryRes.data || []).find((a) => a.id === data.apiary_id);
         if (apiary?.latitude && apiary?.longitude) {
           setApiaryLocation({ lat: apiary.latitude, lon: apiary.longitude });
           try {
             const addr = await reverseGeocode(apiary.latitude, apiary.longitude);
-            if (addr?.display) setHumanAddress(addr.display);
+            setHumanAddress(addr?.display || "");
           } catch {
             setHumanAddress("");
           }
-          if (data.date) fetchWeather(apiary, data.date);
+          if (dateStr) fetchWeather(apiary, dateStr);
         }
       }
+
+      if ("NDEFReader" in window) setNfcSupported(true);
 
       setLoading(false);
     };
 
     loadAll();
-    if ("NDEFReader" in window) setNfcSupported(true);
+
+    // cleanup previews
+    return () => {
+      newPreviews.forEach((u) => u?.startsWith("blob:") && URL.revokeObjectURL(u));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  const hivesForApiary = useMemo(
-    () => (formData.apiary_id ? hives.filter((h) => h.apiary_id === formData.apiary_id) : hives),
-    [hives, formData.apiary_id]
-  );
+  const hivesForApiary = useMemo(() => {
+    if (!formData.apiary_id) return hives;
+    return hives.filter((h) => h.apiary_id === formData.apiary_id);
+  }, [hives, formData.apiary_id]);
 
   useEffect(() => {
     setErrorMsg("");
@@ -305,6 +363,7 @@ const EditInspection = () => {
           safeHiveId = "";
         }
         const next = { ...prev, apiary_id: value, hive_id: safeHiveId };
+
         const apiary = apiaryById.get(value);
         if (apiary) {
           fetchWeather(apiary, prev.date || next.date);
@@ -316,11 +375,15 @@ const EditInspection = () => {
           setApiaryLocation(null);
           setHumanAddress("");
         }
+
         if (safeHiveId === "" && prev.hive_id) {
-          setErrorMsg("Previous hive was cleared because it doesn’t belong to the selected apiary.");
+          setErrorMsg(
+            "Previous hive was cleared because it doesn’t belong to the selected apiary."
+          );
         } else {
           setErrorMsg("");
         }
+
         return next;
       });
       return;
@@ -340,8 +403,6 @@ const EditInspection = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const onSelectSingle = (field) => (e) => setFormData((p) => ({ ...p, [field]: e.target.value }));
-
   const toggleInArray = (field, value) => {
     setFormData((prev) => {
       const set = new Set(prev[field] || []);
@@ -350,23 +411,19 @@ const EditInspection = () => {
       return { ...prev, [field]: Array.from(set) };
     });
   };
-  const toggleQueen = (opt) => toggleInArray("queen_status", opt);
 
   /* ----- Photos ----- */
-  useEffect(() => {
-    return () => {
-      newPreviews.forEach((u) => u?.startsWith("blob:") && URL.revokeObjectURL(u));
-    };
-  }, [newPreviews]);
-
   const onPickPhotos = (e) => {
     const filesPicked = Array.from(e.target.files || []);
     if (!filesPicked.length) return;
+
     const remainingSlots = Math.max(0, 3 - (formData.photos.length + newFiles.length));
     const selected = filesPicked.slice(0, remainingSlots);
     const urls = selected.map((f) => URL.createObjectURL(f));
+
     setNewFiles((prev) => [...prev, ...selected]);
     setNewPreviews((prev) => [...prev, ...urls]);
+
     e.target.value = "";
   };
 
@@ -383,6 +440,7 @@ const EditInspection = () => {
       return c;
     });
   };
+
   const removeExistingPhotoAt = (idx) => {
     setFormData((prev) => {
       const c = [...prev.photos];
@@ -393,39 +451,49 @@ const EditInspection = () => {
 
   const uploadNewFiles = async () => {
     if (!newFiles.length) return [];
+
     const uploaded = [];
     for (const file of newFiles) {
       const safeName = file.name.replace(/\s+/g, "_");
       const filename = `${id}-${Date.now()}-${safeName}`;
       const path = `inspections/${filename}`;
+
       const { error: upErr } = await supabase.storage
         .from("photos")
         .upload(path, file, { contentType: file.type, upsert: true });
+
       if (upErr) {
         console.error("Upload error:", upErr);
         continue;
       }
+
       const { data } = supabase.storage.from("photos").getPublicUrl(path);
       if (data?.publicUrl) uploaded.push(data.publicUrl);
     }
+
     return uploaded;
   };
 
   // ----- NFC scan (premium only) -----
   const handleNfcScan = async () => {
     if (subscriptionLevel !== "premium") return;
+
     try {
       const reader = new window.NDEFReader();
       await reader.scan();
+
       reader.onreading = async (event) => {
         const uid = event.serialNumber || "";
         if (!uid) return;
 
         const { match, duplicates } = resolveHiveByNfc(uid);
         if (duplicates) {
-          setSaveError("This NFC tag is assigned to multiple hives. Please resolve duplicates first.");
+          setSaveError(
+            "This NFC tag is assigned to multiple hives. Please resolve duplicates first."
+          );
           return;
         }
+
         if (match) {
           setSaveError("");
           setFormData((prev) => {
@@ -440,6 +508,7 @@ const EditInspection = () => {
             }
             return next;
           });
+
           alert(`NFC tag detected and hive selected: ${match.name}`);
         } else {
           alert("No hive found for this NFC tag.");
@@ -455,6 +524,7 @@ const EditInspection = () => {
   const handleSave = async (e) => {
     e.preventDefault();
     if (errorMsg) return;
+
     setSaving(true);
     setSaveError("");
 
@@ -462,7 +532,7 @@ const EditInspection = () => {
     if (formData.apiary_id) {
       const { data: parentApiary } = await supabase
         .from("apiaries")
-        .select("archived_at, latitude, longitude")
+        .select("archived_at")
         .eq("id", formData.apiary_id)
         .single();
       if (parentApiary?.archived_at) {
@@ -485,32 +555,72 @@ const EditInspection = () => {
     }
 
     const uploadedUrls = await uploadNewFiles();
-    const removed = originalPhotos.filter((oldUrl) => !formData.photos.includes(oldUrl));
-    const { archived, ...rest } = formData;
 
-    // Build payload with DB-friendly nulls
+    // remove any storage objects that the user removed from the list
+    const removed = originalPhotos.filter((oldUrl) => !formData.photos.includes(oldUrl));
+
     const payload = {
-      ...rest,
-      queen_status: Array.isArray(rest.queen_status) && rest.queen_status.length ? rest.queen_status : null,
+      apiary_id: formData.apiary_id || null,
+      hive_id: formData.hive_id || null,
+      date: formData.date || null,
+      weather: formData.weather || null,
+      weather_code: formData.weather_code || null,
+
+      colony_behavior: formData.colony_behavior || null,
+      colony_behavior_other:
+        formData.colony_behavior === "Other"
+          ? (formData.colony_behavior_other || null)
+          : null,
+
       environmental_signs:
-        Array.isArray(rest.environmental_signs) && rest.environmental_signs.length ? rest.environmental_signs : null,
-      disease_types: rest.signs_disease
-        ? (Array.isArray(rest.disease_types) && rest.disease_types.length ? rest.disease_types : null)
+        Array.isArray(formData.environmental_signs) && formData.environmental_signs.length
+          ? formData.environmental_signs
+          : null,
+      environmental_signs_other:
+        formData.environmental_signs.includes("Other")
+          ? (formData.environmental_signs_other || null)
+          : null,
+
+      hive_population: formData.hive_population || null,
+      brood_pattern: formData.brood_pattern || null,
+      food_stores: formData.food_stores || null,
+
+      queen_status:
+        Array.isArray(formData.queen_status) && formData.queen_status.length
+          ? formData.queen_status
+          : null,
+      queen_status_other:
+        formData.queen_status.includes("Other")
+          ? (formData.queen_status_other || null)
+          : null,
+
+      signs_disease: Boolean(formData.signs_disease),
+      disease_types: formData.signs_disease
+        ? (Array.isArray(formData.disease_types) && formData.disease_types.length
+            ? formData.disease_types
+            : null)
         : null,
-      pest_types: rest.signs_pests
-        ? (Array.isArray(rest.pest_types) && rest.pest_types.length ? rest.pest_types : null)
+      disease_other: formData.signs_disease
+        ? (formData.disease_types.includes("Other") ? (formData.disease_other || null) : null)
         : null,
-      disease_other: rest.signs_disease ? (rest.disease_other || null) : null,
-      pest_other: rest.signs_pests ? (rest.pest_other || null) : null,
-      weather: rest.weather || null,
-      weather_code: rest.weather_code || null, // ⬅️ persist code too
-      photos: [...rest.photos, ...uploadedUrls].slice(0, 3),
+
+      signs_pests: Boolean(formData.signs_pests),
+      pest_types: formData.signs_pests
+        ? (Array.isArray(formData.pest_types) && formData.pest_types.length
+            ? formData.pest_types
+            : null)
+        : null,
+      pest_other: formData.signs_pests
+        ? (formData.pest_types.includes("Other") ? (formData.pest_other || null) : null)
+        : null,
+
+      notes: formData.notes || null,
+
+      photos: [...(formData.photos || []), ...uploadedUrls].slice(0, 3),
     };
 
-    // Save
     const { error } = await supabase.from("inspections").update(payload).eq("id", id);
 
-    // Remove any storage objects that the user removed from the list
     if (!error && removed.length) {
       const pathsByBucket = new Map();
       for (const u of removed) {
@@ -520,55 +630,77 @@ const EditInspection = () => {
         pathsByBucket.get(parsed.bucket).push(parsed.path);
       }
       for (const [bucket, paths] of pathsByBucket.entries()) {
-        try { await supabase.storage.from(bucket).remove(paths); } catch {}
+        try {
+          await supabase.storage.from(bucket).remove(paths);
+        } catch {
+          // ignore
+        }
       }
     }
 
     newPreviews.forEach((u) => u?.startsWith("blob:") && URL.revokeObjectURL(u));
-    setNewPreviews([]); setNewFiles([]); setSaving(false);
+    setNewPreviews([]);
+    setNewFiles([]);
+    setSaving(false);
 
     if (error) {
       console.error("Update failed", error);
       setSaveError("Failed to update inspection. " + (error.message || ""));
       return;
     }
+
     navigate("/inspections");
   };
 
   const handleArchive = async () => {
     if (!window.confirm("Are you sure you want to archive this inspection?")) return;
+
     const { error } = await archiveItem("inspections", id);
     if (error) {
       alert(humaniseSupabaseError(error) || "Failed to archive inspection.");
       return;
     }
+    alert("Inspection archived.");
     navigate("/inspections");
   };
 
   const handleDelete = async () => {
-    const { data, error: checkErr } = await supabase.rpc("check_inspection_children", { inspection_id: id });
-    if (checkErr) {
-      console.error(checkErr);
-      alert("Could not delete, linked items. Please try again.");
-      return;
+    // OPTION 1: Pre-check + fallback
+    let hasChildren = false;
+    let counts = { logs: 0, todos: 0 };
+
+    try {
+      const { data, error: checkErr } = await supabase.rpc("check_inspection_children", {
+        inspection_id: id,
+      });
+
+      if (!checkErr) {
+        const row = Array.isArray(data) ? data[0] : data;
+        counts = {
+          logs: Number(row?.logs || 0),
+          todos: Number(row?.todos || 0),
+        };
+        hasChildren = counts.logs + counts.todos > 0;
+      }
+    } catch {
+      // RPC may not exist — ignore and fall back to delete attempt
     }
-    const row = Array.isArray(data) ? data[0] : data;
-    const { logs = 0, todos = 0 } = row || {};
-    const hasChildren = (logs + todos) > 0;
 
     if (hasChildren) {
       const ok = window.confirm(
-        `This inspection has:\n• ${logs} logbook entr${logs === 1 ? "y" : "ies"}${todos ? `\n• ${todos} to-do${todos === 1 ? "" : "s"}` : ""}\n\n` +
-        `Archive instead? This will archive the inspection and those linked items.`
+        `This inspection has:\n• ${counts.logs} logbook entr${
+          counts.logs === 1 ? "y" : "ies"
+        }${counts.todos ? `\n• ${counts.todos} to-do${counts.todos === 1 ? "" : "s"}` : ""}\n\n` +
+          `You can’t delete it while linked items exist.\n\nArchive instead?`
       );
       if (!ok) return;
 
       const { error: archErr } = await archiveItem("inspections", id);
       if (archErr) {
-        console.error(archErr);
         alert("Failed to archive inspection.");
         return;
       }
+
       alert("Inspection archived.");
       navigate("/inspections");
       return;
@@ -578,22 +710,27 @@ const EditInspection = () => {
 
     const { error: delErr } = await deleteRowAndRemoveUrls("inspections", id, "photos");
     if (delErr) {
-      alert(humaniseSupabaseError(delErr) || "Failed to delete inspection.");
+      alert(humaniseSupabaseError(delErr, { table: "inspections" }) || "Failed to delete inspection.");
       return;
     }
+
     alert("Inspection deleted.");
     navigate("/inspections");
   };
 
-  const showColonyOther = formData.colony_behavior === "Other";
-  const showEnvOther = formData.environmental_signs.includes("Other");
-  const showPestOther = formData.pest_types.includes("Other");
-  const showDiseaseOther = formData.disease_types.includes("Other");
-  const totalPhotos = formData.photos.length + newFiles.length;
+  const totalPhotos = (formData.photos?.length || 0) + (newFiles?.length || 0);
   const canAddMorePhotos = totalPhotos < 3;
 
   const selectedHive = hiveById.get(formData.hive_id);
   const selectedHiveNfc = selectedHive?.nfc_uid || "";
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-10">
+        <div className="w-8 h-8 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6">
@@ -620,401 +757,420 @@ const EditInspection = () => {
         </div>
       )}
 
-      {loading ? (
-        <p>Loading…</p>
-      ) : (
-        <form onSubmit={handleSave} className="space-y-6 max-w-3xl">
-          {/* Apiary/Hive */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Apiary</label>
-              <select
-                name="apiary_id"
-                value={formData.apiary_id}
-                onChange={onChange}
-                className="w-full border rounded px-3 py-2"
-                required
-              >
-                <option value="">Select Apiary</option>
-                {apiaries.map((a) => (
-                  <option key={a.id} value={a.id}>
-                    {a.name}
-                  </option>
-                ))}
-              </select>
-              {apiaryLocation && humanAddress && (
-                <p className="text-xs text-gray-600 mt-1">{humanAddress}</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Hive</label>
-              <select
-                name="hive_id"
-                value={formData.hive_id}
-                onChange={onChange}
-                className="w-full border rounded px-3 py-2"
-                required
-              >
-                <option value="">Select Hive</option>
-                {hivesForApiary.map((h) => (
-                  <option key={h.id} value={h.id}>
-                    {h.name}
-                  </option>
-                ))}
-              </select>
-              {selectedHiveNfc && (
-                <div className="text-xs text-gray-600 mt-1">
-                  NFC: <span className="font-mono">{selectedHiveNfc}</span>
-                </div>
-              )}
-            </div>
+      <form onSubmit={handleSave} className="space-y-6 max-w-3xl">
+        {/* Apiary/Hive */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Apiary</label>
+            <select
+              name="apiary_id"
+              value={formData.apiary_id}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2"
+              required
+            >
+              <option value="">Select Apiary</option>
+              {apiaries.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name}
+                </option>
+              ))}
+            </select>
+            {apiaryLocation && humanAddress && (
+              <p className="text-xs text-gray-600 mt-1">{humanAddress}</p>
+            )}
           </div>
 
-          {/* Date / Weather */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Date</label>
-              <input
-                type="date"
-                name="date"
-                value={formData.date}
-                onChange={onChange}
-                className="w-full border rounded px-3 py-2"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Weather</label>
+          <div>
+            <label className="block text-sm font-medium mb-1">Hive</label>
+            <select
+              name="hive_id"
+              value={formData.hive_id}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2"
+              required
+            >
+              <option value="">Select Hive</option>
+              {hivesForApiary.map((h) => (
+                <option key={h.id} value={h.id}>
+                  {h.name}
+                </option>
+              ))}
+            </select>
+            {selectedHiveNfc && (
+              <div className="text-xs text-gray-600 mt-1">
+                NFC: <span className="font-mono">{selectedHiveNfc}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Date / Weather */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-1">Date</label>
+            <input
+              type="date"
+              name="date"
+              value={formData.date || ""}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Weather</label>
+            <input
+              type="text"
+              name="weather"
+              value={formData.weather || ""}
+              readOnly
+              className="w-full border rounded px-3 py-2 bg-gray-100 text-gray-700"
+              placeholder="(auto)"
+            />
+          </div>
+        </div>
+
+        {/* Colony Behaviour */}
+        <div>
+          <label className="block text-sm font-medium mb-1">Colony Behaviour</label>
+          <select
+            name="colony_behavior"
+            value={formData.colony_behavior}
+            onChange={onChange}
+            className="w-full border rounded px-3 py-2"
+          >
+            <option value="">Select</option>
+            {COLONY_BEHAVIOUR_OPTS.map((o) => (
+              <option key={o} value={o}>
+                {o}
+              </option>
+            ))}
+          </select>
+          {formData.colony_behavior === "Other" && (
+            <input
+              type="text"
+              name="colony_behavior_other"
+              value={formData.colony_behavior_other}
+              onChange={onChange}
+              placeholder="Describe other behavior"
+              className="w-full border rounded px-3 py-2 mt-2"
+            />
+          )}
+        </div>
+
+        {/* Environmental Signs (multi) */}
+        <div className="border rounded p-3">
+          <div className="font-medium mb-2">Environmental Signs (select all that apply)</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {ENVIRONMENTAL_SIGNS_OPTS.map((opt) => (
+              <label key={opt} className="inline-flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={formData.environmental_signs.includes(opt)}
+                  onChange={() => toggleInArray("environmental_signs", opt)}
+                />
+                <span>{opt}</span>
+              </label>
+            ))}
+          </div>
+          {formData.environmental_signs.includes("Other") && (
+            <div className="mt-3">
+              <label className="block text-sm font-medium mb-1">
+                Environmental Signs — Other
+              </label>
               <input
                 type="text"
-                name="weather"
-                value={formData.weather || ""}
-                readOnly
-                className="w-full border rounded px-3 py-2 bg-gray-100 text-gray-700"
-                placeholder="(auto)"
+                name="environmental_signs_other"
+                value={formData.environmental_signs_other}
+                onChange={onChange}
+                className="w-full border rounded px-3 py-2"
               />
             </div>
-          </div>
+          )}
+        </div>
 
-          {/* Colony Behaviour */}
+        {/* Hive Population / Brood Pattern / Food Stores */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Colony Behaviour</label>
+            <label className="block text-sm font-medium mb-1">Hive Population</label>
             <select
-              name="colony_behavior"
-              value={formData.colony_behavior}
-              onChange={onSelectSingle("colony_behavior")}
+              name="hive_population"
+              value={formData.hive_population}
+              onChange={onChange}
               className="w-full border rounded px-3 py-2"
             >
               <option value="">Select</option>
-              {COLONY_BEHAVIOUR_OPTS.map((o) => (
+              {HIVE_POPULATION_OPTS.map((o) => (
                 <option key={o} value={o}>
                   {o}
                 </option>
               ))}
             </select>
-            {formData.colony_behavior === "Other" && (
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Brood Pattern</label>
+            <select
+              name="brood_pattern"
+              value={formData.brood_pattern}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2"
+            >
+              <option value="">Select</option>
+              {BROOD_PATTERN_OPTS.map((o) => (
+                <option key={o} value={o}>
+                  {o}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Food Stores</label>
+            <select
+              name="food_stores"
+              value={formData.food_stores}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2"
+            >
+              <option value="">Select</option>
+              {FOOD_STORES_OPTS.map((o) => (
+                <option key={o} value={o}>
+                  {o}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Queen Status (multi) */}
+        <div className="border rounded p-3">
+          <div className="font-medium mb-2">Queen Status (select all that apply)</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {QUEEN_OPTIONS.map((opt) => (
+              <label key={opt} className="inline-flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={formData.queen_status.includes(opt)}
+                  onChange={() => toggleInArray("queen_status", opt)}
+                />
+                <span>{opt}</span>
+              </label>
+            ))}
+          </div>
+          {formData.queen_status.includes("Other") && (
+            <div className="mt-3">
+              <label className="block text-sm font-medium mb-1">Queen Other</label>
               <input
                 type="text"
-                name="colony_behavior_other"
-                value={formData.colony_behavior_other}
+                name="queen_status_other"
+                value={formData.queen_status_other}
                 onChange={onChange}
-                placeholder="Describe other behavior"
-                className="w-full border rounded px-3 py-2 mt-2"
+                className="w-full border rounded px-3 py-2"
               />
-            )}
-          </div>
+            </div>
+          )}
+        </div>
 
-          {/* Environmental Signs (multi) */}
+        {/* Pests / Disease */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="border rounded p-3">
-            <div className="font-medium mb-2">Environmental Signs (select all that apply)</div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {ENVIRONMENTAL_SIGNS_OPTS.map((opt) => (
-                <label key={opt} className="inline-flex items-center gap-2">
+            <label className="inline-flex items-center gap-2">
+              <input
+                type="checkbox"
+                name="signs_pests"
+                checked={formData.signs_pests}
+                onChange={onChange}
+              />
+              <span className="font-medium">Signs of Pests</span>
+            </label>
+
+            {formData.signs_pests && (
+              <>
+                <div className="mt-3 grid grid-cols-1 gap-2">
+                  {PEST_TYPES.map((p) => (
+                    <label key={p} className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={formData.pest_types.includes(p)}
+                        onChange={() => toggleInArray("pest_types", p)}
+                      />
+                      <span>{p}</span>
+                    </label>
+                  ))}
+                </div>
+
+                {formData.pest_types.includes("Other") && (
                   <input
-                    type="checkbox"
-                    checked={formData.environmental_signs.includes(opt)}
-                    onChange={() => toggleInArray("environmental_signs", opt)}
+                    type="text"
+                    name="pest_other"
+                    value={formData.pest_other}
+                    onChange={onChange}
+                    placeholder="Describe other pest"
+                    className="w-full border rounded px-3 py-2 mt-2"
                   />
-                  <span>{opt}</span>
-                </label>
-              ))}
-            </div>
-            {formData.environmental_signs.includes("Other") && (
-              <div className="mt-3">
-                <label className="block text-sm font-medium mb-1">Environmental Signs — Other</label>
-                <input
-                  type="text"
-                  name="environmental_signs_other"
-                  value={formData.environmental_signs_other}
-                  onChange={onChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
+                )}
+              </>
             )}
           </div>
 
-          {/* Hive Population / Brood Pattern / Food Stores */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Hive Population</label>
-              <select
-                name="hive_population"
-                value={formData.hive_population}
-                onChange={onSelectSingle("hive_population")}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="">Select</option>
-                {HIVE_POPULATION_OPTS.map((o) => (
-                  <option key={o} value={o}>
-                    {o}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Brood Pattern</label>
-              <select
-                name="brood_pattern"
-                value={formData.brood_pattern}
-                onChange={onSelectSingle("brood_pattern")}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="">Select</option>
-                {BROOD_PATTERN_OPTS.map((o) => (
-                  <option key={o} value={o}>
-                    {o}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-1">Food Stores</label>
-              <select
-                name="food_stores"
-                value={formData.food_stores}
-                onChange={onSelectSingle("food_stores")}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="">Select</option>
-                {FOOD_STORES_OPTS.map((o) => (
-                  <option key={o} value={o}>
-                    {o}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Queen Status (multi) */}
           <div className="border rounded p-3">
-            <div className="font-medium mb-2">Queen Status (select all that apply)</div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {QUEEN_OPTIONS.map((opt) => (
-                <label key={opt} className="inline-flex items-center gap-2">
+            <label className="inline-flex items-center gap-2">
+              <input
+                type="checkbox"
+                name="signs_disease"
+                checked={formData.signs_disease}
+                onChange={onChange}
+              />
+              <span className="font-medium">Signs of Disease</span>
+            </label>
+
+            {formData.signs_disease && (
+              <>
+                <div className="mt-3 grid grid-cols-1 gap-2">
+                  {DISEASE_TYPES.map((d) => (
+                    <label key={d} className="inline-flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={formData.disease_types.includes(d)}
+                        onChange={() => toggleInArray("disease_types", d)}
+                      />
+                      <span>{d}</span>
+                    </label>
+                  ))}
+                </div>
+
+                {formData.disease_types.includes("Other") && (
                   <input
-                    type="checkbox"
-                    checked={formData.queen_status.includes(opt)}
-                    onChange={() => toggleQueen(opt)}
+                    type="text"
+                    name="disease_other"
+                    value={formData.disease_other}
+                    onChange={onChange}
+                    placeholder="Describe other disease"
+                    className="w-full border rounded px-3 py-2 mt-2"
                   />
-                  <span>{opt}</span>
-                </label>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Photos: existing + new, max 3 total */}
+        <div>
+          <div className="font-medium mb-2">Photos (max 3)</div>
+
+          {/* Existing */}
+          {formData.photos.length > 0 && (
+            <div className="flex flex-wrap gap-3 mb-3">
+              {formData.photos.map((url, idx) => (
+                <div key={url + idx} className="relative">
+                  <img
+                    src={url}
+                    alt="Inspection"
+                    className="w-24 h-24 object-cover rounded border"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeExistingPhotoAt(idx)}
+                    className="absolute top-0 right-0 bg-red-600 text-white px-1 rounded"
+                  >
+                    ×
+                  </button>
+                </div>
               ))}
-            </div>
-            {formData.queen_status.includes("Other") && (
-              <div className="mt-3">
-                <label className="block text-sm font-medium mb-1">Queen Other</label>
-                <input
-                  type="text"
-                  name="queen_status_other"
-                  value={formData.queen_status_other}
-                  onChange={onChange}
-                  className="w-full border rounded px-3 py-2"
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Pests / Disease */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="border rounded p-3">
-              <label className="inline-flex items-center gap-2">
-                <input type="checkbox" name="signs_pests" checked={formData.signs_pests} onChange={onChange} />
-                <span className="font-medium">Signs of Pests</span>
-              </label>
-              {formData.signs_pests && (
-                <>
-                  <div className="mt-3 grid grid-cols-1 gap-2">
-                    {PEST_TYPES.map((p) => (
-                      <label key={p} className="inline-flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={formData.pest_types.includes(p)}
-                          onChange={() => toggleInArray("pest_types", p)}
-                        />
-                        <span>{p}</span>
-                      </label>
-                    ))}
-                  </div>
-                  {formData.pest_types.includes("Other") && (
-                    <input
-                      type="text"
-                      name="pest_other"
-                      value={formData.pest_other}
-                      onChange={onChange}
-                      placeholder="Describe other pest"
-                      className="w-full border rounded px-3 py-2 mt-2"
-                    />
-                  )}
-                </>
-              )}
-            </div>
-
-            <div className="border rounded p-3">
-              <label className="inline-flex items-center gap-2">
-                <input type="checkbox" name="signs_disease" checked={formData.signs_disease} onChange={onChange} />
-                <span className="font-medium">Signs of Disease</span>
-              </label>
-              {formData.signs_disease && (
-                <>
-                  <div className="mt-3 grid grid-cols-1 gap-2">
-                    {DISEASE_TYPES.map((d) => (
-                      <label key={d} className="inline-flex items-center gap-2">
-                        <input
-                          type="checkbox"
-                          checked={formData.disease_types.includes(d)}
-                          onChange={() => toggleInArray("disease_types", d)}
-                        />
-                        <span>{d}</span>
-                      </label>
-                    ))}
-                  </div>
-                  {formData.disease_types.includes("Other") && (
-                    <input
-                      type="text"
-                      name="disease_other"
-                      value={formData.disease_other}
-                      onChange={onChange}
-                      placeholder="Describe other disease"
-                      className="w-full border rounded px-3 py-2 mt-2"
-                    />
-                  )}
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Photos: existing + new, max 3 total */}
-          <div>
-            <div className="font-medium mb-2">Photos (max 3)</div>
-
-            {/* Existing */}
-            {formData.photos.length > 0 && (
-              <div className="flex flex-wrap gap-3 mb-3">
-                {formData.photos.map((url, idx) => (
-                  <div key={url + idx} className="relative">
-                    <img src={url} alt="Inspection" className="w-24 h-24 object-cover rounded border" />
-                    <button
-                      type="button"
-                      onClick={() => removeExistingPhotoAt(idx)}
-                      className="absolute top-0 right-0 bg-red-600 text-white px-1 rounded"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* New (not uploaded yet) */}
-            {newPreviews.length > 0 && (
-              <div className="flex flex-wrap gap-3 mb-3">
-                {newPreviews.map((u, idx) => (
-                  <div key={u + idx} className="relative">
-                    <img src={u} alt="New" className="w-24 h-24 object-cover rounded border" />
-                    <button
-                      type="button"
-                      onClick={() => removeNewPhotoAt(idx)}
-                      className="absolute top-0 right-0 bg-red-600 text-white px-1 rounded"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              ref={fileInputRef}
-              onChange={onPickPhotos}
-              className="block"
-              disabled={!canAddMorePhotos}
-            />
-            {!canAddMorePhotos && <p className="text-sm text-red-600 mt-1">Maximum of 3 photos reached.</p>}
-          </div>
-
-          {/* Notes */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Inspector Notes</label>
-            <textarea
-              name="notes"
-              value={formData.notes}
-              onChange={onChange}
-              rows={3}
-              className="w-full border rounded px-3 py-2"
-              placeholder="Add any additional notes…"
-            />
-          </div>
-
-          {/* Errors */}
-          {(saveError || errorMsg) && (
-            <div className="text-red-700 bg-red-50 border border-red-200 rounded p-3 text-sm">
-              {saveError || errorMsg}
             </div>
           )}
 
-                    {/* Actions */}
-          <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2">
-            <button
-              type="submit"
-              disabled={saving || Boolean(errorMsg)}
-              className="w-full sm:w-auto bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
-             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
-            >
-              {saving ? "Saving…" : "Save Changes"}
-            </button>
+          {/* New (not uploaded yet) */}
+          {newPreviews.length > 0 && (
+            <div className="flex flex-wrap gap-3 mb-3">
+              {newPreviews.map((u, idx) => (
+                <div key={u + idx} className="relative">
+                  <img src={u} alt="New" className="w-24 h-24 object-cover rounded border" />
+                  <button
+                    type="button"
+                    onClick={() => removeNewPhotoAt(idx)}
+                    className="absolute top-0 right-0 bg-red-600 text-white px-1 rounded"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
-            <button
-              type="button"
-              onClick={handleArchive}
-              className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-3 py-2 rounded"
-            >
-              Archive
-            </button>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            ref={fileInputRef}
+            onChange={onPickPhotos}
+            className="block"
+            disabled={!canAddMorePhotos}
+          />
+          {!canAddMorePhotos && (
+            <p className="text-sm text-red-600 mt-1">Maximum of 3 photos reached.</p>
+          )}
+        </div>
 
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-2 rounded"
-            >
-              Delete
-            </button>
+        {/* Notes */}
+        <div>
+          <label className="block text-sm font-medium mb-1">Inspector Notes</label>
+          <textarea
+            name="notes"
+            value={formData.notes}
+            onChange={onChange}
+            rows={3}
+            className="w-full border rounded px-3 py-2"
+            placeholder="Add any additional notes…"
+          />
+        </div>
 
-            <button
-              type="button"
-              onClick={() => navigate("/inspections")}
-              className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm px-3 py-2 rounded"
-            >
-              Cancel
-            </button>
+        {/* Errors */}
+        {(saveError || errorMsg) && (
+          <div className="text-red-700 bg-red-50 border border-red-200 rounded p-3 text-sm">
+            {saveError || errorMsg}
           </div>
+        )}
 
-        </form>
-      )}
+        {/* Actions */}
+        <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2">
+          <button
+            type="submit"
+            disabled={saving || Boolean(errorMsg)}
+            className="w-full sm:w-auto bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+          >
+            {saving ? "Saving…" : "Save Changes"}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleArchive}
+            className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-3 py-2 rounded"
+          >
+            Archive
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDelete}
+            className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-2 rounded"
+          >
+            Delete
+          </button>
+
+          <button
+            type="button"
+            onClick={() => navigate("/inspections")}
+            className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm px-3 py-2 rounded"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
