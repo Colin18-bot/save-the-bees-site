@@ -6,8 +6,6 @@ import { supabase } from "../../services/supabase";
 
 // Helpers: UK display vs ISO for inputs/queries
 const fmtUK = (d) => (d ? dayjs(d).format("DD/MM/YYYY") : "");
-const fmtISO = (d) => (d ? dayjs(d).format("YYYY-MM-DD") : "");
-
 const DEFAULT_FROM = dayjs().subtract(30, "day").format("YYYY-MM-DD"); // ISO for inputs
 const DEFAULT_TO = dayjs().format("YYYY-MM-DD"); // ISO for inputs
 
@@ -18,6 +16,10 @@ export default function PrintReport() {
   const [apiaries, setApiaries] = useState([]);
   const [hives, setHives] = useState([]);
 
+  // subscription (Premium gating)
+  const [subscriptionLevel, setSubscriptionLevel] = useState("free");
+  const isPremium = subscriptionLevel === "premium";
+
   // filters
   const [apiaryId, setApiaryId] = useState("");
   const [hiveId, setHiveId] = useState("");
@@ -27,13 +29,16 @@ export default function PrintReport() {
   const [includeInspections, setIncludeInspections] = useState(true);
   const [includeTodos, setIncludeTodos] = useState(true);
   const [includeLogbook, setIncludeLogbook] = useState(true);
-  const [includeNfc, setIncludeNfc] = useState(true); // NEW: NFC tags toggle
+
+  // IMPORTANT: NFC toggle starts OFF by default.
+  // Premium users can enable it; Free users never see it.
+  const [includeNfc, setIncludeNfc] = useState(false);
 
   // data
   const [inspections, setInspections] = useState([]);
   const [todos, setTodos] = useState([]);
   const [logbook, setLogbook] = useState([]);
-  const [nfcHives, setNfcHives] = useState([]); // NEW: NFC-tagged hives
+  const [nfcHives, setNfcHives] = useState([]);
   const [inspectionById, setInspectionById] = useState(new Map());
 
   // schema detection (start false; enable after safe probe)
@@ -48,11 +53,49 @@ export default function PrintReport() {
     document.title = `Reports & Exports — ${fmtUK(fromDate)}–${fmtUK(toDate)}`;
   }, [fromDate, toDate]);
 
+  // Load subscription level (premium / free)
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data: userWrap } = await supabase.auth.getUser();
+        const uid = userWrap?.user?.id;
+
+        if (!uid) {
+          setSubscriptionLevel("free");
+          setIncludeNfc(false);
+          return;
+        }
+
+        const { data: profile, error: profErr } = await supabase
+          .from("profiles")
+          .select("subscription_level")
+          .eq("user_id", uid)
+          .maybeSingle();
+
+        if (profErr) {
+          setSubscriptionLevel("free");
+          setIncludeNfc(false);
+          return;
+        }
+
+        const level = profile?.subscription_level || "free";
+        setSubscriptionLevel(level);
+
+        // Safety: if Free, force NFC off
+        if (level !== "premium") setIncludeNfc(false);
+      } catch {
+        setSubscriptionLevel("free");
+        setIncludeNfc(false);
+      }
+    })();
+  }, []);
+
   // name lookups
   const apiaryName = useMemo(
     () => new Map(apiaries.map((a) => [a.id, a.name || "Unnamed Apiary"])),
     [apiaries]
   );
+
   const hiveMap = useMemo(
     () =>
       new Map(
@@ -114,11 +157,7 @@ export default function PrintReport() {
 
   const missingInspectionCol = (err) =>
     err &&
-    /column .*inspection_id.* does not exist/i.test(
-      String(err?.message || err)
-    );
-  const missingAnyCol = (err) =>
-    err && /column .* does not exist/i.test(String(err?.message || err));
+    /column .*inspection_id.* does not exist/i.test(String(err?.message || err));
 
   const runQuery = async () => {
     setLoading(true);
@@ -127,16 +166,16 @@ export default function PrintReport() {
       let inspectionsData = [];
       let todosData = [];
       let logbookData = [];
-      let nfcData = []; // NEW
+      let nfcData = [];
+
+      // SAFETY: Free users must never query NFC, even if state is tampered
+      const allowNfc = isPremium && includeNfc;
 
       // ---- SAFE schema detection (no 400s) ----
       const detectHasInspectionId = async (table) => {
-        const { data, error } = await supabase
-          .from(table)
-          .select("*")
-          .range(0, 0);
+        const { data, error } = await supabase.from(table).select("*").range(0, 0);
         if (error) return false;
-        if (!data || !data.length) return false; // can't confirm on empty set
+        if (!data || !data.length) return false;
         return Object.prototype.hasOwnProperty.call(data[0], "inspection_id");
       };
 
@@ -148,7 +187,7 @@ export default function PrintReport() {
         setHasTodoInspectionCol(todoHasInsp);
         setHasLogInspectionCol(logHasInsp);
       } catch {
-        // ignore; flags stay false (we'll avoid insp filters)
+        // ignore
       }
 
       // ---------- Inspections ----------
@@ -163,6 +202,7 @@ export default function PrintReport() {
         else if (apiaryId) q = q.eq("apiary_id", apiaryId);
         if (fromDate) q = q.gte("date", fromDate);
         if (toDate) q = q.lte("date", toDate);
+
         const { data, error } = await q;
         if (error) throw error;
         inspectionsData = data || [];
@@ -171,8 +211,8 @@ export default function PrintReport() {
       // inspection ids for linking (if needed)
       let inspIds = [];
       const needInspIds =
-        (includeTodos && hasTodoInspectionCol) ||
-        (includeLogbook && hasLogInspectionCol);
+        (includeTodos && hasTodoInspectionCol) || (includeLogbook && hasLogInspectionCol);
+
       if (needInspIds && (hiveId || apiaryId)) {
         let iq = supabase.from("inspections").select("id");
         if (hiveId) iq = iq.eq("hive_id", hiveId);
@@ -187,21 +227,15 @@ export default function PrintReport() {
         const buildTodoQuery = (mode, byInspection = false) => {
           let q = supabase.from("todos").select("*");
           if (!includeArchived) q = q.is("archived_at", null);
-
           if (byInspection) q = q.in("inspection_id", inspIds);
 
           if (mode === "due") {
             if (fromDate) q = q.gte("due_date", fromDate);
             if (toDate) q = q.lte("due_date", toDate);
           } else {
-            // created-at fallback when due_date is null
             q = q.is("due_date", null);
             if (fromDate) q = q.gte("created_at", fromDate);
-            if (toDate)
-              q = q.lte(
-                "created_at",
-                dayjs(toDate).add(1, "day").format("YYYY-MM-DD")
-              );
+            if (toDate) q = q.lte("created_at", dayjs(toDate).add(1, "day").format("YYYY-MM-DD"));
           }
 
           if (hiveId) q = q.eq("hive_id", hiveId);
@@ -210,15 +244,12 @@ export default function PrintReport() {
           return q;
         };
 
-        // A) due window
         const { data: A1, error: E1 } = await buildTodoQuery("due");
         if (E1) throw E1;
 
-        // B) created_at window (due_date null)
         const { data: A2, error: E2 } = await buildTodoQuery("created");
         if (E2) throw E2;
 
-        // C/D) via inspection_id only if the column exists and we have IDs
         let B1 = [];
         let B2 = [];
         if (hasTodoInspectionCol && inspIds.length) {
@@ -250,23 +281,17 @@ export default function PrintReport() {
       // ---------- Logbook ----------
       if (includeLogbook) {
         const buildLogQuery = (mode, byInspection = false) => {
-          let q = supabase.from("logbook").select("*"); // avoid asking for non-existent columns
+          let q = supabase.from("logbook").select("*");
           if (!includeArchived) q = q.is("archived_at", null);
-
           if (byInspection) q = q.in("inspection_id", inspIds);
 
           if (mode === "date") {
             if (fromDate) q = q.gte("date", fromDate);
             if (toDate) q = q.lte("date", toDate);
           } else {
-            // created_at fallback when date is null
             q = q.is("date", null);
             if (fromDate) q = q.gte("created_at", fromDate);
-            if (toDate)
-              q = q.lte(
-                "created_at",
-                dayjs(toDate).add(1, "day").format("YYYY-MM-DD")
-              );
+            if (toDate) q = q.lte("created_at", dayjs(toDate).add(1, "day").format("YYYY-MM-DD"));
           }
 
           if (hiveId) q = q.eq("hive_id", hiveId);
@@ -275,15 +300,12 @@ export default function PrintReport() {
           return q;
         };
 
-        // A) explicit date window
         const { data: A1, error: E1 } = await buildLogQuery("date");
         if (E1) throw E1;
 
-        // B) date null → created_at window
         const { data: A2, error: E2 } = await buildLogQuery("created");
         if (E2) throw E2;
 
-        // C/D) via inspection_id (only if present)
         let B1 = [];
         let B2 = [];
         if (hasLogInspectionCol && inspIds.length) {
@@ -312,18 +334,22 @@ export default function PrintReport() {
         logbookData = Array.from(map.values());
       }
 
-      // ---------- NFC TAGGED HIVES (no date filter, just apiary/hive/archived) ----------
-      if (includeNfc) {
+      // ---------- NFC TAGGED HIVES ----------
+      if (allowNfc) {
         let q = supabase
           .from("hives")
           .select("id, name, apiary_id, nfc_uid, archived_at")
           .not("nfc_uid", "is", null);
+
         if (!includeArchived) q = q.is("archived_at", null);
         if (hiveId) q = q.eq("id", hiveId);
         else if (apiaryId) q = q.eq("apiary_id", apiaryId);
+
         const { data, error } = await q;
         if (error) throw error;
         nfcData = data || [];
+      } else {
+        nfcData = [];
       }
 
       // build inspection lookup (for rows that only have inspection_id)
@@ -360,7 +386,7 @@ export default function PrintReport() {
       setInspections(inspectionsData);
       setTodos(todosData);
       setLogbook(logbookData);
-      setNfcHives(nfcData); // NEW
+      setNfcHives(nfcData);
     } catch (e) {
       console.error(e);
       setError(e.message || "Failed to load report data.");
@@ -369,7 +395,7 @@ export default function PrintReport() {
     }
   };
 
-  // CSV helpers (all dates in UK format; filenames use UK-ordered timestamp)
+  // CSV helpers
   const esc = (v) => {
     if (v == null) return "";
     const s = String(v);
@@ -378,6 +404,7 @@ export default function PrintReport() {
     }
     return s;
   };
+
   const downloadCSV = (filename, rows, headers) => {
     const headerLine = headers.map(esc).join(",");
     const body = rows
@@ -397,6 +424,8 @@ export default function PrintReport() {
   const ukStamp = () => dayjs().format("DDMMYYYY-HHmm");
 
   const downloadCombinedCSV = () => {
+    const allowNfc = isPremium && includeNfc;
+
     const headers = [
       "type",
       "date",
@@ -418,6 +447,7 @@ export default function PrintReport() {
       "created_at",
       "archived",
     ];
+
     const rows = [];
 
     if (includeInspections) {
@@ -459,7 +489,7 @@ export default function PrintReport() {
           date: fmtUK(t.due_date || t.created_at),
           apiary: apiaryName.get(resolvedApiaryId) || "",
           hive: displayHive(resolvedHiveId, resolvedApiaryId),
-          title: t.title || `To-Do ${fmtUK(t.due_date) || ""}`,
+          title: t.title || "",
           weather: "",
           colony_behavior: "",
           hive_population: "",
@@ -482,23 +512,13 @@ export default function PrintReport() {
       for (const l of logbook) {
         const { resolvedApiaryId, resolvedHiveId } = effectiveIds(l);
         const text =
-          l.entry ||
-          l.notes ||
-          l.note ||
-          l.content ||
-          l.text ||
-          l.message ||
-          "";
+          l.entry || l.notes || l.note || l.content || l.text || l.message || "";
         rows.push({
           type: "Logbook",
           date: fmtUK(l.date || l.created_at),
           apiary: apiaryName.get(resolvedApiaryId) || "",
           hive: displayHive(resolvedHiveId, resolvedApiaryId),
-          title:
-            l.log_type ||
-            (text
-              ? text.slice(0, 60)
-              : `Log ${fmtUK(l.date || l.created_at)}`),
+          title: l.log_type || "",
           weather: "",
           colony_behavior: "",
           hive_population: "",
@@ -517,12 +537,12 @@ export default function PrintReport() {
       }
     }
 
-    // NEW: NFC tags in combined CSV
-    if (includeNfc) {
+    // Premium-only NFC in combined CSV
+    if (allowNfc) {
       for (const h of nfcHives) {
         rows.push({
           type: "NFC Tag",
-          date: "", // no date window for NFC list
+          date: "",
           apiary: apiaryName.get(h.apiary_id) || "",
           hive: h.name || "Unnamed Hive",
           title: "NFC tag",
@@ -535,7 +555,6 @@ export default function PrintReport() {
           disease_types: "",
           signs_pests: "",
           pest_types: "",
-          // put the UID in notes so it's clearly visible
           notes: h.nfc_uid ? `NFC UID: ${h.nfc_uid}` : "",
           due_date: "",
           status: "",
@@ -594,16 +613,7 @@ export default function PrintReport() {
   };
 
   const downloadTodosCSV = () => {
-    const headers = [
-      "due_date",
-      "apiary",
-      "hive",
-      "title",
-      "notes",
-      "status",
-      "created_at",
-      "archived",
-    ];
+    const headers = ["due_date", "apiary", "hive", "title", "notes", "status", "created_at", "archived"];
     const rows = todos.map((t) => {
       const { resolvedApiaryId, resolvedHiveId } = effectiveIds(t);
       return {
@@ -625,13 +635,7 @@ export default function PrintReport() {
     const rows = logbook.map((l) => {
       const { resolvedApiaryId, resolvedHiveId } = effectiveIds(l);
       const text =
-        l.entry ||
-        l.notes ||
-        l.note ||
-        l.content ||
-        l.text ||
-        l.message ||
-        "";
+        l.entry || l.notes || l.note || l.content || l.text || l.message || "";
       return {
         date: fmtUK(l.date || l.created_at),
         apiary: apiaryName.get(resolvedApiaryId) || "",
@@ -645,20 +649,18 @@ export default function PrintReport() {
   };
 
   const downloadNfcCSV = () => {
+    // Safety: Free users should never be able to generate this
+    if (!isPremium) return;
+
     const headers = ["apiary", "hive", "nfc_uid", "archived"];
-    const rows = nfcHives.map((h) => {
-      return {
-        apiary: apiaryName.get(h.apiary_id) || "",
-        hive: h.name || "Unnamed Hive",
-        nfc_uid: h.nfc_uid || "",
-        archived: h.archived_at ? "Yes" : "No",
-      };
-    });
+    const rows = nfcHives.map((h) => ({
+      apiary: apiaryName.get(h.apiary_id) || "",
+      hive: h.name || "Unnamed Hive",
+      nfc_uid: h.nfc_uid || "",
+      archived: h.archived_at ? "Yes" : "No",
+    }));
     downloadCSV(`nfc-tags-${ukStamp()}.csv`, rows, headers);
   };
-
-  // We keep the print function in case you re-add the button later (harmless if unused)
-  const printPage = () => window.print();
 
   return (
     <div className="p-6">
@@ -672,16 +674,12 @@ export default function PrintReport() {
 
       {/* sticky back bar */}
       <div className="no-print sticky top-0 z-30 -mx-6 px-6 py-3 bg-white/90 backdrop-blur border-b flex items-center justify-between">
-        <Link
-          to="/dashboard#print"
-          className="text-blue-600 hover:underline"
-        >
+        <Link to="/dashboard#print" className="text-blue-600 hover:underline">
           ← Back to Dashboard
         </Link>
       </div>
 
       <h1 className="text-2xl font-bold mt-4">Reports &amp; Exports</h1>
-      {/* UK date range subtitle appears in print/PDF */}
       <p className="text-sm text-gray-600 mb-4">
         Date range: <strong>{fmtUK(fromDate)}–{fmtUK(toDate)}</strong>
       </p>
@@ -735,8 +733,7 @@ export default function PrintReport() {
             </select>
           </div>
 
-         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <div>
               <label className="block text-sm font-medium mb-1">From</label>
               <input
@@ -791,14 +788,18 @@ export default function PrintReport() {
             />
             <span>Logbook</span>
           </label>
-          <label className="inline-flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={includeNfc}
-              onChange={(e) => setIncludeNfc(e.target.checked)}
-            />
-            <span>NFC tags</span>
-          </label>
+
+          {/* Premium-only NFC toggle */}
+          {isPremium && (
+            <label className="inline-flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={includeNfc}
+                onChange={(e) => setIncludeNfc(e.target.checked)}
+              />
+              <span>NFC tags</span>
+            </label>
+          )}
         </div>
 
         <div className="mt-4 flex flex-wrap gap-3">
@@ -809,6 +810,7 @@ export default function PrintReport() {
           >
             {loading ? "Loading…" : "Generate Report"}
           </button>
+
           <button
             onClick={downloadCombinedCSV}
             className="bg-gray-800 hover:bg-black text-white px-4 py-2 rounded"
@@ -816,6 +818,7 @@ export default function PrintReport() {
           >
             Download CSV (Combined)
           </button>
+
           <button
             onClick={downloadInspectionsCSV}
             className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded"
@@ -823,6 +826,7 @@ export default function PrintReport() {
           >
             CSV: Inspections
           </button>
+
           <button
             onClick={downloadTodosCSV}
             className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded"
@@ -830,6 +834,7 @@ export default function PrintReport() {
           >
             CSV: Tasks
           </button>
+
           <button
             onClick={downloadLogbookCSV}
             className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded"
@@ -837,13 +842,18 @@ export default function PrintReport() {
           >
             CSV: Logbook
           </button>
-          <button
-            onClick={downloadNfcCSV}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded"
-            disabled={loading || !nfcHives.length}
-          >
-            CSV: NFC tags
-          </button>
+
+          {/* Premium-only NFC CSV button */}
+          {isPremium && (
+            <button
+              onClick={downloadNfcCSV}
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-2 rounded"
+              disabled={loading || !nfcHives.length || !includeNfc}
+              title={!includeNfc ? "Enable NFC tags to export NFC CSV" : ""}
+            >
+              CSV: NFC tags
+            </button>
+          )}
         </div>
 
         {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
@@ -876,34 +886,17 @@ export default function PrintReport() {
                   </thead>
                   <tbody>
                     {inspections.map((x) => {
-                      const { resolvedApiaryId, resolvedHiveId } =
-                        effectiveIds(x);
+                      const { resolvedApiaryId, resolvedHiveId } = effectiveIds(x);
                       return (
                         <tr key={x.id} className="border-b align-top">
-                          <td className="py-2 pr-3 whitespace-nowrap">
-                            {fmtUK(x.date)}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {apiaryName.get(resolvedApiaryId) || ""}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {displayHive(resolvedHiveId, resolvedApiaryId)}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {x.weather || ""}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {x.colony_behavior || ""}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {x.hive_population || ""}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {x.brood_pattern || ""}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {x.food_stores || ""}
-                          </td>
+                          <td className="py-2 pr-3 whitespace-nowrap">{fmtUK(x.date)}</td>
+                          <td className="py-2 pr-3">{apiaryName.get(resolvedApiaryId) || ""}</td>
+                          <td className="py-2 pr-3">{displayHive(resolvedHiveId, resolvedApiaryId)}</td>
+                          <td className="py-2 pr-3">{x.weather || ""}</td>
+                          <td className="py-2 pr-3">{x.colony_behavior || ""}</td>
+                          <td className="py-2 pr-3">{x.hive_population || ""}</td>
+                          <td className="py-2 pr-3">{x.brood_pattern || ""}</td>
+                          <td className="py-2 pr-3">{x.food_stores || ""}</td>
                           <td className="py-2 pr-3">
                             {x.signs_disease
                               ? Array.isArray(x.disease_types)
@@ -918,9 +911,7 @@ export default function PrintReport() {
                                 : "Yes"
                               : "No"}
                           </td>
-                          <td className="py-2 pr-3">
-                            {x.notes || ""}
-                          </td>
+                          <td className="py-2 pr-3">{x.notes || ""}</td>
                         </tr>
                       );
                     })}
@@ -951,28 +942,17 @@ export default function PrintReport() {
                   </thead>
                   <tbody>
                     {todos.map((t) => {
-                      const { resolvedApiaryId, resolvedHiveId } =
-                        effectiveIds(t);
+                      const { resolvedApiaryId, resolvedHiveId } = effectiveIds(t);
                       return (
                         <tr key={t.id} className="border-b align-top">
                           <td className="py-2 pr-3 whitespace-nowrap">
                             {fmtUK(t.due_date || t.created_at)}
                           </td>
-                          <td className="py-2 pr-3">
-                            {apiaryName.get(resolvedApiaryId) || ""}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {displayHive(resolvedHiveId, resolvedApiaryId)}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {t.title || ""}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {t.notes || ""}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {t.status || ""}
-                          </td>
+                          <td className="py-2 pr-3">{apiaryName.get(resolvedApiaryId) || ""}</td>
+                          <td className="py-2 pr-3">{displayHive(resolvedHiveId, resolvedApiaryId)}</td>
+                          <td className="py-2 pr-3">{t.title || ""}</td>
+                          <td className="py-2 pr-3">{t.notes || ""}</td>
+                          <td className="py-2 pr-3">{t.status || ""}</td>
                         </tr>
                       );
                     })}
@@ -1002,33 +982,16 @@ export default function PrintReport() {
                   </thead>
                   <tbody>
                     {logbook.map((l) => {
-                      const { resolvedApiaryId, resolvedHiveId } =
-                        effectiveIds(l);
+                      const { resolvedApiaryId, resolvedHiveId } = effectiveIds(l);
                       const text =
-                        l.entry ||
-                        l.notes ||
-                        l.note ||
-                        l.content ||
-                        l.text ||
-                        l.message ||
-                        "";
+                        l.entry || l.notes || l.note || l.content || l.text || l.message || "";
                       return (
                         <tr key={l.id} className="border-b align-top">
-                          <td className="py-2 pr-3 whitespace-nowrap">
-                            {fmtUK(l.date || l.created_at)}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {apiaryName.get(resolvedApiaryId) || ""}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {displayHive(resolvedHiveId, resolvedApiaryId)}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {l.log_type || ""}
-                          </td>
-                          <td className="py-2 pr-3">
-                            {text}
-                          </td>
+                          <td className="py-2 pr-3 whitespace-nowrap">{fmtUK(l.date || l.created_at)}</td>
+                          <td className="py-2 pr-3">{apiaryName.get(resolvedApiaryId) || ""}</td>
+                          <td className="py-2 pr-3">{displayHive(resolvedHiveId, resolvedApiaryId)}</td>
+                          <td className="py-2 pr-3">{l.log_type || ""}</td>
+                          <td className="py-2 pr-3">{text}</td>
                         </tr>
                       );
                     })}
@@ -1039,17 +1002,15 @@ export default function PrintReport() {
           </section>
         )}
 
-        {includeNfc && (
+        {/* Premium-only NFC results section */}
+        {isPremium && includeNfc && (
           <section className="card border rounded p-4">
             <h2 className="text-xl font-semibold mb-3">NFC Tags</h2>
             <p className="text-xs text-gray-600 mb-2">
-              Shows hives that currently have an NFC tag linked. This respects
-              the Apiary/Hive and archived filters, but not the date range.
+              Shows hives that currently have an NFC tag linked. This respects the Apiary/Hive and archived filters, but not the date range.
             </p>
             {nfcHives.length === 0 ? (
-              <p className="text-gray-500">
-                No NFC tags found for this filter.
-              </p>
+              <p className="text-gray-500">No NFC tags found for this filter.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="min-w-full text-sm">
@@ -1064,20 +1025,14 @@ export default function PrintReport() {
                   <tbody>
                     {nfcHives.map((h) => (
                       <tr key={h.id} className="border-b align-top">
-                        <td className="py-2 pr-3">
-                          {apiaryName.get(h.apiary_id) || ""}
-                        </td>
-                        <td className="py-2 pr-3">
-                          {h.name || "Unnamed Hive"}
-                        </td>
+                        <td className="py-2 pr-3">{apiaryName.get(h.apiary_id) || ""}</td>
+                        <td className="py-2 pr-3">{h.name || "Unnamed Hive"}</td>
                         <td className="py-2 pr-3">
                           <code className="px-1.5 py-0.5 bg-gray-50 border rounded text-[11px] break-all">
                             {h.nfc_uid}
                           </code>
                         </td>
-                        <td className="py-2 pr-3">
-                          {h.archived_at ? "Yes" : "No"}
-                        </td>
+                        <td className="py-2 pr-3">{h.archived_at ? "Yes" : "No"}</td>
                       </tr>
                     ))}
                   </tbody>
