@@ -7,6 +7,7 @@ const toc = [
   { id: "membership", title: "Membership & Feature Availability" },
   { id: "getting-started", title: "Getting Started" },
   { id: "navigation", title: "Navigation Overview" },
+  { id: "bee-health-helper", title: "Colony Health Check (Bee Health Helper)" },
   { id: "business-inventory", title: "Inventory, Sales & Expenses" },
   { id: "currency-defaults", title: "Default Currency (How It Works)" },
   { id: "reports", title: "Reports" },
@@ -159,6 +160,9 @@ export default function Help() {
                         <strong>Export my data (CSV)</strong> via{" "}
                         <em>Settings → Export</em>
                       </li>
+                      <li>
+                        <strong>Colony Health Check</strong> (Bee Health Helper)
+                      </li>
                     </ul>
                     <p className="mt-2 text-sm text-gray-600">
                       If you downgrade from Premium to Free, we keep{" "}
@@ -234,6 +238,12 @@ export default function Help() {
                   date. <Badge>Free</Badge>
                 </li>
                 <li>
+                  <strong>Try the Colony Health Check:</strong>{" "}
+                  <span className="text-gray-700">Colony Health Check</span>{" "}
+                  helps you decide what to check next when something looks “off”.
+                  <Badge>Free</Badge>
+                </li>
+                <li>
                   <strong>NFC</strong> <Badge tone="blue">Premium</Badge>:
                   optional tap-to-log flow—see the NFC section below.
                 </li>
@@ -287,8 +297,7 @@ export default function Help() {
                     <li>
                       <strong>Seasonal Beekeeper Notes (preview):</strong> small
                       panel under the snapshot showing the first few season-aware
-                      notes (e.g., winter feeding, spring build-up, late-summer
-                      Varroa timing) with a <strong>“View full notes”</strong>{" "}
+                      notes with a <strong>“View full notes”</strong>{" "}
                       link that takes you to the full Weather page.
                     </li>
                     <li>
@@ -337,8 +346,7 @@ export default function Help() {
                     </li>
                     <li>
                       If an NFC tag is linked, a small <strong>NFC Tag</strong>{" "}
-                      pill appears on the hive card (Premium), so you can see at
-                      a glance which hives are tagged.
+                      pill appears on the hive card (Premium).
                     </li>
                     <li>
                       Photos open in a <strong>lightbox</strong> when clicked;
@@ -365,12 +373,6 @@ export default function Help() {
                       diseases.
                     </li>
                     <li>
-                      Where the inspection belongs to a hive with an NFC tag, the
-                      card can show a small <strong>NFC Tag</strong> pill,
-                      especially when you’ve arrived via the NFC flow or are
-                      filtered to that hive.
-                    </li>
-                    <li>
                       <strong>Linked Logbook:</strong> where logbook entries
                       reference an inspection, the card shows a count with a{" "}
                       <em>View logbook</em> link. Clicking it opens the{" "}
@@ -389,18 +391,35 @@ export default function Help() {
                 </div>
 
                 <div>
+                  <h3 className="font-semibold">Colony Health Check</h3>
+                  <ul className="list-disc pl-6">
+                    <li>
+                      A guided helper that asks one question at a time and suggests
+                      what to check next when symptoms are unclear.
+                    </li>
+                    <li>
+                      It includes a clear disclaimer and links to official UK reporting
+                      guidance for high-significance pests/diseases.
+                    </li>
+                    <li>
+                      You can switch between <strong>Guided mode</strong> and{" "}
+                      <strong>Expand all</strong> at any time.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
                   <h3 className="font-semibold">Tasks &amp; Calendar</h3>
                   <ul className="list-disc pl-6">
                     <li>
                       Create tasks with due dates and statuses; filter by{" "}
-                      <strong>apiary</strong>, <strong>hive</strong>, and (where
-                      available) a <strong>From/To date range</strong> to focus
-                      on a specific period.
+                      <strong>apiary</strong>, <strong>hive</strong>, and a{" "}
+                      <strong>From/To date range</strong>.
                     </li>
                     <li>
                       <strong>Marking completed:</strong> update the status from
-                      the <strong>Task List</strong> (blue <em>Mark complete</em>{" "}
-                      button) or from the <strong>Edit Task</strong> page.
+                      the <strong>Task List</strong> or from the{" "}
+                      <strong>Edit Task</strong> page.
                     </li>
                     <li>
                       From the calendar, open an item and choose{" "}
@@ -424,19 +443,15 @@ export default function Help() {
                     <span className="text-gray-700">
                       When linking a <em>Related Inspection</em>, the dropdown is
                       grouped by date and each option shows{" "}
-                      <strong>Hive (Apiary)</strong> and the <strong>time</strong>,
-                      making same-day inspections easy to tell apart. Use the Hive
-                      selector above to narrow the list.
+                      <strong>Hive (Apiary)</strong> and the <strong>time</strong>.
                     </span>{" "}
                     <Badge>Free</Badge>
                   </p>
                   <ul className="list-disc pl-6 mt-2">
                     <li>
                       <strong>Arriving from Inspections:</strong> the Logbook list
-                      may be <em>filtered to a specific inspection</em> (via{" "}
-                      <em>View logbook</em>). You’ll see a blue banner with the
-                      inspection ref/date, a <em>Back to that inspection</em>{" "}
-                      link, and a <em>Clear inspection filter</em> action.
+                      may be <em>filtered to a specific inspection</em>. You’ll see a
+                      blue banner plus a one-click “Clear inspection filter”.
                     </li>
                     <li>
                       <strong>Deep-links &amp; highlights:</strong> when you’re
@@ -492,9 +507,7 @@ export default function Help() {
                     </li>
                     <li>
                       <strong>Default Currency:</strong> choose your preferred
-                      ISO code (e.g., GBP, EUR, USD). This sets the default used
-                      in Sales totals and pre-fills in New Expense. You can still
-                      override currency on individual expenses.
+                      ISO code (e.g., GBP, EUR, USD).
                     </li>
                     <li>
                       <strong>Manage billing</strong> (Premium): opens Stripe
@@ -523,6 +536,142 @@ export default function Help() {
               </div>
             </section>
 
+            {/* Colony Health Check */}
+            <section id="bee-health-helper">
+              <h2 className="text-2xl font-bold mb-3">
+                Colony Health Check (Bee Health Helper)
+              </h2>
+
+              <div className="mb-4 rounded border border-yellow-200 bg-yellow-50 p-4 text-sm text-gray-800">
+                <div className="font-semibold">Important</div>
+                <ul className="list-disc pl-5 mt-1 space-y-1">
+                  <li>
+                    The Bee Health Helper is <strong>not a diagnosis</strong>. It’s a
+                    triage tool to guide what to check next.
+                  </li>
+                  <li>
+                    Use <strong>Not sure</strong> whenever you haven’t opened the hive,
+                    the weather is poor, or you simply can’t observe that detail.
+                  </li>
+                  <li>
+                    If you suspect a <strong>notifiable disease/pest</strong>, avoid
+                    moving colonies/equipment and follow official guidance.
+                  </li>
+                </ul>
+              </div>
+
+              <p className="text-gray-700">
+                The Bee Health Helper is designed for real-world beekeeping where you
+                might only have partial information. It asks a short set of context
+                questions first, then adapts the next questions based on what you’ve
+                selected.
+              </p>
+
+              <div className="mt-4 space-y-4">
+                <div className="rounded border bg-white p-4">
+                  <h3 className="font-semibold">How to use it (simple)</h3>
+                  <ol className="list-decimal pl-6 space-y-1 text-gray-700 mt-2">
+                    <li>
+                      Open <strong>Colony Health Check</strong> from the sidebar.
+                    </li>
+                    <li>
+                      Answer the first few “context” questions:{" "}
+                      <strong>Season</strong>, <strong>Colony strength</strong>, and{" "}
+                      <strong>How quickly did this start?</strong>
+                    </li>
+                    <li>
+                      Pick your <strong>main concern</strong> (brood, adults, behaviour,
+                      collapse, pests, or “not sure”).
+                    </li>
+                    <li>
+                      Continue with the guided questions (or switch to{" "}
+                      <strong>Expand all</strong> if you prefer).
+                    </li>
+                    <li>
+                      Press <strong>Get results</strong> to see the most likely patterns
+                      and what to check next.
+                    </li>
+                  </ol>
+                </div>
+
+                <div className="rounded border bg-white p-4">
+                  <h3 className="font-semibold">Guided mode vs Expand all</h3>
+                  <ul className="list-disc pl-6 space-y-1 text-gray-700 mt-2">
+                    <li>
+                      <strong>Guided mode</strong> shows <em>one question at a time</em>
+                      and keeps you moving forward.
+                    </li>
+                    <li>
+                      <strong>Expand all</strong> shows everything that’s currently
+                      relevant so you can jump around.
+                    </li>
+                    <li>
+                      You can switch between them any time. Your answers stay in place.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="rounded border bg-white p-4">
+                  <h3 className="font-semibold">Why it asks “Season” and “Strength”</h3>
+                  <ul className="list-disc pl-6 space-y-1 text-gray-700 mt-2">
+                    <li>
+                      These answers help the tool show more relevant questions (for
+                      example, some symptoms are more common in certain seasons).
+                    </li>
+                    <li>
+                      They can also nudge suggestions, but they are{" "}
+                      <strong>not a diagnosis</strong> on their own.
+                    </li>
+                    <li>
+                      If you’re unsure, choose the closest match — or use “Not sure”
+                      where available.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="rounded border bg-white p-4">
+                  <h3 className="font-semibold">Recommended next checks</h3>
+                  <p className="text-gray-700 mt-2">
+                    After results, you may see <strong>Recommended next checks</strong>.
+                    These are the most useful observations to confirm or rule out the
+                    top suggestions. Clicking one jumps you straight to that question.
+                  </p>
+                </div>
+
+                <div className="rounded border bg-white p-4">
+                  <h3 className="font-semibold">UK reporting &amp; urgent guidance</h3>
+                  <p className="text-gray-700 mt-2">
+                    If you select a high-significance sign (or the results indicate an
+                    urgent risk), the tool will show a <strong>UK action</strong> panel
+                    with official links. This may appear even if the condition doesn’t
+                    show as your “top” result, because reporting guidance is more
+                    important than scoring.
+                  </p>
+                  <p className="text-gray-700 mt-2">
+                    If you’re unsure, treat it as a prompt to{" "}
+                    <strong>pause and check official guidance</strong> before moving
+                    equipment or applying treatments.
+                  </p>
+                </div>
+
+                <div className="rounded border bg-white p-4">
+                  <h3 className="font-semibold">Resetting</h3>
+                  <p className="text-gray-700 mt-2">
+                    Use <strong>Reset all</strong> to clear everything and start again.
+                    This is helpful if you’re switching to a different hive, or your
+                    situation changes.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 text-sm text-gray-600">
+                Quick link:{" "}
+                <Link to="/bee-health" className="text-blue-700 underline">
+                  Open Colony Health Check
+                </Link>
+              </div>
+            </section>
+
             {/* Inventory, Sales & Expenses (overview) */}
             <section id="business-inventory">
               <h2 className="text-2xl font-bold mb-3">
@@ -542,9 +691,8 @@ export default function Help() {
                       such as hives, frames, feeders, jars, labels and other kit.
                     </li>
                     <li>
-                      <strong>New Item:</strong> record category (e.g. “Bee
-                      equipment”, “Bottling”, “Other”), purchase date, quantity,
-                      unit price, total cost, supplier/invoice and optional link
+                      <strong>New Item:</strong> record category, purchase date,
+                      quantity, unit price, total cost, supplier/invoice and optional link
                       to an apiary/hive.
                     </li>
                     <li>
@@ -559,13 +707,12 @@ export default function Help() {
                   <ul className="list-disc pl-6 space-y-1">
                     <li>
                       <strong>Sales</strong> shows each sale with customer,
-                      channel (e.g. farm shop, direct), invoice reference and
-                      totals.
+                      channel, invoice reference and totals.
                     </li>
                     <li>
                       <strong>New Sale:</strong> add line items including product
                       name, type, unit, quantity, unit price, optional discount
-                      and cost-per-unit (for profit calculations).
+                      and cost-per-unit.
                     </li>
                     <li>
                       Amounts are displayed using your{" "}
@@ -728,8 +875,26 @@ export default function Help() {
                 </div>
 
                 <div>
+                  <h3 className="font-semibold">B) Quick “something’s not right” check</h3>
+                  <ol className="list-decimal pl-6 space-y-1 text-gray-700">
+                    <li>
+                      Open <em>Colony Health Check</em> and answer the first few context questions.
+                    </li>
+                    <li>
+                      Use <strong>Not sure</strong> freely (especially if you haven’t opened the hive yet).
+                    </li>
+                    <li>
+                      Press <strong>Get results</strong>, then use <strong>Recommended next checks</strong> to narrow it down.
+                    </li>
+                    <li>
+                      If a <strong>UK action</strong> panel appears, follow official guidance before moving equipment or treating.
+                    </li>
+                  </ol>
+                </div>
+
+                <div>
                   <h3 className="font-semibold">
-                    B) Tap-to-log with NFC <Badge tone="blue">Premium</Badge>
+                    C) Tap-to-log with NFC <Badge tone="blue">Premium</Badge>
                   </h3>
                   <p className="text-gray-700">
                     <strong>First time using a new NFC tag:</strong>
@@ -749,10 +914,7 @@ export default function Help() {
                   <p className="text-gray-700 mt-2">
                     <strong>Future visits:</strong> once a hive is linked to a tag,
                     every tap on that tag always opens{" "}
-                    <strong>New Inspection</strong> for that hive immediately. The
-                    assumption is that if you’re at the hive scanning the tag,
-                    you’re there to inspect it. You can still review past
-                    inspections afterwards via the normal <em>Inspections</em> pages.
+                    <strong>New Inspection</strong> for that hive immediately.
                   </p>
                   <p className="text-gray-700 mt-2">
                     <strong>Once-per-day rule:</strong> to prevent accidental
@@ -761,11 +923,6 @@ export default function Help() {
                     If you need a second inspection on the same day, open{" "}
                     <em>Inspections → New Inspection</em> and select the hive
                     manually.
-                  </p>
-                  <p className="text-gray-700 mt-2">
-                    When you arrive from NFC and view inspection history for that
-                    hive, you may also see a small <strong>NFC Tag</strong> pill
-                    on relevant rows to remind you that this hive is tagged.
                   </p>
                 </div>
               </div>
@@ -780,15 +937,12 @@ export default function Help() {
                 <p className="text-gray-700">
                   Each NFC tag has a globally unique ID and is linked to one{" "}
                   <em>active</em> hive. When you tap, the app resolves that exact
-                  hive—no risk of mixing tags, even with hives close together at
-                  the same apiary.
+                  hive.
                 </p>
                 <ul className="list-disc pl-6">
                   <li>
                     <strong>Support:</strong> Web NFC works on Chrome for Android.
-                    iOS Safari and many desktops don’t support Web NFC—use the
-                    standard flow instead, or tags pre-encoded with a URL that
-                    opens the <strong>Scan NFC</strong> page.
+                    iOS Safari and many desktops don’t support Web NFC.
                   </li>
                   <li>
                     <strong>Linking:</strong> tap an unlinked tag → <em>New Hive</em>{" "}
@@ -798,71 +952,25 @@ export default function Help() {
                   <li>
                     <strong>Routing:</strong> once a tag is linked to a hive, every
                     tap always opens a <strong>New Inspection</strong> for that
-                    hive. This keeps the NFC flow fast and predictable during
-                    real-life apiary visits. You can still review history from the
-                    hive or inspections pages.
+                    hive.
                   </li>
                   <li>
-                    <strong>Once-per-day rule:</strong> to avoid accidental duplicate
-                    records, the NFC shortcut to create a new inspection is limited to{" "}
-                    <strong>one NFC-started inspection per hive per day</strong>.
-                    If you need another inspection on the same day, use{" "}
-                    <em>Inspections → New Inspection</em> and select the hive
-                    manually.
+                    <strong>Once-per-day rule:</strong> NFC-started inspections are limited to{" "}
+                    <strong>one per hive per day</strong>.
                   </li>
                   <li>
-                    <strong>Scan page messages:</strong> the <strong>Scan NFC</strong>{" "}
-                    page shows clear messages if your device doesn’t support Web
-                    NFC, if permission is blocked, if a scan is cancelled, if a tag
-                    is unknown, or if a tag is linked to an archived hive. You’re
-                    always told what happened and what to try next.
+                    <strong>NFC Tag Manager:</strong> view all tagged hives, filter, and clear a tag if you want to re-use it.
                   </li>
                   <li>
-                    When viewing a tagged hive or its inspections, you’ll often see
-                    a small <strong>NFC Tag</strong> pill on the hive and, where
-                    applicable, on related inspection cards so it’s clear which
-                    records belong to NFC-tagged hives.
-                  </li>
-                  <li>
-                    <strong>NFC Tag Manager:</strong> use the{" "}
-                    <strong>Manage NFC Tags</strong> page to see all tagged hives,
-                    filter by apiary/hive, and clear a tag from a hive if you want
-                    to re-use it. Clearing a tag doesn’t remove any inspections; it
-                    simply frees that UID so it can be linked to a different hive later.
-                  </li>
-                  <li>
-                    <strong>Duplicates:</strong> two active hives cannot share the
-                    same tag. Archive or clear the old hive’s tag first, or re-link
-                    the tag to a different hive via the edit flow.
-                  </li>
-                  <li>
-                    <strong>Buy tags:</strong> the <strong>Buy NFC Tags</strong>{" "}
-                    page uses Stripe checkout with quantity selection and UK-only
-                    flat shipping via Stripe Shipping Rates. Orders are currently
-                    limited to UK shipping addresses.
-                  </li>
-                  <li>
-                    <strong>Troubleshooting:</strong> enable NFC; hold the tag near
-                    the phone’s antenna; try another supported phone if needed. If
-                    the app reports the tag is already linked, look up that hive
-                    and adjust your setup before re-using the tag.
+                    <strong>Buy tags:</strong> uses Stripe checkout and UK-only flat shipping.
                   </li>
                 </ul>
                 <p className="text-gray-700 text-sm">
-                  For a printable step-by-step guide to ship with tags or save as
-                  PDF, use the{" "}
+                  For a printable step-by-step guide, use the{" "}
                   <Link to="/nfc/instructions" className="text-blue-700 underline">
                     NFC Tag Setup
                   </Link>{" "}
-                  page. It’s designed as an A4-style card you can print and include
-                  in the envelope with each HiveTag order.
-                </p>
-                <p className="text-gray-700 text-xs">
-                  At the bottom of the <strong>Scan NFC</strong> page there is an
-                  optional <em>“Show debug info”</em> toggle for troubleshooting.
-                  It shows raw tag details (serial number, record types) and the
-                  last error/lookup result. Most beekeepers can ignore this; it’s
-                  mainly useful if you’re diagnosing device/browser issues.
+                  page.
                 </p>
               </div>
             </section>
@@ -874,36 +982,22 @@ export default function Help() {
               </h2>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
-                  <strong>Weather page:</strong> shows your current conditions, a
+                  <strong>Weather page:</strong> shows current conditions, a
                   “Today, hour by hour” strip, and the next 5 days for the selected
                   apiary. It can also show <strong>official weather warnings</strong>{" "}
-                  and <strong>pollen levels</strong> where the provider supplies
-                  them. Temperature and wind units can be toggled between °C/°F and
-                  km/h/mph.
+                  and <strong>pollen levels</strong> where available.
                 </li>
                 <li>
-                  <strong>Seasonal Beekeeper Notes (full):</strong> the Weather page
-                  includes a full “Seasonal Beekeeper Notes” panel giving season-aware
-                  guidance (e.g. winter feeding, spring build-up, late-summer Varroa
-                  treatment windows, autumn feeding and moisture control). All notes
-                  are advisory and assume typical cool–temperate conditions—always
-                  follow product labels, official guidance and local association advice.
+                  <strong>Seasonal Beekeeper Notes (full):</strong> advisory, season-aware guidance.
                 </li>
                 <li>
-                  <strong>Dashboard snapshot:</strong> shows a small “now + next 5
-                  days” summary for your default apiary and a <strong>preview</strong>{" "}
-                  of the Seasonal Beekeeper Notes (a few key points). Use the “View
-                  full notes” link on the Dashboard to jump straight to the Weather page.
+                  <strong>Dashboard snapshot:</strong> summary for your default apiary plus a preview of notes.
                 </li>
                 <li>
-                  <strong>Inspections:</strong> when you create a new inspection, the
-                  weather section uses the apiary’s coordinates and the inspection date
-                  to auto-fill basic conditions for that day.
+                  <strong>Inspections:</strong> weather auto-fills using the apiary’s coordinates and the inspection date.
                 </li>
                 <li>
-                  <strong>Maps:</strong> set coordinates by clicking the map or
-                  searching by address. This improves weather forecasts and gives you
-                  location context for each apiary.
+                  <strong>Maps:</strong> set coordinates by clicking the map or searching by address.
                 </li>
                 <li>
                   <strong>Photos:</strong> Apiary/Hive support one optional photo;
@@ -912,11 +1006,8 @@ export default function Help() {
                 </li>
               </ul>
               <p className="mt-3 text-xs text-gray-600">
-                Weather, warnings, pollen and notes all depend on third-party providers
-                and are for guidance only. Conditions, forage and disease pressure vary
-                by region and micro-climate; always use your own judgement and any
-                instructions from product labels, Bee Inspectors, vets or your local
-                association.
+                Weather, warnings, pollen and notes depend on third-party providers and are for guidance only.
+                Conditions vary by region and micro-climate.
               </p>
             </section>
 
@@ -934,29 +1025,14 @@ export default function Help() {
                 </li>
                 <li>
                   <strong>Date ranges:</strong> some list and export screens let you
-                  set <strong>From</strong> and <strong>To</strong> dates so you can
-                  focus on a specific period (helpful for monthly summaries, a honey
-                  flow window, or “last inspection cycle” reporting).
+                  set <strong>From</strong> and <strong>To</strong> dates.
                 </li>
                 <li>
-                  <strong>Exports from Reports:</strong> CSV exports on the{" "}
-                  <em>Reports &amp; Exports</em> page respect your Apiary/Hive and date
-                  filters so you can download focused views.
+                  <strong>Exports from Reports:</strong> respect Apiary/Hive and date filters.
                 </li>
                 <li>
                   <strong>List pages show active items</strong>; archived content lives
                   in the <em>Archive</em> page.
-                </li>
-                <li>
-                  <strong>Dashboard recent lists &amp; archiving:</strong> archived rows
-                  display an <Badge tone="amber">Archived</Badge> pill on the far right
-                  and have no <em>Open</em>/<em>Edit</em> actions. Use the{" "}
-                  <em>Archive</em> page to view details or restore (where allowed).
-                </li>
-                <li>
-                  <strong>After downgrade to Free:</strong> extra apiaries/hives are
-                  auto-archived. You can view/export them, but cannot unarchive beyond
-                  Free limits until you upgrade.
                 </li>
               </ul>
 
@@ -990,9 +1066,8 @@ export default function Help() {
                     <strong>2 active Hives</strong> total).
                   </li>
                   <li>
-                    Unarchiving a parent (e.g., Apiary → Hive → Inspection) may prompt
-                    you to unarchive its children; if limits are exceeded, only
-                    allowable items are reactivated.
+                    Unarchiving a parent may prompt you to unarchive its children; if limits are exceeded,
+                    only allowable items are reactivated.
                   </li>
                 </ul>
 
@@ -1007,18 +1082,6 @@ export default function Help() {
                   <li>
                     Public photo URLs remain accessible unless you delete the files from
                     storage.
-                  </li>
-                </ul>
-
-                <h3 className="font-semibold mt-4 mb-2">Tips</h3>
-                <ul className="list-disc pl-6 space-y-1 text-gray-700">
-                  <li>
-                    Before downgrading, manually archive extra Apiaries/Hives so you
-                    choose which stay active on Free.
-                  </li>
-                  <li>
-                    Use the <em>Archive</em> page as your “history” area—keep current
-                    operations uncluttered while preserving full records.
                   </li>
                 </ul>
               </div>
@@ -1041,12 +1104,7 @@ export default function Help() {
                   fallback logic.
                 </li>
                 <li>
-                  Click photos on cards to open a <strong>lightbox</strong> for a closer
-                  look.
-                </li>
-                <li>
-                  Filtering by apiary updates the page URL—bookmark or share filtered
-                  views.
+                  Use <strong>Not sure</strong> in the Colony Health Check whenever you don’t have the information yet.
                 </li>
               </ul>
             </section>
@@ -1055,6 +1113,29 @@ export default function Help() {
             <section id="faqs">
               <h2 className="text-2xl font-bold mb-3">FAQs</h2>
               <div className="space-y-4">
+                <div>
+                  <p className="font-medium">Is the Colony Health Check a diagnosis?</p>
+                  <p className="text-gray-700">
+                    No. It’s a triage helper that suggests what to check next. If a UK action/reporting panel appears,
+                    follow official guidance.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">Why does it ask Season / Strength / Onset first?</p>
+                  <p className="text-gray-700">
+                    Those answers help the helper show the most relevant questions next. They can also influence suggestions slightly,
+                    but they don’t “diagnose” anything on their own.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">What should I choose if I haven’t opened the hive?</p>
+                  <p className="text-gray-700">
+                    Use <strong>Not sure</strong>. The helper is designed for partial information.
+                  </p>
+                </div>
+
                 <div>
                   <p className="font-medium">Can I use the app without NFC?</p>
                   <p className="text-gray-700">
@@ -1067,8 +1148,7 @@ export default function Help() {
                   <p className="font-medium">Can I filter tasks by date range?</p>
                   <p className="text-gray-700">
                     Yes. On the <strong>Tasks</strong> list you can use{" "}
-                    <strong>From</strong> and <strong>To</strong> dates (alongside Apiary
-                    and Hive) to focus on a specific period.
+                    <strong>From</strong> and <strong>To</strong> dates.
                   </p>
                 </div>
 
@@ -1078,9 +1158,7 @@ export default function Help() {
                   </p>
                   <p className="text-gray-700">
                     The NFC shortcut is limited to <strong>one NFC-started inspection per
-                    hive per day</strong> to prevent accidental duplicates. If you need a
-                    second inspection on the same day, open{" "}
-                    <em>Inspections → New Inspection</em> and select the hive manually.
+                    hive per day</strong> to prevent accidental duplicates.
                   </p>
                 </div>
 
@@ -1088,38 +1166,7 @@ export default function Help() {
                   <p className="font-medium">What exactly do I get on Free?</p>
                   <p className="text-gray-700">
                     1 active apiary, 2 active hives total, unlimited inspections, weather
-                    tools (Weather page, snapshot and auto-fill), calendar, tasks, logbook
-                    entries, and CSV export from Settings.
-                  </p>
-                </div>
-
-                <div>
-                  <p className="font-medium">
-                    What happens if I downgrade from Premium to Free?
-                  </p>
-                  <p className="text-gray-700">
-                    We keep 1 active apiary (preferring your default) and up to 2 active
-                    hives within it; everything else is auto-archived. Your data remains
-                    available to view/export. Upgrade again to reactivate more.
-                  </p>
-                </div>
-
-                <div>
-                  <p className="font-medium">
-                    Why can’t I unarchive an extra apiary or hive on Free?
-                  </p>
-                  <p className="text-gray-700">
-                    Free limits enforce 1 active apiary and 2 active hives. Unarchiving
-                    beyond that is blocked while on Free. Upgrade to activate more.
-                  </p>
-                </div>
-
-                <div>
-                  <p className="font-medium">How do I manage billing or cancel?</p>
-                  <p className="text-gray-700">
-                    Go to <strong>Settings → Manage billing</strong>. This opens the
-                    Stripe Customer Portal to update your card, download invoices, or
-                    cancel.
+                    tools, calendar, tasks, logbook entries, Colony Health Check, and CSV export from Settings.
                   </p>
                 </div>
 
@@ -1127,45 +1174,7 @@ export default function Help() {
                   <p className="font-medium">How do I export my data?</p>
                   <p className="text-gray-700">
                     Go to <strong>Settings → Export</strong> and click{" "}
-                    <em>Export my data (CSV)</em>. You’ll get separate CSV files for your
-                    tables plus <code>photos.csv</code> with public links to your images.
-                  </p>
-                </div>
-
-                <div>
-                  <p className="font-medium">What happens if I delete my account?</p>
-                  <p className="text-gray-700">
-                    <strong>Settings → Delete Account</strong> cancels your subscription,
-                    removes your photos &amp; data, and deletes your account. This is
-                    permanent and cannot be undone.
-                  </p>
-                </div>
-
-                <div>
-                  <p className="font-medium">NFC says “not supported.”</p>
-                  <p className="text-gray-700">
-                    Your device/browser likely doesn’t support Web NFC (e.g., iOS Safari).
-                    Use the normal New Inspection flow or tags encoded with a URL that
-                    opens the <strong>Scan NFC</strong> page.
-                  </p>
-                </div>
-
-                <div>
-                  <p className="font-medium">
-                    Why is Dashboard weather a different location?
-                  </p>
-                  <p className="text-gray-700">
-                    Weather uses your <strong>default apiary</strong>. Edit the correct
-                    apiary and set as default.
-                  </p>
-                </div>
-
-                <div>
-                  <p className="font-medium">Where can I buy compatible NFC tags?</p>
-                  <p className="text-gray-700">
-                    Use the <strong>Buy NFC Tags</strong> page in the app. It uses Stripe
-                    Checkout with quantity selection and UK-only flat shipping. Non-UK
-                    shipping isn’t currently supported.
+                    <em>Export my data (CSV)</em>.
                   </p>
                 </div>
               </div>
@@ -1176,6 +1185,15 @@ export default function Help() {
               <h2 className="text-2xl font-bold mb-3">Troubleshooting</h2>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
+                  <strong>Colony Health Check seems stuck:</strong> switch to{" "}
+                  <strong>Expand all</strong> to see everything relevant, or press{" "}
+                  <strong>Reset all</strong> and start again.
+                </li>
+                <li>
+                  <strong>Colony Health Check shows a UK action panel:</strong> pause before moving equipment,
+                  and use the official links shown for guidance/reporting.
+                </li>
+                <li>
                   <strong>Can’t add another apiary/hive:</strong> Free plan allows 1
                   active apiary and 2 active hives total. Upgrade to add more.
                 </li>
@@ -1184,76 +1202,12 @@ export default function Help() {
                   on Free. Upgrade to reactivate more.
                 </li>
                 <li>
-                  <strong>Can’t save Apiary/Hive/Inspection:</strong> fill required
-                  fields; wait for photo upload; confirm you’re signed in.
+                  <strong>Weather didn’t load or is very slow:</strong> confirm the
+                  apiary has valid coordinates saved; occasionally providers are slow.
                 </li>
                 <li>
-                  <strong>Task didn’t change to Completed:</strong> set status from the
-                  Task List (Mark complete) or the Edit Task page.
-                </li>
-                <li>
-                  <strong>Need to find tasks for a specific period:</strong> use the{" "}
-                  <strong>From</strong> and <strong>To</strong> date filters (alongside
-                  Apiary/Hive) on the Tasks list.
-                </li>
-                <li>
-                  <strong>
-                    Can’t find the right inspection in the Logbook’s Related Inspection
-                    list:
-                  </strong>{" "}
-                  pick the correct date group, then look for the option labelled{" "}
-                  <em>Hive (Apiary) • time</em>; switch the Hive selector above to narrow
-                  results.
-                </li>
-                <li>
-                  <strong>NFC permission blocked:</strong> if the browser shows that NFC
-                  access was denied, you’ll see a message on the <strong>Scan NFC</strong>{" "}
-                  page. Re-enable NFC permissions for your browser/site and try again.
-                </li>
-                <li>
-                  <strong>NFC scan cancelled or no tag detected:</strong> if you move
-                  away before a tag is read, the scan is cancelled and you’ll see a note
-                  telling you no tag was read. Start another scan and hold your phone
-                  steady over the tag until it beeps or vibrates.
-                </li>
-                <li>
-                  <strong>Tag read but no serial/unknown tag:</strong> if a tag doesn’t
-                  provide a usable ID, you’ll see a message explaining that the tag
-                  couldn’t be identified. If the tag is readable and has a usable ID but
-                  isn’t yet linked, the app will say it’s unlinked and send you to{" "}
-                  <strong>New Hive</strong> with the tag ID pre-filled and locked.
-                </li>
-                <li>
-                  <strong>NFC tag already linked:</strong> if a tag belongs to an
-                  existing active hive, the app resolves that hive and opens{" "}
-                  <strong>New Inspection</strong> for it. If it’s linked to an archived
-                  hive, you’ll see a message telling you to unarchive or update the hive
-                  before re-using the tag.
-                </li>
-                <li>
-                  <strong>NFC won’t create another inspection today:</strong> the NFC
-                  shortcut is limited to <strong>one NFC-started inspection per hive per
-                  day</strong>. If you need a second inspection, use{" "}
-                  <em>Inspections → New Inspection</em> and select the hive manually.
-                </li>
-                <li>
-                  <strong>Android shows “New tag collected / Empty tag”:</strong> this
-                  message comes from Android’s built-in NFC handler, not BeezKnees. It
-                  appears when your browser isn’t actively scanning. Open the{" "}
-                  <strong>Scan NFC</strong> page again, tap <strong>Scan NFC Tag</strong>
-                  , then tap the tag—your phone will route the tap to HiveTag and you’ll
-                  go straight into the correct hive’s inspection flow.
-                </li>
-                <li>
-                  <strong>Weather didn’t load or is very slow:</strong> check that the
-                  apiary has valid coordinates saved. Occasionally the forecast provider
-                  is slow or unavailable; try again in a few minutes, or switch apiary.
-                  The app may briefly pause new requests after a failed attempt to keep
-                  the UI responsive.
-                </li>
-                <li>
-                  <strong>Export didn’t download:</strong> check your browser’s download
-                  permissions/pop-up blocker and retry.
+                  <strong>NFC says “not supported”:</strong> iOS Safari and many desktops
+                  don’t support Web NFC; use the standard flow.
                 </li>
               </ul>
             </section>
@@ -1270,8 +1224,7 @@ export default function Help() {
                 <li>
                   <strong>NFC UIDs:</strong> only the tag’s unique ID and its hive
                   linkage are stored, used solely to route you to the correct
-                  hive/inspection. NFC tags are <strong>not tracked for location</strong>
-                  , and no movement history is recorded.
+                  hive/inspection. NFC tags are <strong>not tracked for location</strong>.
                 </li>
                 <li>
                   <strong>Export</strong>: use <em>Settings → Export</em> to download CSVs
@@ -1282,17 +1235,21 @@ export default function Help() {
                   any subscription, removes storage files, deletes your tables, and
                   deletes the auth user.
                 </li>
-                <li>
-                  Analytics respect consent; events are sent only when you grant
-                  analytics consent.
-                </li>
               </ul>
             </section>
 
             {/* Power Users */}
             <section id="power-users">
               <h2 className="text-2xl font-bold mb-3">Power-User Notes</h2>
+              <p className="text-gray-700 mb-2">
+                A <strong>power user</strong> is simply someone who prefers advanced controls:
+                jumping around, seeing everything at once, and moving quickly without a guided wizard.
+              </p>
               <ul className="list-disc pl-6 space-y-1">
+                <li>
+                  <strong>Colony Health Check:</strong> use <strong>Expand all</strong> to answer in any order.
+                  Use <strong>Recommended next checks</strong> to narrow down the results efficiently.
+                </li>
                 <li>
                   <strong>Plan enforcement:</strong> inserts and unarchives are constrained
                   on Free (1 apiary / 2 hives). Downgrade auto-archives extras; upgrade
@@ -1301,35 +1258,14 @@ export default function Help() {
                 <li>
                   <strong>NFC scan routing:</strong> unlinked tag → <em>New Hive</em>;
                   once linked, every tap on that tag takes you directly to{" "}
-                  <em>New Inspection</em> for the associated hive.{" "}
-                  <Badge tone="blue">Premium</Badge>
+                  <em>New Inspection</em>. <Badge tone="blue">Premium</Badge>
                 </li>
                 <li>
-                  <strong>NFC once-per-day guard:</strong> NFC-started inspections are
-                  limited to one per hive per day to prevent accidental duplicates.
-                </li>
-                <li>
-                  <strong>Duplicate NFC guard:</strong> enforced when creating a hive and
-                  in NFC quick-select / Tag Manager flows so one UID cannot belong to two
-                  active hives.
-                </li>
-                <li>
-                  <strong>Reports export:</strong> CSV exports on the{" "}
-                  <em>Reports &amp; Exports</em> page respect the Apiary/Hive filter; ideal
-                  for per-yard summaries.
-                </li>
-                <li>
-                  <strong>Print Report:</strong> the Reports → Print page is designed for
-                  clean PDF/printouts of Inspections, Tasks, Logbook entries and
-                  NFC-tagged hives, with matching CSV exports.
+                  <strong>Reports export:</strong> CSV exports respect the Apiary/Hive filter.
                 </li>
                 <li>
                   <strong>CSV export (Settings):</strong> one CSV per table +{" "}
                   <code>photos.csv</code> with public URLs (images not bundled).
-                </li>
-                <li>
-                  <strong>Print:</strong> Dashboard → Reports card gives a quick route into
-                  a printable, filter-aware view.
                 </li>
               </ul>
             </section>
@@ -1360,6 +1296,18 @@ export default function Help() {
                   <dt className="font-medium">Archive</dt>
                   <dd className="text-gray-700">
                     Hide from active lists without deleting.
+                  </dd>
+                </div>
+                <div>
+                  <dt className="font-medium">Triage</dt>
+                  <dd className="text-gray-700">
+                    A “what to check next” approach, not a medical/veterinary diagnosis.
+                  </dd>
+                </div>
+                <div>
+                  <dt className="font-medium">Notifiable (UK)</dt>
+                  <dd className="text-gray-700">
+                    A pest/disease with official reporting requirements. Follow GOV.UK / NBU guidance and avoid moving equipment.
                   </dd>
                 </div>
               </dl>

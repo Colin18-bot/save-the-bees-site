@@ -9,6 +9,49 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.0.8",
+  released_at: "2026-01-13T12:00:00Z",
+  summary:
+    "Bee Health Helper: added UK urgent-reporting alerts (shown even when not in top results), and improved results safety messaging for high-significance pests/diseases.",
+
+  added: [
+    "New **Bee Health Helper** foundations for Ada-style triage (one question at a time) with **Yes / No / Not sure** answers and an **Expand all** option.",
+    "Added **Reset all** and a persistent **disclaimer** block at the top of the Bee Health Helper page.",
+    "Added an **urgent reporting trigger system** (`urgentReporting`) so the UI can surface **UK reporting guidance** even if a notifiable pest/disease does not appear in the top results."
+  ],
+
+  changed: [
+    "Bee Health Helper results now include an **urgent reporting banner** when urgent triggers are hit, not just when an alert condition appears in the top results.",
+    "Results panel wiring updated to pass `urgentHit` through to the UI and choose the correct UK reporting panel mode (`asian_hornet`, `shb`, or general)."
+  ],
+
+  fixed: [
+    "Fixed edge cases where high-significance reporting guidance could be missed when the related condition did not rank in the top list due to unknown/partial answers."
+  ],
+
+  removed: [],
+
+  security: [
+    "Strengthened safe-use messaging by surfacing **official UK reporting guidance** when urgent triggers are selected, reducing the risk of delayed escalation for notifiable pests/diseases."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Colony Health Check", to: "/bee-health" },
+    { label: "Inspections", to: "/inspections" },
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Help", to: "/help" },
+    { label: "Release Notes", to: "/updates" }
+  ],
+
+  known_issues: [
+    "The Bee Health Helper is an early version and is **not a diagnostic tool**; it provides pattern-based triage only.",
+    "Some results may remain inconclusive if many answers are set to “Not sure”; use **Recommended next checks** to narrow it down."
+  ]
+},
+
+  {
   version: "1.0.7",
   released_at: "2026-01-04T12:00:00Z",
   summary:

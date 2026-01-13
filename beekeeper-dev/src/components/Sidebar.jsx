@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
 // APP_VERSION=1.2.3
-const APP_VERSION = "1.0.7";
+const APP_VERSION = "1.0.8";
 
 const Sidebar = ({ setIsMobileMenuOpen }) => {
   const [quickCreateOpen, setQuickCreateOpen] = useState(true);
@@ -86,6 +86,12 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     { to: "/dashboard", label: "Dashboard" },
   ];
 
+  // NEW: always-visible "guide" buttons that are permanently styled dark green
+  const corePinnedGuides = [
+    { to: "/bee-health", label: "Colony Health Check" },
+    { to: "/inspections/step-by-step", label: "Inspection Guide" },
+  ];
+
   const coreSecondaryNavItems = [
     { to: "/apiaries", label: "Apiaries" },
     { to: "/hives", label: "Hives" },
@@ -94,6 +100,7 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     { to: "/todos", label: "Tasks" },
     { to: "/calendar", label: "Calendar" },
     { to: "/weather", label: "Weather" },
+
     { to: "/settings", label: "Settings" },
     { to: "/archive", label: "Archive" },
     { to: "/help", label: "Help" },
@@ -156,6 +163,22 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     </NavLink>
   );
 
+  // NEW: pinned guide button (always dark green, even when active)
+  const PinnedGuideItem = ({ item }) => (
+    <NavLink
+      key={item.to}
+      to={item.to}
+      onClick={handleLinkClick}
+      className={() =>
+        "block px-4 py-2 rounded text-sm font-semibold transition-colors duration-150 " +
+        "bg-[#0f241c] text-green-100 border border-green-300/30 " +
+        "hover:bg-[#133023] hover:text-green-50 hover:border-green-200/40"
+      }
+    >
+      {item.label}
+    </NavLink>
+  );
+
   return (
     <div className="w-64 bg-[#1a3329] h-full flex flex-col pt-10 px-4 pb-4">
       <nav className="flex flex-col gap-1">
@@ -165,6 +188,13 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
         {coreTopNavItems.map((item) => (
           <LinkItem key={item.to} item={item} />
         ))}
+
+        {/* NEW: Pinned Guide buttons under Dashboard */}
+        <div className="mt-2 flex flex-col gap-1">
+          {corePinnedGuides.map((item) => (
+            <PinnedGuideItem key={item.to} item={item} />
+          ))}
+        </div>
 
         {/* Beekeeping Quick Create directly under Dashboard */}
         <button
@@ -193,8 +223,12 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
 
                   const isPremiumNfc = item.premiumNfc;
 
-                  const baseClasses = isPremiumNfc ? basePremiumClasses : baseNormalClasses;
-                  const activeClasses = isPremiumNfc ? activePremiumClasses : activeNormalClasses;
+                  const baseClasses = isPremiumNfc
+                    ? basePremiumClasses
+                    : baseNormalClasses;
+                  const activeClasses = isPremiumNfc
+                    ? activePremiumClasses
+                    : activeNormalClasses;
 
                   return `flex px-4 py-2 rounded text-sm font-medium transition-colors duration-150 items-center justify-between gap-2 ${
                     isActive ? activeClasses : baseClasses
@@ -307,10 +341,7 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
         </div>
 
         <div className="mt-6 pt-3 border-t border-white/10 text-[11px] text-yellow-300/90 text-center">
-          <p
-            className="font-mono tracking-wide"
-            aria-label="Application version"
-          >
+          <p className="font-mono tracking-wide" aria-label="Application version">
             Version {APP_VERSION}
           </p>
           <NavLink

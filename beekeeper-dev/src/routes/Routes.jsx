@@ -41,6 +41,9 @@ import Settings from "../pages/Settings.jsx";
 import Archive from "../pages/Archive.jsx";
 import Help from "../pages/Help.jsx";
 
+import BeeHealthHelper from "../pages/BeeHealth/BeeHealthHelper.jsx";
+
+
 // Step by Step Inspections
 import StepByStepInspections from "../pages/step-by-step-inspections.jsx";
 
@@ -167,6 +170,8 @@ function AppRoutes() {
       <Route path="/settings" element={<Guarded><Settings /></Guarded>} />
       <Route path="/archive" element={<Guarded><Archive /></Guarded>} />
       <Route path="/help" element={<Guarded><Help /></Guarded>} />
+
+      <Route path="/bee-health" element={<Guarded><BeeHealthHelper /></Guarded>} />
 
       {/* NFC scan + instructions + manager + tag store */}
       <Route path="/nfc" element={<Guarded><NFCScan /></Guarded>} />
