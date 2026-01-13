@@ -82,12 +82,12 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     ...(!userIsPremium
       ? [{ to: "/pricing", label: "Upgrade Plan", highlight: true }]
       : []),
-    // Dashboard always shown
-    { to: "/dashboard", label: "Dashboard" },
   ];
 
-  // NEW: always-visible "guide" buttons that are permanently styled dark green
+  // Always-visible "guide" buttons (dark green style)
+  // Order: Getting Started -> Colony Health Check -> Inspection Guide
   const corePinnedGuides = [
+    { to: "/help/getting-started", label: "Getting Started" },
     { to: "/bee-health", label: "Colony Health Check" },
     { to: "/inspections/step-by-step", label: "Inspection Guide" },
   ];
@@ -163,7 +163,7 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     </NavLink>
   );
 
-  // NEW: pinned guide button (always dark green, even when active)
+  // pinned guide button (always dark green, even when active)
   const PinnedGuideItem = ({ item }) => (
     <NavLink
       key={item.to}
@@ -184,17 +184,20 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
       <nav className="flex flex-col gap-1">
         <SectionTitle>Beekeeping</SectionTitle>
 
-        {/* Upgrade Plan + Dashboard at the top */}
+        {/* Upgrade Plan stays at the very top */}
         {coreTopNavItems.map((item) => (
           <LinkItem key={item.to} item={item} />
         ))}
 
-        {/* NEW: Pinned Guide buttons under Dashboard */}
+        {/* Pinned buttons next (green style) */}
         <div className="mt-2 flex flex-col gap-1">
           {corePinnedGuides.map((item) => (
             <PinnedGuideItem key={item.to} item={item} />
           ))}
         </div>
+
+        {/* Dashboard as a normal nav item (original styling) */}
+        <LinkItem item={{ to: "/dashboard", label: "Dashboard" }} />
 
         {/* Beekeeping Quick Create directly under Dashboard */}
         <button

@@ -548,8 +548,7 @@ const Dashboard = () => {
     const unit = "C";
     const windUnit = "kmh";
     const toF = (c) => Math.round((c * 9) / 5 + 32);
-    const tempLabel = (c) =>
-      unit === "C" ? `${c}°C` : `${toF(c)}°F`;
+    const tempLabel = (c) => (unit === "C" ? `${c}°C` : `${toF(c)}°F`);
     const windLabel = windUnit === "kmh" ? "km/h" : "mph";
 
     // Month / season profile
@@ -786,7 +785,18 @@ const Dashboard = () => {
   return (
     <div className="p-6 space-y-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <div>
+          <h1 className="text-2xl font-bold">Dashboard</h1>
+
+          {/* NEW: subtle Getting Started link */}
+         
+          <Link
+            to="/help/getting-started"
+            className="text-xs text-gray-500 hover:text-blue-600 hover:underline"
+          >
+            New here? Read Getting Started →
+          </Link>
+        </div>
 
         {/* Filter by Apiary */}
         <div className="w-full md:w-auto flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
@@ -968,9 +978,7 @@ const Dashboard = () => {
                   >
                     <div className="min-w-0">
                       <div className="font-semibold truncate">
-                        {hive.name ||
-                          hiveNameById[hive.id] ||
-                          "Unnamed hive"}
+                        {hive.name || hiveNameById[hive.id] || "Unnamed hive"}
                       </div>
                       <div className="text-xs text-gray-600">
                         {hive.apiary_id && apiaryNameById[hive.apiary_id]
@@ -985,7 +993,9 @@ const Dashboard = () => {
                       <Link
                         to={toHiveInList(hive.id)}
                         className="text-xs text-blue-600 hover:underline whitespace-nowrap"
-                        aria-label={`Open hive ${hive.name || hive.id} in hive list`}
+                        aria-label={`Open hive ${
+                          hive.name || hive.id
+                        } in hive list`}
                       >
                         Open hive →
                       </Link>
@@ -1025,9 +1035,7 @@ const Dashboard = () => {
                   title={i.archived_at ? "Archived inspection" : ""}
                 >
                   <div className="min-w-0">
-                    <strong className="mr-1">
-                      {formatUKDate(i.date)}
-                    </strong>
+                    <strong className="mr-1">{formatUKDate(i.date)}</strong>
                     {i.apiary_id && apiaryNameById[i.apiary_id]
                       ? ` • Apiary: ${apiaryNameById[i.apiary_id]}`
                       : ""}
@@ -1053,9 +1061,7 @@ const Dashboard = () => {
                         <Link
                           to={`/inspections/${i.id}/edit`}
                           className="text-xs text-gray-600 hover:underline whitespace-nowrap"
-                          aria-label={`Edit inspection ${formatUKDate(
-                            i.date
-                          )}`}
+                          aria-label={`Edit inspection ${formatUKDate(i.date)}`}
                         >
                           ✎ Edit
                         </Link>
@@ -1100,9 +1106,7 @@ const Dashboard = () => {
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <strong>
-                          {t.due_date
-                            ? formatUKDate(t.due_date)
-                            : "No date"}
+                          {t.due_date ? formatUKDate(t.due_date) : "No date"}
                         </strong>
                         <span className={statusPill(t.status)}>
                           {t.status || "Pending"}
@@ -1179,10 +1183,8 @@ const Dashboard = () => {
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <strong className="mr-1">
-                        {formatUKDate(l.date)}
-                      </strong>
-                      : {l.log_type}
+                      <strong className="mr-1">{formatUKDate(l.date)}</strong>:{" "}
+                      {l.log_type}
                     </div>
                     {l.apiary_id && apiaryNameById[l.apiary_id]
                       ? ` • Apiary: ${apiaryNameById[l.apiary_id]}`
@@ -1266,9 +1268,8 @@ const Dashboard = () => {
           <>
             <div className="text-sm">
               <p>
-                <strong>Now:</strong>{" "}
-                {weather?.current?.temperature_2m ?? "N/A"}°C, Wind{" "}
-                {weather?.current?.wind_speed_mph ?? "N/A"} mph
+                <strong>Now:</strong> {weather?.current?.temperature_2m ?? "N/A"}
+                °C, Wind {weather?.current?.wind_speed_mph ?? "N/A"} mph
               </p>
               <p className="mt-2">
                 <strong>Next 5 Days:</strong>
@@ -1286,8 +1287,7 @@ const Dashboard = () => {
                       weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
                     return (
                       <li key={day ?? index}>
-                        {formatUKDate(day)}: {icon}{" "}
-                        {label && `${label} — `}
+                        {formatUKDate(day)}: {icon} {label && `${label} — `}
                         {tmin}°C → {tmax}°C
                       </li>
                     );
