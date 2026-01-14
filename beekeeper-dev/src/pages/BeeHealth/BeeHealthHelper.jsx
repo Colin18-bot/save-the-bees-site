@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { BEE_HEALTH_RULES } from "../../utils/BeeHealthRules";
 
 /**
- * Ada-mode philosophy:
+ * Guided triage:
  * - Ask 1 question at a time
  * - Allow Yes / No / Not sure (unknown)
  * - Keep "Expand all" for users who want full control
@@ -41,20 +41,16 @@ export default function BeeHealthHelper() {
 
   const [answers, setAnswers] = useState(initialState);
   const [mode, setMode] = useState("guided"); // "guided" | "all"
-  const [results, setResults] = useState(null);
 
-  // results UX helpers
-  const [resultsStatus, setResultsStatus] = useState("idle"); // "idle" | "updating" | "ready"
-  const resultsRef = useRef(null);
-  const autoRunTimerRef = useRef(null);
-  const didFirstAutoRunRef = useRef(false);
+  // results are manual now (clear end-of-flow)
+  const [results, setResults] = useState(null);
 
   // Guided flow state
   const [currentId, setCurrentId] = useState(null);
   const [highlightId, setHighlightId] = useState(null);
   const pendingScrollRef = useRef(null);
 
-  // Guided history (for Back button)
+  // Guided history (Back button)
   const guidedHistoryRef = useRef([]); // [{ id, prevValue }]
 
   // ---------- label map ----------
@@ -70,7 +66,7 @@ export default function BeeHealthHelper() {
     ingest(questions?.pests_predators);
     ingest(questions?.stores_behaviour);
 
-    // Derived/internal flags
+    // Derived/internal labels (not questions)
     map.weak_colony = "Colony is weak";
     map.strong_colony = "Colony is strong";
     map.varroa_present = "Varroa indicators present";
@@ -122,17 +118,6 @@ export default function BeeHealthHelper() {
     pendingScrollRef.current = null;
     guidedHistoryRef.current = [];
     setMode("guided");
-    setResultsStatus("idle");
-    didFirstAutoRunRef.current = false;
-    if (autoRunTimerRef.current) clearTimeout(autoRunTimerRef.current);
-    autoRunTimerRef.current = null;
-  }
-
-  function jumpToResults() {
-    const el = resultsRef.current;
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
   }
 
   // Clause evaluator (showIf/excludeIf) uses boolean flags
@@ -157,8 +142,7 @@ export default function BeeHealthHelper() {
     d.winter = answers.season === "winter";
 
     d.weak_colony =
-      answers.colony_strength === "weak" ||
-      answers.colony_strength === "very_weak";
+      answers.colony_strength === "weak" || answers.colony_strength === "very_weak";
     d.strong_colony = answers.colony_strength === "strong";
 
     d.onset_sudden = answers.onset_speed === "sudden";
@@ -204,12 +188,9 @@ export default function BeeHealthHelper() {
       const all = rule.all || [];
       const not = rule.not || [];
 
-      const anyOk =
-        any.length === 0 ? false : any.some((k) => flags[k] === true);
-      const allOk =
-        all.length === 0 ? true : all.every((k) => flags[k] === true);
-      const notOk =
-        not.length === 0 ? true : not.every((k) => flags[k] !== true);
+      const anyOk = any.length === 0 ? false : any.some((k) => flags[k] === true);
+      const allOk = all.length === 0 ? true : all.every((k) => flags[k] === true);
+      const notOk = not.length === 0 ? true : not.every((k) => flags[k] !== true);
 
       if (anyOk && allOk && notOk) return rule;
     }
@@ -219,17 +200,13 @@ export default function BeeHealthHelper() {
   // ---------- question bank ----------
   const foundationQuestions = useMemo(() => {
     const qSeason =
-      questions.context?.find((q) => q.id === "season") ||
-      questions.context?.[0];
+      questions.context?.find((q) => q.id === "season") || questions.context?.[0];
     const qStrength =
-      questions.context?.find((q) => q.id === "colony_strength") ||
-      questions.context?.[1];
+      questions.context?.find((q) => q.id === "colony_strength") || questions.context?.[1];
     const qOnset =
-      questions.context?.find((q) => q.id === "onset_speed") ||
-      questions.context?.[2];
+      questions.context?.find((q) => q.id === "onset_speed") || questions.context?.[2];
     const qConcern =
-      questions.concern?.find((q) => q.id === "main_concern") ||
-      questions.concern?.[0];
+      questions.concern?.find((q) => q.id === "main_concern") || questions.concern?.[0];
 
     return [
       { kind: "select", ...qSeason },
@@ -252,60 +229,26 @@ export default function BeeHealthHelper() {
   const observationGroups = useMemo(() => {
     return [
       { key: "brood", title: "Brood", list: questions.brood || [] },
-      {
-        key: "adults_varroa",
-        title: "Adults / Varroa",
-        list: questions.adults_varroa || [],
-      },
-      {
-        key: "pests_predators",
-        title: "Pests / Predators",
-        list: questions.pests_predators || [],
-      },
-      {
-        key: "stores_behaviour",
-        title: "Stores / Behaviour",
-        list: questions.stores_behaviour || [],
-      },
+      { key: "adults_varroa", title: "Adults / Varroa", list: questions.adults_varroa || [] },
+      { key: "pests_predators", title: "Pests / Predators", list: questions.pests_predators || [] },
+      { key: "stores_behaviour", title: "Stores / Behaviour", list: questions.stores_behaviour || [] },
     ];
   }, [questions]);
 
   const flattenedObservations = useMemo(() => {
     const arr = [];
     observationGroups.forEach((g) => {
-      g.list.forEach((q) =>
-        arr.push({ ...q, groupKey: g.key, groupTitle: g.title })
-      );
+      g.list.forEach((q) => arr.push({ ...q, groupKey: g.key, groupTitle: g.title }));
     });
     return arr;
   }, [observationGroups]);
-
-  // Actionable question IDs (so we never show "jump" for derived labels like Season: Winter)
-  const actionableIds = useMemo(() => {
-    const set = new Set();
-    const addQ = (arr) => (arr || []).forEach((q) => q?.id && set.add(q.id));
-    const addOpts = (arr) =>
-      (arr || []).forEach((o) => o?.id && set.add(o.id));
-
-    addQ(questions?.context);
-    addQ(questions?.concern);
-    addQ(questions?.brood);
-    addQ(questions?.adults_varroa);
-    addQ(questions?.pests_predators);
-    addQ(questions?.stores_behaviour);
-
-    // context multi options
-    if (questions?.context?.[3]?.options?.length) addOpts(questions.context[3].options);
-
-    return set;
-  }, [questions]);
 
   const nextUnansweredFoundation = useMemo(() => {
     for (const q of foundationQuestions) {
       if (q.kind === "select") {
         if (!answers[q.id]) return q.id;
       }
-      if (q.kind === "multi") continue; // optional
+      if (q.kind === "multi") continue; // optional (we keep it optional)
     }
     return null;
   }, [foundationQuestions, answers]);
@@ -360,50 +303,12 @@ export default function BeeHealthHelper() {
     return "Unlikely";
   }
 
-  function getMissingEvidence(scoreMap, maxItems = 4) {
-    const positives = Object.entries(scoreMap)
-      .filter(([, w]) => w > 0)
-      .sort((a, b) => b[1] - a[1]);
-
-    const missing = [];
-    for (const [flagId, weight] of positives) {
-      const v = answers[flagId];
-      const isYes = v === "yes" || flags[flagId] === true;
-      if (!isYes) {
-        missing.push({ flag: flagId, weight });
-        if (missing.length >= maxItems) break;
-      }
-    }
-    return missing;
-  }
-
-  function buildRecommendedNextChecks(topList) {
-    const bag = new Map();
-    topList.forEach((r) => {
-      const def = conditions[r.key];
-      if (!def?.scores) return;
-      const miss = getMissingEvidence(def.scores, 6);
-      miss.forEach(({ flag, weight }) => {
-        const prev = bag.get(flag) || 0;
-        if (weight > prev) bag.set(flag, weight);
-      });
-    });
-    return [...bag.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 8)
-      .map(([flag]) => flag)
-      .filter((id) => actionableIds.has(id)); // only real questions
-  }
-
-  function runAssessment({ silent = false } = {}) {
-    if (!silent) setResultsStatus("updating");
-
+  function runAssessment() {
     const urgentHit = getUrgentReportingHit();
 
     const redHit = redFlags.find((k) => flags[k] === true);
     if (redHit) {
       setResults({ type: "override", redHit, urgentHit });
-      setResultsStatus("ready");
       return;
     }
 
@@ -417,7 +322,6 @@ export default function BeeHealthHelper() {
           threshold: def.threshold,
           confidence: "Ruled out",
           severity: templates[key]?.severity ?? "info",
-          missing: [],
         };
       }
 
@@ -432,11 +336,8 @@ export default function BeeHealthHelper() {
         excluded: false,
         score,
         threshold: def.threshold,
-        confidence: passing
-          ? getConfidenceLabel(score, def.threshold)
-          : "Not enough evidence",
+        confidence: passing ? getConfidenceLabel(score, def.threshold) : "Not enough evidence",
         severity: templates[key]?.severity ?? "info",
-        missing: getMissingEvidence(def.scores, 4),
       };
     });
 
@@ -469,53 +370,8 @@ export default function BeeHealthHelper() {
       top.push(item);
     }
 
-    const shown = new Set(top.map((x) => x.key));
-    const whyNot = scored
-      .filter((x) => !shown.has(x.key))
-      .sort((a, b) => b.score - b.threshold - (a.score - a.threshold))
-      .slice(0, 6);
-
-    const recommendedNext = buildRecommendedNextChecks(top);
-
-    setResults({ type: "normal", top, whyNot, dominanceNotes, recommendedNext, urgentHit });
-    setResultsStatus("ready");
+    setResults({ type: "normal", top, dominanceNotes, urgentHit });
   }
-
-  // auto-run results as answers change (debounced)
-  useEffect(() => {
-    const hasAnyInput =
-      !!answers.season ||
-      !!answers.colony_strength ||
-      !!answers.onset_speed ||
-      !!answers.main_concern ||
-      Object.values(answers).some(
-        (v) =>
-          v === "yes" ||
-          v === "no" ||
-          v === "unknown" ||
-          v === true
-      );
-
-    if (!hasAnyInput) {
-      setResults(null);
-      setResultsStatus("idle");
-      didFirstAutoRunRef.current = false;
-      return;
-    }
-
-    if (autoRunTimerRef.current) clearTimeout(autoRunTimerRef.current);
-    setResultsStatus("updating");
-
-    autoRunTimerRef.current = setTimeout(() => {
-      runAssessment({ silent: true });
-      didFirstAutoRunRef.current = true;
-    }, 350);
-
-    return () => {
-      if (autoRunTimerRef.current) clearTimeout(autoRunTimerRef.current);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [answers, flags]);
 
   // ---------- Guided controls ----------
   function askNextAuto() {
@@ -565,6 +421,9 @@ export default function BeeHealthHelper() {
       pushHistory(currentId, prevValue);
       setTri(currentId, value);
     }
+
+    // If they change answers after results exist, clear results so it’s obvious they need to re-run
+    if (results) setResults(null);
   }
 
   useEffect(() => {
@@ -577,8 +436,7 @@ export default function BeeHealthHelper() {
     const isFoundation = foundationIds.has(currentId);
 
     const nowAnswered =
-      (isFoundation && !!answers[currentId]) ||
-      (!isFoundation && isTri(answers[currentId]));
+      (isFoundation && !!answers[currentId]) || (!isFoundation && isTri(answers[currentId]));
 
     if (nowAnswered) {
       const next = computedNextId;
@@ -593,9 +451,7 @@ export default function BeeHealthHelper() {
   const currentQuestion = useMemo(() => {
     if (!currentId) return null;
 
-    const f = foundationQuestions.find(
-      (q) => q.kind === "select" && q.id === currentId
-    );
+    const f = foundationQuestions.find((q) => q.kind === "select" && q.id === currentId);
     if (f) return { kind: "select", q: f };
 
     const obs = availableObservationQuestions.find((q) => q.id === currentId);
@@ -605,24 +461,10 @@ export default function BeeHealthHelper() {
   }, [currentId, foundationQuestions, availableObservationQuestions]);
 
   const allAnswered = !computedNextId;
-
-  const resultsHasAlert =
-    results?.type === "normal" &&
-    results.top?.some((r) => templates[r.key]?.severity === "alert");
-  const hasHornet =
-    results?.type === "normal" &&
-    results.top?.some((r) => r.key === "asian_hornet");
-  const hasSHB =
-    results?.type === "normal" &&
-    results.top?.some((r) => r.key === "small_hive_beetle");
-
   const canGoBack = guidedHistoryRef.current.length > 0;
 
-  // Show optional context as soon as the 4 foundation selects are done (so it’s not an “afterthought”)
-  const showRecentChanges =
-    mode === "guided" &&
-    !nextUnansweredFoundation &&
-    questions.context?.[3]?.options?.length;
+  // Keep optional recent changes where it was, but we can move it later if you want.
+  const showRecentChanges = !nextUnansweredFoundation && questions.context?.[3]?.options?.length;
 
   return (
     <div className="p-6 max-w-5xl">
@@ -649,9 +491,6 @@ export default function BeeHealthHelper() {
             <p className="text-sm text-gray-600 mt-1">
               Guided triage. One question at a time, with an “Expand all” option.
             </p>
-            <p className="text-xs text-gray-600 mt-1">
-              <b>Results update automatically</b> as you answer.
-            </p>
           </div>
 
           <div className="w-full md:w-auto">
@@ -673,23 +512,6 @@ export default function BeeHealthHelper() {
               >
                 {mode === "guided" ? "Expand all" : "Guided mode"}
               </button>
-
-              <button
-                type="button"
-                onClick={jumpToResults}
-                className="px-3 py-2 rounded border text-sm bg-white hover:bg-gray-50"
-                title="Jump down to the results"
-              >
-                Jump to results
-              </button>
-            </div>
-
-            <div className="mt-2 text-xs text-gray-600 text-center md:text-right">
-              {resultsStatus === "updating"
-                ? "Updating results…"
-                : resultsStatus === "ready"
-                ? "Results ready."
-                : ""}
             </div>
           </div>
         </div>
@@ -698,32 +520,6 @@ export default function BeeHealthHelper() {
       {/* GUIDED MODE */}
       {mode === "guided" && (
         <div className="space-y-4">
-          {/* OPTIONAL CONTEXT (moved up + explained) */}
-          {showRecentChanges ? (
-            <div className="rounded border bg-white p-5">
-              <div className="font-semibold text-sm">
-                {questions.context[3].label}
-              </div>
-              <p className="text-xs text-gray-600 mt-1">
-                Optional — this helps interpret signs. For example, feeding or a queen event can temporarily change
-                behaviour/brood patterns and reduce false alarms. You can skip this.
-              </p>
-              <div className="mt-3 grid sm:grid-cols-2 gap-2">
-                {questions.context[3].options.map((opt) => (
-                  <label key={opt.id} className="flex items-start gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      className="mt-1"
-                      checked={!!answers[opt.id]}
-                      onChange={() => toggleMulti(opt.id)}
-                    />
-                    <span>{opt.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          ) : null}
-
           <div className="rounded border bg-white p-5">
             <div className="flex items-center justify-between gap-3">
               <div className="font-semibold">Next question</div>
@@ -753,36 +549,14 @@ export default function BeeHealthHelper() {
               </div>
             </div>
 
+            {/* MAIN: question content */}
             {!currentQuestion ? (
-              <div className="mt-3 text-sm text-gray-700">
+              <div className="mt-4 text-sm text-gray-600">
                 {allAnswered ? (
-                  <div className="rounded border border-green-200 bg-green-50 p-4">
-                    <div className="font-semibold text-green-900">
-                      You’ve answered all relevant questions.
-                    </div>
-                    <p className="text-sm mt-1 text-green-900">
-                      Tap <b>Get results</b> to view the suggested causes and safe next steps. (Results will still update if you change answers.)
-                    </p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          runAssessment({ silent: false });
-                          jumpToResults();
-                        }}
-                        className="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-black font-medium text-sm"
-                      >
-                        Get results
-                      </button>
-                      <button
-                        type="button"
-                        onClick={jumpToResults}
-                        className="px-4 py-2 rounded bg-white border hover:bg-gray-50 text-sm"
-                      >
-                        View results ↓
-                      </button>
-                    </div>
-                  </div>
+                  <CompletionBanner
+                    hasResults={!!results}
+                    onGetResults={() => runAssessment()}
+                  />
                 ) : (
                   "Click “Ask next” to continue."
                 )}
@@ -810,25 +584,46 @@ export default function BeeHealthHelper() {
                 />
               </div>
             )}
+
+            {/* If the last answer was just completed, show the banner UNDER the last question */}
+            {allAnswered ? (
+              <div className="mt-4">
+                <CompletionBanner hasResults={!!results} onGetResults={() => runAssessment()} />
+              </div>
+            ) : null}
+
+            {/* Optional “recent changes” */}
+            {showRecentChanges ? (
+              <div className="mt-4 p-4 rounded border bg-gray-50">
+                <div className="font-semibold text-sm">{questions.context[3].label}</div>
+                <p className="text-xs text-gray-600 mt-1">
+                  Optional — answer if relevant. You can skip this.
+                </p>
+                <div className="mt-2 grid sm:grid-cols-2 gap-2">
+                  {questions.context[3].options.map((opt) => (
+                    <label key={opt.id} className="flex items-start gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        className="mt-1"
+                        checked={!!answers[opt.id]}
+                        onChange={() => {
+                          toggleMulti(opt.id);
+                          if (results) setResults(null);
+                        }}
+                      />
+                      <span>{opt.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
 
-          <div ref={resultsRef}>
-            <ResultsPanel
-              results={results}
-              templates={templates}
-              getLabel={getLabel}
-              resultsHasAlert={resultsHasAlert}
-              hasHornet={hasHornet}
-              hasSHB={hasSHB}
-              urgentHit={results?.urgentHit}
-              onAsk={(id) => {
-                setCurrentId(id);
-                setHighlightId(id);
-                pendingScrollRef.current = id;
-              }}
-              actionableIds={actionableIds}
-            />
-          </div>
+          <ResultsPanel
+            results={results}
+            templates={templates}
+            getLabel={getLabel}
+          />
         </div>
       )}
 
@@ -847,7 +642,10 @@ export default function BeeHealthHelper() {
                     label={q.label}
                     value={answers[q.id] || ""}
                     options={q.options}
-                    onChange={(v) => setSelect(q.id, v)}
+                    onChange={(v) => {
+                      setSelect(q.id, v);
+                      if (results) setResults(null);
+                    }}
                   />
                 ))}
             </div>
@@ -855,9 +653,6 @@ export default function BeeHealthHelper() {
             {questions.context?.[3]?.options?.length ? (
               <div className="mt-4">
                 <div className="font-semibold text-sm">{questions.context[3].label}</div>
-                <p className="text-xs text-gray-600 mt-1">
-                  Optional — helps interpret signs (feeding/queen events/treatments can temporarily change behaviour).
-                </p>
                 <div className="mt-2 grid sm:grid-cols-2 gap-2">
                   {questions.context[3].options.map((opt) => (
                     <label key={opt.id} className="flex items-start gap-2 text-sm">
@@ -865,7 +660,10 @@ export default function BeeHealthHelper() {
                         type="checkbox"
                         className="mt-1"
                         checked={!!answers[opt.id]}
-                        onChange={() => toggleMulti(opt.id)}
+                        onChange={() => {
+                          toggleMulti(opt.id);
+                          if (results) setResults(null);
+                        }}
                       />
                       <span>{opt.label}</span>
                     </label>
@@ -873,6 +671,21 @@ export default function BeeHealthHelper() {
                 </div>
               </div>
             ) : null}
+
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={runAssessment}
+                className="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-black font-medium text-sm"
+              >
+                Get results
+              </button>
+              {!results ? (
+                <p className="text-xs text-gray-600 mt-2">
+                  Results appear below after you click <b>Get results</b>.
+                </p>
+              ) : null}
+            </div>
           </div>
 
           {observationGroups.map((g) => (
@@ -887,76 +700,73 @@ export default function BeeHealthHelper() {
                       id={q.id}
                       label={q.label}
                       value={answers[q.id]}
-                      onChange={(v) => setTri(q.id, v)}
+                      onChange={(v) => {
+                        setTri(q.id, v);
+                        if (results) setResults(null);
+                      }}
                     />
                   ))}
               </div>
             </div>
           ))}
 
-          <div ref={resultsRef}>
-            <ResultsPanel
-              results={results}
-              templates={templates}
-              getLabel={getLabel}
-              resultsHasAlert={resultsHasAlert}
-              hasHornet={hasHornet}
-              hasSHB={hasSHB}
-              urgentHit={results?.urgentHit}
-              onAsk={(id) => {
-                setHighlightId(id);
-                const el = document.getElementById(`q-${id}`);
-                if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-              }}
-              actionableIds={actionableIds}
-            />
-          </div>
+          <ResultsPanel
+            results={results}
+            templates={templates}
+            getLabel={getLabel}
+          />
         </div>
       )}
     </div>
   );
 }
 
+/* ---------------- Completion banner ---------------- */
+
+function CompletionBanner({ hasResults, onGetResults }) {
+  return (
+    <div className="rounded border border-green-300 bg-green-50 p-4">
+      <div className="text-lg font-bold text-green-900">You’ve answered all relevant questions.</div>
+      <p className="text-sm mt-1 text-green-900">
+        {hasResults
+          ? "If you change any answers above, click Get results again."
+          : "Click Get results to see the guidance below."}
+      </p>
+      <div className="mt-3">
+        <button
+          type="button"
+          onClick={onGetResults}
+          className="px-5 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-black font-medium text-sm"
+        >
+          Get results
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ---------------- Results ---------------- */
 
-function ResultsPanel({
-  results,
-  templates,
-  getLabel,
-  resultsHasAlert,
-  hasHornet,
-  hasSHB,
-  urgentHit,
-  onAsk,
-  actionableIds,
-}) {
+function ResultsPanel({ results, templates, getLabel }) {
   if (!results) {
     return (
       <div className="p-5 rounded border bg-white">
         <div className="font-semibold">Results</div>
         <p className="text-sm text-gray-600 mt-1">
-          Start answering questions above and your results will appear here.
+          When you reach the end, click <b>Get results</b> in the green banner above.
         </p>
       </div>
     );
   }
 
-  const recommended = (results.recommendedNext || []).filter((id) => actionableIds?.has(id));
+  const urgentHit = results?.urgentHit;
 
   return (
     <div className="space-y-3">
       <div className="p-4 rounded border bg-white">
-        <div className="flex items-center justify-between gap-3">
-          <div className="font-semibold">Results</div>
-          <div className="text-xs text-gray-600">
-            <span className="inline-flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded-full border bg-gray-50">Live</span>
-              <span>Updates as you answer</span>
-            </span>
-          </div>
-        </div>
+        <div className="font-semibold">Results</div>
         <p className="text-sm text-gray-600 mt-1">
-          These suggestions help narrow down likely causes. Click a suggested check to jump to that question.
+          These are guidance suggestions based on the answers you selected.
         </p>
       </div>
 
@@ -967,40 +777,8 @@ function ResultsPanel({
         </>
       ) : (
         <>
-          {(urgentHit || resultsHasAlert || hasHornet || hasSHB) && (
-            <UKReportingPanel
-              mode={
-                urgentHit?.mode
-                  ? urgentHit.mode
-                  : hasHornet
-                  ? "asian_hornet"
-                  : hasSHB
-                  ? "shb"
-                  : "general_alert"
-              }
-            />
-          )}
-
-          {recommended.length ? (
-            <div className="p-4 rounded border bg-white">
-              <div className="font-semibold">Recommended next checks (to narrow it down)</div>
-              <p className="text-sm text-gray-600 mt-1">
-                If you only answer a few more questions, answer these — they’re most likely to change the result.
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {recommended.map((id) => (
-                  <button
-                    key={id}
-                    type="button"
-                    onClick={() => onAsk(id)}
-                    className="px-3 py-1.5 rounded-full text-sm border bg-yellow-50 border-yellow-200 hover:bg-yellow-100"
-                  >
-                    {getLabel(id)}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : null}
+          {/* UK reporting only when triggered */}
+          {urgentHit?.mode ? <UKReportingPanel mode={urgentHit.mode} /> : null}
 
           {results.top?.length ? (
             results.top.map((r) => {
@@ -1039,32 +817,6 @@ function ResultsPanel({
                     </>
                   ) : null}
 
-                  {r.missing?.length ? (
-                    <>
-                      <div className="mt-3 font-semibold text-sm">To confirm or rule this out, check:</div>
-                      <ul className="list-disc pl-5 text-sm mt-1 space-y-1 text-gray-800">
-                        {r.missing
-                          .map((m) => m.flag)
-                          .filter((id) => actionableIds?.has(id))
-                          .map((id) => (
-                            <li key={id}>
-                              <button
-                                type="button"
-                                onClick={() => onAsk(id)}
-                                className="inline-flex items-center gap-2"
-                                title="Jump to this question"
-                              >
-                                <span className="underline hover:no-underline">{getLabel(id)}</span>
-                                <span className="text-[11px] px-2 py-0.5 rounded-full border bg-white">
-                                  Jump
-                                </span>
-                              </button>
-                            </li>
-                          ))}
-                      </ul>
-                    </>
-                  ) : null}
-
                   {t?.steps?.length ? (
                     <>
                       <div className="mt-3 font-semibold text-sm">Safe next steps</div>
@@ -1082,7 +834,7 @@ function ResultsPanel({
             <div className="p-5 rounded border bg-green-50 border-green-300">
               <h3 className="font-semibold">No clear issue identified</h3>
               <p className="text-sm text-gray-700 mt-1">
-                Answer more questions (or use “Not sure”) and results will update automatically if symptoms change.
+                If symptoms change, update your answers and click <b>Get results</b> again.
               </p>
             </div>
           )}
