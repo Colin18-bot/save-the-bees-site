@@ -1,6 +1,6 @@
 // src/pages/BeeHealth/BeeHealthHelper.jsx
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BEE_HEALTH_RULES } from "../../utils/beeHealthRules";
+import { BEE_HEALTH_RULES } from "../../utils/BeeHealthRules";
 
 /**
  * Ada-mode philosophy:
