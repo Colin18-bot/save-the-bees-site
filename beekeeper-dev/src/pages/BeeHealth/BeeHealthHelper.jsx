@@ -22,7 +22,7 @@ export default function BeeHealthHelper() {
     templates,
     conditions,
     redFlags,
-    urgentReporting, // NEW
+    urgentReporting,
     confidence,
     dominance,
   } = BEE_HEALTH_RULES;
@@ -43,12 +43,18 @@ export default function BeeHealthHelper() {
   const [mode, setMode] = useState("guided"); // "guided" | "all"
   const [results, setResults] = useState(null);
 
+  // NEW: results UX helpers
+  const [resultsStatus, setResultsStatus] = useState("idle"); // "idle" | "updating" | "ready"
+  const resultsRef = useRef(null);
+  const autoRunTimerRef = useRef(null);
+  const didFirstAutoRunRef = useRef(false);
+
   // Guided flow state
   const [currentId, setCurrentId] = useState(null);
   const [highlightId, setHighlightId] = useState(null);
   const pendingScrollRef = useRef(null);
 
-  // NEW: guided history (for Back button)
+  // Guided history (for Back button)
   const guidedHistoryRef = useRef([]); // [{ id, prevValue }]
 
   // ---------- label map ----------
@@ -116,6 +122,17 @@ export default function BeeHealthHelper() {
     pendingScrollRef.current = null;
     guidedHistoryRef.current = [];
     setMode("guided");
+    setResultsStatus("idle");
+    didFirstAutoRunRef.current = false;
+    if (autoRunTimerRef.current) clearTimeout(autoRunTimerRef.current);
+    autoRunTimerRef.current = null;
+  }
+
+  function jumpToResults() {
+    const el = resultsRef.current;
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
 
   // Clause evaluator (showIf/excludeIf) uses boolean flags
@@ -178,7 +195,7 @@ export default function BeeHealthHelper() {
     return f;
   }, [answers, derived]);
 
-  // NEW: urgent reporting triggers (UK notifiable / high-significance)
+  // Urgent reporting triggers
   function getUrgentReportingHit() {
     const list = urgentReporting || [];
     for (const rule of list) {
@@ -186,12 +203,11 @@ export default function BeeHealthHelper() {
       const all = rule.all || [];
       const not = rule.not || [];
 
-      // For urgent reporting rules, require at least one "any" flag to be true
       const anyOk = any.length === 0 ? false : any.some((k) => flags[k] === true);
       const allOk = all.length === 0 ? true : all.every((k) => flags[k] === true);
       const notOk = not.length === 0 ? true : not.every((k) => flags[k] !== true);
 
-      if (anyOk && allOk && notOk) return rule; // { mode, label, ... }
+      if (anyOk && allOk && notOk) return rule;
     }
     return null;
   }
@@ -347,12 +363,15 @@ export default function BeeHealthHelper() {
       .map(([flag]) => flag);
   }
 
-  function runAssessment() {
-    const urgentHit = getUrgentReportingHit(); // NEW
+  function runAssessment({ silent = false } = {}) {
+    if (!silent) setResultsStatus("updating");
+
+    const urgentHit = getUrgentReportingHit();
 
     const redHit = redFlags.find((k) => flags[k] === true);
     if (redHit) {
-      setResults({ type: "override", redHit, urgentHit }); // NEW
+      setResults({ type: "override", redHit, urgentHit });
+      setResultsStatus("ready");
       return;
     }
 
@@ -424,8 +443,41 @@ export default function BeeHealthHelper() {
 
     const recommendedNext = buildRecommendedNextChecks(top);
 
-    setResults({ type: "normal", top, whyNot, dominanceNotes, recommendedNext, urgentHit }); // NEW
+    setResults({ type: "normal", top, whyNot, dominanceNotes, recommendedNext, urgentHit });
+    setResultsStatus("ready");
   }
+
+  // NEW: auto-run results as answers change (debounced)
+  useEffect(() => {
+    // Don’t spam runs before the user has answered anything at all
+    const hasAnyInput =
+      !!answers.season ||
+      !!answers.colony_strength ||
+      !!answers.onset_speed ||
+      !!answers.main_concern ||
+      Object.values(answers).some((v) => v === "yes" || v === "no" || v === "unknown" || v === true);
+
+    if (!hasAnyInput) {
+      setResults(null);
+      setResultsStatus("idle");
+      didFirstAutoRunRef.current = false;
+      return;
+    }
+
+    // Debounce
+    if (autoRunTimerRef.current) clearTimeout(autoRunTimerRef.current);
+    setResultsStatus("updating");
+
+    autoRunTimerRef.current = setTimeout(() => {
+      runAssessment({ silent: true });
+      didFirstAutoRunRef.current = true;
+    }, 350);
+
+    return () => {
+      if (autoRunTimerRef.current) clearTimeout(autoRunTimerRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answers, flags]);
 
   // ---------- Guided controls ----------
   function askNextAuto() {
@@ -435,13 +487,11 @@ export default function BeeHealthHelper() {
     pendingScrollRef.current = computedNextId;
   }
 
-  // NEW: store a history entry for Back
   function pushHistory(id, prevValue) {
     guidedHistoryRef.current.push({ id, prevValue });
     if (guidedHistoryRef.current.length > 200) guidedHistoryRef.current.shift();
   }
 
-  // NEW: go back one step (restore previous value)
   function goBackOne() {
     const last = guidedHistoryRef.current.pop();
     if (!last) return;
@@ -536,8 +586,7 @@ export default function BeeHealthHelper() {
             Use <b>Not sure</b> whenever you haven’t opened the hive or can’t observe something.
           </li>
           <li>
-            If you suspect a <b>notifiable disease/pest</b>, avoid moving colonies/equipment and follow official
-            guidance.
+            If you suspect a <b>notifiable disease/pest</b>, avoid moving colonies/equipment and follow official guidance.
           </li>
         </ul>
       </div>
@@ -548,6 +597,9 @@ export default function BeeHealthHelper() {
             <h1 className="text-3xl font-bold">Bee Health Helper</h1>
             <p className="text-sm text-gray-600 mt-1">
               Guided triage. One question at a time, with an “Expand all” option.
+            </p>
+            <p className="text-xs text-gray-600 mt-1">
+              <b>Results update automatically</b> as you answer. You can also refresh manually.
             </p>
           </div>
 
@@ -573,11 +625,25 @@ export default function BeeHealthHelper() {
 
               <button
                 type="button"
-                onClick={runAssessment}
-                className="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-black font-medium text-sm"
+                onClick={jumpToResults}
+                className="px-3 py-2 rounded border text-sm bg-white hover:bg-gray-50"
+                title="Jump down to the results"
               >
-                Get results
+                Jump to results
               </button>
+
+              <button
+                type="button"
+                onClick={() => runAssessment({ silent: false })}
+                className="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-black font-medium text-sm"
+                title="Manually refresh results"
+              >
+                Refresh results
+              </button>
+            </div>
+
+            <div className="mt-2 text-xs text-gray-600 text-center md:text-right">
+              {resultsStatus === "updating" ? "Updating results…" : resultsStatus === "ready" ? "Results ready." : ""}
             </div>
           </div>
         </div>
@@ -616,10 +682,26 @@ export default function BeeHealthHelper() {
             </div>
 
             {!currentQuestion ? (
-              <div className="mt-3 text-sm text-gray-600">
-                {allAnswered
-                  ? "You’ve answered everything that’s currently relevant. Run results or switch to Expand all."
-                  : "Click “Ask next” to continue."}
+              <div className="mt-3 text-sm text-gray-700">
+                {allAnswered ? (
+                  <div className="rounded border border-green-200 bg-green-50 p-3">
+                    <div className="font-semibold">That’s the end of the questions.</div>
+                    <p className="text-sm mt-1">
+                      Your results are shown below. If you change any answers, results will update automatically.
+                    </p>
+                    <div className="mt-2">
+                      <button
+                        type="button"
+                        onClick={jumpToResults}
+                        className="px-3 py-2 rounded bg-white border hover:bg-gray-50 text-sm"
+                      >
+                        View results ↓
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  "Click “Ask next” to continue."
+                )}
               </div>
             ) : currentQuestion.kind === "select" ? (
               <div className="mt-3">
@@ -667,20 +749,22 @@ export default function BeeHealthHelper() {
             ) : null}
           </div>
 
-          <ResultsPanel
-            results={results}
-            templates={templates}
-            getLabel={getLabel}
-            resultsHasAlert={resultsHasAlert}
-            hasHornet={hasHornet}
-            hasSHB={hasSHB}
-            urgentHit={results?.urgentHit} // NEW
-            onAsk={(id) => {
-              setCurrentId(id);
-              setHighlightId(id);
-              pendingScrollRef.current = id;
-            }}
-          />
+          <div ref={resultsRef}>
+            <ResultsPanel
+              results={results}
+              templates={templates}
+              getLabel={getLabel}
+              resultsHasAlert={resultsHasAlert}
+              hasHornet={hasHornet}
+              hasSHB={hasSHB}
+              urgentHit={results?.urgentHit}
+              onAsk={(id) => {
+                setCurrentId(id);
+                setHighlightId(id);
+                pendingScrollRef.current = id;
+              }}
+            />
+          </div>
         </div>
       )}
 
@@ -743,20 +827,22 @@ export default function BeeHealthHelper() {
             </div>
           ))}
 
-          <ResultsPanel
-            results={results}
-            templates={templates}
-            getLabel={getLabel}
-            resultsHasAlert={resultsHasAlert}
-            hasHornet={hasHornet}
-            hasSHB={hasSHB}
-            urgentHit={results?.urgentHit} // NEW
-            onAsk={(id) => {
-              setHighlightId(id);
-              const el = document.getElementById(`q-${id}`);
-              if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
-            }}
-          />
+          <div ref={resultsRef}>
+            <ResultsPanel
+              results={results}
+              templates={templates}
+              getLabel={getLabel}
+              resultsHasAlert={resultsHasAlert}
+              hasHornet={hasHornet}
+              hasSHB={hasSHB}
+              urgentHit={results?.urgentHit}
+              onAsk={(id) => {
+                setHighlightId(id);
+                const el = document.getElementById(`q-${id}`);
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+              }}
+            />
+          </div>
         </div>
       )}
     </div>
@@ -772,13 +858,39 @@ function ResultsPanel({
   resultsHasAlert,
   hasHornet,
   hasSHB,
-  urgentHit, // NEW
+  urgentHit,
   onAsk,
 }) {
-  if (!results) return null;
+  if (!results) {
+    return (
+      <div className="p-5 rounded border bg-white">
+        <div className="font-semibold">Results</div>
+        <p className="text-sm text-gray-600 mt-1">
+          Start answering questions above and your results will appear here.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3">
+      <div className="p-4 rounded border bg-white">
+        <div className="flex items-center justify-between gap-3">
+          <div className="font-semibold">Results</div>
+          <div className="text-xs text-gray-600">
+            <span className="inline-flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded-full border bg-gray-50">
+                Live
+              </span>
+              <span>Updates as you answer</span>
+            </span>
+          </div>
+        </div>
+        <p className="text-sm text-gray-600 mt-1">
+          Click any suggested check to jump to that question.
+        </p>
+      </div>
+
       {results.type === "override" ? (
         <>
           <OverridePanel reasonLabel={getLabel(results.redHit)} />
@@ -865,10 +977,15 @@ function ResultsPanel({
                             <button
                               type="button"
                               onClick={() => onAsk(m.flag)}
-                              className="underline hover:no-underline"
+                              className="inline-flex items-center gap-2"
                               title="Jump to this question"
                             >
-                              {getLabel(m.flag)}
+                              <span className="underline hover:no-underline">
+                                {getLabel(m.flag)}
+                              </span>
+                              <span className="text-[11px] px-2 py-0.5 rounded-full border bg-white">
+                                Jump
+                              </span>
                             </button>
                           </li>
                         ))}
@@ -893,7 +1010,7 @@ function ResultsPanel({
             <div className="p-5 rounded border bg-green-50 border-green-300">
               <h3 className="font-semibold">No clear issue identified</h3>
               <p className="text-sm text-gray-700 mt-1">
-                Answer more questions (or use “Not sure”) and rerun results if symptoms change.
+                Answer more questions (or use “Not sure”) and results will update automatically if symptoms change.
               </p>
             </div>
           )}
@@ -927,7 +1044,7 @@ function SelectCard({ id, label, value, options, onChange, highlight }) {
         ))}
       </select>
       <p className="mt-2 text-xs text-gray-600">
-        Tip: This just changes which questions come next — it doesn’t “diagnose” anything.
+        Tip: This changes which questions come next — it doesn’t “diagnose” anything.
       </p>
     </div>
   );
