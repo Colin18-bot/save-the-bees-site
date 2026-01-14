@@ -48,10 +48,14 @@ export default function BeeHealthHelper() {
   const [highlightId, setHighlightId] = useState(null);
   const pendingScrollRef = useRef(null);
 
+  // NEW: guided history (for Back button)
+  const guidedHistoryRef = useRef([]); // [{ id, prevValue }]
+
   // ---------- label map ----------
   const labelMap = useMemo(() => {
     const map = {};
-    const ingest = (arr) => (arr || []).forEach((q) => q?.id && (map[q.id] = q.label));
+    const ingest = (arr) =>
+      (arr || []).forEach((q) => q?.id && (map[q.id] = q.label));
 
     ingest(questions?.context);
     ingest(questions?.concern);
@@ -110,6 +114,7 @@ export default function BeeHealthHelper() {
     setCurrentId(null);
     setHighlightId(null);
     pendingScrollRef.current = null;
+    guidedHistoryRef.current = [];
     setMode("guided");
   }
 
@@ -134,7 +139,8 @@ export default function BeeHealthHelper() {
     d.autumn = answers.season === "autumn";
     d.winter = answers.season === "winter";
 
-    d.weak_colony = answers.colony_strength === "weak" || answers.colony_strength === "very_weak";
+    d.weak_colony =
+      answers.colony_strength === "weak" || answers.colony_strength === "very_weak";
     d.strong_colony = answers.colony_strength === "strong";
 
     d.onset_sudden = answers.onset_speed === "sudden";
@@ -192,12 +198,17 @@ export default function BeeHealthHelper() {
 
   // ---------- question bank ----------
   const foundationQuestions = useMemo(() => {
-    const qSeason = questions.context?.find((q) => q.id === "season") || questions.context?.[0];
+    const qSeason =
+      questions.context?.find((q) => q.id === "season") || questions.context?.[0];
     const qStrength =
-      questions.context?.find((q) => q.id === "colony_strength") || questions.context?.[1];
-    const qOnset = questions.context?.find((q) => q.id === "onset_speed") || questions.context?.[2];
+      questions.context?.find((q) => q.id === "colony_strength") ||
+      questions.context?.[1];
+    const qOnset =
+      questions.context?.find((q) => q.id === "onset_speed") ||
+      questions.context?.[2];
     const qConcern =
-      questions.concern?.find((q) => q.id === "main_concern") || questions.concern?.[0];
+      questions.concern?.find((q) => q.id === "main_concern") ||
+      questions.concern?.[0];
 
     return [
       { kind: "select", ...qSeason },
@@ -221,8 +232,16 @@ export default function BeeHealthHelper() {
     return [
       { key: "brood", title: "Brood", list: questions.brood || [] },
       { key: "adults_varroa", title: "Adults / Varroa", list: questions.adults_varroa || [] },
-      { key: "pests_predators", title: "Pests / Predators", list: questions.pests_predators || [] },
-      { key: "stores_behaviour", title: "Stores / Behaviour", list: questions.stores_behaviour || [] },
+      {
+        key: "pests_predators",
+        title: "Pests / Predators",
+        list: questions.pests_predators || [],
+      },
+      {
+        key: "stores_behaviour",
+        title: "Stores / Behaviour",
+        list: questions.stores_behaviour || [],
+      },
     ];
   }, [questions]);
 
@@ -416,11 +435,48 @@ export default function BeeHealthHelper() {
     pendingScrollRef.current = computedNextId;
   }
 
+  // NEW: store a history entry for Back
+  function pushHistory(id, prevValue) {
+    guidedHistoryRef.current.push({ id, prevValue });
+    if (guidedHistoryRef.current.length > 200) guidedHistoryRef.current.shift();
+  }
+
+  // NEW: go back one step (restore previous value)
+  function goBackOne() {
+    const last = guidedHistoryRef.current.pop();
+    if (!last) return;
+
+    setAnswers((prev) => {
+      const next = { ...prev };
+      if (last.prevValue === undefined) {
+        delete next[last.id];
+      } else {
+        next[last.id] = last.prevValue;
+      }
+      return next;
+    });
+
+    setCurrentId(last.id);
+    setHighlightId(last.id);
+    pendingScrollRef.current = last.id;
+  }
+
   function answerCurrent(kind, value) {
     if (!currentId) return;
 
-    if (kind === "select") setSelect(currentId, value);
-    if (kind === "tri") setTri(currentId, value);
+    const prevValue = answers[currentId];
+
+    if (kind === "select") {
+      if (prevValue === value) return;
+      pushHistory(currentId, prevValue === "" ? undefined : prevValue);
+      setSelect(currentId, value);
+    }
+
+    if (kind === "tri") {
+      if (prevValue === value) return;
+      pushHistory(currentId, prevValue);
+      setTri(currentId, value);
+    }
   }
 
   useEffect(() => {
@@ -465,6 +521,8 @@ export default function BeeHealthHelper() {
   const hasSHB =
     results?.type === "normal" && results.top?.some((r) => r.key === "small_hive_beetle");
 
+  const canGoBack = guidedHistoryRef.current.length > 0;
+
   return (
     <div className="p-6 max-w-5xl">
       {/* Top disclaimer (always visible) */}
@@ -485,40 +543,42 @@ export default function BeeHealthHelper() {
       </div>
 
       <header className="mb-5">
-        <div className="flex items-start justify-between gap-4">
-          <div>
+        <div className="flex flex-col items-start gap-3 md:flex-row md:items-start md:justify-between md:gap-4">
+          <div className="w-full">
             <h1 className="text-3xl font-bold">Bee Health Helper</h1>
             <p className="text-sm text-gray-600 mt-1">
               Guided triage. One question at a time, with an “Expand all” option.
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={resetAll}
-              className="px-3 py-2 rounded border text-sm bg-white hover:bg-gray-50"
-              title="Clear all answers and start again"
-            >
-              Reset all
-            </button>
+          <div className="w-full md:w-auto">
+            <div className="flex flex-wrap justify-center md:justify-end items-center gap-2">
+              <button
+                type="button"
+                onClick={resetAll}
+                className="px-3 py-2 rounded border text-sm bg-white hover:bg-gray-50"
+                title="Clear all answers and start again"
+              >
+                Reset all
+              </button>
 
-            <button
-              type="button"
-              onClick={() => setMode((m) => (m === "guided" ? "all" : "guided"))}
-              className="px-3 py-2 rounded border text-sm bg-white hover:bg-gray-50"
-              title="Show everything at once (expand all)"
-            >
-              {mode === "guided" ? "Expand all" : "Guided mode"}
-            </button>
+              <button
+                type="button"
+                onClick={() => setMode((m) => (m === "guided" ? "all" : "guided"))}
+                className="px-3 py-2 rounded border text-sm bg-white hover:bg-gray-50"
+                title="Show everything at once (expand all)"
+              >
+                {mode === "guided" ? "Expand all" : "Guided mode"}
+              </button>
 
-            <button
-              type="button"
-              onClick={runAssessment}
-              className="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-black font-medium text-sm"
-            >
-              Get results
-            </button>
+              <button
+                type="button"
+                onClick={runAssessment}
+                className="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-black font-medium text-sm"
+              >
+                Get results
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -529,16 +589,30 @@ export default function BeeHealthHelper() {
           <div className="rounded border bg-white p-5">
             <div className="flex items-center justify-between gap-3">
               <div className="font-semibold">Next question</div>
-              <button
-                type="button"
-                onClick={askNextAuto}
-                disabled={!computedNextId}
-                className={`px-3 py-1.5 rounded text-sm border ${
-                  computedNextId ? "bg-white hover:bg-gray-50" : "bg-gray-50 text-gray-400"
-                }`}
-              >
-                Ask next →
-              </button>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={goBackOne}
+                  disabled={!canGoBack}
+                  className={`px-3 py-1.5 rounded text-sm border ${
+                    canGoBack ? "bg-white hover:bg-gray-50" : "bg-gray-50 text-gray-400"
+                  }`}
+                >
+                  ← Back
+                </button>
+
+                <button
+                  type="button"
+                  onClick={askNextAuto}
+                  disabled={!computedNextId}
+                  className={`px-3 py-1.5 rounded text-sm border ${
+                    computedNextId ? "bg-white hover:bg-gray-50" : "bg-gray-50 text-gray-400"
+                  }`}
+                >
+                  Ask next →
+                </button>
+              </div>
             </div>
 
             {!currentQuestion ? (
@@ -835,7 +909,9 @@ function SelectCard({ id, label, value, options, onChange, highlight }) {
   return (
     <div
       id={`q-${id}`}
-      className={`rounded border p-4 ${highlight ? "ring-2 ring-yellow-400 bg-yellow-50" : "bg-white"}`}
+      className={`rounded border p-4 ${
+        highlight ? "ring-2 ring-yellow-400 bg-yellow-50" : "bg-white"
+      }`}
     >
       <div className="font-semibold">{label}</div>
       <select
@@ -861,7 +937,9 @@ function TriCard({ id, label, value, onChange, hint, highlight }) {
   return (
     <div
       id={`q-${id}`}
-      className={`rounded border p-4 ${highlight ? "ring-2 ring-yellow-400 bg-yellow-50" : "bg-white"}`}
+      className={`rounded border p-4 ${
+        highlight ? "ring-2 ring-yellow-400 bg-yellow-50" : "bg-white"
+      }`}
     >
       <div className="font-semibold">{label}</div>
       {hint ? <div className="text-xs text-gray-600 mt-1">{hint}</div> : null}
