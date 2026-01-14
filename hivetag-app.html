@@ -15,11 +15,11 @@
     <!-- SEO Meta Tags -->
     <meta
       name="description"
-      content="HiveTag is a web-based beekeeping app for recording hive inspections, apiaries, tasks, inventory, sales and expenses – built by a beekeeper in South Wales and used by beekeepers in Cardiff, the Vale of Glamorgan and across the UK."
+      content="HiveTag is a web-based beekeeping app for recording hive inspections, apiaries, tasks, inventory, sales and expenses – plus a Colony Health Check (bee disease helper) to guide observations – built by a beekeeper in South Wales and used by beekeepers in Cardiff, the Vale of Glamorgan and across the UK."
     />
     <meta
       name="keywords"
-      content="HiveTag app, beekeeping app UK, digital hive records, hive inspection app UK, apiary management software, NFC hive tags UK, hive tagging system, beekeeping records app, hive inspection log, beekeeping software UK, Cardiff beekeeping, Vale of Glamorgan beekeeper, South Wales beekeeping"
+      content="HiveTag app, beekeeping app UK, digital hive records, hive inspection app UK, apiary management software, bee disease checker, colony health check, bee disease helper, varroa symptoms, foulbrood signs, chalkbrood, nosema, beekeeping records app, hive inspection log, beekeeping software UK, Cardiff beekeeping, Vale of Glamorgan beekeeper, South Wales beekeeping"
     />
     <meta name="author" content="Colin Chorley" />
 
@@ -28,7 +28,7 @@
     <meta property="og:title" content="HiveTag Beekeeping App – Hive Records, Tasks &amp; Apiary Management" />
     <meta
       property="og:description"
-      content="Keep all your beekeeping records in one place with HiveTag – apiaries, hives, inspections, tasks and costs for hobby and small-scale beekeepers across the UK."
+      content="Keep all your beekeeping records in one place with HiveTag – apiaries, hives, inspections, tasks and costs for hobby and small-scale beekeepers across the UK. Includes a Colony Health Check to help you record what you observe."
     />
     <meta property="og:url" content="https://beezknees.co.uk/hivetag-app" />
     <meta property="og:image" content="https://beezknees.co.uk/images/BeezKnees-Logo.png" />
@@ -38,7 +38,7 @@
     <meta name="twitter:title" content="HiveTag Beekeeping App – Hive Records, Tasks &amp; Apiary Management" />
     <meta
       name="twitter:description"
-      content="HiveTag helps you track hive inspections, tasks and beekeeping costs in one simple UK-focused web app."
+      content="HiveTag helps you track hive inspections, tasks and beekeeping costs in one simple UK-focused web app — with a Colony Health Check to guide what you record."
     />
     <meta name="twitter:image" content="https://beezknees.co.uk/images/BeezKnees-Logo.png" />
 
@@ -61,7 +61,7 @@
           "url": "https://beezknees-members.netlify.app/",
           "applicationCategory": "ProductivityApplication",
           "operatingSystem": "Web",
-          "description": "HiveTag is a web-based beekeeping app for recording apiaries, hives, inspections, tasks, inventory, sales and expenses, designed for UK hobby and small-scale beekeepers.",
+          "description": "HiveTag is a web-based beekeeping app for recording apiaries, hives, inspections, tasks, inventory, sales and expenses, designed for UK hobby and small-scale beekeepers. It also includes a Colony Health Check (bee disease helper) to guide observations during inspections.",
           "creator": {
             "@type": "Person",
             "name": "Colin Chorley"
@@ -151,6 +151,14 @@
             },
             {
               "@type": "Question",
+              "name": "Does HiveTag include a bee disease checker?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. HiveTag includes a Colony Health Check (bee disease helper) that guides you through common symptoms so you can record what you observe during inspections. It is not a diagnosis tool and it does not replace official advice for notifiable diseases."
+              }
+            },
+            {
+              "@type": "Question",
               "name": "Does HiveTag work with NFC hive tags?",
               "acceptedAnswer": {
                 "@type": "Answer",
@@ -214,6 +222,12 @@
             </p>
 
             <p class="lede">
+              Not sure what you’re looking at during an inspection? HiveTag includes a <strong>Colony Health Check</strong>
+              (bee disease helper) that guides you through common symptoms so you can record what you observe and decide what
+              to check next. It’s designed to support good note-taking, not replace official guidance or bee inspector advice.
+            </p>
+
+            <p class="lede">
               HiveTag works fully without NFC for simple digital record-keeping. If you choose to upgrade to the
               <strong>Premium</strong> plan, you can also use optional NFC hive tags to tap a hive and open its record
               instantly — ideal for busy apiary days and wet gloves. NFC features require a compatible device and separately
@@ -228,6 +242,22 @@
                 title="Try HiveTag free (Members Area)"
               >
                 Try HiveTag – Free
+              </a>
+              &nbsp;
+              <a
+                href="https://beezknees-members.netlify.app/bee-health"
+                class="hero-cta secondary"
+                title="Open the Colony Health Check (bee disease helper)"
+              >
+                Colony Health Check
+              </a>
+              &nbsp;
+              <a
+                href="https://beezknees-members.netlify.app/inspections/step-by-step"
+                class="hero-cta secondary"
+                title="Open the step-by-step inspection guide"
+              >
+                Inspection Guide
               </a>
               &nbsp;
               <a
@@ -315,6 +345,22 @@
                 </p>
               </div>
             </div>
+
+            <div class="card">
+              <img
+                src="images/mobile_health.webp"
+                alt="Bee health check representing colony health and disease observations"
+                loading="lazy"
+              />
+              <div class="card-content">
+                <h3>Colony Health Check (bee disease helper)</h3>
+                <p>
+                  Use the Colony Health Check to guide your observations during inspections. It helps you note common signs
+                  and prompts you to record what you see so you can make better follow-up decisions. It is not a diagnosis
+                  tool and it does not replace official advice for notifiable diseases.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -351,6 +397,14 @@
             <div class="hivetag-step">
               <div class="hivetag-step-number">4</div>
               <div class="hivetag-step-body">
+                <strong>Run the Colony Health Check when you’re unsure.</strong> Use the bee disease helper to guide what you
+                record (symptoms, patterns, what you checked) and decide sensible next steps for follow-up.
+              </div>
+            </div>
+
+            <div class="hivetag-step">
+              <div class="hivetag-step-number">5</div>
+              <div class="hivetag-step-body">
                 <strong>Track inventory, sales and expenses.</strong> Keep an eye on where your money is going – from jars and
                 foundation to honey sales.
               </div>
@@ -384,6 +438,7 @@
                 <li>Lightweight inventory, sales and expense tracking</li>
                 <li>Seasonal &amp; per-apiary reporting</li>
                 <li>Step-by-step inspection guide</li>
+                <li>Colony Health Check (bee disease helper)</li>
               </ul>
               <div class="hivetag-plan-actions">
                 <a
@@ -454,6 +509,15 @@
                 No. HiveTag runs in a web browser on most modern phones, tablets and laptops. HiveTag works fully without NFC.
                 Optional NFC hive tags are available on the <strong>Premium</strong> plan for quicker access to hive records
                 with a tap.
+              </p>
+            </div>
+
+            <div class="hivetag-faq-item">
+              <h3>Does HiveTag include a bee disease checker?</h3>
+              <p>
+                Yes. HiveTag includes a <strong>Colony Health Check</strong> (bee disease helper) that guides you through
+                common symptoms so you can record what you observe during inspections. It is not a diagnosis tool and it does
+                not replace official advice for notifiable diseases.
               </p>
             </div>
 

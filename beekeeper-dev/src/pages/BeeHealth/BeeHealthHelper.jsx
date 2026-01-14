@@ -43,7 +43,7 @@ export default function BeeHealthHelper() {
   const [mode, setMode] = useState("guided"); // "guided" | "all"
   const [results, setResults] = useState(null);
 
-  // NEW: results UX helpers
+  // results UX helpers
   const [resultsStatus, setResultsStatus] = useState("idle"); // "idle" | "updating" | "ready"
   const resultsRef = useRef(null);
   const autoRunTimerRef = useRef(null);
@@ -157,7 +157,8 @@ export default function BeeHealthHelper() {
     d.winter = answers.season === "winter";
 
     d.weak_colony =
-      answers.colony_strength === "weak" || answers.colony_strength === "very_weak";
+      answers.colony_strength === "weak" ||
+      answers.colony_strength === "very_weak";
     d.strong_colony = answers.colony_strength === "strong";
 
     d.onset_sudden = answers.onset_speed === "sudden";
@@ -203,9 +204,12 @@ export default function BeeHealthHelper() {
       const all = rule.all || [];
       const not = rule.not || [];
 
-      const anyOk = any.length === 0 ? false : any.some((k) => flags[k] === true);
-      const allOk = all.length === 0 ? true : all.every((k) => flags[k] === true);
-      const notOk = not.length === 0 ? true : not.every((k) => flags[k] !== true);
+      const anyOk =
+        any.length === 0 ? false : any.some((k) => flags[k] === true);
+      const allOk =
+        all.length === 0 ? true : all.every((k) => flags[k] === true);
+      const notOk =
+        not.length === 0 ? true : not.every((k) => flags[k] !== true);
 
       if (anyOk && allOk && notOk) return rule;
     }
@@ -215,7 +219,8 @@ export default function BeeHealthHelper() {
   // ---------- question bank ----------
   const foundationQuestions = useMemo(() => {
     const qSeason =
-      questions.context?.find((q) => q.id === "season") || questions.context?.[0];
+      questions.context?.find((q) => q.id === "season") ||
+      questions.context?.[0];
     const qStrength =
       questions.context?.find((q) => q.id === "colony_strength") ||
       questions.context?.[1];
@@ -247,7 +252,11 @@ export default function BeeHealthHelper() {
   const observationGroups = useMemo(() => {
     return [
       { key: "brood", title: "Brood", list: questions.brood || [] },
-      { key: "adults_varroa", title: "Adults / Varroa", list: questions.adults_varroa || [] },
+      {
+        key: "adults_varroa",
+        title: "Adults / Varroa",
+        list: questions.adults_varroa || [],
+      },
       {
         key: "pests_predators",
         title: "Pests / Predators",
@@ -264,10 +273,32 @@ export default function BeeHealthHelper() {
   const flattenedObservations = useMemo(() => {
     const arr = [];
     observationGroups.forEach((g) => {
-      g.list.forEach((q) => arr.push({ ...q, groupKey: g.key, groupTitle: g.title }));
+      g.list.forEach((q) =>
+        arr.push({ ...q, groupKey: g.key, groupTitle: g.title })
+      );
     });
     return arr;
   }, [observationGroups]);
+
+  // Actionable question IDs (so we never show "jump" for derived labels like Season: Winter)
+  const actionableIds = useMemo(() => {
+    const set = new Set();
+    const addQ = (arr) => (arr || []).forEach((q) => q?.id && set.add(q.id));
+    const addOpts = (arr) =>
+      (arr || []).forEach((o) => o?.id && set.add(o.id));
+
+    addQ(questions?.context);
+    addQ(questions?.concern);
+    addQ(questions?.brood);
+    addQ(questions?.adults_varroa);
+    addQ(questions?.pests_predators);
+    addQ(questions?.stores_behaviour);
+
+    // context multi options
+    if (questions?.context?.[3]?.options?.length) addOpts(questions.context[3].options);
+
+    return set;
+  }, [questions]);
 
   const nextUnansweredFoundation = useMemo(() => {
     for (const q of foundationQuestions) {
@@ -360,7 +391,8 @@ export default function BeeHealthHelper() {
     return [...bag.entries()]
       .sort((a, b) => b[1] - a[1])
       .slice(0, 8)
-      .map(([flag]) => flag);
+      .map(([flag]) => flag)
+      .filter((id) => actionableIds.has(id)); // only real questions
   }
 
   function runAssessment({ silent = false } = {}) {
@@ -400,7 +432,9 @@ export default function BeeHealthHelper() {
         excluded: false,
         score,
         threshold: def.threshold,
-        confidence: passing ? getConfidenceLabel(score, def.threshold) : "Not enough evidence",
+        confidence: passing
+          ? getConfidenceLabel(score, def.threshold)
+          : "Not enough evidence",
         severity: templates[key]?.severity ?? "info",
         missing: getMissingEvidence(def.scores, 4),
       };
@@ -447,15 +481,20 @@ export default function BeeHealthHelper() {
     setResultsStatus("ready");
   }
 
-  // NEW: auto-run results as answers change (debounced)
+  // auto-run results as answers change (debounced)
   useEffect(() => {
-    // Don’t spam runs before the user has answered anything at all
     const hasAnyInput =
       !!answers.season ||
       !!answers.colony_strength ||
       !!answers.onset_speed ||
       !!answers.main_concern ||
-      Object.values(answers).some((v) => v === "yes" || v === "no" || v === "unknown" || v === true);
+      Object.values(answers).some(
+        (v) =>
+          v === "yes" ||
+          v === "no" ||
+          v === "unknown" ||
+          v === true
+      );
 
     if (!hasAnyInput) {
       setResults(null);
@@ -464,7 +503,6 @@ export default function BeeHealthHelper() {
       return;
     }
 
-    // Debounce
     if (autoRunTimerRef.current) clearTimeout(autoRunTimerRef.current);
     setResultsStatus("updating");
 
@@ -539,7 +577,8 @@ export default function BeeHealthHelper() {
     const isFoundation = foundationIds.has(currentId);
 
     const nowAnswered =
-      (isFoundation && !!answers[currentId]) || (!isFoundation && isTri(answers[currentId]));
+      (isFoundation && !!answers[currentId]) ||
+      (!isFoundation && isTri(answers[currentId]));
 
     if (nowAnswered) {
       const next = computedNextId;
@@ -554,7 +593,9 @@ export default function BeeHealthHelper() {
   const currentQuestion = useMemo(() => {
     if (!currentId) return null;
 
-    const f = foundationQuestions.find((q) => q.kind === "select" && q.id === currentId);
+    const f = foundationQuestions.find(
+      (q) => q.kind === "select" && q.id === currentId
+    );
     if (f) return { kind: "select", q: f };
 
     const obs = availableObservationQuestions.find((q) => q.id === currentId);
@@ -566,12 +607,22 @@ export default function BeeHealthHelper() {
   const allAnswered = !computedNextId;
 
   const resultsHasAlert =
-    results?.type === "normal" && results.top?.some((r) => templates[r.key]?.severity === "alert");
-  const hasHornet = results?.type === "normal" && results.top?.some((r) => r.key === "asian_hornet");
+    results?.type === "normal" &&
+    results.top?.some((r) => templates[r.key]?.severity === "alert");
+  const hasHornet =
+    results?.type === "normal" &&
+    results.top?.some((r) => r.key === "asian_hornet");
   const hasSHB =
-    results?.type === "normal" && results.top?.some((r) => r.key === "small_hive_beetle");
+    results?.type === "normal" &&
+    results.top?.some((r) => r.key === "small_hive_beetle");
 
   const canGoBack = guidedHistoryRef.current.length > 0;
+
+  // Show optional context as soon as the 4 foundation selects are done (so it’s not an “afterthought”)
+  const showRecentChanges =
+    mode === "guided" &&
+    !nextUnansweredFoundation &&
+    questions.context?.[3]?.options?.length;
 
   return (
     <div className="p-6 max-w-5xl">
@@ -599,7 +650,7 @@ export default function BeeHealthHelper() {
               Guided triage. One question at a time, with an “Expand all” option.
             </p>
             <p className="text-xs text-gray-600 mt-1">
-              <b>Results update automatically</b> as you answer. You can also refresh manually.
+              <b>Results update automatically</b> as you answer.
             </p>
           </div>
 
@@ -631,19 +682,14 @@ export default function BeeHealthHelper() {
               >
                 Jump to results
               </button>
-
-              <button
-                type="button"
-                onClick={() => runAssessment({ silent: false })}
-                className="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-black font-medium text-sm"
-                title="Manually refresh results"
-              >
-                Refresh results
-              </button>
             </div>
 
             <div className="mt-2 text-xs text-gray-600 text-center md:text-right">
-              {resultsStatus === "updating" ? "Updating results…" : resultsStatus === "ready" ? "Results ready." : ""}
+              {resultsStatus === "updating"
+                ? "Updating results…"
+                : resultsStatus === "ready"
+                ? "Results ready."
+                : ""}
             </div>
           </div>
         </div>
@@ -652,6 +698,32 @@ export default function BeeHealthHelper() {
       {/* GUIDED MODE */}
       {mode === "guided" && (
         <div className="space-y-4">
+          {/* OPTIONAL CONTEXT (moved up + explained) */}
+          {showRecentChanges ? (
+            <div className="rounded border bg-white p-5">
+              <div className="font-semibold text-sm">
+                {questions.context[3].label}
+              </div>
+              <p className="text-xs text-gray-600 mt-1">
+                Optional — this helps interpret signs. For example, feeding or a queen event can temporarily change
+                behaviour/brood patterns and reduce false alarms. You can skip this.
+              </p>
+              <div className="mt-3 grid sm:grid-cols-2 gap-2">
+                {questions.context[3].options.map((opt) => (
+                  <label key={opt.id} className="flex items-start gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      className="mt-1"
+                      checked={!!answers[opt.id]}
+                      onChange={() => toggleMulti(opt.id)}
+                    />
+                    <span>{opt.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
           <div className="rounded border bg-white p-5">
             <div className="flex items-center justify-between gap-3">
               <div className="font-semibold">Next question</div>
@@ -684,16 +756,28 @@ export default function BeeHealthHelper() {
             {!currentQuestion ? (
               <div className="mt-3 text-sm text-gray-700">
                 {allAnswered ? (
-                  <div className="rounded border border-green-200 bg-green-50 p-3">
-                    <div className="font-semibold">That’s the end of the questions.</div>
-                    <p className="text-sm mt-1">
-                      Your results are shown below. If you change any answers, results will update automatically.
+                  <div className="rounded border border-green-200 bg-green-50 p-4">
+                    <div className="font-semibold text-green-900">
+                      You’ve answered all relevant questions.
+                    </div>
+                    <p className="text-sm mt-1 text-green-900">
+                      Tap <b>Get results</b> to view the suggested causes and safe next steps. (Results will still update if you change answers.)
                     </p>
-                    <div className="mt-2">
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          runAssessment({ silent: false });
+                          jumpToResults();
+                        }}
+                        className="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-black font-medium text-sm"
+                      >
+                        Get results
+                      </button>
                       <button
                         type="button"
                         onClick={jumpToResults}
-                        className="px-3 py-2 rounded bg-white border hover:bg-gray-50 text-sm"
+                        className="px-4 py-2 rounded bg-white border hover:bg-gray-50 text-sm"
                       >
                         View results ↓
                       </button>
@@ -726,27 +810,6 @@ export default function BeeHealthHelper() {
                 />
               </div>
             )}
-
-            {/* Optional “recent changes” */}
-            {!nextUnansweredFoundation && questions.context?.[3]?.options?.length ? (
-              <div className="mt-4 p-4 rounded border bg-gray-50">
-                <div className="font-semibold text-sm">{questions.context[3].label}</div>
-                <p className="text-xs text-gray-600 mt-1">Optional — answer if relevant. You can skip this.</p>
-                <div className="mt-2 grid sm:grid-cols-2 gap-2">
-                  {questions.context[3].options.map((opt) => (
-                    <label key={opt.id} className="flex items-start gap-2 text-sm">
-                      <input
-                        type="checkbox"
-                        className="mt-1"
-                        checked={!!answers[opt.id]}
-                        onChange={() => toggleMulti(opt.id)}
-                      />
-                      <span>{opt.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
-            ) : null}
           </div>
 
           <div ref={resultsRef}>
@@ -763,6 +826,7 @@ export default function BeeHealthHelper() {
                 setHighlightId(id);
                 pendingScrollRef.current = id;
               }}
+              actionableIds={actionableIds}
             />
           </div>
         </div>
@@ -791,6 +855,9 @@ export default function BeeHealthHelper() {
             {questions.context?.[3]?.options?.length ? (
               <div className="mt-4">
                 <div className="font-semibold text-sm">{questions.context[3].label}</div>
+                <p className="text-xs text-gray-600 mt-1">
+                  Optional — helps interpret signs (feeding/queen events/treatments can temporarily change behaviour).
+                </p>
                 <div className="mt-2 grid sm:grid-cols-2 gap-2">
                   {questions.context[3].options.map((opt) => (
                     <label key={opt.id} className="flex items-start gap-2 text-sm">
@@ -841,6 +908,7 @@ export default function BeeHealthHelper() {
                 const el = document.getElementById(`q-${id}`);
                 if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
               }}
+              actionableIds={actionableIds}
             />
           </div>
         </div>
@@ -860,6 +928,7 @@ function ResultsPanel({
   hasSHB,
   urgentHit,
   onAsk,
+  actionableIds,
 }) {
   if (!results) {
     return (
@@ -872,6 +941,8 @@ function ResultsPanel({
     );
   }
 
+  const recommended = (results.recommendedNext || []).filter((id) => actionableIds?.has(id));
+
   return (
     <div className="space-y-3">
       <div className="p-4 rounded border bg-white">
@@ -879,15 +950,13 @@ function ResultsPanel({
           <div className="font-semibold">Results</div>
           <div className="text-xs text-gray-600">
             <span className="inline-flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded-full border bg-gray-50">
-                Live
-              </span>
+              <span className="px-2 py-0.5 rounded-full border bg-gray-50">Live</span>
               <span>Updates as you answer</span>
             </span>
           </div>
         </div>
         <p className="text-sm text-gray-600 mt-1">
-          Click any suggested check to jump to that question.
+          These suggestions help narrow down likely causes. Click a suggested check to jump to that question.
         </p>
       </div>
 
@@ -912,12 +981,14 @@ function ResultsPanel({
             />
           )}
 
-          {results.recommendedNext?.length ? (
+          {recommended.length ? (
             <div className="p-4 rounded border bg-white">
               <div className="font-semibold">Recommended next checks (to narrow it down)</div>
-              <p className="text-sm text-gray-600 mt-1">Click one to jump to it.</p>
+              <p className="text-sm text-gray-600 mt-1">
+                If you only answer a few more questions, answer these — they’re most likely to change the result.
+              </p>
               <div className="mt-3 flex flex-wrap gap-2">
-                {results.recommendedNext.map((id) => (
+                {recommended.map((id) => (
                   <button
                     key={id}
                     type="button"
@@ -972,23 +1043,24 @@ function ResultsPanel({
                     <>
                       <div className="mt-3 font-semibold text-sm">To confirm or rule this out, check:</div>
                       <ul className="list-disc pl-5 text-sm mt-1 space-y-1 text-gray-800">
-                        {r.missing.map((m) => (
-                          <li key={m.flag}>
-                            <button
-                              type="button"
-                              onClick={() => onAsk(m.flag)}
-                              className="inline-flex items-center gap-2"
-                              title="Jump to this question"
-                            >
-                              <span className="underline hover:no-underline">
-                                {getLabel(m.flag)}
-                              </span>
-                              <span className="text-[11px] px-2 py-0.5 rounded-full border bg-white">
-                                Jump
-                              </span>
-                            </button>
-                          </li>
-                        ))}
+                        {r.missing
+                          .map((m) => m.flag)
+                          .filter((id) => actionableIds?.has(id))
+                          .map((id) => (
+                            <li key={id}>
+                              <button
+                                type="button"
+                                onClick={() => onAsk(id)}
+                                className="inline-flex items-center gap-2"
+                                title="Jump to this question"
+                              >
+                                <span className="underline hover:no-underline">{getLabel(id)}</span>
+                                <span className="text-[11px] px-2 py-0.5 rounded-full border bg-white">
+                                  Jump
+                                </span>
+                              </button>
+                            </li>
+                          ))}
                       </ul>
                     </>
                   ) : null}
