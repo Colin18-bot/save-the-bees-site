@@ -489,6 +489,36 @@ export default function BeeHealthHelper() {
         </ul>
       </div>
 
+      {/* HOW IT WORKS (public explainer) */}
+      <div className="mb-5 rounded border bg-white p-4 text-sm text-gray-800 no-print">
+        <details>
+          <summary className="cursor-pointer font-semibold">
+            How this checker works (read first)
+          </summary>
+
+          <div className="mt-3 space-y-3 text-gray-700">
+            <p>
+              This tool is a <b>triage helper</b>. It doesn’t diagnose — it helps you narrow down what to check next.
+            </p>
+
+            <ul className="list-disc pl-5 space-y-1">
+              <li><b>Step 1:</b> Pick what you’re mainly seeing (this chooses the best question path).</li>
+              <li><b>Step 2:</b> Answer what you can. Use <b>Not sure</b> whenever you can’t confirm.</li>
+              <li><b>Step 3:</b> You’ll get <b>most likely</b> outcomes with “What to do now” + “When to worry”.</li>
+            </ul>
+
+            <p>
+              Some signs overlap. That’s why you may see more than one possible outcome.
+              If a <b>notifiable disease/pest</b> is suspected, the checker will tell you to stop and follow official guidance.
+            </p>
+
+            <p className="text-xs text-gray-600">
+              Tip: If you haven’t opened the hive, choose “Entrance only” — the checker will avoid brood-frame questions.
+            </p>
+          </div>
+        </details>
+      </div>
+
       <header className="mb-5 no-print">
         <div className="flex flex-col items-start gap-3 md:flex-row md:items-start md:justify-between md:gap-4">
           <div className="w-full">

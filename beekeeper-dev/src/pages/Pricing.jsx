@@ -348,25 +348,6 @@ export default function Pricing() {
         />
       </div>
 
-      {/* NFC tags cross-sell strip */}
-      <section className="mt-8 rounded-2xl bg-amber-50 border border-amber-200 p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-sm">
-        <div>
-          <p className="font-semibold text-amber-900">
-            Need physical HiveTag NFC labels?
-          </p>
-          <p className="mt-1 text-amber-900/80">
-            Order outdoor-rated, on-metal compatible NFC tags directly from BeezKnees — perfect for your Premium NFC features.
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => navigate("/nfc/tags")}
-          className="inline-flex items-center justify-center px-4 py-2 rounded-md text-sm font-semibold text-[#1a3329] bg-yellow-400 hover:bg-yellow-300 border border-yellow-500"
-        >
-          View NFC tags →
-        </button>
-      </section>
-
       {/* Benefit strip */}
       <section className="mt-12 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
         <h2 className="text-xl font-bold text-green-800 mb-3">Everything you need to run your apiaries</h2>

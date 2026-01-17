@@ -1,5 +1,5 @@
 // src/utils/BeeHealthRules.js
-// v2.4: Route-based Ada-style triage (UK beekeeping) — outcomes-first (120+ outcomes).
+// v2.4: Route-based triage (UK beekeeping) — outcomes-first (120+ outcomes).
 // Engine flags expected by BeeHealthHelper.jsx:
 // - tri: <id>_yes / <id>_no / <id>_unknown
 // - select: <id>_<value> (e.g. season_summer, onset_speed_fast, qb_population_change_dropped_a_lot)
@@ -87,7 +87,7 @@ export const BEE_HEALTH_RULES = {
   ],
 
   // ---------------------------
-  // QUESTIONS (Ada-style bank)
+  // QUESTIONS BANK
   // ---------------------------
   questions: {
     // Foundation — always first
@@ -807,561 +807,1430 @@ function buildOutcomeLibrary() {
   const seasons = ["early_spring", "spring", "summer", "autumn", "winter"];
   const onsets = ["sudden", "fast", "slow", "ongoing"];
 
-  // -------------------------
-  // A) NORMAL / EXPECTED
-  // -------------------------
-  add("normal_orientation_flights", {
-    title: "Orientation flights (normal)",
-    severity: "info",
-    urgency: "normal",
-    when: { all: ["ea_warm_sunny_yes", "ea_bees_circling_facing_hive_yes"] },
-    actions: ["No action needed. Avoid blocking the entrance.", "This often settles within 20–60 minutes."],
-  });
+// -------------------------
+// A) ENTRANCE / ACTIVITY (tightened + nextChecks + excludes)
+// -------------------------
 
-  add("normal_cleansing_flights", {
-    title: "Cleansing flights after confinement (normal)",
-    severity: "info",
-    urgency: "normal",
-    when: { all: ["ea_cleansing_flights_yes"], any: ["season_winter", "season_early_spring"] },
-    actions: ["No action needed. Ensure water access.", "If heavy soiling is present, consider dysentery/moisture checks."],
-  });
-
-  add("normal_summer_bearding", {
-    title: "Bearding due to heat/ventilation (often normal)",
-    severity: "info",
-    urgency: "watch",
-    when: { all: ["ea_bearding_yes", "season_summer"] },
-    actions: ["Improve ventilation/shade and ensure water nearby.", "Avoid heavy inspections in the hottest part of the day."],
-  });
-
-  add("normal_fanning_ventilation", {
-    title: "Fanning at the entrance (ventilation / scenting — often normal)",
-    severity: "info",
-    urgency: "normal",
-    when: { all: ["ea_fanning_yes"] },
-    actions: ["Often normal. Watch for robbing signs if entrance is frantic.", ...basicActions.monitor],
-  });
-
-  add("normal_drones_spring_summer", {
-    title: "Lots of drones visible (often normal in spring/summer)",
-    severity: "info",
-    urgency: "normal",
-    when: { all: ["ea_drones_visible_yes"], any: ["season_spring", "season_summer"] },
-    actions: ["Normal seasonal behaviour. No action needed.", ...basicActions.monitor],
-  });
-
-  // -------------------------
-  // B) ROBBING / ENTRANCE CONFLICT
-  // -------------------------
-  add("robbing_active_likely", {
-    title: "Active robbing likely (urgent management)",
-    severity: "warning",
-    urgency: "urgent",
-    when: {
-      all: ["ea_fighting_rolling_yes"],
-      any: ["ea_bees_shiny_black_thieving_yes", "fs_robbery_signs_yes", "tm_robbery_pressure_yes"],
-    },
-    actions: [...basicActions.robbingNow, "If the colony is weak, reduce entrance further and avoid exposing stores."],
-  });
-
-  add("robbing_risk_feeder_leak", {
-    title: "Robbing risk increased due to syrup spills/leaks",
-    severity: "warning",
-    urgency: "urgent",
-    when: { all: ["fs_feeder_leaks_yes"], any: ["fs_robbery_signs_yes", "ea_fighting_rolling_yes"] },
-    actions: ["Stop leaks immediately. Clean spills.", ...basicActions.robbingNow],
-  });
-
-  // -------------------------
-  // C) QUEEN / BROOD STATUS
-  // -------------------------
-  add("queen_swarmed_recently", {
-    title: "Likely swarm has occurred recently",
-    severity: "warning",
-    urgency: "watch",
-    when: {
-      all: [
-        "route_queen_brood",
-        "opened_frames_ok",
-        "qb_eggs_seen_no",
-        "qb_sealed_worker_brood_seen_yes",
-        "qb_population_change_dropped_a_lot",
-      ],
-      any: ["qb_queen_cells_seen_yes", "qb_queen_cells_opened_yes"],
-    },
-    actions: [
-      "Avoid heavy disturbance.",
-      "Re-check in 7–14 days for eggs (mating delay is normal after swarming).",
-      "Ensure stores are adequate while they rebuild.",
+add("normal_orientation_flights", {
+  title: "Orientation flights (normal)",
+  severity: "info",
+  urgency: "normal",
+  confidence: "strong",
+  when: { all: ["ea_warm_sunny_yes", "ea_bees_circling_facing_hive_yes"] },
+  excludeIf: {
+    any: [
+      "ea_fighting_rolling_yes",
+      "ea_bees_shiny_black_thieving_yes",
+      "fs_robbery_signs_yes",
+      "pp_wasps_pressure_yes",
+      "pp_hornet_hawking_yes",
+      "dd_piles_dead_bees_yes",
+      "dd_crawling_cant_fly_yes",
     ],
-  });
+  },
+  actions: [
+    "No action needed. Avoid blocking the entrance.",
+    "This often settles within 20–60 minutes (sometimes longer on very warm afternoons).",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["ea_fighting_rolling", "ea_bees_shiny_black_thieving", "ea_drones_visible"],
+});
 
-  add("queen_virgin_mating_window", {
-    title: "Possible virgin queen / mating window (brood break)",
-    severity: "info",
-    urgency: "watch",
-    when: {
-      all: ["route_queen_brood", "opened_frames_ok", "qb_eggs_seen_no", "qb_sealed_worker_brood_seen_yes"],
-      any: ["qb_queen_cells_opened_yes", "recent_queen_event_true"],
-    },
-    actions: [
-      "Give time: 1–3+ weeks can be normal (weather dependent).",
-      "Re-check in 7–10 days for eggs; avoid repeated heavy disturbance.",
+add("normal_cleansing_flights", {
+  title: "Cleansing flights after confinement (often normal)",
+  severity: "info",
+  urgency: "normal",
+  confidence: "medium",
+  when: { all: ["ea_cleansing_flights_yes"], any: ["season_winter", "season_early_spring"] },
+  excludeIf: {
+    any: [
+      "dd_piles_dead_bees_yes",
+      "dd_crawling_cant_fly_yes",
+      "ea_fighting_rolling_yes",
+      "fs_robbery_signs_yes",
     ],
-  });
+  },
+  actions: [
+    "Often normal after a cold spell or long confinement.",
+    "Ensure water access nearby.",
+    "If you see heavy soiling at the entrance/frames, consider damp/dysentery risk checks.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["dd_piles_dead_bees", "dd_crawling_cant_fly", "dd_cold_spell"],
+});
 
-  add("queenless_likely", {
-    title: "Queenless likely (needs confirmation)",
-    severity: "warning",
-    urgency: "urgent",
-    when: {
-      all: ["route_queen_brood", "opened_frames_ok", "qb_eggs_seen_no", "qb_young_larvae_seen_no", "qb_sealed_worker_brood_seen_no"],
-      not: ["qb_queen_cells_seen_yes"],
-    },
-    actions: [
-      "If you have another colony: add a frame with eggs/young larvae so they can raise a queen.",
-      "Before introducing a queen, check for laying worker signs.",
-      ...basicActions.seekHelp,
+add("normal_summer_bearding", {
+  title: "Bearding due to heat/ventilation (often normal)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: { all: ["ea_bearding_yes"], any: ["season_summer", "season_spring"] },
+  excludeIf: {
+    any: [
+      "ea_fighting_rolling_yes",
+      "ea_bees_shiny_black_thieving_yes",
+      "fs_robbery_signs_yes",
+      "pp_wasps_pressure_yes",
+      "pp_hornet_hawking_yes",
     ],
-  });
+  },
+  actions: [
+    "Often normal in warm weather. Improve ventilation/shade and ensure water nearby.",
+    "Avoid heavy inspections in the hottest part of the day.",
+    "If bearding is extreme and ongoing, check congestion and space (supering).",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["ea_fanning", "season", "colony_strength"],
+});
 
-  add("laying_workers_suspected", {
-    title: "Laying workers suspected (unfertilised eggs)",
-    severity: "warning",
-    urgency: "urgent",
-    when: { all: ["route_queen_brood", "opened_frames_ok", "qb_multiple_eggs_per_cell_yes"], any: ["qb_drone_brood_in_worker_cells_yes"] },
-    actions: [
-      "This can be difficult for beginners — requeening often fails unless handled correctly.",
-      "A common approach is combining with a strong queen-right colony via newspaper (after confirming details).",
-      ...basicActions.seekHelp,
+add("normal_fanning_ventilation", {
+  title: "Fanning at the entrance (ventilation / scenting — often normal)",
+  severity: "info",
+  urgency: "normal",
+  confidence: "low",
+  when: { all: ["ea_fanning_yes"] },
+  excludeIf: {
+    any: ["ea_fighting_rolling_yes", "ea_bees_shiny_black_thieving_yes", "fs_robbery_signs_yes"],
+  },
+  actions: [
+    "Often normal ventilation or scenting behaviour.",
+    "If the entrance looks frantic or there’s fighting, treat as possible robbing instead.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["ea_fighting_rolling", "ea_bees_shiny_black_thieving", "fs_robbery_signs"],
+});
+
+add("normal_drones_spring_summer", {
+  title: "Lots of drones visible (often normal in spring/summer)",
+  severity: "info",
+  urgency: "normal",
+  confidence: "medium",
+  when: { all: ["ea_drones_visible_yes"], any: ["season_spring", "season_summer"] },
+  excludeIf: {
+    any: ["ea_fighting_rolling_yes", "fs_robbery_signs_yes", "pp_hornet_hawking_yes"],
+  },
+  actions: ["Normal seasonal behaviour. No action needed.", ...basicActions.monitor],
+  nextChecks: ["season", "ea_fighting_rolling"],
+});
+
+add("entrance_activity_not_flight_weather", {
+  title: "High entrance activity but weather isn’t flight-friendly (check disturbance/feeding/robbery)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "low",
+  when: { all: ["ea_warm_sunny_no"], any: ["recent_harvest", "recent_feeding", "recent_move", "recent_treatment"] },
+  actions: [
+    "If it’s not flight weather but the hive is very busy/agitated, consider disturbance or feeding/robbing pressure.",
+    "Keep inspections short and avoid exposing honey.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["recent_changes", "ea_fighting_rolling", "ea_bees_shiny_black_thieving", "fs_feeder_leaks"],
+});
+
+// -------------------------
+// B) ROBBING / ENTRANCE CONFLICT (tightened)
+// -------------------------
+
+add("robbing_active_likely", {
+  title: "Active robbing likely (urgent management)",
+  severity: "warning",
+  urgency: "urgent",
+  confidence: "strong",
+  when: {
+    all: ["ea_fighting_rolling_yes"],
+    any: ["ea_bees_shiny_black_thieving_yes", "fs_robbery_signs_yes", "tm_robbery_pressure_yes"],
+  },
+  excludeIf: {
+    any: [
+      "pp_hornet_hawking_yes", // could be hornet pressure instead
     ],
-  });
+  },
+  actions: [
+    ...basicActions.robbingNow,
+    "If the colony is weak, reduce entrance further and avoid exposing stores.",
+    "If robbing is intense: consider a robbing screen and stop any open feeding immediately.",
+  ],
+  nextChecks: ["fs_feeder_leaks", "fs_robbery_signs", "pp_wasps_pressure", "pp_hornet_hawking", "colony_strength"],
+});
 
-  add("drone_laying_queen_suspected", {
-    title: "Drone-laying queen suspected (failing/unmated)",
-    severity: "warning",
-    urgency: "watch",
-    when: { all: ["route_queen_brood", "opened_frames_ok", "qb_drone_brood_in_worker_cells_yes"], not: ["qb_multiple_eggs_per_cell_yes"] },
-    actions: [
-      "Confirm egg-laying pattern: single egg per cell (neat) vs multiple eggs (messy).",
-      "Consider requeening if confirmed; timing/season matters.",
-      ...basicActions.reduceDisturbance,
+add("robbing_risk_feeder_leak", {
+  title: "Robbing risk increased due to syrup spills/leaks",
+  severity: "warning",
+  urgency: "urgent",
+  confidence: "strong",
+  when: { all: ["fs_feeder_leaks_yes"], any: ["fs_robbery_signs_yes", "ea_fighting_rolling_yes"] },
+  actions: ["Stop leaks immediately. Clean spills.", ...basicActions.robbingNow],
+  nextChecks: ["fs_feeder_leaks", "fs_feeder_access", "fs_feeder_type"],
+});
+
+add("wasp_pressure_entrance", {
+  title: "Wasp pressure at the entrance (can look like 'constant fighting')",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "medium",
+  when: { all: ["pp_wasps_pressure_yes"] },
+  excludeIf: {
+    any: ["pp_hornet_hawking_yes"],
+  },
+  actions: [
+    "Reduce entrance for weak colonies; keep the colony able to defend.",
+    "Avoid syrup spills and keep feeding internal and discreet.",
+    "Consider traps away from the apiary (avoid attracting wasps to the hive line).",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["ea_fighting_rolling", "colony_strength", "fs_feeder_leaks"],
+});
+
+add("hornet_pressure_entrance", {
+  title: "Hornet hawking pressure at the entrance (treat as urgent if Asian hornet suspected)",
+  severity: "alert",
+  urgency: "report",
+  confidence: "medium",
+  when: { any: ["pp_hornet_hawking_yes", "pp_hornet_persistent_yes"] },
+  actions: [
+    "If safe, take a clear photo/video for identification.",
+    "Do not attempt nest destruction yourself.",
+    "Report promptly via official UK routes if you suspect Asian hornet.",
+    ...basicActions.reduceDisturbance,
+  ],
+  nextChecks: ["pp_hornet_hawking", "pp_hornet_persistent", "pp_wasps_pressure"],
+});
+
+// -------------------------
+// C) QUEEN / BROOD (deepened + tightened)
+// -------------------------
+
+add("queen_swarmed_recently", {
+  title: "Likely swarm has occurred recently",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "strong",
+  when: {
+    all: [
+      "route_queen_brood",
+      "opened_frames_ok",
+      "qb_eggs_seen_no",
+      "qb_sealed_worker_brood_seen_yes",
+      "qb_population_change_dropped_a_lot",
     ],
-  });
-
-  // -------------------------
-  // D) DISEASE / PARASITE (tightened)
-  // -------------------------
-  add("varroa_dwv_signal", {
-    title: "Varroa / Deformed Wing Virus pressure likely",
-    severity: "warning",
-    urgency: "watch",
-    when: { any: ["dd_deformed_wings_yes", "symptom_deformed_wings_yes"] },
-    excludeIf: {
-      any: [
-        // if you have a notifiable red flag, that takes precedence
-        "bd_ropey_larvae_yes",
-        "symptom_ropey_larvae_yes",
-      ],
-    },
-    actions: [
-      "Check Varroa levels if you can (monitoring methods).",
-      "Review your seasonal Varroa plan; treat if thresholds indicate.",
-      "Avoid combining colonies until you understand what’s happening.",
-      ...basicActions.monitor,
+    any: ["qb_queen_cells_seen_yes", "qb_queen_cells_opened_yes"],
+  },
+  excludeIf: {
+    any: [
+      "qb_multiple_eggs_per_cell_yes", // points more to laying workers
+      "qb_drone_brood_in_worker_cells_yes", // could be drone-layer/layers
+      "symptom_ropey_larvae_yes",
+      "bd_ropey_larvae_yes",
     ],
-  });
+  },
+  why: [
+    "No eggs but sealed worker brood still present suggests a brood break (common post-swarm).",
+    "A big drop in adult bees supports a swarm event.",
+    "Queen cells (especially opened) fit a recent queen turnover.",
+  ],
+  actions: [
+    "Avoid heavy disturbance — let the colony stabilise.",
+    "Re-check in 7–14 days for eggs (mating delay after swarming is normal).",
+    "Ensure stores are adequate while they rebuild.",
+    ...basicActions.monitor,
+  ],
+  whenToWorry: [
+    "If there are still no eggs after ~3 weeks of suitable flying weather.",
+    "If the colony is very weak and being robbed/pressured.",
+  ],
+  nextChecks: ["qb_queen_cells_opened", "qb_young_larvae_seen", "qb_population_change"],
+});
 
-  add("foulbrood_red_flag", {
-    title: "Red flag: possible foulbrood (notifiable) — act immediately",
-    severity: "alert",
-    urgency: "report",
-    when: { any: ["bd_ropey_larvae_yes", "symptom_ropey_larvae_yes"] },
-    actions: [...basicActions.notifiable],
-  });
-
-  add("chalkbrood_likely", {
-    title: "Chalkbrood likely",
-    severity: "info",
-    urgency: "watch",
-    when: { any: ["bd_chalk_mummies_yes"] },
-    excludeIf: { any: ["inspection_level_entrance_only"] },
-    actions: [
-      "Reduce excess space for weak colonies and improve ventilation.",
-      "Check nutrition and damp. Often improves as colony strengthens.",
-      ...basicActions.monitor,
+add("queen_virgin_mating_window", {
+  title: "Possible virgin queen / mating window (brood break)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: {
+    all: [
+      "route_queen_brood",
+      "opened_frames_ok",
+      "qb_eggs_seen_no",
+      "qb_sealed_worker_brood_seen_yes",
     ],
-  });
-
-  add("sacbrood_likely", {
-    title: "Sacbrood likely",
-    severity: "info",
-    urgency: "watch",
-    when: { any: ["bd_sacbrood_yes"] },
-    excludeIf: { any: ["inspection_level_entrance_only"] },
-    actions: [
-      "Reduce stress and keep nutrition steady.",
-      "Monitor over the next inspection; strong colonies often recover.",
-      ...basicActions.monitor,
+    any: ["qb_queen_cells_opened_yes", "recent_queen_event_true"],
+  },
+  excludeIf: {
+    any: [
+      "qb_population_change_dropped_a_lot", // if huge drop, swarm outcome likely above
+      "qb_multiple_eggs_per_cell_yes",
+      "qb_drone_brood_in_worker_cells_yes",
+      "symptom_ropey_larvae_yes",
+      "bd_ropey_larvae_yes",
     ],
-  });
+  },
+  why: [
+    "Sealed brood without eggs can simply mean the old queen has gone and the new one hasn’t started laying yet.",
+    "Mating delays are common, especially if weather has been poor.",
+  ],
+  actions: [
+    "Give time: 1–3+ weeks can be normal (weather dependent).",
+    "Re-check in 7–10 days for eggs; avoid repeated heavy disturbance.",
+    "Keep stores steady so they don’t stall.",
+    ...basicActions.monitor,
+  ],
+  whenToWorry: [
+    "If there are no eggs after ~3 weeks of decent flying weather.",
+    "If the colony is shrinking rapidly or shows laying worker signs.",
+  ],
+  nextChecks: ["qb_eggs_seen", "qb_queen_cells_seen", "qb_population_change"],
+});
 
-  add("chilled_brood_likely", {
-    title: "Chilled brood likely",
-    severity: "info",
-    urgency: "watch",
-    when: { any: ["bd_chilled_pattern_yes", "dd_cold_spell_yes"] },
-    excludeIf: { any: ["inspection_level_entrance_only"] },
-    actions: [
-      "Reduce space if needed so bees can cover brood.",
-      "Avoid over-expanding early. Re-check when weather improves.",
-      ...basicActions.monitor,
+add("queen_supersedure_underway", {
+  title: "Supersedure likely underway (queen being replaced)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: {
+    all: ["route_queen_brood", "opened_frames_ok", "qb_queen_cells_seen_yes"],
+    any: [
+      "qb_brood_pattern_poor_yes",
+      "qb_population_change_about_same",
+      "qb_population_change_slightly_down",
+      "recent_queen_event_true",
     ],
-  });
+  },
+  excludeIf: {
+    any: [
+      "qb_population_change_dropped_a_lot", // stronger swarm signal
+      "qb_multiple_eggs_per_cell_yes",
+      "qb_drone_brood_in_worker_cells_yes",
+      "symptom_ropey_larvae_yes",
+      "bd_ropey_larvae_yes",
+    ],
+  },
+  why: [
+    "Queen cells plus an otherwise ‘not collapsed’ colony often fits supersedure rather than a swarm.",
+    "Patchy brood pattern can trigger replacement of a failing queen.",
+  ],
+  actions: [
+    "Avoid heavy manipulation while queen replacement is in progress.",
+    "Re-check in 7–14 days for eggs and improving brood pattern.",
+    "Keep a close eye on stores during the changeover.",
+    ...basicActions.monitor,
+  ],
+  whenToWorry: [
+    "If the colony becomes suddenly very weak or you see multiple eggs per cell / drone brood in worker cells.",
+  ],
+  nextChecks: ["qb_brood_pattern_poor", "qb_eggs_seen", "qb_population_change"],
+});
+
+add("queen_failing_or_poor_queen", {
+  title: "Failing / poor queen likely (patchy brood pattern)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "medium",
+  when: {
+    all: ["route_queen_brood", "opened_frames_ok", "qb_brood_pattern_poor_yes"],
+    any: ["qb_eggs_seen_yes", "qb_young_larvae_seen_yes", "qb_sealed_worker_brood_seen_yes"],
+  },
+  excludeIf: {
+    any: [
+      "qb_multiple_eggs_per_cell_yes",
+      "qb_drone_brood_in_worker_cells_yes",
+      "symptom_ropey_larvae_yes",
+      "bd_ropey_larvae_yes",
+    ],
+  },
+  why: [
+    "A patchy/erratic brood pattern can indicate an ageing queen, poor mating, or stress.",
+    "It can also occur with Varroa/virus pressure — keep that in mind if wings are deformed.",
+  ],
+  actions: [
+    "If you can: check Varroa/virus signals (especially if deformed wings are present).",
+    "Consider requeening if pattern stays poor across 2 inspections (season dependent).",
+    "Keep disturbance minimal and ensure steady stores.",
+    ...basicActions.monitor,
+  ],
+  whenToWorry: [
+    "If brood pattern worsens quickly or colony population drops noticeably.",
+  ],
+  nextChecks: ["symptom_deformed_wings", "qb_population_change", "qb_queen_cells_seen"],
+});
+
+add("queenless_likely", {
+  title: "Queenless likely (needs confirmation)",
+  severity: "warning",
+  urgency: "urgent",
+  confidence: "strong",
+  when: {
+    all: [
+      "route_queen_brood",
+      "opened_frames_ok",
+      "qb_eggs_seen_no",
+      "qb_young_larvae_seen_no",
+      "qb_sealed_worker_brood_seen_no",
+    ],
+    not: ["qb_queen_cells_seen_yes"],
+  },
+  excludeIf: {
+    any: [
+      "qb_multiple_eggs_per_cell_yes",
+      "qb_drone_brood_in_worker_cells_yes",
+      "symptom_ropey_larvae_yes",
+      "bd_ropey_larvae_yes",
+    ],
+  },
+  why: [
+    "No eggs, no larvae, and no sealed brood suggests no functioning queen and no recent brood.",
+    "No queen cells present suggests they may be unable to raise a new queen.",
+  ],
+  actions: [
+    "If you have another colony: add a frame with eggs/young larvae (so they can raise a queen).",
+    "Before introducing a queen, check for laying worker signs.",
+    ...basicActions.seekHelp,
+  ],
+  whenToWorry: [
+    "If the colony is getting very small or is being robbed/pressured — act quickly.",
+  ],
+  nextChecks: ["qb_multiple_eggs_per_cell", "qb_drone_brood_in_worker_cells", "qb_queen_cells_seen"],
+});
+
+add("queenless_possible_brood_break", {
+  title: "Possible brood break / queen status unclear (re-check soon)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "low",
+  when: {
+    all: ["route_queen_brood", "opened_frames_ok", "qb_eggs_seen_no"],
+    any: ["qb_young_larvae_seen_no", "qb_sealed_worker_brood_seen_yes", "qb_queen_cells_seen_yes"],
+  },
+  excludeIf: {
+    any: [
+      "qb_multiple_eggs_per_cell_yes",
+      "qb_drone_brood_in_worker_cells_yes",
+      "symptom_ropey_larvae_yes",
+      "bd_ropey_larvae_yes",
+    ],
+  },
+  why: [
+    "Some scenarios look similar at first glance: swarmed, supersedure, virgin queen delay, or queen loss.",
+    "A timed re-check is often the safest move before doing something irreversible.",
+  ],
+  actions: [
+    "Re-check in 7–10 days for eggs and young larvae.",
+    "Avoid heavy disturbance in the meantime.",
+    "Keep stores steady while you wait.",
+    ...basicActions.monitor,
+  ],
+  whenToWorry: [
+    "If the population collapses rapidly or you start seeing multiple eggs per cell.",
+  ],
+  nextChecks: ["qb_young_larvae_seen", "qb_sealed_worker_brood_seen", "qb_population_change"],
+});
+
+add("laying_workers_suspected", {
+  title: "Laying workers suspected (unfertilised eggs)",
+  severity: "warning",
+  urgency: "urgent",
+  confidence: "strong",
+  when: {
+    all: ["route_queen_brood", "opened_frames_ok", "qb_multiple_eggs_per_cell_yes"],
+    any: ["qb_drone_brood_in_worker_cells_yes", "qb_eggs_seen_yes"],
+  },
+  excludeIf: {
+    any: [
+      // if you clearly saw a queen today, it’s less likely (not impossible to mis-ID, but avoid wrong steer)
+      "qb_queen_seen_yes",
+      "symptom_ropey_larvae_yes",
+      "bd_ropey_larvae_yes",
+    ],
+  },
+  why: [
+    "Multiple eggs per cell and eggs on side walls often indicate worker laying after prolonged queenlessness.",
+    "This can be difficult to fix without a strong queen-right colony or experienced handling.",
+  ],
+  actions: [
+    "This is tricky for beginners — requeening often fails unless managed carefully.",
+    "Common approaches: combine with a strong queen-right colony via newspaper (after confirming details).",
+    "Get local help before doing irreversible steps.",
+    ...basicActions.seekHelp,
+  ],
+  whenToWorry: [
+    "If the colony is very weak or being robbed — urgency increases quickly.",
+  ],
+  nextChecks: ["qb_drone_brood_in_worker_cells", "qb_queen_seen", "qb_population_change"],
+});
+
+add("drone_laying_queen_suspected", {
+  title: "Drone-laying queen suspected (failing/unmated queen)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "medium",
+  when: {
+    all: ["route_queen_brood", "opened_frames_ok", "qb_drone_brood_in_worker_cells_yes"],
+    not: ["qb_multiple_eggs_per_cell_yes"],
+  },
+  excludeIf: {
+    any: ["symptom_ropey_larvae_yes", "bd_ropey_larvae_yes"],
+  },
+  why: [
+    "Drone brood in worker-sized cells can indicate a queen laying only unfertilised eggs.",
+    "If eggs are mostly single and well-placed, it points more to a queen than workers.",
+  ],
+  actions: [
+    "Confirm egg pattern: single egg per cell vs multiple eggs (messy).",
+    "Consider requeening if confirmed; timing/season matters.",
+    ...basicActions.monitor,
+  ],
+  whenToWorry: [
+    "If population drops and no worker brood is being produced.",
+  ],
+  nextChecks: ["qb_multiple_eggs_per_cell", "qb_eggs_seen", "qb_population_change"],
+});
+
+add("queen_brood_break_after_treatment_or_disturbance", {
+  title: "Brood break / disruption after treatment or disturbance (possible)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "low",
+  when: {
+    all: ["route_queen_brood", "opened_frames_ok", "qb_eggs_seen_no"],
+    any: ["recent_treatment", "recent_harvest", "recent_move", "recent_queen_event"],
+  },
+  excludeIf: {
+    any: [
+      "qb_multiple_eggs_per_cell_yes",
+      "qb_drone_brood_in_worker_cells_yes",
+      "symptom_ropey_larvae_yes",
+      "bd_ropey_larvae_yes",
+    ],
+  },
+  why: [
+    "Treatments, moves, harvest disturbance, or queen events can temporarily interrupt laying or make it harder to spot eggs.",
+  ],
+  actions: [
+    "Re-check in 7–10 days for eggs and young larvae.",
+    "Keep handling minimal until you see the brood cycle re-establish.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["qb_young_larvae_seen", "qb_eggs_seen", "qb_sealed_worker_brood_seen"],
+});
+
+// -------------------------
+// D) DISEASE / PARASITES (deepened + tightened)
+// -------------------------
+
+add("disease_varroa_dwv_pressure", {
+  title: "Varroa / Deformed Wing Virus pressure likely",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "strong",
+  when: {
+    any: [
+      // queen/brood route
+      "symptom_deformed_wings_yes",
+      // dead/dying route
+      "dd_deformed_wings_yes",
+    ],
+  },
+  excludeIf: {
+    any: [
+      // if you have sudden piles of dead + tongues out, poisoning might be higher on the list too
+      // (we don't suppress varroa entirely, but avoid mis-ranking it as the only cause)
+      "dd_tongues_out_yes",
+      // if foulbrood red flag exists, that overrides anyway
+      "bd_ropey_larvae_yes",
+      "symptom_ropey_larvae_yes",
+    ],
+  },
+  why: [
+    "Deformed wings are a strong field signal for virus expression often associated with high Varroa pressure.",
+    "It can present alongside weakening, crawling bees, and patchy brood (but those can have other causes too).",
+  ],
+  actions: [
+    "Check Varroa levels if you can (monitoring method appropriate to season).",
+    "Review your seasonal Varroa plan; treat if thresholds indicate.",
+    "Avoid combining colonies until you understand what’s happening (risk of spreading problems).",
+    ...basicActions.monitor,
+  ],
+  whenToWorry: [
+    "If deformed wings are widespread, the colony is shrinking quickly, or you’re seeing lots of crawling bees.",
+    "If you have repeated losses despite treatment — get local help to review plan/timing.",
+  ],
+});
+
+add("disease_foulbrood_red_flag", {
+  title: "Red flag: possible foulbrood (notifiable) — act immediately",
+  severity: "alert",
+  urgency: "report",
+  confidence: "strong",
+  when: {
+    any: ["bd_ropey_larvae_yes", "symptom_ropey_larvae_yes"],
+  },
+  why: [
+    "Ropey/brown larvae and foul smell can be consistent with notifiable brood disease patterns.",
+    "Because consequences are serious, treat as notifiable until ruled out by an inspector.",
+  ],
+  actions: [
+    ...basicActions.notifiable,
+    "Minimise disturbance and prevent robbing (do not leave hive open).",
+  ],
+  whenToWorry: [
+    "Immediately — do not wait for it to ‘improve’ on its own.",
+  ],
+});
+
+add("disease_chalkbrood_likely", {
+  title: "Chalkbrood likely",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: { any: ["bd_chalk_mummies_yes"] },
+  excludeIf: {
+    any: [
+      "inspection_level_entrance_only",
+      // if foulbrood red flag exists, that takes priority
+      "bd_ropey_larvae_yes",
+      "symptom_ropey_larvae_yes",
+    ],
+  },
+  why: [
+    "Chalk-like mummies are a classic sign; it often improves as the colony strengthens and conditions dry out.",
+  ],
+  actions: [
+    "Reduce excess space for weak colonies and improve ventilation.",
+    "Check nutrition; avoid damp/mouldy conditions.",
+    "Consider replacing worst affected comb over time (not in one go if colony is weak).",
+    ...basicActions.monitor,
+  ],
+});
+
+add("disease_sacbrood_likely", {
+  title: "Sacbrood likely",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: { any: ["bd_sacbrood_yes"] },
+  excludeIf: {
+    any: [
+      "inspection_level_entrance_only",
+      "bd_ropey_larvae_yes",
+      "symptom_ropey_larvae_yes",
+    ],
+  },
+  why: [
+    "Fluid-filled larvae / slipper-shaped remains are consistent with sacbrood patterns.",
+    "Often stress-related and can resolve as conditions improve.",
+  ],
+  actions: [
+    "Reduce stress: keep inspections minimal and avoid chilling brood.",
+    "Ensure steady nutrition (avoid boom/bust feed patterns).",
+    ...basicActions.monitor,
+  ],
+});
+
+add("disease_chilled_brood_likely", {
+  title: "Chilled brood likely (temperature/coverage issue)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: {
+    any: ["bd_chilled_pattern_yes", "dd_cold_spell_yes"],
+  },
+  excludeIf: {
+    any: [
+      "inspection_level_entrance_only",
+      // notifiable override already handled elsewhere
+      "bd_ropey_larvae_yes",
+      "symptom_ropey_larvae_yes",
+    ],
+  },
+  why: [
+    "Cold nights + brood on edges / dead brood patterns often indicate inadequate coverage or too much space.",
+  ],
+  actions: [
+    "Reduce space if bees can’t cover brood (especially early spring).",
+    "Avoid splitting the brood nest with foundation during cool spells.",
+    "Re-check when weather improves; patterns often stabilise.",
+    ...basicActions.monitor,
+  ],
+});
+
+add("disease_poisoning_suspected", {
+  title: "Possible pesticide poisoning / acute exposure",
+  severity: "warning",
+  urgency: "urgent",
+  confidence: "medium",
+  when: {
+    all: ["dd_piles_dead_bees_yes"],
+    any: ["onset_speed_sudden", "dd_tongues_out_yes"],
+  },
+  excludeIf: {
+    any: [
+      // starvation can also produce big losses, so avoid mislabelling if stores are clearly critically low
+      "dd_stores_very_light_yes",
+      "fs_stores_low_yes",
+      // if foulbrood red flag exists, that’s a separate urgent path
+      "bd_ropey_larvae_yes",
+      "symptom_ropey_larvae_yes",
+    ],
+  },
+  why: [
+    "Sudden piles of dead bees (especially with tongues out) can fit acute exposure patterns.",
+    "This isn’t certain — but it’s worth treating as urgent and documenting.",
+  ],
+  actions: [
+    "Reduce disturbance; document timing and symptoms (photos).",
+    "Avoid feeding exposed honey back to bees until you’re confident it’s safe.",
+    "Seek local support if severe/ongoing (association/inspector).",
+    ...basicActions.monitor,
+  ],
+  whenToWorry: [
+    "If losses continue over multiple days, or neighbouring colonies show similar sudden deaths.",
+  ],
+});
+
+add("disease_nosema_dysentery_possible", {
+  title: "Dysentery / gut stress possible (often linked to damp, confinement, or feed issues)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "low",
+  when: {
+    all: ["ea_cleansing_flights_yes"],
+    any: ["season_winter", "season_early_spring"],
+  },
+  excludeIf: {
+    any: [
+      // if the key issue is robbing conflict, that’s higher priority than gut stress
+      "ea_fighting_rolling_yes",
+      "fs_robbery_signs_yes",
+    ],
+  },
+  why: [
+    "Heavy cleansing flights after confinement can be normal, but persistent soiling can indicate gut stress.",
+    "Moisture and poor ventilation can worsen it.",
+  ],
+  actions: [
+    "Improve ventilation and keep hive dry (avoid damp floors/stands).",
+    "Avoid feeding fermented syrup.",
+    "If you suspect dysentery, keep disturbance low and monitor stores.",
+    ...basicActions.monitor,
+  ],
+});
 
   // -------------------------
   // E) FEEDING / STORES (tightened)
   // -------------------------
-  add("feeding_not_taking_syrup_nectar_flow", {
-    title: "Not taking syrup because there’s a nectar flow (often normal)",
-    severity: "info",
-    urgency: "normal",
-    when: { all: ["route_feeding_stores", "fs_nectar_flow_yes"], not: ["fs_stores_low_yes"] },
 
-    // Tightened excludes: if ANY “problem” signal exists, do not call it “normal”
-    excludeIf: {
-      any: [
-        "fs_too_cold_yes",
-        "fs_weather_flight_ok_no",
-        "fs_feeder_access_no",
-        "fs_feed_consumption_none_yes",
-        "fs_smell_ferment_yes",
-        "fs_robbery_signs_yes",
-        "fs_feeder_leaks_yes",
-        "ea_fighting_rolling_yes",
-        "ea_bees_shiny_black_thieving_yes",
-        "dd_piles_dead_bees_yes",
-        "dd_crawling_cant_fly_yes",
-        "dd_stores_very_light_yes",
-        "fs_colony_weak_yes",
-        "colony_strength_weak",
-        "colony_strength_very_weak",
-      ],
-    },
+add("feeding_starvation_risk_imminent", {
+  title: "Starvation risk (urgent feeding needed)",
+  severity: "warning",
+  urgency: "urgent",
+  confidence: "strong",
+  when: {
+    all: ["route_feeding_stores"],
+    any: ["fs_stores_low_yes", "dd_stores_very_light_yes"],
+  },
+  excludeIf: {
+    any: ["ea_fighting_rolling_yes", "fs_robbery_signs_yes", "ea_bees_shiny_black_thieving_yes"],
+  },
+  why: [
+    "Low/heft-light stores is an immediate risk — colonies can collapse quickly once stores run out.",
+  ],
+  actions: [
+    ...basicActions.starvationNow,
+    "If the colony is very weak, reduce space so the cluster can stay warm and reach feed.",
+  ],
+  whenToWorry: [
+    "If the colony remains light after 48–72 hours.",
+    "If you see many crawling bees or rapid losses alongside low stores.",
+  ],
+  nextChecks: ["fs_too_cold", "fs_feed_type", "fs_colony_weak", "dd_crawling_cant_fly"],
+});
 
-    actions: [
-      "Often normal. If stores are building, no action needed.",
-      "If you must feed (e.g. new nuc), use smaller amounts and avoid spills (robbing risk).",
-      ...basicActions.monitor,
+add("feeding_robbing_triggered_by_feeding", {
+  title: "Feeding is triggering robbing risk (change approach now)",
+  severity: "warning",
+  urgency: "urgent",
+  confidence: "strong",
+  when: {
+    all: ["route_feeding_stores"],
+    any: ["fs_robbery_signs_yes", "fs_feeder_leaks_yes", "ea_fighting_rolling_yes", "ea_bees_shiny_black_thieving_yes"],
+  },
+  why: [
+    "Syrup smell/spills can trigger robbing very fast, especially late summer/autumn.",
+    "Robbing can overwhelm weak colonies quickly.",
+  ],
+  actions: [
+    "Stop leaks/spills immediately and clean up syrup around the hive/stand.",
+    ...basicActions.robbingNow,
+    "Feed internally only (avoid open feeding).",
+  ],
+  whenToWorry: [
+    "If fighting continues after entrance reduction.",
+    "If the colony is weak and cannot defend.",
+  ],
+  nextChecks: ["fs_feeder_leaks", "fs_feeder_type", "fs_feeder_access", "fs_colony_weak"],
+});
+
+add("feeding_not_taking_syrup_because_flow", {
+  title: "Not taking syrup because there’s a nectar flow (often normal)",
+  severity: "info",
+  urgency: "normal",
+  confidence: "strong",
+  when: {
+    all: ["route_feeding_stores", "fs_nectar_flow_yes"],
+    not: ["fs_stores_low_yes"],
+  },
+  excludeIf: {
+    any: [
+      // Robbing / conflict
+      "fs_robbery_signs_yes",
+      "ea_fighting_rolling_yes",
+      "ea_bees_shiny_black_thieving_yes",
+      "fs_feeder_leaks_yes",
+      // Dead/dying / collapse signals
+      "dd_piles_dead_bees_yes",
+      "dd_crawling_cant_fly_yes",
+      "dd_tongues_out_yes",
+      // Sudden onset suggests “something else”
+      "onset_speed_sudden",
     ],
-  });
+  },
+  why: [
+    "During a strong flow, bees often ignore syrup because they prefer real nectar.",
+  ],
+  actions: [
+    "Often normal. If stores are building, no action needed.",
+    "If feeding a nuc/very small colony, use smaller internal feeds and avoid any spills.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["fs_weather_flight_ok", "fs_feeder_leaks", "fs_robbery_signs"],
+});
 
-  add("feeding_not_taking_syrup_too_cold", {
-    title: "Not taking syrup because it’s too cold (switch feed type)",
-    severity: "info",
-    urgency: "watch",
-    when: { all: ["route_feeding_stores", "fs_too_cold_yes"] },
-    excludeIf: {
-      // If stores are low, it’s not “just” cold — it’s urgent
-      all: ["fs_nectar_flow_yes"],
-      not: ["fs_stores_low_yes"],
-    },
-    actions: [
-      "In cold: fondant is often more appropriate than syrup.",
-      "Ensure feed is accessible to the cluster (don’t force bees to break cluster).",
-      "Avoid spills around the hive (robbing risk).",
+add("feeding_not_taking_syrup_too_cold_switch_feed", {
+  title: "Not taking syrup because it’s too cold (switch feed type)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "strong",
+  when: {
+    all: ["route_feeding_stores", "fs_too_cold_yes"],
+  },
+  excludeIf: {
+    any: [
+      // If robbing is happening, cold isn’t the main issue to solve first
+      "fs_robbery_signs_yes",
+      "ea_fighting_rolling_yes",
+      "ea_bees_shiny_black_thieving_yes",
+      // If starvation is already flagged, handle as urgent starvation outcome
+      "fs_stores_low_yes",
+      "dd_stores_very_light_yes",
     ],
-  });
+  },
+  why: [
+    "In cold weather bees may not break cluster or take syrup effectively.",
+    "Fondant is often safer than syrup when temperatures are low.",
+  ],
+  actions: [
+    "Switch to fondant/candy if cold (place within easy reach of the cluster).",
+    "Avoid forcing bees to break cluster to reach feed.",
+    "Avoid spills around the hive (robbing risk).",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["fs_feed_type", "fs_weather_flight_ok", "fs_feeder_access"],
+});
 
-  add("feeding_fermented_syrup", {
-    title: "Syrup may be fermented / unpalatable",
-    severity: "warning",
-    urgency: "watch",
-    when: { all: ["route_feeding_stores", "fs_smell_ferment_yes"] },
-    actions: [
-      "Remove and replace syrup with fresh feed.",
-      "Clean feeder and avoid leaving syrup to warm/ferment for long periods.",
-      ...basicActions.monitor,
+add("feeding_feeder_access_or_design_issue", {
+  title: "Feeder access/design problem likely",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "strong",
+  when: {
+    all: ["route_feeding_stores"],
+    any: ["fs_feeder_access_no", "fs_feed_consumption_none_yes"],
+  },
+  excludeIf: {
+    any: [
+      // Don’t muddy the waters if robbing/starvation is the main problem
+      "fs_robbery_signs_yes",
+      "ea_fighting_rolling_yes",
+      "ea_bees_shiny_black_thieving_yes",
+      "fs_stores_low_yes",
+      "dd_stores_very_light_yes",
     ],
-  });
+  },
+  why: [
+    "If bees can’t physically access syrup (misalignment, missing floats/ladders), intake can be near-zero.",
+    "Some feeders are unsuitable for weak colonies (drowning risk / hard-to-reach syrup).",
+  ],
+  actions: [
+    "Check alignment of feeder holes/access points and add floats/ladders where needed.",
+    "Try a feeder style that suits weak colonies (frame feeder/contact feeder).",
+    "Confirm the feeder isn’t emptying via leaks rather than being consumed.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["fs_feeder_type", "fs_feeder_access", "fs_feeder_leaks", "fs_colony_weak"],
+});
 
-  add("feeding_feeder_access_issue", {
-    title: "Feeder access/design problem likely",
-    severity: "warning",
-    urgency: "watch",
-    when: {
-      all: ["route_feeding_stores"],
-      any: ["fs_feeder_access_no", "fs_feed_consumption_none_yes"],
-    },
-    excludeIf: {
-      // If it’s clearly too cold, don’t blame the feeder first
-      any: ["fs_too_cold_yes"],
-    },
-    actions: [
-      "Check alignment of feeder holes/access points and add floats/ladders where needed.",
-      "Try a feeder style that suits weak colonies (frame feeder/contact feeder).",
-      ...basicActions.monitor,
+add("feeding_syrup_ferment_or_off", {
+  title: "Syrup may be fermented/tainted (replace it)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "strong",
+  when: {
+    all: ["route_feeding_stores", "fs_smell_ferment_yes"],
+  },
+  excludeIf: {
+    any: [
+      "fs_robbery_signs_yes",
+      "ea_fighting_rolling_yes",
+      "ea_bees_shiny_black_thieving_yes",
+      "fs_stores_low_yes",
+      "dd_stores_very_light_yes",
     ],
-  });
+  },
+  why: [
+    "Old or fermented syrup can be ignored and may upset bees.",
+  ],
+  actions: [
+    "Remove and replace syrup with fresh feed.",
+    "Clean the feeder before refilling to prevent recurring fermentation.",
+    "In warm weather, avoid making syrup too far in advance.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["fs_feed_type", "fs_feeder_type", "fs_feed_consumption_none"],
+});
 
-  add("feeding_robbing_risk_from_feeding", {
-    title: "Feeding is triggering robbing risk (change approach now)",
-    severity: "warning",
-    urgency: "urgent",
-    when: { any: ["fs_robbery_signs_yes", "fs_feeder_leaks_yes", "ea_fighting_rolling_yes"] },
-    actions: ["Stop leaks/spills immediately; clean up syrup around hive/stand.", ...basicActions.robbingNow],
-  });
-
-  add("feeding_starvation_risk_imminent", {
-    title: "Starvation risk (urgent feeding needed)",
-    severity: "warning",
-    urgency: "urgent",
-    when: { any: ["fs_stores_low_yes", "dd_stores_very_light_yes"] },
-    excludeIf: { any: ["ea_fighting_rolling_yes", "fs_robbery_signs_yes"] },
-    actions: [...basicActions.starvationNow],
-  });
-
-  add("feeding_weak_colony_cant_take_feed", {
-    title: "Colony may be too weak to take feed effectively",
-    severity: "warning",
-    urgency: "watch",
-    when: {
-      any: ["fs_colony_weak_yes", "colony_strength_weak", "colony_strength_very_weak"],
-    },
-    excludeIf: {
-      any: [
-        "fs_stores_low_yes",
-        "dd_stores_very_light_yes",
-        "ea_fighting_rolling_yes",
-        "fs_robbery_signs_yes",
-        "dd_piles_dead_bees_yes",
-        "dd_crawling_cant_fly_yes",
-      ],
-    },
-    actions: [
-      "Reduce space so the cluster can stay warm and defend the entrance.",
-      "Use a feeder that allows easy access with minimal drowning risk.",
-      "If cold, use fondant instead of syrup.",
-      ...basicActions.monitor,
+add("feeding_recent_treatment_or_brood_break_effect", {
+  title: "Recent Varroa treatment/brood break may be affecting behaviour",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: {
+    all: ["route_feeding_stores", "fs_recent_treatment_effect_yes"],
+  },
+  excludeIf: {
+    any: [
+      "fs_stores_low_yes",
+      "dd_stores_very_light_yes",
+      "fs_robbery_signs_yes",
+      "ea_fighting_rolling_yes",
+      "ea_bees_shiny_black_thieving_yes",
+      "dd_piles_dead_bees_yes",
+      "dd_crawling_cant_fly_yes",
     ],
-  });
+  },
+  why: [
+    "Some treatments and brood breaks can temporarily change feeding/foraging behaviour.",
+  ],
+  actions: [
+    "Keep disturbance low and monitor intake over 48–72 hours.",
+    "Confirm feeder access and check that syrup is fresh and not leaking.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["fs_feeder_access", "fs_smell_ferment", "fs_feed_consumption_none"],
+});
 
-  add("feeding_recent_treatment_effect", {
-    title: "Recent Varroa treatment may be affecting behaviour temporarily",
-    severity: "info",
-    urgency: "watch",
-    when: { all: ["route_feeding_stores", "fs_recent_treatment_effect_yes"] },
-    excludeIf: {
-      any: ["fs_stores_low_yes", "dd_stores_very_light_yes", "fs_robbery_signs_yes", "ea_fighting_rolling_yes"],
-    },
-    actions: [
-      "Some treatments/brood breaks can temporarily change intake and temperament.",
-      "If stores are OK, monitor for 3–7 days and reassess.",
-      ...basicActions.monitor,
+add("feeding_weak_colony_processing_limit", {
+  title: "Colony may be too weak to take/process feed effectively",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "medium",
+  when: {
+    all: ["route_feeding_stores"],
+    any: ["fs_colony_weak_yes", "colony_strength_weak", "colony_strength_very_weak"],
+  },
+  excludeIf: {
+    any: [
+      // If starvation is flagged, let starvation outcome lead
+      "fs_stores_low_yes",
+      "dd_stores_very_light_yes",
+      // If robbing is present, that’s the immediate emergency
+      "fs_robbery_signs_yes",
+      "ea_fighting_rolling_yes",
+      "ea_bees_shiny_black_thieving_yes",
+      // If collapse/death is obvious, route should be dead/dying
+      "dd_piles_dead_bees_yes",
+      "dd_crawling_cant_fly_yes",
     ],
-  });
+  },
+  why: [
+    "Small clusters struggle to defend, heat syrup, and process feed quickly.",
+    "They may also avoid breaking cluster if conditions are cool.",
+  ],
+  actions: [
+    "Reduce space so the cluster can stay warm and defend the entrance.",
+    "Use a feeder that allows easy access with minimal drowning risk.",
+    "If cold, use fondant instead of syrup.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["fs_too_cold", "fs_feeder_type", "fs_feeder_access", "fs_robbery_signs"],
+});
+// -------------------------
+// F) COMB / DRAWING / SPACE (deepened + tightened + aligned to your question IDs)
+// -------------------------
 
-  // -------------------------
-  // F) COMB / DRAWING / SPACE (tightened + practical)
-  // -------------------------
-  add("comb_no_flow_no_stimulus", {
-    title: "Not drawing comb because there’s no flow (or no stimulation)",
-    severity: "info",
-    urgency: "watch",
-    when: { all: ["route_comb_building", "cb_is_flow_no"], not: ["cb_feed_present_yes"] },
-    excludeIf: {
-      any: ["ea_fighting_rolling_yes", "fs_robbery_signs_yes", "fs_feeder_leaks_yes", "fs_stores_low_yes", "dd_stores_very_light_yes"],
-    },
-    actions: [
-      "Bees draw wax best during a nectar flow or with careful stimulation feeding.",
-      "If appropriate, provide small, controlled stimulation feeds (avoid robbing risk).",
-      ...basicActions.monitor,
+add("comb_no_flow_no_stimulus", {
+  title: "Not drawing comb because there’s no flow (or no stimulation)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: {
+    all: ["route_comb_building", "cb_is_flow_no"],
+    not: ["cb_feed_present_yes"],
+  },
+  excludeIf: {
+    any: [
+      "fs_stores_low_yes",
+      "dd_stores_very_light_yes",
+      "ea_fighting_rolling_yes",
+      "fs_robbery_signs_yes",
     ],
-  });
+  },
+  why: [
+    "Bees draw wax best during a nectar flow or with controlled stimulation feeding.",
+    "In a dearth, they conserve energy and wax production slows dramatically.",
+  ],
+  actions: [
+    "If season-appropriate, provide small, controlled stimulation feeds (avoid spills/robbing).",
+    "Ensure the colony has enough bees and warmth to commit to wax building.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["cb_feed_present", "cb_colony_strong", "cb_temperature_ok"],
+});
 
-  add("comb_too_weak_to_draw", {
-    title: "Colony too weak to draw foundation (very common)",
-    severity: "warning",
-    urgency: "watch",
-    when: {
-      all: ["route_comb_building"],
-      any: ["cb_colony_strong_no", "colony_strength_weak", "colony_strength_very_weak"],
-    },
-    excludeIf: { any: ["fs_stores_low_yes", "dd_stores_very_light_yes", "ea_fighting_rolling_yes", "fs_robbery_signs_yes"] },
-    actions: [
-      "Reduce space; ensure the colony can cover and warm the frames they already have.",
-      "Wait until the colony is stronger and conditions improve before expecting drawing.",
-      ...basicActions.monitor,
+add("comb_colony_too_weak_to_draw", {
+  title: "Colony too weak to draw foundation (very common)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "strong",
+  when: {
+    all: ["route_comb_building"],
+    any: ["cb_colony_strong_no", "colony_strength_weak", "colony_strength_very_weak"],
+  },
+  excludeIf: {
+    any: [
+      "fs_stores_low_yes",
+      "dd_stores_very_light_yes",
+      "ea_fighting_rolling_yes",
+      "fs_robbery_signs_yes",
+      "dd_piles_dead_bees_yes",
+      "dd_crawling_cant_fly_yes",
     ],
-  });
+  },
+  why: [
+    "Weak colonies struggle to heat wax and spare workforce for comb building.",
+    "They also struggle if you give them too much space to heat/defend.",
+  ],
+  actions: [
+    "Reduce excess space (avoid leaving boxes/frames they can’t cover).",
+    "Delay adding more foundation until the colony is stronger and weather improves.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["colony_strength", "cb_added_space_recently", "cb_temperature_ok"],
+});
 
-  add("comb_temperature_too_low", {
-    title: "Too cold for wax work (temperature limiting)",
-    severity: "info",
-    urgency: "watch",
-    when: { all: ["route_comb_building"], any: ["cb_temperature_ok_no", "fs_weather_flight_ok_no"] },
-    actions: [
-      "Cold nights can stop wax work even if days are sunny.",
-      "Delay foundation expansion until a warmer spell.",
-      "Avoid splitting the brood nest with foundation in cool conditions.",
-      ...basicActions.monitor,
+add("comb_temperature_limiting", {
+  title: "Too cold for wax work (temperature limiting)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "strong",
+  when: {
+    all: ["route_comb_building"],
+    any: ["cb_temperature_ok_no", "fs_weather_flight_ok_no"],
+  },
+  excludeIf: {
+    any: ["season_summer"], // summer can still have cold nights, but this stops it firing too broadly
+  },
+  why: [
+    "Cold nights can stop wax work even if days are sunny.",
+    "Bees won’t invest in wax if they can’t keep it warm and workable.",
+  ],
+  actions: [
+    "Delay expansion until a warmer spell (especially at night).",
+    "Avoid splitting the brood nest with foundation in cool conditions.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["season", "cb_box_position", "cb_added_space_recently"],
+});
+
+add("comb_too_much_space_added_too_early", {
+  title: "Too much space added too early (slows comb and can chill brood)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "strong",
+  when: { all: ["route_comb_building", "cb_added_space_recently_yes"] },
+  excludeIf: {
+    any: ["colony_strength_strong", "cb_congestion_yes"], // strong + congested = adding space may be correct
+  },
+  why: [
+    "Excess space is harder to heat and defend, so bees may stall on building.",
+    "It can also lead to chilled brood if the brood nest is spread too thin.",
+  ],
+  actions: [
+    "Reduce space and add frames/boxes more gradually as the colony expands.",
+    "Keep new foundation close to where bees are active (but don’t chill brood).",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["cb_congestion", "cb_box_position", "colony_strength"],
+});
+
+add("comb_foundation_condition_problem", {
+  title: "Foundation condition issue (old/dry/contaminated) possible",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "medium",
+  when: { all: ["route_comb_building", "cb_foundation_new_clean_no"] },
+  excludeIf: { any: ["fs_stores_low_yes", "dd_stores_very_light_yes"] },
+  why: [
+    "Old, dry, or contaminated foundation is often ignored.",
+    "Some colonies are picky unless conditions are perfect (flow + warmth).",
+  ],
+  actions: [
+    "Swap for fresh foundation if possible.",
+    "Encourage drawing during a flow or with careful stimulation feeding (avoid robbing risk).",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["cb_is_flow", "cb_feed_present", "cb_foundation_type"],
+});
+
+add("comb_plastic_not_waxed", {
+  title: "Plastic foundation not wax-coated (often ignored)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "strong",
+  when: { all: ["route_comb_building", "cb_plastic_waxed_no"] },
+  excludeIf: { any: ["cb_foundation_type_wax", "cb_foundation_type_starter_strip"] },
+  why: [
+    "Unwaxed plastic is a very common reason bees won’t draw foundation.",
+    "Wax coating gives them the ‘starter’ they need to begin building.",
+  ],
+  actions: [
+    "Use wax-coated plastic foundation (or add wax coating if you know how).",
+    "Try again during a flow / warm spell / with careful stimulation feeding.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["cb_foundation_type", "cb_is_flow", "cb_temperature_ok"],
+});
+
+add("comb_wrong_placement_cross_comb_risk", {
+  title: "Comb built in odd places (cross comb) — placement/space issue likely",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "medium",
+  when: { all: ["route_comb_building", "cb_what_not_drawing_building_wrong_place"] },
+  excludeIf: {
+    any: ["inspection_level_entrance_only"], // you can’t really confirm cross-comb without opening
+  },
+  why: [
+    "Cross comb often happens with foundationless/starter strips, spacing errors, or too much empty space.",
+    "If frames aren’t straight/close, bees build where it ‘makes sense’ to them.",
+  ],
+  actions: [
+    "Correct frame spacing and ensure frames are pushed tight together.",
+    "If foundationless, ensure a good straight guide and strong nectar flow.",
+    "Fix early — cross comb gets harder to correct later.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["cb_foundation_type", "cb_added_space_recently", "cb_is_flow"],
+});
+
+add("comb_super_ignored_not_ready_or_no_flow", {
+  title: "Not using the super yet (often timing/flow/strength)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: { all: ["route_comb_building", "cb_what_not_drawing_ignoring_super"] },
+  excludeIf: {
+    any: ["cb_congestion_yes"], // if congested and still ignoring super, excluder/placement becomes more likely
+  },
+  why: [
+    "Bees may ignore supers if there’s no flow, the colony isn’t strong enough, or nights are cold.",
+    "They prioritise brood nest and stores before expanding upward.",
+  ],
+  actions: [
+    "Add supers during a flow when the colony is strong and nights are mild.",
+    "If you’re using foundation, consider adding a drawn comb frame as a lure (if you have one).",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["cb_is_flow", "cb_colony_strong", "cb_temperature_ok", "cb_congestion"],
+});
+
+add("comb_excluder_reluctance", {
+  title: "Bees reluctant to cross the queen excluder (common early season)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: { all: ["route_comb_building", "cb_queen_excluder_in_way_yes"] },
+  excludeIf: {
+    any: ["cb_is_flow_no", "cb_colony_strong_no"], // if no flow or weak colony, excluder isn't the main problem
+  },
+  why: [
+    "Some colonies hesitate to cross an excluder unless conditions are ideal (flow + strength).",
+    "It can look like ‘they won’t use the super’ even when they’re simply not ready.",
+  ],
+  actions: [
+    "Ensure the brood box is strong and there’s a nectar flow before expecting super work.",
+    "If appropriate, confirm there’s drawn comb above (or add one drawn frame as a lure).",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["cb_is_flow", "cb_colony_strong", "cb_congestion"],
+});
+
+add("comb_inserting_foundation_mid_brood_risk", {
+  title: "Foundation inserted in brood nest may be slowing progress (and risks chilling brood)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "medium",
+  when: {
+    all: ["route_comb_building", "cb_box_position_middle_brood"],
+    any: ["cb_temperature_ok_no", "season_early_spring", "season_spring"],
+  },
+  excludeIf: {
+    any: ["colony_strength_strong", "cb_congestion_yes"], // strong congested colonies can sometimes handle it
+  },
+  why: [
+    "Putting foundation in the middle of brood can chill brood if the colony can’t cover it.",
+    "Bees may refuse to draw it there if conditions aren’t warm and strong enough.",
+  ],
+  actions: [
+    "Move foundation to the edge of brood nest instead of splitting brood.",
+    "Wait for warmer nights / stronger colony before attempting mid-brood insertion.",
+    ...basicActions.monitor,
+  ],
+  nextChecks: ["cb_temperature_ok", "colony_strength", "cb_box_position"],
+});
+
+// -------------------------
+// G) PESTS / PREDATORS (deepened + tightened)
+// -------------------------
+
+add("pests_wasps_pressure", {
+  title: "Wasp pressure likely (manage before it becomes robbing)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "medium",
+  when: { all: ["route_pests_predators"], any: ["pp_wasps_pressure_yes"] },
+  excludeIf: {
+    any: [
+      // if these are true, this is no longer “wasps pressure” — it’s active robbing dynamics
+      "ea_fighting_rolling_yes",
+      "ea_bees_shiny_black_thieving_yes",
+      "fs_robbery_signs_yes",
     ],
-  });
+  },
+  why: [
+    "Wasps often probe entrances in late summer/autumn and target weak colonies.",
+    "Early action prevents escalation into full robbing/colony collapse.",
+  ],
+  actions: [
+    "Reduce entrance (especially for weak colonies).",
+    "Avoid syrup spills and avoid leaving exposed honey/frames during inspections.",
+    "Consider traps placed away from hives (so you don’t draw wasps to the entrance).",
+    ...basicActions.monitor,
+  ],
+});
 
-  add("comb_too_much_space_added", {
-    title: "Too much space added too early (slows comb and can chill brood)",
-    severity: "info",
-    urgency: "watch",
-    when: { all: ["route_comb_building", "cb_added_space_recently_yes"] },
-    actions: [
-      "Reduce space and add frames/boxes more gradually as bees expand.",
-      "Keep new foundation close to where bees are active (but don’t chill brood).",
-      ...basicActions.monitor,
+add("pests_wasps_escalating_to_robbing", {
+  title: "Entrance conflict escalating (robbery risk high)",
+  severity: "warning",
+  urgency: "urgent",
+  confidence: "strong",
+  when: {
+    any: ["pp_wasps_pressure_yes"],
+    all: ["route_pests_predators"],
+    // if the user is seeing fighting/robbing signs at the same time, treat like robbing management
+    // (we keep it as a pests route-friendly variant)
+  },
+  excludeIf: {
+    not: ["ea_fighting_rolling_yes", "fs_robbery_signs_yes", "ea_bees_shiny_black_thieving_yes"],
+  },
+  why: [
+    "When fighting/robbing signs appear, the priority is entrance protection and stopping leaks/spills.",
+  ],
+  actions: [
+    ...basicActions.robbingNow,
+    "If it continues, consider moving feeding to evening only and keep entrances very small for weak colonies.",
+  ],
+});
+
+add("pests_hornet_hawking_generic", {
+  title: "Hornet hawking at the entrance (stress/forager losses possible)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "medium",
+  when: { all: ["route_pests_predators"], any: ["pp_hornet_hawking_yes"] },
+  excludeIf: {
+    any: [
+      // if slime/fermentation is present, SHB path takes priority
+      "pp_slimy_fermented_frames_yes",
     ],
-  });
+  },
+  why: [
+    "Persistent hawking can reduce foraging and increase stress, especially in weaker colonies.",
+    "Identification matters: Asian hornet requires urgent reporting.",
+  ],
+  actions: [
+    "If safe, get a clear photo/video for identification.",
+    "If you suspect Asian hornet: report promptly via official UK reporting routes.",
+    "Support the colony by keeping entrance defensible and avoiding syrup spills.",
+    ...basicActions.monitor,
+  ],
+});
 
-  add("comb_foundation_problem", {
-    title: "Foundation issue (type/condition/acceptance) possible",
-    severity: "warning",
-    urgency: "watch",
-    when: { all: ["route_comb_building"], any: ["cb_foundation_new_clean_no", "cb_plastic_waxed_no"] },
-    actions: [
-      "Replace questionable foundation; ensure plastic is wax-coated.",
-      "Use fresh foundation during a flow or with stimulation feeding.",
-      ...basicActions.monitor,
+add("pests_asian_hornet_reporting", {
+  title: "Possible Asian hornet activity — urgent reporting advised",
+  severity: "alert",
+  urgency: "report",
+  confidence: "strong",
+  when: { any: ["pp_hornet_hawking_yes", "pp_hornet_persistent_yes"] },
+  actions: [
+    "Do not attempt nest destruction yourself.",
+    "If safe, take a clear photo/video for identification.",
+    "Report promptly via official UK reporting routes if you suspect Asian hornet.",
+    "Keep colonies calm and defensible; avoid feeding spills.",
+  ],
+});
+
+add("pests_wax_moth_secondary_weakness", {
+  title: "Wax moth activity (usually a symptom of a weak or stressed colony)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "strong",
+  when: { all: ["route_pests_predators"], any: ["pp_wax_moth_webbing_yes"] },
+  excludeIf: {
+    any: [
+      // strong colonies usually keep wax moth in check
+      "colony_strength_strong",
+      // if SHB symptoms exist, take the SHB outcome instead
+      "pp_slimy_fermented_frames_yes",
     ],
-  });
+  },
+  why: [
+    "Wax moth usually becomes a problem when colonies are weak, queenless, or can’t patrol all comb.",
+    "It often follows other issues (low population, starvation, brood break, robbing).",
+  ],
+  actions: [
+    "Reduce excess space and remove severely damaged comb.",
+    "Focus on strengthening colony: stores, warmth, queen status.",
+    ...basicActions.monitor,
+  ],
+});
 
-  add("comb_cross_comb_likely", {
-    title: "Cross-comb / comb built in odd places (space/spacing issue likely)",
-    severity: "warning",
-    urgency: "watch",
-    when: { all: ["route_comb_building", "cb_what_not_drawing_building_wrong_place"] },
-    actions: [
-      "Check frame spacing and ensure frames are pushed tight together.",
-      "Avoid giving large empty volumes too early; keep space appropriate to colony strength.",
-      "Correct early before it becomes a mess — but keep disturbance minimal.",
-      ...basicActions.monitor,
+add("pests_wax_moth_present_but_strong", {
+  title: "Wax moth signs found — but colony may cope if strong",
+  severity: "info",
+  urgency: "watch",
+  confidence: "low",
+  when: { all: ["route_pests_predators", "pp_wax_moth_webbing_yes"], any: ["colony_strength_strong"] },
+  why: [
+    "Strong colonies usually control wax moth — a small amount of damage may be historical or limited.",
+  ],
+  actions: [
+    "Remove/replace badly damaged comb when convenient.",
+    "Check you haven’t left unused comb/space that bees can’t patrol.",
+    ...basicActions.monitor,
+  ],
+});
+
+add("pests_mice_intrusion_likely", {
+  title: "Mouse intrusion likely (especially in cooler months)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "strong",
+  when: { all: ["route_pests_predators"], any: ["pp_mouse_signs_yes"] },
+  excludeIf: {
+    any: [
+      // very warm, mid-summer conditions make it less likely as a current issue
+      "season_summer",
     ],
-  });
+  },
+  why: [
+    "Mice seek warmth and food and can wreck comb/insulation and stress the colony.",
+  ],
+  actions: [
+    "Fit an entrance reducer / mouse guard (season-appropriate).",
+    "Remove debris and check comb damage.",
+    "Avoid leaving gaps that allow re-entry.",
+    ...basicActions.monitor,
+  ],
+});
 
-  add("comb_excluder_reluctance", {
-    title: "Bees reluctant to cross queen excluder (common early in season)",
-    severity: "info",
-    urgency: "watch",
-    when: { all: ["route_comb_building", "cb_queen_excluder_in_way_yes"] },
-    excludeIf: {
-      any: ["cb_is_flow_no", "cb_temperature_ok_no", "colony_strength_weak", "colony_strength_very_weak"],
-    },
-    actions: [
-      "Ensure the brood box is strong enough before expecting super work.",
-      "Add supers during flow; avoid too early when nights are cold.",
-      ...basicActions.monitor,
+add("pests_ants_nuisance", {
+  title: "Ants present (usually nuisance rather than a colony-killer)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: { all: ["route_pests_predators"], any: ["pp_ants_seen_yes"] },
+  excludeIf: {
+    any: [
+      // if the entrance is already in conflict, focus on robbing/wasps first
+      "ea_fighting_rolling_yes",
+      "fs_robbery_signs_yes",
     ],
-  });
+  },
+  why: [
+    "Ants often scavenge spills and can irritate bees, but rarely destroy a healthy colony.",
+  ],
+  actions: [
+    "Keep stand area clean and dry; avoid syrup/honey spills.",
+    "Use bee-safe barriers on the stand legs if persistent.",
+    ...basicActions.monitor,
+  ],
+});
 
-  add("comb_ignoring_super_conditions", {
-    title: "Ignoring the super (conditions not right yet)",
-    severity: "info",
-    urgency: "watch",
-    when: { all: ["route_comb_building", "cb_what_not_drawing_ignoring_super"] },
-    excludeIf: {
-      any: [
-        "cb_is_flow_no",
-        "cb_temperature_ok_no",
-        "colony_strength_weak",
-        "colony_strength_very_weak",
-        "fs_stores_low_yes",
-        "dd_stores_very_light_yes",
-      ],
-    },
-    actions: [
-      "Often they won’t move up until the colony is strong and there’s a flow.",
-      "Ensure the super has drawn comb (or bait with a drawn frame if available).",
-      ...basicActions.monitor,
-    ],
-  });
-
-  // -------------------------
-  // G) PESTS / PREDATORS (tightened)
-  // -------------------------
-  add("wax_moth_secondary", {
-    title: "Wax moth activity (usually secondary to weakness)",
-    severity: "warning",
-    urgency: "watch",
-    when: { any: ["pp_wax_moth_webbing_yes"] },
-    excludeIf: {
-      any: [
-        "colony_strength_strong",
-        "fs_robbery_signs_yes",
-        "ea_fighting_rolling_yes",
-      ],
-    },
-    actions: ["Reduce excess space; remove badly damaged comb.", "Focus on strengthening colony.", ...basicActions.monitor],
-  });
-
-  add("mice_intrusion_risk", {
-    title: "Mouse intrusion risk",
-    severity: "warning",
-    urgency: "watch",
-    when: { any: ["pp_mouse_signs_yes"] },
-    excludeIf: { all: ["season_summer", "ea_warm_sunny_yes"] },
-    actions: ["Fit a mouse guard/entrance reducer (season-appropriate).", "Clean debris and check damage.", ...basicActions.monitor],
-  });
-
-  add("ants_nuisance", {
-    title: "Ant nuisance (usually not fatal)",
-    severity: "info",
-    urgency: "watch",
-    when: { any: ["pp_ants_seen_yes"] },
-    excludeIf: { any: ["ea_fighting_rolling_yes", "fs_robbery_signs_yes"] },
-    actions: ["Avoid spills; keep stand clean/dry.", "Use bee-safe stand barriers if persistent.", ...basicActions.monitor],
-  });
-
-  add("wasps_pressure", {
-    title: "Wasp pressure likely",
-    severity: "warning",
-    urgency: "watch",
-    when: { any: ["pp_wasps_pressure_yes"] },
-    excludeIf: {
-      any: ["ea_fighting_rolling_yes", "ea_bees_shiny_black_thieving_yes", "fs_robbery_signs_yes"],
-    },
-    actions: ["Reduce entrance for weak colonies.", "Avoid syrup spills; consider traps away from hives.", ...basicActions.monitor],
-  });
-
-  add("asian_hornet_reporting", {
-    title: "Hornet hawking concern (treat as urgent reporting if you suspect Asian hornet)",
-    severity: "alert",
-    urgency: "report",
-    when: { any: ["pp_hornet_hawking_yes", "pp_hornet_persistent_yes"] },
-    actions: [
-      "Do not attempt nest destruction yourself.",
-      "If safe, take a clear photo/video for identification.",
-      "Report promptly via official UK reporting routes if you suspect Asian hornet.",
-      ...basicActions.reduceDisturbance,
-    ],
-  });
-
-  add("small_hive_beetle_reporting", {
-    title: "Small hive beetle concern (urgent reporting advised)",
-    severity: "alert",
-    urgency: "report",
-    when: { any: ["pp_slimy_fermented_frames_yes"] },
-    actions: [...basicActions.notifiable],
-  });
+add("pests_shb_suspicion", {
+  title: "Small hive beetle suspicion — urgent reporting advised (UK notifiable)",
+  severity: "alert",
+  urgency: "report",
+  confidence: "strong",
+  when: { any: ["pp_slimy_fermented_frames_yes"] },
+  actions: [
+    ...basicActions.notifiable,
+    "Minimise disturbance until you receive official guidance.",
+  ],
+});
 
   // -------------------------
   // H) DEAD / DYING / POISONING / CHILLING (core)
   // -------------------------
-  add("dead_poisoning_possible", {
-    title: "Possible pesticide poisoning / acute exposure",
+  add("dead_poisoning_strong_signal", {
+    title: "Strong signal: possible pesticide poisoning / acute exposure",
     severity: "warning",
     urgency: "urgent",
-    when: { all: ["dd_piles_dead_bees_yes"], any: ["onset_speed_sudden", "dd_tongues_out_yes"] },
+    confidence: "strong",
+    when: {
+      all: ["dd_piles_dead_bees_yes"],
+      any: ["dd_tongues_out_yes", "onset_speed_sudden"],
+    },
+    excludeIf: {
+      any: ["dd_stores_very_light_yes", "fs_stores_low_yes"], // don’t mislabel starvation as poisoning
+    },
     actions: [
-      "Reduce disturbance; document timing and symptoms (photos).",
+      "Reduce disturbance; document timing and symptoms (photos/video).",
+      "If possible, note nearby spraying/weed control timing (same day/previous day).",
       "Avoid feeding exposed honey back to bees.",
-      "Seek local guidance if severe/ongoing (association/inspector).",
+      "If losses are severe/ongoing, seek local guidance urgently (association/inspector).",
+      ...basicActions.monitor,
+    ],
+    whenToWorry: [
+      "Rapidly increasing piles of dead bees over hours–1 day.",
+      "Multiple colonies affected at the same apiary.",
+      "Continuing losses for more than 24–48 hours.",
+    ],
+  });
+
+  add("dead_poisoning_possible", {
+    title: "Possible pesticide poisoning / exposure (needs checking)",
+    severity: "warning",
+    urgency: "watch",
+    confidence: "medium",
+    when: {
+      all: ["dd_piles_dead_bees_yes"],
+      any: ["onset_speed_fast", "dd_tongues_out_unknown", "dd_tongues_out_yes"],
+    },
+    excludeIf: { any: ["dd_stores_very_light_yes", "fs_stores_low_yes"] },
+    actions: [
+      "Reduce disturbance and keep inspections short.",
+      "Check stores and weather context to rule out starvation/chilling.",
+      "Document symptoms and timeline; seek local help if unsure.",
+      ...basicActions.monitor,
     ],
   });
 
@@ -1369,32 +2238,106 @@ function buildOutcomeLibrary() {
     title: "Starvation likely / stores critically low",
     severity: "warning",
     urgency: "urgent",
-    when: { all: ["dd_stores_very_light_yes"] },
-    actions: [...basicActions.starvationNow],
+    confidence: "strong",
+    when: { any: ["dd_stores_very_light_yes", "fs_stores_low_yes"] },
+    excludeIf: {
+      any: ["ea_fighting_rolling_yes", "fs_robbery_signs_yes"], // if robbing is active, advice differs
+    },
+    actions: [
+      ...basicActions.starvationNow,
+      "Reduce entrance if the colony is weak (to help defence).",
+    ],
+    whenToWorry: [
+      "Crawling bees + very light hive.",
+      "Brood present but very low stores (brood can starve fast).",
+    ],
   });
 
-  add("dead_chilling_stress_possible", {
-    title: "Chilling / cold-stress contributing to losses",
+  add("dead_chilling_stress_likely", {
+    title: "Chilling / cold-stress likely contributing to losses",
     severity: "info",
     urgency: "watch",
-    when: { all: ["dd_cold_spell_yes"], any: ["season_winter", "season_early_spring"] },
+    confidence: "strong",
+    when: {
+      all: ["dd_cold_spell_yes"],
+      any: ["season_winter", "season_early_spring"],
+    },
+    excludeIf: { any: ["dd_stores_very_light_yes", "fs_stores_low_yes"] },
     actions: [
       "Reduce draughts and excess space; ensure adequate stores.",
       "Avoid opening the hive unless necessary during cold periods.",
+      "If the colony is weak, keep the cluster compact (don’t over-expand).",
       ...basicActions.monitor,
     ],
   });
 
-  add("dead_crawling_multi_causes", {
-    title: "Crawling / can’t fly — multiple possible causes (check Varroa, poisoning, chilling, starvation)",
+  add("dead_varroa_virus_signal_in_dead_route", {
+    title: "Varroa/virus pressure possible (deformed wings / crawling)",
     severity: "warning",
     urgency: "watch",
+    confidence: "medium",
+    when: {
+      any: ["dd_deformed_wings_yes", "symptom_deformed_wings_yes", "dd_crawling_cant_fly_yes"],
+    },
+    excludeIf: { any: ["dd_stores_very_light_yes", "fs_stores_low_yes"] },
+    actions: [
+      "Check Varroa levels if you can (monitoring methods).",
+      "Review your seasonal Varroa plan; treat if thresholds indicate.",
+      "Avoid combining colonies until you understand what’s happening.",
+      ...basicActions.monitor,
+    ],
+    whenToWorry: [
+      "Increasing numbers of bees with deformed wings.",
+      "Rapid population drop alongside deformed wings.",
+    ],
+  });
+
+  add("dead_crawling_multi_causes", {
+    title: "Crawling / can’t fly — multiple possible causes (stores, cold, varroa/virus, poisoning)",
+    severity: "warning",
+    urgency: "watch",
+    confidence: "low",
     when: { all: ["dd_crawling_cant_fly_yes"] },
     actions: [
       "Check stores (heft), cold spell history, and Varroa/virus signs.",
       "If sudden large losses occur, treat as urgent and document thoroughly.",
       ...basicActions.monitor,
     ],
+  });
+
+  add("dead_small_numbers_normal_context", {
+    title: "A few dead bees can be normal housekeeping (context check)",
+    severity: "info",
+    urgency: "normal",
+    confidence: "low",
+    when: {
+      all: ["route_dead_dying"],
+      any: ["onset_speed_slow", "onset_speed_ongoing", "onset_speed_unknown"],
+    },
+    excludeIf: {
+      any: ["dd_piles_dead_bees_yes", "dd_crawling_cant_fly_yes", "dd_stores_very_light_yes"],
+    },
+    actions: [
+      "A small number of dead bees at the entrance can be normal.",
+      "If numbers rise quickly, re-run this check with updated observations.",
+      ...basicActions.monitor,
+    ],
+  });
+
+  // Dead/dying variants by onset (keep these for coverage)
+  onsets.forEach((o) => {
+    add(`dead_onset_${o}_triage`, {
+      title: `Dead/dying bees with ${labelOnset(o)} onset — prioritise immediate checks`,
+      severity: o === "sudden" ? "warning" : "info",
+      urgency: o === "sudden" ? "urgent" : "watch",
+      confidence: "low",
+      when: { all: ["route_dead_dying", `onset_speed_${o}`] },
+      actions: [
+        "Confirm stores (heft), cold exposure, and Varroa/virus signs.",
+        "If you suspect poisoning, document symptoms and timing promptly.",
+        ...basicActions.monitor,
+      ],
+    });
   });
 
   // -------------------------
@@ -1404,24 +2347,106 @@ function buildOutcomeLibrary() {
     title: "Defensiveness likely due to poor weather",
     severity: "info",
     urgency: "normal",
+    confidence: "strong",
     when: { all: ["tm_weather_windy_yes"] },
-    actions: ["Avoid inspections in poor weather. Re-test temperament on a warm calm day.", ...basicActions.monitor],
+    actions: [
+      "Avoid inspections in poor weather. Re-test temperament on a warm calm day.",
+      "Use more smoke and minimise time with frames exposed.",
+      ...basicActions.monitor,
+    ],
   });
 
   add("temperament_robbery_related", {
     title: "Defensiveness likely linked to robbing pressure",
     severity: "warning",
+    urgency: "urgent",
+    confidence: "strong",
+    when: { any: ["tm_robbery_pressure_yes", "fs_robbery_signs_yes", "ea_fighting_rolling_yes"] },
+    actions: [
+      ...basicActions.robbingNow,
+      "Avoid exposing honey/syrup during inspections.",
+    ],
+    whenToWorry: [
+      "Sustained fighting at entrance.",
+      "Bees pinging/attacking far from the hive (high arousal).",
+    ],
+  });
+
+  add("temperament_recent_disturbance_related", {
+    title: "Temperament change possibly linked to disturbance (harvest/move/treatment)",
+    severity: "info",
     urgency: "watch",
-    when: { any: ["tm_robbery_pressure_yes", "fs_robbery_signs_yes"] },
-    actions: [...basicActions.robbingNow],
+    confidence: "medium",
+    when: {
+      all: ["route_temperament"],
+      any: ["recent_harvest", "recent_move", "recent_treatment"],
+    },
+    excludeIf: { any: ["tm_robbery_pressure_yes", "fs_robbery_signs_yes"] },
+    actions: [
+      "Give the colony time to settle after disturbance (a few days).",
+      "Keep inspections short and avoid repeated disruption.",
+      ...basicActions.monitor,
+    ],
   });
 
   add("temperament_queen_event_related", {
     title: "Temperament change possibly linked to queen event",
     severity: "info",
     urgency: "watch",
+    confidence: "medium",
     when: { all: ["tm_queen_event_yes"] },
-    actions: ["Re-check after queen situation stabilises. Avoid unnecessary disturbance.", ...basicActions.monitor],
+    excludeIf: { any: ["tm_robbery_pressure_yes", "fs_robbery_signs_yes"] },
+    actions: [
+      "Queen events can temporarily disrupt colony behaviour (brood break, re-organisation).",
+      "Re-check once the queen situation stabilises.",
+      ...basicActions.monitor,
+    ],
+  });
+
+  add("temperament_genetics_or_failing_queen_possible", {
+    title: "Possible genetics / failing queen contributing to defensiveness (needs pattern check)",
+    severity: "warning",
+    urgency: "watch",
+    confidence: "low",
+    when: {
+      all: ["route_temperament", "tm_changed_suddenly_no"],
+      not: ["tm_weather_windy_yes", "tm_robbery_pressure_yes", "tm_queen_event_yes"],
+    },
+    actions: [
+      "If defensiveness is persistent across good weather and calm conditions, consider queen quality/genetics.",
+      "Seek local mentor input before requeening — timing/season matters.",
+      "Avoid inspecting without protection; keep sessions short.",
+      ...basicActions.monitor,
+    ],
+    whenToWorry: [
+      "Defensiveness persists over multiple calm, warm inspections.",
+      "Colony becomes unmanageable/safety risk.",
+    ],
+  });
+
+  add("temperament_sudden_change_flag", {
+    title: "Sudden temperament change — prioritise robbing/queen loss/disturbance checks",
+    severity: "warning",
+    urgency: "watch",
+    confidence: "medium",
+    when: { all: ["route_temperament", "tm_changed_suddenly_yes"] },
+    actions: [
+      "Sudden changes are often situational (robbing pressure, queen event, disturbance, weather).",
+      "Check entrance behaviour for fighting and review recent changes (move/harvest/treatment).",
+      ...basicActions.monitor,
+    ],
+  });
+
+  // Temperament variants by season (keep these for coverage)
+  seasons.forEach((s) => {
+    add(`temperament_season_${s}_note`, {
+      title: `Temperament context (${labelSeason(s)}) — forage and disturbance can affect behaviour`,
+      severity: "info",
+      urgency: "normal",
+      confidence: "low",
+      when: { all: ["route_temperament", `season_${s}`] },
+      actions: ["Check robbing/wasp pressure and inspection conditions.", ...basicActions.monitor],
+    });
   });
 
   // -------------------------
