@@ -26,6 +26,7 @@ export default function BeeHealthHelper() {
       onset_speed: "",
       colony_strength: "",
       // multi + tri are added dynamically
+      // guided-only: we store optional multi completion as __done_<questionId>
     }),
     []
   );
@@ -83,7 +84,7 @@ export default function BeeHealthHelper() {
         f[`${k}_${v}`] = true;
       }
 
-      // multi -> true flags
+      // boolean -> multi flags (and also our __done_* markers)
       if (typeof v === "boolean") {
         f[k] = v;
       }
@@ -102,11 +103,7 @@ export default function BeeHealthHelper() {
     f.opened_frames_ok =
       answers.inspection_level === "opened_quick" || answers.inspection_level === "full_inspection";
 
-    // Convenience helpers used in rules
-    f.qb_queen_cells_seen_yes = answers.qb_queen_cells_seen === "yes";
-    f.recent_queen_event_true = !!answers.recent_queen_event;
-
-    // "winter OR early spring" helper
+    // Helper used by normalizeWhen()
     f.season_winter_or_early_spring = ["season_winter", "season_early_spring"].some((k) => f[k] === true);
 
     return f;
@@ -154,20 +151,51 @@ export default function BeeHealthHelper() {
     return m;
   }, [allQuestionsInOrder]);
 
+  // ---------- guided optional multi handling ----------
+  const isMultiDone = (qid) => !!answers[`__done_${qid}`];
+
+  const markMultiDone = (qid) => {
+    setAnswers((p) => ({ ...p, [`__done_${qid}`]: true }));
+  };
+
+  const clearMultiDone = (qid) => {
+    setAnswers((p) => {
+      const next = { ...p };
+      delete next[`__done_${qid}`];
+      return next;
+    });
+  };
+
+  const isMultiEmpty = (q) => {
+    const opts = q?.options || [];
+    if (!opts.length) return true;
+    return opts.every((opt) => !answers[opt.id]);
+  };
+
   // ----- next unanswered -----
+  // Required: select + tri first. Then (guided only) offer multi questions once (optional).
   const computedNextId = useMemo(() => {
+    // 1) required questions
     for (const q of allQuestionsInOrder) {
       if (q.kind === "select") {
         if (!answers[q.id]) return q.id;
       } else if (q.kind === "tri") {
         if (!isTri(answers[q.id])) return q.id;
-      } else if (q.kind === "multi") {
-        // optional
-        continue;
       }
     }
+
+    // 2) optional multi (guided only)
+    if (mode === "guided") {
+      for (const q of allQuestionsInOrder) {
+        if (q.kind !== "multi") continue;
+        if (isMultiDone(q.id)) continue;
+        // show it once even if empty (user can Skip)
+        return q.id;
+      }
+    }
+
     return null;
-  }, [allQuestionsInOrder, answers]);
+  }, [allQuestionsInOrder, answers, mode]);
 
   const allAnswered = !computedNextId;
 
@@ -227,9 +255,22 @@ export default function BeeHealthHelper() {
       return next;
     });
 
-    setCurrentId(last.id);
-    setHighlightId(last.id);
-    pendingScrollRef.current = last.id;
+    // If we go back to a multi question, clear its done marker so it can be shown again properly
+    if (String(last.id || "").startsWith("__done_")) {
+      const qid = String(last.id).replace("__done_", "");
+      clearMultiDone(qid);
+    }
+
+    setCurrentId(
+      String(last.id || "").startsWith("__done_") ? String(last.id).replace("__done_", "") : last.id
+    );
+    setHighlightId(
+      String(last.id || "").startsWith("__done_") ? String(last.id).replace("__done_", "") : last.id
+    );
+    pendingScrollRef.current = String(last.id || "").startsWith("__done_")
+      ? String(last.id).replace("__done_", "")
+      : last.id;
+
     setResults(null);
   }
 
@@ -253,6 +294,21 @@ export default function BeeHealthHelper() {
     setResults(null);
   }
 
+  function toggleMultiInGuided(optId) {
+    const prevValue = answers[optId];
+    pushHistory(optId, prevValue);
+    toggleMulti(optId);
+    setResults(null);
+  }
+
+  function skipMultiInGuided(qid) {
+    const key = `__done_${qid}`;
+    const prevValue = answers[key];
+    pushHistory(key, prevValue);
+    markMultiDone(qid);
+    setResults(null);
+  }
+
   // Auto-advance when answered
   useEffect(() => {
     if (mode !== "guided") return;
@@ -263,7 +319,8 @@ export default function BeeHealthHelper() {
 
     const nowAnswered =
       (q.kind === "select" && !!answers[currentId]) ||
-      (q.kind === "tri" && isTri(answers[currentId]));
+      (q.kind === "tri" && isTri(answers[currentId])) ||
+      (q.kind === "multi" && isMultiDone(q.id)); // multi advances only after Skip
 
     if (nowAnswered) {
       const next = computedNextId;
@@ -311,15 +368,7 @@ export default function BeeHealthHelper() {
 
   // --- confidence helpers ---
   function confidenceLabelFromScore(score, threshold) {
-    // Prefer your BeeHealthRules.js labels if present: strong/medium/low
-    if (confidence?.strong?.label && confidence?.medium?.label && confidence?.low?.label) {
-      const over = score - threshold;
-      if (over >= 3) return confidence.strong.label;
-      if (over >= 1) return confidence.medium.label;
-      return confidence.low.label;
-    }
-
-    // Fallback
+    // Default to BeeHealthRules.js config: veryLikely/likely/possible
     const cfg = confidence || {
       veryLikely: { label: "Very likely", minOver: 3 },
       likely: { label: "Likely", minOver: 1 },
@@ -418,11 +467,7 @@ export default function BeeHealthHelper() {
 
     const sevRank = (s) => (s === "alert" ? 3 : s === "warning" ? 2 : 1);
     const confRank = (c) =>
-      String(c).toLowerCase().includes("very") || String(c).toLowerCase().includes("strong")
-        ? 3
-        : String(c).toLowerCase().includes("likely") || String(c).toLowerCase().includes("moderate")
-        ? 2
-        : 1;
+      String(c).toLowerCase().includes("very") ? 3 : String(c).toLowerCase().includes("likely") ? 2 : 1;
 
     matched.sort((a, b) => {
       const d1 = sevRank(b.severity) - sevRank(a.severity);
@@ -492,9 +537,7 @@ export default function BeeHealthHelper() {
       {/* HOW IT WORKS (public explainer) */}
       <div className="mb-5 rounded border bg-white p-4 text-sm text-gray-800 no-print">
         <details>
-          <summary className="cursor-pointer font-semibold">
-            How this checker works (read first)
-          </summary>
+          <summary className="cursor-pointer font-semibold">How this checker works (read first)</summary>
 
           <div className="mt-3 space-y-3 text-gray-700">
             <p>
@@ -502,14 +545,20 @@ export default function BeeHealthHelper() {
             </p>
 
             <ul className="list-disc pl-5 space-y-1">
-              <li><b>Step 1:</b> Pick what you’re mainly seeing (this chooses the best question path).</li>
-              <li><b>Step 2:</b> Answer what you can. Use <b>Not sure</b> whenever you can’t confirm.</li>
-              <li><b>Step 3:</b> You’ll get <b>most likely</b> outcomes with “What to do now” + “When to worry”.</li>
+              <li>
+                <b>Step 1:</b> Pick what you’re mainly seeing (this chooses the best question path).
+              </li>
+              <li>
+                <b>Step 2:</b> Answer what you can. Use <b>Not sure</b> whenever you can’t confirm.
+              </li>
+              <li>
+                <b>Step 3:</b> You’ll get <b>most likely</b> outcomes with “What to do now” + “When to worry”.
+              </li>
             </ul>
 
             <p>
-              Some signs overlap. That’s why you may see more than one possible outcome.
-              If a <b>notifiable disease/pest</b> is suspected, the checker will tell you to stop and follow official guidance.
+              Some signs overlap. That’s why you may see more than one possible outcome. If a{" "}
+              <b>notifiable disease/pest</b> is suspected, the checker will tell you to stop and follow official guidance.
             </p>
 
             <p className="text-xs text-gray-600">
@@ -523,7 +572,9 @@ export default function BeeHealthHelper() {
         <div className="flex flex-col items-start gap-3 md:flex-row md:items-start md:justify-between md:gap-4">
           <div className="w-full">
             <h1 className="text-3xl font-bold">Colony Health Check</h1>
-            <p className="text-sm text-gray-600 mt-1">One question at a time. Expand all if you prefer.</p>
+            <p className="text-sm text-gray-600 mt-1">
+              One question at a time. Expand all if you prefer.
+            </p>
           </div>
 
           <div className="w-full md:w-auto">
@@ -538,7 +589,16 @@ export default function BeeHealthHelper() {
 
               <button
                 type="button"
-                onClick={() => setMode((m) => (m === "guided" ? "all" : "guided"))}
+                onClick={() => {
+                  setMode((m) => (m === "guided" ? "all" : "guided"));
+                  // If switching to guided and we haven't started, kick off the first question
+                  setResults(null);
+                  if (mode === "all" && !currentId && computedNextId) {
+                    setCurrentId(computedNextId);
+                    setHighlightId(computedNextId);
+                    pendingScrollRef.current = computedNextId;
+                  }
+                }}
                 className="px-3 py-2 rounded border text-sm bg-white hover:bg-gray-50"
               >
                 {mode === "guided" ? "Expand all" : "Guided mode"}
@@ -561,8 +621,8 @@ export default function BeeHealthHelper() {
         <div className="mb-3">
           <div className="text-2xl font-bold">BeezKnees — Colony Health Check</div>
           <div className="text-sm text-gray-700">
-            Printed guidance (triage only — not a diagnosis). If notifiable disease is suspected, do not move bees/equipment
-            and contact official routes.
+            Printed guidance (triage only — not a diagnosis). If notifiable disease is suspected, do not move
+            bees/equipment and contact official routes.
           </div>
         </div>
       </div>
@@ -616,7 +676,11 @@ export default function BeeHealthHelper() {
 
             {!currentQuestion ? (
               <div className="mt-4 text-sm text-gray-600">
-                {allAnswered ? <CompletionBanner hasResults={!!results} onGetResults={runAssessment} /> : "Click “Ask next” to start."}
+                {allAnswered ? (
+                  <CompletionBanner hasResults={!!results} onGetResults={runAssessment} />
+                ) : (
+                  "Click “Ask next” to start."
+                )}
               </div>
             ) : currentQuestion.kind === "select" ? (
               <div className="mt-3">
@@ -648,11 +712,42 @@ export default function BeeHealthHelper() {
                   help={currentQuestion.help}
                   options={currentQuestion.options}
                   answers={answers}
-                  onToggle={(id) => {
-                    toggleMulti(id);
-                    setResults(null);
-                  }}
+                  onToggle={(optId) => toggleMultiInGuided(optId)}
                 />
+
+                {/* Guided-only controls for optional multi */}
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+                  <div className="text-xs text-gray-600">
+                    Optional: tick anything that applies, or skip.
+                  </div>
+
+                  <div className="flex gap-2">
+                    {!isMultiEmpty(currentQuestion) ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          // mark done once user has interacted (ticked something)
+                          if (!isMultiDone(currentQuestion.id)) {
+                            const key = `__done_${currentQuestion.id}`;
+                            pushHistory(key, answers[key]);
+                            markMultiDone(currentQuestion.id);
+                          }
+                        }}
+                        className="px-3 py-1.5 rounded border text-sm bg-white hover:bg-gray-50"
+                      >
+                        Continue →
+                      </button>
+                    ) : null}
+
+                    <button
+                      type="button"
+                      onClick={() => skipMultiInGuided(currentQuestion.id)}
+                      className="px-3 py-1.5 rounded border text-sm bg-white hover:bg-gray-50"
+                    >
+                      Skip →
+                    </button>
+                  </div>
+                </div>
               </div>
             ) : null}
 
@@ -720,8 +815,8 @@ export default function BeeHealthHelper() {
                         help={q.help}
                         options={q.options}
                         answers={answers}
-                        onToggle={(id) => {
-                          toggleMulti(id);
+                        onToggle={(optId) => {
+                          toggleMulti(optId);
                           setResults(null);
                         }}
                       />
@@ -788,10 +883,13 @@ function SelectCard({ id, label, help, value, options, onChange, highlight }) {
   return (
     <div
       id={`q-${id}`}
-      className={`rounded border p-4 ${highlight ? "ring-2 ring-yellow-400 bg-yellow-50" : "bg-white"}`}
+      className={`rounded border p-4 ${
+        highlight ? "ring-2 ring-yellow-400 bg-yellow-50" : "bg-white"
+      }`}
     >
       <div className="font-semibold">{label}</div>
       {help ? <div className="text-xs text-gray-600 mt-1">{help}</div> : null}
+
       <select
         className="mt-3 w-full border rounded px-3 py-2"
         value={value || ""}
@@ -812,7 +910,9 @@ function TriCard({ id, label, help, value, onChange, highlight }) {
   return (
     <div
       id={`q-${id}`}
-      className={`rounded border p-4 ${highlight ? "ring-2 ring-yellow-400 bg-yellow-50" : "bg-white"}`}
+      className={`rounded border p-4 ${
+        highlight ? "ring-2 ring-yellow-400 bg-yellow-50" : "bg-white"
+      }`}
     >
       <div className="font-semibold">{label}</div>
       {help ? <div className="text-xs text-gray-600 mt-1">{help}</div> : null}
@@ -838,7 +938,9 @@ function TriButton({ active, onClick, children }) {
       type="button"
       onClick={onClick}
       className={`px-4 py-2 rounded border text-sm transition ${
-        active ? "bg-yellow-500 border-yellow-500 text-black" : "bg-white hover:bg-gray-50"
+        active
+          ? "bg-yellow-500 border-yellow-500 text-black"
+          : "bg-white hover:bg-gray-50"
       }`}
     >
       {children}
@@ -851,6 +953,7 @@ function MultiCard({ label, help, options, answers, onToggle }) {
     <div className="rounded border p-4 bg-gray-50">
       <div className="font-semibold">{label}</div>
       {help ? <div className="text-xs text-gray-600 mt-1">{help}</div> : null}
+
       <div className="mt-3 grid sm:grid-cols-2 gap-2">
         {options?.map((opt) => (
           <label key={opt.id} className="flex items-start gap-2 text-sm">
@@ -877,10 +980,11 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
       <ul className="list-disc pl-5 text-sm mt-2 space-y-1 text-gray-800">
         <li>This is guidance only — it does not diagnose disease.</li>
         <li>
-          If notifiable disease/pest is suspected: <b>do not move</b> colonies, frames, bees, or equipment off site.
+          If notifiable disease/pest is suspected: <b>do not move</b> colonies,
+          frames, bees, or equipment off site.
         </li>
         <li>Avoid combining colonies or swapping frames until you understand what’s happening.</li>
-        <li>If severe/uncertain, get help from your association/mentor or official routes.</li>
+        <li>If severe or uncertain, get help from your association, mentor, or official routes.</li>
       </ul>
     </div>
   );
@@ -900,16 +1004,14 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
     return (
       <div className="space-y-3">
         <div className="p-5 rounded border border-red-400 bg-red-50 print-card">
-          <h3 className="font-bold text-red-800 text-lg">Important — immediate action required</h3>
+          <h3 className="font-bold text-red-800 text-lg">
+            Important — immediate action required
+          </h3>
           <p className="mt-2 text-sm text-red-900">
-            A red-flag sign was selected. This can be consistent with a <b>notifiable</b> brood disease.
-            <b> Do not move</b> colonies/equipment off site. Seek official advice promptly.
+            A red-flag sign was selected. This can be consistent with a{" "}
+            <b>notifiable</b> brood disease.
+            <b> Do not move</b> colonies or equipment off site.
           </p>
-          <ul className="list-disc pl-5 mt-3 space-y-1 text-sm text-red-900">
-            <li>Do not apply treatments as a substitute for inspection/confirmation</li>
-            <li>Do not share frames/equipment between colonies</li>
-            <li>Minimise disturbance until assessed</li>
-          </ul>
         </div>
 
         <InspectorSafeDisclaimer />
@@ -933,7 +1035,9 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="font-semibold">Results</div>
-            <p className="text-sm text-gray-600 mt-1">These are guidance suggestions based on your answers.</p>
+            <p className="text-sm text-gray-600 mt-1">
+              These are guidance suggestions based on your answers.
+            </p>
           </div>
 
           <button
@@ -948,19 +1052,12 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
 
       <InspectorSafeDisclaimer />
 
-      {results.urgentHit ? (
-        <div className="p-5 rounded border border-red-300 bg-red-50 print-card">
-          <div className="font-bold text-red-800">{results.urgentHit.label}</div>
-          <div className="text-sm mt-1 text-red-900">
-            If you suspect a notifiable pest/disease, avoid moving bees/equipment and follow official guidance.
-          </div>
-        </div>
-      ) : null}
-
       {results.nextChecks?.length ? (
         <div className="p-5 rounded border bg-white print-card no-print">
-          <div className="font-semibold">Recommended next checks (to narrow it down)</div>
-          <div className="text-sm text-gray-600 mt-1">Click one to jump to that question.</div>
+          <div className="font-semibold">Recommended next checks</div>
+          <div className="text-sm text-gray-600 mt-1">
+            Click one to jump to that question.
+          </div>
           <div className="mt-3 flex flex-wrap gap-2">
             {results.nextChecks.map((id) => (
               <button
@@ -968,7 +1065,6 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
                 type="button"
                 onClick={() => onJump?.(id)}
                 className="px-3 py-1.5 rounded border bg-white hover:bg-gray-50 text-sm"
-                title={id}
               >
                 {qLabelById?.get(id) || id}
               </button>
@@ -999,7 +1095,7 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
               {r.why?.length ? (
                 <>
                   <div className="mt-3 font-semibold text-sm">Why</div>
-                  <ul className="list-disc pl-5 text-sm mt-1 space-y-1 text-gray-800">
+                  <ul className="list-disc pl-5 text-sm mt-1 space-y-1">
                     {r.why.map((x, i) => (
                       <li key={i}>{x}</li>
                     ))}
@@ -1010,7 +1106,7 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
               {r.actions?.length ? (
                 <>
                   <div className="mt-3 font-semibold text-sm">What to do now</div>
-                  <ul className="list-disc pl-5 text-sm mt-1 space-y-1 text-gray-800">
+                  <ul className="list-disc pl-5 text-sm mt-1 space-y-1">
                     {r.actions.map((x, i) => (
                       <li key={i}>{x}</li>
                     ))}
@@ -1020,8 +1116,10 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
 
               {r.whenToWorry?.length ? (
                 <>
-                  <div className="mt-3 font-semibold text-sm">When to worry / get help</div>
-                  <ul className="list-disc pl-5 text-sm mt-1 space-y-1 text-gray-800">
+                  <div className="mt-3 font-semibold text-sm">
+                    When to worry / get help
+                  </div>
+                  <ul className="list-disc pl-5 text-sm mt-1 space-y-1">
                     {r.whenToWorry.map((x, i) => (
                       <li key={i}>{x}</li>
                     ))}
@@ -1034,9 +1132,12 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
       ) : (
         <div className="p-5 rounded border bg-green-50 border-green-300 print-card">
           <h3 className="font-semibold">No clear issue identified</h3>
-          <p className="text-sm text-gray-700 mt-1">Try switching your route at the top or adding more observations.</p>
+          <p className="text-sm mt-1">
+            Try switching your route at the top or adding more observations.
+          </p>
         </div>
       )}
     </div>
   );
 }
+

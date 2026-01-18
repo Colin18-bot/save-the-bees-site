@@ -148,7 +148,7 @@ export const BEE_HEALTH_RULES = {
       },
       {
         id: "colony_strength",
-        label: "How strong is the colony right now?",
+        label: "How strong is the colony — or if it has now collapsed, how strong was it recently?",
         kind: "select",
         options: [
           { value: "very_weak", label: "Very weak (tiny cluster / few seams)" },
@@ -327,7 +327,7 @@ export const BEE_HEALTH_RULES = {
     dead_dying: [
       {
         id: "dd_piles_dead_bees",
-        label: "Are there piles of dead bees outside the hive?",
+        label: "Are there piles of dead bees (inside the hive or outside at the entrance)?",
         kind: "tri",
         showIf: { any: ["route_dead_dying", "route_unsure"] },
       },
@@ -341,7 +341,7 @@ export const BEE_HEALTH_RULES = {
         id: "dd_tongues_out",
         label: "Do dead bees have tongues out?",
         kind: "tri",
-        showIf: { any: ["route_dead_dying", "route_unsure", "dd_piles_dead_bees_yes"] },
+        showIf: { all: ["dd_piles_dead_bees_yes"], any: ["route_dead_dying", "route_unsure"] },
       },
       {
         id: "dd_deformed_wings",
@@ -639,40 +639,54 @@ export const BEE_HEALTH_RULES = {
       },
     ],
 
-    // ROUTE: Brood disease
-    brood_disease: [
-      {
-        id: "bd_chalk_mummies",
-        label: "Chalk-like mummies (white/grey/black) in cells or on floor?",
-        kind: "tri",
-        showIf: { any: ["route_brood_disease", "route_unsure"] },
-      },
-      {
-        id: "bd_sacbrood",
-        label: "Fluid-filled larvae / slipper-shaped remains?",
-        kind: "tri",
-        showIf: { any: ["route_brood_disease", "route_unsure"] },
-      },
-      {
-        id: "bd_chilled_pattern",
-        label: "Brood death pattern after cold nights / brood on edges?",
-        kind: "tri",
-        showIf: { any: ["route_brood_disease", "route_unsure"] },
-      },
-      {
-        id: "bd_smell_foul",
-        label: "Unpleasant smell from brood area?",
-        kind: "tri",
-        showIf: { any: ["route_brood_disease", "route_unsure"] },
-      },
-      {
-        id: "bd_ropey_larvae",
-        label: "Brown/ropey larvae (stringy) or sunken/perforated cappings together?",
-        kind: "tri",
-        showIf: { any: ["route_brood_disease", "route_unsure"] },
-      },
-    ],
-
+   // ROUTE: Brood disease (hide if entrance-only)
+brood_disease: [
+  {
+    id: "bd_chalk_mummies",
+    label: "Chalk-like mummies (white/grey/black) in cells or on floor?",
+    kind: "tri",
+    showIf: {
+      any: ["route_brood_disease", "route_unsure"],
+      not: ["inspection_level_entrance_only"],
+    },
+  },
+  {
+    id: "bd_sacbrood",
+    label: "Fluid-filled larvae / slipper-shaped remains?",
+    kind: "tri",
+    showIf: {
+      any: ["route_brood_disease", "route_unsure"],
+      not: ["inspection_level_entrance_only"],
+    },
+  },
+  {
+    id: "bd_chilled_pattern",
+    label: "Brood death pattern after cold nights / brood on edges?",
+    kind: "tri",
+    showIf: {
+      any: ["route_brood_disease", "route_unsure"],
+      not: ["inspection_level_entrance_only"],
+    },
+  },
+  {
+    id: "bd_smell_foul",
+    label: "Unpleasant smell from brood area?",
+    kind: "tri",
+    showIf: {
+      any: ["route_brood_disease", "route_unsure"],
+      not: ["inspection_level_entrance_only"],
+    },
+  },
+  {
+    id: "bd_ropey_larvae",
+    label: "Brown/ropey larvae (stringy) or sunken/perforated cappings together?",
+    kind: "tri",
+    showIf: {
+      any: ["route_brood_disease", "route_unsure"],
+      not: ["inspection_level_entrance_only"],
+    },
+  },
+],
     // ROUTE: Temperament
     temperament: [
       {
@@ -1053,7 +1067,7 @@ add("queen_virgin_mating_window", {
       "qb_eggs_seen_no",
       "qb_sealed_worker_brood_seen_yes",
     ],
-    any: ["qb_queen_cells_opened_yes", "recent_queen_event_true"],
+    any: ["qb_queen_cells_opened_yes", "recent_queen_event"],
   },
   excludeIf: {
     any: [
@@ -1092,7 +1106,7 @@ add("queen_supersedure_underway", {
       "qb_brood_pattern_poor_yes",
       "qb_population_change_about_same",
       "qb_population_change_slightly_down",
-      "recent_queen_event_true",
+      "recent_queen_event",
     ],
   },
   excludeIf: {
@@ -1762,6 +1776,7 @@ add("feeding_weak_colony_processing_limit", {
   ],
   nextChecks: ["fs_too_cold", "fs_feeder_type", "fs_feeder_access", "fs_robbery_signs"],
 });
+
 // -------------------------
 // F) COMB / DRAWING / SPACE (deepened + tightened + aligned to your question IDs)
 // -------------------------
@@ -1833,7 +1848,7 @@ add("comb_temperature_limiting", {
   confidence: "strong",
   when: {
     all: ["route_comb_building"],
-    any: ["cb_temperature_ok_no", "fs_weather_flight_ok_no"],
+    any: ["cb_temperature_ok_no"],
   },
   excludeIf: {
     any: ["season_summer"], // summer can still have cold nights, but this stops it firing too broadly
@@ -2033,16 +2048,15 @@ add("pests_wasps_escalating_to_robbing", {
   urgency: "urgent",
   confidence: "strong",
   when: {
-    any: ["pp_wasps_pressure_yes"],
-    all: ["route_pests_predators"],
-    // if the user is seeing fighting/robbing signs at the same time, treat like robbing management
-    // (we keep it as a pests route-friendly variant)
-  },
-  excludeIf: {
-    not: ["ea_fighting_rolling_yes", "fs_robbery_signs_yes", "ea_bees_shiny_black_thieving_yes"],
+    all: ["route_pests_predators", "pp_wasps_pressure_yes"],
+    any: [
+      "ea_fighting_rolling_yes",
+      "fs_robbery_signs_yes",
+      "ea_bees_shiny_black_thieving_yes",
+    ],
   },
   why: [
-    "When fighting/robbing signs appear, the priority is entrance protection and stopping leaks/spills.",
+    "Wasp pressure combined with fighting or robbing-style behaviour means the situation is escalating.",
   ],
   actions: [
     ...basicActions.robbingNow,
@@ -2187,305 +2201,335 @@ add("pests_shb_suspicion", {
   ],
 });
 
-  // -------------------------
-  // H) DEAD / DYING / POISONING / CHILLING (core)
-  // -------------------------
-  add("dead_poisoning_strong_signal", {
-    title: "Strong signal: possible pesticide poisoning / acute exposure",
-    severity: "warning",
-    urgency: "urgent",
-    confidence: "strong",
-    when: {
-      all: ["dd_piles_dead_bees_yes"],
-      any: ["dd_tongues_out_yes", "onset_speed_sudden"],
-    },
-    excludeIf: {
-      any: ["dd_stores_very_light_yes", "fs_stores_low_yes"], // don’t mislabel starvation as poisoning
-    },
-    actions: [
-      "Reduce disturbance; document timing and symptoms (photos/video).",
-      "If possible, note nearby spraying/weed control timing (same day/previous day).",
-      "Avoid feeding exposed honey back to bees.",
-      "If losses are severe/ongoing, seek local guidance urgently (association/inspector).",
-      ...basicActions.monitor,
-    ],
-    whenToWorry: [
-      "Rapidly increasing piles of dead bees over hours–1 day.",
-      "Multiple colonies affected at the same apiary.",
-      "Continuing losses for more than 24–48 hours.",
-    ],
-  });
+// -------------------------
+// H) DEAD / DYING / POISONING / CHILLING (core)
+// -------------------------
+add("dead_poisoning_strong_signal", {
+  title: "Strong signal: possible pesticide poisoning / acute exposure",
+  severity: "warning",
+  urgency: "urgent",
+  confidence: "strong",
+  when: {
+    all: ["dd_piles_dead_bees_yes"],
+    any: ["dd_tongues_out_yes", "onset_speed_sudden"],
+  },
+  excludeIf: {
+    any: ["dd_stores_very_light_yes", "fs_stores_low_yes"], // don’t mislabel starvation as poisoning
+  },
+  actions: [
+    "Reduce disturbance; document timing and symptoms (photos/video).",
+    "If possible, note nearby spraying/weed control timing (same day/previous day).",
+    "Avoid feeding exposed honey back to bees.",
+    "If losses are severe/ongoing, seek local guidance urgently (association/inspector).",
+    ...basicActions.monitor,
+  ],
+  whenToWorry: [
+    "Rapidly increasing piles of dead bees over hours–1 day.",
+    "Multiple colonies affected at the same apiary.",
+    "Continuing losses for more than 24–48 hours.",
+  ],
+});
 
-  add("dead_poisoning_possible", {
-    title: "Possible pesticide poisoning / exposure (needs checking)",
-    severity: "warning",
-    urgency: "watch",
-    confidence: "medium",
-    when: {
-      all: ["dd_piles_dead_bees_yes"],
-      any: ["onset_speed_fast", "dd_tongues_out_unknown", "dd_tongues_out_yes"],
-    },
-    excludeIf: { any: ["dd_stores_very_light_yes", "fs_stores_low_yes"] },
-    actions: [
-      "Reduce disturbance and keep inspections short.",
-      "Check stores and weather context to rule out starvation/chilling.",
-      "Document symptoms and timeline; seek local help if unsure.",
-      ...basicActions.monitor,
-    ],
-  });
+add("dead_poisoning_possible", {
+  title: "Possible pesticide poisoning / exposure (needs checking)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "medium",
+  when: {
+    all: ["dd_piles_dead_bees_yes"],
+    any: ["onset_speed_fast", "dd_tongues_out_unknown", "dd_tongues_out_yes"],
+  },
+  excludeIf: { any: ["dd_stores_very_light_yes", "fs_stores_low_yes"] },
+  actions: [
+    "Reduce disturbance and keep inspections short.",
+    "Check stores and weather context to rule out starvation/chilling.",
+    "Document symptoms and timeline; seek local help if unsure.",
+    ...basicActions.monitor,
+  ],
+});
 
-  add("dead_starvation_likely", {
-    title: "Starvation likely / stores critically low",
-    severity: "warning",
-    urgency: "urgent",
-    confidence: "strong",
-    when: { any: ["dd_stores_very_light_yes", "fs_stores_low_yes"] },
-    excludeIf: {
-      any: ["ea_fighting_rolling_yes", "fs_robbery_signs_yes"], // if robbing is active, advice differs
-    },
-    actions: [
-      ...basicActions.starvationNow,
-      "Reduce entrance if the colony is weak (to help defence).",
-    ],
-    whenToWorry: [
-      "Crawling bees + very light hive.",
-      "Brood present but very low stores (brood can starve fast).",
-    ],
-  });
+add("dead_starvation_likely", {
+  title: "Starvation likely / stores critically low",
+  severity: "warning",
+  urgency: "urgent",
+  confidence: "strong",
+  when: { any: ["dd_stores_very_light_yes", "fs_stores_low_yes"] },
+  excludeIf: {
+    any: ["ea_fighting_rolling_yes", "fs_robbery_signs_yes"], // if robbing is active, advice differs
+  },
+  actions: [
+    ...basicActions.starvationNow,
+    "Reduce entrance if the colony is weak (to help defence).",
+  ],
+  whenToWorry: [
+    "Crawling bees + very light hive.",
+    "Brood present but very low stores (brood can starve fast).",
+  ],
+});
 
-  add("dead_chilling_stress_likely", {
-    title: "Chilling / cold-stress likely contributing to losses",
-    severity: "info",
-    urgency: "watch",
-    confidence: "strong",
-    when: {
-      all: ["dd_cold_spell_yes"],
-      any: ["season_winter", "season_early_spring"],
-    },
-    excludeIf: { any: ["dd_stores_very_light_yes", "fs_stores_low_yes"] },
-    actions: [
-      "Reduce draughts and excess space; ensure adequate stores.",
-      "Avoid opening the hive unless necessary during cold periods.",
-      "If the colony is weak, keep the cluster compact (don’t over-expand).",
-      ...basicActions.monitor,
-    ],
-  });
+add("dead_chilling_stress_likely", {
+  title: "Chilling / cold-stress likely contributing to losses",
+  severity: "info",
+  urgency: "watch",
+  confidence: "strong",
+  when: {
+    all: ["dd_cold_spell_yes"],
+    any: ["season_winter", "season_early_spring"],
+  },
+  excludeIf: { any: ["dd_stores_very_light_yes", "fs_stores_low_yes"] },
+  actions: [
+    "Reduce draughts and excess space; ensure adequate stores.",
+    "Avoid opening the hive unless necessary during cold periods.",
+    "If the colony is weak, keep the cluster compact (don’t over-expand).",
+    ...basicActions.monitor,
+  ],
+});
 
-  add("dead_varroa_virus_signal_in_dead_route", {
-    title: "Varroa/virus pressure possible (deformed wings / crawling)",
-    severity: "warning",
-    urgency: "watch",
-    confidence: "medium",
-    when: {
-      any: ["dd_deformed_wings_yes", "symptom_deformed_wings_yes", "dd_crawling_cant_fly_yes"],
-    },
-    excludeIf: { any: ["dd_stores_very_light_yes", "fs_stores_low_yes"] },
-    actions: [
-      "Check Varroa levels if you can (monitoring methods).",
-      "Review your seasonal Varroa plan; treat if thresholds indicate.",
-      "Avoid combining colonies until you understand what’s happening.",
-      ...basicActions.monitor,
-    ],
-    whenToWorry: [
-      "Increasing numbers of bees with deformed wings.",
-      "Rapid population drop alongside deformed wings.",
-    ],
-  });
+add("dead_varroa_virus_signal_in_dead_route", {
+  title: "Varroa/virus pressure possible (deformed wings / crawling)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "medium",
+  when: {
+    any: ["dd_deformed_wings_yes", "symptom_deformed_wings_yes", "dd_crawling_cant_fly_yes"],
+  },
+  excludeIf: { any: ["dd_stores_very_light_yes", "fs_stores_low_yes"] },
+  actions: [
+    "Check Varroa levels if you can (monitoring methods).",
+    "Review your seasonal Varroa plan; treat if thresholds indicate.",
+    "Avoid combining colonies until you understand what’s happening.",
+    ...basicActions.monitor,
+  ],
+  whenToWorry: [
+    "Increasing numbers of bees with deformed wings.",
+    "Rapid population drop alongside deformed wings.",
+  ],
+});
 
-  add("dead_crawling_multi_causes", {
-    title: "Crawling / can’t fly — multiple possible causes (stores, cold, varroa/virus, poisoning)",
-    severity: "warning",
-    urgency: "watch",
+add("dead_crawling_multi_causes", {
+  title: "Crawling / can’t fly — multiple possible causes (stores, cold, varroa/virus, poisoning)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "low",
+  when: { all: ["dd_crawling_cant_fly_yes"] },
+  actions: [
+    "Check stores (heft), cold spell history, and Varroa/virus signs.",
+    "If sudden large losses occur, treat as urgent and document thoroughly.",
+    ...basicActions.monitor,
+  ],
+});
+
+add("dead_small_numbers_normal_context", {
+  title: "A few dead bees can be normal housekeeping (context check)",
+  severity: "info",
+  urgency: "normal",
+  confidence: "low",
+  when: {
+    all: ["route_dead_dying"],
+    any: ["onset_speed_slow", "onset_speed_ongoing", "onset_speed_unknown"],
+  },
+  excludeIf: {
+    any: [
+      "dd_piles_dead_bees_yes",
+      "dd_crawling_cant_fly_yes",
+      "dd_stores_very_light_yes",
+      "fs_stores_low_yes",
+    ],
+  },
+  actions: [
+    "A small number of dead bees at the entrance can be normal.",
+    "If numbers rise quickly, re-run this check with updated observations.",
+    ...basicActions.monitor,
+  ],
+});
+
+add("dead_small_numbers_normal_context_unsure", {
+  title: "A few dead bees can be normal housekeeping (context check)",
+  severity: "info",
+  urgency: "normal",
+  confidence: "low",
+  when: {
+    all: ["route_unsure"],
+    any: ["onset_speed_slow", "onset_speed_ongoing", "onset_speed_unknown"],
+  },
+  excludeIf: {
+    any: [
+      "dd_piles_dead_bees_yes",
+      "dd_crawling_cant_fly_yes",
+      "dd_stores_very_light_yes",
+      "fs_stores_low_yes",
+    ],
+  },
+  actions: [
+    "A small number of dead bees at the entrance can be normal.",
+    "If numbers rise quickly, re-run this check with updated observations.",
+    ...basicActions.monitor,
+  ],
+});
+
+// Dead/dying variants by onset (keep these for coverage)
+onsets.forEach((o) => {
+  add(`dead_onset_${o}_triage`, {
+    title: `Dead/dying bees with ${labelOnset(o)} onset — prioritise immediate checks`,
+    severity: o === "sudden" ? "warning" : "info",
+    urgency: o === "sudden" ? "urgent" : "watch",
     confidence: "low",
-    when: { all: ["dd_crawling_cant_fly_yes"] },
+    when: { all: ["route_dead_dying", `onset_speed_${o}`] },
     actions: [
-      "Check stores (heft), cold spell history, and Varroa/virus signs.",
-      "If sudden large losses occur, treat as urgent and document thoroughly.",
+      "Confirm stores (heft), cold exposure, and Varroa/virus signs.",
+      "If you suspect poisoning, document symptoms and timing promptly.",
       ...basicActions.monitor,
     ],
   });
+});
 
-  add("dead_small_numbers_normal_context", {
-    title: "A few dead bees can be normal housekeeping (context check)",
+ // -------------------------
+// I) TEMPERAMENT (core)
+// -------------------------
+add("temperament_weather_defensive", {
+  title: "Defensiveness likely due to poor weather",
+  severity: "info",
+  urgency: "normal",
+  confidence: "strong",
+  when: { all: ["tm_weather_windy_yes"] },
+  actions: [
+    "Avoid inspections in poor weather. Re-test temperament on a warm calm day.",
+    "Use more smoke and minimise time with frames exposed.",
+    ...basicActions.monitor,
+  ],
+});
+
+add("temperament_robbery_related", {
+  title: "Defensiveness likely linked to robbing pressure",
+  severity: "warning",
+  urgency: "urgent",
+  confidence: "strong",
+  when: { any: ["tm_robbery_pressure_yes", "fs_robbery_signs_yes", "ea_fighting_rolling_yes"] },
+  actions: [
+    ...basicActions.robbingNow,
+    "Avoid exposing honey/syrup during inspections.",
+  ],
+  whenToWorry: [
+    "Sustained fighting at entrance.",
+    "Bees pinging/attacking far from the hive (high arousal).",
+  ],
+});
+
+add("temperament_recent_disturbance_related", {
+  title: "Temperament change possibly linked to disturbance (harvest/move/treatment)",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: {
+    all: ["route_temperament"],
+    any: ["recent_harvest", "recent_move", "recent_treatment"],
+  },
+  excludeIf: { any: ["tm_robbery_pressure_yes", "fs_robbery_signs_yes"] },
+  actions: [
+    "Give the colony time to settle after disturbance (a few days).",
+    "Keep inspections short and avoid repeated disruption.",
+    ...basicActions.monitor,
+  ],
+});
+
+add("temperament_queen_event_related", {
+  title: "Temperament change possibly linked to queen event",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: { all: ["tm_queen_event_yes"] },
+  excludeIf: { any: ["tm_robbery_pressure_yes", "fs_robbery_signs_yes"] },
+  actions: [
+    "Queen events can temporarily disrupt colony behaviour (brood break, re-organisation).",
+    "Re-check once the queen situation stabilises.",
+    ...basicActions.monitor,
+  ],
+});
+
+add("temperament_genetics_or_failing_queen_possible", {
+  title: "Possible genetics / failing queen contributing to defensiveness (needs pattern check)",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "low",
+  when: {
+    all: ["route_temperament", "tm_changed_suddenly_no"],
+    not: ["tm_weather_windy_yes", "tm_robbery_pressure_yes", "tm_queen_event_yes"],
+  },
+  actions: [
+    "If defensiveness is persistent across good weather and calm conditions, consider queen quality/genetics.",
+    "Seek local mentor input before requeening — timing/season matters.",
+    "Avoid inspecting without protection; keep sessions short.",
+    ...basicActions.monitor,
+  ],
+  whenToWorry: [
+    "Defensiveness persists over multiple calm, warm inspections.",
+    "Colony becomes unmanageable/safety risk.",
+  ],
+});
+
+add("temperament_sudden_change_flag", {
+  title: "Sudden temperament change — prioritise robbing/queen loss/disturbance checks",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "medium",
+  when: { all: ["route_temperament", "tm_changed_suddenly_yes"] },
+  actions: [
+    "Sudden changes are often situational (robbing pressure, queen event, disturbance, weather).",
+    "Check entrance behaviour for fighting and review recent changes (move/harvest/treatment).",
+    ...basicActions.monitor,
+  ],
+});
+
+// Temperament variants by season (keep these for coverage)
+seasons.forEach((s) => {
+  add(`temperament_season_${s}_note`, {
+    title: `Temperament context (${labelSeason(s)}) — forage and disturbance can affect behaviour`,
     severity: "info",
     urgency: "normal",
     confidence: "low",
-    when: {
-      all: ["route_dead_dying"],
-      any: ["onset_speed_slow", "onset_speed_ongoing", "onset_speed_unknown"],
-    },
-    excludeIf: {
-      any: ["dd_piles_dead_bees_yes", "dd_crawling_cant_fly_yes", "dd_stores_very_light_yes"],
-    },
-    actions: [
-      "A small number of dead bees at the entrance can be normal.",
-      "If numbers rise quickly, re-run this check with updated observations.",
-      ...basicActions.monitor,
-    ],
+    when: { all: ["route_temperament", `season_${s}`] },
+    actions: ["Check robbing/wasp pressure and inspection conditions.", ...basicActions.monitor],
   });
+});
 
-  // Dead/dying variants by onset (keep these for coverage)
-  onsets.forEach((o) => {
-    add(`dead_onset_${o}_triage`, {
-      title: `Dead/dying bees with ${labelOnset(o)} onset — prioritise immediate checks`,
-      severity: o === "sudden" ? "warning" : "info",
-      urgency: o === "sudden" ? "urgent" : "watch",
-      confidence: "low",
-      when: { all: ["route_dead_dying", `onset_speed_${o}`] },
-      actions: [
-        "Confirm stores (heft), cold exposure, and Varroa/virus signs.",
-        "If you suspect poisoning, document symptoms and timing promptly.",
-        ...basicActions.monitor,
-      ],
-    });
-  });
+// -------------------------
+// J) CONTEXT FILLERS (still 120+, but no longer drown real outcomes)
+// -------------------------
+const routes = [
+  "route_entrance_activity",
+  "route_queen_brood",
+  "route_dead_dying",
+  "route_feeding_stores",
+  "route_comb_building",
+  "route_pests_predators",
+  "route_brood_disease",
+  "route_temperament",
+  "route_unsure",
+];
 
-  // -------------------------
-  // I) TEMPERAMENT (core)
-  // -------------------------
-  add("temperament_weather_defensive", {
-    title: "Defensiveness likely due to poor weather",
-    severity: "info",
-    urgency: "normal",
-    confidence: "strong",
-    when: { all: ["tm_weather_windy_yes"] },
-    actions: [
-      "Avoid inspections in poor weather. Re-test temperament on a warm calm day.",
-      "Use more smoke and minimise time with frames exposed.",
-      ...basicActions.monitor,
-    ],
-  });
-
-  add("temperament_robbery_related", {
-    title: "Defensiveness likely linked to robbing pressure",
-    severity: "warning",
-    urgency: "urgent",
-    confidence: "strong",
-    when: { any: ["tm_robbery_pressure_yes", "fs_robbery_signs_yes", "ea_fighting_rolling_yes"] },
-    actions: [
-      ...basicActions.robbingNow,
-      "Avoid exposing honey/syrup during inspections.",
-    ],
-    whenToWorry: [
-      "Sustained fighting at entrance.",
-      "Bees pinging/attacking far from the hive (high arousal).",
-    ],
-  });
-
-  add("temperament_recent_disturbance_related", {
-    title: "Temperament change possibly linked to disturbance (harvest/move/treatment)",
-    severity: "info",
-    urgency: "watch",
-    confidence: "medium",
-    when: {
-      all: ["route_temperament"],
-      any: ["recent_harvest", "recent_move", "recent_treatment"],
-    },
-    excludeIf: { any: ["tm_robbery_pressure_yes", "fs_robbery_signs_yes"] },
-    actions: [
-      "Give the colony time to settle after disturbance (a few days).",
-      "Keep inspections short and avoid repeated disruption.",
-      ...basicActions.monitor,
-    ],
-  });
-
-  add("temperament_queen_event_related", {
-    title: "Temperament change possibly linked to queen event",
-    severity: "info",
-    urgency: "watch",
-    confidence: "medium",
-    when: { all: ["tm_queen_event_yes"] },
-    excludeIf: { any: ["tm_robbery_pressure_yes", "fs_robbery_signs_yes"] },
-    actions: [
-      "Queen events can temporarily disrupt colony behaviour (brood break, re-organisation).",
-      "Re-check once the queen situation stabilises.",
-      ...basicActions.monitor,
-    ],
-  });
-
-  add("temperament_genetics_or_failing_queen_possible", {
-    title: "Possible genetics / failing queen contributing to defensiveness (needs pattern check)",
-    severity: "warning",
-    urgency: "watch",
-    confidence: "low",
-    when: {
-      all: ["route_temperament", "tm_changed_suddenly_no"],
-      not: ["tm_weather_windy_yes", "tm_robbery_pressure_yes", "tm_queen_event_yes"],
-    },
-    actions: [
-      "If defensiveness is persistent across good weather and calm conditions, consider queen quality/genetics.",
-      "Seek local mentor input before requeening — timing/season matters.",
-      "Avoid inspecting without protection; keep sessions short.",
-      ...basicActions.monitor,
-    ],
-    whenToWorry: [
-      "Defensiveness persists over multiple calm, warm inspections.",
-      "Colony becomes unmanageable/safety risk.",
-    ],
-  });
-
-  add("temperament_sudden_change_flag", {
-    title: "Sudden temperament change — prioritise robbing/queen loss/disturbance checks",
-    severity: "warning",
-    urgency: "watch",
-    confidence: "medium",
-    when: { all: ["route_temperament", "tm_changed_suddenly_yes"] },
-    actions: [
-      "Sudden changes are often situational (robbing pressure, queen event, disturbance, weather).",
-      "Check entrance behaviour for fighting and review recent changes (move/harvest/treatment).",
-      ...basicActions.monitor,
-    ],
-  });
-
-  // Temperament variants by season (keep these for coverage)
+let idx = 0;
+routes.forEach((r) => {
   seasons.forEach((s) => {
-    add(`temperament_season_${s}_note`, {
-      title: `Temperament context (${labelSeason(s)}) — forage and disturbance can affect behaviour`,
-      severity: "info",
-      urgency: "normal",
-      confidence: "low",
-      when: { all: ["route_temperament", `season_${s}`] },
-      actions: ["Check robbing/wasp pressure and inspection conditions.", ...basicActions.monitor],
-    });
-  });
-
-  // -------------------------
-  // J) CONTEXT FILLERS (still 120+, but no longer drown real outcomes)
-  // -------------------------
-  const routes = [
-    "route_entrance_activity",
-    "route_queen_brood",
-    "route_dead_dying",
-    "route_feeding_stores",
-    "route_comb_building",
-    "route_pests_predators",
-    "route_brood_disease",
-    "route_temperament",
-  ];
-
-  let idx = 0;
-  routes.forEach((r) => {
-    seasons.forEach((s) => {
-      onsets.forEach((o) => {
-        const key = `context_${r}_${s}_${o}_${idx++}`;
-        add(key, {
-          title: `${prettyRoute(r)} — context guidance (${labelSeason(s)}, ${labelOnset(o)})`,
-          severity: "info",
-          urgency: o === "sudden" ? "watch" : "normal",
-          when: { all: [r, `season_${s}`, `onset_speed_${o}`] },
-          // crucial: if ANY meaningful signal exists, skip the generic fillers
-          excludeIf: { any: meaningfulSignals },
-          actions: [
-            "Use the suggested route questions to narrow the cause.",
-            "If anything is rapidly worsening, treat as urgent and seek local support.",
-            ...basicActions.monitor,
-          ],
-        });
+    onsets.forEach((o) => {
+      const key = `context_${r}_${s}_${o}_${idx++}`;
+      add(key, {
+        title: `${prettyRoute(r)} — context guidance (${labelSeason(s)}, ${labelOnset(o)})`,
+        severity: "info",
+        urgency: o === "sudden" ? "watch" : "normal",
+        when: { all: [r, `season_${s}`, `onset_speed_${o}`] },
+        // crucial: if ANY meaningful signal exists, skip the generic fillers
+        excludeIf: { any: meaningfulSignals },
+        actions: [
+          "Use the suggested route questions to narrow the cause.",
+          "If anything is rapidly worsening, treat as urgent and seek local support.",
+          ...basicActions.monitor,
+        ],
       });
     });
   });
+});
 
-  return O;
+return O;
 }
 
 // -------------------------
