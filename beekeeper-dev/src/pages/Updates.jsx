@@ -15,7 +15,7 @@ const NOTES = [
     "Bee Health Helper: added UK urgent-reporting alerts (shown even when not in top results), and improved results safety messaging for high-significance pests/diseases.",
 
   added: [
-    "New **Bee Health Helper** foundations for Ada-style triage (one question at a time) with **Yes / No / Not sure** answers and an **Expand all** option.",
+    "New **Bee Health Helper** foundations for triage (one question at a time) with **Yes / No / Not sure** answers and an **Expand all** option.",
     "Added **Reset all** and a persistent **disclaimer** block at the top of the Bee Health Helper page.",
     "Added an **urgent reporting trigger system** (`urgentReporting`) so the UI can surface **UK reporting guidance** even if a notifiable pest/disease does not appear in the top results."
   ],
