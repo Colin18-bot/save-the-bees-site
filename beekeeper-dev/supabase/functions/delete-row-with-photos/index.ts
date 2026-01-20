@@ -1,25 +1,47 @@
-// supabase/functions/delete-row-with-photos/index.ts
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 
-function asStringArray(v: unknown): string[] {
-  return Array.isArray(v) ? v.filter((x) => typeof x === "string") : [];
-}
-
 type TableName = "apiaries" | "hives" | "logbook" | "inspections";
 type Mode = "clear_photo" | "delete_row";
 
-const SUPABASE_URL = (Deno.env.get("SUPABASE_URL") || "").trim();
-const SERVICE_ROLE = (Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "").trim();
+type RemoveOne = { path?: string; url?: string };
 
-const TABLES: Record<TableName, Record<string, string>> = {
+type DeleteBody = {
+  table: TableName;
+  id: string;
+  mode: Mode;
+  removeOne?: RemoveOne;
+};
 
+type CfgSingle = { userCol: "user_id"; urlCol: "photo_url"; pathCol: "photo_path" };
+type CfgMulti = { userCol: "user_id"; urlsCol: "photos"; pathsCol: "photo_paths" };
+type TableCfg = CfgSingle | CfgMulti;
+
+const TABLES: Record<TableName, TableCfg> = {
   apiaries: { userCol: "user_id", urlCol: "photo_url", pathCol: "photo_path" },
   hives: { userCol: "user_id", urlCol: "photo_url", pathCol: "photo_path" },
   logbook: { userCol: "user_id", urlCol: "photo_url", pathCol: "photo_path" },
   inspections: { userCol: "user_id", urlsCol: "photos", pathsCol: "photo_paths" },
 };
+
+const SUPABASE_URL = (Deno.env.get("SUPABASE_URL") || "").trim();
+const SERVICE_ROLE = (Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "").trim();
+
+function json(status: number, body: unknown) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json", ...corsHeaders },
+  });
+}
+
+function asStringArray(v: unknown): string[] {
+  return Array.isArray(v) ? v.filter((x) => typeof x === "string") : [];
+}
+
+function uniq(arr: string[]) {
+  return Array.from(new Set(arr.filter(Boolean)));
+}
 
 function parsePublicUrl(url: string | null | undefined) {
   if (!url) return null;
@@ -29,64 +51,62 @@ function parsePublicUrl(url: string | null | undefined) {
   return { bucket: m[1], path: decodeURIComponent(m[2]) };
 }
 
-function uniq(arr: string[]) {
-  return Array.from(new Set(arr.filter(Boolean)));
+// THIS avoids the red 7015 errors: always index a dictionary type
+function get(rec: Record<string, unknown>, key: string): unknown {
+  return rec[key];
+}
+
+function isTableName(v: unknown): v is TableName {
+  return v === "apiaries" || v === "hives" || v === "logbook" || v === "inspections";
+}
+
+function isMode(v: unknown): v is Mode {
+  return v === "clear_photo" || v === "delete_row";
+}
+
+function isDeleteBody(v: unknown): v is DeleteBody {
+  if (!v || typeof v !== "object") return false;
+  const o = v as Record<string, unknown>;
+  if (!isTableName(o.table)) return false;
+  if (typeof o.id !== "string" || !o.id) return false;
+  if (!isMode(o.mode)) return false;
+
+  if (o.removeOne === undefined) return true;
+  if (!o.removeOne || typeof o.removeOne !== "object") return false;
+
+  const r = o.removeOne as Record<string, unknown>;
+  const pathOk = r.path === undefined || typeof r.path === "string";
+  const urlOk = r.url === undefined || typeof r.url === "string";
+  return pathOk && urlOk;
 }
 
 serve(async (req: Request) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders });
-  }
+  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
 
   try {
-    if (!SUPABASE_URL || !SERVICE_ROLE) {
-      return new Response(JSON.stringify({ error: "Missing SUPABASE envs" }), {
-        status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      });
-    }
+    if (!SUPABASE_URL || !SERVICE_ROLE) return json(500, { error: "Missing SUPABASE envs" });
 
     const authHeader = req.headers.get("Authorization") || "";
     const jwt = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
-    if (!jwt) {
-      return new Response(JSON.stringify({ error: "Missing Authorization bearer token" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      });
-    }
+    if (!jwt) return json(401, { error: "Missing Authorization bearer token" });
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
 
     const { data: userRes, error: userErr } = await admin.auth.getUser(jwt);
-    if (userErr || !userRes?.user) {
-      return new Response(JSON.stringify({ error: "Invalid user session" }), {
-        status: 401,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      });
-    }
+    if (userErr || !userRes?.user) return json(401, { error: "Invalid user session" });
     const uid = userRes.user.id;
 
-    const body = (await req.json().catch(() => null)) as Record<string, unknown> | null;
+    const raw = (await req.json().catch(() => null)) as unknown;
+    if (!isDeleteBody(raw)) return json(400, { error: "Missing/invalid {table,id,mode}" });
 
-    
-    const table = body?.table as TableName;
-    const id = body?.id as string;
-    const mode = body?.mode as Mode;
-    const removeOne = body?.removeOne as { path?: string; url?: string } | undefined;
-
-    if (!table || !TABLES[table] || !id || !mode) {
-      return new Response(JSON.stringify({ error: "Missing/invalid {table,id,mode}" }), {
-        status: 400,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      });
-    }
-
-    // 1) Read row and verify ownership
+    const { table, id, mode, removeOne } = raw;
     const cfg = TABLES[table];
+
+    // 1) Fetch row (and verify ownership)
     const selectCols =
       table === "inspections"
-        ? `${cfg.userCol}, ${cfg.urlsCol}, ${cfg.pathsCol}`
-        : `${cfg.userCol}, ${cfg.urlCol}, ${cfg.pathCol}`;
+        ? `${cfg.userCol}, ${(cfg as CfgMulti).urlsCol}, ${(cfg as CfgMulti).pathsCol}`
+        : `${cfg.userCol}, ${(cfg as CfgSingle).urlCol}, ${(cfg as CfgSingle).pathCol}`;
 
     const { data: row, error: rowErr } = await admin
       .from(table)
@@ -94,44 +114,39 @@ serve(async (req: Request) => {
       .eq("id", id)
       .maybeSingle();
 
-    if (rowErr) {
-      return new Response(JSON.stringify({ error: rowErr.message }), {
-        status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      });
-    }
-    if (!row) {
-      return new Response(JSON.stringify({ error: "Row not found" }), {
-        status: 404,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      });
-    }
-    if (row[cfg.userCol] !== uid) {
-      return new Response(JSON.stringify({ error: "Forbidden" }), {
-        status: 403,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      });
-    }
+    if (rowErr) return json(500, { error: rowErr.message });
+    if (!row) return json(404, { error: "Row not found" });
 
-    // 2) Build list of storage paths to delete (prefer *_path fields)
+    const rec = row as unknown as Record<string, unknown>;
+
+
+    // Ownership check (always user_id)
+    if (String(get(rec, "user_id") ?? "") !== uid) return json(403, { error: "Forbidden" });
+
     const bucket = "photos";
-    let paths: string[] = [];
+
+    // 2) Determine paths to delete
+    let pathsToDelete: string[] = [];
 
     if (table === "inspections") {
-      const storedPaths = asStringArray(row[cfg.pathsCol]);
-      const storedUrls = asStringArray(row[cfg.urlsCol]);
+      const urlsKey = (cfg as CfgMulti).urlsCol;   // "photos"
+      const pathsKey = (cfg as CfgMulti).pathsCol; // "photo_paths"
 
-      paths = storedPaths.slice();
+      const storedPaths = asStringArray(get(rec, pathsKey));
+      const storedUrls = asStringArray(get(rec, urlsKey));
 
-      // fallback for legacy rows with only URLs:
-      if (!paths.length && storedUrls.length) {
+      // Prefer stored paths
+      pathsToDelete = storedPaths.slice();
+
+      // Fallback: derive paths from URLs (legacy)
+      if (!pathsToDelete.length && storedUrls.length) {
         for (const u of storedUrls) {
           const p = parsePublicUrl(u);
-          if (p?.bucket === bucket) paths.push(p.path);
+          if (p?.bucket === bucket) pathsToDelete.push(p.path);
         }
       }
 
-      // optional: remove one photo only
+      // Optional: remove a single photo
       if (removeOne?.path || removeOne?.url) {
         const onePath =
           removeOne.path ||
@@ -140,102 +155,83 @@ serve(async (req: Request) => {
             : null);
 
         if (onePath) {
-          // delete JUST this one path first
+          // Delete just this one file FIRST
           const { error: delErr } = await admin.storage.from(bucket).remove([onePath]);
-          if (delErr) {
-            return new Response(JSON.stringify({ error: `Storage delete failed: ${delErr.message}` }), {
-              status: 500,
-              headers: { "Content-Type": "application/json", ...corsHeaders },
-            });
-          }
+          if (delErr) return json(500, { error: `Storage delete failed: ${delErr.message}` });
 
-          // update arrays after deletion
+          // Remove from arrays AFTER deletion
           const newPaths = storedPaths.filter((p) => p !== onePath);
           const newUrls = storedUrls.filter((u) => {
             const p = parsePublicUrl(u);
             return !(p?.bucket === bucket && p.path === onePath);
           });
 
-          const { error: updErr } = await admin
-            .from(table)
-            .update({ [cfg.pathsCol]: newPaths, [cfg.urlsCol]: newUrls })
-            .eq("id", id);
+          const patch: Record<string, unknown> = {};
+          patch[pathsKey] = newPaths;
+          patch[urlsKey] = newUrls;
 
-          if (updErr) {
-            return new Response(JSON.stringify({ error: `DB update failed: ${updErr.message}` }), {
-              status: 500,
-              headers: { "Content-Type": "application/json", ...corsHeaders },
-            });
-          }
+          const { error: updErr } = await admin.from(table).update(patch).eq("id", id);
+          if (updErr) return json(500, { error: `DB update failed: ${updErr.message}` });
 
-          return new Response(JSON.stringify({ ok: true, mode: "remove_one", deleted: [onePath] }), {
-            headers: { "Content-Type": "application/json", ...corsHeaders },
-          });
+          return json(200, { ok: true, mode: "remove_one", deleted: [onePath] });
         }
       }
     } else {
-      const storedPath = (row[cfg.pathCol] as string | null) || null;
-      const storedUrl = (row[cfg.urlCol] as string | null) || null;
+      const urlKey = (cfg as CfgSingle).urlCol;
+      const pathKey = (cfg as CfgSingle).pathCol;
 
-      if (storedPath) paths.push(storedPath);
+      const storedPath = get(rec, pathKey);
+      const storedUrl = get(rec, urlKey);
 
-      // fallback for legacy rows with only URL:
-      if (!paths.length && storedUrl) {
+      if (typeof storedPath === "string" && storedPath) {
+        pathsToDelete.push(storedPath);
+      } else if (typeof storedUrl === "string" && storedUrl) {
         const p = parsePublicUrl(storedUrl);
-        if (p?.bucket === bucket) paths.push(p.path);
+        if (p?.bucket === bucket) pathsToDelete.push(p.path);
       }
     }
 
-    paths = uniq(paths);
+    pathsToDelete = uniq(pathsToDelete);
 
     // 3) Delete storage FIRST
-    if (paths.length) {
-      const { error: delErr } = await admin.storage.from(bucket).remove(paths);
-      if (delErr) {
-        return new Response(JSON.stringify({ error: `Storage delete failed: ${delErr.message}`, paths }), {
-          status: 500,
-          headers: { "Content-Type": "application/json", ...corsHeaders },
-        });
-      }
+    if (pathsToDelete.length) {
+      const { error: delErr } = await admin.storage.from(bucket).remove(pathsToDelete);
+      if (delErr) return json(500, { error: `Storage delete failed: ${delErr.message}`, paths: pathsToDelete });
     }
 
     // 4) Then clear refs or delete row
     if (mode === "clear_photo") {
       if (table === "inspections") {
-        const { error: updErr } = await admin
-          .from(table)
-          .update({ [cfg.urlsCol]: [], [cfg.pathsCol]: [] })
-          .eq("id", id);
-        if (updErr) throw updErr;
+        const urlsKey = (cfg as CfgMulti).urlsCol;
+        const pathsKey = (cfg as CfgMulti).pathsCol;
+
+        const patch: Record<string, unknown> = {};
+        patch[urlsKey] = [];
+        patch[pathsKey] = [];
+
+        const { error: updErr } = await admin.from(table).update(patch).eq("id", id);
+        if (updErr) return json(500, { error: `DB update failed: ${updErr.message}` });
       } else {
-        const { error: updErr } = await admin
-          .from(table)
-          .update({ [cfg.urlCol]: null, [cfg.pathCol]: null })
-          .eq("id", id);
-        if (updErr) throw updErr;
+        const urlKey = (cfg as CfgSingle).urlCol;
+        const pathKey = (cfg as CfgSingle).pathCol;
+
+        const patch: Record<string, unknown> = {};
+        patch[urlKey] = null;
+        patch[pathKey] = null;
+
+        const { error: updErr } = await admin.from(table).update(patch).eq("id", id);
+        if (updErr) return json(500, { error: `DB update failed: ${updErr.message}` });
       }
 
-      return new Response(JSON.stringify({ ok: true, mode, deleted: paths }), {
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      });
+      return json(200, { ok: true, mode, deleted: pathsToDelete });
     }
 
     // delete_row
     const { error: delRowErr } = await admin.from(table).delete().eq("id", id);
-    if (delRowErr) {
-      return new Response(JSON.stringify({ error: `Row delete failed: ${delRowErr.message}` }), {
-        status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
-      });
-    }
+    if (delRowErr) return json(500, { error: `Row delete failed: ${delRowErr.message}` });
 
-    return new Response(JSON.stringify({ ok: true, mode, deleted: paths }), {
-      headers: { "Content-Type": "application/json", ...corsHeaders },
-    });
+    return json(200, { ok: true, mode, deleted: pathsToDelete });
   } catch (e) {
-    return new Response(JSON.stringify({ error: String(e) }), {
-      status: 500,
-      headers: { "Content-Type": "application/json", ...corsHeaders },
-    });
+    return json(500, { error: String(e) });
   }
 });
