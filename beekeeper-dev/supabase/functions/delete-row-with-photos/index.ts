@@ -1,8 +1,8 @@
 // @ts-nocheck
 // deno-lint-ignore-file
 
-import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { serve } from "std/http/server.ts";
+import { createClient } from "@supabase/supabase-js";
 import { corsHeaders } from "../_shared/cors.ts";
 
 type TableName = "apiaries" | "hives" | "logbook" | "inspections";
