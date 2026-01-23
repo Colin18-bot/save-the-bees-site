@@ -1,5 +1,5 @@
 // src/services/actions.js
-import { supabase } from "./supabase.js"; // ← add .js for Deno
+import { supabase } from "./supabase.js"; // keep .js for Deno compatibility
 
 /** Nicely format Supabase errors for toasts/alerts */
 export function humaniseSupabaseError(err, context = {}) {
@@ -14,7 +14,6 @@ function fkFriendlyMessage(err, context = {}) {
   const message = String(err.message || "");
   const details = String(err.details || "");
 
-  // Postgres FK violation (23503) often surfaces as: violates foreign key constraint "xyz"
   if (String(code) !== "23503" && !/foreign key constraint/i.test(message)) return "";
 
   const constraint =
@@ -45,14 +44,13 @@ function fkFriendlyMessage(err, context = {}) {
     logbook_inspection_id_fkey:
       "You can’t delete this inspection because it still has logbook entries linked to it (including any in the archive). Delete those logbook entries first, or archive the inspection instead.",
 
-    // Todo children (if you ever FK logbook to todos etc.)
+    // Todo children
     logbook_todo_id_fkey:
       "You can’t delete this to-do because it still has logbook entries linked to it (including any in the archive). Delete those logbook entries first, or archive the to-do instead.",
   };
 
   if (constraint && MAP[constraint]) return MAP[constraint];
 
-  // Generic fallback based on the table being deleted (if provided)
   const table = context.table || "";
   if (table === "apiaries")
     return "You can’t delete this apiary because other records still reference it (including archived records). Delete those linked items first, or archive the apiary instead.";
@@ -66,10 +64,11 @@ function fkFriendlyMessage(err, context = {}) {
   return "You can’t delete this item because other records still reference it (including archived records). Delete the linked items first, or archive it instead.";
 }
 
-/** Extract { bucket, path } from a Supabase public URL (useful for migration/legacy only) */
+/** Extract { bucket, path } from a Supabase public URL */
 export function parseStoragePublicUrl(url) {
   if (!url) return null;
-  const m = url.match(/\/object\/public\/([^/]+)\/(.+)$/);
+  const noQuery = String(url).split("?")[0];
+  const m = noQuery.match(/\/object\/public\/([^/]+)\/(.+)$/);
   if (!m) return null;
   return { bucket: m[1], path: decodeURIComponent(m[2]) };
 }
@@ -83,16 +82,14 @@ export async function archiveItem(table, id) {
 }
 
 /**
- * Call the solid server-side delete pipeline (Edge Function).
- * This prevents orphaned storage files by:
- *  - deleting Storage first (service role)
- *  - only then clearing/deleting the DB row
- *
- * Function name must match what you deploy.
+ * Edge Function name (must match deployed folder name)
+ * supabase/functions/delete-row-with-photos
  */
 const DELETE_FN = "delete-row-with-photos";
 
 /**
+ * Solid server-side delete pipeline (Storage first, then DB).
+ *
  * mode:
  *  - "clear_photo": delete storage objects and clear photo fields
  *  - "delete_row": delete storage objects then delete the row
@@ -100,21 +97,14 @@ const DELETE_FN = "delete-row-with-photos";
  * removeOne:
  *  - for inspections (photos array), remove a single photo by {path} or {url}
  */
-export async function serverDeleteRowWithPhotos({
-  table,
-  id,
-  mode = "delete_row",
-  removeOne,
-}) {
+export async function serverDeleteRowWithPhotos({ table, id, mode = "delete_row", removeOne }) {
   const { data, error } = await supabase.functions.invoke(DELETE_FN, {
     body: { table, id, mode, ...(removeOne ? { removeOne } : {}) },
   });
 
-  // IMPORTANT: do not continue on error (this is what stops orphans)
   if (error) return { data: null, error };
 
-  // Some edge functions return { error: "..." } in JSON body with 200.
-  // Treat that as an error too.
+  // Some functions return { error: "..." } in JSON body with 200
   if (data && typeof data === "object" && data.error) {
     return { data: null, error: { message: data.error } };
   }
@@ -122,24 +112,51 @@ export async function serverDeleteRowWithPhotos({
   return { data, error: null };
 }
 
+/* ------------------------------------------------------------------ */
+/* ✅ Backwards-compatible helpers expected by your React pages        */
+/* ------------------------------------------------------------------ */
+
 /**
- * smartDeleteApiary(id)
- * - If linked children exist (via optional RPC check_apiary_children), archive it.
- * - Otherwise, hard-delete via server pipeline (storage first, then row)
+ * deleteRowWithPhoto(table, id, urlCol?)
+ * - Fixes: "does not provide an export named deleteRowWithPhoto"
+ * - Uses edge function to delete storage (via photo_path or photo_url) then delete row.
+ *
+ * urlCol is ignored by the server pipeline, but we accept it for compatibility.
  */
+export async function deleteRowWithPhoto(table, id, urlCol = "photo_url") {
+  void urlCol; // kept for compatibility
+  return await serverDeleteRowWithPhotos({ table, id, mode: "delete_row" });
+}
+
+/**
+ * deleteRowAndRemoveUrls(table, id, urlsCol?)
+ * - For inspections: photos is an array (urlsCol="photos")
+ * - Server function handles:
+ *    - photo_paths[] (preferred) OR
+ *    - photos[] URLs (legacy fallback)
+ *
+ * urlsCol is ignored by the server pipeline, but we accept it for compatibility.
+ */
+export async function deleteRowAndRemoveUrls(table, id, urlsCol = "photos") {
+  void urlsCol; // kept for compatibility
+  return await serverDeleteRowWithPhotos({ table, id, mode: "delete_row" });
+}
+
+/* ------------------------------------------------------------------ */
+/* Optional “smart delete” helpers you already had                     */
+/* ------------------------------------------------------------------ */
+
 export async function smartDeleteApiary(id) {
   let hasChildren = false;
   try {
-    const { data, error } = await supabase.rpc("check_apiary_children", {
-      apiary_id: id,
-    });
+    const { data, error } = await supabase.rpc("check_apiary_children", { apiary_id: id });
     if (!error) {
       const row = Array.isArray(data) ? data[0] : data;
       const { hives = 0, inspections = 0, todos = 0, logs = 0 } = row || {};
       hasChildren = hives + inspections + todos + logs > 0;
     }
   } catch {
-    /* RPC may not exist — ignore */
+    /* ignore */
   }
 
   if (hasChildren) {
@@ -147,32 +164,21 @@ export async function smartDeleteApiary(id) {
     return { archived: true, error };
   }
 
-  const { error } = await serverDeleteRowWithPhotos({
-    table: "apiaries",
-    id,
-    mode: "delete_row",
-  });
+  const { error } = await serverDeleteRowWithPhotos({ table: "apiaries", id, mode: "delete_row" });
   return { archived: false, error };
 }
 
-/**
- * smartDeleteHive(id)
- * - If linked children exist (RPC check_hive_children), archive it.
- * - Otherwise, hard-delete via server pipeline (storage first, then row)
- */
 export async function smartDeleteHive(id) {
   let hasChildren = false;
   try {
-    const { data, error } = await supabase.rpc("check_hive_children", {
-      hive_id: id,
-    });
+    const { data, error } = await supabase.rpc("check_hive_children", { hive_id: id });
     if (!error) {
       const row = Array.isArray(data) ? data[0] : data;
       const { inspections = 0, todos = 0, logs = 0 } = row || {};
       hasChildren = inspections + todos + logs > 0;
     }
   } catch {
-    /* RPC may not exist — ignore */
+    /* ignore */
   }
 
   if (hasChildren) {
@@ -180,68 +186,36 @@ export async function smartDeleteHive(id) {
     return { archived: true, error };
   }
 
-  const { error } = await serverDeleteRowWithPhotos({
-    table: "hives",
-    id,
-    mode: "delete_row",
-  });
+  const { error } = await serverDeleteRowWithPhotos({ table: "hives", id, mode: "delete_row" });
   return { archived: false, error };
 }
 
-/**
- * smartDeleteInspection(id)
- * - Hard delete via server pipeline (storage first, then row)
- * - This supports both:
- *   - legacy inspections.photos[] URLs
- *   - new inspections.photo_paths[] (once you add it)
- */
 export async function smartDeleteInspection(id) {
-  const { error } = await serverDeleteRowWithPhotos({
-    table: "inspections",
-    id,
-    mode: "delete_row",
-  });
+  const { error } = await serverDeleteRowWithPhotos({ table: "inspections", id, mode: "delete_row" });
   return { archived: false, error };
 }
 
-/**
- * Remove a single inspection photo (solid).
- * Provide either an object path or a public URL.
- * This will:
- *  - delete that one storage object
- *  - remove it from the row arrays
- */
 export async function removeOneInspectionPhoto(id, { path, url }) {
   const { data, error } = await serverDeleteRowWithPhotos({
     table: "inspections",
     id,
-    mode: "clear_photo", // function treats removeOne specially and updates arrays
+    mode: "clear_photo", // function treats removeOne specially
     removeOne: { path, url },
   });
   return { data, error };
 }
 
-/**
- * smartDeleteTodo(id)
- * - Archives if it has children (optional RPC)
- * - Otherwise deletes row. (If todos have attachments, move them into the same server function later.)
- *
- * NOTE: Your current schema audit doesn’t show a guaranteed photo_path for todos.
- * If you add todo photo_path(s), route this through serverDeleteRowWithPhotos too.
- */
 export async function smartDeleteTodo(id) {
   let hasChildren = false;
   try {
-    const { data, error } = await supabase.rpc("check_todo_children", {
-      todo_id: id,
-    });
+    const { data, error } = await supabase.rpc("check_todo_children", { todo_id: id });
     if (!error) {
       const row = Array.isArray(data) ? data[0] : data;
       const { logs = 0, attachments = 0 } = row || {};
       hasChildren = logs + attachments > 0;
     }
   } catch {
-    /* RPC may not exist — ignore */
+    /* ignore */
   }
 
   if (hasChildren) {
@@ -249,8 +223,6 @@ export async function smartDeleteTodo(id) {
     return { archived: true, error };
   }
 
-  // Until todos are added to the server pipeline with explicit paths,
-  // we just delete the row (no storage handled here).
   const { error } = await supabase.from("todos").delete().eq("id", id);
   return { archived: false, error };
 }
