@@ -1,13 +1,13 @@
+// supabase/functions/delete-row-with-photos/index.ts
 // @ts-nocheck
 // deno-lint-ignore-file
 
-import { serve } from "std/http/server.ts";
-import { createClient } from "@supabase/supabase-js";
+import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { corsHeaders } from "../_shared/cors.ts";
 
 type TableName = "apiaries" | "hives" | "logbook" | "inspections";
 type Mode = "clear_photo" | "delete_row";
-
 type RemoveOne = { path?: string; url?: string };
 
 type DeleteBody = {
@@ -48,13 +48,12 @@ function uniq(arr: string[]) {
 
 function parsePublicUrl(url: string | null | undefined) {
   if (!url) return null;
-  const clean = url.split("?")[0];
+  const clean = String(url).split("?")[0];
   const m = clean.match(/\/object\/public\/([^/]+)\/(.+)$/);
   if (!m) return null;
   return { bucket: m[1], path: decodeURIComponent(m[2]) };
 }
 
-// THIS avoids the red 7015 errors: always index a dictionary type
 function get(rec: Record<string, unknown>, key: string): unknown {
   return rec[key];
 }
@@ -84,7 +83,9 @@ function isDeleteBody(v: unknown): v is DeleteBody {
 }
 
 serve(async (req: Request) => {
-  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders });
+  if (req.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders });
+  }
 
   try {
     if (!SUPABASE_URL || !SERVICE_ROLE) return json(500, { error: "Missing SUPABASE envs" });
@@ -104,29 +105,43 @@ serve(async (req: Request) => {
 
     const { table, id, mode, removeOne } = raw;
     const cfg = TABLES[table];
-
-    // 1) Fetch row (and verify ownership)
-    const selectCols =
-      table === "inspections"
-        ? `${cfg.userCol}, ${(cfg as CfgMulti).urlsCol}, ${(cfg as CfgMulti).pathsCol}`
-        : `${cfg.userCol}, ${(cfg as CfgSingle).urlCol}, ${(cfg as CfgSingle).pathCol}`;
-
-    const { data: row, error: rowErr } = await admin
-      .from(table)
-      .select(selectCols)
-      .eq("id", id)
-      .maybeSingle();
-
-    if (rowErr) return json(500, { error: rowErr.message });
-    if (!row) return json(404, { error: "Row not found" });
-
-    const rec = row as unknown as Record<string, unknown>;
-
-
-    // Ownership check (always user_id)
-    if (String(get(rec, "user_id") ?? "") !== uid) return json(403, { error: "Forbidden" });
-
     const bucket = "photos";
+
+    // 1) Fetch row (verify ownership)
+    let row: Record<string, unknown> | null = null;
+
+    if (table === "inspections") {
+      const urlsKey = (cfg as CfgMulti).urlsCol; // "photos"
+      const pathsKey = (cfg as CfgMulti).pathsCol; // "photo_paths"
+      const colsWithPaths = `${cfg.userCol}, ${urlsKey}, ${pathsKey}`;
+      const colsWithoutPaths = `${cfg.userCol}, ${urlsKey}`;
+
+      // Try with photo_paths first; if the column doesn't exist, retry without it.
+      let r1 = await admin.from(table).select(colsWithPaths).eq("id", id).maybeSingle();
+      if (r1.error && /column .*photo_paths.* does not exist/i.test(r1.error.message || "")) {
+        r1 = await admin.from(table).select(colsWithoutPaths).eq("id", id).maybeSingle();
+      }
+
+      if (r1.error) return json(500, { error: r1.error.message });
+      if (!r1.data) return json(404, { error: "Row not found" });
+      row = r1.data as Record<string, unknown>;
+    } else {
+      const urlKey = (cfg as CfgSingle).urlCol;
+      const pathKey = (cfg as CfgSingle).pathCol;
+      const colsWithPath = `${cfg.userCol}, ${urlKey}, ${pathKey}`;
+      const colsWithoutPath = `${cfg.userCol}, ${urlKey}`;
+
+      let r1 = await admin.from(table).select(colsWithPath).eq("id", id).maybeSingle();
+      if (r1.error && /column .*photo_path.* does not exist/i.test(r1.error.message || "")) {
+        r1 = await admin.from(table).select(colsWithoutPath).eq("id", id).maybeSingle();
+      }
+
+      if (r1.error) return json(500, { error: r1.error.message });
+      if (!r1.data) return json(404, { error: "Row not found" });
+      row = r1.data as Record<string, unknown>;
+    }
+
+    if (String(get(row, "user_id") ?? "") !== uid) return json(403, { error: "Forbidden" });
 
     // 2) Determine paths to delete
     let pathsToDelete: string[] = [];
@@ -135,56 +150,55 @@ serve(async (req: Request) => {
       const urlsKey = (cfg as CfgMulti).urlsCol;   // "photos"
       const pathsKey = (cfg as CfgMulti).pathsCol; // "photo_paths"
 
-      const storedPaths = asStringArray(get(rec, pathsKey));
-      const storedUrls = asStringArray(get(rec, urlsKey));
+      const storedUrls = asStringArray(get(row, urlsKey));
+      const storedPaths = asStringArray(get(row, pathsKey)); // may be [] if column missing
 
-      // Prefer stored paths
+      // If removeOne is present, delete ONLY that one file and update arrays.
+      if (removeOne?.path || removeOne?.url) {
+        const fromUrl = removeOne.url ? parsePublicUrl(removeOne.url) : null;
+        const onePath =
+          removeOne.path ||
+          (fromUrl?.bucket === bucket ? fromUrl.path : null);
+
+        if (!onePath) {
+          return json(400, { error: "removeOne provided but no valid {path|url} resolved" });
+        }
+
+        const { error: delErr } = await admin.storage.from(bucket).remove([onePath]);
+        if (delErr) return json(500, { error: `Storage delete failed: ${delErr.message}` });
+
+        const newPaths = storedPaths.filter((p) => p !== onePath);
+        const newUrls = storedUrls.filter((u) => {
+          const p = parsePublicUrl(u);
+          return !(p?.bucket === bucket && p.path === onePath);
+        });
+
+        const patch: Record<string, unknown> = {};
+        patch[urlsKey] = newUrls;
+        // only write pathsKey if the column exists on the row selection
+        if (pathsKey in row) patch[pathsKey] = newPaths;
+
+        const { error: updErr } = await admin.from(table).update(patch).eq("id", id);
+        if (updErr) return json(500, { error: `DB update failed: ${updErr.message}` });
+
+        return json(200, { ok: true, mode: "remove_one", deleted: [onePath] });
+      }
+
+      // Normal delete: prefer stored paths, else derive from URLs
       pathsToDelete = storedPaths.slice();
 
-      // Fallback: derive paths from URLs (legacy)
       if (!pathsToDelete.length && storedUrls.length) {
         for (const u of storedUrls) {
           const p = parsePublicUrl(u);
           if (p?.bucket === bucket) pathsToDelete.push(p.path);
         }
       }
-
-      // Optional: remove a single photo
-      if (removeOne?.path || removeOne?.url) {
-        const onePath =
-          removeOne.path ||
-          (parsePublicUrl(removeOne.url || "")?.bucket === bucket
-            ? parsePublicUrl(removeOne.url || "")?.path
-            : null);
-
-        if (onePath) {
-          // Delete just this one file FIRST
-          const { error: delErr } = await admin.storage.from(bucket).remove([onePath]);
-          if (delErr) return json(500, { error: `Storage delete failed: ${delErr.message}` });
-
-          // Remove from arrays AFTER deletion
-          const newPaths = storedPaths.filter((p) => p !== onePath);
-          const newUrls = storedUrls.filter((u) => {
-            const p = parsePublicUrl(u);
-            return !(p?.bucket === bucket && p.path === onePath);
-          });
-
-          const patch: Record<string, unknown> = {};
-          patch[pathsKey] = newPaths;
-          patch[urlsKey] = newUrls;
-
-          const { error: updErr } = await admin.from(table).update(patch).eq("id", id);
-          if (updErr) return json(500, { error: `DB update failed: ${updErr.message}` });
-
-          return json(200, { ok: true, mode: "remove_one", deleted: [onePath] });
-        }
-      }
     } else {
       const urlKey = (cfg as CfgSingle).urlCol;
       const pathKey = (cfg as CfgSingle).pathCol;
 
-      const storedPath = get(rec, pathKey);
-      const storedUrl = get(rec, urlKey);
+      const storedPath = get(row, pathKey);
+      const storedUrl = get(row, urlKey);
 
       if (typeof storedPath === "string" && storedPath) {
         pathsToDelete.push(storedPath);
@@ -199,7 +213,12 @@ serve(async (req: Request) => {
     // 3) Delete storage FIRST
     if (pathsToDelete.length) {
       const { error: delErr } = await admin.storage.from(bucket).remove(pathsToDelete);
-      if (delErr) return json(500, { error: `Storage delete failed: ${delErr.message}`, paths: pathsToDelete });
+      if (delErr) {
+        return json(500, {
+          error: `Storage delete failed: ${delErr.message}`,
+          paths: pathsToDelete,
+        });
+      }
     }
 
     // 4) Then clear refs or delete row
@@ -210,7 +229,7 @@ serve(async (req: Request) => {
 
         const patch: Record<string, unknown> = {};
         patch[urlsKey] = [];
-        patch[pathsKey] = [];
+        if (pathsKey in row) patch[pathsKey] = [];
 
         const { error: updErr } = await admin.from(table).update(patch).eq("id", id);
         if (updErr) return json(500, { error: `DB update failed: ${updErr.message}` });
@@ -220,6 +239,7 @@ serve(async (req: Request) => {
 
         const patch: Record<string, unknown> = {};
         patch[urlKey] = null;
+        // only set if column exists; otherwise ignore
         patch[pathKey] = null;
 
         const { error: updErr } = await admin.from(table).update(patch).eq("id", id);
