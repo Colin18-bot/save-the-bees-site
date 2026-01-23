@@ -1,5 +1,5 @@
 // src/pages/Apiaries/EditApiary.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import dayjs from "dayjs";
@@ -16,7 +16,7 @@ import L from "leaflet";
 import { forwardGeocode } from "../../utils/geocode";
 import {
   archiveItem,
-  deleteRowWithPhoto,
+  serverDeleteRowWithPhotos,
   humaniseSupabaseError,
 } from "../../services/actions";
 
@@ -34,11 +34,13 @@ function DraggableMarker({ position, onMove }) {
   useEffect(() => {
     if (position) map.setView(position, map.getZoom());
   }, [position, map]);
+
   useMapEvents({
     click(e) {
       onMove([e.latlng.lat, e.latlng.lng]);
     },
   });
+
   return (
     <>
       <Marker
@@ -60,28 +62,17 @@ function DraggableMarker({ position, onMove }) {
   );
 }
 
-/** Extract { bucket, path } from a Supabase public URL */
-function parseStoragePublicUrl(url) {
-  if (!url) return null;
-
-  // Strip any query string (e.g. ?t=123456) so we get the real object path
-  const noQuery = url.split("?")[0];
-
-  const m = noQuery.match(/\/object\/public\/([^/]+)\/(.+)$/);
-  if (!m) return null;
-  return { bucket: m[1], path: decodeURIComponent(m[2]) };
-}
-
 const EditApiary = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
-  // File/preview handling (stable URL + filename)
+  // File/preview handling
+  const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [currentObject, setCurrentObject] = useState(null);
 
   // Map & location
   const [mapCenter, setMapCenter] = useState([51.5, -3.2]); // Cardiff-ish fallback
@@ -97,21 +88,27 @@ const EditApiary = () => {
     location_type: "",
     site_setting: "",
     is_default: false,
+
+    // IMPORTANT: keep both so the server delete pipeline can be exact
     photo_url: "",
+    photo_path: "",
+
     user_id: "",
   });
 
   // Clean up blob URL when it changes/unmounts
   useEffect(() => {
     return () => {
-      if (previewUrl && previewUrl.startsWith("blob:"))
+      if (previewUrl && previewUrl.startsWith("blob:")) {
         URL.revokeObjectURL(previewUrl);
+      }
     };
   }, [previewUrl]);
 
   useEffect(() => {
     (async () => {
       setLoading(true);
+
       const { data, error } = await supabase
         .from("apiaries")
         .select("*")
@@ -130,18 +127,16 @@ const EditApiary = () => {
         latitude: data.latitude ?? "",
         longitude: data.longitude ?? "",
         notes: data.notes || "",
-        established_date:
-          data.established_date || dayjs().format("YYYY-MM-DD"),
+        established_date: data.established_date || dayjs().format("YYYY-MM-DD"),
         location_type: data.location_type || "",
         site_setting: data.site_setting || "",
         is_default: !!data.is_default,
         photo_url: data.photo_url || "",
+        photo_path: data.photo_path || "",
         user_id: data.user_id || "",
       });
 
-      // Existing image as initial preview
       setPreviewUrl(data.photo_url || null);
-      setCurrentObject(parseStoragePublicUrl(data.photo_url));
 
       if (
         Number.isFinite(Number(data.latitude)) &&
@@ -177,63 +172,89 @@ const EditApiary = () => {
     const file = e.target.files?.[0] || null;
     setSelectedFile(file);
 
+    // swap preview to new blob
+    if (previewUrl && previewUrl.startsWith("blob:")) {
+      URL.revokeObjectURL(previewUrl);
+    }
+
     if (file) {
-      const url = URL.createObjectURL(file);
-      if (previewUrl && previewUrl.startsWith("blob:"))
-        URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(url);
+      setPreviewUrl(URL.createObjectURL(file));
     } else {
-      if (previewUrl && previewUrl.startsWith("blob:"))
-        URL.revokeObjectURL(previewUrl);
       setPreviewUrl(formData.photo_url || null);
     }
   };
 
-  // Upload new file if selected; otherwise keep current URL
-  const uploadPhoto = async () => {
-    if (!selectedFile) {
-      return { url: formData.photo_url, path: currentObject?.path || null };
+  // Upload new file if selected (returns {url, path})
+  const uploadNewPhoto = async () => {
+    if (!selectedFile) return { url: null, path: null };
+
+    const userId = formData.user_id;
+    if (!userId) {
+      throw new Error("Missing user_id on apiary record (cannot upload photo).");
     }
 
-    const filename = `${id}-${Date.now()}-${selectedFile.name.replace(
-      /\s+/g,
-      "_"
-    )}`;
-    const path = `apiaries/${filename}`;
+    const safeName = String(selectedFile.name || "photo.jpg")
+      .replace(/[^\w.-]+/g, "_")
+      .slice(0, 120);
+
+    const filename = `${id}-${Date.now()}-${safeName}`;
+    const path = `apiaries/${userId}/${id}/${filename}`;
 
     const { error: uploadError } = await supabase.storage
       .from("photos")
       .upload(path, selectedFile, {
         upsert: true,
-        contentType: selectedFile.type,
+        contentType: selectedFile.type || "image/jpeg",
       });
 
     if (uploadError) {
       console.error("Photo upload error:", uploadError);
-      return { url: formData.photo_url, path: currentObject?.path || null };
+      throw new Error(uploadError.message || "Photo upload failed.");
     }
+
     const { data } = supabase.storage.from("photos").getPublicUrl(path);
-    return { url: data.publicUrl, path };
+    return { url: data?.publicUrl || null, path };
   };
 
+  // Delete current stored photo via server pipeline (storage FIRST, then DB clears)
   const deletePhoto = async () => {
-    if (currentObject?.bucket && currentObject?.path) {
-      const { error } = await supabase.storage
-        .from(currentObject.bucket)
-        .remove([currentObject.path]);
-      if (error) {
-        console.error("Photo delete error:", error);
-        alert("Failed to delete photo.");
-        return;
-      }
-    }
-    setSelectedFile(null);
-    setFormData((prev) => ({ ...prev, photo_url: "" }));
+    if (!window.confirm("Remove this photo?")) return;
 
-    if (previewUrl && previewUrl.startsWith("blob:"))
-      URL.revokeObjectURL(previewUrl);
+    // If user had picked a new file, just clear that selection/preview (no storage object yet)
+    if (selectedFile) {
+      setSelectedFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      if (previewUrl && previewUrl.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(formData.photo_url || null);
+      return;
+    }
+
+    // Nothing stored
+    if (!formData.photo_url && !formData.photo_path) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    // Server-side: delete storage + clear DB fields
+    const { error } = await serverDeleteRowWithPhotos({
+      table: "apiaries",
+      id,
+      mode: "clear_photo",
+    });
+
+    if (error) {
+      console.error("Server photo delete error:", error);
+      alert(humaniseSupabaseError(error, { table: "apiaries" }) || "Failed to delete photo.");
+      return;
+    }
+
+    // Sync UI to cleared state
+    setFormData((prev) => ({ ...prev, photo_url: "", photo_path: "" }));
+    if (previewUrl && previewUrl.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
-    setCurrentObject(null);
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    setSelectedFile(null);
   };
 
   // Make this apiary the *only* default for this user (and sync profile)
@@ -247,10 +268,7 @@ const EditApiary = () => {
       .is("archived_at", null)
       .neq("id", thisApiaryId);
 
-    await supabase
-      .from("apiaries")
-      .update({ is_default: true })
-      .eq("id", thisApiaryId);
+    await supabase.from("apiaries").update({ is_default: true }).eq("id", thisApiaryId);
 
     const { data: userWrap } = await supabase.auth.getUser();
     const uid = userWrap?.user?.id;
@@ -264,73 +282,96 @@ const EditApiary = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSaving(true);
 
-    const { url: newUrl, path: newPath } = await uploadPhoto();
+    try {
+      const toNum = (v) => (v === "" || v == null ? null : Number(v));
+      const normalize = (obj) =>
+        Object.fromEntries(
+          Object.entries(obj).map(([k, v]) => [k, v === "" ? null : v])
+        );
 
-    if (
-      newPath &&
-      currentObject?.path &&
-      (newUrl && newUrl !== formData.photo_url)
-    ) {
-      await supabase.storage
-        .from(currentObject.bucket || "photos")
-        .remove([currentObject.path])
-        .catch(() => {});
+      // If a new file is selected, delete the previous stored photo FIRST (server-side)
+      // This guarantees no orphaned old files even if replacement happens.
+      if (selectedFile && (formData.photo_url || formData.photo_path)) {
+        const { error: clearErr } = await serverDeleteRowWithPhotos({
+          table: "apiaries",
+          id,
+          mode: "clear_photo",
+        });
+        if (clearErr) {
+          throw new Error(
+            humaniseSupabaseError(clearErr, { table: "apiaries" }) ||
+              "Failed to remove existing photo."
+          );
+        }
+      }
+
+      // Upload new (if any)
+      const { url: newUrl, path: newPath } = await uploadNewPhoto();
+
+      const normalized = normalize({
+        ...formData,
+        latitude: toNum(formData.latitude),
+        longitude: toNum(formData.longitude),
+
+        // If we uploaded a new one, store BOTH url + path
+        photo_url: newUrl ? newUrl : (formData.photo_url || null),
+        photo_path: newPath ? newPath : (formData.photo_path || null),
+      });
+
+      const { is_default: wantDefault, ...rest } = normalized;
+
+      // Update DB row
+      const { error } = await supabase.from("apiaries").update(rest).eq("id", id);
+      if (error) {
+        console.error("Error updating apiary:", error);
+        throw new Error("Failed to update apiary.");
+      }
+
+      // Default handling
+      if (wantDefault) {
+        await setOnlyDefaultForUser(rest.user_id, id);
+      } else {
+        await supabase.from("apiaries").update({ is_default: false }).eq("id", id);
+      }
+
+      // Clean local file state after success
+      setSelectedFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+
+      // Update preview to saved URL (or null)
+      if (previewUrl && previewUrl.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(rest.photo_url || null);
+
+      alert("Apiary updated successfully!");
+      navigate("/apiaries");
+    } catch (err) {
+      console.error(err);
+      alert(err?.message || "Failed to update apiary.");
+    } finally {
+      setSaving(false);
     }
-
-    const toNum = (v) => (v === "" || v == null ? null : Number(v));
-    const normalize = (obj) =>
-      Object.fromEntries(
-        Object.entries(obj).map(([k, v]) => [k, v === "" ? null : v])
-      );
-
-    const normalized = normalize({
-      ...formData,
-      latitude: toNum(formData.latitude),
-      longitude: toNum(formData.longitude),
-      photo_url: newUrl || null,
-    });
-
-    const { is_default: wantDefault, ...rest } = normalized;
-
-    const { error } = await supabase.from("apiaries").update(rest).eq("id", id);
-    if (error) {
-      console.error("Error updating apiary:", error);
-      alert("Failed to update apiary.");
-      return;
-    }
-
-    if (wantDefault) {
-      await setOnlyDefaultForUser(rest.user_id, id);
-    } else {
-      await supabase
-        .from("apiaries")
-        .update({ is_default: false })
-        .eq("id", id);
-    }
-
-    alert("Apiary updated successfully!");
-    navigate("/apiaries");
   };
 
   const handleDelete = async () => {
-    const { data, error: checkErr } = await supabase.rpc(
-      "check_apiary_children",
-      { apiary_id: id }
-    );
+    const { data, error: checkErr } = await supabase.rpc("check_apiary_children", {
+      apiary_id: id,
+    });
+
     if (checkErr) {
       console.error(checkErr);
       alert("Could not delete, linked items. Please try again.");
       return;
     }
+
     const row = Array.isArray(data) ? data[0] : data;
     const { hives = 0, inspections = 0, todos = 0, logs = 0 } = row || {};
     const hasChildren = hives + inspections + todos + logs > 0;
 
     if (hasChildren) {
       const ok = window.confirm(
-        `This apiary has:\n• ${hives} hives\n• ${inspections} inspections\n• ${todos} to-dos\n• ${logs} log entries\n\n` +
-          `Archive instead?`
+        `This apiary has:\n• ${hives} hives\n• ${inspections} inspections\n• ${todos} to-dos\n• ${logs} log entries\n\nArchive instead?`
       );
       if (!ok) return;
 
@@ -345,21 +386,26 @@ const EditApiary = () => {
       return;
     }
 
-    if (!window.confirm("Delete this apiary permanently? This cannot be undone."))
-      return;
+    if (!window.confirm("Delete this apiary permanently? This cannot be undone.")) return;
 
-    const { error: delErr } = await deleteRowWithPhoto("apiaries", id, "photo_url");
+    // Server-side delete: deletes storage first, then row
+    const { error: delErr } = await serverDeleteRowWithPhotos({
+      table: "apiaries",
+      id,
+      mode: "delete_row",
+    });
+
     if (delErr) {
-      alert(humaniseSupabaseError(delErr, { table: "apiaries" }));
+      alert(humaniseSupabaseError(delErr, { table: "apiaries" }) || "Failed to delete apiary.");
       return;
     }
+
     alert("Apiary deleted.");
     navigate("/apiaries");
   };
 
   const handleArchive = async () => {
-    if (!window.confirm("Are you sure you want to archive this apiary?"))
-      return;
+    if (!window.confirm("Are you sure you want to archive this apiary?")) return;
     const { error } = await archiveItem("apiaries", id);
     if (error) {
       console.error("Archive error:", error);
@@ -392,6 +438,7 @@ const EditApiary = () => {
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Edit Apiary</h1>
+
       {loading ? (
         <div className="flex justify-center py-10">
           <div className="w-8 h-8 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
@@ -400,9 +447,7 @@ const EditApiary = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Apiary name */}
           <div>
-            <label className="block text-sm text-gray-600 mb-1">
-              Apiary Name
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Apiary Name</label>
             <input
               type="text"
               name="name"
@@ -414,24 +459,13 @@ const EditApiary = () => {
           </div>
 
           {/* Hidden lat/lon */}
-          <input
-            type="hidden"
-            name="latitude"
-            value={formData.latitude}
-            readOnly
-          />
-          <input
-            type="hidden"
-            name="longitude"
-            value={formData.longitude}
-            readOnly
-          />
+          <input type="hidden" name="latitude" value={formData.latitude} readOnly />
+          <input type="hidden" name="longitude" value={formData.longitude} readOnly />
 
           {/* Find & Map */}
           <div className="space-y-2">
             <label className="block text-sm text-gray-600">Find location</label>
 
-            {/* RESPONSIVE: stack on mobile, row on larger screens */}
             <div className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
@@ -452,9 +486,7 @@ const EditApiary = () => {
                 <button
                   type="button"
                   onClick={() =>
-                    originalCenter
-                      ? moveMarker(originalCenter)
-                      : alert("No saved location.")
+                    originalCenter ? moveMarker(originalCenter) : alert("No saved location.")
                   }
                   className="flex-1 sm:flex-none px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                 >
@@ -491,6 +523,7 @@ const EditApiary = () => {
               <option value="Coastal">Coastal</option>
               <option value="Other">Other</option>
             </select>
+
             <select
               name="site_setting"
               value={formData.site_setting}
@@ -529,9 +562,7 @@ const EditApiary = () => {
 
           {/* Established date */}
           <div>
-            <label className="block text-sm text-gray-600 mb-1">
-              Date Apiary Established
-            </label>
+            <label className="block text-sm text-gray-600 mb-1">Date Apiary Established</label>
             <input
               type="date"
               name="established_date"
@@ -550,7 +581,7 @@ const EditApiary = () => {
             className="w-full px-3 py-2 border rounded min-h-[100px]"
           />
 
-          {/* Photo (responsive preview + filename) */}
+          {/* Photo */}
           <div className="flex flex-col items-start gap-2">
             {previewUrl && (
               <div className="relative inline-flex flex-col items-start mb-2 max-w-full">
@@ -563,6 +594,7 @@ const EditApiary = () => {
                   type="button"
                   onClick={deletePhoto}
                   className="absolute top-1 right-1 bg-red-600 text-white text-xs px-1 rounded hover:bg-red-700"
+                  aria-label="Remove photo"
                 >
                   ×
                 </button>
@@ -571,17 +603,23 @@ const EditApiary = () => {
                 </div>
               </div>
             )}
-            <input type="file" accept="image/*" onChange={handleFileChange} />
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+            />
           </div>
 
           {/* Actions */}
           <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2">
             <button
               type="submit"
+              disabled={saving}
               className="w-full sm:w-auto bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
-             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+              disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
             >
-              Save Changes
+              {saving ? "Saving…" : "Save Changes"}
             </button>
 
             <button

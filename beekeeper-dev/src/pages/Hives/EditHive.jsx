@@ -3,19 +3,39 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import dayjs from "dayjs";
-import {
-  archiveItem,
-  deleteRowWithPhoto,
-  humaniseSupabaseError,
-} from "../../services/actions";
+import { archiveItem, humaniseSupabaseError } from "../../services/actions";
 
-// Extract { bucket, path } from a Supabase public URL
+// Extract { bucket, path } from a Supabase public URL (legacy fallback)
 function parseStoragePublicUrl(url) {
   if (!url) return null;
-  // matches: .../object/public/<bucket>/<path...>
   const m = url.match(/\/object\/public\/([^/]+)\/(.+)$/);
   if (!m) return null;
   return { bucket: m[1], path: decodeURIComponent(m[2]) };
+}
+
+// Call the deployed Edge Function for storage-first delete/clear
+async function deleteWithPhotos({ table, id, mode, removeOne }) {
+  const { data: sessionWrap } = await supabase.auth.getSession();
+  const token = sessionWrap?.session?.access_token;
+  if (!token) throw new Error("Not authenticated");
+
+  const res = await fetch(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-row-with-photos`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ table, id, mode, removeOne }),
+    }
+  );
+
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(json?.error || "Delete function failed");
+  }
+  return json;
 }
 
 const EditHive = () => {
@@ -33,12 +53,13 @@ const EditHive = () => {
     status: "active",
     notes: "",
     photo_url: "",
+    photo_path: null, // ✅ NEW: stored path for reliable deletion
     nfc_uid: "", // read-only, set from DB or ?nfc_uid for premium users
   });
 
   const [apiaries, setApiaries] = useState([]);
-  const [photoPreview, setPhotoPreview] = useState(null); // can be public url or blob url
-  const [currentObject, setCurrentObject] = useState(null); // {bucket, path} of existing photo
+  const [photoPreview, setPhotoPreview] = useState(null); // public url or blob url
+  const [currentObject, setCurrentObject] = useState(null); // legacy: {bucket, path} from url
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [subscriptionLevel, setSubscriptionLevel] = useState("free");
@@ -67,9 +88,14 @@ const EditHive = () => {
       const hive = hiveRes.data;
       setApiaries(apiaryRes.error ? [] : apiaryRes.data || []);
       setPhotoPreview(hive.photo_url || null);
-      setCurrentObject(parseStoragePublicUrl(hive.photo_url));
 
-      // figure out subscription and NFC to use
+      // ✅ Prefer photo_path if present; otherwise fall back to parsing url
+      const legacy = parseStoragePublicUrl(hive.photo_url);
+      setCurrentObject(
+        hive.photo_path ? { bucket: "photos", path: hive.photo_path } : legacy
+      );
+
+      // subscription + NFC
       let level = "free";
       const uid = userRes?.data?.user?.id;
       if (uid) {
@@ -83,18 +109,18 @@ const EditHive = () => {
       }
 
       const nfcToUse =
-        level === "premium" && nfcParam ? nfcParam : (hive.nfc_uid || "");
+        level === "premium" && nfcParam ? nfcParam : hive.nfc_uid || "";
 
       setFormData({
         name: hive.name || "",
         apiary_id: hive.apiary_id || "",
         hive_type: hive.hive_type || "",
         hive_type_other: hive.hive_type_other || "",
-        date_established:
-          hive.date_established || dayjs().format("YYYY-MM-DD"),
+        date_established: hive.date_established || dayjs().format("YYYY-MM-DD"),
         status: hive.status || "active",
         notes: hive.notes || "",
         photo_url: hive.photo_url || "",
+        photo_path: hive.photo_path || null, // ✅ NEW
         nfc_uid: nfcToUse,
       });
 
@@ -123,21 +149,23 @@ const EditHive = () => {
     setPhotoPreview(URL.createObjectURL(file));
   };
 
+  // ✅ UPDATED: returns BOTH url and path
   const uploadPhoto = async () => {
     const file = fileInputRef.current?.files?.[0];
     if (!file) {
       return {
-        url: formData.photo_url,
-        path: currentObject?.path || null,
-        bucket: currentObject?.bucket || "photos",
+        url: formData.photo_url || "",
+        path: formData.photo_path || currentObject?.path || null,
+        bucket: "photos",
       };
     }
 
     const safeName = file.name.replace(/\s+/g, "_");
-    const filename = `hives/${id}-${Date.now()}-${safeName}`;
+    const photo_path = `hives/${id}-${Date.now()}-${safeName}`;
+
     const { error: uploadError } = await supabase.storage
       .from("photos")
-      .upload(filename, file, {
+      .upload(photo_path, file, {
         upsert: true,
         contentType: file.type || "image/jpeg",
       });
@@ -145,29 +173,29 @@ const EditHive = () => {
     if (uploadError) {
       console.error("Upload error", uploadError);
       return {
-        url: formData.photo_url,
-        path: currentObject?.path || null,
-        bucket: currentObject?.bucket || "photos",
+        url: formData.photo_url || "",
+        path: formData.photo_path || currentObject?.path || null,
+        bucket: "photos",
       };
     }
 
-    const { data } = supabase.storage.from("photos").getPublicUrl(filename);
-    return { url: data.publicUrl, path: filename, bucket: "photos" };
+    const { data } = supabase.storage.from("photos").getPublicUrl(photo_path);
+    return { url: data.publicUrl, path: photo_path, bucket: "photos" };
   };
 
+  // ✅ UPDATED: storage-first clear using Edge Function (no client remove)
   const handleRemovePhoto = async () => {
     try {
-      if (currentObject?.bucket && currentObject?.path) {
-        await supabase.storage
-          .from(currentObject.bucket)
-          .remove([currentObject.path]);
-      }
-    } catch {
-      /* non-fatal */
+      await deleteWithPhotos({ table: "hives", id, mode: "clear_photo" });
+    } catch (e) {
+      console.error(e);
+      setError(String(e?.message || e));
+      return;
     }
+
     if (photoPreview?.startsWith("blob:")) URL.revokeObjectURL(photoPreview);
     setPhotoPreview(null);
-    setFormData((prev) => ({ ...prev, photo_url: "" }));
+    setFormData((prev) => ({ ...prev, photo_url: "", photo_path: null }));
     setCurrentObject(null);
     if (fileInputRef.current) fileInputRef.current.value = null;
   };
@@ -190,7 +218,7 @@ const EditHive = () => {
     const { data, error } = await supabase
       .from("hives")
       .select("id")
-      .ilike("nfc_uid", trimmed) // exact string, case-insensitive
+      .ilike("nfc_uid", trimmed)
       .neq("id", id)
       .is("archived_at", null);
     if (error) return true; // be safe: block on error
@@ -226,21 +254,26 @@ const EditHive = () => {
       }
     }
 
-    // Upload (optional)
+    // Upload optional
     const { url: newUrl, path: newPath } = await uploadPhoto();
 
-    // If we uploaded a new file and we had a previous storage object, clean the old one
-    if (newPath && currentObject?.path && newUrl !== formData.photo_url) {
-      try {
-        await supabase.storage
-          .from(currentObject.bucket || "photos")
-          .remove([currentObject.path]);
-      } catch {
-        /* non-fatal */
+    // If we uploaded a new file and we had a previous storage object, clean old one (non-fatal)
+    if (
+      newPath &&
+      (formData.photo_path || currentObject?.path) &&
+      newUrl !== formData.photo_url
+    ) {
+      const oldPath = formData.photo_path || currentObject?.path || null;
+      if (oldPath && oldPath !== newPath) {
+        try {
+          await supabase.storage.from("photos").remove([oldPath]);
+        } catch {
+          /* non-fatal */
+        }
       }
     }
 
-    // Normalize payload: empty strings -> null
+    // Normalize: empty strings -> null
     const normalize = (obj) =>
       Object.fromEntries(
         Object.entries(obj).map(([k, v]) => [k, v === "" ? null : v])
@@ -249,15 +282,12 @@ const EditHive = () => {
     const base = normalize({
       ...formData,
       photo_url: newUrl || formData.photo_url || null,
-      // Only persist NFC for premium users; otherwise clear it
+      photo_path: newPath || formData.photo_path || null, // ✅ NEW
       nfc_uid:
         subscriptionLevel === "premium" ? (formData.nfc_uid || null) : null,
     });
 
-    const { error: updateErr } = await supabase
-      .from("hives")
-      .update(base)
-      .eq("id", id);
+    const { error: updateErr } = await supabase.from("hives").update(base).eq("id", id);
 
     if (updateErr) {
       console.error("Update error", updateErr);
@@ -278,8 +308,11 @@ const EditHive = () => {
     }
   };
 
+  // ✅ UPDATED: delete uses Edge Function (storage-first) not client deleteRowWithPhoto
   const handleDelete = async () => {
-    const { data, error: checkErr } = await supabase.rpc("check_hive_children", { hive_id: id });
+    const { data, error: checkErr } = await supabase.rpc("check_hive_children", {
+      hive_id: id,
+    });
     if (checkErr) {
       alert("Could not delete, check linked items.");
       return;
@@ -304,11 +337,14 @@ const EditHive = () => {
     }
 
     if (!window.confirm("Delete this hive permanently? This cannot be undone.")) return;
-    const { error: delErr } = await deleteRowWithPhoto("hives", id, "photo_url");
-    if (delErr) {
-      alert(humaniseSupabaseError(delErr, { table: "hives" }));
+
+    try {
+      await deleteWithPhotos({ table: "hives", id, mode: "delete_row" });
+    } catch (e) {
+      alert(humaniseSupabaseError({ message: String(e?.message || e) }, { table: "hives" }));
       return;
     }
+
     alert("Hive deleted.");
     navigate("/hives");
   };
@@ -325,7 +361,6 @@ const EditHive = () => {
     <div className="max-w-2xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Edit Hive</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Hive Name */}
         <input
           name="name"
           value={formData.name}
@@ -335,7 +370,6 @@ const EditHive = () => {
           required
         />
 
-        {/* Apiary */}
         <select
           name="apiary_id"
           value={formData.apiary_id}
@@ -351,7 +385,6 @@ const EditHive = () => {
           ))}
         </select>
 
-        {/* Hive Type */}
         <select
           name="hive_type"
           value={formData.hive_type}
@@ -365,6 +398,7 @@ const EditHive = () => {
           <option value="Warre">Warre</option>
           <option value="Other">Other</option>
         </select>
+
         {formData.hive_type === "Other" && (
           <input
             name="hive_type_other"
@@ -375,7 +409,6 @@ const EditHive = () => {
           />
         )}
 
-        {/* Date */}
         <label className="block text-sm font-medium">
           Date hive was placed in apiary
         </label>
@@ -387,7 +420,6 @@ const EditHive = () => {
           className="w-full px-3 py-2 border rounded"
         />
 
-        {/* Status */}
         <select
           name="status"
           value={formData.status}
@@ -399,7 +431,6 @@ const EditHive = () => {
           <option value="under observation">Under Observation</option>
         </select>
 
-        {/* Notes */}
         <textarea
           name="notes"
           value={formData.notes}
@@ -408,7 +439,6 @@ const EditHive = () => {
           className="w-full px-3 py-2 border rounded min-h-[100px]"
         />
 
-        {/* NFC (Premium only, read-only / auto-assigned from scan) */}
         {subscriptionLevel === "premium" && formData.nfc_uid && (
           <div className="p-3 border rounded bg-gray-50 text-sm">
             <span className="font-medium">NFC Tag Linked:</span>{" "}
@@ -422,7 +452,6 @@ const EditHive = () => {
           </div>
         )}
 
-        {/* Photo */}
         <div className="flex flex-col items-start gap-2">
           {photoPreview && (
             <div className="relative w-32">
@@ -461,7 +490,6 @@ const EditHive = () => {
 
         {error && <p className="text-red-600 text-sm">{error}</p>}
 
-        {/* Actions */}
         <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2">
           <button
             type="submit"

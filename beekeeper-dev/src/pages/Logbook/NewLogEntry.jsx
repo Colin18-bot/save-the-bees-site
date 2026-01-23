@@ -89,7 +89,10 @@ export default function NewLogEntry() {
 
   useEffect(() => {
     (async () => {
-      if (!form.apiary_id) { setHives([]); return; }
+      if (!form.apiary_id) {
+        setHives([]);
+        return;
+      }
       const { data } = await supabase
         .from("hives")
         .select("id, name, apiary_id")
@@ -102,7 +105,10 @@ export default function NewLogEntry() {
 
   useEffect(() => {
     (async () => {
-      if (!form.apiary_id) { setInspections([]); return; }
+      if (!form.apiary_id) {
+        setInspections([]);
+        return;
+      }
       // include created_at to get a time component if `date` is date-only
       let q = supabase
         .from("inspections")
@@ -130,12 +136,30 @@ export default function NewLogEntry() {
     const key = id || name;
 
     if (key === "apiary_id") {
-      setForm((p) => ({ ...p, apiary_id: value, hive_id: "", all_hives: false, inspection_id: "" }));
+      setForm((p) => ({
+        ...p,
+        apiary_id: value,
+        hive_id: "",
+        all_hives: false,
+        inspection_id: "",
+      }));
       return;
     }
     if (key === "hive_id") {
-      if (value === "ALL_SPECIAL") setForm((p) => ({ ...p, hive_id: "", all_hives: true, inspection_id: "" }));
-      else setForm((p) => ({ ...p, hive_id: value, all_hives: false, inspection_id: "" }));
+      if (value === "ALL_SPECIAL")
+        setForm((p) => ({
+          ...p,
+          hive_id: "",
+          all_hives: true,
+          inspection_id: "",
+        }));
+      else
+        setForm((p) => ({
+          ...p,
+          hive_id: value,
+          all_hives: false,
+          inspection_id: "",
+        }));
       return;
     }
 
@@ -148,10 +172,12 @@ export default function NewLogEntry() {
     setSelectedFile(file);
     if (file) {
       const url = URL.createObjectURL(file);
-      if (previewUrl && previewUrl.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+      if (previewUrl && previewUrl.startsWith("blob:"))
+        URL.revokeObjectURL(previewUrl);
       setPreviewUrl(url);
     } else {
-      if (previewUrl && previewUrl.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+      if (previewUrl && previewUrl.startsWith("blob:"))
+        URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
     }
   };
@@ -168,16 +194,24 @@ export default function NewLogEntry() {
     };
   }, [previewUrl]);
 
+  // ✅ UPDATED: return BOTH { url, path }
   const uploadPhotoIfAny = async () => {
-    if (!selectedFile) return { url: null };
+    if (!selectedFile) return { url: null, path: null };
+
     const safeName = selectedFile.name.replace(/\s+/g, "_");
     const filePath = `logbook/${Date.now()}-${safeName}`;
+
     const { error: upErr } = await supabase.storage
       .from("photos")
-      .upload(filePath, selectedFile, { contentType: selectedFile.type, upsert: true });
-    if (upErr) return { url: null, err: upErr.message };
+      .upload(filePath, selectedFile, {
+        contentType: selectedFile.type,
+        upsert: true,
+      });
+
+    if (upErr) return { url: null, path: null, err: upErr.message };
+
     const { data } = supabase.storage.from("photos").getPublicUrl(filePath);
-    return { url: data?.publicUrl || null };
+    return { url: data?.publicUrl || null, path: filePath };
   };
 
   const saveEntry = async (e) => {
@@ -186,37 +220,56 @@ export default function NewLogEntry() {
     setError("");
     setSuccess("");
 
-    if (!form.apiary_id) { setSaving(false); setError("Please select an apiary."); return; }
+    if (!form.apiary_id) {
+      setSaving(false);
+      setError("Please select an apiary.");
+      return;
+    }
     if (!noHives && !form.all_hives && !form.hive_id) {
-      setSaving(false); setError("Please select a hive or choose All Hives."); return;
+      setSaving(false);
+      setError("Please select a hive or choose All Hives.");
+      return;
     }
 
     let finalLogType = form.log_type_select;
     if (finalLogType === "Other") {
       finalLogType = form.log_type_custom.trim();
-      if (!finalLogType) { setSaving(false); setError("Please enter a custom Log Entry name for 'Other'."); return; }
+      if (!finalLogType) {
+        setSaving(false);
+        setError("Please enter a custom Log Entry name for 'Other'.");
+        return;
+      }
     } else if (!finalLogType) {
-      setSaving(false); setError("Please choose a Log Entry type."); return;
+      setSaving(false);
+      setError("Please choose a Log Entry type.");
+      return;
     }
 
-    const { url: photo_url } = await uploadPhotoIfAny();
-    const { data: { user } } = await supabase.auth.getUser();
+    // ✅ UPDATED: capture both url + path
+    const { url: photo_url, path: photo_path } = await uploadPhotoIfAny();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     const payload = {
       user_id: user?.id || null,
       date: form.date || null,
       apiary_id: form.apiary_id || null,
-      hive_id: form.all_hives ? null : (form.hive_id || null),
+      hive_id: form.all_hives ? null : form.hive_id || null,
       all_hives: form.all_hives,
       inspection_id: form.inspection_id || null,
       log_type: finalLogType,
       entry: form.entry || "",
       photo_url: photo_url || null,
+      photo_path: photo_path || null, // ✅ NEW
     };
 
     const { error: insertErr } = await supabase.from("logbook").insert([payload]);
     setSaving(false);
-    if (insertErr) { setError(insertErr.message || "Failed to save log entry."); return; }
+    if (insertErr) {
+      setError(insertErr.message || "Failed to save log entry.");
+      return;
+    }
 
     setSuccess("Log entry saved successfully!");
     successRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -263,23 +316,50 @@ export default function NewLogEntry() {
         {/* Core fields grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
-            <label htmlFor="date" className="block text-sm font-medium mb-1">Date</label>
-            <input id="date" type="date" value={form.date} onChange={onChange} className="w-full border rounded px-3 py-2 focus:outline-none" required />
+            <label htmlFor="date" className="block text-sm font-medium mb-1">
+              Date
+            </label>
+            <input
+              id="date"
+              type="date"
+              value={form.date}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2 focus:outline-none"
+              required
+            />
           </div>
 
           <div>
-            <label htmlFor="apiary_id" className="block text-sm font-medium mb-1">Apiary</label>
-            <select id="apiary_id" value={form.apiary_id} onChange={onChange} className="w-full border rounded px-3 py-2 focus:outline-none" required>
+            <label htmlFor="apiary_id" className="block text-sm font-medium mb-1">
+              Apiary
+            </label>
+            <select
+              id="apiary_id"
+              value={form.apiary_id}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2 focus:outline-none"
+              required
+            >
               <option value="">Select Apiary</option>
-              {apiaries.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+              {apiaries.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name}
+                </option>
+              ))}
             </select>
           </div>
 
           <div>
-            <label htmlFor="hive_id" className="block text-sm font-medium mb-1">Hive</label>
+            <label htmlFor="hive_id" className="block text-sm font-medium mb-1">
+              Hive
+            </label>
             {noHives ? (
               <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded p-3">
-                This apiary has no hives yet. <Link to="/hives/new" className="underline">Add a hive</Link> first.
+                This apiary has no hives yet.{" "}
+                <Link to="/hives/new" className="underline">
+                  Add a hive
+                </Link>{" "}
+                first.
               </div>
             ) : (
               <select
@@ -290,8 +370,14 @@ export default function NewLogEntry() {
                 required
               >
                 <option value="">Select a hive…</option>
-                {hivesForApiary.length > 0 && <option value="ALL_SPECIAL">All Hives</option>}
-                {hivesForApiary.map((h) => <option key={h.id} value={h.id}>{h.name}</option>)}
+                {hivesForApiary.length > 0 && (
+                  <option value="ALL_SPECIAL">All Hives</option>
+                )}
+                {hivesForApiary.map((h) => (
+                  <option key={h.id} value={h.id}>
+                    {h.name}
+                  </option>
+                ))}
               </select>
             )}
           </div>
@@ -311,10 +397,14 @@ export default function NewLogEntry() {
               {inspectionsGroupedByDay.map(([day, list]) => (
                 <optgroup key={day} label={formatUKDateLabel(day)}>
                   {list.map((i) => {
-                    const hiveName = hiveNameById.get(i.hive_id) || "Unassigned hive";
-                    const apiaryName = apiaryNameById.get(i.apiary_id) || "Apiary";
+                    const hiveName =
+                      hiveNameById.get(i.hive_id) || "Unassigned hive";
+                    const apiaryName =
+                      apiaryNameById.get(i.apiary_id) || "Apiary";
                     const timeStr = formatHM(i.date) || formatHM(i.created_at);
-                    const label = `${hiveName} (${apiaryName})${timeStr ? ` • ${timeStr}` : ""}`;
+                    const label = `${hiveName} (${apiaryName})${
+                      timeStr ? ` • ${timeStr}` : ""
+                    }`;
                     return (
                       <option key={i.id} value={i.id}>
                         {label}
@@ -325,7 +415,8 @@ export default function NewLogEntry() {
               ))}
             </select>
             <p className="mt-1 text-xs text-gray-500">
-              Tip: change the Hive selector above to narrow inspections to that hive only.
+              Tip: change the Hive selector above to narrow inspections to that
+              hive only.
             </p>
           </div>
         </div>
@@ -341,7 +432,11 @@ export default function NewLogEntry() {
             required
           >
             <option value="">Select type…</option>
-            {LOG_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+            {LOG_TYPES.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
           </select>
 
           {form.log_type_select === "Other" && (
@@ -357,7 +452,9 @@ export default function NewLogEntry() {
 
         {/* Notes */}
         <div>
-          <label htmlFor="entry" className="block text-sm font-medium mb-1">Notes</label>
+          <label htmlFor="entry" className="block text-sm font-medium mb-1">
+            Notes
+          </label>
           <textarea
             id="entry"
             value={form.entry}
@@ -372,7 +469,12 @@ export default function NewLogEntry() {
         <div>
           <label className="block text-sm font-medium mb-1">Photo (optional)</label>
           {!previewUrl ? (
-            <input type="file" accept="image/*" onChange={onPickPhoto} className="w-full border rounded px-3 py-2" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={onPickPhoto}
+              className="w-full border rounded px-3 py-2"
+            />
           ) : (
             <div className="relative inline-flex flex-col items-start mb-2 max-w-full">
               <img
@@ -397,29 +499,36 @@ export default function NewLogEntry() {
         </div>
 
         {/* Inline messages */}
-        {error && <div className="text-red-700 bg-red-50 border border-red-200 rounded p-3 text-sm">{error}</div>}
+        {error && (
+          <div className="text-red-700 bg-red-50 border border-red-200 rounded p-3 text-sm">
+            {error}
+          </div>
+        )}
         {success && (
-          <div ref={successRef} className="text-green-700 bg-green-50 border border-green-200 rounded p-3 text-sm">
+          <div
+            ref={successRef}
+            className="text-green-700 bg-green-50 border border-green-200 rounded p-3 text-sm"
+          >
             {success}
           </div>
         )}
 
         <div className="flex gap-3">
-          {/* STANDARD GREEN BUTTON */}
           <button
             type="submit"
             disabled={saving}
             className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500
-                       disabled:opacity-50 disabled:pointer-events-none">
+                       disabled:opacity-50 disabled:pointer-events-none"
+          >
             {saving ? "Saving…" : "Save Entry"}
           </button>
 
-          {/* Neutral cancel (matched height) */}
           <button
             type="button"
             className="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm px-3 py-2 rounded"
-            onClick={handleCancel}>
+            onClick={handleCancel}
+          >
             Cancel
           </button>
         </div>

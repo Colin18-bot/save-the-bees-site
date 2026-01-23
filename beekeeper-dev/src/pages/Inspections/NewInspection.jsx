@@ -108,10 +108,9 @@ const NewInspection = () => {
 
   // cleanup previews on unmount
   useEffect(() => {
-    return () =>
-      previews.forEach(
-        (p) => p.url?.startsWith("blob:") && URL.revokeObjectURL(p.url)
-      );
+    return () => {
+      previews.forEach((p) => p.url?.startsWith("blob:") && URL.revokeObjectURL(p.url));
+    };
   }, [previews]);
 
   const fetchWeather = async (apiary, dateStr) => {
@@ -169,15 +168,10 @@ const NewInspection = () => {
       setSubscriptionLevel(level);
 
       const [{ data: hivesData }, { data: apiariesData }] = await Promise.all([
-        supabase
-          .from("hives")
-          .select("id, name, apiary_id, nfc_uid")
-          .is("archived_at", null),
-        supabase
-          .from("apiaries")
-          .select("id, name, latitude, longitude")
-          .is("archived_at", null),
+        supabase.from("hives").select("id, name, apiary_id, nfc_uid").is("archived_at", null),
+        supabase.from("apiaries").select("id, name, latitude, longitude").is("archived_at", null),
       ]);
+
       const safeHives = hivesData || [];
       const safeApiaries = apiariesData || [];
       setHives(safeHives);
@@ -186,7 +180,7 @@ const NewInspection = () => {
       let chosenHiveId = "";
       let chosenApiaryId = "";
 
-      // 1) Direct hive_id param (e.g. from Hives list or NFCScan)
+      // 1) Direct hive_id param
       if (hiveIdParam) {
         const hv = safeHives.find((h) => h.id === hiveIdParam);
         if (hv) {
@@ -195,18 +189,16 @@ const NewInspection = () => {
         }
       }
 
-      // 2) apiary_id param (if no hive decided yet)
+      // 2) apiary_id param
       if (!chosenApiaryId && apiaryIdParam) {
         const ap = safeApiaries.find((a) => a.id === apiaryIdParam);
         if (ap) chosenApiaryId = ap.id;
       }
 
-      // 3) NFC param – PREMIUM ONLY: use to pre-select hive, no redirects
+      // 3) NFC param – PREMIUM ONLY
       if (level === "premium" && nfc_uidParam) {
         const matches = safeHives.filter(
-          (h) =>
-            (h.nfc_uid || "").trim().toLowerCase() ===
-            nfc_uidParam.trim().toLowerCase()
+          (h) => (h.nfc_uid || "").trim().toLowerCase() === nfc_uidParam.trim().toLowerCase()
         );
 
         if (matches.length > 1) {
@@ -218,7 +210,6 @@ const NewInspection = () => {
           chosenHiveId = hive.id;
           chosenApiaryId = hive.apiary_id;
         } else if (!hiveIdParam) {
-          // Only complain if we didn't already have a hive_id from the URL
           setErrorMessage("No hive found for this NFC tag.");
         }
       }
@@ -230,9 +221,7 @@ const NewInspection = () => {
       }));
 
       const today = dayjs().format("YYYY-MM-DD");
-      const apiary = safeApiaries.find(
-        (a) => a.id === (chosenApiaryId || formData.apiary_id)
-      );
+      const apiary = safeApiaries.find((a) => a.id === (chosenApiaryId || formData.apiary_id));
       if (apiary) fetchWeather(apiary, today);
     };
 
@@ -260,18 +249,28 @@ const NewInspection = () => {
     }
 
     if (type === "file") {
-      const nextFiles = [...files, ...(Array.from(picked || []))].slice(0, 3);
-      previews.forEach(
-        (p) => p.url?.startsWith("blob:") && URL.revokeObjectURL(p.url)
-      );
-      setFiles(nextFiles);
-      setPreviews(
-        nextFiles.map((f, i) => ({
-          id: `${f.name}-${i}-${Date.now()}`,
-          url: URL.createObjectURL(f),
-          name: f.name,
-        }))
-      );
+      const pickedFiles = Array.from(picked || []);
+      if (!pickedFiles.length) return;
+
+      const remainingSlots = Math.max(0, 3 - files.length);
+      const selected = pickedFiles.slice(0, remainingSlots);
+
+      setFiles((prev) => [...prev, ...selected]);
+
+      setPreviews((prev) => {
+        const next = [...prev];
+        for (const f of selected) {
+          next.push({
+            id: `${f.name}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            url: URL.createObjectURL(f),
+            name: f.name,
+          });
+        }
+        return next;
+      });
+
+      // allow re-selecting same file
+      e.target.value = "";
       return;
     }
 
@@ -312,12 +311,12 @@ const NewInspection = () => {
   const removePhoto = (id) => {
     const idx = previews.findIndex((p) => p.id === id);
     if (idx === -1) return;
+
     const pv = previews[idx];
     if (pv?.url?.startsWith("blob:")) URL.revokeObjectURL(pv.url);
-    const newPreviews = previews.filter((p) => p.id !== id);
-    const newFiles = files.filter((_, i) => i !== idx);
-    setPreviews(newPreviews);
-    setFiles(newFiles);
+
+    setPreviews((prev) => prev.filter((p) => p.id !== id));
+    setFiles((prev) => prev.filter((_, i) => i !== idx));
   };
 
   // Premium: NFC scan to auto-select hive (with duplicate safeguards)
@@ -329,17 +328,18 @@ const NewInspection = () => {
       reader.onreading = async (event) => {
         const uid = event.serialNumber || "";
         if (!uid) return;
+
         const matches = hives.filter(
-          (h) =>
-            (h.nfc_uid || "").trim().toLowerCase() ===
-            uid.trim().toLowerCase()
+          (h) => (h.nfc_uid || "").trim().toLowerCase() === uid.trim().toLowerCase()
         );
+
         if (matches.length > 1) {
           setErrorMessage(
             "This NFC tag is linked to multiple hives. Please resolve duplicates first."
           );
           return;
         }
+
         if (matches.length === 1) {
           const hive = matches[0];
           const apiary = apiaries.find((a) => a.id === hive.apiary_id);
@@ -357,9 +357,7 @@ const NewInspection = () => {
       };
     } catch (err) {
       console.error("NFC scan error:", err);
-      setErrorMessage(
-        "Failed to start NFC scan. Your browser/device may not support it."
-      );
+      setErrorMessage("Failed to start NFC scan. Your browser/device may not support it.");
     }
   };
 
@@ -383,19 +381,12 @@ const NewInspection = () => {
       return;
     }
 
-    // Guard: parents must be active (belt & braces)
+    // Guard: parents must be active
     const [{ data: apiaryRow }, { data: hiveRow }] = await Promise.all([
-      supabase
-        .from("apiaries")
-        .select("archived_at")
-        .eq("id", formData.apiary_id)
-        .single(),
-      supabase
-        .from("hives")
-        .select("archived_at")
-        .eq("id", formData.hive_id)
-        .single(),
+      supabase.from("apiaries").select("archived_at").eq("id", formData.apiary_id).single(),
+      supabase.from("hives").select("archived_at").eq("id", formData.hive_id).single(),
     ]);
+
     if (apiaryRow?.archived_at) {
       setErrorMessage("Selected apiary is archived. Choose an active apiary.");
       setSaving(false);
@@ -415,6 +406,7 @@ const NewInspection = () => {
       signs_disease: formData.signs_disease === "yes",
       signs_pests: formData.signs_pests === "yes",
     };
+
     if (!base.signs_disease) {
       base.disease_types = null;
       base.disease_other = null;
@@ -435,6 +427,9 @@ const NewInspection = () => {
     const insertPayload = {
       ...normalize(base),
       user_id: userWrap?.user?.id || null,
+      // photos + photo_paths will be set after upload (or remain null)
+      photos: null,
+      photo_paths: null,
     };
 
     // Insert row
@@ -463,31 +458,41 @@ const NewInspection = () => {
       source: "app",
     });
 
-    // Upload up to 3 photos -> store public URLs in photos[]
-    const urls = [];
-    for (const f of files) {
+    // Upload up to 3 photos -> store URLs + PATHS (paths are what the Edge Function prefers)
+    const uploadedUrls = [];
+    const uploadedPaths = [];
+
+    for (const f of files.slice(0, 3)) {
       try {
-        const path = `inspections/${inserted.id}-${Date.now()}-${f.name.replace(
-          /\s+/g,
-          "_"
-        )}`;
+        const safeName = f.name.replace(/\s+/g, "_");
+        const path = `inspections/${inserted.id}-${Date.now()}-${safeName}`;
+
         const { error: upErr } = await supabase.storage
           .from("photos")
           .upload(path, f, { upsert: true, contentType: f.type });
-        if (!upErr) {
-          const { data: u } = supabase.storage
-            .from("photos")
-            .getPublicUrl(path);
-          if (u?.publicUrl) urls.push(u.publicUrl);
+
+        if (upErr) {
+          console.error("Photo upload error:", upErr);
+          continue;
+        }
+
+        const { data: u } = supabase.storage.from("photos").getPublicUrl(path);
+        if (u?.publicUrl) {
+          uploadedUrls.push(u.publicUrl);
+          uploadedPaths.push(path);
         }
       } catch (err) {
         console.error("Photo upload error:", err);
       }
     }
-    if (urls.length) {
+
+    if (uploadedUrls.length) {
       await supabase
         .from("inspections")
-        .update({ photos: urls })
+        .update({
+          photos: uploadedUrls,
+          photo_paths: uploadedPaths,
+        })
         .eq("id", inserted.id);
 
       // ✅ GA: follow-up event once uploads succeed
@@ -495,42 +500,38 @@ const NewInspection = () => {
         inspection_id: inserted.id,
         apiary_id: inserted.apiary_id,
         hive_id: inserted.hive_id,
-        count_photos: urls.length,
+        count_photos: uploadedUrls.length,
       });
     }
 
+    // cleanup previews now we’re leaving
+    previews.forEach((p) => p.url?.startsWith("blob:") && URL.revokeObjectURL(p.url));
+    setPreviews([]);
+    setFiles([]);
+
     setSuccessMessage("Inspection saved successfully!");
     setSaving(false);
-    setTimeout(
-      () =>
-        successRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        }),
-      50
-    );
 
-    // 👇 Redirect logic:
-    // If this inspection was started via NFC, go straight to a *fresh* New Inspection
-    // for the same hive, so the next visit is also "tap → inspection".
+    setTimeout(() => {
+      successRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+
+    // Redirect logic:
     if (nfc_uidParam && inserted.hive_id) {
       navigate(
-        `/inspections/new?hive_id=${encodeURIComponent(
-          inserted.hive_id
-        )}&nfc_uid=${encodeURIComponent(nfc_uidParam)}&from=saved`
+        `/inspections/new?hive_id=${encodeURIComponent(inserted.hive_id)}&nfc_uid=${encodeURIComponent(
+          nfc_uidParam
+        )}&from=saved`
       );
     } else {
-      // Normal flow (menu / buttons): go back to the list
       navigate("/inspections");
     }
   };
 
-  const hivesForSelectedApiary =
-    formData.apiary_id
-      ? hives.filter((h) => h.apiary_id === formData.apiary_id)
-      : hives;
+  const hivesForSelectedApiary = formData.apiary_id
+    ? hives.filter((h) => h.apiary_id === formData.apiary_id)
+    : hives;
 
-  // --- Inline compliance message renderer (kept tiny & local)
   const renderDiseaseCompliance = () => {
     if (formData.signs_disease !== "yes") return null;
 
@@ -542,7 +543,6 @@ const NewInspection = () => {
 
     const auth = COUNTRY_AUTH[reportCountry] || COUNTRY_AUTH["England & Wales"];
 
-    // pick severity
     const isNotifiable = hasAFB || hasEFB;
     const boxCls = isNotifiable
       ? "bg-red-50 border-red-200 text-red-800"
@@ -567,76 +567,59 @@ const NewInspection = () => {
 
         {isNotifiable && (
           <p className="mb-1">
-            <strong>AFB/EFB are notifiable diseases.</strong> By law you must
-            report immediately to{" "}
-            <a
-              href={auth.url}
-              target="_blank"
-              rel="noreferrer"
-              className="underline"
-            >
+            <strong>AFB/EFB are notifiable diseases.</strong> By law you must report
+            immediately to{" "}
+            <a href={auth.url} target="_blank" rel="noreferrer" className="underline">
               {auth.name}
             </a>{" "}
-            ({reportCountry}). Avoid moving combs/kit off-site until advised by
-            an inspector.
+            ({reportCountry}). Avoid moving combs/kit off-site until advised by an inspector.
           </p>
         )}
 
-       {hasVarroa && (
-  <p className="mt-1">
-    <strong>Varroa (monitoring):</strong> Varroa is <strong>not a notifiable disease</strong>{" "}
-    in the UK. Beekeepers are encouraged to monitor infestation levels, keep
-    treatment records, and share concerns (e.g., unusually high counts or suspected
-    treatment resistance) with{" "}
-    <a
-      href={auth.url}
-      target="_blank"
-      rel="noreferrer"
-      className="underline"
-    >
-      {auth.name}
-    </a>{" "}
-    where appropriate.
-  </p>
-)}
+        {hasVarroa && (
+          <p className="mt-1">
+            <strong>Varroa (monitoring):</strong> Varroa is <strong>not a notifiable disease</strong>{" "}
+            in the UK. Beekeepers are encouraged to monitor infestation levels, keep treatment
+            records, and share concerns (e.g., unusually high counts or suspected treatment
+            resistance) with{" "}
+            <a href={auth.url} target="_blank" rel="noreferrer" className="underline">
+              {auth.name}
+            </a>{" "}
+            where appropriate.
+          </p>
+        )}
       </div>
     );
   };
 
-  // For the NFC banner + "view history" link
   const resolvedHiveId = formData.hive_id || hiveIdParam || "";
 
   return (
     <div className="p-4 max-w-3xl mx-auto rounded-x1 shadow-lg">
-     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
-  <h1 className="text-2xl font-bold">New Inspection</h1>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
+        <h1 className="text-2xl font-bold">New Inspection</h1>
 
-  <Link
-    to="/inspections/step-by-step"
-    target="_blank"
-    rel="noreferrer"
-    className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100 w-full sm:w-auto"
-    title="Open the step-by-step inspection guide"
-    onClick={() =>
-      trackEvent("inspection_guide_open", { source: "new_inspection" })
-    }
-  >
-    Step-by-step inspection guide
-  </Link>
-</div>
+        <Link
+          to="/inspections/step-by-step"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100 w-full sm:w-auto"
+          title="Open the step-by-step inspection guide"
+          onClick={() => trackEvent("inspection_guide_open", { source: "new_inspection" })}
+        >
+          Step-by-step inspection guide
+        </Link>
+      </div>
 
-      {/* If we just came back after saving via NFC */}
       {fromParam === "saved" && nfc_uidParam && resolvedHiveId && (
         <div className="mb-3 p-3 border rounded bg-green-50 text-green-900 text-sm">
-          <p className="font-semibold">
-            Last inspection for this hive was saved successfully.
-          </p>
+          <p className="font-semibold">Last inspection for this hive was saved successfully.</p>
           <p className="mt-1">
             You’re ready to start another inspection, or you can{" "}
             <Link
-              to={`/inspections?hive_id=${encodeURIComponent(
-                resolvedHiveId
-              )}&nfc_uid=${encodeURIComponent(nfc_uidParam)}`}
+              to={`/inspections?hive_id=${encodeURIComponent(resolvedHiveId)}&nfc_uid=${encodeURIComponent(
+                nfc_uidParam
+              )}`}
               className="underline"
             >
               view this hive’s inspection history
@@ -646,22 +629,19 @@ const NewInspection = () => {
         </div>
       )}
 
-      {/* If we arrived via NFC URL on Premium, show a little banner */}
       {subscriptionLevel === "premium" && nfc_uidParam && (
         <div className="mb-3 p-3 border rounded bg-green-50 text-green-900 text-sm">
           <p>
             Arrived via NFC tag:{" "}
-            <code className="px-1 py-0.5 bg-white border rounded">
-              {nfc_uidParam}
-            </code>
-            . Hive has been pre-selected where possible.
+            <code className="px-1 py-0.5 bg-white border rounded">{nfc_uidParam}</code>. Hive
+            has been pre-selected where possible.
           </p>
           {resolvedHiveId && (
             <p className="mt-1">
               <Link
-                to={`/inspections?hive_id=${encodeURIComponent(
-                  resolvedHiveId
-                )}&nfc_uid=${encodeURIComponent(nfc_uidParam)}`}
+                to={`/inspections?hive_id=${encodeURIComponent(resolvedHiveId)}&nfc_uid=${encodeURIComponent(
+                  nfc_uidParam
+                )}`}
                 className="text-green-800 underline"
               >
                 View this hive’s inspection history →
@@ -671,12 +651,9 @@ const NewInspection = () => {
         </div>
       )}
 
-      {/* Premium NFC quick-select */}
       {subscriptionLevel === "premium" && nfcSupported && (
         <div className="mb-4 p-3 border rounded bg-blue-50 text-blue-900 flex items-center justify-between">
-          <div className="text-sm">
-            Tap an NFC tag to instantly select its hive.
-          </div>
+          <div className="text-sm">Tap an NFC tag to instantly select its hive.</div>
           <button
             type="button"
             onClick={handleNfcScan}
@@ -726,7 +703,7 @@ const NewInspection = () => {
           </select>
         </div>
 
-        {/* Date + Weather (read-only) */}
+        {/* Date + Weather */}
         <div>
           <label className="block font-semibold">Inspection Date</label>
           <input
@@ -777,25 +754,21 @@ const NewInspection = () => {
         {/* Environmental Signs */}
         <div>
           <label className="block font-semibold">Environmental Signs</label>
-          {[
-            "Entering/exiting",
-            "Bringing in pollen",
-            "Robbing",
-            "Unusual odour",
-            "Other",
-          ].map((opt) => (
-            <label key={opt} className="block">
-              <input
-                type="checkbox"
-                name="environmental_signs"
-                value={opt}
-                checked={formData.environmental_signs.includes(opt)}
-                onChange={handleChange}
-                className="mr-2"
-              />
-              {opt}
-            </label>
-          ))}
+          {["Entering/exiting", "Bringing in pollen", "Robbing", "Unusual odour", "Other"].map(
+            (opt) => (
+              <label key={opt} className="block">
+                <input
+                  type="checkbox"
+                  name="environmental_signs"
+                  value={opt}
+                  checked={formData.environmental_signs.includes(opt)}
+                  onChange={handleChange}
+                  className="mr-2"
+                />
+                {opt}
+              </label>
+            )
+          )}
           {formData.environmental_signs.includes("Other") && (
             <input
               type="text"
@@ -858,21 +831,19 @@ const NewInspection = () => {
         {/* Queen Status */}
         <div>
           <label className="block font-semibold">Queen Status</label>
-          {["Seen", "Eggs", "Capped brood", "Uncapped brood", "Other"].map(
-            (opt) => (
-              <label key={opt} className="block">
-                <input
-                  type="checkbox"
-                  name="queen_status"
-                  value={opt}
-                  checked={formData.queen_status.includes(opt)}
-                  onChange={handleChange}
-                  className="mr-2"
-                />
-                {opt}
-              </label>
-            )
-          )}
+          {["Seen", "Eggs", "Capped brood", "Uncapped brood", "Other"].map((opt) => (
+            <label key={opt} className="block">
+              <input
+                type="checkbox"
+                name="queen_status"
+                value={opt}
+                checked={formData.queen_status.includes(opt)}
+                onChange={handleChange}
+                className="mr-2"
+              />
+              {opt}
+            </label>
+          ))}
           {formData.queen_status.includes("Other") && (
             <input
               type="text"
@@ -897,30 +868,25 @@ const NewInspection = () => {
             <option value="no">No</option>
             <option value="yes">Yes</option>
           </select>
+
           {formData.signs_disease === "yes" && (
             <>
-              {[
-                "Varroa",
-                "Chalkbrood",
-                "Sacbrood",
-                "EFB",
-                "AFB",
-                "Nosema",
-                "Dead bees",
-                "Other",
-              ].map((opt) => (
-                <label key={opt} className="block">
-                  <input
-                    type="checkbox"
-                    name="disease_types"
-                    value={opt}
-                    checked={formData.disease_types.includes(opt)}
-                    onChange={handleChange}
-                    className="mr-2"
-                  />
-                  {opt}
-                </label>
-              ))}
+              {["Varroa", "Chalkbrood", "Sacbrood", "EFB", "AFB", "Nosema", "Dead bees", "Other"].map(
+                (opt) => (
+                  <label key={opt} className="block">
+                    <input
+                      type="checkbox"
+                      name="disease_types"
+                      value={opt}
+                      checked={formData.disease_types.includes(opt)}
+                      onChange={handleChange}
+                      className="mr-2"
+                    />
+                    {opt}
+                  </label>
+                )
+              )}
+
               {formData.disease_types.includes("Other") && (
                 <input
                   type="text"
@@ -932,7 +898,6 @@ const NewInspection = () => {
                 />
               )}
 
-              {/* ▶ Inline compliance note */}
               {renderDiseaseCompliance()}
             </>
           )}
@@ -950,23 +915,23 @@ const NewInspection = () => {
             <option value="no">No</option>
             <option value="yes">Yes</option>
           </select>
+
           {formData.signs_pests === "yes" && (
             <>
-              {["Mice", "Ants", "Beetles", "Wax Moths", "Wasps", "Other"].map(
-                (opt) => (
-                  <label key={opt} className="block">
-                    <input
-                      type="checkbox"
-                      name="pest_types"
-                      value={opt}
-                      checked={formData.pest_types.includes(opt)}
-                      onChange={handleChange}
-                      className="mr-2"
-                    />
-                    {opt}
-                  </label>
-                )
-              )}
+              {["Mice", "Ants", "Beetles", "Wax Moths", "Wasps", "Other"].map((opt) => (
+                <label key={opt} className="block">
+                  <input
+                    type="checkbox"
+                    name="pest_types"
+                    value={opt}
+                    checked={formData.pest_types.includes(opt)}
+                    onChange={handleChange}
+                    className="mr-2"
+                  />
+                  {opt}
+                </label>
+              ))}
+
               {formData.pest_types.includes("Other") && (
                 <input
                   type="text"
@@ -996,9 +961,7 @@ const NewInspection = () => {
 
         {/* Photos */}
         <div>
-          <label className="block font-semibold mb-1">
-            Upload Photos (max 3)
-          </label>
+          <label className="block font-semibold mb-1">Upload Photos (max 3)</label>
           <input
             type="file"
             accept="image/*"
@@ -1009,9 +972,7 @@ const NewInspection = () => {
             disabled={files.length >= 3}
           />
           {files.length >= 3 && (
-            <p className="text-sm text-red-600 mt-1">
-              Maximum of 3 photos reached.
-            </p>
+            <p className="text-sm text-red-600 mt-1">Maximum of 3 photos reached.</p>
           )}
 
           {previews.length > 0 && (
@@ -1030,9 +991,7 @@ const NewInspection = () => {
                   >
                     ×
                   </button>
-                  <div className="mt-1 text-xs text-gray-600 break-all">
-                    {p.name}
-                  </div>
+                  <div className="mt-1 text-xs text-gray-600 break-all">{p.name}</div>
                 </div>
               ))}
             </div>

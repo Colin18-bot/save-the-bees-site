@@ -1,5 +1,5 @@
 // src/pages/Apiaries/NewApiary.jsx
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import {
@@ -40,7 +40,7 @@ async function reverseGeocodeCountry(lat, lon) {
         if (name) return { code, name };
       }
     } catch {
-      /* fall through to fallback */
+      /* fall through */
     }
   }
 
@@ -61,55 +61,62 @@ async function reverseGeocodeCountry(lat, lon) {
 }
 
 async function detectTimezone(lat, lon) {
-  const url = `https://api.open-meteo.com/v1/timezone?latitude=${encodeURIComponent(
-    lat
-  )}&longitude=${encodeURIComponent(lon)}`;
-  const res = await fetch(url, { headers: { accept: "application/json" } });
-  if (!res.ok) return null;
-  const data = await res.json().catch(() => null);
-  const tz = data?.timezone;
-  return typeof tz === "string" && tz ? tz : null;
+  try {
+    const url = `https://api.open-meteo.com/v1/timezone?latitude=${encodeURIComponent(
+      lat
+    )}&longitude=${encodeURIComponent(lon)}`;
+    const res = await fetch(url, { headers: { accept: "application/json" } });
+    if (!res.ok) return null;
+    const data = await res.json().catch(() => null);
+    const tz = data?.timezone;
+    return typeof tz === "string" && tz ? tz : null;
+  } catch {
+    return null;
+  }
 }
 
 const LocationMarker = ({ latitude, longitude, setLatitude, setLongitude }) => {
   const map = useMap();
+
   useMapEvents({
     click(e) {
       setLatitude(e.latlng.lat);
       setLongitude(e.latlng.lng);
     },
   });
+
   useEffect(() => {
     if (latitude != null && longitude != null) {
       const currentZoom = map.getZoom();
       map.setView([latitude, longitude], currentZoom);
     }
   }, [latitude, longitude, map]);
+
+  if (latitude == null || longitude == null) return null;
+
   return (
     <>
-      {latitude != null && longitude != null && (
-        <>
-          <Marker position={[latitude, longitude]} icon={markerIcon} />
-          <Circle
-            center={[latitude, longitude]}
-            radius={4828}
-            pathOptions={{ color: "green", fillOpacity: 0.2 }}
-          />
-        </>
-      )}
+      <Marker position={[latitude, longitude]} icon={markerIcon} />
+      <Circle
+        center={[latitude, longitude]}
+        radius={4828}
+        pathOptions={{ color: "green", fillOpacity: 0.2 }}
+      />
     </>
   );
 };
 
 const NewApiary = () => {
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+  const successRef = useRef(null);
 
   // Core fields
   const [name, setName] = useState("");
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
 
-  // Country (shown) + tz (not stored per Option A)
+  // Country (shown) + tz (not stored per your current schema)
   const [country, setCountry] = useState("");
   const [countryCode, setCountryCode] = useState("");
   const [tz, setTz] = useState("Europe/London");
@@ -135,7 +142,6 @@ const NewApiary = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [saving, setSaving] = useState(false);
-  const successRef = useRef(null);
 
   // Reusable button styles (consistent sizes)
   const greenBtn =
@@ -146,10 +152,6 @@ const NewApiary = () => {
   const blueBtn =
     "bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-2 rounded " +
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-blue-500";
-
-  const grayBtn =
-    "bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm px-3 py-2 rounded " +
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-gray-400";
 
   // Dropdowns
   useEffect(() => {
@@ -186,9 +188,10 @@ const NewApiary = () => {
     })();
   }, []);
 
-  // Auto-update Country and tz when the pin changes.
+  // Auto-update Country + tz when pin changes
   useEffect(() => {
     let cancelled = false;
+
     (async () => {
       if (latitude == null || longitude == null) return;
 
@@ -216,33 +219,77 @@ const NewApiary = () => {
   // Success scroll
   useEffect(() => {
     if (successMessage) {
-      successRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+      successRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [successMessage]);
 
   // Photo preview
   useEffect(() => {
     if (!photo) {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      if (previewUrl?.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
       return;
     }
     const url = URL.createObjectURL(photo);
+    if (previewUrl?.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(url);
-    return () => URL.revokeObjectURL(url);
+    return () => {
+      if (url?.startsWith("blob:")) URL.revokeObjectURL(url);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [photo]);
+
+  const resetPin = () => {
+    setLatitude(null);
+    setLongitude(null);
+    setCountry("");
+    setCountryCode("");
+    // keep tz as profile default
+  };
+
+  const removePhoto = () => {
+    setPhoto(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    if (previewUrl?.startsWith("blob:")) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+  };
+
+  const handleAddressSearch = async () => {
+    if (!addressSearch.trim()) return;
+    try {
+      const hit = await forwardGeocode(addressSearch.trim());
+      if (!hit) {
+        alert("Location not found.");
+        return;
+      }
+      // IMPORTANT: set the pin immediately (so user doesn't have to click map after searching)
+      setLatitude(Number(hit.lat));
+      setLongitude(Number(hit.lon));
+    } catch (err) {
+      console.error("Address search failed:", err);
+      if (String(err?.message || "").includes("VITE_LOCATIONIQ_KEY")) {
+        alert("Missing LocationIQ key in .env");
+      } else {
+        alert("Address search failed. Please try again.");
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage("");
+    setSuccessMessage("");
+
+    const cleanName = name.trim();
+    if (!cleanName) {
+      setErrorMessage("Please enter an apiary name.");
+      return;
+    }
 
     // Require a pin on the map before saving
     if (latitude == null || longitude == null) {
       setErrorMessage(
-        "Please click on the map to place the pin for your apiary location before saving."
+        "Please place the pin for your apiary location before saving."
       );
       return;
     }
@@ -281,11 +328,11 @@ const NewApiary = () => {
         }
       }
 
-      // Prevent duplicate names
+      // Prevent duplicate names (trim + exact match)
       const { data: existing, error: dupErr } = await supabase
         .from("apiaries")
         .select("id")
-        .eq("name", name)
+        .eq("name", cleanName)
         .eq("user_id", user.id)
         .is("archived_at", null);
 
@@ -297,19 +344,19 @@ const NewApiary = () => {
       // 1) Insert apiary (no upload yet)
       const payloadInsert = {
         user_id: user.id,
-        name,
+        name: cleanName,
         latitude,
         longitude,
         established_date: establishedDate || null,
         location_type:
           selectedLocationType === "Other"
-            ? otherLocationType || null
+            ? (otherLocationType || "").trim() || null
             : selectedLocationType || null,
         site_setting:
           selectedSiteSetting === "Other"
-            ? otherSiteSetting || null
+            ? (otherSiteSetting || "").trim() || null
             : selectedSiteSetting || null,
-        notes: notes || null,
+        notes: (notes || "").trim() || null,
         is_default: false,
       };
 
@@ -326,15 +373,20 @@ const NewApiary = () => {
 
       // 2) Upload photo (after insert)
       if (photo && insertedApiary?.id) {
-        const safeName = photo.name.replace(/[^\w.-]+/g, "_");
+        const safeName = String(photo.name || "photo.jpg").replace(
+          /[^\w.-]+/g,
+          "_"
+        );
         photo_path = `apiaries/${user.id}/${insertedApiary.id}/${Date.now()}-${safeName}`;
 
-        const { error: upErr } = await supabase.storage
-          .from("photos")
-          .upload(photo_path, photo, {
+        const { error: upErr } = await supabase.storage.from("photos").upload(
+          photo_path,
+          photo,
+          {
             upsert: true,
             contentType: photo.type || "image/jpeg",
-          });
+          }
+        );
 
         if (upErr) {
           await supabase.from("apiaries").delete().eq("id", insertedApiary.id);
@@ -345,29 +397,25 @@ const NewApiary = () => {
           .from("photos")
           .getPublicUrl(photo_path);
 
-        // Store a clean URL with no cache-busting querystring
         photo_url = pub?.publicUrl || "";
 
         // Save URL (and PATH if available)
-        let updateErr = null;
         const { error: updErr1 } = await supabase
           .from("apiaries")
           .update({ photo_url, photo_path })
           .eq("id", insertedApiary.id);
-        updateErr = updErr1;
 
         if (
-          updateErr &&
-          /column .*photo_path.* does not exist/i.test(
-            updateErr.message || ""
-          )
+          updErr1 &&
+          /column .*photo_path.* does not exist/i.test(updErr1.message || "")
         ) {
-          await supabase
+          const { error: updErr2 } = await supabase
             .from("apiaries")
             .update({ photo_url })
             .eq("id", insertedApiary.id);
-        } else if (updateErr) {
-          throw updateErr;
+          if (updErr2) throw updErr2;
+        } else if (updErr1) {
+          throw updErr1;
         }
       }
 
@@ -395,7 +443,7 @@ const NewApiary = () => {
       navigate("/apiaries");
     } catch (err) {
       console.error("Error saving apiary:", err);
-      setErrorMessage(err.message || "Failed to save apiary.");
+      setErrorMessage(err?.message || "Failed to save apiary.");
     } finally {
       setSaving(false);
     }
@@ -404,6 +452,7 @@ const NewApiary = () => {
   return (
     <div className="max-w-2xl mx-auto p-6 rounded-xl shadow-lg">
       <h2 className="text-2xl font-bold mb-4">New Apiary</h2>
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
@@ -484,27 +533,7 @@ const NewApiary = () => {
           />
           <button
             type="button"
-            onClick={async () => {
-              if (!addressSearch.trim()) return;
-              try {
-                const hit = await forwardGeocode(addressSearch.trim());
-                if (!hit) {
-                  alert("Location not found.");
-                  return;
-                }
-                setLatitude(Number(hit.lat));
-                setLongitude(Number(hit.lon));
-              } catch (err) {
-                console.error("Address search failed:", err);
-                if (
-                  String(err?.message || "").includes("VITE_LOCATIONIQ_KEY")
-                ) {
-                  alert("Missing LocationIQ key in .env");
-                } else {
-                  alert("Address search failed. Please try again.");
-                }
-              }
-            }}
+            onClick={handleAddressSearch}
             className={blueBtn}
           >
             Search
@@ -535,20 +564,20 @@ const NewApiary = () => {
         <div className="mt-2 text-xs text-gray-700 bg-yellow-50 border border-yellow-200 rounded p-2">
           <strong className="block font-semibold mb-1">Tip</strong>
           <p>
-            After searching for an address, you still need to{" "}
-            <span className="font-semibold">click on the map</span> to drop the
-            pin exactly where your apiary is. You can zoom and drag the map –
-            zoom out to see the green circle, which shows the approximate
-            foraging area around your apiary.
+            Use <span className="font-semibold">Search</span> to drop the pin
+            quickly, then click the map to fine-tune the exact spot. Zoom out to
+            see the green circle, showing the approximate foraging area.
           </p>
         </div>
 
-        {/* Country under the map (autofills from the pin; editable) */}
+        {/* Country + timezone (display only) */}
         <div>
           {latitude != null && longitude != null && (
             <div className="text-xs text-gray-600 mb-1">
-              Selected location: {latitude.toFixed(5)},{" "}
-              {longitude.toFixed(5)} (approx.)
+              Selected location: {latitude.toFixed(5)}, {longitude.toFixed(5)}{" "}
+              (approx.)
+              {countryCode ? ` • ${countryCode}` : ""}
+              {tz ? ` • ${tz}` : ""}
             </div>
           )}
           <label className="block text-sm font-medium mb-1">Country</label>
@@ -561,18 +590,9 @@ const NewApiary = () => {
         </div>
 
         <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              setLatitude(null);
-              setLongitude(null);
-            }}
-            className={blueBtn}
-          >
+          <button type="button" onClick={resetPin} className={blueBtn}>
             Reset Pin
           </button>
-          {/* Example neutral button if you add more actions later */}
-          {/* <button type="button" className={grayBtn}>Another Action</button> */}
         </div>
 
         <textarea
@@ -582,6 +602,7 @@ const NewApiary = () => {
           className="w-full border p-2 rounded"
         />
 
+        {/* Photo preview */}
         {photo && (
           <div className="mt-3">
             <div className="relative inline-flex flex-col items-start mb-2 max-w-full">
@@ -592,7 +613,7 @@ const NewApiary = () => {
               />
               <button
                 type="button"
-                onClick={() => setPhoto(null)}
+                onClick={removePhoto}
                 className="absolute top-1 right-1 bg-red-600 text-white text-xs px-1 rounded hover:bg-red-700"
                 aria-label="Remove photo"
               >
@@ -606,6 +627,7 @@ const NewApiary = () => {
         )}
 
         <input
+          ref={fileInputRef}
           type="file"
           accept="image/*"
           onChange={(e) => setPhoto(e.target.files?.[0] || null)}
@@ -616,7 +638,7 @@ const NewApiary = () => {
           <input
             type="checkbox"
             checked={isDefault}
-            onChange={() => setIsDefault(!isDefault)}
+            onChange={() => setIsDefault((v) => !v)}
             id="isDefault"
           />
           <label htmlFor="isDefault">Set as default apiary</label>

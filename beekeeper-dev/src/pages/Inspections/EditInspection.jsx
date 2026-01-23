@@ -5,8 +5,9 @@ import { supabase } from "../../services/supabase";
 import { reverseGeocode } from "../../utils/geocode";
 import {
   archiveItem,
-  deleteRowAndRemoveUrls,
   humaniseSupabaseError,
+  removeOneInspectionPhoto,
+  smartDeleteInspection,
 } from "../../services/actions";
 
 /* --- Option sets (mirror NewInspection.jsx) --- */
@@ -44,15 +45,6 @@ const toArray = (v) => {
   }
   return [];
 };
-
-/** Extract { bucket, path } from a Supabase public URL */
-function parseStoragePublicUrl(url) {
-  if (!url) return null;
-  const noQuery = String(url).split("?")[0];
-  const m = noQuery.match(/\/object\/public\/([^/]+)\/(.+)$/);
-  if (!m) return null;
-  return { bucket: m[1], path: decodeURIComponent(m[2]) };
-}
 
 // WMO code map
 const weatherCodeMap = {
@@ -133,9 +125,18 @@ const EditInspection = () => {
   const [newFiles, setNewFiles] = useState([]);
   const [newPreviews, setNewPreviews] = useState([]);
 
+  // keep these previews in a ref so we can clean up on unmount safely
+  const previewsRef = useRef([]);
+  useEffect(() => {
+    previewsRef.current = newPreviews;
+  }, [newPreviews]);
+
   // Premium/NFC helpers
   const [subscriptionLevel, setSubscriptionLevel] = useState("free");
   const [nfcSupported, setNfcSupported] = useState(false);
+
+  // user id for storage paths
+  const [userId, setUserId] = useState("");
 
   const hiveById = useMemo(() => new Map(hives.map((h) => [h.id, h])), [hives]);
   const apiaryById = useMemo(() => new Map(apiaries.map((a) => [a.id, a])), [apiaries]);
@@ -190,9 +191,7 @@ const EditInspection = () => {
   const resolveHiveByNfc = (uidRaw) => {
     if (!uidRaw) return { match: null, duplicates: false };
     const target = uidRaw.trim().toLowerCase();
-    const matches = hives.filter(
-      (h) => (h.nfc_uid || "").trim().toLowerCase() === target
-    );
+    const matches = hives.filter((h) => (h.nfc_uid || "").trim().toLowerCase() === target);
     if (matches.length > 1) return { match: null, duplicates: true };
     if (matches.length === 1) return { match: matches[0], duplicates: false };
     return { match: null, duplicates: false };
@@ -204,13 +203,16 @@ const EditInspection = () => {
       setSaveError("");
       setErrorMsg("");
 
-      // Profile (premium)
+      // user + profile (premium)
       const { data: userWrap } = await supabase.auth.getUser();
-      if (userWrap?.user?.id) {
+      const uid = userWrap?.user?.id || "";
+      setUserId(uid);
+
+      if (uid) {
         const { data: profile } = await supabase
           .from("profiles")
           .select("subscription_level")
-          .eq("user_id", userWrap.user.id)
+          .eq("user_id", uid)
           .maybeSingle();
         setSubscriptionLevel(profile?.subscription_level || "free");
       }
@@ -242,7 +244,6 @@ const EditInspection = () => {
       const data = inspRes.data || {};
       const loadedPhotos = Array.isArray(data.photos) ? data.photos : [];
 
-      // normalise date for <input type="date">
       let dateStr = data.date || "";
       if (dateStr) {
         try {
@@ -279,7 +280,6 @@ const EditInspection = () => {
 
       setOriginalPhotos(loadedPhotos);
 
-      // initial location + reverse geocode + weather
       if (data.apiary_id) {
         const apiary = (apiaryRes.data || []).find((a) => a.id === data.apiary_id);
         if (apiary?.latitude && apiary?.longitude) {
@@ -301,9 +301,8 @@ const EditInspection = () => {
 
     loadAll();
 
-    // cleanup previews
     return () => {
-      newPreviews.forEach((u) => u?.startsWith("blob:") && URL.revokeObjectURL(u));
+      (previewsRef.current || []).forEach((u) => u?.startsWith("blob:") && URL.revokeObjectURL(u));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
@@ -326,13 +325,11 @@ const EditInspection = () => {
   const onChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    // boolean toggles
     if (type === "checkbox" && (name === "signs_pests" || name === "signs_disease")) {
       setFormData((prev) => ({ ...prev, [name]: checked }));
       return;
     }
 
-    // hive selection: auto-set apiary + refresh weather + address
     if (name === "hive_id") {
       setFormData((prev) => {
         const next = { ...prev, hive_id: value };
@@ -354,17 +351,15 @@ const EditInspection = () => {
       return;
     }
 
-    // apiary selection: refresh weather + address, clear mismatched hive
     if (name === "apiary_id") {
       setFormData((prev) => {
         let safeHiveId = prev.hive_id;
         const hive = hiveById.get(prev.hive_id);
-        if (hive && hive.apiary_id !== value) {
-          safeHiveId = "";
-        }
-        const next = { ...prev, apiary_id: value, hive_id: safeHiveId };
+        if (hive && hive.apiary_id !== value) safeHiveId = "";
 
+        const next = { ...prev, apiary_id: value, hive_id: safeHiveId };
         const apiary = apiaryById.get(value);
+
         if (apiary) {
           fetchWeather(apiary, prev.date || next.date);
           setApiaryLocation({ lat: apiary.latitude, lon: apiary.longitude });
@@ -377,9 +372,7 @@ const EditInspection = () => {
         }
 
         if (safeHiveId === "" && prev.hive_id) {
-          setErrorMsg(
-            "Previous hive was cleared because it doesn’t belong to the selected apiary."
-          );
+          setErrorMsg("Previous hive was cleared because it doesn’t belong to the selected apiary.");
         } else {
           setErrorMsg("");
         }
@@ -389,7 +382,6 @@ const EditInspection = () => {
       return;
     }
 
-    // date change: refresh weather for selected apiary
     if (name === "date") {
       setFormData((prev) => {
         const next = { ...prev, date: value };
@@ -449,17 +441,23 @@ const EditInspection = () => {
     });
   };
 
+  /**
+   * Upload new files and return [{ url, path, bucket }]
+   */
   const uploadNewFiles = async () => {
     if (!newFiles.length) return [];
 
     const uploaded = [];
+    const bucket = "photos";
+    const uid = userId;
+
     for (const file of newFiles) {
-      const safeName = file.name.replace(/\s+/g, "_");
-      const filename = `${id}-${Date.now()}-${safeName}`;
-      const path = `inspections/${filename}`;
+      const safeName = String(file.name || "image").replace(/[^\w.-]+/g, "_");
+      const filename = `${Date.now()}-${safeName}`;
+      const path = `inspections/${uid || "unknown"}/${id}/${filename}`;
 
       const { error: upErr } = await supabase.storage
-        .from("photos")
+        .from(bucket)
         .upload(path, file, { contentType: file.type, upsert: true });
 
       if (upErr) {
@@ -467,8 +465,8 @@ const EditInspection = () => {
         continue;
       }
 
-      const { data } = supabase.storage.from("photos").getPublicUrl(path);
-      if (data?.publicUrl) uploaded.push(data.publicUrl);
+      const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+      if (data?.publicUrl) uploaded.push({ url: data.publicUrl, path, bucket });
     }
 
     return uploaded;
@@ -488,9 +486,7 @@ const EditInspection = () => {
 
         const { match, duplicates } = resolveHiveByNfc(uid);
         if (duplicates) {
-          setSaveError(
-            "This NFC tag is assigned to multiple hives. Please resolve duplicates first."
-          );
+          setSaveError("This NFC tag is assigned to multiple hives. Please resolve duplicates first.");
           return;
         }
 
@@ -554,10 +550,12 @@ const EditInspection = () => {
       }
     }
 
-    const uploadedUrls = await uploadNewFiles();
+    // Upload first; keep paths so we can rollback on DB failure
+    const uploaded = await uploadNewFiles(); // [{url, path, bucket}]
+    const uploadedUrls = uploaded.map((x) => x.url).filter(Boolean);
 
-    // remove any storage objects that the user removed from the list
-    const removed = originalPhotos.filter((oldUrl) => !formData.photos.includes(oldUrl));
+    // URLs the user removed from existing list
+    const removed = originalPhotos.filter((oldUrl) => !(formData.photos || []).includes(oldUrl));
 
     const payload = {
       apiary_id: formData.apiary_id || null,
@@ -568,16 +566,14 @@ const EditInspection = () => {
 
       colony_behavior: formData.colony_behavior || null,
       colony_behavior_other:
-        formData.colony_behavior === "Other"
-          ? (formData.colony_behavior_other || null)
-          : null,
+        formData.colony_behavior === "Other" ? (formData.colony_behavior_other || null) : null,
 
       environmental_signs:
         Array.isArray(formData.environmental_signs) && formData.environmental_signs.length
           ? formData.environmental_signs
           : null,
       environmental_signs_other:
-        formData.environmental_signs.includes("Other")
+        (formData.environmental_signs || []).includes("Other")
           ? (formData.environmental_signs_other || null)
           : null,
 
@@ -586,61 +582,67 @@ const EditInspection = () => {
       food_stores: formData.food_stores || null,
 
       queen_status:
-        Array.isArray(formData.queen_status) && formData.queen_status.length
-          ? formData.queen_status
-          : null,
+        Array.isArray(formData.queen_status) && formData.queen_status.length ? formData.queen_status : null,
       queen_status_other:
-        formData.queen_status.includes("Other")
-          ? (formData.queen_status_other || null)
-          : null,
+        (formData.queen_status || []).includes("Other") ? (formData.queen_status_other || null) : null,
 
       signs_disease: Boolean(formData.signs_disease),
       disease_types: formData.signs_disease
-        ? (Array.isArray(formData.disease_types) && formData.disease_types.length
-            ? formData.disease_types
-            : null)
+        ? (Array.isArray(formData.disease_types) && formData.disease_types.length ? formData.disease_types : null)
         : null,
       disease_other: formData.signs_disease
-        ? (formData.disease_types.includes("Other") ? (formData.disease_other || null) : null)
+        ? ((formData.disease_types || []).includes("Other") ? (formData.disease_other || null) : null)
         : null,
 
       signs_pests: Boolean(formData.signs_pests),
       pest_types: formData.signs_pests
-        ? (Array.isArray(formData.pest_types) && formData.pest_types.length
-            ? formData.pest_types
-            : null)
+        ? (Array.isArray(formData.pest_types) && formData.pest_types.length ? formData.pest_types : null)
         : null,
       pest_other: formData.signs_pests
-        ? (formData.pest_types.includes("Other") ? (formData.pest_other || null) : null)
+        ? ((formData.pest_types || []).includes("Other") ? (formData.pest_other || null) : null)
         : null,
 
       notes: formData.notes || null,
 
+      // merged list, max 3
       photos: [...(formData.photos || []), ...uploadedUrls].slice(0, 3),
     };
 
     const { error } = await supabase.from("inspections").update(payload).eq("id", id);
 
-    if (!error && removed.length) {
-      const pathsByBucket = new Map();
-      for (const u of removed) {
-        const parsed = parseStoragePublicUrl(u);
-        if (!parsed) continue;
-        if (!pathsByBucket.has(parsed.bucket)) pathsByBucket.set(parsed.bucket, []);
-        pathsByBucket.get(parsed.bucket).push(parsed.path);
+    // If update failed, rollback newly uploaded files so you don’t leak storage
+    if (error && uploaded.length) {
+      const byBucket = new Map();
+      for (const u of uploaded) {
+        if (!u?.bucket || !u?.path) continue;
+        if (!byBucket.has(u.bucket)) byBucket.set(u.bucket, []);
+        byBucket.get(u.bucket).push(u.path);
       }
-      for (const [bucket, paths] of pathsByBucket.entries()) {
+      for (const [bucket, paths] of byBucket.entries()) {
         try {
           await supabase.storage.from(bucket).remove(paths);
         } catch {
-          // ignore
+          // ignore rollback errors
         }
       }
     }
 
+    // If update succeeded, delete removed old photos via EDGE FUNCTION (no orphans)
+    if (!error && removed.length) {
+      for (const url of removed) {
+        try {
+          await removeOneInspectionPhoto(id, { url });
+        } catch {
+          // ignore; edge function already handles idempotently, and we don't block save UX
+        }
+      }
+    }
+
+    // cleanup new previews (blob URLs)
     newPreviews.forEach((u) => u?.startsWith("blob:") && URL.revokeObjectURL(u));
     setNewPreviews([]);
     setNewFiles([]);
+
     setSaving(false);
 
     if (error) {
@@ -665,52 +667,11 @@ const EditInspection = () => {
   };
 
   const handleDelete = async () => {
-    // OPTION 1: Pre-check + fallback
-    let hasChildren = false;
-    let counts = { logs: 0, todos: 0 };
-
-    try {
-      const { data, error: checkErr } = await supabase.rpc("check_inspection_children", {
-        inspection_id: id,
-      });
-
-      if (!checkErr) {
-        const row = Array.isArray(data) ? data[0] : data;
-        counts = {
-          logs: Number(row?.logs || 0),
-          todos: Number(row?.todos || 0),
-        };
-        hasChildren = counts.logs + counts.todos > 0;
-      }
-    } catch {
-      // RPC may not exist — ignore and fall back to delete attempt
-    }
-
-    if (hasChildren) {
-      const ok = window.confirm(
-        `This inspection has:\n• ${counts.logs} logbook entr${
-          counts.logs === 1 ? "y" : "ies"
-        }${counts.todos ? `\n• ${counts.todos} to-do${counts.todos === 1 ? "" : "s"}` : ""}\n\n` +
-          `You can’t delete it while linked items exist.\n\nArchive instead?`
-      );
-      if (!ok) return;
-
-      const { error: archErr } = await archiveItem("inspections", id);
-      if (archErr) {
-        alert("Failed to archive inspection.");
-        return;
-      }
-
-      alert("Inspection archived.");
-      navigate("/inspections");
-      return;
-    }
-
     if (!window.confirm("Delete this inspection permanently? This cannot be undone.")) return;
 
-    const { error: delErr } = await deleteRowAndRemoveUrls("inspections", id, "photos");
-    if (delErr) {
-      alert(humaniseSupabaseError(delErr, { table: "inspections" }) || "Failed to delete inspection.");
+    const { error } = await smartDeleteInspection(id);
+    if (error) {
+      alert(humaniseSupabaseError(error, { table: "inspections" }) || "Failed to delete inspection.");
       return;
     }
 
@@ -736,7 +697,6 @@ const EditInspection = () => {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Edit Inspection</h1>
 
-      {/* Premium NFC helpers (scan to select hive) */}
       {subscriptionLevel === "premium" && nfcSupported && (
         <div className="mb-4 p-3 border rounded bg-blue-50 text-blue-900 flex items-center justify-between">
           <div className="text-sm">
@@ -860,7 +820,7 @@ const EditInspection = () => {
           )}
         </div>
 
-        {/* Environmental Signs (multi) */}
+        {/* Environmental Signs */}
         <div className="border rounded p-3">
           <div className="font-medium mb-2">Environmental Signs (select all that apply)</div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -877,9 +837,7 @@ const EditInspection = () => {
           </div>
           {formData.environmental_signs.includes("Other") && (
             <div className="mt-3">
-              <label className="block text-sm font-medium mb-1">
-                Environmental Signs — Other
-              </label>
+              <label className="block text-sm font-medium mb-1">Environmental Signs — Other</label>
               <input
                 type="text"
                 name="environmental_signs_other"
@@ -945,7 +903,7 @@ const EditInspection = () => {
           </div>
         </div>
 
-        {/* Queen Status (multi) */}
+        {/* Queen Status */}
         <div className="border rounded p-3">
           <div className="font-medium mb-2">Queen Status (select all that apply)</div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -978,12 +936,7 @@ const EditInspection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="border rounded p-3">
             <label className="inline-flex items-center gap-2">
-              <input
-                type="checkbox"
-                name="signs_pests"
-                checked={formData.signs_pests}
-                onChange={onChange}
-              />
+              <input type="checkbox" name="signs_pests" checked={formData.signs_pests} onChange={onChange} />
               <span className="font-medium">Signs of Pests</span>
             </label>
 
@@ -1018,12 +971,7 @@ const EditInspection = () => {
 
           <div className="border rounded p-3">
             <label className="inline-flex items-center gap-2">
-              <input
-                type="checkbox"
-                name="signs_disease"
-                checked={formData.signs_disease}
-                onChange={onChange}
-              />
+              <input type="checkbox" name="signs_disease" checked={formData.signs_disease} onChange={onChange} />
               <span className="font-medium">Signs of Disease</span>
             </label>
 
@@ -1057,20 +1005,15 @@ const EditInspection = () => {
           </div>
         </div>
 
-        {/* Photos: existing + new, max 3 total */}
+        {/* Photos */}
         <div>
           <div className="font-medium mb-2">Photos (max 3)</div>
 
-          {/* Existing */}
           {formData.photos.length > 0 && (
             <div className="flex flex-wrap gap-3 mb-3">
               {formData.photos.map((url, idx) => (
                 <div key={url + idx} className="relative">
-                  <img
-                    src={url}
-                    alt="Inspection"
-                    className="w-24 h-24 object-cover rounded border"
-                  />
+                  <img src={url} alt="Inspection" className="w-24 h-24 object-cover rounded border" />
                   <button
                     type="button"
                     onClick={() => removeExistingPhotoAt(idx)}
@@ -1083,7 +1026,6 @@ const EditInspection = () => {
             </div>
           )}
 
-          {/* New (not uploaded yet) */}
           {newPreviews.length > 0 && (
             <div className="flex flex-wrap gap-3 mb-3">
               {newPreviews.map((u, idx) => (
@@ -1128,14 +1070,12 @@ const EditInspection = () => {
           />
         </div>
 
-        {/* Errors */}
         {(saveError || errorMsg) && (
           <div className="text-red-700 bg-red-50 border border-red-200 rounded p-3 text-sm">
             {saveError || errorMsg}
           </div>
         )}
 
-        {/* Actions */}
         <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2">
           <button
             type="submit"

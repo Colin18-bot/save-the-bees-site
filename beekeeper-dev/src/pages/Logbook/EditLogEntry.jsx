@@ -2,11 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { supabase } from "../../services/supabase";
-import {
-  archiveItem,
-  deleteRowAndRemoveUrls,
-  humaniseSupabaseError,
-} from "../../services/actions";
+import { archiveItem, humaniseSupabaseError } from "../../services/actions";
 
 // The choices shown in the "Log Entry" dropdown
 const LOG_TYPES = [
@@ -42,6 +38,7 @@ const EditLogEntry = () => {
     hive_id: "",
     inspection_id: "",
     photo_url: "",
+    photo_path: "", // ✅ NEW
   });
 
   const [apiaries, setApiaries] = useState([]);
@@ -49,7 +46,7 @@ const EditLogEntry = () => {
   const [inspections, setInspections] = useState([]);
 
   const [photoPreview, setPhotoPreview] = useState(null);
-  const [currentObject, setCurrentObject] = useState(null); // {bucket, path} for the existing photo
+  const [currentPath, setCurrentPath] = useState(null); // ✅ prefer this over parsing URL
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -70,15 +67,17 @@ const EditLogEntry = () => {
       setLoading(true);
       setError("");
 
-      const [{ data: entry, error: entryErr }, { data: apiaryData, error: apiErr }] =
-        await Promise.all([
-          supabase.from("logbook").select("*").eq("id", id).single(),
-          supabase
-            .from("apiaries")
-            .select("id, name")
-            .is("archived_at", null)
-            .order("name"),
-        ]);
+      const [
+        { data: entry, error: entryErr },
+        { data: apiaryData, error: apiErr },
+      ] = await Promise.all([
+        supabase.from("logbook").select("*").eq("id", id).single(),
+        supabase
+          .from("apiaries")
+          .select("id, name")
+          .is("archived_at", null)
+          .order("name"),
+      ]);
 
       if (entryErr) {
         setError(entryErr.message || "Failed to load entry.");
@@ -94,6 +93,11 @@ const EditLogEntry = () => {
       const isKnown = LOG_TYPES.includes(loadedType);
       const dropdownValue = isKnown ? loadedType : loadedType ? "Other" : "";
 
+      const fallbackPath =
+        entry?.photo_path ||
+        parseStoragePublicUrl(entry?.photo_url)?.path ||
+        null;
+
       setFormData({
         log_type: dropdownValue,
         custom_log_type: isKnown ? "" : loadedType || "",
@@ -103,10 +107,12 @@ const EditLogEntry = () => {
         hive_id: entry?.hive_id || "",
         inspection_id: entry?.inspection_id || "",
         photo_url: entry?.photo_url || "",
+        photo_path: entry?.photo_path || "", // ✅ NEW
       });
 
       setPhotoPreview(entry?.photo_url || null);
-      setCurrentObject(parseStoragePublicUrl(entry?.photo_url));
+      setCurrentPath(fallbackPath);
+
       setApiaries(apiaryData || []);
       setLoading(false);
     };
@@ -191,7 +197,12 @@ const EditLogEntry = () => {
   // Upload selected file (if any). Return { url, path }.
   const uploadPhoto = async () => {
     const file = fileInputRef.current?.files?.[0];
-    if (!file) return { url: formData.photo_url, path: currentObject?.path || null };
+    if (!file) {
+      return {
+        url: formData.photo_url || "",
+        path: formData.photo_path || currentPath || null,
+      };
+    }
 
     const safeName = String(file.name || "photo.jpg").replace(/\s+/g, "_");
     const filename = `${id}-${Date.now()}-${safeName}`;
@@ -203,25 +214,42 @@ const EditLogEntry = () => {
 
     if (uploadError) {
       console.error("Upload error", uploadError);
-      return { url: formData.photo_url, path: currentObject?.path || null };
+      return {
+        url: formData.photo_url || "",
+        path: formData.photo_path || currentPath || null,
+      };
     }
 
     const { data } = supabase.storage.from("photos").getPublicUrl(path);
-    return { url: data.publicUrl, path };
+    return { url: data?.publicUrl || "", path };
   };
 
-  // Remove current photo immediately from storage and clear form state
+  // ✅ Use Edge Function for solid delete/clear (prevents orphans)
+  const callDeleteFn = async ({ mode }) => {
+    const { data, error: fnErr } = await supabase.functions.invoke(
+      "delete-row-with-photos",
+      {
+        body: { table: "logbook", id, mode },
+      }
+    );
+    return { data, error: fnErr };
+  };
+
+  // Remove current photo via edge function (storage FIRST, then DB cleared)
   const handleRemovePhoto = async () => {
-    if (currentObject?.bucket && currentObject?.path) {
-      await supabase.storage
-        .from(currentObject.bucket)
-        .remove([currentObject.path])
-        .catch(() => {});
+    const ok = window.confirm("Remove this photo?");
+    if (!ok) return;
+
+    const { error: fnErr } = await callDeleteFn({ mode: "clear_photo" });
+    if (fnErr) {
+      alert(fnErr.message || "Failed to remove photo.");
+      return;
     }
+
     if (photoPreview?.startsWith("blob:")) URL.revokeObjectURL(photoPreview);
     setPhotoPreview(null);
-    setFormData((prev) => ({ ...prev, photo_url: "" }));
-    setCurrentObject(null);
+    setFormData((prev) => ({ ...prev, photo_url: "", photo_path: "" }));
+    setCurrentPath(null);
     if (fileInputRef.current) fileInputRef.current.value = null;
   };
 
@@ -281,16 +309,13 @@ const EditLogEntry = () => {
       }
     }
 
-    // Upload new photo (if chosen). If a different photo replaces an existing one, delete old.
+    // Upload new photo (if chosen)
+    const oldPath = formData.photo_path || currentPath || null;
+    const oldUrl = formData.photo_url || "";
+
     const { url: newUrl, path: newPath } = await uploadPhoto();
 
-    if (newPath && currentObject?.path && newUrl && newUrl !== formData.photo_url) {
-      await supabase.storage
-        .from(currentObject.bucket || "photos")
-        .remove([currentObject.path])
-        .catch(() => {});
-    }
-
+    // Update row (store BOTH url + path)
     const { error: upErr } = await supabase
       .from("logbook")
       .update({
@@ -300,7 +325,8 @@ const EditLogEntry = () => {
         apiary_id: formData.apiary_id || null,
         hive_id: formData.hive_id || null,
         inspection_id: formData.inspection_id || null,
-        photo_url: newUrl || "",
+        photo_url: newUrl || null,
+        photo_path: newPath || null,
       })
       .eq("id", id);
 
@@ -308,6 +334,11 @@ const EditLogEntry = () => {
     if (upErr) {
       setError(upErr.message || "Failed to update entry.");
       return;
+    }
+
+    // If a NEW photo replaced an OLD one, best-effort delete old file
+    if (newPath && oldPath && newPath !== oldPath && oldUrl && oldUrl !== newUrl) {
+      await supabase.storage.from("photos").remove([oldPath]).catch(() => {});
     }
 
     alert("Log entry updated.");
@@ -326,18 +357,16 @@ const EditLogEntry = () => {
     navigate("/logbook");
   };
 
-  // Hard delete via shared helper (includes storage cleanup)
+  // ✅ Hard delete via Edge Function (storage FIRST, then row delete)
   const deleteEntry = async () => {
-    if (!confirm("Are you sure you want to delete this log entry? This cannot be undone."))
+    if (
+      !confirm("Are you sure you want to delete this log entry? This cannot be undone.")
+    )
       return;
 
-    // IMPORTANT: your logbook uses photo_url (single string), not photos[].
-    // Our helper supports arrays, so we just pass the single url as the "arrayField" and
-    // let it delete the row; storage cleanup is handled elsewhere in your app.
-    // If your actions.js deleteRowAndRemoveUrls reads arrays only, this will still delete the row.
-    const { error: delErr } = await deleteRowAndRemoveUrls("logbook", id, "photo_url");
-    if (delErr) {
-      alert(humaniseSupabaseError(delErr, { table: "logbook" }) || "Failed to delete.");
+    const { error: fnErr } = await callDeleteFn({ mode: "delete_row" });
+    if (fnErr) {
+      alert(fnErr.message || "Failed to delete.");
       return;
     }
 

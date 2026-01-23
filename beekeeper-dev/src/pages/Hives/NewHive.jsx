@@ -181,21 +181,27 @@ const NewHive = () => {
     return (data?.length || 0) > 0;
   };
 
+  // ✅ UPDATED: return BOTH photo_url and photo_path (filename)
   const uploadPhoto = async (hiveId) => {
     if (!selectedFile) return null;
 
     const safeName = selectedFile.name.replace(/\s+/g, "_");
-    const filename = `hives/${hiveId}-${Date.now()}-${safeName}`;
+    const photo_path = `hives/${hiveId}-${Date.now()}-${safeName}`;
+
     const { error: uploadError } = await supabase.storage
       .from("photos")
-      .upload(filename, selectedFile, { upsert: true, contentType: selectedFile.type });
+      .upload(photo_path, selectedFile, {
+        upsert: true,
+        contentType: selectedFile.type,
+      });
 
     if (uploadError) return null;
 
     const { data: publicUrlData } = supabase.storage
       .from("photos")
-      .getPublicUrl(filename);
-    return publicUrlData.publicUrl;
+      .getPublicUrl(photo_path);
+
+    return { photo_url: publicUrlData.publicUrl, photo_path };
   };
 
   // --------- Submit ---------
@@ -307,9 +313,12 @@ const NewHive = () => {
     });
 
     // Upload photo (optional)
-    const photo_url = await uploadPhoto(inserted.id);
-    if (photo_url) {
-      await supabase.from("hives").update({ photo_url }).eq("id", inserted.id);
+    const uploaded = await uploadPhoto(inserted.id);
+    if (uploaded?.photo_url) {
+      await supabase
+        .from("hives")
+        .update({ photo_url: uploaded.photo_url, photo_path: uploaded.photo_path })
+        .eq("id", inserted.id);
 
       // ✅ GA: track a follow-up photo upload event
       trackEvent("hive_photo_uploaded", {
