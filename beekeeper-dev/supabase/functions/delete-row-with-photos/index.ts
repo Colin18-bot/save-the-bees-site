@@ -4,7 +4,7 @@
 
 import { serve } from "https://deno.land/std@0.224.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { corsHeaders } from "../_shared/cors.ts";
+import { getCorsHeaders } from "../_shared/cors.ts";
 
 type TableName = "apiaries" | "hives" | "logbook" | "inspections";
 type Mode = "clear_photo" | "delete_row";
@@ -31,10 +31,13 @@ const TABLES: Record<TableName, TableCfg> = {
 const SUPABASE_URL = (Deno.env.get("SUPABASE_URL") || "").trim();
 const SERVICE_ROLE = (Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "").trim();
 
-function json(status: number, body: unknown) {
+function json(req: Request, status: number, body: unknown) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...corsHeaders },
+    headers: {
+      ...getCorsHeaders(req),
+      "Content-Type": "application/json",
+    },
   });
 }
 
@@ -83,25 +86,31 @@ function isDeleteBody(v: unknown): v is DeleteBody {
 }
 
 serve(async (req: Request) => {
+  // ✅ Bulletproof preflight
   if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: corsHeaders });
+    return new Response("ok", {
+      status: 200,
+      headers: getCorsHeaders(req),
+    });
   }
 
   try {
-    if (!SUPABASE_URL || !SERVICE_ROLE) return json(500, { error: "Missing SUPABASE envs" });
+    if (!SUPABASE_URL || !SERVICE_ROLE) {
+      return json(req, 500, { error: "Missing SUPABASE envs" });
+    }
 
     const authHeader = req.headers.get("Authorization") || "";
     const jwt = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
-    if (!jwt) return json(401, { error: "Missing Authorization bearer token" });
+    if (!jwt) return json(req, 401, { error: "Missing Authorization bearer token" });
 
     const admin = createClient(SUPABASE_URL, SERVICE_ROLE);
 
     const { data: userRes, error: userErr } = await admin.auth.getUser(jwt);
-    if (userErr || !userRes?.user) return json(401, { error: "Invalid user session" });
+    if (userErr || !userRes?.user) return json(req, 401, { error: "Invalid user session" });
     const uid = userRes.user.id;
 
     const raw = (await req.json().catch(() => null)) as unknown;
-    if (!isDeleteBody(raw)) return json(400, { error: "Missing/invalid {table,id,mode}" });
+    if (!isDeleteBody(raw)) return json(req, 400, { error: "Missing/invalid {table,id,mode}" });
 
     const { table, id, mode, removeOne } = raw;
     const cfg = TABLES[table];
@@ -111,19 +120,18 @@ serve(async (req: Request) => {
     let row: Record<string, unknown> | null = null;
 
     if (table === "inspections") {
-      const urlsKey = (cfg as CfgMulti).urlsCol; // "photos"
-      const pathsKey = (cfg as CfgMulti).pathsCol; // "photo_paths"
+      const urlsKey = (cfg as CfgMulti).urlsCol;
+      const pathsKey = (cfg as CfgMulti).pathsCol;
       const colsWithPaths = `${cfg.userCol}, ${urlsKey}, ${pathsKey}`;
       const colsWithoutPaths = `${cfg.userCol}, ${urlsKey}`;
 
-      // Try with photo_paths first; if the column doesn't exist, retry without it.
       let r1 = await admin.from(table).select(colsWithPaths).eq("id", id).maybeSingle();
       if (r1.error && /column .*photo_paths.* does not exist/i.test(r1.error.message || "")) {
         r1 = await admin.from(table).select(colsWithoutPaths).eq("id", id).maybeSingle();
       }
 
-      if (r1.error) return json(500, { error: r1.error.message });
-      if (!r1.data) return json(404, { error: "Row not found" });
+      if (r1.error) return json(req, 500, { error: r1.error.message });
+      if (!r1.data) return json(req, 404, { error: "Row not found" });
       row = r1.data as Record<string, unknown>;
     } else {
       const urlKey = (cfg as CfgSingle).urlCol;
@@ -136,36 +144,33 @@ serve(async (req: Request) => {
         r1 = await admin.from(table).select(colsWithoutPath).eq("id", id).maybeSingle();
       }
 
-      if (r1.error) return json(500, { error: r1.error.message });
-      if (!r1.data) return json(404, { error: "Row not found" });
+      if (r1.error) return json(req, 500, { error: r1.error.message });
+      if (!r1.data) return json(req, 404, { error: "Row not found" });
       row = r1.data as Record<string, unknown>;
     }
 
-    if (String(get(row, "user_id") ?? "") !== uid) return json(403, { error: "Forbidden" });
+    if (String(get(row, "user_id") ?? "") !== uid) return json(req, 403, { error: "Forbidden" });
 
     // 2) Determine paths to delete
     let pathsToDelete: string[] = [];
 
     if (table === "inspections") {
-      const urlsKey = (cfg as CfgMulti).urlsCol;   // "photos"
-      const pathsKey = (cfg as CfgMulti).pathsCol; // "photo_paths"
+      const urlsKey = (cfg as CfgMulti).urlsCol;
+      const pathsKey = (cfg as CfgMulti).pathsCol;
 
       const storedUrls = asStringArray(get(row, urlsKey));
-      const storedPaths = asStringArray(get(row, pathsKey)); // may be [] if column missing
+      const storedPaths = asStringArray(get(row, pathsKey));
 
-      // If removeOne is present, delete ONLY that one file and update arrays.
       if (removeOne?.path || removeOne?.url) {
         const fromUrl = removeOne.url ? parsePublicUrl(removeOne.url) : null;
-        const onePath =
-          removeOne.path ||
-          (fromUrl?.bucket === bucket ? fromUrl.path : null);
+        const onePath = removeOne.path || (fromUrl?.bucket === bucket ? fromUrl.path : null);
 
         if (!onePath) {
-          return json(400, { error: "removeOne provided but no valid {path|url} resolved" });
+          return json(req, 400, { error: "removeOne provided but no valid {path|url} resolved" });
         }
 
         const { error: delErr } = await admin.storage.from(bucket).remove([onePath]);
-        if (delErr) return json(500, { error: `Storage delete failed: ${delErr.message}` });
+        if (delErr) return json(req, 500, { error: `Storage delete failed: ${delErr.message}` });
 
         const newPaths = storedPaths.filter((p) => p !== onePath);
         const newUrls = storedUrls.filter((u) => {
@@ -175,16 +180,14 @@ serve(async (req: Request) => {
 
         const patch: Record<string, unknown> = {};
         patch[urlsKey] = newUrls;
-        // only write pathsKey if the column exists on the row selection
         if (pathsKey in row) patch[pathsKey] = newPaths;
 
         const { error: updErr } = await admin.from(table).update(patch).eq("id", id);
-        if (updErr) return json(500, { error: `DB update failed: ${updErr.message}` });
+        if (updErr) return json(req, 500, { error: `DB update failed: ${updErr.message}` });
 
-        return json(200, { ok: true, mode: "remove_one", deleted: [onePath] });
+        return json(req, 200, { ok: true, mode: "remove_one", deleted: [onePath] });
       }
 
-      // Normal delete: prefer stored paths, else derive from URLs
       pathsToDelete = storedPaths.slice();
 
       if (!pathsToDelete.length && storedUrls.length) {
@@ -194,8 +197,8 @@ serve(async (req: Request) => {
         }
       }
     } else {
-      const urlKey = (cfg as CfgSingle).urlCol;
       const pathKey = (cfg as CfgSingle).pathCol;
+      const urlKey = (cfg as CfgSingle).urlCol;
 
       const storedPath = get(row, pathKey);
       const storedUrl = get(row, urlKey);
@@ -214,7 +217,7 @@ serve(async (req: Request) => {
     if (pathsToDelete.length) {
       const { error: delErr } = await admin.storage.from(bucket).remove(pathsToDelete);
       if (delErr) {
-        return json(500, {
+        return json(req, 500, {
           error: `Storage delete failed: ${delErr.message}`,
           paths: pathsToDelete,
         });
@@ -232,29 +235,28 @@ serve(async (req: Request) => {
         if (pathsKey in row) patch[pathsKey] = [];
 
         const { error: updErr } = await admin.from(table).update(patch).eq("id", id);
-        if (updErr) return json(500, { error: `DB update failed: ${updErr.message}` });
+        if (updErr) return json(req, 500, { error: `DB update failed: ${updErr.message}` });
       } else {
         const urlKey = (cfg as CfgSingle).urlCol;
         const pathKey = (cfg as CfgSingle).pathCol;
 
         const patch: Record<string, unknown> = {};
         patch[urlKey] = null;
-        // only set if column exists; otherwise ignore
         patch[pathKey] = null;
 
         const { error: updErr } = await admin.from(table).update(patch).eq("id", id);
-        if (updErr) return json(500, { error: `DB update failed: ${updErr.message}` });
+        if (updErr) return json(req, 500, { error: `DB update failed: ${updErr.message}` });
       }
 
-      return json(200, { ok: true, mode, deleted: pathsToDelete });
+      return json(req, 200, { ok: true, mode, deleted: pathsToDelete });
     }
 
     // delete_row
     const { error: delRowErr } = await admin.from(table).delete().eq("id", id);
-    if (delRowErr) return json(500, { error: `Row delete failed: ${delRowErr.message}` });
+    if (delRowErr) return json(req, 500, { error: `Row delete failed: ${delRowErr.message}` });
 
-    return json(200, { ok: true, mode, deleted: pathsToDelete });
+    return json(req, 200, { ok: true, mode, deleted: pathsToDelete });
   } catch (e) {
-    return json(500, { error: String(e) });
+    return json(req, 500, { error: String(e?.message || e) });
   }
 });
