@@ -1,6 +1,6 @@
 // src/pages/Hives/NewHive.jsx
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import dayjs from "dayjs";
 // ✅ GA custom events (respects consent)
@@ -337,7 +337,18 @@ const NewHive = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-6 rounded-xl shadow-lg">
-      <h1 className="text-2xl font-bold mb-4">New Hive</h1>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
+  <h1 className="text-2xl font-bold">New Hive</h1>
+
+  <Link
+    to="/hives/step-by-step"
+    className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100 w-full sm:w-auto"
+    title="Open the hive siting guide"
+    onClick={() => trackEvent("hive_siting_guide_open", { source: "new_hive" })}
+  >
+    Hive Siting Guide
+  </Link>
+</div>
 
       {/* ✅ NFC banner when coming from a scan */}
       {subscriptionLevel === "premium" && formData.nfc_uid && (

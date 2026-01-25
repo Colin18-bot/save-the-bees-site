@@ -6,6 +6,7 @@ const toc = [
   { id: "concepts", title: "Key Concepts" },
   { id: "membership", title: "Membership & Feature Availability" },
   { id: "getting-started", title: "Getting Started" },
+  { id: "siting-guides", title: "Apiary & Hive Siting Guides" },
   { id: "navigation", title: "Navigation Overview" },
   { id: "bee-health-helper", title: "Colony Health Check (Bee Health Helper)" },
   { id: "business-inventory", title: "Inventory, Sales & Expenses" },
@@ -163,6 +164,9 @@ export default function Help() {
                       <li>
                         <strong>Colony Health Check</strong> (Bee Health Helper)
                       </li>
+                      <li>
+                        <strong>Siting Guides</strong> (Apiary Siting Guide + Hive Siting Guide)
+                      </li>
                     </ul>
                     <p className="mt-2 text-sm text-gray-600">
                       If you downgrade from Premium to Free, we keep{" "}
@@ -218,7 +222,13 @@ export default function Help() {
                   <strong>Create an Apiary:</strong>{" "}
                   <span className="text-gray-700">Apiaries → New Apiary.</span>{" "}
                   Name it, set a date, optionally pin on the map or search by
-                  address, then save. <Badge>Free</Badge> 1 active apiary
+                  address, then save.{" "}
+                  <span className="ml-2">
+                    <Badge>Free</Badge> 1 active apiary
+                  </span>
+                  <div className="mt-1 text-sm text-gray-600">
+                    Tip: Use the <strong>Apiary Siting Guide</strong> button on the New Apiary page if you’re unsure where to place an apiary.
+                  </div>
                 </li>
                 <li>
                   <strong>Add a Hive:</strong>{" "}
@@ -228,6 +238,9 @@ export default function Help() {
                   <span className="ml-2">
                     <Badge>Free</Badge> 2 active hives total
                   </span>
+                  <div className="mt-1 text-sm text-gray-600">
+                    Tip: Use the <strong>Hive Siting Guide</strong> button on the New Hive page to help with entrance direction, flight paths, and working space.
+                  </div>
                 </li>
                 <li>
                   <strong>Log an Inspection:</strong>{" "}
@@ -248,6 +261,59 @@ export default function Help() {
                   optional tap-to-log flow—see the NFC section below.
                 </li>
               </ol>
+            </section>
+
+            {/* NEW: Siting Guides */}
+            <section id="siting-guides">
+              <h2 className="text-2xl font-bold mb-3">Apiary &amp; Hive Siting Guides</h2>
+
+              <p className="text-gray-700">
+                HiveTag includes two beginner-friendly guides designed to be used while you are setting up new records:
+              </p>
+
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Apiary Siting Guide</h3>
+                  <p className="mt-1 text-sm text-gray-700">
+                    Helps you choose a safe, practical apiary location: permission, access, working area,
+                    flight paths, shelter/microclimate, water, security, and expansion space.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-600">
+                    Best place to open it: <strong>Apiaries → New Apiary</strong> using the button at the top of the page.
+                  </p>
+                  <div className="mt-3 text-sm">
+                    Quick link:{" "}
+                    <Link to="/apiaries/step-by-step" className="text-blue-700 underline">
+                      Open Apiary Siting Guide
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Hive Siting Guide</h3>
+                  <p className="mt-1 text-sm text-gray-700">
+                    Covers exact hive placement within an apiary: stand stability/height, entrance direction,
+                    nuisance reduction, wind/sun/shade, spacing, and practical safety.
+                  </p>
+                  <p className="mt-2 text-sm text-gray-600">
+                    Best place to open it: <strong>Hives → New Hive</strong> using the button at the top of the page.
+                  </p>
+                  <div className="mt-3 text-sm">
+                    Quick link:{" "}
+                    <Link to="/hives/step-by-step" className="text-blue-700 underline">
+                      Open Hive Siting Guide
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded border border-yellow-200 bg-yellow-50 p-4 text-sm text-gray-800">
+                <div className="font-semibold">Back button note</div>
+                <p className="mt-1">
+                  The guides include a <strong>Back</strong> button that returns to the page you came from.
+                  For this to work as expected, open the guides in the <strong>same tab</strong> (not a new tab).
+                </p>
+              </div>
             </section>
 
             {/* Navigation Overview */}
@@ -331,6 +397,14 @@ export default function Help() {
                       toggle.
                     </li>
                     <li>
+                      New Apiary includes an <strong>Apiary Siting Guide</strong> button at the top for beginners.
+                      (Quick link:{" "}
+                      <Link to="/apiaries/step-by-step" className="text-blue-700 underline">
+                        Apiary Siting Guide
+                      </Link>
+                      )
+                    </li>
+                    <li>
                       Free plan limit: <strong>1 active apiary</strong>.{" "}
                       <Badge>Free</Badge>
                     </li>
@@ -351,6 +425,14 @@ export default function Help() {
                     <li>
                       Photos open in a <strong>lightbox</strong> when clicked;
                       location and map come from the parent apiary.
+                    </li>
+                    <li>
+                      New Hive includes a <strong>Hive Siting Guide</strong> button at the top to help choose entrance direction,
+                      working space, and nuisance reduction. (Quick link:{" "}
+                      <Link to="/hives/step-by-step" className="text-blue-700 underline">
+                        Hive Siting Guide
+                      </Link>
+                      )
                     </li>
                     <li>
                       Free plan limit: <strong>2 active hives</strong> total.{" "}
@@ -1106,10 +1188,13 @@ export default function Help() {
                 <li>
                   Use <strong>Not sure</strong> in the Colony Health Check whenever you don’t have the information yet.
                 </li>
+                <li>
+                  Use the <strong>Apiary Siting Guide</strong> / <strong>Hive Siting Guide</strong> buttons when setting up new locations—small siting choices prevent most future issues.
+                </li>
               </ul>
             </section>
 
-            {/* FAQs */}
+{/* FAQs */}
             <section id="faqs">
               <h2 className="text-2xl font-bold mb-3">FAQs</h2>
               <div className="space-y-4">
@@ -1118,6 +1203,23 @@ export default function Help() {
                   <p className="text-gray-700">
                     No. It’s a triage helper that suggests what to check next. If a UK action/reporting panel appears,
                     follow official guidance.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">Where do I find the Apiary Siting Guide and Hive Siting Guide?</p>
+                  <p className="text-gray-700">
+                    On the <strong>New Apiary</strong> page and <strong>New Hive</strong> page there’s a guide button at the top.
+                    You can also open them directly here:{" "}
+                    <Link to="/apiaries/step-by-step" className="text-blue-700 underline">
+                      Apiary Siting Guide
+                    </Link>{" "}
+                    and{" "}
+                    <Link to="/hives/step-by-step" className="text-blue-700 underline">
+                    
+			Hive Siting Guide
+                    </Link>
+                    .
                   </p>
                 </div>
 
@@ -1139,16 +1241,14 @@ export default function Help() {
                 <div>
                   <p className="font-medium">Can I use the app without NFC?</p>
                   <p className="text-gray-700">
-                    Yes. NFC <Badge tone="blue">Premium</Badge> just speeds up hive
-                    selection.
+                    Yes. NFC <Badge tone="blue">Premium</Badge> just speeds up hive selection.
                   </p>
                 </div>
 
                 <div>
                   <p className="font-medium">Can I filter tasks by date range?</p>
                   <p className="text-gray-700">
-                    Yes. On the <strong>Tasks</strong> list you can use{" "}
-                    <strong>From</strong> and <strong>To</strong> dates.
+                    Yes. On the <strong>Tasks</strong> list you can use <strong>From</strong> and <strong>To</strong> dates.
                   </p>
                 </div>
 
@@ -1157,24 +1257,23 @@ export default function Help() {
                     Why won’t NFC create another inspection for the same hive today?
                   </p>
                   <p className="text-gray-700">
-                    The NFC shortcut is limited to <strong>one NFC-started inspection per
-                    hive per day</strong> to prevent accidental duplicates.
+                    The NFC shortcut is limited to{" "}
+                    <strong>one NFC-started inspection per hive per day</strong> to prevent accidental duplicates.
                   </p>
                 </div>
 
                 <div>
                   <p className="font-medium">What exactly do I get on Free?</p>
                   <p className="text-gray-700">
-                    1 active apiary, 2 active hives total, unlimited inspections, weather
-                    tools, calendar, tasks, logbook entries, Colony Health Check, and CSV export from Settings.
+                    1 active apiary, 2 active hives total, unlimited inspections, weather tools, calendar, tasks, logbook entries,
+                    Colony Health Check, and CSV export from Settings.
                   </p>
                 </div>
 
                 <div>
                   <p className="font-medium">How do I export my data?</p>
                   <p className="text-gray-700">
-                    Go to <strong>Settings → Export</strong> and click{" "}
-                    <em>Export my data (CSV)</em>.
+                    Go to <strong>Settings → Export</strong> and click <em>Export my data (CSV)</em>.
                   </p>
                 </div>
               </div>
@@ -1185,29 +1284,30 @@ export default function Help() {
               <h2 className="text-2xl font-bold mb-3">Troubleshooting</h2>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
-                  <strong>Colony Health Check seems stuck:</strong> switch to{" "}
-                  <strong>Expand all</strong> to see everything relevant, or press{" "}
-                  <strong>Reset all</strong> and start again.
+                  <strong>Colony Health Check seems stuck:</strong> switch to <strong>Expand all</strong> to see everything relevant,
+                  or press <strong>Reset all</strong> and start again.
                 </li>
                 <li>
-                  <strong>Colony Health Check shows a UK action panel:</strong> pause before moving equipment,
-                  and use the official links shown for guidance/reporting.
+                  <strong>Colony Health Check shows a UK action panel:</strong> pause before moving equipment, and use the official
+                  links shown for guidance/reporting.
                 </li>
                 <li>
-                  <strong>Can’t add another apiary/hive:</strong> Free plan allows 1
-                  active apiary and 2 active hives total. Upgrade to add more.
+                  <strong>Can’t add another apiary/hive:</strong> Free plan allows 1 active apiary and 2 active hives total. Upgrade
+                  to add more.
                 </li>
                 <li>
-                  <strong>Can’t unarchive an apiary/hive on Free:</strong> limits apply
-                  on Free. Upgrade to reactivate more.
+                  <strong>Can’t unarchive an apiary/hive on Free:</strong> limits apply on Free. Upgrade to reactivate more.
                 </li>
                 <li>
-                  <strong>Weather didn’t load or is very slow:</strong> confirm the
-                  apiary has valid coordinates saved; occasionally providers are slow.
+                  <strong>Weather didn’t load or is very slow:</strong> confirm the apiary has valid coordinates saved; occasionally
+                  providers are slow.
                 </li>
                 <li>
-                  <strong>NFC says “not supported”:</strong> iOS Safari and many desktops
-                  don’t support Web NFC; use the standard flow.
+                  <strong>NFC says “not supported”:</strong> iOS Safari and many desktops don’t support Web NFC; use the standard flow.
+                </li>
+                <li>
+                  <strong>Back button on siting guides doesn’t return:</strong> the Back button relies on browser history. If you open a
+                  guide in a new tab, there may be no history to go back to—open the guide in the same tab from New Apiary / New Hive.
                 </li>
               </ul>
             </section>
@@ -1218,22 +1318,18 @@ export default function Help() {
               <ul className="list-disc pl-6 space-y-1">
                 <li>Your data is stored securely in your BeezKnees account.</li>
                 <li>
-                  <strong>Photos are public URLs</strong> for fast loading; your CSV
-                  export includes links to these files.
+                  <strong>Photos are public URLs</strong> for fast loading; your CSV export includes links to these files.
                 </li>
                 <li>
-                  <strong>NFC UIDs:</strong> only the tag’s unique ID and its hive
-                  linkage are stored, used solely to route you to the correct
-                  hive/inspection. NFC tags are <strong>not tracked for location</strong>.
+                  <strong>NFC UIDs:</strong> only the tag’s unique ID and its hive linkage are stored, used solely to route you to the
+                  correct hive/inspection. NFC tags are <strong>not tracked for location</strong>.
                 </li>
                 <li>
-                  <strong>Export</strong>: use <em>Settings → Export</em> to download CSVs
-                  of your data anytime.
+                  <strong>Export</strong>: use <em>Settings → Export</em> to download CSVs of your data anytime.
                 </li>
                 <li>
-                  <strong>Deletion</strong>: <em>Settings → Delete Account</em> cancels
-                  any subscription, removes storage files, deletes your tables, and
-                  deletes the auth user.
+                  <strong>Deletion</strong>: <em>Settings → Delete Account</em> cancels any subscription, removes storage files, deletes
+                  your tables, and deletes the auth user.
                 </li>
               </ul>
             </section>
@@ -1242,30 +1338,27 @@ export default function Help() {
             <section id="power-users">
               <h2 className="text-2xl font-bold mb-3">Power-User Notes</h2>
               <p className="text-gray-700 mb-2">
-                A <strong>power user</strong> is simply someone who prefers advanced controls:
-                jumping around, seeing everything at once, and moving quickly without a guided wizard.
+                A <strong>power user</strong> is simply someone who prefers advanced controls: jumping around, seeing everything at once,
+                and moving quickly without a guided wizard.
               </p>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
-                  <strong>Colony Health Check:</strong> use <strong>Expand all</strong> to answer in any order.
-                  Use <strong>Recommended next checks</strong> to narrow down the results efficiently.
+                  <strong>Colony Health Check:</strong> use <strong>Expand all</strong> to answer in any order. Use{" "}
+                  <strong>Recommended next checks</strong> to narrow down the results efficiently.
                 </li>
                 <li>
-                  <strong>Plan enforcement:</strong> inserts and unarchives are constrained
-                  on Free (1 apiary / 2 hives). Downgrade auto-archives extras; upgrade
-                  lifts limits.
+                  <strong>Plan enforcement:</strong> inserts and unarchives are constrained on Free (1 apiary / 2 hives). Downgrade
+                  auto-archives extras; upgrade lifts limits.
                 </li>
                 <li>
-                  <strong>NFC scan routing:</strong> unlinked tag → <em>New Hive</em>;
-                  once linked, every tap on that tag takes you directly to{" "}
-                  <em>New Inspection</em>. <Badge tone="blue">Premium</Badge>
+                  <strong>NFC scan routing:</strong> unlinked tag → <em>New Hive</em>; once linked, every tap on that tag takes you
+                  directly to <em>New Inspection</em>. <Badge tone="blue">Premium</Badge>
                 </li>
                 <li>
                   <strong>Reports export:</strong> CSV exports respect the Apiary/Hive filter.
                 </li>
                 <li>
-                  <strong>CSV export (Settings):</strong> one CSV per table +{" "}
-                  <code>photos.csv</code> with public URLs (images not bundled).
+                  <strong>CSV export (Settings):</strong> one CSV per table + <code>photos.csv</code> with public URLs (images not bundled).
                 </li>
               </ul>
             </section>
@@ -1294,9 +1387,7 @@ export default function Help() {
                 </div>
                 <div>
                   <dt className="font-medium">Archive</dt>
-                  <dd className="text-gray-700">
-                    Hide from active lists without deleting.
-                  </dd>
+                  <dd className="text-gray-700">Hide from active lists without deleting.</dd>
                 </div>
                 <div>
                   <dt className="font-medium">Triage</dt>

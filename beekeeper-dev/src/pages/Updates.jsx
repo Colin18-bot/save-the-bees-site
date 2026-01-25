@@ -9,6 +9,47 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.0.9",
+  released_at: "2026-01-25T12:00:00Z",
+  summary:
+    "Added beginner-friendly siting guides for apiary and hive placement, with quick access buttons on the New Apiary and New Hive pages.",
+
+  added: [
+    "New **Apiary Siting Guide** page (step-by-step) to help beginners choose a safe, practical apiary location.",
+    "New **Hive Siting Guide** page (step-by-step) covering entrance orientation, flight paths, stand stability, shelter, and working space.",
+    "Added **Apiary Siting Guide** button to **New Apiary** for quick access while creating a new apiary.",
+    "Added **Hive Siting Guide** button to **New Hive** for quick access while creating a new hive."
+  ],
+
+  changed: [
+    "Routing updated with two new protected guide routes: **/apiaries/step-by-step** and **/hives/step-by-step**."
+  ],
+
+  fixed: [
+    "Back navigation on the new siting guide pages now returns correctly when opened from the New Apiary / New Hive flows (opened in the same tab)."
+  ],
+
+  removed: [],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+    { label: "Apiaries", to: "/apiaries" },
+    { label: "Hives", to: "/hives" },
+    { label: "Inspections", to: "/inspections" },
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Help", to: "/help" },
+    { label: "Release Notes", to: "/updates" }
+  ],
+
+  known_issues: [
+    "If the siting guides are opened in a new tab, browser history may be empty so the Back button cannot return to the originating form; open the guides in the same tab for expected Back behaviour."
+  ]
+},
+
+  {
   version: "1.0.8",
   released_at: "2026-01-13T12:00:00Z",
   summary:
