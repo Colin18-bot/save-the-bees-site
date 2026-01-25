@@ -350,3 +350,9 @@ entrypoint = "./functions/create-checkout/index.ts"
 
 [functions."create-billing-portal"]
 verify_jwt = false
+
+[functions.delete-row-with-photos]
+enabled = true
+verify_jwt = false
+import_map = "./functions/delete-row-with-photos/deno.json"
+entrypoint = "./functions/delete-row-with-photos/index.ts"
