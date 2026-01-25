@@ -78,7 +78,7 @@ export async function archiveItem(table, id) {
  * Edge Function name (must match deployed folder name)
  * supabase/functions/delete-row-with-photos
  */
-const DELETE_FN = "delete-storage";
+const DELETE_FN = "delete-row-with-photos";
 
 /**
  * IMPORTANT:
