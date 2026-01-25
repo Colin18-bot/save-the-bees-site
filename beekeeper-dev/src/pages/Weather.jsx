@@ -2,6 +2,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "../services/supabase.js";
 
+import { buildBeekeeperNotes } from "../utils/buildBeekeeperNotes.js";
+
 // === Feature flags (flip to true in production if you want these) ===
 const ENABLE_POLLEN = true;
 const ENABLE_WARNINGS = true;
@@ -39,7 +41,8 @@ const codeMap = {
 };
 
 // time helpers
-const toDate = (t) => (typeof t === "number" ? new Date(t * 1000) : new Date(t || 0));
+const toDate = (t) =>
+  typeof t === "number" ? new Date(t * 1000) : new Date(t || 0);
 
 const fmtHM = (t, tz) =>
   new Intl.DateTimeFormat("en-GB", {
@@ -85,6 +88,9 @@ export default function Weather() {
   const [windUnit, setWindUnit] = useState("kmh"); // kmh or mph for wind
   const [usedFallback, setUsedFallback] = useState(false);
 
+  // ✅ NEW: store the *real* apiary latitude (not the fallback lat)
+  const [apiaryLatitude, setApiaryLatitude] = useState(null);
+
   // Load apiaries and pick default
   useEffect(() => {
     let alive = true;
@@ -121,7 +127,10 @@ export default function Weather() {
 
   async function fetchJsonOnce(url, signal) {
     try {
-      const res = await fetch(url, { signal, headers: { Accept: "application/json" } });
+      const res = await fetch(url, {
+        signal,
+        headers: { Accept: "application/json" },
+      });
       const text = await res.text();
       let json = null;
       try {
@@ -131,7 +140,13 @@ export default function Weather() {
       }
       return { ok: res.ok, status: res.status, text, json, url };
     } catch (e) {
-      return { ok: false, status: 0, text: String(e?.message || e), json: null, url };
+      return {
+        ok: false,
+        status: 0,
+        text: String(e?.message || e),
+        json: null,
+        url,
+      };
     }
   }
 
@@ -164,7 +179,10 @@ export default function Weather() {
     let idx = 0,
       bestDiff = Infinity;
     for (let i = 0; i < times.length; i++) {
-      const ms = typeof times[i] === "number" ? times[i] * 1000 : Date.parse(times[i] || 0);
+      const ms =
+        typeof times[i] === "number"
+          ? times[i] * 1000
+          : Date.parse(times[i] || 0);
       const diff = Math.abs(ms - now);
       if (diff < bestDiff) {
         bestDiff = diff;
@@ -191,8 +209,17 @@ export default function Weather() {
     if (!selectedApiary) return;
 
     const a = apiaries.find((x) => String(x.id) === String(selectedApiary));
-    let lat = Number(a?.latitude);
-    let lon = Number(a?.longitude);
+
+    // ✅ real apiary lat/lon (for season profile)
+    const realLat = Number(a?.latitude);
+    const realLon = Number(a?.longitude);
+
+    // ✅ store the real latitude (even if we later use fallback for the weather call)
+    setApiaryLatitude(Number.isFinite(realLat) ? realLat : null);
+
+    // weather query lat/lon (may fallback)
+    let lat = realLat;
+    let lon = realLon;
 
     const good = (v) => Number.isFinite(v) && !(Math.abs(v) === Infinity);
     if (!good(lat) || !good(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) {
@@ -238,7 +265,10 @@ export default function Weather() {
         timeformat: "unixtime",
       }).toString();
 
-      const r1 = await fetchJsonOnce(`https://api.open-meteo.com/v1/forecast?${q1}`, signal);
+      const r1 = await fetchJsonOnce(
+        `https://api.open-meteo.com/v1/forecast?${q1}`,
+        signal
+      );
       if (r1.ok && r1.json?.current) {
         localWeather = r1.json;
         gotWeather = true;
@@ -257,7 +287,10 @@ export default function Weather() {
           timeformat: "unixtime",
         }).toString();
 
-        const r2 = await fetchJsonOnce(`https://api.open-meteo.com/v1/forecast?${q2}`, signal);
+        const r2 = await fetchJsonOnce(
+          `https://api.open-meteo.com/v1/forecast?${q2}`,
+          signal
+        );
         const normalized = r2.ok ? normalizeLegacy(r2.json) : null;
         if (normalized?.current) {
           localWeather = { ...normalized, hourly: r2.json?.hourly, daily: r2.json?.daily };
@@ -277,7 +310,10 @@ export default function Weather() {
           timeformat: "unixtime",
         }).toString();
 
-        const r3 = await fetchJsonOnce(`https://api.open-meteo.com/v1/forecast?${q3}`, signal);
+        const r3 = await fetchJsonOnce(
+          `https://api.open-meteo.com/v1/forecast?${q3}`,
+          signal
+        );
         if (r3.ok && r3.json?.hourly) {
           const derived = currentFromHourly(r3.json);
           if (derived?.current) {
@@ -307,7 +343,10 @@ export default function Weather() {
             timezone: "auto",
             timeformat: "unixtime",
           }).toString();
-          const rP = await fetchJsonOnce(`https://pollen.open-meteo.com/v1/forecast?${pollenQs}`, signal);
+          const rP = await fetchJsonOnce(
+            `https://pollen.open-meteo.com/v1/forecast?${pollenQs}`,
+            signal
+          );
           setPollen(rP.ok && rP.json ? rP.json : null);
         } catch {
           setPollen(null);
@@ -325,8 +364,12 @@ export default function Weather() {
             timezone: "auto",
             timeformat: "unixtime",
           }).toString();
-          const rW = await fetchJsonOnce(`https://api.open-meteo.com/v1/warnings?${warnQs}`, signal);
-          const list = rW?.ok && Array.isArray(rW?.json?.warnings) ? rW.json.warnings : [];
+          const rW = await fetchJsonOnce(
+            `https://api.open-meteo.com/v1/warnings?${warnQs}`,
+            signal
+          );
+          const list =
+            rW?.ok && Array.isArray(rW?.json?.warnings) ? rW.json.warnings : [];
           setWarnings(list.slice(0, 8));
         } catch {
           setWarnings([]);
@@ -342,7 +385,8 @@ export default function Weather() {
   }, [selectedApiary, apiaries]);
 
   // UI helpers
-  const t = (c) => (unit === "C" ? Math.round(c ?? 0) : Math.round(((c ?? 0) * 9) / 5 + 32));
+  const t = (c) =>
+    unit === "C" ? Math.round(c ?? 0) : Math.round(((c ?? 0) * 9) / 5 + 32);
   const unitLabel = unit === "C" ? "°C" : "°F";
 
   const windDisplay = (k) => {
@@ -356,9 +400,6 @@ export default function Weather() {
   const hourly = weather?.hourly || {};
   const daily = weather?.daily || {};
 
-  // ✅ stable slice of weather used for advisories
-  const currentTime = weather?.current?.time ?? null;
-
   // nearest hour
   const nowIdx = useMemo(() => {
     const times = safeArr(hourly.time, 0);
@@ -367,7 +408,8 @@ export default function Weather() {
     let best = 0,
       bestDiff = Infinity;
     times.forEach((tStamp, i) => {
-      const ms = typeof tStamp === "number" ? tStamp * 1000 : Date.parse(tStamp || 0);
+      const ms =
+        typeof tStamp === "number" ? tStamp * 1000 : Date.parse(tStamp || 0);
       const diff = Math.abs(ms - now);
       if (diff < bestDiff) {
         bestDiff = diff;
@@ -379,245 +421,23 @@ export default function Weather() {
 
   // Beekeeper Notes (including seasonal treatment guidance)
   const advisories = useMemo(() => {
-    const winds = safeArr(daily.wind_speed_10m_max, 0).filter(Number.isFinite);
-    const precs = safeArr(daily.precipitation_sum, 0).filter(Number.isFinite);
-    const tmins = safeArr(daily.temperature_2m_min, 0).filter(Number.isFinite);
-    const tmaxs = safeArr(daily.temperature_2m_max, 0).filter(Number.isFinite);
-
-    const out = [];
-
-    const windLabel = windUnit === "kmh" ? "km/h" : "mph";
-    const toF = (c) => Math.round((c * 9) / 5 + 32);
-    const tempLabel = (c) => (unit === "C" ? `${c}°C` : `${toF(c)}°F`);
-
-    // Determine current month from weather timestamp (fallback to system date)
-    let nowDate = new Date();
-    const currentTs = currentTime;
-    if (currentTs) nowDate = toDate(currentTs);
-    const month = nowDate.getMonth(); // 0 = Jan, 11 = Dec
-
-    // --- Month / season profile + treatments overview ---
-    if (month === 11 || month === 0 || month === 1) {
-      // Dec–Feb: winter
-      if (month === 0) {
-        out.push({
-          icon: "📆",
-          text: "January – deep winter. Do not open colonies unless there is an emergency (for example, suspected starvation or damage).",
-        });
-      } else if (month === 1) {
-        out.push({
-          icon: "📆",
-          text: "February – colonies are starting to brood up but weather is still unreliable. Continue to avoid full inspections.",
-        });
-      } else {
-        out.push({
-          icon: "📆",
-          text: "December – mid-winter. Colonies should be settled with good stores and secure hives.",
-        });
-      }
-
-      out.push({
-        icon: "🍬",
-        text: "Winter feeding – use fondant above the crown board hole. Check hive weight by hefting rather than opening boxes.",
-      });
-      out.push({
-        icon: "❄️",
-        text: `Foraging is minimal below about ${tempLabel(10)}. Expect very little flight; bees will mainly rely on stored food.`,
-      });
-      out.push({
-        icon: "🛠️",
-        text: "After storms, frost or snow, check straps, roofs and entrances and clear any blockages.",
-      });
-      out.push({
-        icon: "🧪",
-        text: "Many beekeepers use an authorised oxalic-acid based winter Varroa treatment when colonies have little or no brood (often late December or January). Only use products approved in your country, follow the label and official guidance, and never treat when honey supers are on.",
-      });
-    } else if (month >= 2 && month <= 4) {
-      // Mar–May: spring
-      if (month === 2) {
-        out.push({
-          icon: "📆",
-          text: "March – early spring. Brood is expanding, but cold snaps are still likely. Only inspect on the warmest, calmest days.",
-        });
-      } else if (month === 3) {
-        out.push({
-          icon: "📆",
-          text: "April – main build-up. Choose mild, calm days for full inspections and keep them efficient to avoid chilling brood.",
-        });
-      } else {
-        out.push({
-          icon: "📆",
-          text: "May – strong build-up and early swarm season. Regular inspections are usually possible in suitable weather.",
-        });
-      }
-
-      out.push({
-        icon: "🍯",
-        text: `Below around ${tempLabel(10)} there will be little foraging; colonies depend heavily on stored food if the weather turns wet or cold.`,
-      });
-      out.push({
-        icon: "🔍",
-        text: `Full inspections are comfortable once daytime highs approach ${tempLabel(
-          15
-        )} and it is calm. Between ${tempLabel(10)}–${tempLabel(14)} keep any checks brief.`,
-      });
-      out.push({
-        icon: "⚠️",
-        text: "Spring build-up – watch for starvation in light colonies after cold or wet spells; emergency fondant or warm syrup on mild days may be needed.",
-      });
-      out.push({
-        icon: "🧫",
-        text: "Spring is a good time to monitor Varroa levels using recognised methods (for example natural mite drop, sugar-roll or alcohol-wash) and to plan any post-honey-crop treatments. Avoid using strong Varroa treatments while honey supers are on unless the product label specifically allows it.",
-      });
-    } else if (month >= 5 && month <= 7) {
-      // Jun–Aug: summer
-      if (month === 5) {
-        out.push({
-          icon: "📆",
-          text: "June – peak season. Swarm control and regular inspections in suitable weather are usually required.",
-        });
-      } else if (month === 6) {
-        out.push({
-          icon: "📆",
-          text: "July – main honey flow for many areas. Manage supers, ventilation and space.",
-        });
-      } else {
-        out.push({
-          icon: "📆",
-          text: "August – end of main flow in many areas. Focus on honey removal, colony assessment and treatment planning.",
-        });
-      }
-
-      out.push({
-        icon: "🌼",
-        text: "Most days with light winds and temperatures above roughly 15°C are suitable for full inspections and good foraging.",
-      });
-      out.push({
-        icon: "🪱",
-        text: "Late summer and early autumn are key times for Varroa control once the main honey crop is removed. Many beekeepers apply an authorised late-summer treatment at this stage. Remove honey supers if required, follow the product label, respect any temperature limits and ensure good hive ventilation.",
-      });
-    } else if (month >= 8 && month <= 10) {
-      // Sep–Nov: autumn
-      if (month === 8) {
-        out.push({
-          icon: "📆",
-          text: "September – early autumn. Assess stores and start autumn feeding if colonies are underweight.",
-        });
-      } else if (month === 9) {
-        out.push({
-          icon: "📆",
-          text: "October – late autumn. Finish syrup feeding early; switch to fondant if colonies are still light.",
-        });
-      } else {
-        out.push({
-          icon: "📆",
-          text: "November – early winter. Avoid opening the brood nest; rely on hefting and external checks.",
-        });
-      }
-
-      out.push({
-        icon: "🍯",
-        text: "Autumn feeding – syrup while it is still warm enough for bees to ripen and cap it; once colder, rely on fondant only.",
-      });
-      out.push({
-        icon: "💧",
-        text: "Damp kills more bees than cold. Keep hives off the ground, roofs sound and ventilation modest but not draughty.",
-      });
-      out.push({
-        icon: "🧮",
-        text: "Aim to complete your main Varroa treatment early enough that the long-lived winter bees develop with a low mite load. If monitoring still shows high Varroa levels after treatment, seek advice from your local association, Bee Inspector or vet before repeating or changing products.",
-      });
-    }
-
-    // --- Live, temperature & wind-driven guidance ---
-    const strongWindThresholdKmh = 40;
-    const maxWind = winds.length ? Math.max(...winds) : 0;
-
-    const strongWindDisplay =
-      windUnit === "kmh"
-        ? `≥${strongWindThresholdKmh} ${windLabel}`
-        : `≥${Math.round(strongWindThresholdKmh * 0.621371)} ${windLabel}`;
-
-    if (maxWind >= strongWindThresholdKmh) {
-      out.push({
-        icon: "💨",
-        text: `Strong winds expected (${strongWindDisplay}). Avoid opening hives; ensure lids are strapped or weighted and stands are stable.`,
-      });
-    }
-
-    // Heavy rain advisory
-    const heavyRain = precs.some((mm) => mm >= 10);
-    if (heavyRain) {
-      out.push({
-        icon: "🌧️",
-        text: "Heavy rain in the forecast. Foraging will be poor; plan inspections and manipulations for dry, calmer windows.",
-      });
-    }
-
-    // Temperature-based inspection & foraging notes
-    const minTemp = tmins.length ? Math.min(...tmins) : 99;
-    const maxTemp = tmaxs.length ? Math.max(...tmaxs) : 0;
-
-    if (minTemp <= 5 || maxTemp < 10) {
-      out.push({
-        icon: "🥶",
-        text: `Forecast highs stay below about ${tempLabel(10)}. Expect very little foraging – colonies will mainly rely on stored food.`,
-      });
-    } else if (maxTemp >= 10 && maxTemp < 15) {
-      out.push({
-        icon: "🍃",
-        text: `Daytime highs between about ${tempLabel(10)} and ${tempLabel(
-          15
-        )}. Some foraging is possible in bright spells, but keep any hive checks very brief.`,
-      });
-    }
-
-    if (maxTemp < 10) {
-      out.push({
-        icon: "🚫🐝",
-        text: `Daytime highs below ${tempLabel(10)}. Avoid full inspections – opening the brood nest risks chilling and stressing the colony.`,
-      });
-    } else if (maxTemp >= 10 && maxTemp < 15) {
-      out.push({
-        icon: "⚠️",
-        text: `Daytime highs between ${tempLabel(10)} and ${tempLabel(
-          15
-        )}. Only open colonies if absolutely necessary and keep brood exposure as short as possible.`,
-      });
-    } else if (maxTemp >= 15 && maxWind < strongWindThresholdKmh) {
-      out.push({
-        icon: "✅",
-        text: `Forecast includes at least one mild, calmer day (around ${tempLabel(
-          15
-        )} or above). This is generally suitable for normal inspections if needed.`,
-      });
-    }
-
-    // Hot spell advisory
-    const hotThresholdC = 28;
-    if (maxTemp >= hotThresholdC) {
-      out.push({
-        icon: "🥵",
-        text: `Hot spell forecast (around ${tempLabel(
-          hotThresholdC
-        )} or above). Ensure bees have good ventilation and a reliable water source and avoid long inspections in peak heat.`,
-      });
-    }
-
-    return out;
-  }, [
-    daily?.wind_speed_10m_max,
-    daily?.precipitation_sum,
-    daily?.temperature_2m_min,
-    daily?.temperature_2m_max,
-    windUnit,
-    unit,
-    currentTime,
-  ]);
+    return buildBeekeeperNotes({
+      daily,
+      weather,
+      unit,
+      windUnit,
+      warnings,
+      pollen,
+      timezone: weather?.timezone || "UTC",
+      // ✅ NEW: latitude-based season profile selection
+      latitude: apiaryLatitude,
+    });
+  }, [daily, weather, unit, windUnit, warnings, pollen, apiaryLatitude]);
 
   const pollenHourly = pollen?.hourly || {};
   const scalePollen = (v) => {
-    if (!Number.isFinite(v)) return { label: "–", cls: "bg-zinc-800 text-zinc-300" };
+    if (!Number.isFinite(v))
+      return { label: "–", cls: "bg-zinc-800 text-zinc-300" };
     if (v < 20) return { label: "Low", cls: "bg-emerald-900/40 text-emerald-200" };
     if (v < 60) return { label: "Moderate", cls: "bg-amber-900/40 text-amber-200" };
     if (v < 150) return { label: "High", cls: "bg-orange-900/40 text-orange-200" };
@@ -676,7 +496,9 @@ export default function Weather() {
           <div className="w-8 h-8 border-4 border-zinc-400 border-dotted rounded-full animate-spin" />
         </div>
       ) : err ? (
-        <div className="text-red-700 bg-red-50 border border-red-200 rounded p-3 text-sm">{err}</div>
+        <div className="text-red-700 bg-red-50 border border-red-200 rounded p-3 text-sm">
+          {err}
+        </div>
       ) : !weather ? (
         <div className="text-zinc-700">No weather data.</div>
       ) : (
@@ -687,7 +509,9 @@ export default function Weather() {
             <div className="bg-zinc-900 text-zinc-100 rounded shadow p-4 border border-zinc-800">
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="text-3xl sm:text-4xl">{codeMap[weather?.current?.weather_code]?.icon || "🌡️"}</div>
+                  <div className="text-3xl sm:text-4xl">
+                    {codeMap[weather?.current?.weather_code]?.icon || "🌡️"}
+                  </div>
                   <div className="min-w-0">
                     <div className="text-lg sm:text-xl font-semibold break-words">
                       {codeMap[weather?.current?.weather_code]?.label || "Current"}
@@ -725,7 +549,9 @@ export default function Weather() {
                 <div className="p-3 rounded bg-zinc-800">
                   <div className="text-zinc-400">Direction</div>
                   <div className="font-semibold">
-                    {Number.isFinite(weather?.current?.wind_direction_10m) ? `${weather?.current?.wind_direction_10m}°` : "–"}
+                    {Number.isFinite(weather?.current?.wind_direction_10m)
+                      ? `${weather?.current?.wind_direction_10m}°`
+                      : "–"}
                   </div>
                 </div>
               </div>
@@ -738,7 +564,7 @@ export default function Weather() {
                 <div className="text-xs sm:text-sm text-zinc-400">Local time ({tz})</div>
               </div>
 
-            <div className="-mx-3 sm:mx-0 px-3 sm:px-0 overflow-x-auto snap-x snap-mandatory">
+              <div className="-mx-3 sm:mx-0 px-3 sm:px-0 overflow-x-auto snap-x snap-mandatory">
                 <div className="flex gap-2 sm:gap-3 w-max">
                   {safeArr(hourly.time)
                     .slice(nowIdx, nowIdx + 18)
@@ -786,10 +612,7 @@ export default function Weather() {
                     const wmax = safeArr(daily.wind_speed_10m_max)[i];
 
                     return (
-                      <div
-                        key={d ?? i}
-                        className="p-3 rounded border border-zinc-700 bg-zinc-800 text-center"
-                      >
+                      <div key={d ?? i} className="p-3 rounded border border-zinc-700 bg-zinc-800 text-center">
                         <div className="text-sm text-zinc-400">{fmtDay(d, tz)}</div>
                         <div className="text-2xl sm:text-3xl my-1">{codeMap[wc]?.icon || "⛅"}</div>
                         <div className="font-semibold text-sm sm:text-base">
@@ -799,9 +622,7 @@ export default function Weather() {
                         <div className="text-xs text-zinc-400">
                           Rain {Number.isFinite(psum) ? Math.round(psum) : "–"} mm
                         </div>
-                        <div className="text-xs text-zinc-400">
-                          Wind up to {windDisplay(wmax)}
-                        </div>
+                        <div className="text-xs text-zinc-400">Wind up to {windDisplay(wmax)}</div>
                       </div>
                     );
                   })}
@@ -919,7 +740,10 @@ export default function Weather() {
                       let bestDiff = Infinity;
 
                       times.forEach((tStamp, i) => {
-                        const ms = typeof tStamp === "number" ? tStamp * 1000 : Date.parse(tStamp || 0);
+                        const ms =
+                          typeof tStamp === "number"
+                            ? tStamp * 1000
+                            : Date.parse(tStamp || 0);
                         const diff = Math.abs(ms - Date.now());
                         if (diff < bestDiff) {
                           bestDiff = diff;
@@ -963,4 +787,3 @@ export default function Weather() {
     </div>
   );
 }
-

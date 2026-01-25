@@ -2,6 +2,55 @@
 
 // Build the array of advisory notes for the Weather & Seasonal Beekeeping panel.
 // This is deliberately pure and UI-agnostic so you can reuse it on the Dashboard, etc.
+
+// ---- Latitude-based season profiles ----
+const TROPIC_LAT = 23.5;
+
+function getSeasonProfile(latitude) {
+  const lat = Number(latitude);
+  if (!Number.isFinite(lat)) return { profile: "northern_temperate", lat: null };
+
+  if (lat > TROPIC_LAT) return { profile: "northern_temperate", lat };
+  if (lat < -TROPIC_LAT) return { profile: "southern_temperate", lat };
+  return { profile: "tropical", lat };
+}
+
+// 0 = Jan, 11 = Dec
+function shiftMonthForHemisphere(monthIndex, profile) {
+  if (profile === "southern_temperate") return (monthIndex + 6) % 12;
+  return monthIndex;
+}
+
+function monthNameFromIndex(i) {
+  return [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ][i] || "Unknown month";
+}
+
+// Tropical wet/dry default model (broad brush)
+// - Northern tropics: wet ~ May–Oct, dry ~ Nov–Apr
+// - Southern tropics: wet ~ Nov–Apr, dry ~ May–Oct
+function tropicalSeasonKey(monthIndex, lat) {
+  const isSouthern = Number.isFinite(lat) ? lat < 0 : false;
+
+  const wetMonthsNorthern = new Set([4, 5, 6, 7, 8, 9]); // May–Oct
+  const wetMonthsSouthern = new Set([10, 11, 0, 1, 2, 3]); // Nov–Apr
+
+  const wetSet = isSouthern ? wetMonthsSouthern : wetMonthsNorthern;
+  return wetSet.has(monthIndex) ? "wet" : "dry";
+}
+
 export function buildBeekeeperNotes({
   daily,
   weather,
@@ -9,14 +58,28 @@ export function buildBeekeeperNotes({
   windUnit = "kmh", // "kmh" | "mph"
   warnings = [],
   pollen = null,
-  timezone = "UTC", // kept for API compatibility (not currently used)
+  timezone = "UTC", // used for month/season in apiary-local time
   now = null, // optional Date override (useful for testing)
+  latitude = null, // ✅ NEW: apiary latitude for season profile selection
 } = {}) {
-  void timezone; // avoid no-unused-vars while keeping signature stable for future use
-
   const out = [];
 
   const safeArr = (a) => (Array.isArray(a) ? a : []);
+
+  const getMonthInTz = (date, tz) => {
+    try {
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: tz,
+        month: "numeric",
+      }).formatToParts(date);
+      const m = parts.find((p) => p.type === "month")?.value;
+      const monthIndex = Number(m) - 1;
+      return Number.isFinite(monthIndex) ? monthIndex : date.getMonth();
+    } catch {
+      // If timezone is invalid or Intl fails, fall back to local month
+      return date.getMonth();
+    }
+  };
 
   // --- Time / season helpers ---
   let nowDate = now instanceof Date ? now : new Date();
@@ -31,7 +94,15 @@ export function buildBeekeeperNotes({
       }
     }
   }
-  const month = nowDate.getMonth(); // 0 = Jan … 11 = Dec
+
+  // Month based on apiary-local time (timezone)
+  const realMonth = getMonthInTz(nowDate, timezone); // 0..11 (real month name)
+
+  // Decide season model from latitude (prefer explicit latitude, fallback to weather.latitude if you ever store it)
+  const { profile, lat } = getSeasonProfile(latitude ?? weather?.latitude);
+
+  // For southern temperate, shift month index by 6 for *seasonal logic only*
+  const seasonMonth = shiftMonthForHemisphere(realMonth, profile);
 
   const winds = safeArr(daily?.wind_speed_10m_max).filter(Number.isFinite);
   const precs = safeArr(daily?.precipitation_sum).filter(Number.isFinite);
@@ -45,151 +116,155 @@ export function buildBeekeeperNotes({
     return unit === "C" ? `${c}°C` : `${toF(c)}°F`;
   };
 
-  // --- Seasonal / month profile (lifted from your existing logic) ---
+  // --- Seasonal / month profile (latitude-aware) ---
+  if (profile === "tropical") {
+    const key = tropicalSeasonKey(realMonth, lat);
+    const mName = monthNameFromIndex(realMonth);
 
-  if (month === 11 || month === 0 || month === 1) {
-    // Dec–Feb: winter
-    if (month === 0) {
+    out.push({
+      icon: "🌍",
+      text:
+        key === "wet"
+          ? `${mName} — tropical wet season pattern. Expect rapid forage changes, sudden storms and higher humidity. Inspect early where possible, prioritise ventilation, keep entrances clear, and watch for swarm pressure.`
+          : `${mName} — tropical dry season pattern. Forage may be patchy and colonies can be sensitive to water availability. Ensure a reliable water source, check stores if forage is scarce, and watch for robbing/wasps depending on local conditions.`,
+    });
+  } else {
+    // Temperate model uses your existing UK-style month guidance,
+    // but in the southern hemisphere we shift by 6 months.
+    const displayMonthName = monthNameFromIndex(realMonth);
+
+    if (seasonMonth === 11 || seasonMonth === 0 || seasonMonth === 1) {
+      // Dec–Feb: winter (seasonal)
+      if (seasonMonth === 0) {
+        out.push({
+          icon: "📆",
+          text: `${displayMonthName} – deep winter. Do not open colonies unless there is an emergency (for example, suspected starvation or damage).`,
+        });
+      } else if (seasonMonth === 1) {
+        out.push({
+          icon: "📆",
+          text: `${displayMonthName} – colonies are starting to brood up but weather is still unreliable. Continue to avoid full inspections.`,
+        });
+      } else {
+        out.push({
+          icon: "📆",
+          text: `${displayMonthName} – mid-winter. Colonies should be settled with good stores and secure hives.`,
+        });
+      }
+
       out.push({
-        icon: "📆",
+        icon: "🍬",
         text:
-          "January – deep winter. Do not open colonies unless there is an emergency (for example, suspected starvation or damage).",
+          "Winter feeding – use fondant above the crown board hole. Check hive weight by hefting rather than opening boxes.",
       });
-    } else if (month === 1) {
       out.push({
-        icon: "📆",
-        text:
-          "February – colonies are starting to brood up but weather is still unreliable. Continue to avoid full inspections.",
+        icon: "❄️",
+        text: `Foraging is minimal below about ${tempLabel(
+          10
+        )}. Expect very little flight; bees will mainly rely on stored food.`,
       });
-    } else {
       out.push({
-        icon: "📆",
+        icon: "🛠️",
         text:
-          "December – mid-winter. Colonies should be settled with good stores and secure hives.",
+          "After storms, frost or snow, check straps, roofs and entrances and clear any blockages.",
+      });
+    } else if (seasonMonth >= 2 && seasonMonth <= 4) {
+      // Mar–May: spring (seasonal)
+      if (seasonMonth === 2) {
+        out.push({
+          icon: "📆",
+          text: `${displayMonthName} – early spring. Brood is expanding, but cold snaps are still likely. Only inspect on the warmest, calmest days.`,
+        });
+      } else if (seasonMonth === 3) {
+        out.push({
+          icon: "📆",
+          text: `${displayMonthName} – main build-up. Choose mild, calm days for full inspections and keep them efficient to avoid chilling brood.`,
+        });
+      } else {
+        out.push({
+          icon: "📆",
+          text: `${displayMonthName} – strong build-up and early swarm season. Regular inspections are usually possible in suitable weather.`,
+        });
+      }
+
+      out.push({
+        icon: "🍯",
+        text: `Below around ${tempLabel(
+          10
+        )} there will be little foraging; colonies depend heavily on stored food if the weather turns wet or cold.`,
+      });
+      out.push({
+        icon: "🔍",
+        text: `Full inspections are comfortable once daytime highs approach ${tempLabel(
+          15
+        )} and it is calm. Between ${tempLabel(10)}–${tempLabel(
+          14
+        )} keep any checks brief.`,
+      });
+      out.push({
+        icon: "⚠️",
+        text:
+          "Spring build-up – watch for starvation in light colonies after cold or wet spells; emergency fondant or warm syrup on mild days may be needed.",
+      });
+    } else if (seasonMonth >= 5 && seasonMonth <= 7) {
+      // Jun–Aug: summer (seasonal)
+      if (seasonMonth === 5) {
+        out.push({
+          icon: "📆",
+          text: `${displayMonthName} – peak season. Swarm control and regular inspections in suitable weather are usually required.`,
+        });
+      } else if (seasonMonth === 6) {
+        out.push({
+          icon: "📆",
+          text: `${displayMonthName} – main honey flow for many areas. Manage supers, ventilation and space.`,
+        });
+      } else {
+        out.push({
+          icon: "📆",
+          text: `${displayMonthName} – end of main flow in many areas. Focus on honey removal, colony assessment and treatment planning.`,
+        });
+      }
+
+      out.push({
+        icon: "🌼",
+        text:
+          "Most days with light winds and temperatures above roughly 15°C are suitable for full inspections and good foraging.",
+      });
+      out.push({
+        icon: "🪱",
+        text:
+          "Late summer is a key time for Varroa treatment. Always follow product instructions, including any temperature limits.",
+      });
+    } else if (seasonMonth >= 8 && seasonMonth <= 10) {
+      // Sep–Nov: autumn (seasonal)
+      if (seasonMonth === 8) {
+        out.push({
+          icon: "📆",
+          text: `${displayMonthName} – early autumn. Assess stores and start autumn feeding if colonies are underweight.`,
+        });
+      } else if (seasonMonth === 9) {
+        out.push({
+          icon: "📆",
+          text: `${displayMonthName} – late autumn. Finish syrup feeding early; switch to fondant if colonies are still light.`,
+        });
+      } else {
+        out.push({
+          icon: "📆",
+          text: `${displayMonthName} – early winter. Avoid opening the brood nest; rely on hefting and external checks.`,
+        });
+      }
+
+      out.push({
+        icon: "🍯",
+        text:
+          "Autumn feeding – syrup while it is still warm enough for bees to ripen and cap it; once colder, rely on fondant only.",
+      });
+      out.push({
+        icon: "💧",
+        text:
+          "Damp kills more bees than cold. Keep hives off the ground, roofs sound and ventilation modest but not draughty.",
       });
     }
-
-    out.push({
-      icon: "🍬",
-      text:
-        "Winter feeding – use fondant above the crown board hole. Check hive weight by hefting rather than opening boxes.",
-    });
-    out.push({
-      icon: "❄️",
-      text: `Foraging is minimal below about ${tempLabel(
-        10
-      )}. Expect very little flight; bees will mainly rely on stored food.`,
-    });
-    out.push({
-      icon: "🛠️",
-      text:
-        "After storms, frost or snow, check straps, roofs and entrances and clear any blockages.",
-    });
-  } else if (month >= 2 && month <= 4) {
-    // Mar–May: spring
-    if (month === 2) {
-      out.push({
-        icon: "📆",
-        text:
-          "March – early spring. Brood is expanding, but cold snaps are still likely. Only inspect on the warmest, calmest days.",
-      });
-    } else if (month === 3) {
-      out.push({
-        icon: "📆",
-        text:
-          "April – main build-up. Choose mild, calm days for full inspections and keep them efficient to avoid chilling brood.",
-      });
-    } else {
-      out.push({
-        icon: "📆",
-        text:
-          "May – strong build-up and early swarm season. Regular inspections are usually possible in suitable weather.",
-      });
-    }
-
-    out.push({
-      icon: "🍯",
-      text: `Below around ${tempLabel(
-        10
-      )} there will be little foraging; colonies depend heavily on stored food if the weather turns wet or cold.`,
-    });
-    out.push({
-      icon: "🔍",
-      text: `Full inspections are comfortable once daytime highs approach ${tempLabel(
-        15
-      )} and it is calm. Between ${tempLabel(10)}–${tempLabel(
-        14
-      )} keep any checks brief.`,
-    });
-    out.push({
-      icon: "⚠️",
-      text:
-        "Spring build-up – watch for starvation in light colonies after cold or wet spells; emergency fondant or warm syrup on mild days may be needed.",
-    });
-  } else if (month >= 5 && month <= 7) {
-    // Jun–Aug: summer
-    if (month === 5) {
-      out.push({
-        icon: "📆",
-        text:
-          "June – peak season. Swarm control and regular inspections in suitable weather are usually required.",
-      });
-    } else if (month === 6) {
-      out.push({
-        icon: "📆",
-        text:
-          "July – main honey flow for many areas. Manage supers, ventilation and space.",
-      });
-    } else {
-      out.push({
-        icon: "📆",
-        text:
-          "August – end of main flow in many areas. Focus on honey removal, colony assessment and treatment planning.",
-      });
-    }
-
-    out.push({
-      icon: "🌼",
-      text:
-        "Most days with light winds and temperatures above roughly 15°C are suitable for full inspections and good foraging.",
-    });
-    out.push({
-      icon: "🪱",
-      text:
-        "Late summer is a key time for Varroa treatment. Always follow product instructions, including any temperature limits.",
-    });
-  } else if (month >= 8 && month <= 10) {
-    // Sep–Nov: autumn
-    if (month === 8) {
-      out.push({
-        icon: "📆",
-        text:
-          "September – early autumn. Assess stores and start autumn feeding if colonies are underweight.",
-      });
-    } else if (month === 9) {
-      out.push({
-        icon: "📆",
-        text:
-          "October – late autumn. Finish syrup feeding early; switch to fondant if colonies are still light.",
-      });
-    } else {
-      out.push({
-        icon: "📆",
-        text:
-          "November – early winter. Avoid opening the brood nest; rely on hefting and external checks.",
-      });
-    }
-
-    out.push({
-      icon: "🍯",
-      text:
-        "Autumn feeding – syrup while it is still warm enough for bees to ripen and cap it; once colder, rely on fondant only.",
-    });
-    out.push({
-      icon: "💧",
-      text:
-        "Damp kills more bees than cold. Keep hives off the ground, roofs sound and ventilation modest but not draughty.",
-    });
   }
 
   // --- Live, temperature & wind-driven guidance (as before) ---
@@ -280,7 +355,12 @@ export function buildBeekeeperNotes({
       const sev = (w.severity_text || w.severity || w.level || "")
         .toString()
         .toLowerCase();
-      return sev.includes("red") || sev.includes("orange") || sev === "3" || sev === "2";
+      return (
+        sev.includes("red") ||
+        sev.includes("orange") ||
+        sev === "3" ||
+        sev === "2"
+      );
     });
 
     const anyYellow = warnings.some((w) => {
