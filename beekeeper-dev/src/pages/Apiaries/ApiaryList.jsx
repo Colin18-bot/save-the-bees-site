@@ -311,7 +311,27 @@ const ApiaryList = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Your Apiaries</h1>
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+  <h1 className="text-2xl font-bold">Your Apiaries</h1>
+
+  <div className="flex flex-col sm:flex-row gap-2">
+    <Link
+      to="/apiaries/new"
+      className="inline-flex items-center justify-center bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+    >
+      New Apiary
+    </Link>
+
+    <Link
+      to="/apiaries/step-by-step"
+      className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-slate-400"
+    >
+      Apiary Siting Guide
+    </Link>
+  </div>
+</div>
 
       <div className="flex flex-wrap gap-4 items-center mb-4">
         <div>
