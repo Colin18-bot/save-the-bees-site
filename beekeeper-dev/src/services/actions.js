@@ -17,12 +17,11 @@ function fkFriendlyMessage(err, context = {}) {
   if (String(code) !== "23503" && !/foreign key constraint/i.test(message)) return "";
 
   const constraint =
-    (message.match(/constraint\s+\"([^\"]+)\"/i)?.[1] ||
-      details.match(/constraint\s+\"([^\"]+)\"/i)?.[1] ||
-      "");
+    message.match(/constraint\s+"([^"]+)"/i)?.[1] ||
+    details.match(/constraint\s+"([^"]+)"/i)?.[1] ||
+    "";
 
   const MAP = {
-    // Apiary children
     hives_apiary_id_fkey:
       "You can’t delete this apiary because it still has hives (including any in the archive). Delete those hives first, or archive the apiary instead.",
     inspections_apiary_id_fkey:
@@ -32,7 +31,6 @@ function fkFriendlyMessage(err, context = {}) {
     logbook_apiary_id_fkey:
       "You can’t delete this apiary because it still has logbook entries (including any in the archive). Delete those logbook entries first, or archive the apiary instead.",
 
-    // Hive children
     inspections_hive_id_fkey:
       "You can’t delete this hive because it still has inspections (including any in the archive). Delete those inspections first, or archive the hive instead.",
     todos_hive_id_fkey:
@@ -40,11 +38,9 @@ function fkFriendlyMessage(err, context = {}) {
     logbook_hive_id_fkey:
       "You can’t delete this hive because it still has logbook entries (including any in the archive). Delete those logbook entries first, or archive the hive instead.",
 
-    // Inspection children
     logbook_inspection_id_fkey:
       "You can’t delete this inspection because it still has logbook entries linked to it (including any in the archive). Delete those logbook entries first, or archive the inspection instead.",
 
-    // Todo children
     logbook_todo_id_fkey:
       "You can’t delete this to-do because it still has logbook entries linked to it (including any in the archive). Delete those logbook entries first, or archive the to-do instead.",
   };
@@ -64,21 +60,18 @@ function fkFriendlyMessage(err, context = {}) {
   return "You can’t delete this item because other records still reference it (including archived records). Delete the linked items first, or archive it instead.";
 }
 
-/** Extract { bucket, path } from a Supabase public URL */
+/** Extract { bucket, path } from a Supabase Storage URL (public or signed) */
 export function parseStoragePublicUrl(url) {
   if (!url) return null;
   const noQuery = String(url).split("?")[0];
-  const m = noQuery.match(/\/object\/public\/([^/]+)\/(.+)$/);
+  const m = noQuery.match(/\/object\/(?:public|sign)\/([^/]+)\/(.+)$/);
   if (!m) return null;
   return { bucket: m[1], path: decodeURIComponent(m[2]) };
 }
 
 /** Archive a row (sets archived_at = now()) */
 export async function archiveItem(table, id) {
-  return await supabase
-    .from(table)
-    .update({ archived_at: new Date().toISOString() })
-    .eq("id", id);
+  return await supabase.from(table).update({ archived_at: new Date().toISOString() }).eq("id", id);
 }
 
 /**
@@ -86,6 +79,80 @@ export async function archiveItem(table, id) {
  * supabase/functions/delete-row-with-photos
  */
 const DELETE_FN = "delete-row-with-photos";
+
+/**
+ * IMPORTANT:
+ * Supabase Edge preflight can fail if apikey header is missing.
+ * We force headers via a direct fetch fallback if invoke() fails.
+ */
+
+function getEnv(key) {
+  // Vite exposes envs via import.meta.env
+  // We keep this tiny helper for safety.
+  try {
+    return import.meta?.env?.[key];
+  } catch {
+    return undefined;
+  }
+}
+
+const SUPABASE_URL = getEnv("VITE_SUPABASE_URL");
+const SUPABASE_ANON_KEY = getEnv("VITE_SUPABASE_ANON_KEY");
+
+/** Direct call to Edge Function with explicit headers (apikey + auth) */
+async function fetchEdgeFunction(fnName, body) {
+  if (!SUPABASE_URL) {
+    return { data: null, error: { message: "Missing VITE_SUPABASE_URL in environment" } };
+  }
+  if (!SUPABASE_ANON_KEY) {
+    return { data: null, error: { message: "Missing VITE_SUPABASE_ANON_KEY in environment" } };
+  }
+
+  const {
+    data: { session },
+    error: sessErr,
+  } = await supabase.auth.getSession();
+
+  if (sessErr) return { data: null, error: sessErr };
+  if (!session?.access_token) {
+    return { data: null, error: { message: "Not signed in (missing access token)" } };
+  }
+
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/${fnName}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // ✅ critical headers:
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${session.access_token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  // If preflight/edge rejects, this might not be JSON
+  const text = await res.text().catch(() => "");
+  let json;
+  try {
+    json = text ? JSON.parse(text) : null;
+  } catch {
+    json = null;
+  }
+
+  if (!res.ok) {
+    return {
+      data: null,
+      error: {
+        message:
+          (json && (json.error || json.message)) ||
+          `Edge function ${fnName} failed (${res.status})`,
+        status: res.status,
+        raw: text?.slice(0, 500),
+      },
+    };
+  }
+
+  return { data: json, error: null };
+}
 
 /**
  * Solid server-side delete pipeline (Storage first, then DB).
@@ -98,10 +165,27 @@ const DELETE_FN = "delete-row-with-photos";
  *  - for inspections (photos array), remove a single photo by {path} or {url}
  */
 export async function serverDeleteRowWithPhotos({ table, id, mode = "delete_row", removeOne }) {
-  const { data, error } = await supabase.functions.invoke(DELETE_FN, {
-    body: { table, id, mode, ...(removeOne ? { removeOne } : {}) },
-  });
+  const payload = { table, id, mode, ...(removeOne ? { removeOne } : {}) };
 
+  // 1) Try official invoke() first
+  const inv = await supabase.functions.invoke(DELETE_FN, { body: payload });
+
+  // If invoke returns a transport/gateway error, fallback to direct fetch (forces apikey header)
+  if (inv?.error) {
+    const fallback = await fetchEdgeFunction(DELETE_FN, payload);
+    if (fallback.error) {
+      // Return whichever has more useful info; fallback usually does.
+      return { data: null, error: fallback.error };
+    }
+    // Some functions return { error: "..." } with 200
+    if (fallback.data && typeof fallback.data === "object" && fallback.data.error) {
+      return { data: null, error: { message: fallback.data.error } };
+    }
+    return { data: fallback.data, error: null };
+  }
+
+  // 2) Normal invoke success path
+  const { data, error } = inv;
   if (error) return { data: null, error };
 
   // Some functions return { error: "..." } in JSON body with 200
@@ -116,27 +200,11 @@ export async function serverDeleteRowWithPhotos({ table, id, mode = "delete_row"
 /* ✅ Backwards-compatible helpers expected by your React pages        */
 /* ------------------------------------------------------------------ */
 
-/**
- * deleteRowWithPhoto(table, id, urlCol?)
- * - Fixes: "does not provide an export named deleteRowWithPhoto"
- * - Uses edge function to delete storage (via photo_path or photo_url) then delete row.
- *
- * urlCol is ignored by the server pipeline, but we accept it for compatibility.
- */
 export async function deleteRowWithPhoto(table, id, urlCol = "photo_url") {
   void urlCol; // kept for compatibility
   return await serverDeleteRowWithPhotos({ table, id, mode: "delete_row" });
 }
 
-/**
- * deleteRowAndRemoveUrls(table, id, urlsCol?)
- * - For inspections: photos is an array (urlsCol="photos")
- * - Server function handles:
- *    - photo_paths[] (preferred) OR
- *    - photos[] URLs (legacy fallback)
- *
- * urlsCol is ignored by the server pipeline, but we accept it for compatibility.
- */
 export async function deleteRowAndRemoveUrls(table, id, urlsCol = "photos") {
   void urlsCol; // kept for compatibility
   return await serverDeleteRowWithPhotos({ table, id, mode: "delete_row" });
@@ -156,7 +224,7 @@ export async function smartDeleteApiary(id) {
       hasChildren = hives + inspections + todos + logs > 0;
     }
   } catch {
-    /* ignore */
+    // ignore
   }
 
   if (hasChildren) {
@@ -178,7 +246,7 @@ export async function smartDeleteHive(id) {
       hasChildren = inspections + todos + logs > 0;
     }
   } catch {
-    /* ignore */
+    // ignore
   }
 
   if (hasChildren) {
@@ -215,7 +283,7 @@ export async function smartDeleteTodo(id) {
       hasChildren = logs + attachments > 0;
     }
   } catch {
-    /* ignore */
+    // ignore
   }
 
   if (hasChildren) {
