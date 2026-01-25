@@ -40,12 +40,22 @@ const codeMap = {
 
 // time helpers
 const toDate = (t) => (typeof t === "number" ? new Date(t * 1000) : new Date(t || 0));
+
 const fmtHM = (t, tz) =>
-  new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: tz }).format(toDate(t));
+  new Intl.DateTimeFormat("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZone: tz,
+  }).format(toDate(t));
+
 const fmtDay = (t, tz) =>
-  new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "2-digit", month: "short", timeZone: tz }).format(
-    toDate(t)
-  );
+  new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+    timeZone: tz,
+  }).format(toDate(t));
+
 const fmtLong = (t, tz) =>
   new Intl.DateTimeFormat("en-GB", {
     day: "2-digit",
@@ -55,6 +65,9 @@ const fmtLong = (t, tz) =>
     minute: "2-digit",
     timeZone: tz,
   }).format(toDate(t));
+
+// ✅ STABLE helper (must be outside component)
+const safeArr = (a, n = 0) => (Array.isArray(a) ? a : Array(n).fill(undefined));
 
 // circuit breaker (weather only)
 const CB_KEY = "weather_breaker_until";
@@ -263,6 +276,7 @@ export default function Weather() {
           timezone: "auto",
           timeformat: "unixtime",
         }).toString();
+
         const r3 = await fetchJsonOnce(`https://api.open-meteo.com/v1/forecast?${q3}`, signal);
         if (r3.ok && r3.json?.hourly) {
           const derived = currentFromHourly(r3.json);
@@ -328,8 +342,9 @@ export default function Weather() {
   }, [selectedApiary, apiaries]);
 
   // UI helpers
-  const t = (c) => (unit === "C" ? Math.round(c ?? 0) : Math.round((c ?? 0) * 9 / 5 + 32));
+  const t = (c) => (unit === "C" ? Math.round(c ?? 0) : Math.round(((c ?? 0) * 9) / 5 + 32));
   const unitLabel = unit === "C" ? "°C" : "°F";
+
   const windDisplay = (k) => {
     if (!Number.isFinite(k)) return "–";
     const v = windUnit === "kmh" ? Math.round(k) : Math.round(k * 0.621371);
@@ -340,7 +355,9 @@ export default function Weather() {
   const tz = weather?.timezone || "UTC";
   const hourly = weather?.hourly || {};
   const daily = weather?.daily || {};
-  const safeArr = (a, n = 0) => (Array.isArray(a) ? a : Array(n).fill(undefined));
+
+  // ✅ stable slice of weather used for advisories
+  const currentTime = weather?.current?.time ?? null;
 
   // nearest hour
   const nowIdx = useMemo(() => {
@@ -375,10 +392,8 @@ export default function Weather() {
 
     // Determine current month from weather timestamp (fallback to system date)
     let nowDate = new Date();
-    const currentTs = weather?.current?.time;
-    if (currentTs) {
-      nowDate = toDate(currentTs);
-    }
+    const currentTs = currentTime;
+    if (currentTs) nowDate = toDate(currentTs);
     const month = nowDate.getMonth(); // 0 = Jan, 11 = Dec
 
     // --- Month / season profile + treatments overview ---
@@ -546,9 +561,7 @@ export default function Weather() {
     if (minTemp <= 5 || maxTemp < 10) {
       out.push({
         icon: "🥶",
-        text: `Forecast highs stay below about ${tempLabel(
-          10
-        )}. Expect very little foraging – colonies will mainly rely on stored food.`,
+        text: `Forecast highs stay below about ${tempLabel(10)}. Expect very little foraging – colonies will mainly rely on stored food.`,
       });
     } else if (maxTemp >= 10 && maxTemp < 15) {
       out.push({
@@ -562,9 +575,7 @@ export default function Weather() {
     if (maxTemp < 10) {
       out.push({
         icon: "🚫🐝",
-        text: `Daytime highs below ${tempLabel(
-          10
-        )}. Avoid full inspections – opening the brood nest risks chilling and stressing the colony.`,
+        text: `Daytime highs below ${tempLabel(10)}. Avoid full inspections – opening the brood nest risks chilling and stressing the colony.`,
       });
     } else if (maxTemp >= 10 && maxTemp < 15) {
       out.push({
@@ -594,7 +605,15 @@ export default function Weather() {
     }
 
     return out;
-  }, [daily, windUnit, unit, safeArr, weather]);
+  }, [
+    daily?.wind_speed_10m_max,
+    daily?.precipitation_sum,
+    daily?.temperature_2m_min,
+    daily?.temperature_2m_max,
+    windUnit,
+    unit,
+    currentTime,
+  ]);
 
   const pollenHourly = pollen?.hourly || {};
   const scalePollen = (v) => {
@@ -668,9 +687,7 @@ export default function Weather() {
             <div className="bg-zinc-900 text-zinc-100 rounded shadow p-4 border border-zinc-800">
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="text-3xl sm:text-4xl">
-                    {codeMap[weather?.current?.weather_code]?.icon || "🌡️"}
-                  </div>
+                  <div className="text-3xl sm:text-4xl">{codeMap[weather?.current?.weather_code]?.icon || "🌡️"}</div>
                   <div className="min-w-0">
                     <div className="text-lg sm:text-xl font-semibold break-words">
                       {codeMap[weather?.current?.weather_code]?.label || "Current"}
@@ -708,9 +725,7 @@ export default function Weather() {
                 <div className="p-3 rounded bg-zinc-800">
                   <div className="text-zinc-400">Direction</div>
                   <div className="font-semibold">
-                    {Number.isFinite(weather?.current?.wind_direction_10m)
-                      ? `${weather?.current?.wind_direction_10m}°`
-                      : "–"}
+                    {Number.isFinite(weather?.current?.wind_direction_10m) ? `${weather?.current?.wind_direction_10m}°` : "–"}
                   </div>
                 </div>
               </div>
@@ -723,33 +738,36 @@ export default function Weather() {
                 <div className="text-xs sm:text-sm text-zinc-400">Local time ({tz})</div>
               </div>
 
-              <div className="-mx-3 sm:mx-0 px-3 sm:px-0 overflow-x-auto snap-x snap-mandatory">
+            <div className="-mx-3 sm:mx-0 px-3 sm:px-0 overflow-x-auto snap-x snap-mandatory">
                 <div className="flex gap-2 sm:gap-3 w-max">
-                  {safeArr(hourly.time).slice(nowIdx, nowIdx + 18).map((tstamp, i) => {
-                    const idx = nowIdx + i;
-                    const code = safeArr(hourly.weather_code)[idx];
-                    const temp = safeArr(hourly.temperature_2m)[idx];
-                    const rainProb = safeArr(hourly.precipitation_probability)[idx];
-                    const wind10 = safeArr(hourly.wind_speed_10m)[idx];
-                    return (
-                      <div
-                        key={tstamp ?? idx}
-                        className="w-24 sm:w-28 p-3 rounded border border-zinc-700 bg-zinc-800 shrink-0 snap-start"
-                      >
-                        <div className="text-xs text-zinc-400">{fmtHM(tstamp, tz)}</div>
-                        <div className="text-2xl sm:text-3xl">{codeMap[code]?.icon || "⛅"}</div>
-                        <div className="font-semibold text-sm sm:text-base">
-                          {Number.isFinite(temp) ? `${t(temp)}${unitLabel}` : "–"}
+                  {safeArr(hourly.time)
+                    .slice(nowIdx, nowIdx + 18)
+                    .map((tstamp, i) => {
+                      const idx = nowIdx + i;
+                      const code = safeArr(hourly.weather_code)[idx];
+                      const temp = safeArr(hourly.temperature_2m)[idx];
+                      const rainProb = safeArr(hourly.precipitation_probability)[idx];
+                      const wind10 = safeArr(hourly.wind_speed_10m)[idx];
+
+                      return (
+                        <div
+                          key={tstamp ?? idx}
+                          className="w-24 sm:w-28 p-3 rounded border border-zinc-700 bg-zinc-800 shrink-0 snap-start"
+                        >
+                          <div className="text-xs text-zinc-400">{fmtHM(tstamp, tz)}</div>
+                          <div className="text-2xl sm:text-3xl">{codeMap[code]?.icon || "⛅"}</div>
+                          <div className="font-semibold text-sm sm:text-base">
+                            {Number.isFinite(temp) ? `${t(temp)}${unitLabel}` : "–"}
+                          </div>
+                          <div className="text-[11px] sm:text-xs text-zinc-400">
+                            Rain {Number.isFinite(rainProb) ? `${rainProb}%` : "–"}
+                          </div>
+                          <div className="text-[11px] sm:text-xs text-zinc-400">
+                            Wind {windDisplay(wind10)}
+                          </div>
                         </div>
-                        <div className="text-[11px] sm:text-xs text-zinc-400">
-                          Rain {Number.isFinite(rainProb) ? `${rainProb}%` : "–"}
-                        </div>
-                        <div className="text-[11px] sm:text-xs text-zinc-400">
-                          Wind {windDisplay(wind10)}
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
                 </div>
               </div>
             </div>
@@ -758,27 +776,35 @@ export default function Weather() {
             <div className="bg-zinc-900 text-zinc-100 rounded shadow p-4 border border-zinc-800">
               <h3 className="text-lg font-semibold mb-3">Next 5 Days</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                {safeArr(daily.time).slice(0, 5).map((d, i) => {
-                  const wc = safeArr(daily.weather_code)[i];
-                  const tmax = safeArr(daily.temperature_2m_max)[i];
-                  const tmin = safeArr(daily.temperature_2m_min)[i];
-                  const psum = safeArr(daily.precipitation_sum)[i];
-                  const wmax = safeArr(daily.wind_speed_10m_max)[i];
-                  return (
-                    <div key={d ?? i} className="p-3 rounded border border-zinc-700 bg-zinc-800 text-center">
-                      <div className="text-sm text-zinc-400">{fmtDay(d, tz)}</div>
-                      <div className="text-2xl sm:text-3xl my-1">{codeMap[wc]?.icon || "⛅"}</div>
-                      <div className="font-semibold text-sm sm:text-base">
-                        {Number.isFinite(tmax) ? `${t(tmax)}${unitLabel}` : "–"} /{" "}
-                        {Number.isFinite(tmin) ? `${t(tmin)}${unitLabel}` : "–"}
+                {safeArr(daily.time)
+                  .slice(0, 5)
+                  .map((d, i) => {
+                    const wc = safeArr(daily.weather_code)[i];
+                    const tmax = safeArr(daily.temperature_2m_max)[i];
+                    const tmin = safeArr(daily.temperature_2m_min)[i];
+                    const psum = safeArr(daily.precipitation_sum)[i];
+                    const wmax = safeArr(daily.wind_speed_10m_max)[i];
+
+                    return (
+                      <div
+                        key={d ?? i}
+                        className="p-3 rounded border border-zinc-700 bg-zinc-800 text-center"
+                      >
+                        <div className="text-sm text-zinc-400">{fmtDay(d, tz)}</div>
+                        <div className="text-2xl sm:text-3xl my-1">{codeMap[wc]?.icon || "⛅"}</div>
+                        <div className="font-semibold text-sm sm:text-base">
+                          {Number.isFinite(tmax) ? `${t(tmax)}${unitLabel}` : "–"} /{" "}
+                          {Number.isFinite(tmin) ? `${t(tmin)}${unitLabel}` : "–"}
+                        </div>
+                        <div className="text-xs text-zinc-400">
+                          Rain {Number.isFinite(psum) ? Math.round(psum) : "–"} mm
+                        </div>
+                        <div className="text-xs text-zinc-400">
+                          Wind up to {windDisplay(wmax)}
+                        </div>
                       </div>
-                      <div className="text-xs text-zinc-400">
-                        Rain {Number.isFinite(psum) ? Math.round(psum) : "–"} mm
-                      </div>
-                      <div className="text-xs text-zinc-400">Wind up to {windDisplay(wmax)}</div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
             </div>
           </div>
@@ -798,6 +824,7 @@ export default function Weather() {
                 vets and experienced mentors. Do not rely on this panel alone when deciding whether to inspect, feed or
                 treat your bees.
               </p>
+
               {advisories.length ? (
                 <ul className="space-y-1 text-sm">
                   {advisories.map((x, i) => (
@@ -816,6 +843,7 @@ export default function Weather() {
             {ENABLE_WARNINGS && (
               <div className="bg-zinc-900 text-zinc-100 rounded shadow p-4 border border-zinc-800">
                 <h3 className="text-lg font-semibold mb-2">Official Weather Warnings</h3>
+
                 {warnings?.length ? (
                   <ul className="space-y-2 text-sm">
                     {warnings.map((w, idx) => {
@@ -828,10 +856,12 @@ export default function Weather() {
                           : sev.includes("yellow") || sev === "1"
                           ? "bg-amber-900/40 text-amber-200"
                           : "bg-zinc-800 text-zinc-300";
+
                       const title = w.event || w.headline || "Warning";
                       const start = w.start || w.effective || w.onset;
                       const end = w.end || w.expires || w.expiry;
                       const wtz = w.timezone || tz;
+
                       return (
                         <li key={idx} className="border border-zinc-700 rounded p-2 bg-zinc-800">
                           <div className="flex items-center gap-2">
@@ -840,15 +870,18 @@ export default function Weather() {
                             </span>
                             <div className="font-semibold break-words">{title}</div>
                           </div>
+
                           <div className="text-xs text-zinc-400 mt-1">
                             {start ? fmtLong(start, wtz) : "—"} → {end ? fmtLong(end, wtz) : "—"} ({wtz})
                           </div>
+
                           {w.description ? (
                             <div className="mt-1 text-sm text-zinc-200 whitespace-pre-wrap break-words">
                               {String(w.description).slice(0, 220)}
                               {String(w.description).length > 220 ? "…" : ""}
                             </div>
                           ) : null}
+
                           {w.instruction ? (
                             <div className="mt-1 text-xs text-zinc-300 whitespace-pre-wrap break-words">
                               Advice: {String(w.instruction).slice(0, 220)}
@@ -871,6 +904,7 @@ export default function Weather() {
             {ENABLE_POLLEN && (
               <div className="bg-zinc-900 text-zinc-100 rounded shadow p-4 border border-zinc-800">
                 <h3 className="text-lg font-semibold mb-2">Pollen — local time ({tz})</h3>
+
                 {!pollen?.hourly ? (
                   <div className="text-sm text-zinc-200 bg-zinc-900/50 border border-zinc-700 rounded p-2">
                     No pollen data.
@@ -880,8 +914,10 @@ export default function Weather() {
                     {["tree_pollen", "grass_pollen", "weed_pollen"].map((key) => {
                       const hourlyP = pollenHourly || {};
                       const times = safeArr(hourlyP.time);
-                      let best = 0,
-                        bestDiff = Infinity;
+
+                      let best = 0;
+                      let bestDiff = Infinity;
+
                       times.forEach((tStamp, i) => {
                         const ms = typeof tStamp === "number" ? tStamp * 1000 : Date.parse(tStamp || 0);
                         const diff = Math.abs(ms - Date.now());
@@ -890,20 +926,29 @@ export default function Weather() {
                           best = i;
                         }
                       });
+
                       const nowVal = safeArr(hourlyP[key])[best];
-                      const next12 = safeArr(hourlyP[key]).slice(best, best + 12).filter(Number.isFinite);
+                      const next12 = safeArr(hourlyP[key])
+                        .slice(best, best + 12)
+                        .filter(Number.isFinite);
+
                       const dayMax = next12.length ? Math.max(...next12) : undefined;
+
                       const nowScale = scalePollen(nowVal);
                       const maxScale = scalePollen(dayMax);
                       const label = key.split("_")[0];
+
                       return (
                         <div key={key} className="border border-zinc-700 rounded p-3 bg-zinc-800">
                           <div className="text-sm text-zinc-400 capitalize">{label}</div>
+
                           <div className={`inline-block mt-1 px-2 py-0.5 rounded text-xs font-medium ${nowScale.cls}`}>
                             {nowScale.label}
                           </div>
+
                           <div className="text-xs text-zinc-400 mt-1">
-                            Today peak: <span className={`px-1 rounded ${maxScale.cls}`}>{maxScale.label}</span>
+                            Today peak:{" "}
+                            <span className={`px-1 rounded ${maxScale.cls}`}>{maxScale.label}</span>
                           </div>
                         </div>
                       );
@@ -918,3 +963,4 @@ export default function Weather() {
     </div>
   );
 }
+

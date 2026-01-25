@@ -30,7 +30,7 @@ export default function Contact() {
         name="member-contact"
         method="POST"
         data-netlify="true"
-        netlify-honeypot="bot-field"
+        data-netlify-honeypot="bot-field"
         action="/contact/sent"
         onSubmit={handleSubmit}
         className="space-y-4"

@@ -187,7 +187,7 @@ const ApiaryList = () => {
     };
 
     fetchApiaries();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [selectedApiary]);
 
   // Filter by dropdown selection (client-side)

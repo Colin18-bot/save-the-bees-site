@@ -304,7 +304,7 @@ const EditInspection = () => {
     return () => {
       (previewsRef.current || []).forEach((u) => u?.startsWith("blob:") && URL.revokeObjectURL(u));
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [id]);
 
   const hivesForApiary = useMemo(() => {

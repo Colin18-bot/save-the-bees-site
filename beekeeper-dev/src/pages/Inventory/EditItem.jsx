@@ -171,12 +171,6 @@ export default function EditItem() {
     };
   }, [usageScope, selectedApiaryId]);
 
-  const toggleHiveSelection = (hiveId) => {
-    setSelectedHiveIds((prev) =>
-      prev.includes(hiveId) ? prev.filter((id) => id !== hiveId) : [...prev, hiveId]
-    );
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg("");

@@ -1,5 +1,5 @@
 // src/pages/BeeHealth/BeeHealthHelper.jsx
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BEE_HEALTH_RULES } from "../../utils/BeeHealthRules";
 
 /**
@@ -110,7 +110,8 @@ export default function BeeHealthHelper() {
   }, [answers]);
 
   // ----- build question list for this run -----
-  const foundation = questions?.foundation || [];
+  // ✅ memoised so it doesn't create a new [] every render (fixes lint warning)
+  const foundation = useMemo(() => questions?.foundation || [], [questions]);
 
   const routeKey = useMemo(() => {
     const r = answers.primary_route;
@@ -152,7 +153,8 @@ export default function BeeHealthHelper() {
   }, [allQuestionsInOrder]);
 
   // ---------- guided optional multi handling ----------
-  const isMultiDone = (qid) => !!answers[`__done_${qid}`];
+  // ✅ stable function + included where used (fixes missing-deps warnings)
+  const isMultiDone = useCallback((qid) => !!answers[`__done_${qid}`], [answers]);
 
   const markMultiDone = (qid) => {
     setAnswers((p) => ({ ...p, [`__done_${qid}`]: true }));
@@ -195,7 +197,7 @@ export default function BeeHealthHelper() {
     }
 
     return null;
-  }, [allQuestionsInOrder, answers, mode]);
+  }, [allQuestionsInOrder, answers, mode, isMultiDone]);
 
   const allAnswered = !computedNextId;
 
@@ -320,7 +322,7 @@ export default function BeeHealthHelper() {
     const nowAnswered =
       (q.kind === "select" && !!answers[currentId]) ||
       (q.kind === "tri" && isTri(answers[currentId])) ||
-      (q.kind === "multi" && isMultiDone(q.id)); // multi advances only after Skip
+      (q.kind === "multi" && isMultiDone(q.id)); // ✅ uses stable callback
 
     if (nowAnswered) {
       const next = computedNextId;
@@ -330,7 +332,7 @@ export default function BeeHealthHelper() {
         pendingScrollRef.current = next;
       }
     }
-  }, [answers, mode, currentId, computedNextId, currentQuestion]);
+  }, [answers, mode, currentId, computedNextId, currentQuestion, isMultiDone]);
 
   // --- JUMP TO QUESTION (used by results) ---
   function jumpToQuestion(id) {
@@ -883,18 +885,12 @@ function SelectCard({ id, label, help, value, options, onChange, highlight }) {
   return (
     <div
       id={`q-${id}`}
-      className={`rounded border p-4 ${
-        highlight ? "ring-2 ring-yellow-400 bg-yellow-50" : "bg-white"
-      }`}
+      className={`rounded border p-4 ${highlight ? "ring-2 ring-yellow-400 bg-yellow-50" : "bg-white"}`}
     >
       <div className="font-semibold">{label}</div>
       {help ? <div className="text-xs text-gray-600 mt-1">{help}</div> : null}
 
-      <select
-        className="mt-3 w-full border rounded px-3 py-2"
-        value={value || ""}
-        onChange={(e) => onChange(e.target.value)}
-      >
+      <select className="mt-3 w-full border rounded px-3 py-2" value={value || ""} onChange={(e) => onChange(e.target.value)}>
         <option value="">Select…</option>
         {options?.map((o) => (
           <option key={o.value} value={o.value}>
@@ -910,9 +906,7 @@ function TriCard({ id, label, help, value, onChange, highlight }) {
   return (
     <div
       id={`q-${id}`}
-      className={`rounded border p-4 ${
-        highlight ? "ring-2 ring-yellow-400 bg-yellow-50" : "bg-white"
-      }`}
+      className={`rounded border p-4 ${highlight ? "ring-2 ring-yellow-400 bg-yellow-50" : "bg-white"}`}
     >
       <div className="font-semibold">{label}</div>
       {help ? <div className="text-xs text-gray-600 mt-1">{help}</div> : null}
@@ -938,9 +932,7 @@ function TriButton({ active, onClick, children }) {
       type="button"
       onClick={onClick}
       className={`px-4 py-2 rounded border text-sm transition ${
-        active
-          ? "bg-yellow-500 border-yellow-500 text-black"
-          : "bg-white hover:bg-gray-50"
+        active ? "bg-yellow-500 border-yellow-500 text-black" : "bg-white hover:bg-gray-50"
       }`}
     >
       {children}
@@ -957,12 +949,7 @@ function MultiCard({ label, help, options, answers, onToggle }) {
       <div className="mt-3 grid sm:grid-cols-2 gap-2">
         {options?.map((opt) => (
           <label key={opt.id} className="flex items-start gap-2 text-sm">
-            <input
-              type="checkbox"
-              className="mt-1"
-              checked={!!answers[opt.id]}
-              onChange={() => onToggle(opt.id)}
-            />
+            <input type="checkbox" className="mt-1" checked={!!answers[opt.id]} onChange={() => onToggle(opt.id)} />
             <span>{opt.label}</span>
           </label>
         ))}
@@ -980,8 +967,7 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
       <ul className="list-disc pl-5 text-sm mt-2 space-y-1 text-gray-800">
         <li>This is guidance only — it does not diagnose disease.</li>
         <li>
-          If notifiable disease/pest is suspected: <b>do not move</b> colonies,
-          frames, bees, or equipment off site.
+          If notifiable disease/pest is suspected: <b>do not move</b> colonies, frames, bees, or equipment off site.
         </li>
         <li>Avoid combining colonies or swapping frames until you understand what’s happening.</li>
         <li>If severe or uncertain, get help from your association, mentor, or official routes.</li>
@@ -1004,12 +990,9 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
     return (
       <div className="space-y-3">
         <div className="p-5 rounded border border-red-400 bg-red-50 print-card">
-          <h3 className="font-bold text-red-800 text-lg">
-            Important — immediate action required
-          </h3>
+          <h3 className="font-bold text-red-800 text-lg">Important — immediate action required</h3>
           <p className="mt-2 text-sm text-red-900">
-            A red-flag sign was selected. This can be consistent with a{" "}
-            <b>notifiable</b> brood disease.
+            A red-flag sign was selected. This can be consistent with a <b>notifiable</b> brood disease.
             <b> Do not move</b> colonies or equipment off site.
           </p>
         </div>
@@ -1017,11 +1000,7 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
         <InspectorSafeDisclaimer />
 
         <div className="no-print">
-          <button
-            type="button"
-            onClick={onPrint}
-            className="px-4 py-2 rounded border bg-white hover:bg-gray-50 text-sm"
-          >
+          <button type="button" onClick={onPrint} className="px-4 py-2 rounded border bg-white hover:bg-gray-50 text-sm">
             Print results
           </button>
         </div>
@@ -1035,16 +1014,10 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="font-semibold">Results</div>
-            <p className="text-sm text-gray-600 mt-1">
-              These are guidance suggestions based on your answers.
-            </p>
+            <p className="text-sm text-gray-600 mt-1">These are guidance suggestions based on your answers.</p>
           </div>
 
-          <button
-            type="button"
-            onClick={onPrint}
-            className="px-4 py-2 rounded border bg-white hover:bg-gray-50 text-sm"
-          >
+          <button type="button" onClick={onPrint} className="px-4 py-2 rounded border bg-white hover:bg-gray-50 text-sm">
             Print results
           </button>
         </div>
@@ -1055,9 +1028,7 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
       {results.nextChecks?.length ? (
         <div className="p-5 rounded border bg-white print-card no-print">
           <div className="font-semibold">Recommended next checks</div>
-          <div className="text-sm text-gray-600 mt-1">
-            Click one to jump to that question.
-          </div>
+          <div className="text-sm text-gray-600 mt-1">Click one to jump to that question.</div>
           <div className="mt-3 flex flex-wrap gap-2">
             {results.nextChecks.map((id) => (
               <button
@@ -1116,9 +1087,7 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
 
               {r.whenToWorry?.length ? (
                 <>
-                  <div className="mt-3 font-semibold text-sm">
-                    When to worry / get help
-                  </div>
+                  <div className="mt-3 font-semibold text-sm">When to worry / get help</div>
                   <ul className="list-disc pl-5 text-sm mt-1 space-y-1">
                     {r.whenToWorry.map((x, i) => (
                       <li key={i}>{x}</li>
@@ -1132,12 +1101,9 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
       ) : (
         <div className="p-5 rounded border bg-green-50 border-green-300 print-card">
           <h3 className="font-semibold">No clear issue identified</h3>
-          <p className="text-sm mt-1">
-            Try switching your route at the top or adding more observations.
-          </p>
+          <p className="text-sm mt-1">Try switching your route at the top or adding more observations.</p>
         </div>
       )}
     </div>
   );
 }
-

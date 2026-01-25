@@ -3,7 +3,6 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import dayjs from "dayjs";
 import { supabase } from "../../services/supabase";
 
-const fmtDate = (d) => (d ? dayjs(d).format("YYYY-MM-DD") : ""); // ISO for inputs/queries
 const fmtDateUK = (d) => (d ? dayjs(d).format("DD/MM/YYYY") : ""); // UK display/print
 const ukStamp = () => dayjs().format("DDMMYYYY-HHmm"); // for file names
 
@@ -42,8 +41,8 @@ export default function ProfitLoss() {
 
   // React live to Settings → Default Currency changes
   useEffect(() => {
-    const onCurrency = (e) => {
-      const next = (e?.detail?.currency || localStorage.getItem("prefs.currency") || "GBP").toUpperCase();
+    const onCurrency = (evt) => {
+      const next = (evt?.detail?.currency || localStorage.getItem("prefs.currency") || "GBP").toUpperCase();
       setCurrency(next);
     };
     window.addEventListener("prefs:currency", onCurrency);
@@ -84,9 +83,7 @@ export default function ProfitLoss() {
           chunks.map((batch) =>
             supabase
               .from("sales_lines")
-              .select(
-                "order_id, product_name, product_type, unit, qty, unit_price, discount, cogs_per_unit_cached"
-              )
+              .select("order_id, product_name, product_type, unit, qty, unit_price, discount, cogs_per_unit_cached")
               .in("order_id", batch)
           )
         );
@@ -128,8 +125,8 @@ export default function ProfitLoss() {
 
       setSales(saleRows || []);
       setExpenses(expenseRows || []);
-    } catch (e) {
-      setErr(e.message || String(e));
+    } catch (err) {
+      setErr(err?.message || String(err));
     } finally {
       setLoading(false);
     }
@@ -176,15 +173,15 @@ export default function ProfitLoss() {
 
     lines.push("Expenses");
     lines.push("Date,Category,Vendor,Amount,Invoice #,Notes");
-    for (const e of expenses) {
+    for (const ex of expenses) {
       lines.push(
         [
-          fmtDateUK(e.occurred_at), // UK format in CSV
-          csvSafe(e.category),
-          csvSafe(e.vendor || ""),
-          e.amount,
-          csvSafe(e.invoice_number || ""),
-          csvSafe(e.notes || ""),
+          fmtDateUK(ex.occurred_at), // UK format in CSV
+          csvSafe(ex.category),
+          csvSafe(ex.vendor || ""),
+          ex.amount,
+          csvSafe(ex.invoice_number || ""),
+          csvSafe(ex.notes || ""),
         ].join(",")
       );
     }
@@ -229,14 +226,14 @@ export default function ProfitLoss() {
         ? `<tr><td colspan="6" class="muted">No expenses in this range.</td></tr>`
         : expenses
             .map(
-              (e) => `
+              (ex) => `
           <tr>
-            <td>${fmtDateUK(e.occurred_at)}</td>
-            <td>${escapeHtml(e.category)}</td>
-            <td>${escapeHtml(e.vendor || "—")}</td>
-            <td class="num">${money(e.amount, e.currency || currency)}</td>
-            <td>${escapeHtml(e.invoice_number || "—")}</td>
-            <td>${escapeHtml(e.notes || "—")}</td>
+            <td>${fmtDateUK(ex.occurred_at)}</td>
+            <td>${escapeHtml(ex.category)}</td>
+            <td>${escapeHtml(ex.vendor || "—")}</td>
+            <td class="num">${money(ex.amount, ex.currency || currency)}</td>
+            <td>${escapeHtml(ex.invoice_number || "—")}</td>
+            <td>${escapeHtml(ex.notes || "—")}</td>
           </tr>
         `
             )
@@ -329,17 +326,29 @@ export default function ProfitLoss() {
     document.body.appendChild(iframe);
 
     const cleanup = () => {
-      try { document.body.removeChild(iframe); } catch {}
+      try {
+        document.body.removeChild(iframe);
+      } catch {
+        // ignore
+      }
       printingRef.current = false;
     };
 
     const onLoaded = () => {
       try {
         const w = iframe.contentWindow;
-        if (!w) { cleanup(); return; }
+        if (!w) {
+          cleanup();
+          return;
+        }
         w.onafterprint = cleanup;
         setTimeout(() => {
-          try { w.focus(); w.print(); } catch { cleanup(); }
+          try {
+            w.focus();
+            w.print();
+          } catch {
+            cleanup();
+          }
         }, 80);
       } catch {
         cleanup();
@@ -349,7 +358,9 @@ export default function ProfitLoss() {
     const doc = iframe.contentDocument || iframe.contentWindow?.document;
     if (doc) {
       iframe.onload = onLoaded;
-      doc.open(); doc.write(html); doc.close();
+      doc.open();
+      doc.write(html);
+      doc.close();
     } else {
       cleanup();
     }
@@ -394,7 +405,7 @@ export default function ProfitLoss() {
                 type="date"
                 className="w-full border rounded px-3 py-2"
                 value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
+                onChange={(evt) => setFromDate(evt.target.value)}
               />
             </div>
             <div>
@@ -403,7 +414,7 @@ export default function ProfitLoss() {
                 type="date"
                 className="w-full border rounded px-3 py-2"
                 value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
+                onChange={(evt) => setToDate(evt.target.value)}
               />
             </div>
             <div>
@@ -411,8 +422,8 @@ export default function ProfitLoss() {
               <input
                 className="w-full border rounded px-3 py-2 font-mono"
                 value={currency}
-                onChange={(e) =>
-                  setCurrency(e.target.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3))
+                onChange={(evt) =>
+                  setCurrency(evt.target.value.toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3))
                 }
               />
             </div>
@@ -535,25 +546,25 @@ export default function ProfitLoss() {
           {expenses.length === 0 ? (
             <p className="text-gray-500">No expenses in this range.</p>
           ) : (
-            expenses.map((e, idx) => (
+            expenses.map((ex, idx) => (
               <div key={idx} className="border rounded p-3 bg-white">
-                <div className="text-sm text-gray-600 mb-2">{fmtDateUK(e.occurred_at)}</div>
+                <div className="text-sm text-gray-600 mb-2">{fmtDateUK(ex.occurred_at)}</div>
                 <div className="text-sm">
-                  <span className="font-medium">Category:</span> {e.category}
+                  <span className="font-medium">Category:</span> {ex.category}
                 </div>
-                {e.vendor && (
+                {ex.vendor && (
                   <div className="text-sm">
-                    <span className="font-medium">Vendor:</span> {e.vendor}
+                    <span className="font-medium">Vendor:</span> {ex.vendor}
                   </div>
                 )}
                 <div className="mt-2 text-sm">
                   <span className="font-medium">Amount:</span>{" "}
-                  {money(e.amount, e.currency || currency)}
+                  {money(ex.amount, ex.currency || currency)}
                 </div>
-                {e.invoice_number && (
-                  <div className="text-xs text-gray-600 mt-1">Invoice: {e.invoice_number}</div>
+                {ex.invoice_number && (
+                  <div className="text-xs text-gray-600 mt-1">Invoice: {ex.invoice_number}</div>
                 )}
-                {e.notes && <div className="text-xs text-gray-600 mt-1">{e.notes}</div>}
+                {ex.notes && <div className="text-xs text-gray-600 mt-1">{ex.notes}</div>}
               </div>
             ))
           )}
@@ -580,15 +591,15 @@ export default function ProfitLoss() {
                     </td>
                   </tr>
                 ) : (
-                  expenses.map((e, idx) => (
+                  expenses.map((ex, idx) => (
                     <tr key={idx} className="border-b">
-                      <TD>{fmtDateUK(e.occurred_at)}</TD>
-                      <TD>{e.category}</TD>
-                      <TD>{e.vendor || "—"}</TD>
-                      <TD className="text-right">{money(e.amount, e.currency || currency)}</TD>
-                      <TD>{e.invoice_number || "—"}</TD>
-                      <TD className="max-w-[420px] truncate" title={e.notes || ""}>
-                        {e.notes || "—"}
+                      <TD>{fmtDateUK(ex.occurred_at)}</TD>
+                      <TD>{ex.category}</TD>
+                      <TD>{ex.vendor || "—"}</TD>
+                      <TD className="text-right">{money(ex.amount, ex.currency || currency)}</TD>
+                      <TD>{ex.invoice_number || "—"}</TD>
+                      <TD className="max-w-[420px] truncate" title={ex.notes || ""}>
+                        {ex.notes || "—"}
                       </TD>
                     </tr>
                   ))

@@ -1,6 +1,6 @@
 // src/pages/Calendar.jsx
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
 /** ----------------------------------------------------------------
@@ -91,7 +91,9 @@ const loadHidden = () => {
 const saveHidden = (set) => {
   try {
     localStorage.setItem(LS_KEY_HIDDEN, JSON.stringify([...set]));
-  } catch {}
+  } catch {
+    // localStorage may be blocked (private mode, policies) – ignore
+  }
 };
 
 /** ----------------------------------------------------------------
@@ -176,7 +178,6 @@ const Calendar = () => {
   const [hidden, setHidden] = useState(loadHidden()); // Set of "TYPE:id"
 
   // Modal state
-  const navigate = useNavigate();
   const [selected, setSelected] = useState(null); // clicked event
   const [modalOpen, setModalOpen] = useState(false);
 

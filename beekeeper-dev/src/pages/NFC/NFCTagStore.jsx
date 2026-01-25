@@ -10,6 +10,14 @@ const NFC_PRICE_TEXT = "£1.10 per tag";
 // Numeric price used for estimating totals (update if you change Stripe price)
 const NFC_PRICE_PER_TAG = 1.1;
 
+const prettyPlan = (plan) => {
+  const p = String(plan || "").toLowerCase();
+  if (p === "premium") return "Premium";
+  if (p === "pro") return "Pro";
+  if (p === "paid") return "Paid";
+  return "Free";
+};
+
 export default function NFCTagStore() {
   const navigate = useNavigate();
 
@@ -29,10 +37,7 @@ export default function NFCTagStore() {
       try {
         const [{ data: userData }, { data: profileData }] = await Promise.all([
           supabase.auth.getUser(),
-          supabase
-            .from("profiles")
-            .select("subscription_level")
-            .maybeSingle(),
+          supabase.from("profiles").select("subscription_level").maybeSingle(),
         ]);
 
         const u = userData?.user || null;
@@ -103,24 +108,21 @@ export default function NFCTagStore() {
 
       // Supabase Edge Function: create-nfc-checkout
       // expects: { quantity, price_id, user_id, success_path, cancel_path }
-      const res = await fetch(
-        `${SUPABASE_FUNCTIONS_BASE}/create-nfc-checkout`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-            apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-          },
-          body: JSON.stringify({
-            quantity: qty,
-            price_id: priceId,
-            user_id: user.id,
-            success_path: "/nfc?tags_purchased=1",
-            cancel_path: "/nfc/tags?canceled=1",
-          }),
-        }
-      );
+      const res = await fetch(`${SUPABASE_FUNCTIONS_BASE}/create-nfc-checkout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({
+          quantity: qty,
+          price_id: priceId,
+          user_id: user.id,
+          success_path: "/nfc?tags_purchased=1",
+          cancel_path: "/nfc/tags?canceled=1",
+        }),
+      });
 
       const txt = await res.text().catch(() => "");
       if (!res.ok) {
@@ -136,10 +138,7 @@ export default function NFCTagStore() {
       window.location.href = url;
     } catch (err) {
       console.error("NFC tag checkout error:", err);
-      setError(
-        err?.message ||
-          "Sorry, we couldn’t start the checkout. Please try again."
-      );
+      setError(err?.message || "Sorry, we couldn’t start the checkout. Please try again.");
       setIsCheckingOut(false);
     }
   };
@@ -154,11 +153,25 @@ export default function NFCTagStore() {
               HiveTag NFC Labels
             </h1>
             <p className="mt-2 text-sm text-gray-700">
-              Commercial-grade NFC tags for your hives. Tap your phone on a tag
-              to jump straight into that hive’s inspection flow.
+              Commercial-grade NFC tags for your hives. Tap your phone on a tag to jump straight
+              into that hive’s inspection flow.
             </p>
-           
+
+            {/* ✅ Uses subscriptionLevel so ESLint stops complaining */}
+            <div className="mt-3 inline-flex items-center gap-2 text-xs text-gray-600">
+              <span className="px-2 py-0.5 rounded-full border bg-gray-50">
+                Plan: <span className="font-semibold">{prettyPlan(subscriptionLevel)}</span>
+              </span>
+              {user ? (
+                <span className="truncate max-w-[280px]">
+                  Signed in as <span className="font-medium">{user.email}</span>
+                </span>
+              ) : (
+                <span>Not signed in</span>
+              )}
+            </div>
           </div>
+
           <div className="shrink-0">
             <div className="w-40 h-40 rounded-full border border-gray-200 bg-gradient-to-br from-amber-50 to-yellow-100 shadow-sm flex items-center justify-center overflow-hidden">
               <img
@@ -174,27 +187,22 @@ export default function NFCTagStore() {
         <section className="bg-white rounded-2xl shadow p-6 flex flex-col md:flex-row gap-6">
           <div className="flex-1 space-y-4">
             <div>
-              <h2 className="text-lg font-semibold text-green-900">
-                Pricing &amp; Checkout
-              </h2>
+              <h2 className="text-lg font-semibold text-green-900">Pricing &amp; Checkout</h2>
               <p className="mt-1 text-sm text-gray-700">
-                <span className="font-semibold">{NFC_PRICE_TEXT}</span>, on-metal
-                compatible, waterproof ABS discs with strong 3M adhesive and a
-                central screw hole for extra fixing if you want it.
+                <span className="font-semibold">{NFC_PRICE_TEXT}</span>, on-metal compatible,
+                waterproof ABS discs with strong 3M adhesive and a central screw hole for extra
+                fixing if you want it.
               </p>
               <p className="mt-1 text-xs text-gray-600">
                 UK postage &amp; packaging is typically{" "}
-                <span className="font-semibold">£1.55 per order</span>, shown on
-                the secure Stripe checkout page.
+                <span className="font-semibold">£1.55 per order</span>, shown on the secure Stripe
+                checkout page.
               </p>
             </div>
 
             {/* Quantity selector */}
             <div className="space-y-2">
-              <label
-                htmlFor="nfcQty"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="nfcQty" className="block text-sm font-medium text-gray-700">
                 Number of tags
               </label>
               <div className="inline-flex items-center gap-2">
@@ -225,10 +233,8 @@ export default function NFCTagStore() {
                 </button>
               </div>
               <p className="text-xs text-gray-500">
-                You can adjust the quantity on future orders. A good starting
-                point is{" "}
-                <span className="font-semibold">around 10 tags</span> for a
-                small apiary.
+                You can adjust the quantity on future orders. A good starting point is{" "}
+                <span className="font-semibold">around 10 tags</span> for a small apiary.
               </p>
             </div>
           </div>
@@ -249,8 +255,8 @@ export default function NFCTagStore() {
                 <span>£{estimatedTotal}</span>
               </div>
               <p className="text-[11px] text-gray-500 mt-1">
-                Final price (including postage) will be confirmed on the secure
-                Stripe checkout page.
+                Final price (including postage) will be confirmed on the secure Stripe checkout
+                page.
               </p>
             </div>
 
@@ -260,24 +266,19 @@ export default function NFCTagStore() {
                 onClick={handleCheckout}
                 disabled={isCheckingOut}
                 className={`w-full px-4 py-2 rounded-md text-sm font-semibold text-white shadow ${
-                  isCheckingOut
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-green-700 hover:bg-green-800"
+                  isCheckingOut ? "bg-gray-400 cursor-not-allowed" : "bg-green-700 hover:bg-green-800"
                 }`}
               >
-                {isCheckingOut
-                  ? "Redirecting to Stripe…"
-                  : "Buy now with Stripe"}
+                {isCheckingOut ? "Redirecting to Stripe…" : "Buy now with Stripe"}
               </button>
               {!user && (
                 <p className="text-[11px] text-gray-600">
-                  You’ll be asked to log in or create an account before
-                  checkout.
+                  You’ll be asked to log in or create an account before checkout.
                 </p>
               )}
               <p className="text-[11px] text-gray-500">
-                Payments are processed securely by Stripe. BeezKnees does not
-                store your card details.
+                Payments are processed securely by Stripe. BeezKnees does not store your card
+                details.
               </p>
               {error && (
                 <p className="text-[11px] text-red-700 bg-red-50 border border-red-200 rounded px-2 py-1 mt-1">
@@ -291,23 +292,14 @@ export default function NFCTagStore() {
         {/* Details / specs */}
         <section className="bg-white rounded-2xl shadow p-6 space-y-4 text-sm text-gray-700">
           <div>
-            <h2 className="text-lg font-semibold text-green-900">
-              Why HiveTag?
-            </h2>
+            <h2 className="text-lg font-semibold text-green-900">Why HiveTag?</h2>
             <ul className="mt-2 list-disc pl-5 space-y-1">
               <li>Instant access — tap your hive to open inspections.</li>
-              <li>
-                Designed for outdoor use — waterproof ABS, tough enough for UK
-                weather.
-              </li>
-              <li>
-                Works on metal roofs and boxes — anti-metal ferrite backing for
-                reliable reads.
-              </li>
+              <li>Designed for outdoor use — waterproof ABS, tough enough for UK weather.</li>
+              <li>Works on metal roofs and boxes — anti-metal ferrite backing for reliable reads.</li>
               <li>
                 Mount how you like — very sticky 3M backing and a{" "}
-                <strong>5&nbsp;mm central hole</strong> for screws, nails or
-                rivets.
+                <strong>5&nbsp;mm central hole</strong> for screws, nails or rivets.
               </li>
               <li>Compatible with modern iOS and Android phones.</li>
               <li>Reusable — clear a tag and reassign it to another hive.</li>
@@ -315,62 +307,47 @@ export default function NFCTagStore() {
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-green-900">
-              Technical specification
-            </h2>
+            <h2 className="text-lg font-semibold text-green-900">Technical specification</h2>
             <ul className="mt-2 list-disc pl-5 space-y-1">
               <li>Chip: Original NXP NTAG213 (13.56&nbsp;MHz, ISO&nbsp;14443A).</li>
+              <li>User memory: 144 bytes (around 130–137 characters with NDEF formatting).</li>
               <li>
-                User memory: 144 bytes (around 130–137 characters with NDEF
-                formatting).
-              </li>
-              <li>
-                Form factor: 29&nbsp;mm round ABS disc, approx. 5&nbsp;mm high,
-                with 5&nbsp;mm central hole.
+                Form factor: 29&nbsp;mm round ABS disc, approx. 5&nbsp;mm high, with 5&nbsp;mm
+                central hole.
               </li>
               <li>Very strong 3M adhesive backing.</li>
               <li>Anti-metal ferrite layer for mounting directly on metal.</li>
               <li>Weatherproof and waterproof; suitable for indoor or outdoor use.</li>
               <li>
-                Android: NFC tap support in most modern phones (Chrome for
-                Android recommended for Web NFC).
+                Android: NFC tap support in most modern phones (Chrome for Android recommended for
+                Web NFC).
               </li>
               <li>
-                iOS: NFC read support on iPhone&nbsp;7 and newer for URL-based
-                tags that open HiveTag.
+                iOS: NFC read support on iPhone&nbsp;7 and newer for URL-based tags that open
+                HiveTag.
               </li>
             </ul>
           </div>
 
           <div>
-            <h2 className="text-lg font-semibold text-green-900">
-              How it works with HiveTag
-            </h2>
+            <h2 className="text-lg font-semibold text-green-900">How it works with HiveTag</h2>
             <ol className="mt-2 list-decimal pl-5 space-y-1">
               <li>
-                Attach the tag to your hive using the adhesive backing or a
-                small screw through the central hole.
+                Attach the tag to your hive using the adhesive backing or a small screw through the
+                central hole.
               </li>
-              <li>
-                In HiveTag, go to <strong>Scan NFC Tag</strong> (Premium).
-              </li>
+              <li>In HiveTag, go to <strong>Scan NFC Tag</strong> (Premium).</li>
               <li>Tap your phone on the tag and assign it to a hive once.</li>
+              <li>Next time you visit that hive, tap again and jump straight into a new inspection.</li>
               <li>
-                Next time you visit that hive, tap again and jump straight into
-                a new inspection.
-              </li>
-              <li>
-                Manage, search and clear tags from the{" "}
-                <strong>NFC Tag Manager</strong> in your dashboard.
+                Manage, search and clear tags from the <strong>NFC Tag Manager</strong> in your
+                dashboard.
               </li>
             </ol>
           </div>
 
           <div className="border-t border-gray-200 pt-4 text-xs text-gray-500">
-            <p>
-              If a tag arrives damaged or faulty, please contact us and we’ll
-              arrange a replacement.
-            </p>
+            <p>If a tag arrives damaged or faulty, please contact us and we’ll arrange a replacement.</p>
           </div>
         </section>
       </div>

@@ -36,7 +36,7 @@ export async function deriveTimezone(lat, lng) {
 
     if (!tz) throw new Error("Timezone not found in response.");
     return tz; // e.g., "Africa/Johannesburg"
-  } catch (_err) {
+  } catch {
     // Let the component show the red helper text; don't silently mask it.
     throw new Error("Timezone detection failed.");
   } finally {

@@ -1,5 +1,5 @@
 // src/pages/Inspections/InspectionList.jsx
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../../services/supabase";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
@@ -30,7 +30,7 @@ const InspectionList = () => {
   const [dateTo, setDateTo] = useState("");
 
   // IMPORTANT: page is driven from URL now
-  const [page, setPage] = useState(1);
+  const [, setPage] = useState(1);
   const [total, setTotal] = useState(0);
 
   // related logbook map { [inspection_id]: { count, recent: Log[] } }
@@ -43,15 +43,23 @@ const InspectionList = () => {
     index: 0,
   });
 
-  const closeLightbox = () =>
-    setLightbox((s) => ({ ...s, isOpen: false, urls: [], index: 0 }));
-  const showPrev = () =>
-    setLightbox((s) => ({
-      ...s,
-      index: (s.index + s.urls.length - 1) % s.urls.length,
-    }));
-  const showNext = () =>
-    setLightbox((s) => ({ ...s, index: (s.index + 1) % s.urls.length }));
+  const closeLightbox = useCallback(() => {
+  setLightbox((s) => ({ ...s, isOpen: false, urls: [], index: 0 }));
+}, []);
+
+const showPrev = useCallback(() => {
+  setLightbox((s) => {
+    if (!s.urls?.length) return s;
+    return { ...s, index: (s.index + s.urls.length - 1) % s.urls.length };
+  });
+}, []);
+
+const showNext = useCallback(() => {
+  setLightbox((s) => {
+    if (!s.urls?.length) return s;
+    return { ...s, index: (s.index + 1) % s.urls.length };
+  });
+}, []);
 
   // Track whether we've already auto-scrolled to the highlighted card
   const hasScrolledRef = useRef(false);
@@ -88,15 +96,16 @@ const InspectionList = () => {
   // Esc / Arrow keys (lightbox)
   useEffect(() => {
     if (!lightbox.isOpen) return;
+
     const onKey = (e) => {
       if (e.key === "Escape") closeLightbox();
       if (e.key === "ArrowLeft") showPrev();
       if (e.key === "ArrowRight") showNext();
     };
+
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lightbox.isOpen]);
+  }, [lightbox.isOpen, closeLightbox, showPrev, showNext]);
 
   // Load lookup options (ACTIVE only)
   useEffect(() => {
@@ -134,7 +143,8 @@ const InspectionList = () => {
   }, [apiaryFromUrl, hiveFromUrl, fromFromUrl, toFromUrl, pageFromUrl]);
 
   // Helper: write params back to URL (single place)
-  const setSearchParams = (updates) => {
+  const setSearchParams = useCallback(
+  (updates) => {
     const incoming = new URLSearchParams(location.search || "");
     const params = new URLSearchParams();
 
@@ -162,7 +172,9 @@ const InspectionList = () => {
     const next = params.toString();
     const curr = (location.search || "").replace(/^\?/, "");
     if (next !== curr) navigate({ search: next }, { replace: true });
-  };
+  },
+  [location.search, navigate]
+);
 
   // ✅ If highlight is present: compute the correct page deterministically
   // Approach: fetch ordered IDs under current filters, find index, set URL page.
@@ -219,7 +231,16 @@ const InspectionList = () => {
       cancelled = true;
     };
     // IMPORTANT: use URL-derived vars only
-  }, [highlightId, highlightType, apiaryFromUrl, hiveFromUrl, fromFromUrl, toFromUrl, pageFromUrl]);
+  }, [
+    highlightId,
+    highlightType,
+    apiaryFromUrl,
+    hiveFromUrl,
+    fromFromUrl,
+    toFromUrl,
+    pageFromUrl,
+    setSearchParams,
+  ]);
 
   // Fetch inspections with pagination (ACTIVE ONLY) — now uses pageFromUrl as truth
   useEffect(() => {
@@ -308,7 +329,14 @@ const InspectionList = () => {
     };
 
     fetchInspections();
-  }, [apiaryFromUrl, hiveFromUrl, fromFromUrl, toFromUrl, pageFromUrl]);
+  }, [
+    apiaryFromUrl,
+    hiveFromUrl,
+    fromFromUrl,
+    toFromUrl,
+    pageFromUrl,
+    setSearchParams,
+  ]);
 
   // Lookup helpers
   const apiaryName = useMemo(() => {
@@ -397,12 +425,14 @@ const InspectionList = () => {
         : insp.colony_behavior
     );
     pushIf("Env. signs", insp.environmental_signs);
-    if (insp.environmental_signs?.includes("Other")) pushIf("Env. other", insp.environmental_signs_other);
+    if (insp.environmental_signs?.includes("Other"))
+      pushIf("Env. other", insp.environmental_signs_other);
     pushIf("Population", insp.hive_population);
     pushIf("Brood", insp.brood_pattern);
     pushIf("Stores", insp.food_stores);
     pushIf("Queen", insp.queen_status);
-    if (insp.queen_status?.includes("Other")) pushIf("Queen other", insp.queen_status_other);
+    if (insp.queen_status?.includes("Other"))
+      pushIf("Queen other", insp.queen_status_other);
     if (insp.signs_pests) {
       pushIf("Pests", insp.pest_types);
       pushIf("Pest other", insp.pest_other);
@@ -495,7 +525,11 @@ const InspectionList = () => {
                   }
                   const hv = hives.find((h) => String(h.id) === String(nextHive));
                   const nextApiary = hv?.apiary_id || apiaryFromUrl || "";
-                  setSearchParams({ hive_id: nextHive, apiary_id: nextApiary, page: 1 });
+                  setSearchParams({
+                    hive_id: nextHive,
+                    apiary_id: nextApiary,
+                    page: 1,
+                  });
                 }}
                 disabled={hivesForSelectedApiary.length === 0}
               >
@@ -564,10 +598,10 @@ const InspectionList = () => {
       {hiveFromUrl && selectedHiveHasNfc && nfcUid && (
         <div className="mb-4 p-3 border rounded bg-green-50 text-green-900 text-sm">
           <p className="font-semibold">
-            NFC tag recognised for hive "{hiveName(hiveFromUrl)}".
+           NFC tag recognised for hive &quot;{hiveName(hiveFromUrl)}&quot;.
           </p>
           <p className="mt-1">
-            You’re viewing this hive’s inspection history. Tap this hive’s NFC
+            You&apos;re viewing this hive&apos;s inspection history. Tap this hive&apos;s NFC
             tag again to start a new inspection, or use the button below.
           </p>
           <div className="mt-2">
@@ -612,9 +646,7 @@ const InspectionList = () => {
 
               const logs = logMap[insp.id] || { count: 0, recent: [] };
 
-              const hiveForCard = hives.find(
-                (h) => String(h.id) === String(insp.hive_id)
-              );
+              const hiveForCard = hives.find((h) => String(h.id) === String(insp.hive_id));
               const showNfcHeaderPill =
                 hiveForCard &&
                 hiveForCard.nfc_uid &&
@@ -633,9 +665,7 @@ const InspectionList = () => {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <h2 className="text-lg font-semibold">
-                        {hiveName(insp.hive_id)}
-                      </h2>
+                      <h2 className="text-lg font-semibold">{hiveName(insp.hive_id)}</h2>
                       {showNfcHeaderPill && (
                         <span className="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200">
                           NFC tag
@@ -647,9 +677,7 @@ const InspectionList = () => {
                     </span>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-2">
-                    {apiaryName(insp.apiary_id)}
-                  </p>
+                  <p className="text-sm text-gray-600 mb-2">{apiaryName(insp.apiary_id)}</p>
 
                   <div className="mb-2 flex items-center gap-3">
                     <span
@@ -658,9 +686,7 @@ const InspectionList = () => {
                           ? "bg-gray-100 text-gray-800 border-gray-200"
                           : "bg-gray-50 text-gray-400 border-gray-100"
                       }`}
-                      title={`${logs.count} linked logbook entr${
-                        logs.count === 1 ? "y" : "ies"
-                      }`}
+                      title={`${logs.count} linked logbook entr${logs.count === 1 ? "y" : "ies"}`}
                     >
                       {logs.count} log{logs.count === 1 ? "" : "s"}
                     </span>
@@ -682,9 +708,7 @@ const InspectionList = () => {
                         className="inline-flex items-center gap-2 text-[11px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200 max-w-full"
                         title={`NFC tag: ${hiveForCard.nfc_uid}`}
                       >
-                        <span className="font-semibold uppercase tracking-wide">
-                          NFC tag
-                        </span>
+                        <span className="font-semibold uppercase tracking-wide">NFC tag</span>
                         <span className="font-mono truncate max-w-[170px]">
                           {hiveForCard.nfc_uid}
                         </span>
@@ -737,13 +761,12 @@ const InspectionList = () => {
                       ⚠️ Notifiable disease suspected (AFB/EFB). Report to the relevant authority.
                     </div>
                   )}
-                  {insp.signs_disease &&
-                    !diseaseInfo?.notifiable &&
-                    diseaseInfo?.hasVarroa && (
-                      <div className="mb-3 p-2 text-sm rounded border bg-amber-50 border-amber-200 text-amber-900">
-                        Varroa present — reporting required per national rules.
-                      </div>
-                    )}
+
+                  {insp.signs_disease && !diseaseInfo?.notifiable && diseaseInfo?.hasVarroa && (
+                    <div className="mb-3 p-2 text-sm rounded border bg-amber-50 border-amber-200 text-amber-900">
+                      Varroa present — reporting required per national rules.
+                    </div>
+                  )}
 
                   {photos.length > 0 && (
                     <div className="flex gap-2 flex-wrap mb-3">
@@ -751,9 +774,7 @@ const InspectionList = () => {
                         <button
                           key={i}
                           type="button"
-                          onClick={() =>
-                            setLightbox({ isOpen: true, urls: photos, index: i })
-                          }
+                          onClick={() => setLightbox({ isOpen: true, urls: photos, index: i })}
                           className="focus:outline-none"
                           aria-label={`Open photo ${i + 1} of ${photos.length}`}
                         >
@@ -783,7 +804,7 @@ const InspectionList = () => {
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
             <div className="text-sm text-gray-600">
-              Showing {Math.min((pageFromUrl - 1) * PAGE_SIZE + 1, total)}–
+              Showing {Math.min((pageFromUrl - 1) * PAGE_SIZE + 1, total)}–{" "}
               {Math.min(pageFromUrl * PAGE_SIZE, total)} of {total}
             </div>
 

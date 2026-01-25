@@ -42,7 +42,7 @@ export default function NewItem() {
   const [currency, setCurrency] = useState(prefCurrency);
   useEffect(() => {
     setCurrency((c) => c || prefCurrency);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [prefCurrency]);
 
   const [trackStock, setTrackStock] = useState(false);

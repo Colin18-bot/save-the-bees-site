@@ -1,5 +1,5 @@
 // src/pages/Archive.jsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "../services/supabase";
 import { humaniseSupabaseError } from "../services/actions";
 
@@ -46,11 +46,7 @@ const Archive = () => {
   // Inline restore error messages keyed by `${table}-${id}`
   const [restoreErrors, setRestoreErrors] = useState({});
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const fetchArchived = async (table) =>
       (await supabase.from(table).select("*").not("archived_at", "is", null)).data || [];
 
@@ -87,12 +83,21 @@ const Archive = () => {
 
     setApiaryLookup(new Map((apiariesAll || []).map((a) => [a.id, a.name || "Unnamed Apiary"])));
     setHiveLookup(
-      new Map((hivesAll || []).map((h) => [h.id, { name: h.name || "Unnamed Hive", apiary_id: h.apiary_id }]))
+      new Map(
+        (hivesAll || []).map((h) => [
+          h.id,
+          { name: h.name || "Unnamed Hive", apiary_id: h.apiary_id },
+        ])
+      )
     );
 
     // clear any stale per-item restore errors after a refresh
     setRestoreErrors({});
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   // ----- helpers -----
   const getUserId = async () => {
@@ -116,21 +121,6 @@ const Archive = () => {
     const uid = await getUserId();
     if (uid && uid === userId) {
       await supabase.from("profiles").update({ default_apiary_id: apiaryId }).eq("user_id", uid);
-    }
-  };
-
-  // If archiving a default apiary → clear profile.default_apiary_id
-  const clearProfileDefaultIfArchiving = async (apiaryId, userId, isDefault) => {
-    if (!apiaryId || !userId) return;
-    if (!isDefault) return;
-
-    const uid = await getUserId();
-    if (uid && uid === userId) {
-      await supabase
-        .from("profiles")
-        .update({ default_apiary_id: null })
-        .eq("user_id", uid)
-        .in("default_apiary_id", [apiaryId]);
     }
   };
 
@@ -168,99 +158,106 @@ const Archive = () => {
   };
 
   // ---------- filtering / shaping ----------
-  const apiaryName = (id) => apiaryLookup.get(id) || "Unknown Apiary";
-  const hiveName = (id) => (hiveLookup.get(id)?.name ? hiveLookup.get(id).name : "Unknown Hive");
-  const hiveApiaryId = (id) => hiveLookup.get(id)?.apiary_id || "";
+  const apiaryName = useCallback((id) => apiaryLookup.get(id) || "Unknown Apiary", [apiaryLookup]);
+
+  const hiveName = useCallback(
+    (id) => (hiveLookup.get(id)?.name ? hiveLookup.get(id).name : "Unknown Hive"),
+    [hiveLookup]
+  );
+
+  const hiveApiaryId = useCallback((id) => hiveLookup.get(id)?.apiary_id || "", [hiveLookup]);
+
   const shortId = (id) => (id ? String(id).slice(0, 8) : "");
 
   // Make a human-friendly label + sublines per type
-  const describeItem = (type, item) => {
-    const errKey = `${type}-${item.id}`;
+  const describeItem = useCallback(
+    (type, item) => {
+      const errKey = `${type}-${item.id}`;
 
-    // Make sure every item has a consistent apiary_id for filtering
-    const resolvedApiaryId =
-      type === "apiaries"
-        ? item.id // an apiary "belongs" to itself for filtering
-        : item.apiary_id || (item.hive_id ? hiveApiaryId(item.hive_id) : "");
+      // Make sure every item has a consistent apiary_id for filtering
+      const resolvedApiaryId =
+        type === "apiaries"
+          ? item.id
+          : item.apiary_id || (item.hive_id ? hiveApiaryId(item.hive_id) : "");
 
-    const common = {
-      errKey,
-      type,
-      table: type,
-      id: item.id,
-      archived_at: item.archived_at,
-      created_at: item.created_at,
-      apiary_id: resolvedApiaryId,
-      hive_id: item.hive_id || "",
-      inspection_id: item.inspection_id || "",
-      raw: item,
-    };
+      const common = {
+        errKey,
+        type,
+        table: type,
+        id: item.id,
+        archived_at: item.archived_at,
+        created_at: item.created_at,
+        apiary_id: resolvedApiaryId,
+        hive_id: item.hive_id || "",
+        inspection_id: item.inspection_id || "",
+        raw: item,
+      };
 
-    if (type === "apiaries") {
+      if (type === "apiaries") {
+        return {
+          ...common,
+          title: item.name || `Apiary (${shortId(item.id)})`,
+          meta: [],
+        };
+      }
+
+      if (type === "hives") {
+        const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
+        const title = item.name || `Hive (${shortId(item.id)})`;
+        return {
+          ...common,
+          title,
+          meta: [`Apiary: ${apiary}`],
+        };
+      }
+
+      if (type === "inspections") {
+        const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
+        const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
+        const date = item.date
+          ? new Date(item.date).toLocaleDateString("en-GB")
+          : `#${shortId(item.id)}`;
+        return {
+          ...common,
+          title: `Inspection ${item.date ? `on ${date}` : `(${shortId(item.id)})`}`,
+          meta: [`Hive: ${hive}`, `Apiary: ${apiary}`],
+        };
+      }
+
+      if (type === "todos") {
+        const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
+        const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
+        const due = item.due_date
+          ? `Due: ${new Date(item.due_date).toLocaleDateString("en-GB")}`
+          : null;
+        return {
+          ...common,
+          title: item.title || `To-Do (${shortId(item.id)})`,
+          meta: [due, `Hive: ${hive}`, `Apiary: ${apiary}`].filter(Boolean),
+        };
+      }
+
+      if (type === "logbook") {
+        const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
+        const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
+        const preview = item.notes || item.note || item.content || item.text || item.message || "";
+        const clipped = String(preview).trim().slice(0, 80);
+
+        return {
+          ...common,
+          title: clipped ? `Log: ${clipped}${preview.length > 80 ? "…" : ""}` : "Log entry",
+          meta: [`Hive: ${hive}`, `Apiary: ${apiary}`],
+        };
+      }
+
       return {
         ...common,
-        title: item.name || `Apiary (${shortId(item.id)})`,
-        meta: [], // no extra "Apiary" line under the pill
+        title: item.name || item.title || `ID: ${item.id}`,
+        meta: [],
       };
-    }
-
-    if (type === "hives") {
-      const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
-      const title = item.name || `Hive (${shortId(item.id)})`;
-      return {
-        ...common,
-        title,
-        meta: [`Apiary: ${apiary}`],
-      };
-    }
-
-    if (type === "inspections") {
-      const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
-      const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
-      const date = item.date ? new Date(item.date).toLocaleDateString("en-GB") : `#${shortId(item.id)}`;
-      return {
-        ...common,
-        title: `Inspection ${item.date ? `on ${date}` : `(${shortId(item.id)})`}`,
-        meta: [`Hive: ${hive}`, `Apiary: ${apiary}`],
-      };
-    }
-
-    if (type === "todos") {
-      const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
-      const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
-      const due =
-        item.due_date ? `Due: ${new Date(item.due_date).toLocaleDateString("en-GB")}` : null;
-      return {
-        ...common,
-        title: item.title || `To-Do (${shortId(item.id)})`,
-        meta: [due, `Hive: ${hive}`, `Apiary: ${apiary}`].filter(Boolean),
-      };
-    }
-
-    // logbook: try notes/content preview; always show linked hive/apiary
-    if (type === "logbook") {
-      const apiary = item.apiary_id ? apiaryName(item.apiary_id) : "Unknown Apiary";
-      const hive = item.hive_id ? hiveName(item.hive_id) : "Unknown Hive";
-      const preview =
-        item.notes || item.note || item.content || item.text || item.message || "";
-      const clipped = String(preview).trim().slice(0, 80);
-
-      return {
-        ...common,
-        title: clipped
-          ? `Log: ${clipped}${preview.length > 80 ? "…" : ""}`
-          : "Log entry", // simple human-readable fallback
-        meta: [`Hive: ${hive}`, `Apiary: ${apiary}`],
-      };
-    }
-
-    // fallback
-    return {
-      ...common,
-      title: item.name || item.title || `ID: ${item.id}`,
-      meta: [],
-    };
-  };
+    },
+    [apiaryName, hiveApiaryId, hiveName]
+  );
 
   // Shape + filter combined list for the current tab
   const activeItems = useMemo(() => {
@@ -275,20 +272,15 @@ const Archive = () => {
     const applyFilters = (items, type) => {
       let filtered = items.map((it) => describeItem(type, it));
 
-      // search by title
       if (searchTerm) {
         const needle = searchTerm.toLowerCase();
         filtered = filtered.filter((x) => x.title.toLowerCase().includes(needle));
       }
 
-      // filter by apiary (if we can resolve an apiary_id)
       if (selectedApiary) {
-        filtered = filtered.filter(
-          (x) => String(x.apiary_id || "") === String(selectedApiary)
-        );
+        filtered = filtered.filter((x) => String(x.apiary_id || "") === String(selectedApiary));
       }
 
-      // sort by archived_at (fallback created_at)
       filtered.sort((a, b) => {
         const da = new Date(a.archived_at || a.created_at || 0).getTime();
         const db = new Date(b.archived_at || b.created_at || 0).getTime();
@@ -315,7 +307,7 @@ const Archive = () => {
     }
 
     return applyFilters(lists[activeType] || [], activeType);
-  }, [allData, apiaryLookup, hiveLookup, activeType, searchTerm, selectedApiary, sortOrder]);
+  }, [allData, activeType, describeItem, searchTerm, selectedApiary, sortOrder]);
 
   // Reset to page 1 when filters or tab change
   useEffect(() => {
@@ -338,14 +330,13 @@ const Archive = () => {
     { label: "Logbook", value: "logbook" },
   ];
 
-  // ✅ Colored, singular badge
   const TypeBadge = ({ type }) => {
     const label = SINGULAR[type] || type;
     const cls = BADGE_STYLES[type] || "bg-gray-100 text-gray-700 border border-gray-200";
     return <span className={`text-xs px-2 py-1 rounded ${cls}`}>{label}</span>;
   };
 
-  // ====== NEW: preflight helpers to avoid 400s ======
+  // ====== preflight helpers ======
   const isArchived = (table, id) => {
     if (!id) return false;
     const list = allData[table] || [];
@@ -362,18 +353,15 @@ const Archive = () => {
       return null;
     }
 
-    // inspections, todos, logbook can hang off a hive and/or apiary
     const hi = item.hive_id;
     const ai = item.apiary_id || hiveApiaryId(item.hive_id);
 
     if (isArchived("hives", hi)) {
-      const label =
-        table === "inspections" ? "inspection" : table === "todos" ? "to-do" : "log entry";
+      const label = table === "inspections" ? "inspection" : table === "todos" ? "to-do" : "log entry";
       return `Cannot restore ${label}: its hive is archived. Restore the hive (and apiary) first.`;
     }
     if (isArchived("apiaries", ai)) {
-      const label =
-        table === "inspections" ? "inspection" : table === "todos" ? "to-do" : "log entry";
+      const label = table === "inspections" ? "inspection" : table === "todos" ? "to-do" : "log entry";
       return `Cannot restore ${label}: its apiary is archived. Restore the apiary first.`;
     }
     return null;
@@ -415,8 +403,11 @@ const Archive = () => {
         if (row?.is_default && row?.user_id) {
           await enforceSingleDefaultOnRestore(row.id, row.user_id);
         }
-      } catch (_) {}
+      } catch {
+        // ignore (non-blocking)
+      }
     }
+
     fetchData();
   };
 
@@ -426,7 +417,9 @@ const Archive = () => {
     if (table === "apiaries") {
       try {
         await clearProfileDefaultIfDeleting(item.id, item.user_id, !!item.is_default);
-      } catch (_) {}
+      } catch {
+        // ignore (non-blocking)
+      }
     }
 
     const { error } = await supabase.from(table).delete().eq("id", item.id);
@@ -437,23 +430,10 @@ const Archive = () => {
     fetchData();
   };
 
-  // Archive an item (special-case for apiaries)
-  const archiveItem = async (table, item) => {
-    if (table === "apiaries") {
-      try {
-        await clearProfileDefaultIfArchiving(item.id, item.user_id, !!item.is_default);
-      } catch (_) {}
-    }
-    const { error } = await supabase
-      .from(table)
-      .update({ archived_at: new Date().toISOString() })
-      .eq("id", item.id);
-    if (!error) fetchData();
-  };
-
   // ----- bulk actions -----
   const restoreSelectedItems = async () => {
     const newErrors = {};
+
     for (const { table, item } of selectedItems) {
       if (!allData[table]) continue;
 
@@ -475,19 +455,22 @@ const Archive = () => {
           if (row?.is_default && row?.user_id) {
             await enforceSingleDefaultOnRestore(row.id, row.user_id);
           }
-        } catch (_) {}
+        } catch {
+          // ignore (non-blocking)
+        }
       }
     }
+
     if (Object.keys(newErrors).length) {
       setRestoreErrors((prev) => ({ ...prev, ...newErrors }));
     }
+
     setSelectedItems([]);
     fetchData();
   };
 
   const deleteSelectedItems = async () => {
-    if (!window.confirm("Are you sure you want to permanently delete all selected items? This cannot be undone."))
-      return;
+    if (!window.confirm("Are you sure you want to permanently delete all selected items? This cannot be undone.")) return;
 
     for (const { table, item } of selectedItems) {
       if (!allData[table]) continue;
@@ -495,15 +478,17 @@ const Archive = () => {
       if (table === "apiaries") {
         try {
           await clearProfileDefaultIfDeleting(item.id, item.user_id, !!item.is_default);
-        } catch (_) {}
+        } catch {
+          // ignore (non-blocking)
+        }
       }
 
       const { error: delErr } = await supabase.from(table).delete().eq("id", item.id);
       if (delErr) {
         alert(humaniseSupabaseError(delErr, { table }));
-        // keep going so the user can still delete what they can
       }
     }
+
     setSelectedItems([]);
     fetchData();
   };
@@ -536,7 +521,6 @@ const Archive = () => {
   const Row = ({ x }) => {
     const checked = selectedItems.some((sel) => sel.item.id === x.id && sel.table === x.table);
     const errKey = `${x.table}-${x.id}`;
-
     const pre = preflightRestore(x.table, x.raw);
 
     return (
@@ -556,11 +540,17 @@ const Archive = () => {
               </div>
               <div className="text-sm text-gray-600 mt-1 space-x-2 space-y-1">
                 {x.meta.map((m, i) => (
-                  <span key={i} className="inline-block">{m}</span>
+                  <span key={i} className="inline-block">
+                    {m}
+                  </span>
                 ))}
               </div>
               <div className="text-xs text-gray-500 mt-1">
-                {x.archived_at && <>Archived: {new Date(x.archived_at).toLocaleDateString()} · </>}
+                {x.archived_at && (
+                  <>
+                    Archived: {new Date(x.archived_at).toLocaleDateString()} ·{" "}
+                  </>
+                )}
                 {x.created_at && <>Created: {new Date(x.created_at).toLocaleDateString()}</>}
               </div>
               {(!pre.ok || restoreErrors[errKey]) && (
@@ -573,14 +563,13 @@ const Archive = () => {
               onClick={() => restoreItem(x.table, x.raw)}
               disabled={!pre.ok}
               title={!pre.ok ? pre.reason : "Restore"}
-              className={`text-sm ${!pre.ok ? "text-blue-400 cursor-not-allowed opacity-60" : "text-blue-600 hover:underline"}`}
+              className={`text-sm ${
+                !pre.ok ? "text-blue-400 cursor-not-allowed opacity-60" : "text-blue-600 hover:underline"
+              }`}
             >
               Restore
             </button>
-            <button
-              onClick={() => deleteItem(x.table, x.raw)}
-              className="text-red-600 hover:underline text-sm"
-            >
+            <button onClick={() => deleteItem(x.table, x.raw)} className="text-red-600 hover:underline text-sm">
               Delete
             </button>
           </div>
@@ -696,7 +685,7 @@ const Archive = () => {
         </div>
       )}
 
-      {/* Bulk actions (when there are results) */}
+      {/* Bulk actions */}
       {total > 0 && (
         <div className="mb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div className="text-sm text-gray-600 whitespace-nowrap min-h-[1.25rem]">
@@ -733,11 +722,11 @@ const Archive = () => {
             ))}
           </ul>
 
-          {/* Pagination – unified style with other pages */}
+          {/* Pagination */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
             <div className="text-sm text-gray-600">
-              Showing {total === 0 ? 0 : Math.min(startIdx + 1, total)}–
-              {Math.min(currentPage * PAGE_SIZE, total)} of {total}
+              Showing {total === 0 ? 0 : Math.min(startIdx + 1, total)}–{Math.min(currentPage * PAGE_SIZE, total)} of{" "}
+              {total}
             </div>
 
             <div className="flex items-center gap-3 sm:justify-end">

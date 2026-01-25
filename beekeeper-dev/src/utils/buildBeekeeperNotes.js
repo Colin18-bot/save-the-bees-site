@@ -5,13 +5,15 @@
 export function buildBeekeeperNotes({
   daily,
   weather,
-  unit = "C",       // "C" | "F"
+  unit = "C", // "C" | "F"
   windUnit = "kmh", // "kmh" | "mph"
   warnings = [],
   pollen = null,
-  timezone = "UTC", // currently unused, but passed in for future tweaks if needed
-  now = null,       // optional Date override (useful for testing)
+  timezone = "UTC", // kept for API compatibility (not currently used)
+  now = null, // optional Date override (useful for testing)
 } = {}) {
+  void timezone; // avoid no-unused-vars while keeping signature stable for future use
+
   const out = [];
 
   const safeArr = (a) => (Array.isArray(a) ? a : []);
@@ -62,7 +64,8 @@ export function buildBeekeeperNotes({
     } else {
       out.push({
         icon: "📆",
-        text: "December – mid-winter. Colonies should be settled with good stores and secure hives.",
+        text:
+          "December – mid-winter. Colonies should be settled with good stores and secure hives.",
       });
     }
 
@@ -79,7 +82,8 @@ export function buildBeekeeperNotes({
     });
     out.push({
       icon: "🛠️",
-      text: "After storms, frost or snow, check straps, roofs and entrances and clear any blockages.",
+      text:
+        "After storms, frost or snow, check straps, roofs and entrances and clear any blockages.",
     });
   } else if (month >= 2 && month <= 4) {
     // Mar–May: spring
@@ -113,7 +117,9 @@ export function buildBeekeeperNotes({
       icon: "🔍",
       text: `Full inspections are comfortable once daytime highs approach ${tempLabel(
         15
-      )} and it is calm. Between ${tempLabel(10)}–${tempLabel(14)} keep any checks brief.`,
+      )} and it is calm. Between ${tempLabel(10)}–${tempLabel(
+        14
+      )} keep any checks brief.`,
     });
     out.push({
       icon: "⚠️",
@@ -125,12 +131,14 @@ export function buildBeekeeperNotes({
     if (month === 5) {
       out.push({
         icon: "📆",
-        text: "June – peak season. Swarm control and regular inspections in suitable weather are usually required.",
+        text:
+          "June – peak season. Swarm control and regular inspections in suitable weather are usually required.",
       });
     } else if (month === 6) {
       out.push({
         icon: "📆",
-        text: "July – main honey flow for many areas. Manage supers, ventilation and space.",
+        text:
+          "July – main honey flow for many areas. Manage supers, ventilation and space.",
       });
     } else {
       out.push({
@@ -269,29 +277,14 @@ export function buildBeekeeperNotes({
 
   if (Array.isArray(warnings) && warnings.length) {
     const anySevere = warnings.some((w) => {
-      const sev = (
-        w.severity_text ||
-        w.severity ||
-        w.level ||
-        ""
-      )
+      const sev = (w.severity_text || w.severity || w.level || "")
         .toString()
         .toLowerCase();
-      return (
-        sev.includes("red") ||
-        sev.includes("orange") ||
-        sev === "3" ||
-        sev === "2"
-      );
+      return sev.includes("red") || sev.includes("orange") || sev === "3" || sev === "2";
     });
 
     const anyYellow = warnings.some((w) => {
-      const sev = (
-        w.severity_text ||
-        w.severity ||
-        w.level ||
-        ""
-      )
+      const sev = (w.severity_text || w.severity || w.level || "")
         .toString()
         .toLowerCase();
       return sev.includes("yellow") || sev === "1";
@@ -322,8 +315,7 @@ export function buildBeekeeperNotes({
     const nowMs = nowDate.getTime();
 
     times.forEach((tStamp, i) => {
-      const ms =
-        typeof tStamp === "number" ? tStamp * 1000 : Date.parse(tStamp || 0);
+      const ms = typeof tStamp === "number" ? tStamp * 1000 : Date.parse(tStamp || 0);
       const diff = Math.abs(ms - nowMs);
       if (diff < bestDiff) {
         bestDiff = diff;
@@ -358,8 +350,7 @@ export function buildBeekeeperNotes({
       const levelText = highest >= 150 ? "very high" : "high";
       out.push({
         icon: "🌾",
-        text:
-          `Pollen levels are ${levelText} over the next few hours. This often coincides with strong forage, but if you or visitors have allergies you may want to plan apiary visits carefully and follow any medical advice you have been given.`,
+        text: `Pollen levels are ${levelText} over the next few hours. This often coincides with strong forage, but if you or visitors have allergies you may want to plan apiary visits carefully and follow any medical advice you have been given.`,
       });
     }
   }
