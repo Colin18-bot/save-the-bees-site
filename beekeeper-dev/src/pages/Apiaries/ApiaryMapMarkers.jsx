@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   MapContainer,
@@ -36,17 +36,17 @@ const svgIcon = (emoji, bg = "#111827") => {
   </svg>`.trim();
 
   return L.divIcon({
-    className: "", // keep clean (no default white box)
+    className: "",
     html: svg,
     iconSize: [44, 56],
-    iconAnchor: [22, 56], // bottom center of pin
+    iconAnchor: [22, 56],
     popupAnchor: [0, -56],
   });
 };
 
-// --- Icons by type (simple, clear, user-friendly)
+// --- Icons by type
 const icons = {
-  apiary: svgIcon("🏠", "#166534"), // green
+  apiary: svgIcon("🏠", "#166534"),
   water_source: svgIcon("💧", "#1D4ED8"),
   watercourse: svgIcon("🌊", "#2563EB"),
   forage: svgIcon("🌼", "#CA8A04"),
@@ -58,61 +58,6 @@ const icons = {
 };
 
 const iconByType = (type) => icons[type] || icons.other;
-
-// ✅ NEW: subtle, collapsible legend (bottom-left)
-function MapLegend() {
-  const [open, setOpen] = useState(true);
-
-  const items = [
-    { icon: "🏠", label: "Apiary" },
-    { icon: "🌼", label: "Forage hotspot" },
-    { icon: "💧", label: "Water source" },
-    { icon: "🌊", label: "Watercourse" },
-    { icon: "⚠️", label: "Asian hornet sighting" },
-    { icon: "🌳", label: "Shelter / windbreak" },
-    { icon: "🅿️", label: "Access / parking" },
-    { icon: "🚫", label: "Risk" },
-    { icon: "📍", label: "Other" },
-  ];
-
-  return (
-    <div className="absolute bottom-3 left-3 z-[900] pointer-events-none">
-      <div className="pointer-events-auto rounded-2xl bg-white/90 shadow border border-slate-200 backdrop-blur px-3 py-2 max-w-[240px]">
-        <div className="flex items-center justify-between gap-2">
-          <div className="text-xs font-semibold text-slate-700">Legend</div>
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            className="text-xs px-2 py-1 rounded-lg border bg-white hover:bg-slate-50"
-            aria-label={open ? "Collapse legend" : "Expand legend"}
-          >
-            {open ? "Hide" : "Show"}
-          </button>
-        </div>
-
-        {open && (
-          <div className="mt-2 space-y-1">
-            {items.map((it) => (
-              <div key={it.label} className="flex items-center gap-2 text-xs text-slate-700">
-                <span className="inline-flex items-center justify-center w-5">{it.icon}</span>
-                <span>{it.label}</span>
-              </div>
-            ))}
-
-            <div className="mt-2 flex items-center gap-2 text-xs text-slate-700">
-              <span className="inline-flex items-center justify-center w-5">⭕</span>
-              <span>3-mile foraging radius</span>
-            </div>
-
-            <div className="mt-1 text-[11px] text-slate-500 leading-snug">
-              Indicative range only — bees may forage further depending on conditions.
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
 
 function TapToAddMarker({ isAddMode, onPick }) {
   useMapEvents({
@@ -132,19 +77,102 @@ const ApiaryMapMarkers = () => {
   const [apiary, setApiary] = useState(null);
   const [markers, setMarkers] = useState([]);
 
-  // Dropdown options
   const [apiaryOptions, setApiaryOptions] = useState([]);
 
   const [isAddMode, setIsAddMode] = useState(false);
   const [pendingPoint, setPendingPoint] = useState(null);
 
-  // Popup edit state (one marker at a time)
   const [editingId, setEditingId] = useState(null);
-  const [editDraft, setEditDraft] = useState({ type: "forage", title: "", notes: "", observed_at: "" });
+  const [editDraft, setEditDraft] = useState({
+    type: "forage",
+    title: "",
+    notes: "",
+    observed_at: "",
+  });
 
   const markerCount = markers.length;
 
-  // ✅ measure header height so popups never hide under it
+  // Legend toggle
+  const [showLegend, setShowLegend] = useState(true);
+
+  // Pollen card toggle (hide/show)
+  const [showPollen, setShowPollen] = useState(true);
+
+  // When any popup is open, lift the map layer ABOVE the header overlays
+  const [isAnyPopupOpen, setIsAnyPopupOpen] = useState(false);
+
+  // Pollen (selected apiary location only)
+  const [pollen, setPollen] = useState(null);
+  const [pollenLoading, setPollenLoading] = useState(false);
+  const [pollenError, setPollenError] = useState("");
+
+  const safeNum = (v) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : null;
+  };
+
+  const pollenLabel = (v) => {
+    const n = Number(v);
+    if (!Number.isFinite(n)) return "—";
+    if (n <= 1) return "Low";
+    if (n === 2) return "Moderate";
+    return "High";
+  };
+
+  const summarisePollen = (current) => {
+    if (!current) return null;
+
+    const alder = safeNum(current.alder_pollen);
+    const birch = safeNum(current.birch_pollen);
+    const olive = safeNum(current.olive_pollen);
+    const grass = safeNum(current.grass_pollen);
+    const mugwort = safeNum(current.mugwort_pollen);
+    const ragweed = safeNum(current.ragweed_pollen);
+
+    const treeVals = [alder, birch, olive].filter((x) => x !== null);
+    const weedVals = [mugwort, ragweed].filter((x) => x !== null);
+
+    const tree = treeVals.length ? Math.max(...treeVals) : null;
+    const weed = weedVals.length ? Math.max(...weedVals) : null;
+
+    return {
+      tree,
+      grass,
+      weed,
+      tree_label: pollenLabel(tree),
+      grass_label: pollenLabel(grass),
+      weed_label: pollenLabel(weed),
+      raw: { alder, birch, olive, mugwort, ragweed },
+    };
+  };
+
+  const fetchPollenForApiary = async (lat, lon) => {
+    setPollenLoading(true);
+    setPollenError("");
+
+    try {
+      const url =
+        "https://air-quality-api.open-meteo.com/v1/air-quality" +
+        `?latitude=${encodeURIComponent(lat)}` +
+        `&longitude=${encodeURIComponent(lon)}` +
+        "&current=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen" +
+        "&timezone=auto";
+
+      const res = await fetch(url, { headers: { Accept: "application/json" } });
+      if (!res.ok) throw new Error(`Pollen request failed (${res.status})`);
+
+      const json = await res.json();
+      setPollen(summarisePollen(json?.current));
+    } catch (e) {
+      console.error(e);
+      setPollen(null);
+      setPollenError("Pollen data unavailable for this location right now.");
+    } finally {
+      setPollenLoading(false);
+    }
+  };
+
+  // Measure header height (for map padding)
   const headerRef = useRef(null);
   const [headerH, setHeaderH] = useState(0);
 
@@ -156,11 +184,11 @@ const ApiaryMapMarkers = () => {
   }, []);
 
   const center = useMemo(() => {
-    if (!apiary?.latitude || !apiary?.longitude) return [51.4816, -3.1791]; // fallback (Cardiff-ish)
+    if (!apiary?.latitude || !apiary?.longitude) return [51.4816, -3.1791];
     return [Number(apiary.latitude), Number(apiary.longitude)];
   }, [apiary]);
 
-  // Load apiary list for dropdown (active apiaries)
+  // Load apiary list for dropdown
   useEffect(() => {
     const loadApiaryOptions = async () => {
       const { data, error } = await supabase
@@ -184,7 +212,6 @@ const ApiaryMapMarkers = () => {
   const loadAll = async () => {
     setLoading(true);
 
-    // 1) Load apiary
     const { data: apiaryData, error: apiaryErr } = await supabase
       .from("apiaries")
       .select("id, name, latitude, longitude, address")
@@ -198,10 +225,11 @@ const ApiaryMapMarkers = () => {
       return;
     }
 
-    // 2) Load markers for this apiary
     const { data: markerData, error: markerErr } = await supabase
       .from("apiary_map_markers")
-      .select("id, apiary_id, type, title, notes, latitude, longitude, observed_at, created_at, updated_at")
+      .select(
+        "id, apiary_id, type, title, notes, latitude, longitude, observed_at, created_at, updated_at"
+      )
       .eq("apiary_id", apiaryId)
       .order("created_at", { ascending: false });
 
@@ -214,6 +242,16 @@ const ApiaryMapMarkers = () => {
 
     setApiary(apiaryData);
     setMarkers(markerData || []);
+
+    const la = Number(apiaryData?.latitude);
+    const lo = Number(apiaryData?.longitude);
+    if (Number.isFinite(la) && Number.isFinite(lo)) {
+      fetchPollenForApiary(la, lo);
+    } else {
+      setPollen(null);
+      setPollenError("No coordinates saved for this apiary.");
+    }
+
     setLoading(false);
   };
 
@@ -225,6 +263,7 @@ const ApiaryMapMarkers = () => {
   const startAdd = () => {
     setIsAddMode(true);
     setPendingPoint(null);
+    setEditingId(null);
   };
 
   const cancelAdd = () => {
@@ -247,7 +286,10 @@ const ApiaryMapMarkers = () => {
       notes: editDraft.notes?.trim() || null,
       latitude: pendingPoint.lat,
       longitude: pendingPoint.lng,
-      observed_at: editDraft.type === "asian_hornet" && editDraft.observed_at ? editDraft.observed_at : null,
+      observed_at:
+        editDraft.type === "asian_hornet" && editDraft.observed_at
+          ? editDraft.observed_at
+          : null,
     };
 
     const { error } = await supabase.from("apiary_map_markers").insert(payload);
@@ -283,7 +325,10 @@ const ApiaryMapMarkers = () => {
       type: editDraft.type,
       title: editDraft.title?.trim() || null,
       notes: editDraft.notes?.trim() || null,
-      observed_at: editDraft.type === "asian_hornet" && editDraft.observed_at ? editDraft.observed_at : null,
+      observed_at:
+        editDraft.type === "asian_hornet" && editDraft.observed_at
+          ? editDraft.observed_at
+          : null,
     };
 
     const { error } = await supabase.from("apiary_map_markers").update(payload).eq("id", id);
@@ -314,6 +359,31 @@ const ApiaryMapMarkers = () => {
     await loadAll();
   };
 
+  // Prevent Leaflet click-through when pressing buttons inside the popup.
+  const stopClickThrough = useCallback((e) => {
+    if (!e) return;
+    e.preventDefault?.();
+    e.stopPropagation?.();
+    if (e.nativeEvent?.stopPropagation) e.nativeEvent.stopPropagation();
+  }, []);
+
+  // Pick again: clear selected point, keep add mode on, then user taps map to select a new location.
+  const pickAgain = useCallback(
+    (e) => {
+      stopClickThrough(e);
+      setPendingPoint(null);
+    },
+    [stopClickThrough]
+  );
+
+  const popupHandlers = useMemo(
+    () => ({
+      popupopen: () => setIsAnyPopupOpen(true),
+      popupclose: () => setIsAnyPopupOpen(false),
+    }),
+    []
+  );
+
   if (loading) {
     return (
       <div className="p-4">
@@ -330,10 +400,58 @@ const ApiaryMapMarkers = () => {
     );
   }
 
+  const hasCoords =
+    Number.isFinite(Number(apiary?.latitude)) && Number.isFinite(Number(apiary?.longitude));
+
+  // Small helper to keep label/input spacing consistent (and prevent “label protrusion”)
+  const FieldLabel = ({ children }) => (
+    <div className="mt-2">
+      <label className="block text-xs opacity-70 mb-1">{children}</label>
+    </div>
+  );
+
   return (
     <div className="relative w-full" style={{ height: "100dvh" }}>
+      {/* Popup styling (fix label/padding issues inside Leaflet popups) */}
+      <style>{`
+        .bk-popup .leaflet-popup-content-wrapper {
+          border: 2px solid rgba(16, 185, 129, 0.35);
+          box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+          background: rgba(255,255,255,0.98);
+          border-radius: 18px;
+          padding: 0 !important; /* we control padding via leaflet content margin */
+        }
+        .bk-popup .leaflet-popup-content {
+          margin: 14px 16px !important; /* consistent inner padding so nothing “sticks out” */
+          width: auto !important;
+        }
+        .bk-popup .leaflet-popup-tip {
+          background: rgba(255,255,255,0.98);
+          box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+        }
+        .bk-popup .leaflet-popup-close-button {
+          top: 10px;
+          right: 10px;
+          width: 28px;
+          height: 28px;
+          line-height: 26px;
+          border-radius: 9999px;
+          color: rgba(15, 23, 42, 0.75);
+        }
+        .bk-popup .leaflet-popup-close-button:hover {
+          background: rgba(15, 23, 42, 0.06);
+          color: rgba(15, 23, 42, 0.9);
+        }
+        .bk-popup * { box-sizing: border-box; }
+      `}</style>
+
       {/* Top bar */}
-      <div ref={headerRef} className="absolute top-0 left-0 right-0 z-[1000] p-3">
+      <div
+        ref={headerRef}
+        className={`absolute top-0 left-0 right-0 p-3 ${
+          isAnyPopupOpen ? "z-[400]" : "z-[1000]"
+        }`}
+      >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-2xl bg-white/95 shadow px-3 py-2">
           <div className="min-w-0">
             <div className="flex items-center gap-2 min-w-0 flex-wrap">
@@ -392,19 +510,84 @@ const ApiaryMapMarkers = () => {
         {isAddMode && (
           <div className="mt-2 rounded-2xl bg-white/95 shadow px-3 py-2 text-xs">
             {pendingPoint ? (
-              <div className="opacity-80">Marker location selected. Fill details below and save.</div>
+              <div className="opacity-80">
+                Marker location selected. Fill details below and save.
+              </div>
             ) : (
               <div className="opacity-80">Tap the map to drop a marker.</div>
             )}
           </div>
         )}
+
+        {/* Pollen card */}
+        <div className="mt-2 rounded-2xl bg-white/95 shadow px-3 py-2 text-xs">
+          <div className="flex items-center justify-between gap-2">
+            <div className="font-semibold">Pollen (apiary location)</div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="text-xs px-2 py-1 rounded-lg border bg-white hover:bg-slate-50"
+                onClick={() => setShowPollen((v) => !v)}
+              >
+                {showPollen ? "Hide" : "Show"}
+              </button>
+
+              <button
+                type="button"
+                className="text-xs px-2 py-1 rounded-lg border bg-white hover:bg-slate-50"
+                onClick={() => {
+                  const la = Number(apiary?.latitude);
+                  const lo = Number(apiary?.longitude);
+                  if (Number.isFinite(la) && Number.isFinite(lo)) fetchPollenForApiary(la, lo);
+                }}
+                disabled={pollenLoading}
+              >
+                Refresh
+              </button>
+            </div>
+          </div>
+
+          {!showPollen ? (
+            <div className="mt-1 opacity-70">Hidden.</div>
+          ) : pollenLoading ? (
+            <div className="mt-1 opacity-70">Loading…</div>
+          ) : pollenError ? (
+            <div className="mt-1 opacity-70">{pollenError}</div>
+          ) : pollen ? (
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              <div className="rounded-lg border bg-white px-2 py-1">
+                <div className="opacity-70">Tree</div>
+                <div className="font-semibold">{pollen.tree_label}</div>
+                <div className="opacity-60">{pollen.tree ?? "—"}</div>
+              </div>
+              <div className="rounded-lg border bg-white px-2 py-1">
+                <div className="opacity-70">Grass</div>
+                <div className="font-semibold">{pollen.grass_label}</div>
+                <div className="opacity-60">{pollen.grass ?? "—"}</div>
+              </div>
+              <div className="rounded-lg border bg-white px-2 py-1">
+                <div className="opacity-70">Weed</div>
+                <div className="font-semibold">{pollen.weed_label}</div>
+                <div className="opacity-60">{pollen.weed ?? "—"}</div>
+              </div>
+            </div>
+          ) : (
+            <div className="mt-1 opacity-70">No pollen data yet.</div>
+          )}
+
+          {showPollen && (
+            <div className="mt-1 opacity-60">Note: Pollen is seasonal and provider-dependent.</div>
+          )}
+        </div>
       </div>
 
-      {/* Map padded down by header height */}
-      <div style={{ paddingTop: headerH, height: "100%" }}>
-        {/* ✅ Legend sits above the map (bottom-left) */}
-        <MapLegend />
-
+      {/* Map padded under header.
+          IMPORTANT: when a popup is open, lift the WHOLE map layer above the header so popups overlay it. */}
+      <div
+        style={{ paddingTop: headerH, height: "100%" }}
+        className={`relative ${isAnyPopupOpen ? "z-[1200]" : "z-[0]"}`}
+      >
         <MapContainer center={center} zoom={15} zoomControl={false} className="h-full w-full">
           <ZoomControl position="bottomright" />
 
@@ -431,43 +614,53 @@ const ApiaryMapMarkers = () => {
             }}
           />
 
-          {apiary.latitude && apiary.longitude && (
-            <Marker position={[Number(apiary.latitude), Number(apiary.longitude)]} icon={icons.apiary}>
-              <Popup>
+          {/* Apiary marker */}
+          {hasCoords && (
+            <Marker
+              position={[Number(apiary.latitude), Number(apiary.longitude)]}
+              icon={icons.apiary}
+              eventHandlers={popupHandlers}
+            >
+              <Popup className="bk-popup" autoPan={false}>
                 <div className="text-sm font-semibold">{apiary.name}</div>
                 {apiary.address ? <div className="text-xs opacity-70">{apiary.address}</div> : null}
               </Popup>
             </Marker>
           )}
 
-          <Circle
-            center={[Number(apiary.latitude), Number(apiary.longitude)]}
-            radius={4828}
-            pathOptions={{
-              color: "#CA8A04",
-              weight: 2,
-              opacity: 0.8,
-              fillColor: "#FDE68A",
-              fillOpacity: 0.2,
-              dashArray: "6,6",
-            }}
-          >
-            <Popup>
-              <div className="text-sm font-semibold">Typical foraging range</div>
-              <div className="text-xs opacity-70">Approx. 3 miles from apiary</div>
-            </Popup>
-          </Circle>
+          {/* Foraging radius (non-interactive) */}
+          {hasCoords && (
+            <Circle
+              center={[Number(apiary.latitude), Number(apiary.longitude)]}
+              radius={4828}
+              interactive={false}
+              pathOptions={{
+                color: "#CA8A04",
+                weight: 2,
+                opacity: 0.8,
+                fillColor: "#FDE68A",
+                fillOpacity: 0.2,
+                dashArray: "6,6",
+              }}
+            />
+          )}
 
+          {/* Existing markers */}
           {markers.map((m) => (
-            <Marker key={m.id} position={[Number(m.latitude), Number(m.longitude)]} icon={iconByType(m.type)}>
-              <Popup>
+            <Marker
+              key={m.id}
+              position={[Number(m.latitude), Number(m.longitude)]}
+              icon={iconByType(m.type)}
+              eventHandlers={popupHandlers}
+            >
+              <Popup className="bk-popup" autoPan={false}>
                 {editingId === m.id ? (
-                  <div className="w-[240px]">
+                  <div className="w-[240px] max-w-[calc(100vw-80px)] sm:w-[360px]">
                     <div className="text-sm font-semibold mb-2">Edit marker</div>
 
-                    <label className="text-xs opacity-70">Type</label>
+                    <FieldLabel>Type</FieldLabel>
                     <select
-                      className="w-full border rounded-lg px-2 py-1 text-sm mb-2"
+                      className="w-full border rounded-lg px-2 py-1 text-sm"
                       value={editDraft.type}
                       onChange={(e) => setEditDraft((d) => ({ ...d, type: e.target.value }))}
                     >
@@ -478,17 +671,17 @@ const ApiaryMapMarkers = () => {
                       ))}
                     </select>
 
-                    <label className="text-xs opacity-70">Title</label>
+                    <FieldLabel>Title</FieldLabel>
                     <input
-                      className="w-full border rounded-lg px-2 py-1 text-sm mb-2"
+                      className="w-full border rounded-lg px-2 py-1 text-sm"
                       value={editDraft.title}
                       onChange={(e) => setEditDraft((d) => ({ ...d, title: e.target.value }))}
                       placeholder={editDraft.type === "other" ? "What is this?" : "Optional (e.g. Ivy wall)"}
                     />
 
-                    <label className="text-xs opacity-70">Notes</label>
+                    <FieldLabel>Notes</FieldLabel>
                     <textarea
-                      className="w-full border rounded-lg px-2 py-1 text-sm mb-2"
+                      className="w-full border rounded-lg px-2 py-1 text-sm"
                       value={editDraft.notes}
                       onChange={(e) => setEditDraft((d) => ({ ...d, notes: e.target.value }))}
                       rows={3}
@@ -497,9 +690,9 @@ const ApiaryMapMarkers = () => {
 
                     {editDraft.type === "asian_hornet" && (
                       <>
-                        <label className="text-xs opacity-70">Observed date</label>
+                        <FieldLabel>Observed date</FieldLabel>
                         <input
-                          className="w-full border rounded-lg px-2 py-1 text-sm mb-2"
+                          className="w-full border rounded-lg px-2 py-1 text-sm"
                           type="date"
                           value={editDraft.observed_at || ""}
                           onChange={(e) => setEditDraft((d) => ({ ...d, observed_at: e.target.value }))}
@@ -507,7 +700,7 @@ const ApiaryMapMarkers = () => {
                       </>
                     )}
 
-                    <div className="flex gap-2 mt-2">
+                    <div className="flex gap-2 mt-3">
                       <button
                         className="flex-1 px-3 py-2 rounded-xl bg-black text-white text-sm"
                         onClick={() => saveEdit(m.id)}
@@ -533,13 +726,15 @@ const ApiaryMapMarkers = () => {
                     </button>
                   </div>
                 ) : (
-                  <div className="w-[240px]">
+                  <div className="w-[240px] max-w-[calc(100vw-80px)] sm:w-[360px]">
                     <div className="text-sm font-semibold">
                       {MARKER_TYPES.find((t) => t.value === m.type)?.label || m.type}
                     </div>
 
                     {m.title ? <div className="text-sm mt-1">{m.title}</div> : null}
-                    {m.notes ? <div className="text-xs opacity-70 mt-1 whitespace-pre-wrap">{m.notes}</div> : null}
+                    {m.notes ? (
+                      <div className="text-xs opacity-70 mt-1 whitespace-pre-wrap">{m.notes}</div>
+                    ) : null}
                     {m.type === "asian_hornet" && m.observed_at ? (
                       <div className="text-xs opacity-70 mt-1">Observed: {m.observed_at}</div>
                     ) : null}
@@ -566,15 +761,20 @@ const ApiaryMapMarkers = () => {
             </Marker>
           ))}
 
+          {/* Pending marker */}
           {isAddMode && pendingPoint && (
-            <Marker position={[pendingPoint.lat, pendingPoint.lng]} icon={iconByType(editDraft.type)}>
-              <Popup>
-                <div className="w-[240px]">
+            <Marker
+              position={[pendingPoint.lat, pendingPoint.lng]}
+              icon={iconByType(editDraft.type)}
+              eventHandlers={popupHandlers}
+            >
+              <Popup className="bk-popup" autoPan={false}>
+                <div className="w-[240px] max-w-[calc(100vw-80px)] sm:w-[360px]">
                   <div className="text-sm font-semibold mb-2">New marker</div>
 
-                  <label className="text-xs opacity-70">Type</label>
+                  <FieldLabel>Type</FieldLabel>
                   <select
-                    className="w-full border rounded-lg px-2 py-1 text-sm mb-2"
+                    className="w-full border rounded-lg px-2 py-1 text-sm"
                     value={editDraft.type}
                     onChange={(e) => setEditDraft((d) => ({ ...d, type: e.target.value }))}
                   >
@@ -585,17 +785,17 @@ const ApiaryMapMarkers = () => {
                     ))}
                   </select>
 
-                  <label className="text-xs opacity-70">Title</label>
+                  <FieldLabel>Title</FieldLabel>
                   <input
-                    className="w-full border rounded-lg px-2 py-1 text-sm mb-2"
+                    className="w-full border rounded-lg px-2 py-1 text-sm"
                     value={editDraft.title}
                     onChange={(e) => setEditDraft((d) => ({ ...d, title: e.target.value }))}
                     placeholder={editDraft.type === "other" ? "What is this?" : "Optional (e.g. Pond behind gate)"}
                   />
 
-                  <label className="text-xs opacity-70">Notes</label>
+                  <FieldLabel>Notes</FieldLabel>
                   <textarea
-                    className="w-full border rounded-lg px-2 py-1 text-sm mb-2"
+                    className="w-full border rounded-lg px-2 py-1 text-sm"
                     value={editDraft.notes}
                     onChange={(e) => setEditDraft((d) => ({ ...d, notes: e.target.value }))}
                     rows={3}
@@ -604,9 +804,9 @@ const ApiaryMapMarkers = () => {
 
                   {editDraft.type === "asian_hornet" && (
                     <>
-                      <label className="text-xs opacity-70">Observed date</label>
+                      <FieldLabel>Observed date</FieldLabel>
                       <input
-                        className="w-full border rounded-lg px-2 py-1 text-sm mb-2"
+                        className="w-full border rounded-lg px-2 py-1 text-sm"
                         type="date"
                         value={editDraft.observed_at || ""}
                         onChange={(e) => setEditDraft((d) => ({ ...d, observed_at: e.target.value }))}
@@ -614,7 +814,7 @@ const ApiaryMapMarkers = () => {
                     </>
                   )}
 
-                  <div className="flex gap-2 mt-2">
+                  <div className="flex gap-2 mt-3">
                     <button
                       className="flex-1 px-3 py-2 rounded-xl bg-black text-white text-sm"
                       onClick={saveNewMarker}
@@ -624,7 +824,8 @@ const ApiaryMapMarkers = () => {
                     </button>
                     <button
                       className="flex-1 px-3 py-2 rounded-xl border text-sm"
-                      onClick={() => setPendingPoint(null)}
+                      onMouseDown={stopClickThrough}
+                      onClick={pickAgain}
                       type="button"
                     >
                       Pick again
@@ -635,6 +836,69 @@ const ApiaryMapMarkers = () => {
             </Marker>
           )}
         </MapContainer>
+
+        {/* Legend */}
+        <div className="absolute bottom-3 left-3 z-[900] max-w-[260px] rounded-2xl bg-white/90 shadow border px-3 py-2 text-xs">
+          <div className="flex items-center justify-between gap-2">
+            <div className="font-semibold">Legend</div>
+            <button
+              type="button"
+              className="text-[11px] px-2 py-1 rounded-lg border bg-white hover:bg-slate-50"
+              onClick={() => setShowLegend((v) => !v)}
+            >
+              {showLegend ? "Hide" : "Show"}
+            </button>
+          </div>
+
+          {showLegend && (
+            <div className="mt-2 space-y-1 opacity-90">
+              <div className="flex items-center gap-2">
+                <span>🏠</span>
+                <span>Apiary</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>💧</span>
+                <span>Water source</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>🌊</span>
+                <span>Watercourse</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>🌼</span>
+                <span>Forage hotspot</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>⚠️</span>
+                <span>Asian hornet sighting</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>🌳</span>
+                <span>Shelter / windbreak</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>🚫</span>
+                <span>Risk</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>🅿️</span>
+                <span>Access / parking</span>
+              </div>
+
+              <div className="mt-2 pt-2 border-t opacity-80">
+                <div className="flex items-center gap-2">
+                  <span className="inline-block w-4 h-[2px] bg-amber-600" />
+                  <span>~3 mile foraging ring</span>
+                </div>
+
+                {/* ✅ Reinstated disclaimer */}
+                <div className="mt-1 text-[11px] leading-snug opacity-70">
+                  Indicative range only — bees may forage further depending on conditions.
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
