@@ -213,10 +213,11 @@ const ApiaryMapMarkers = () => {
     setLoading(true);
 
     const { data: apiaryData, error: apiaryErr } = await supabase
-      .from("apiaries")
-      .select("id, name, latitude, longitude, address")
-      .eq("id", apiaryId)
-      .single();
+  .from("apiaries")
+  .select("id, name, latitude, longitude, address, hives(count)")
+  .eq("id", apiaryId)
+  .single();
+
 
     if (apiaryErr) {
       console.error(apiaryErr);
@@ -621,10 +622,23 @@ const ApiaryMapMarkers = () => {
               icon={icons.apiary}
               eventHandlers={popupHandlers}
             >
-              <Popup className="bk-popup" autoPan={false}>
+             <Popup className="bk-popup" autoPan={false}>
                 <div className="text-sm font-semibold">{apiary.name}</div>
-                {apiary.address ? <div className="text-xs opacity-70">{apiary.address}</div> : null}
+
+                {apiary.address ? (
+                  <div className="text-xs opacity-70">{apiary.address}</div>
+                ) : null}
+
+                <div className="mt-2 text-xs">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="opacity-70">Total hives</span>
+                    <span className="font-semibold">
+                      {Array.isArray(apiary?.hives) ? apiary.hives[0]?.count ?? 0 : 0}
+                    </span>
+                  </div>
+                </div>
               </Popup>
+
             </Marker>
           )}
 
