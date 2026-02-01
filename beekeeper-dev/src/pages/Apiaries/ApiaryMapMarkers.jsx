@@ -6,6 +6,8 @@ import {
   Marker,
   Popup,
   Circle,
+  GeoJSON,
+  FeatureGroup,
   useMapEvents,
   LayersControl,
   ZoomControl,
@@ -59,11 +61,47 @@ const icons = {
 
 const iconByType = (type) => icons[type] || icons.other;
 
+// --- OpenWeather tile overlays (requires VITE_OPENWEATHER_KEY)
+const OPENWEATHER_KEY = import.meta.env.VITE_OPENWEATHER_KEY;
+
+// OpenWeather “Weather Maps 1.0” tile layers (most useful ones for beekeeping)
+const OWM_OVERLAYS = [
+  { id: "owm_precip", name: "Weather: Precipitation", layer: "precipitation_new", opacity: 0.55 },
+  { id: "owm_clouds", name: "Weather: Clouds", layer: "clouds_new", opacity: 0.45 },
+  { id: "owm_temp", name: "Weather: Temperature", layer: "temp_new", opacity: 0.45 },
+  { id: "owm_wind", name: "Weather: Wind", layer: "wind_new", opacity: 0.45 },
+];
+
+const owmTileUrl = (layer) =>
+  `https://tile.openweathermap.org/map/${layer}/{z}/{x}/{y}.png?appid=${OPENWEATHER_KEY}`;
+
 function TapToAddMarker({ isAddMode, onPick }) {
   useMapEvents({
     click(e) {
       if (!isAddMode) return;
       onPick({ lat: e.latlng.lat, lng: e.latlng.lng });
+    },
+  });
+  return null;
+}
+
+// Watches Leaflet overlay toggles, so the warnings layer behaves like a REAL map layer
+function WarningsOverlayWatcher({ layerRef, onEnable, onDisable }) {
+  useMapEvents({
+    overlayadd(e) {
+      const layer = layerRef?.current;
+
+      // React-Leaflet v4: ref.current is usually the Leaflet layer.
+      // Older shapes sometimes expose leafletElement.
+      const leafletLayer = layer?.leafletElement ?? layer;
+
+      if (leafletLayer && e.layer === leafletLayer) onEnable();
+    },
+    overlayremove(e) {
+      const layer = layerRef?.current;
+      const leafletLayer = layer?.leafletElement ?? layer;
+
+      if (leafletLayer && e.layer === leafletLayer) onDisable();
     },
   });
   return null;
@@ -76,7 +114,6 @@ const ApiaryMapMarkers = () => {
   const [loading, setLoading] = useState(true);
   const [apiary, setApiary] = useState(null);
   const [markers, setMarkers] = useState([]);
-
   const [apiaryOptions, setApiaryOptions] = useState([]);
 
   const [isAddMode, setIsAddMode] = useState(false);
@@ -100,6 +137,13 @@ const ApiaryMapMarkers = () => {
 
   // When any popup is open, lift the map layer ABOVE the header overlays
   const [isAnyPopupOpen, setIsAnyPopupOpen] = useState(false);
+
+  // --- Met Office official weather warnings (NSWWS Public API)
+  const [warningsEnabled, setWarningsEnabled] = useState(false);
+  const [warningsGeoJson, setWarningsGeoJson] = useState(null);
+  const [warningsLoading, setWarningsLoading] = useState(false);
+  const [warningsError, setWarningsError] = useState("");
+  const warningsLayerRef = useRef(null);
 
   // Pollen (selected apiary location only)
   const [pollen, setPollen] = useState(null);
@@ -145,6 +189,79 @@ const ApiaryMapMarkers = () => {
       raw: { alder, birch, olive, mugwort, ragweed },
     };
   };
+
+  const getSeverity = (props) => {
+    const p = props || {};
+    // Met Office feeds can vary; try common keys
+    return (
+      p.severity ||
+      p.awareness_level ||
+      p.awarenessLevel ||
+      p.eventSeverity ||
+      p.severityLevel ||
+      ""
+    );
+  };
+
+  // --- Met Office warnings: style + fetch
+  const severityStyle = useCallback((severity) => {
+    const s = String(severity || "").toLowerCase();
+
+    // Most common strings
+    if (s.includes("red")) {
+      return { color: "#991b1b", weight: 2, fillColor: "#ef4444", fillOpacity: 0.25 };
+    }
+    if (s.includes("amber") || s.includes("orange")) {
+      return { color: "#92400e", weight: 2, fillColor: "#f59e0b", fillOpacity: 0.22 };
+    }
+    if (s.includes("yellow")) {
+      return { color: "#a16207", weight: 2, fillColor: "#fde047", fillOpacity: 0.18 };
+    }
+
+    // If numeric levels ever appear, keep a sensible default
+    return { color: "#0f172a", weight: 2, fillColor: "#94a3b8", fillOpacity: 0.15 };
+  }, []);
+
+  const fetchMetOfficeWarnings = useCallback(async () => {
+    setWarningsLoading(true);
+    setWarningsError("");
+
+    try {
+      // Calls your Supabase Edge Function: supabase/functions/metoffice-warnings
+      // NOTE: By default this sends the user's JWT. If your function is public, that's fine.
+      const { data, error } = await supabase.functions.invoke("metoffice-warnings", {
+        method: "GET",
+      });
+
+      if (error) {
+        throw new Error(error.message || "Edge function error");
+      }
+
+      // Expecting GeoJSON FeatureCollection back
+      if (!data || data.type !== "FeatureCollection") {
+        throw new Error("Edge function returned unexpected data (expected GeoJSON FeatureCollection).");
+      }
+
+      setWarningsGeoJson(data);
+    } catch (e) {
+      console.error(e);
+      setWarningsGeoJson(null);
+
+      const msg = e instanceof Error ? e.message : String(e);
+
+      if (msg.toLowerCase().includes("not found") || msg.includes("404")) {
+        setWarningsError(
+          "Met Office warnings function not found. Check the Edge Function name is exactly: metoffice-warnings, then deploy it."
+        );
+      } else {
+        setWarningsError(
+          "Official warnings unavailable right now. Check the Edge Function is deployed and working."
+        );
+      }
+    } finally {
+      setWarningsLoading(false);
+    }
+  }, []);
 
   const fetchPollenForApiary = async (lat, lon) => {
     setPollenLoading(true);
@@ -213,11 +330,10 @@ const ApiaryMapMarkers = () => {
     setLoading(true);
 
     const { data: apiaryData, error: apiaryErr } = await supabase
-  .from("apiaries")
-  .select("id, name, latitude, longitude, address, hives(count)")
-  .eq("id", apiaryId)
-  .single();
-
+      .from("apiaries")
+      .select("id, name, latitude, longitude, address, hives(count)")
+      .eq("id", apiaryId)
+      .single();
 
     if (apiaryErr) {
       console.error(apiaryErr);
@@ -228,9 +344,7 @@ const ApiaryMapMarkers = () => {
 
     const { data: markerData, error: markerErr } = await supabase
       .from("apiary_map_markers")
-      .select(
-        "id, apiary_id, type, title, notes, latitude, longitude, observed_at, created_at, updated_at"
-      )
+      .select("id, apiary_id, type, title, notes, latitude, longitude, observed_at, created_at, updated_at")
       .eq("apiary_id", apiaryId)
       .order("created_at", { ascending: false });
 
@@ -261,6 +375,13 @@ const ApiaryMapMarkers = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiaryId]);
 
+  // If user enables warnings layer, auto-fetch once (if we have no data yet)
+  useEffect(() => {
+    if (warningsEnabled && !warningsGeoJson && !warningsLoading && !warningsError) {
+      fetchMetOfficeWarnings();
+    }
+  }, [warningsEnabled, warningsGeoJson, warningsLoading, warningsError, fetchMetOfficeWarnings]);
+
   const startAdd = () => {
     setIsAddMode(true);
     setPendingPoint(null);
@@ -287,10 +408,7 @@ const ApiaryMapMarkers = () => {
       notes: editDraft.notes?.trim() || null,
       latitude: pendingPoint.lat,
       longitude: pendingPoint.lng,
-      observed_at:
-        editDraft.type === "asian_hornet" && editDraft.observed_at
-          ? editDraft.observed_at
-          : null,
+      observed_at: editDraft.type === "asian_hornet" && editDraft.observed_at ? editDraft.observed_at : null,
     };
 
     const { error } = await supabase.from("apiary_map_markers").insert(payload);
@@ -326,10 +444,7 @@ const ApiaryMapMarkers = () => {
       type: editDraft.type,
       title: editDraft.title?.trim() || null,
       notes: editDraft.notes?.trim() || null,
-      observed_at:
-        editDraft.type === "asian_hornet" && editDraft.observed_at
-          ? editDraft.observed_at
-          : null,
+      observed_at: editDraft.type === "asian_hornet" && editDraft.observed_at ? editDraft.observed_at : null,
     };
 
     const { error } = await supabase.from("apiary_map_markers").update(payload).eq("id", id);
@@ -420,10 +535,10 @@ const ApiaryMapMarkers = () => {
           box-shadow: 0 18px 60px rgba(0,0,0,0.35);
           background: rgba(255,255,255,0.98);
           border-radius: 18px;
-          padding: 0 !important; /* we control padding via leaflet content margin */
+          padding: 0 !important;
         }
         .bk-popup .leaflet-popup-content {
-          margin: 14px 16px !important; /* consistent inner padding so nothing “sticks out” */
+          margin: 14px 16px !important;
           width: auto !important;
         }
         .bk-popup .leaflet-popup-tip {
@@ -449,9 +564,7 @@ const ApiaryMapMarkers = () => {
       {/* Top bar */}
       <div
         ref={headerRef}
-        className={`absolute top-0 left-0 right-0 p-3 ${
-          isAnyPopupOpen ? "z-[400]" : "z-[1000]"
-        }`}
+        className={`absolute top-0 left-0 right-0 p-3 ${isAnyPopupOpen ? "z-[400]" : "z-[1000]"}`}
       >
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-2xl bg-white/95 shadow px-3 py-2">
           <div className="min-w-0">
@@ -474,12 +587,27 @@ const ApiaryMapMarkers = () => {
               <div className="text-xs px-2 py-1 rounded-full border bg-white">
                 Markers: <span className="font-semibold">{markerCount}</span>
               </div>
+
+              <div className="text-xs px-2 py-1 rounded-full border bg-white">
+                Warnings:{" "}
+                <span className="font-semibold">{warningsEnabled ? "On" : "Off"}</span>
+              </div>
             </div>
 
             <div className="text-xs opacity-70 truncate">{apiary.address || " "}</div>
           </div>
 
           <div className="flex items-center gap-2 justify-end">
+            <button
+              className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50 disabled:opacity-50"
+              onClick={() => fetchMetOfficeWarnings()}
+              type="button"
+              disabled={warningsLoading || !warningsEnabled}
+              title={warningsEnabled ? "Refresh Met Office warnings" : "Turn on the warnings layer first"}
+            >
+              {warningsLoading ? "Refreshing…" : "Refresh warnings"}
+            </button>
+
             <button
               className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50"
               onClick={() => navigate(-1)}
@@ -508,12 +636,24 @@ const ApiaryMapMarkers = () => {
           </div>
         </div>
 
+        {warningsEnabled ? (
+          <div className="mt-2 rounded-2xl bg-white/95 shadow px-3 py-2 text-xs">
+            {warningsLoading ? (
+              <div className="opacity-70">Loading official warnings…</div>
+            ) : warningsError ? (
+              <div className="opacity-70">{warningsError}</div>
+            ) : warningsGeoJson ? (
+              <div className="opacity-70">Official warnings loaded.</div>
+            ) : (
+              <div className="opacity-70">Turned on — waiting for data…</div>
+            )}
+          </div>
+        ) : null}
+
         {isAddMode && (
           <div className="mt-2 rounded-2xl bg-white/95 shadow px-3 py-2 text-xs">
             {pendingPoint ? (
-              <div className="opacity-80">
-                Marker location selected. Fill details below and save.
-              </div>
+              <div className="opacity-80">Marker location selected. Fill details below and save.</div>
             ) : (
               <div className="opacity-80">Tap the map to drop a marker.</div>
             )}
@@ -577,9 +717,7 @@ const ApiaryMapMarkers = () => {
             <div className="mt-1 opacity-70">No pollen data yet.</div>
           )}
 
-          {showPollen && (
-            <div className="mt-1 opacity-60">Note: Pollen is seasonal and provider-dependent.</div>
-          )}
+          {showPollen && <div className="mt-1 opacity-60">Note: Pollen is seasonal and provider-dependent.</div>}
         </div>
       </div>
 
@@ -606,7 +744,61 @@ const ApiaryMapMarkers = () => {
                 url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
               />
             </LayersControl.BaseLayer>
+
+            {/* --- Weather overlays (OpenWeather) --- */}
+            {OPENWEATHER_KEY
+              ? OWM_OVERLAYS.map((o) => (
+                  <LayersControl.Overlay key={o.id} name={o.name}>
+                    <TileLayer
+                      url={owmTileUrl(o.layer)}
+                      opacity={o.opacity}
+                      attribution="&copy; OpenWeather"
+                      updateWhenIdle
+                      keepBuffer={2}
+                    />
+                  </LayersControl.Overlay>
+                ))
+              : null}
+
+            {/* --- Official warnings overlay (Met Office) --- */}
+            <LayersControl.Overlay name="Official warnings (Met Office)">
+              <FeatureGroup ref={warningsLayerRef}>
+                <GeoJSON
+                  // Always provide valid GeoJSON, even if empty
+                  data={
+                    warningsGeoJson || {
+                      type: "FeatureCollection",
+                      features: [],
+                    }
+                  }
+                  style={(feature) => severityStyle(getSeverity(feature?.properties))}
+                  onEachFeature={(feature, layer) => {
+                    const p = feature?.properties || {};
+                    const title = p.headline || p.event || p.type || "Weather warning";
+                    const severity = getSeverity(p) || "Unknown";
+                    const from = p.onset || p.effective || "";
+                    const to = p.expires || p.ends || "";
+
+                    layer.bindPopup(`
+                      <div style="font-size:12px">
+                        <div style="font-weight:700; margin-bottom:4px">${title}</div>
+                        <div><b>Severity:</b> ${severity}</div>
+                        ${from ? `<div><b>From:</b> ${from}</div>` : ""}
+                        ${to ? `<div><b>To:</b> ${to}</div>` : ""}
+                      </div>
+                    `);
+                  }}
+                />
+              </FeatureGroup>
+            </LayersControl.Overlay>
           </LayersControl>
+
+          {/* Keep warningsEnabled in sync with the Leaflet LayersControl checkbox */}
+          <WarningsOverlayWatcher
+            layerRef={warningsLayerRef}
+            onEnable={() => setWarningsEnabled(true)}
+            onDisable={() => setWarningsEnabled(false)}
+          />
 
           <TapToAddMarker
             isAddMode={isAddMode}
@@ -622,12 +814,10 @@ const ApiaryMapMarkers = () => {
               icon={icons.apiary}
               eventHandlers={popupHandlers}
             >
-             <Popup className="bk-popup" autoPan={false}>
+              <Popup className="bk-popup" autoPan={false}>
                 <div className="text-sm font-semibold">{apiary.name}</div>
 
-                {apiary.address ? (
-                  <div className="text-xs opacity-70">{apiary.address}</div>
-                ) : null}
+                {apiary.address ? <div className="text-xs opacity-70">{apiary.address}</div> : null}
 
                 <div className="mt-2 text-xs">
                   <div className="flex items-center justify-between gap-3">
@@ -638,7 +828,6 @@ const ApiaryMapMarkers = () => {
                   </div>
                 </div>
               </Popup>
-
             </Marker>
           )}
 
@@ -905,7 +1094,6 @@ const ApiaryMapMarkers = () => {
                   <span>~3 mile foraging ring</span>
                 </div>
 
-                {/* ✅ Reinstated disclaimer */}
                 <div className="mt-1 text-[11px] leading-snug opacity-70">
                   Indicative range only — bees may forage further depending on conditions.
                 </div>
