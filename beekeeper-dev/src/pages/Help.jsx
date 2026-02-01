@@ -8,6 +8,7 @@ const toc = [
   { id: "getting-started", title: "Getting Started" },
   { id: "siting-guides", title: "Apiary & Hive Siting Guides" },
   { id: "navigation", title: "Navigation Overview" },
+  { id: "apiary-map-markers", title: "Apiary Map Markers (Map Notes)" },
   { id: "bee-health-helper", title: "Colony Health Check (Bee Health Helper)" },
   { id: "business-inventory", title: "Inventory, Sales & Expenses" },
   { id: "currency-defaults", title: "Default Currency (How It Works)" },
@@ -15,6 +16,7 @@ const toc = [
   { id: "workflows", title: "Typical Workflows" },
   { id: "nfc", title: "NFC (Premium): How It Works" },
   { id: "weather-maps-photos", title: "Weather, Maps & Photos" },
+  { id: "apiary-map-markers", title: "Apiary Map & Markers" },
   { id: "filters-counts-archives", title: "Filters, Counts & Archives" },
   { id: "tips", title: "Tips for Smooth Record-Keeping" },
   { id: "faqs", title: "FAQs" },
@@ -393,6 +395,12 @@ export default function Help() {
                       <strong>lightbox</strong>.
                     </li>
                     <li>
+                      <strong>Apiary Map (markers):</strong> the Apiaries list includes a{" "}
+                      <strong>Map</strong> action (on the apiary card) that opens a full-screen map
+                      for that apiary. Use it to add simple map notes like forage hotspots, water
+                      sources, access/parking, shelter/windbreaks, risks, and Asian hornet sightings.
+                    </li>
+                    <li>
                       New/Edit: name, date, coordinates, notes, photo, default
                       toggle.
                     </li>
@@ -617,6 +625,77 @@ export default function Help() {
                 </div>
               </div>
             </section>
+            {/* Apiary Map Markers */}
+<section id="apiary-map-markers">
+  <h2 className="text-2xl font-bold mb-3">Apiary Map Markers (Map Notes)</h2>
+
+  <p className="text-gray-700">
+    The <strong>Apiary Map Markers</strong> page lets you add simple “map notes” for each apiary — for example:
+    water sources, forage hotspots, risks, access/parking, shelter/windbreaks, or Asian hornet sightings.
+    These markers are saved per apiary and are useful for remembering what’s around a site.
+  </p>
+
+  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="rounded-xl border bg-white p-4">
+      <h3 className="font-semibold">How to add a marker</h3>
+      <ol className="mt-2 list-decimal pl-6 space-y-1 text-gray-700">
+        <li>Open an apiary’s map (Apiaries → open the apiary map/markers view).</li>
+        <li>Press <strong>Add marker</strong>.</li>
+        <li>Tap/click the map where you want the marker.</li>
+        <li>Choose a <strong>Type</strong>, then optionally add a <strong>Title</strong> and <strong>Notes</strong>.</li>
+        <li>Press <strong>Save</strong>.</li>
+      </ol>
+    </div>
+
+    <div className="rounded-xl border bg-white p-4">
+      <h3 className="font-semibold">Edit, delete, and “Pick again”</h3>
+      <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+        <li>
+          Tap an existing marker to open it, then use <strong>Edit</strong> to change details or <strong>Delete</strong> to remove it.
+        </li>
+        <li>
+          <strong>Pick again</strong> is only for <em>new markers</em>: it clears the chosen point so you can tap the map again
+          to select a different location before saving.
+        </li>
+        <li>
+          If you press <strong>Pick again</strong>, you should then tap the map again to place the marker in the new spot.
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div className="mt-4 rounded border bg-white p-4">
+    <h3 className="font-semibold">Map layers, legend, and foraging ring</h3>
+    <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+      <li>
+        Use the <strong>Map ↔ Satellite</strong> toggle to switch backgrounds (satellite imagery may load slower depending on provider).
+      </li>
+      <li>
+        The <strong>Legend</strong> explains marker types and the <strong>~3 mile foraging ring</strong> around the apiary.
+      </li>
+    </ul>
+    <p className="mt-2 text-sm text-gray-600">
+      Indicative range only — bees may forage further depending on conditions.
+    </p>
+  </div>
+
+  <div className="mt-4 rounded border border-yellow-200 bg-yellow-50 p-4 text-sm text-gray-800">
+    <div className="font-semibold">Popup behaviour</div>
+    <p className="mt-1">
+      The map is designed so popups sit <strong>above</strong> the header panels (so forms don’t get hidden).
+      The map will <strong>not</strong> automatically “jump” the view to fit a popup — if a popup is near the edge,
+      simply drag the map slightly to bring it fully into view.
+    </p>
+  </div>
+
+  <div className="mt-4 rounded border bg-white p-4">
+    <h3 className="font-semibold">Pollen on the Map Markers page</h3>
+    <p className="mt-2 text-gray-700">
+      Pollen data (when available) is shown in the <strong>Pollen (apiary location)</strong> panel in the header area of the map page.
+      It does <strong>not</strong> appear as a marker on the map itself. The pollen panel is tied to the apiary’s saved coordinates.
+    </p>
+  </div>
+</section>
 
             {/* Colony Health Check */}
             <section id="bee-health-helper">
@@ -1079,7 +1158,9 @@ export default function Help() {
                   <strong>Inspections:</strong> weather auto-fills using the apiary’s coordinates and the inspection date.
                 </li>
                 <li>
-                  <strong>Maps:</strong> set coordinates by clicking the map or searching by address.
+                  <strong>Maps:</strong> set apiary coordinates by clicking the map or searching by address.
+                  HiveTag also includes an <strong>Apiary Map Markers</strong> page where you can save map notes (forage, water, risks, access, etc.)
+                  per apiary.
                 </li>
                 <li>
                   <strong>Photos:</strong> Apiary/Hive support one optional photo;
@@ -1088,10 +1169,94 @@ export default function Help() {
                 </li>
               </ul>
               <p className="mt-3 text-xs text-gray-600">
-                Weather, warnings, pollen and notes depend on third-party providers and are for guidance only.
-                Conditions vary by region and micro-climate.
-              </p>
+                    Weather, warnings, pollen and notes depend on third-party providers and are for guidance only.
+                    Conditions vary by region and micro-climate. Pollen (when available) is shown in panels (e.g. Weather page and the Map Markers header),
+                    not as markers on the map.
+                  </p>
             </section>
+            {/* Apiary Map & Markers */}
+<section id="apiary-map-markers">
+  <h2 className="text-2xl font-bold mb-3">Apiary Map &amp; Markers</h2>
+
+  <p className="text-gray-700">
+    The Apiary Map is a full-screen map for one apiary. It helps you keep simple
+    “map notes” (markers) for real-world features around the apiary such as forage,
+    water, access points, shelter, risks, and sightings.
+  </p>
+
+  <div className="mt-4 space-y-4">
+    <div className="rounded border bg-white p-4">
+      <h3 className="font-semibold">How to open the map</h3>
+      <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
+        <li>
+          Go to <strong>Apiaries</strong> and use the <strong>Map</strong> action on
+          the apiary card.
+        </li>
+        <li>
+          On the map page, you can also switch apiaries using the dropdown in the header.
+        </li>
+      </ul>
+    </div>
+
+    <div className="rounded border bg-white p-4">
+      <h3 className="font-semibold">Add a marker (map note)</h3>
+      <ol className="list-decimal pl-6 mt-2 text-gray-700 space-y-1">
+        <li>Press <strong>Add marker</strong>.</li>
+        <li>
+          Tap/click the map where you want the marker placed. A “New marker” popup opens.
+        </li>
+        <li>
+          Choose a <strong>Type</strong> (forage, water source, access/parking, etc.).
+        </li>
+        <li>
+          Optional: add a <strong>Title</strong> and <strong>Notes</strong> (use this for gate codes,
+          landowner details, flowering times, or anything you want to remember).
+        </li>
+        <li>Press <strong>Save</strong> to store it.</li>
+      </ol>
+
+      <div className="mt-3 text-sm text-gray-600">
+        <strong>Pick again:</strong> clears the selected point and puts you back into “tap the map to drop a marker”
+        so you can choose a different location before saving.
+      </div>
+    </div>
+
+    <div className="rounded border bg-white p-4">
+      <h3 className="font-semibold">Edit or delete a marker</h3>
+      <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
+        <li>Tap a marker to open its popup.</li>
+        <li>Use <strong>Edit</strong> to change the type/title/notes (and date where applicable).</li>
+        <li>Use <strong>Delete</strong> to remove the marker permanently.</li>
+      </ul>
+    </div>
+
+    <div className="rounded border bg-white p-4">
+      <h3 className="font-semibold">Map layers &amp; foraging ring</h3>
+      <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
+        <li>
+          Use the map layer control to switch between standard map and satellite imagery.
+        </li>
+        <li>
+          A <strong>~3 mile foraging ring</strong> is shown around the apiary as a visual guide.
+          <div className="mt-1 text-sm text-gray-600">
+            Indicative range only — bees may forage further depending on conditions.
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div className="rounded border bg-white p-4">
+      <h3 className="font-semibold">Pollen on the map</h3>
+      <p className="text-gray-700 mt-2">
+        Pollen is shown as a small <strong>panel in the map header</strong> for the apiary’s coordinates (where available).
+        It does <strong>not</strong> draw a “pollen overlay” on the map itself.
+      </p>
+      <p className="text-sm text-gray-600 mt-2">
+        Note: Pollen data is seasonal and provider-dependent, and can vary significantly by local microclimate.
+      </p>
+    </div>
+  </div>
+</section>
 
             {/* Filters, Counts & Archives */}
             <section id="filters-counts-archives">
@@ -1207,6 +1372,15 @@ export default function Help() {
                 </div>
 
                 <div>
+                  <p className="font-medium">What is the Apiary Map and what is “Pick again”?</p>
+                  <p className="text-gray-700">
+                    The Apiary Map is a full-screen map for one apiary where you can add “map notes” (markers) like forage, water,
+                    access, shelter, risks, and sightings. When adding a new marker, <strong>Pick again</strong> clears the selected
+                    point so you can tap the map again to choose a different location before saving.
+                  </p>
+                </div>
+
+                <div>
                   <p className="font-medium">Where do I find the Apiary Siting Guide and Hive Siting Guide?</p>
                   <p className="text-gray-700">
                     On the <strong>New Apiary</strong> page and <strong>New Hive</strong> page there’s a guide button at the top.
@@ -1302,6 +1476,15 @@ export default function Help() {
                   <strong>Weather didn’t load or is very slow:</strong> confirm the apiary has valid coordinates saved; occasionally
                   providers are slow.
                 </li>
+                <li>
+                  <strong>Map popups cover the header or feel “tight”:</strong> popups are designed to overlay the header panels without auto-panning
+                  (to avoid screen “jumping”). If a popup is near the edge of the screen, drag the map slightly to bring it fully into view.
+                </li>
+                <li>
+                  <strong>Satellite layer is blank or slow:</strong> satellite imagery comes from an external provider and may be rate-limited or temporarily unavailable.
+                  Switch back to <strong>Map</strong> and try again later.
+                </li>
+
                 <li>
                   <strong>NFC says “not supported”:</strong> iOS Safari and many desktops don’t support Web NFC; use the standard flow.
                 </li>
