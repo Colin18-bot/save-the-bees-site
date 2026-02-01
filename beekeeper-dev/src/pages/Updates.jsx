@@ -9,6 +9,47 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
   {
+  version: "1.1.1",
+  released_at: "2026-02-01T18:00:00Z",
+  summary:
+    "Improved the Apiary Map Markers experience: popups now properly overlay the header/pollen cards (no more hidden forms), reduced 'screen jump' behaviour, added pollen hide/show, tightened 'Pick again' behaviour, and restored the foraging-ring disclaimer.",
+
+  added: [
+    "Added a **Hide/Show** toggle on the **Pollen (apiary location)** card so users can collapse it when the map needs more space.",
+    "Added stronger **popup styling** (subtle tinted border + clearer shadow) so marker forms stand out against the header/pollen cards.",
+    "Restored the legend disclaimer for the foraging ring: **“Indicative range only — bees may forage further depending on conditions.”**"
+  ],
+
+  changed: [
+    "Popup form sizing is now **responsive**: slightly wider on desktop, but constrained on mobile so it never feels cramped or overflows the viewport.",
+    "Popup behaviour adjusted to avoid disorientating map movement: popups no longer force the map to auto-pan (users can move the map if needed).",
+    "When a popup opens, the UI layering now temporarily prioritises the map/popup so the popup can sit **above** the header and pollen cards."
+  ],
+
+  fixed: [
+    "Fixed marker popups rendering **under** the header/pollen cards by correcting z-index/layering (popup now overlays the top UI).",
+    "Fixed the **Pick again** flow so it behaves as intended: it clears the selected point and waits for the user to tap a new location, rather than instantly relocating unexpectedly.",
+    "Fixed popup form layout issues where some labels/fields appeared to protrude or clip outside the popup container.",
+    "Fixed occasional blank page / build errors caused by **syntax issues** (e.g., stray characters after export, missing braces)."
+  ],
+
+  removed: [],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+    { label: "Apiaries", to: "/apiaries" },
+    { label: "Release Notes", to: "/updates" }
+  ],
+
+  known_issues: [
+    "Satellite imagery depends on an external tile provider; if the provider rate-limits or has an outage, the Satellite layer may load slowly or appear blank.",
+    "Pollen data is shown in the **header card only** (it does not place markers/heatmaps on the map yet). A future enhancement could add an optional on-map pollen overlay layer if desired."
+  ]
+},
+  {
   version: "1.1.0",
   released_at: "2026-02-01T12:00:00Z",
   summary:
