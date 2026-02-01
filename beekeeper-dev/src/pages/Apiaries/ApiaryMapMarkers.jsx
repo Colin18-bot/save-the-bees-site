@@ -66,10 +66,10 @@ const OPENWEATHER_KEY = import.meta.env.VITE_OPENWEATHER_KEY;
 
 // OpenWeather “Weather Maps 1.0” tile layers (most useful ones for beekeeping)
 const OWM_OVERLAYS = [
-  { id: "owm_precip", name: "Weather: Precipitation", layer: "precipitation_new", opacity: 0.55 },
-  { id: "owm_clouds", name: "Weather: Clouds", layer: "clouds_new", opacity: 0.45 },
-  { id: "owm_temp", name: "Weather: Temperature", layer: "temp_new", opacity: 0.45 },
-  { id: "owm_wind", name: "Weather: Wind", layer: "wind_new", opacity: 0.45 },
+  { id: "owm_precip", name: "Weather: Precipitation", layer: "precipitation_new", opacity: 0.8 },
+  { id: "owm_clouds", name: "Weather: Clouds", layer: "clouds_new", opacity: 0.7 },
+  { id: "owm_temp", name: "Weather: Temperature", layer: "temp_new", opacity: 0.75 },
+  { id: "owm_wind", name: "Weather: Wind speed", layer: "wind_new", opacity: 0.75 },
 ];
 
 const owmTileUrl = (layer) =>
