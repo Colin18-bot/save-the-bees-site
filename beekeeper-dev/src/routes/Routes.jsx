@@ -18,6 +18,7 @@ import Dashboard from "../pages/Dashboard.jsx";
 import ApiaryList from "../pages/Apiaries/ApiaryList.jsx";
 import NewApiary from "../pages/Apiaries/NewApiary.jsx";
 import EditApiary from "../pages/Apiaries/EditApiary.jsx";
+import ApiaryMapMarkers from "../pages/Apiaries/ApiaryMapMarkers.jsx";
 
 import HiveList from "../pages/Hives/HiveList.jsx";
 import NewHive from "../pages/Hives/NewHive.jsx";
@@ -152,6 +153,7 @@ function AppRoutes() {
       <Route path="/apiaries" element={<Guarded><ApiaryList /></Guarded>} />
       <Route path="/apiaries/new" element={<Guarded><NewApiary /></Guarded>} />
       <Route path="/apiaries/:id/edit" element={<Guarded><EditApiary /></Guarded>} />
+      <Route path="/apiaries/:apiaryId/map" element={<ApiaryMapMarkers />} />
 
       <Route path="/hives" element={<Guarded><HiveList /></Guarded>} />
       <Route path="/hives/new" element={<Guarded><NewHive /></Guarded>} />

@@ -478,6 +478,15 @@ const ApiaryList = () => {
                     >
                       View Hives
                     </Link>
+
+                    <Link
+                      to={`/apiaries/${a.id}/map`}
+                      className="text-sm px-3 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded text-center
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-slate-500"
+                    >
+                      Map markers
+                    </Link>
+
                     <Link
                       to={`/hives/new?apiary_id=${a.id}`}
                       className="text-sm px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-center

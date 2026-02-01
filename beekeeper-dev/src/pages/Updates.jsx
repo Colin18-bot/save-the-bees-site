@@ -8,7 +8,50 @@ dayjs.locale("en-gb");
 
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
-{
+  {
+  version: "1.1.0",
+  released_at: "2026-02-01T12:00:00Z",
+  summary:
+    "Added a full-screen Apiary Map page with simple map notes (markers) per apiary, including satellite view toggle, topic-specific icons, quick edit/delete, and mobile-friendly layout improvements.",
+
+  added: [
+    "New **Apiary Map Markers** page that loads a full-page map for an apiary and lets users add simple map notes (tap-to-drop marker).",
+    "Added an **apiary selector dropdown** on the map page so users can switch between apiaries without leaving the map.",
+    "Added a small **Markers: X** counter next to the dropdown to show how many notes exist for the selected apiary.",
+    "Added **topic-specific marker icons** for common beekeeping map notes: water source, watercourse, forage hotspot, Asian hornet sighting, shelter/windbreak, risk, access/parking, and Other.",
+    "Added **Satellite view** toggle alongside normal map view using a Layer control (Map ↔ Satellite)."
+  ],
+
+  changed: [
+    "Map UI now uses a **full-screen layout** that remains user-friendly on mobile (header can wrap/stack on smaller screens).",
+    "Map controls (layers + zoom) positioned to avoid clashing with the top header (controls moved to the bottom-right).",
+    "Marker rendering hardened by ensuring coordinates are treated as numeric values when passed to Leaflet."
+  ],
+
+  fixed: [
+    "Fixed Leaflet controls overlapping the map header by disabling the default zoom control and rendering a bottom-right **ZoomControl**.",
+    "Fixed markers appearing to drift / not follow zoom correctly by using a proper pin-style SVG icon with correct anchor settings (no manual CSS translate).",
+    "Fixed popup forms being hidden under the header by measuring the header height and adding **dynamic top padding** to the map area."
+  ],
+
+  removed: [],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+    { label: "Apiaries", to: "/apiaries" },
+    { label: "Release Notes", to: "/updates" }
+  ],
+
+  known_issues: [
+    "Satellite imagery depends on an external tile provider; if the provider rate-limits or has an outage, the Satellite layer may load slowly or appear blank.",
+    "On very small screens, popups may still feel tight; the map header stacks to preserve tap targets and readability."
+  ]
+},
+
+  {
   version: "1.0.9",
   released_at: "2026-01-25T12:00:00Z",
   summary:
