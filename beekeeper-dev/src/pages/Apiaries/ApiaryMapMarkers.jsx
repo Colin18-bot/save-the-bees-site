@@ -992,19 +992,19 @@ const ApiaryMapMarkers = () => {
           )}
 
           {/* Foraging radius (non-interactive) */}
-          {hasCoords && (
+                    {hasCoords && (
             <Circle
               center={[Number(apiary.latitude), Number(apiary.longitude)]}
               radius={4828}
               interactive={false}
               pathOptions={{
                 color: "#CA8A04",
-                weight: 2,
-                opacity: 0.8,
-                fillColor: "#FDE68A",
-                fillOpacity: 0.2,
-                dashArray: "6,6",
+                weight: 3,
+                opacity: 1,
+                fillOpacity: 0, // no fill at all
+                 dashArray: null, // IMPORTANT: removes dotted line
               }}
+              
             />
           )}
 
