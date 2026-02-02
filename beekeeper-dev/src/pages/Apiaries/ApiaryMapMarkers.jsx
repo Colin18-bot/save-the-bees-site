@@ -1,3 +1,4 @@
+// src/pages/Apiaries/ApiaryMapMarkers.jsx
 import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -64,7 +65,22 @@ const iconByType = (type) => icons[type] || icons.other;
 // --- OpenWeather tile overlays (requires VITE_OPENWEATHER_KEY)
 const OPENWEATHER_KEY = import.meta.env.VITE_OPENWEATHER_KEY;
 
+// --- Base map sources
+const OSM_TILE_URL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+const OSM_ATTR = "&copy; OpenStreetMap contributors";
+
+// Light basemap (CartoDB Positron) - great contrast for weather overlays
+const LIGHT_TILE_URL = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+const LIGHT_TILE_ATTR =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+// Satellite basemap (Esri)
+const SAT_TILE_URL =
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+const SAT_TILE_ATTR = "Tiles &copy; Esri";
+
 // OpenWeather “Weather Maps 1.0” tile layers (most useful ones for beekeeping)
+// NOTE: OpenWeather's wind tiles are primarily WIND SPEED; they don't give arrow direction.
 const OWM_OVERLAYS = [
   { id: "owm_precip", name: "Weather: Precipitation", layer: "precipitation_new", opacity: 0.8 },
   { id: "owm_clouds", name: "Weather: Clouds", layer: "clouds_new", opacity: 0.7 },
@@ -90,20 +106,39 @@ function WarningsOverlayWatcher({ layerRef, onEnable, onDisable }) {
   useMapEvents({
     overlayadd(e) {
       const layer = layerRef?.current;
-
-      // React-Leaflet v4: ref.current is usually the Leaflet layer.
-      // Older shapes sometimes expose leafletElement.
       const leafletLayer = layer?.leafletElement ?? layer;
-
       if (leafletLayer && e.layer === leafletLayer) onEnable();
     },
     overlayremove(e) {
       const layer = layerRef?.current;
       const leafletLayer = layer?.leafletElement ?? layer;
-
       if (leafletLayer && e.layer === leafletLayer) onDisable();
     },
   });
+  return null;
+}
+
+// Watches OpenWeather overlay toggles (so we can auto-switch basemap for contrast)
+function WeatherOverlaysWatcher({ weatherRefs, onAnyWeatherOn, onAllWeatherOff }) {
+  const map = useMapEvents({
+    overlayadd(e) {
+      const layers = Object.values(weatherRefs?.current || {})
+        .map((r) => (r?.leafletElement ?? r))
+        .filter(Boolean);
+
+      if (layers.some((l) => e.layer === l)) onAnyWeatherOn();
+    },
+    overlayremove() {
+      const layers = Object.values(weatherRefs?.current || {})
+        .map((r) => (r?.leafletElement ?? r))
+        .filter(Boolean);
+
+      // If NONE of the weather layers are still on the map, fire off
+      const anyStillOn = layers.some((l) => map.hasLayer(l));
+      if (!anyStillOn) onAllWeatherOff();
+    },
+  });
+
   return null;
 }
 
@@ -129,8 +164,12 @@ const ApiaryMapMarkers = () => {
 
   const markerCount = markers.length;
 
-  // Legend toggle
+  // Legend toggle (main legend)
   const [showLegend, setShowLegend] = useState(true);
+
+  // Weather mini legend (auto-expand when weather turns on; remember user choice for this session)
+  const [showWeatherLegend, setShowWeatherLegend] = useState(true);
+  const weatherLegendUserSetRef = useRef(false);
 
   // Pollen card toggle (hide/show)
   const [showPollen, setShowPollen] = useState(true);
@@ -138,12 +177,29 @@ const ApiaryMapMarkers = () => {
   // When any popup is open, lift the map layer ABOVE the header overlays
   const [isAnyPopupOpen, setIsAnyPopupOpen] = useState(false);
 
-  // --- Met Office official weather warnings (NSWWS Public API)
+  // --- Met Office official weather warnings
   const [warningsEnabled, setWarningsEnabled] = useState(false);
   const [warningsGeoJson, setWarningsGeoJson] = useState(null);
   const [warningsLoading, setWarningsLoading] = useState(false);
   const [warningsError, setWarningsError] = useState("");
   const warningsLayerRef = useRef(null);
+
+  // --- Weather UX
+  // Basemap selection (Map / Light / Satellite)
+  const [baseMap, setBaseMap] = useState("map"); // "map" | "light" | "satellite"
+
+  // Toggle: auto-switch basemap when weather overlays turn on
+  const [autoLightOnWeather, setAutoLightOnWeather] = useState(true);
+
+  // Track if any weather overlay is currently enabled
+  const [anyWeatherOn, setAnyWeatherOn] = useState(false);
+
+  // Remember what basemap the user had before auto-switching
+  const prevBaseMapRef = useRef(null);
+  const autoSwitchedRef = useRef(false);
+
+  // Refs to OpenWeather overlay layers so we can detect ON/OFF in LayersControl
+  const weatherLayerRefs = useRef({});
 
   // Pollen (selected apiary location only)
   const [pollen, setPollen] = useState(null);
@@ -192,7 +248,6 @@ const ApiaryMapMarkers = () => {
 
   const getSeverity = (props) => {
     const p = props || {};
-    // Met Office feeds can vary; try common keys
     return (
       p.severity ||
       p.awareness_level ||
@@ -207,7 +262,6 @@ const ApiaryMapMarkers = () => {
   const severityStyle = useCallback((severity) => {
     const s = String(severity || "").toLowerCase();
 
-    // Most common strings
     if (s.includes("red")) {
       return { color: "#991b1b", weight: 2, fillColor: "#ef4444", fillOpacity: 0.25 };
     }
@@ -218,7 +272,6 @@ const ApiaryMapMarkers = () => {
       return { color: "#a16207", weight: 2, fillColor: "#fde047", fillOpacity: 0.18 };
     }
 
-    // If numeric levels ever appear, keep a sensible default
     return { color: "#0f172a", weight: 2, fillColor: "#94a3b8", fillOpacity: 0.15 };
   }, []);
 
@@ -227,17 +280,11 @@ const ApiaryMapMarkers = () => {
     setWarningsError("");
 
     try {
-      // Calls your Supabase Edge Function: supabase/functions/metoffice-warnings
-      // NOTE: By default this sends the user's JWT. If your function is public, that's fine.
       const { data, error } = await supabase.functions.invoke("metoffice-warnings", {
         method: "GET",
       });
 
-      if (error) {
-        throw new Error(error.message || "Edge function error");
-      }
-
-      // Expecting GeoJSON FeatureCollection back
+      if (error) throw new Error(error.message || "Edge function error");
       if (!data || data.type !== "FeatureCollection") {
         throw new Error("Edge function returned unexpected data (expected GeoJSON FeatureCollection).");
       }
@@ -248,15 +295,12 @@ const ApiaryMapMarkers = () => {
       setWarningsGeoJson(null);
 
       const msg = e instanceof Error ? e.message : String(e);
-
       if (msg.toLowerCase().includes("not found") || msg.includes("404")) {
         setWarningsError(
           "Met Office warnings function not found. Check the Edge Function name is exactly: metoffice-warnings, then deploy it."
         );
       } else {
-        setWarningsError(
-          "Official warnings unavailable right now. Check the Edge Function is deployed and working."
-        );
+        setWarningsError("Official warnings unavailable right now. Check the Edge Function is deployed and working.");
       }
     } finally {
       setWarningsLoading(false);
@@ -381,6 +425,45 @@ const ApiaryMapMarkers = () => {
       fetchMetOfficeWarnings();
     }
   }, [warningsEnabled, warningsGeoJson, warningsLoading, warningsError, fetchMetOfficeWarnings]);
+
+  // If weather turns ON, auto-expand the mini legend (unless user hid it in this session)
+  useEffect(() => {
+    if (anyWeatherOn && !weatherLegendUserSetRef.current) {
+      setShowWeatherLegend(true);
+    }
+  }, [anyWeatherOn]);
+
+  // Auto-switch basemap when weather overlays turn on/off (if toggle enabled)
+  const handleAnyWeatherOn = useCallback(() => {
+    setAnyWeatherOn(true);
+
+    if (!autoLightOnWeather) return;
+
+    // If user is already on light or satellite, don't force anything.
+    // (Satellite is intentionally allowed anytime.)
+    if (baseMap === "light" || baseMap === "satellite") return;
+
+    // Switch to light for contrast, but remember previous basemap.
+    prevBaseMapRef.current = baseMap;
+    autoSwitchedRef.current = true;
+    setBaseMap("light");
+  }, [autoLightOnWeather, baseMap]);
+
+  const handleAllWeatherOff = useCallback(() => {
+    setAnyWeatherOn(false);
+
+    if (!autoLightOnWeather) return;
+
+    // Only restore if WE auto-switched earlier (and user hasn't manually changed basemap).
+    if (autoSwitchedRef.current && prevBaseMapRef.current) {
+      const prev = prevBaseMapRef.current;
+      prevBaseMapRef.current = null;
+      autoSwitchedRef.current = false;
+
+      // If user is still on light, restore. If they changed manually, do nothing.
+      setBaseMap((curr) => (curr === "light" ? prev : curr));
+    }
+  }, [autoLightOnWeather]);
 
   const startAdd = () => {
     setIsAddMode(true);
@@ -516,8 +599,7 @@ const ApiaryMapMarkers = () => {
     );
   }
 
-  const hasCoords =
-    Number.isFinite(Number(apiary?.latitude)) && Number.isFinite(Number(apiary?.longitude));
+  const hasCoords = Number.isFinite(Number(apiary?.latitude)) && Number.isFinite(Number(apiary?.longitude));
 
   // Small helper to keep label/input spacing consistent (and prevent “label protrusion”)
   const FieldLabel = ({ children }) => (
@@ -525,6 +607,14 @@ const ApiaryMapMarkers = () => {
       <label className="block text-xs opacity-70 mb-1">{children}</label>
     </div>
   );
+
+  // Basemap config from state
+  const baseLayerConfig =
+    baseMap === "light"
+      ? { url: LIGHT_TILE_URL, attribution: LIGHT_TILE_ATTR }
+      : baseMap === "satellite"
+        ? { url: SAT_TILE_URL, attribution: SAT_TILE_ATTR }
+        : { url: OSM_TILE_URL, attribution: OSM_ATTR };
 
   return (
     <div className="relative w-full" style={{ height: "100dvh" }}>
@@ -559,6 +649,9 @@ const ApiaryMapMarkers = () => {
           color: rgba(15, 23, 42, 0.9);
         }
         .bk-popup * { box-sizing: border-box; }
+
+        /* Leaflet controls sit high; our mini legend must sit ABOVE them */
+     
       `}</style>
 
       {/* Top bar */}
@@ -566,73 +659,127 @@ const ApiaryMapMarkers = () => {
         ref={headerRef}
         className={`absolute top-0 left-0 right-0 p-3 ${isAnyPopupOpen ? "z-[400]" : "z-[1000]"}`}
       >
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-2xl bg-white/95 shadow px-3 py-2">
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 min-w-0 flex-wrap">
-              <select
-                className="w-full sm:max-w-[220px] border rounded-lg px-2 py-1 text-sm"
-                value={apiaryId}
-                onChange={(e) => navigate(`/apiaries/${e.target.value}/map`)}
-                aria-label="Select apiary"
-              >
-                {apiaryOptions.map((opt) => (
-                  <option key={opt.id} value={opt.id}>
-                    {opt.name}
-                  </option>
-                ))}
-              </select>
+        <div className="flex flex-col gap-2 rounded-2xl bg-white/95 shadow px-3 py-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 min-w-0 flex-wrap">
+                <select
+                  className="w-full sm:max-w-[220px] border rounded-lg px-2 py-1 text-sm"
+                  value={apiaryId}
+                  onChange={(e) => navigate(`/apiaries/${e.target.value}/map`)}
+                  aria-label="Select apiary"
+                >
+                  {apiaryOptions.map((opt) => (
+                    <option key={opt.id} value={opt.id}>
+                      {opt.name}
+                    </option>
+                  ))}
+                </select>
 
-              <div className="text-sm font-semibold">— Map markers</div>
+                <div className="text-sm font-semibold">— Map markers</div>
 
-              <div className="text-xs px-2 py-1 rounded-full border bg-white">
-                Markers: <span className="font-semibold">{markerCount}</span>
+                <div className="text-xs px-2 py-1 rounded-full border bg-white">
+                  Markers: <span className="font-semibold">{markerCount}</span>
+                </div>
+
+                <div className="text-xs px-2 py-1 rounded-full border bg-white">
+                  Warnings: <span className="font-semibold">{warningsEnabled ? "On" : "Off"}</span>
+                </div>
+
+                <div className="text-xs px-2 py-1 rounded-full border bg-white">
+                  Weather: <span className="font-semibold">{anyWeatherOn ? "On" : "Off"}</span>
+                </div>
               </div>
 
-              <div className="text-xs px-2 py-1 rounded-full border bg-white">
-                Warnings:{" "}
-                <span className="font-semibold">{warningsEnabled ? "On" : "Off"}</span>
+              <div className="text-xs opacity-70 truncate">{apiary.address || " "}</div>
+            </div>
+
+            <div className="flex items-center gap-2 justify-end flex-wrap">
+              <button
+                className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50 disabled:opacity-50"
+                onClick={() => fetchMetOfficeWarnings()}
+                type="button"
+                disabled={warningsLoading || !warningsEnabled}
+                title={warningsEnabled ? "Refresh Met Office warnings" : "Turn on the warnings layer first"}
+              >
+                {warningsLoading ? "Refreshing…" : "Refresh warnings"}
+              </button>
+
+              <button
+                className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50"
+                onClick={() => navigate(-1)}
+                type="button"
+              >
+                Back
+              </button>
+
+              {!isAddMode ? (
+                <button
+                  className="text-sm px-3 py-2 rounded-xl bg-black text-white hover:opacity-90"
+                  onClick={startAdd}
+                  type="button"
+                >
+                  Add marker
+                </button>
+              ) : (
+                <button
+                  className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50"
+                  onClick={cancelAdd}
+                  type="button"
+                >
+                  Cancel add
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Weather UX controls (toggle + basemap selector) */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-xl border bg-white px-3 py-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="text-xs font-semibold">Weather visibility</div>
+
+              <label className="inline-flex items-center gap-2 text-xs">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4"
+                  checked={autoLightOnWeather}
+                  onChange={(e) => {
+                    const next = e.target.checked;
+                    setAutoLightOnWeather(next);
+
+                    // If they turn this OFF while we auto-switched earlier, stop restoring later.
+                    if (!next) {
+                      prevBaseMapRef.current = null;
+                      autoSwitchedRef.current = false;
+                    }
+                  }}
+                />
+                Auto-switch to Light basemap when weather layers turn on
+              </label>
+
+              <div className="text-[11px] opacity-60">
+                Tip: Wind layer = speed (OpenWeather tiles don’t provide arrows for direction).
               </div>
             </div>
 
-            <div className="text-xs opacity-70 truncate">{apiary.address || " "}</div>
-          </div>
-
-          <div className="flex items-center gap-2 justify-end">
-            <button
-              className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50 disabled:opacity-50"
-              onClick={() => fetchMetOfficeWarnings()}
-              type="button"
-              disabled={warningsLoading || !warningsEnabled}
-              title={warningsEnabled ? "Refresh Met Office warnings" : "Turn on the warnings layer first"}
-            >
-              {warningsLoading ? "Refreshing…" : "Refresh warnings"}
-            </button>
-
-            <button
-              className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50"
-              onClick={() => navigate(-1)}
-              type="button"
-            >
-              Back
-            </button>
-
-            {!isAddMode ? (
-              <button
-                className="text-sm px-3 py-2 rounded-xl bg-black text-white hover:opacity-90"
-                onClick={startAdd}
-                type="button"
+            <div className="flex items-center gap-2 justify-end">
+              <div className="text-xs opacity-70">Basemap</div>
+              <select
+                className="border rounded-lg px-2 py-1 text-sm"
+                value={baseMap}
+                onChange={(e) => {
+                  // Manual override: never “snap back” later
+                  prevBaseMapRef.current = null;
+                  autoSwitchedRef.current = false;
+                  setBaseMap(e.target.value);
+                }}
+                aria-label="Select basemap"
               >
-                Add marker
-              </button>
-            ) : (
-              <button
-                className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50"
-                onClick={cancelAdd}
-                type="button"
-              >
-                Cancel add
-              </button>
-            )}
+                <option value="map">Map</option>
+                <option value="light">Light</option>
+                <option value="satellite">Satellite</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -730,26 +877,18 @@ const ApiaryMapMarkers = () => {
         <MapContainer center={center} zoom={15} zoomControl={false} className="h-full w-full">
           <ZoomControl position="bottomright" />
 
+          {/* Basemap (driven by your selector) */}
+          <TileLayer attribution={baseLayerConfig.attribution} url={baseLayerConfig.url} />
+
           <LayersControl position="bottomright">
-            <LayersControl.BaseLayer checked name="Map">
-              <TileLayer
-                attribution="&copy; OpenStreetMap contributors"
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-            </LayersControl.BaseLayer>
-
-            <LayersControl.BaseLayer name="Satellite">
-              <TileLayer
-                attribution="Tiles &copy; Esri"
-                url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-              />
-            </LayersControl.BaseLayer>
-
             {/* --- Weather overlays (OpenWeather) --- */}
             {OPENWEATHER_KEY
               ? OWM_OVERLAYS.map((o) => (
                   <LayersControl.Overlay key={o.id} name={o.name}>
                     <TileLayer
+                      ref={(ref) => {
+                        if (ref) weatherLayerRefs.current[o.id] = ref;
+                      }}
                       url={owmTileUrl(o.layer)}
                       opacity={o.opacity}
                       attribution="&copy; OpenWeather"
@@ -764,7 +903,6 @@ const ApiaryMapMarkers = () => {
             <LayersControl.Overlay name="Official warnings (Met Office)">
               <FeatureGroup ref={warningsLayerRef}>
                 <GeoJSON
-                  // Always provide valid GeoJSON, even if empty
                   data={
                     warningsGeoJson || {
                       type: "FeatureCollection",
@@ -798,6 +936,13 @@ const ApiaryMapMarkers = () => {
             layerRef={warningsLayerRef}
             onEnable={() => setWarningsEnabled(true)}
             onDisable={() => setWarningsEnabled(false)}
+          />
+
+          {/* Detect when ANY weather overlay is enabled/disabled (for auto-light UX) */}
+          <WeatherOverlaysWatcher
+            weatherRefs={weatherLayerRefs}
+            onAnyWeatherOn={handleAnyWeatherOn}
+            onAllWeatherOff={handleAllWeatherOff}
           />
 
           <TapToAddMarker
@@ -935,9 +1080,7 @@ const ApiaryMapMarkers = () => {
                     </div>
 
                     {m.title ? <div className="text-sm mt-1">{m.title}</div> : null}
-                    {m.notes ? (
-                      <div className="text-xs opacity-70 mt-1 whitespace-pre-wrap">{m.notes}</div>
-                    ) : null}
+                    {m.notes ? <div className="text-xs opacity-70 mt-1 whitespace-pre-wrap">{m.notes}</div> : null}
                     {m.type === "asian_hornet" && m.observed_at ? (
                       <div className="text-xs opacity-70 mt-1">Observed: {m.observed_at}</div>
                     ) : null}
@@ -1040,7 +1183,72 @@ const ApiaryMapMarkers = () => {
           )}
         </MapContainer>
 
-        {/* Legend */}
+        {/* Weather mini legend (sits ABOVE Leaflet controls; auto-expands when weather turns on) */}
+        {anyWeatherOn && (
+          <div className="absolute bottom-32 right-3 z-[900] w-[260px] max-w-[calc(100vw-24px)] rounded-2xl bg-white/95 shadow border px-3 py-2 text-xs">
+            <div className="flex items-center justify-between gap-2">
+              <div className="font-semibold">Weather overlays</div>
+              <button
+                type="button"
+                className="text-[11px] px-2 py-1 rounded-lg border bg-white hover:bg-slate-50"
+                onClick={() => {
+                  const next = !showWeatherLegend;
+                  weatherLegendUserSetRef.current = true; // remember user preference for this session
+                  setShowWeatherLegend(next);
+                }}
+              >
+                {showWeatherLegend ? "Hide" : "Show"}
+              </button>
+            </div>
+
+                      {showWeatherLegend ? (
+            <div className="mt-2 space-y-2 opacity-95">
+              <div className="flex gap-2">
+                <div className="mt-[2px]">🌧️</div>
+                <div>
+                  <div className="font-semibold">Precipitation</div>
+                  <div className="opacity-70">Shows rain/snow intensity on top of your map.</div>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <div className="mt-[2px]">☁️</div>
+                <div>
+                  <div className="font-semibold">Clouds</div>
+                  <div className="opacity-70">Cloud cover — useful for flight conditions.</div>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <div className="mt-[2px]">🌡️</div>
+                <div>
+                  <div className="font-semibold">Temperature</div>
+                  <div className="opacity-70">Relative temps — best seen on Light basemap.</div>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <div className="mt-[2px]">🌬️</div>
+                <div>
+                  <div className="font-semibold">Wind speed</div>
+                  <div className="opacity-70">Speed only (no arrows). Direction needs a different layer/provider.</div>
+                </div>
+              </div>
+
+              <div className="pt-2 border-t opacity-70 text-[11px] leading-snug">
+                Use the <b>Layers</b> button (bottom-right) to switch overlays on/off.
+              </div>
+            </div>
+          ) : (
+            <div className="mt-2 text-[11px] opacity-70 leading-snug">
+              Hidden — use <b>Show</b> to expand.
+            </div>
+          )}
+
+          </div>
+        )}
+
+        {/* Main Legend */}
         <div className="absolute bottom-3 left-3 z-[900] max-w-[260px] rounded-2xl bg-white/90 shadow border px-3 py-2 text-xs">
           <div className="flex items-center justify-between gap-2">
             <div className="font-semibold">Legend</div>
