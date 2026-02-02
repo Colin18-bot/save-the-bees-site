@@ -12,7 +12,9 @@ import {
   useMapEvents,
   LayersControl,
   ZoomControl,
+  AttributionControl,
 } from "react-leaflet";
+
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { supabase } from "../../services/supabase";
@@ -687,9 +689,11 @@ const ApiaryMapMarkers = () => {
               <div className="text-xs opacity-70 truncate">{apiary.address || " "}</div>
             </div>
 
-            <div className="flex items-center gap-2 justify-end flex-wrap">
+            <div className="w-full sm:w-auto grid grid-cols-4 gap-2 sm:flex sm:items-center sm:gap-2 sm:justify-end">
+
               <button
-                className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50 sm:hidden"
+                className="text-xs px-2 py-2 rounded-xl border hover:bg-gray-50 sm:hidden"
+
                 type="button"
                 onClick={() => setShowPanels((v) => !v)}
               >
@@ -697,7 +701,7 @@ const ApiaryMapMarkers = () => {
               </button>
 
               <button
-                className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50 disabled:opacity-50"
+                className="text-xs px-2 py-2 rounded-xl border hover:bg-gray-50 disabled:opacity-50"
                 onClick={() => fetchMetOfficeWarnings()}
                 type="button"
                 disabled={warningsLoading || !warningsEnabled}
@@ -707,7 +711,7 @@ const ApiaryMapMarkers = () => {
               </button>
 
               <button
-                className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50"
+                className="text-xs px-2 py-2 rounded-xl border hover:bg-gray-50"
                 onClick={() => navigate(-1)}
                 type="button"
               >
@@ -716,7 +720,7 @@ const ApiaryMapMarkers = () => {
 
               {!isAddMode ? (
                 <button
-                  className="text-sm px-3 py-2 rounded-xl bg-black text-white hover:opacity-90"
+                  className="text-xs px-2 py-2 rounded-xl bg-black text-white hover:opacity-90"
                   onClick={startAdd}
                   type="button"
                 >
@@ -736,7 +740,7 @@ const ApiaryMapMarkers = () => {
 
           {/* Weather UX controls (toggle + basemap selector) */}
           <div className={`${showPanels ? "block" : "hidden"} sm:block`}>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-xl border bg-white px-3 py-2">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-xl border bg-white px-3 pt-2 pb-4 sm:py-2">
 
             <div className="flex items-center gap-2 flex-wrap">
               <div className="text-xs font-semibold">Weather visibility</div>
@@ -882,8 +886,11 @@ const ApiaryMapMarkers = () => {
         style={{ paddingTop: headerH, height: "100%" }}
         className={`relative ${isAnyPopupOpen ? "z-[1200]" : "z-[0]"}`}
       >
-        <MapContainer center={center} zoom={15} zoomControl={false} className="h-full w-full">
+          <MapContainer center={center} zoom={15} zoomControl={false} attributionControl={false} className="h-full w-full">
+
           <ZoomControl position="bottomright" />
+          <AttributionControl position="bottomright" prefix={false} />
+
 
           {/* Basemap (driven by your selector) */}
           <TileLayer attribution={baseLayerConfig.attribution} url={baseLayerConfig.url} />
