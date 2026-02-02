@@ -167,12 +167,11 @@ const ApiaryMapMarkers = () => {
   // Legend toggle (main legend)
   const [showLegend, setShowLegend] = useState(true);
 
-  // Weather mini legend (auto-expand when weather turns on; remember user choice for this session)
-  const [showWeatherLegend, setShowWeatherLegend] = useState(true);
-  const weatherLegendUserSetRef = useRef(false);
-
   // Pollen card toggle (hide/show)
   const [showPollen, setShowPollen] = useState(true);
+
+  // Mobile: collapse bulky header panels so the map is visible
+  const [showPanels, setShowPanels] = useState(false);
 
   // When any popup is open, lift the map layer ABOVE the header overlays
   const [isAnyPopupOpen, setIsAnyPopupOpen] = useState(false);
@@ -426,13 +425,6 @@ const ApiaryMapMarkers = () => {
     }
   }, [warningsEnabled, warningsGeoJson, warningsLoading, warningsError, fetchMetOfficeWarnings]);
 
-  // If weather turns ON, auto-expand the mini legend (unless user hid it in this session)
-  useEffect(() => {
-    if (anyWeatherOn && !weatherLegendUserSetRef.current) {
-      setShowWeatherLegend(true);
-    }
-  }, [anyWeatherOn]);
-
   // Auto-switch basemap when weather overlays turn on/off (if toggle enabled)
   const handleAnyWeatherOn = useCallback(() => {
     setAnyWeatherOn(true);
@@ -650,16 +642,17 @@ const ApiaryMapMarkers = () => {
         }
         .bk-popup * { box-sizing: border-box; }
 
-        /* Leaflet controls sit high; our mini legend must sit ABOVE them */
-     
+              /* Leaflet controls should stay clickable */
+        .leaflet-control { z-index: 1000; }
       `}</style>
 
       {/* Top bar */}
       <div
         ref={headerRef}
-        className={`absolute top-0 left-0 right-0 p-3 ${isAnyPopupOpen ? "z-[400]" : "z-[1000]"}`}
+        className={`absolute top-0 left-0 right-0 p-2 sm:p-3 ${isAnyPopupOpen ? "z-[400]" : "z-[1000]"}`}
       >
-        <div className="flex flex-col gap-2 rounded-2xl bg-white/95 shadow px-3 py-2">
+
+       <div className="flex flex-col gap-2 rounded-2xl bg-white/95 shadow px-2 py-2 sm:px-3 max-h-[42dvh] overflow-y-auto">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <div className="min-w-0">
               <div className="flex items-center gap-2 min-w-0 flex-wrap">
@@ -695,6 +688,14 @@ const ApiaryMapMarkers = () => {
             </div>
 
             <div className="flex items-center gap-2 justify-end flex-wrap">
+              <button
+                className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50 sm:hidden"
+                type="button"
+                onClick={() => setShowPanels((v) => !v)}
+              >
+                {showPanels ? "Hide panels" : "Show panels"}
+              </button>
+
               <button
                 className="text-sm px-3 py-2 rounded-xl border hover:bg-gray-50 disabled:opacity-50"
                 onClick={() => fetchMetOfficeWarnings()}
@@ -734,7 +735,9 @@ const ApiaryMapMarkers = () => {
           </div>
 
           {/* Weather UX controls (toggle + basemap selector) */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-xl border bg-white px-3 py-2">
+          <div className={`${showPanels ? "block" : "hidden"} sm:block`}>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-xl border bg-white px-3 py-2">
+
             <div className="flex items-center gap-2 flex-wrap">
               <div className="text-xs font-semibold">Weather visibility</div>
 
@@ -761,6 +764,7 @@ const ApiaryMapMarkers = () => {
                 Tip: Wind layer = speed (OpenWeather tiles don’t provide arrows for direction).
               </div>
             </div>
+        </div>
 
             <div className="flex items-center gap-2 justify-end">
               <div className="text-xs opacity-70">Basemap</div>
@@ -783,8 +787,10 @@ const ApiaryMapMarkers = () => {
           </div>
         </div>
 
-        {warningsEnabled ? (
-          <div className="mt-2 rounded-2xl bg-white/95 shadow px-3 py-2 text-xs">
+          {warningsEnabled ? (
+          <div className={`${showPanels ? "block" : "hidden"} sm:block`}>
+            <div className="mt-2 rounded-2xl bg-white/95 shadow px-3 py-2 text-xs">
+
             {warningsLoading ? (
               <div className="opacity-70">Loading official warnings…</div>
             ) : warningsError ? (
@@ -795,20 +801,25 @@ const ApiaryMapMarkers = () => {
               <div className="opacity-70">Turned on — waiting for data…</div>
             )}
           </div>
-        ) : null}
+        </div>
+      ) : null}
 
-        {isAddMode && (
-          <div className="mt-2 rounded-2xl bg-white/95 shadow px-3 py-2 text-xs">
+          {isAddMode && (
+          <div className={`${showPanels ? "block" : "hidden"} sm:block`}>
+            <div className="mt-2 rounded-2xl bg-white/95 shadow px-3 py-2 text-xs">
+
             {pendingPoint ? (
               <div className="opacity-80">Marker location selected. Fill details below and save.</div>
             ) : (
               <div className="opacity-80">Tap the map to drop a marker.</div>
             )}
+            </div>
           </div>
         )}
 
         {/* Pollen card */}
-        <div className="mt-2 rounded-2xl bg-white/95 shadow px-3 py-2 text-xs">
+        <div className={`mt-2 rounded-2xl bg-white/95 shadow px-3 py-2 text-xs ${showPanels ? "block" : "hidden"} sm:block`}>
+
           <div className="flex items-center justify-between gap-2">
             <div className="font-semibold">Pollen (apiary location)</div>
 
@@ -821,7 +832,7 @@ const ApiaryMapMarkers = () => {
                 {showPollen ? "Hide" : "Show"}
               </button>
 
-              <button
+                <button
                 type="button"
                 className="text-xs px-2 py-1 rounded-lg border bg-white hover:bg-slate-50"
                 onClick={() => {
@@ -1183,70 +1194,8 @@ const ApiaryMapMarkers = () => {
           )}
         </MapContainer>
 
-        {/* Weather mini legend (sits ABOVE Leaflet controls; auto-expands when weather turns on) */}
-        {anyWeatherOn && (
-          <div className="absolute bottom-32 right-3 z-[900] w-[260px] max-w-[calc(100vw-24px)] rounded-2xl bg-white/95 shadow border px-3 py-2 text-xs">
-            <div className="flex items-center justify-between gap-2">
-              <div className="font-semibold">Weather overlays</div>
-              <button
-                type="button"
-                className="text-[11px] px-2 py-1 rounded-lg border bg-white hover:bg-slate-50"
-                onClick={() => {
-                  const next = !showWeatherLegend;
-                  weatherLegendUserSetRef.current = true; // remember user preference for this session
-                  setShowWeatherLegend(next);
-                }}
-              >
-                {showWeatherLegend ? "Hide" : "Show"}
-              </button>
-            </div>
+        {/* Weather mini legend removed */}
 
-                      {showWeatherLegend ? (
-            <div className="mt-2 space-y-2 opacity-95">
-              <div className="flex gap-2">
-                <div className="mt-[2px]">🌧️</div>
-                <div>
-                  <div className="font-semibold">Precipitation</div>
-                  <div className="opacity-70">Shows rain/snow intensity on top of your map.</div>
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <div className="mt-[2px]">☁️</div>
-                <div>
-                  <div className="font-semibold">Clouds</div>
-                  <div className="opacity-70">Cloud cover — useful for flight conditions.</div>
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <div className="mt-[2px]">🌡️</div>
-                <div>
-                  <div className="font-semibold">Temperature</div>
-                  <div className="opacity-70">Relative temps — best seen on Light basemap.</div>
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <div className="mt-[2px]">🌬️</div>
-                <div>
-                  <div className="font-semibold">Wind speed</div>
-                  <div className="opacity-70">Speed only (no arrows). Direction needs a different layer/provider.</div>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t opacity-70 text-[11px] leading-snug">
-                Use the <b>Layers</b> button (bottom-right) to switch overlays on/off.
-              </div>
-            </div>
-          ) : (
-            <div className="mt-2 text-[11px] opacity-70 leading-snug">
-              Hidden — use <b>Show</b> to expand.
-            </div>
-          )}
-
-          </div>
-        )}
 
         {/* Main Legend */}
         <div className="absolute bottom-3 left-3 z-[900] max-w-[260px] rounded-2xl bg-white/90 shadow border px-3 py-2 text-xs">
