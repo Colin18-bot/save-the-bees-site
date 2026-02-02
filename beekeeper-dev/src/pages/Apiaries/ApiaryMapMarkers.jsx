@@ -760,9 +760,6 @@ const ApiaryMapMarkers = () => {
                 Auto-switch to Light basemap when weather layers turn on
               </label>
 
-              <div className="text-[11px] opacity-60">
-                Tip: Wind layer = speed (OpenWeather tiles don’t provide arrows for direction).
-              </div>
             </div>
         </div>
 
