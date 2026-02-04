@@ -119,6 +119,11 @@ serve(async (req: Request): Promise<Response> => {
       return jsonResponse(emptyFeatureCollection("Upstream did not return a GeoJSON FeatureCollection."), 200, cors);
     }
 
+    // ✅ Helpful note for the UI / debugging
+    if (geoJson.features.length === 0) {
+      geoJson.note = "No active Met Office warnings right now.";
+    }
+
     return jsonResponse(geoJson, 200, cors);
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : String(e);

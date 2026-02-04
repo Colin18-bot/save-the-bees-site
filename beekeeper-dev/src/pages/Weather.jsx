@@ -76,12 +76,20 @@ const safeArr = (a, n = 0) => (Array.isArray(a) ? a : Array(n).fill(undefined));
 const CB_KEY = "weather_breaker_until";
 const BREAK_MINUTES = 30;
 
+// ✅ UK-only helper for "Official warnings" (Met Office)
+const isLikelyUK = (lat, lon) => {
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return false;
+  // Rough UK / NI bounding box (good enough for gating “UK only”)
+  return lat >= 49 && lat <= 61 && lon >= -8.5 && lon <= 2.5;
+};
+
 export default function Weather() {
   const [apiaries, setApiaries] = useState([]);
   const [selectedApiary, setSelectedApiary] = useState("");
   const [weather, setWeather] = useState(null);
   const [pollen, setPollen] = useState(null);
   const [warnings, setWarnings] = useState([]);
+  const [warningsNote, setWarningsNote] = useState(""); // ✅ NEW: message shown when warnings are unavailable
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [unit, setUnit] = useState("C"); // C or F for temperature
@@ -195,7 +203,8 @@ export default function Weather() {
       timezone: tz,
       current: {
         temperature_2m: pick(h.temperature_2m),
-        apparent_temperature: pick(h.apparent_temperature) ?? pick(h.temperature_2m),
+        apparent_temperature:
+          pick(h.apparent_temperature) ?? pick(h.temperature_2m),
         relative_humidity_2m: pick(h.relative_humidity_2m),
         weather_code: pick(h.weather_code),
         wind_speed_10m: pick(h.wind_speed_10m),
@@ -213,6 +222,14 @@ export default function Weather() {
     // ✅ real apiary lat/lon (for season profile)
     const realLat = Number(a?.latitude);
     const realLon = Number(a?.longitude);
+
+    const realCoordsOk =
+      Number.isFinite(realLat) &&
+      Number.isFinite(realLon) &&
+      Math.abs(realLat) <= 90 &&
+      Math.abs(realLon) <= 180;
+
+    const eligibleForUKWarnings = realCoordsOk && isLikelyUK(realLat, realLon);
 
     // ✅ store the real latitude (even if we later use fallback for the weather call)
     setApiaryLatitude(Number.isFinite(realLat) ? realLat : null);
@@ -236,6 +253,8 @@ export default function Weather() {
     (async () => {
       setLoading(true);
       setErr("");
+      setWarnings([]); // reset while loading
+      setWarningsNote(""); // reset note
 
       // Circuit breaker for the main weather call
       const until = Number(localStorage.getItem(CB_KEY) || 0);
@@ -245,6 +264,7 @@ export default function Weather() {
         setWeather(null);
         setPollen(null);
         setWarnings([]);
+        setWarningsNote("");
         return;
       }
 
@@ -259,7 +279,8 @@ export default function Weather() {
           "temperature_2m,relative_humidity_2m,apparent_temperature,is_day,weather_code,wind_speed_10m,wind_direction_10m",
         hourly:
           "temperature_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m,relative_humidity_2m",
-        daily: "temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code,wind_speed_10m_max",
+        daily:
+          "temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code,wind_speed_10m_max",
         forecast_days: "7",
         timezone: "auto",
         timeformat: "unixtime",
@@ -282,7 +303,8 @@ export default function Weather() {
           current_weather: "true",
           hourly:
             "temperature_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m,relative_humidity_2m",
-          daily: "temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code,wind_speed_10m_max",
+          daily:
+            "temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code,wind_speed_10m_max",
           timezone: "auto",
           timeformat: "unixtime",
         }).toString();
@@ -293,7 +315,11 @@ export default function Weather() {
         );
         const normalized = r2.ok ? normalizeLegacy(r2.json) : null;
         if (normalized?.current) {
-          localWeather = { ...normalized, hourly: r2.json?.hourly, daily: r2.json?.daily };
+          localWeather = {
+            ...normalized,
+            hourly: r2.json?.hourly,
+            daily: r2.json?.daily,
+          };
           gotWeather = true;
         }
       }
@@ -305,7 +331,8 @@ export default function Weather() {
           longitude: String(lon),
           hourly:
             "temperature_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m,relative_humidity_2m",
-          daily: "temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code,wind_speed_10m_max",
+          daily:
+            "temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code,wind_speed_10m_max",
           timezone: "auto",
           timeformat: "unixtime",
         }).toString();
@@ -326,21 +353,25 @@ export default function Weather() {
       if (!gotWeather) {
         setErr("Failed to load weather.");
         setWeather(null);
-        localStorage.setItem(CB_KEY, String(Date.now() + BREAK_MINUTES * 60 * 1000));
+        localStorage.setItem(
+          CB_KEY,
+          String(Date.now() + BREAK_MINUTES * 60 * 1000)
+        );
       } else {
         setErr("");
         setWeather(localWeather);
         localStorage.removeItem(CB_KEY);
       }
 
-            // Pollen (optional) — Open-Meteo provides pollen via the Air Quality API
+      // Pollen (optional) — Open-Meteo provides pollen via the Air Quality API
       if (ENABLE_POLLEN) {
         try {
           const pollenQs = new URLSearchParams({
             latitude: String(lat),
             longitude: String(lon),
             domains: "cams_europe",
-            hourly: "alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen",
+            hourly:
+              "alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen",
             timezone: "auto",
             timeformat: "unixtime",
           }).toString();
@@ -358,27 +389,75 @@ export default function Weather() {
         setPollen(null);
       }
 
-      // Official warnings (optional)
+      // ✅ Official warnings (UK only) — via our Met Office Edge Function
       if (ENABLE_WARNINGS) {
-        try {
-          const warnQs = new URLSearchParams({
-            latitude: String(lat),
-            longitude: String(lon),
-            timezone: "auto",
-            timeformat: "unixtime",
-          }).toString();
-          const rW = await fetchJsonOnce(
-            `https://api.open-meteo.com/v1/warnings?${warnQs}`,
-            signal
-          );
-          const list =
-            rW?.ok && Array.isArray(rW?.json?.warnings) ? rW.json.warnings : [];
-          setWarnings(list.slice(0, 8));
-        } catch {
+        // If we don’t have real coords, we can’t safely decide “UK or not”
+        if (!realCoordsOk) {
           setWarnings([]);
+          setWarningsNote(
+            "Add apiary coordinates to enable official warnings (UK only right now)."
+          );
+        } else if (!eligibleForUKWarnings) {
+          setWarnings([]);
+          setWarningsNote(
+            "Official warnings are available for the UK only right now."
+          );
+        } else {
+          try {
+            const { data, error } = await supabase.functions.invoke(
+              "metoffice-warnings",
+              { method: "GET" }
+            );
+
+            if (error) throw new Error(error.message || "Met Office warnings error");
+
+            const features = Array.isArray(data?.features) ? data.features : [];
+            const tzForWarn = localWeather?.timezone || "UTC";
+
+            // Convert GeoJSON features into a simple list the UI already expects
+            const list = features.map((f) => {
+              const p = f?.properties || {};
+              const sevRaw = (
+                p.severity ||
+                p.awareness_level ||
+                p.awarenessLevel ||
+                p.level ||
+                ""
+              )
+                .toString()
+                .toLowerCase();
+
+              return {
+                event: p.event || p.headline || p.type || "Weather warning",
+                headline: p.headline,
+                severity_text: p.severity || p.awareness_level || p.awarenessLevel,
+                severity: sevRaw,
+
+                onset: p.onset || p.effective,
+                effective: p.effective,
+                start: p.onset || p.effective,
+                expires: p.expires || p.ends,
+                end: p.expires || p.ends,
+
+                description: p.description,
+                instruction: p.instruction,
+                timezone: tzForWarn,
+              };
+            });
+
+            setWarnings(list.slice(0, 8));
+            setWarningsNote(""); // clear note if we got here successfully
+          } catch (e) {
+            console.error("Met Office warnings failed:", e);
+            setWarnings([]);
+            setWarningsNote(
+              "Official warnings are temporarily unavailable (UK)."
+            );
+          }
         }
       } else {
         setWarnings([]);
+        setWarningsNote("");
       }
 
       setLoading(false);
@@ -432,7 +511,6 @@ export default function Weather() {
       warnings,
       pollen,
       timezone: weather?.timezone || "UTC",
-      // ✅ NEW: latitude-based season profile selection
       latitude: apiaryLatitude,
     });
   }, [daily, weather, unit, windUnit, warnings, pollen, apiaryLatitude]);
@@ -447,7 +525,8 @@ export default function Weather() {
     return { label: "Very High", cls: "bg-red-900/40 text-red-200" };
   };
 
-  const fmtPollen = (v) => (Number.isFinite(v) ? `${Math.round(v)} grains/m³` : "—");
+  const fmtPollen = (v) =>
+    Number.isFinite(v) ? `${Math.round(v)} grains/m³` : "—";
 
   return (
     <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
@@ -535,7 +614,10 @@ export default function Weather() {
                 <div className="p-3 rounded bg-zinc-800">
                   <div className="text-zinc-400">Feels like</div>
                   <div className="font-semibold">
-                    {t(weather?.current?.apparent_temperature ?? weather?.current?.temperature_2m)}
+                    {t(
+                      weather?.current?.apparent_temperature ??
+                        weather?.current?.temperature_2m
+                    )}
                     {unitLabel}
                   </div>
                 </div>
@@ -549,7 +631,9 @@ export default function Weather() {
                 </div>
                 <div className="p-3 rounded bg-zinc-800">
                   <div className="text-zinc-400">Wind</div>
-                  <div className="font-semibold">{windDisplay(weather?.current?.wind_speed_10m)}</div>
+                  <div className="font-semibold">
+                    {windDisplay(weather?.current?.wind_speed_10m)}
+                  </div>
                 </div>
                 <div className="p-3 rounded bg-zinc-800">
                   <div className="text-zinc-400">Direction</div>
@@ -566,7 +650,9 @@ export default function Weather() {
             <div className="bg-zinc-900 text-zinc-100 rounded shadow p-4 border border-zinc-800">
               <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
                 <h3 className="text-lg font-semibold">Today, hour by hour</h3>
-                <div className="text-xs sm:text-sm text-zinc-400">Local time ({tz})</div>
+                <div className="text-xs sm:text-sm text-zinc-400">
+                  Local time ({tz})
+                </div>
               </div>
 
               <div className="-mx-3 sm:mx-0 px-3 sm:px-0 overflow-x-auto snap-x snap-mandatory">
@@ -585,10 +671,16 @@ export default function Weather() {
                           key={tstamp ?? idx}
                           className="w-24 sm:w-28 p-3 rounded border border-zinc-700 bg-zinc-800 shrink-0 snap-start"
                         >
-                          <div className="text-xs text-zinc-400">{fmtHM(tstamp, tz)}</div>
-                          <div className="text-2xl sm:text-3xl">{codeMap[code]?.icon || "⛅"}</div>
+                          <div className="text-xs text-zinc-400">
+                            {fmtHM(tstamp, tz)}
+                          </div>
+                          <div className="text-2xl sm:text-3xl">
+                            {codeMap[code]?.icon || "⛅"}
+                          </div>
                           <div className="font-semibold text-sm sm:text-base">
-                            {Number.isFinite(temp) ? `${t(temp)}${unitLabel}` : "–"}
+                            {Number.isFinite(temp)
+                              ? `${t(temp)}${unitLabel}`
+                              : "–"}
                           </div>
                           <div className="text-[11px] sm:text-xs text-zinc-400">
                             Rain {Number.isFinite(rainProb) ? `${rainProb}%` : "–"}
@@ -617,9 +709,16 @@ export default function Weather() {
                     const wmax = safeArr(daily.wind_speed_10m_max)[i];
 
                     return (
-                      <div key={d ?? i} className="p-3 rounded border border-zinc-700 bg-zinc-800 text-center">
-                        <div className="text-sm text-zinc-400">{fmtDay(d, tz)}</div>
-                        <div className="text-2xl sm:text-3xl my-1">{codeMap[wc]?.icon || "⛅"}</div>
+                      <div
+                        key={d ?? i}
+                        className="p-3 rounded border border-zinc-700 bg-zinc-800 text-center"
+                      >
+                        <div className="text-sm text-zinc-400">
+                          {fmtDay(d, tz)}
+                        </div>
+                        <div className="text-2xl sm:text-3xl my-1">
+                          {codeMap[wc]?.icon || "⛅"}
+                        </div>
                         <div className="font-semibold text-sm sm:text-base">
                           {Number.isFinite(tmax) ? `${t(tmax)}${unitLabel}` : "–"} /{" "}
                           {Number.isFinite(tmin) ? `${t(tmin)}${unitLabel}` : "–"}
@@ -627,7 +726,9 @@ export default function Weather() {
                         <div className="text-xs text-zinc-400">
                           Rain {Number.isFinite(psum) ? Math.round(psum) : "–"} mm
                         </div>
-                        <div className="text-xs text-zinc-400">Wind up to {windDisplay(wmax)}</div>
+                        <div className="text-xs text-zinc-400">
+                          Wind up to {windDisplay(wmax)}
+                        </div>
                       </div>
                     );
                   })}
@@ -720,7 +821,7 @@ export default function Weather() {
                   </ul>
                 ) : (
                   <div className="text-sm text-zinc-200 bg-zinc-900/50 border border-zinc-700 rounded p-2">
-                    No official alerts for this location.
+                    {warningsNote || "No official alerts for this location."}
                   </div>
                 )}
               </div>
@@ -737,7 +838,7 @@ export default function Weather() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 gap-3">
-                   {["tree", "grass", "weed"].map((key) => {
+                    {["tree", "grass", "weed"].map((key) => {
                       const hourlyP = pollenHourly || {};
                       const times = safeArr(hourlyP.time);
 
@@ -756,63 +857,65 @@ export default function Weather() {
                         }
                       });
 
-                    const pickSeries = (k) => safeArr(hourlyP[k]);
-                    const treeSeries = (() => {
-                      const alder = pickSeries("alder_pollen");
-                      const birch = pickSeries("birch_pollen");
-                      const olive = pickSeries("olive_pollen");
-                      // element-wise max (handles undefined)
-                      return times.map((_, i) => Math.max(
-                        ...( [alder[i], birch[i], olive[i]].filter(Number.isFinite) ),
-                        -Infinity
-                      ));
-                    })();
+                      const pickSeries = (k) => safeArr(hourlyP[k]);
 
-                    const weedSeries = (() => {
-                      const mugwort = pickSeries("mugwort_pollen");
-                      const ragweed = pickSeries("ragweed_pollen");
-                      return times.map((_, i) => Math.max(
-                        ...( [mugwort[i], ragweed[i]].filter(Number.isFinite) ),
-                        -Infinity
-                      ));
-                    })();
+                      const treeSeries = (() => {
+                        const alder = pickSeries("alder_pollen");
+                        const birch = pickSeries("birch_pollen");
+                        const olive = pickSeries("olive_pollen");
+                        return times.map((_, i) =>
+                          Math.max(
+                            ...[alder[i], birch[i], olive[i]].filter(Number.isFinite),
+                            -Infinity
+                          )
+                        );
+                      })();
 
-                    const series =
-                      key === "tree"
-                        ? treeSeries
-                        : key === "weed"
-                        ? weedSeries
-                        : pickSeries("grass_pollen");
+                      const weedSeries = (() => {
+                        const mugwort = pickSeries("mugwort_pollen");
+                        const ragweed = pickSeries("ragweed_pollen");
+                        return times.map((_, i) =>
+                          Math.max(
+                            ...[mugwort[i], ragweed[i]].filter(Number.isFinite),
+                            -Infinity
+                          )
+                        );
+                      })();
 
-                    const nowVal = series[best];
+                      const series =
+                        key === "tree"
+                          ? treeSeries
+                          : key === "weed"
+                          ? weedSeries
+                          : pickSeries("grass_pollen");
 
-                    const next12 = series.slice(best, best + 12).filter(Number.isFinite);
-
-                    const dayMax = next12.length ? Math.max(...next12) : undefined;
+                      const nowVal = series[best];
+                      const next12 = series.slice(best, best + 12).filter(Number.isFinite);
+                      const dayMax = next12.length ? Math.max(...next12) : undefined;
 
                       const nowScale = scalePollen(nowVal);
                       const maxScale = scalePollen(dayMax);
-                      const label = key;
 
                       return (
                         <div key={key} className="border border-zinc-700 rounded p-3 bg-zinc-800">
-                          <div className="text-sm text-zinc-400 capitalize">{label}</div>
+                          <div className="text-sm text-zinc-400 capitalize">{key}</div>
 
-                                              <div className="flex items-center gap-2 flex-wrap mt-1">
-                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${nowScale.cls}`}>
-                        {nowScale.label}
-                      </span>
-                      <span className="text-xs text-zinc-300">
-                        Now: {fmtPollen(nowVal)}
-                      </span>
-                    </div>
+                          <div className="flex items-center gap-2 flex-wrap mt-1">
+                            <span
+                              className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${nowScale.cls}`}
+                            >
+                              {nowScale.label}
+                            </span>
+                            <span className="text-xs text-zinc-300">
+                              Now: {fmtPollen(nowVal)}
+                            </span>
+                          </div>
 
-                    <div className="text-xs text-zinc-400 mt-1">
-                      Today peak:{" "}
-                      <span className={`px-1 rounded ${maxScale.cls}`}>{maxScale.label}</span>
-                      <span className="text-zinc-300"> ({fmtPollen(dayMax)})</span>
-                    </div>
-
+                          <div className="text-xs text-zinc-400 mt-1">
+                            Today peak:{" "}
+                            <span className={`px-1 rounded ${maxScale.cls}`}>{maxScale.label}</span>
+                            <span className="text-zinc-300"> ({fmtPollen(dayMax)})</span>
+                          </div>
                         </div>
                       );
                     })}
