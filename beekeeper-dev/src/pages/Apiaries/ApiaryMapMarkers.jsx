@@ -212,11 +212,14 @@ const ApiaryMapMarkers = () => {
     return Number.isFinite(n) ? n : null;
   };
 
-  const pollenLabel = (v) => {
+    const pollenLabel = (v) => {
     const n = Number(v);
     if (!Number.isFinite(n)) return "—";
-    if (n <= 1) return "Low";
-    if (n === 2) return "Moderate";
+
+    // Open-Meteo pollen is in grains/m³ (not an index)
+    if (n <= 0) return "None";
+    if (n < 10) return "Low";
+    if (n < 50) return "Moderate";
     return "High";
   };
 
@@ -313,12 +316,14 @@ const ApiaryMapMarkers = () => {
     setPollenError("");
 
     try {
-      const url =
+         const url =
         "https://air-quality-api.open-meteo.com/v1/air-quality" +
         `?latitude=${encodeURIComponent(lat)}` +
         `&longitude=${encodeURIComponent(lon)}` +
+        "&domains=cams_europe" +
         "&current=alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen" +
         "&timezone=auto";
+
 
       const res = await fetch(url, { headers: { Accept: "application/json" } });
       if (!res.ok) throw new Error(`Pollen request failed (${res.status})`);
@@ -859,17 +864,23 @@ const ApiaryMapMarkers = () => {
               <div className="rounded-lg border bg-white px-2 py-1">
                 <div className="opacity-70">Tree</div>
                 <div className="font-semibold">{pollen.tree_label}</div>
-                <div className="opacity-60">{pollen.tree ?? "—"}</div>
+                <div className="opacity-60">
+                {pollen.tree ?? "—"}{pollen.tree != null ? " grains/m³" : ""}
+              </div>
               </div>
               <div className="rounded-lg border bg-white px-2 py-1">
                 <div className="opacity-70">Grass</div>
                 <div className="font-semibold">{pollen.grass_label}</div>
-                <div className="opacity-60">{pollen.grass ?? "—"}</div>
+                <div className="opacity-60">
+                {pollen.grass ?? "—"}{pollen.grass != null ? " grains/m³" : ""}
+              </div>
               </div>
               <div className="rounded-lg border bg-white px-2 py-1">
                 <div className="opacity-70">Weed</div>
                 <div className="font-semibold">{pollen.weed_label}</div>
-                <div className="opacity-60">{pollen.weed ?? "—"}</div>
+                <div className="opacity-60">
+                {pollen.weed ?? "—"}{pollen.weed != null ? " grains/m³" : ""}
+              </div>
               </div>
             </div>
           ) : (

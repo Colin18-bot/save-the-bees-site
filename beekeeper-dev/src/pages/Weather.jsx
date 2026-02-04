@@ -333,20 +333,23 @@ export default function Weather() {
         localStorage.removeItem(CB_KEY);
       }
 
-      // Pollen (optional)
+            // Pollen (optional) — Open-Meteo provides pollen via the Air Quality API
       if (ENABLE_POLLEN) {
         try {
           const pollenQs = new URLSearchParams({
             latitude: String(lat),
             longitude: String(lon),
-            hourly: "tree_pollen,grass_pollen,weed_pollen",
+            domains: "cams_europe",
+            hourly: "alder_pollen,birch_pollen,grass_pollen,mugwort_pollen,olive_pollen,ragweed_pollen",
             timezone: "auto",
             timeformat: "unixtime",
           }).toString();
+
           const rP = await fetchJsonOnce(
-            `https://pollen.open-meteo.com/v1/forecast?${pollenQs}`,
+            `https://air-quality-api.open-meteo.com/v1/air-quality?${pollenQs}`,
             signal
           );
+
           setPollen(rP.ok && rP.json ? rP.json : null);
         } catch {
           setPollen(null);
@@ -443,6 +446,8 @@ export default function Weather() {
     if (v < 150) return { label: "High", cls: "bg-orange-900/40 text-orange-200" };
     return { label: "Very High", cls: "bg-red-900/40 text-red-200" };
   };
+
+  const fmtPollen = (v) => (Number.isFinite(v) ? `${Math.round(v)} grains/m³` : "—");
 
   return (
     <div className="w-full max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 overflow-x-hidden">
@@ -732,7 +737,7 @@ export default function Weather() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 gap-3">
-                    {["tree_pollen", "grass_pollen", "weed_pollen"].map((key) => {
+                   {["tree", "grass", "weed"].map((key) => {
                       const hourlyP = pollenHourly || {};
                       const times = safeArr(hourlyP.time);
 
@@ -751,29 +756,63 @@ export default function Weather() {
                         }
                       });
 
-                      const nowVal = safeArr(hourlyP[key])[best];
-                      const next12 = safeArr(hourlyP[key])
-                        .slice(best, best + 12)
-                        .filter(Number.isFinite);
+                    const pickSeries = (k) => safeArr(hourlyP[k]);
+                    const treeSeries = (() => {
+                      const alder = pickSeries("alder_pollen");
+                      const birch = pickSeries("birch_pollen");
+                      const olive = pickSeries("olive_pollen");
+                      // element-wise max (handles undefined)
+                      return times.map((_, i) => Math.max(
+                        ...( [alder[i], birch[i], olive[i]].filter(Number.isFinite) ),
+                        -Infinity
+                      ));
+                    })();
 
-                      const dayMax = next12.length ? Math.max(...next12) : undefined;
+                    const weedSeries = (() => {
+                      const mugwort = pickSeries("mugwort_pollen");
+                      const ragweed = pickSeries("ragweed_pollen");
+                      return times.map((_, i) => Math.max(
+                        ...( [mugwort[i], ragweed[i]].filter(Number.isFinite) ),
+                        -Infinity
+                      ));
+                    })();
+
+                    const series =
+                      key === "tree"
+                        ? treeSeries
+                        : key === "weed"
+                        ? weedSeries
+                        : pickSeries("grass_pollen");
+
+                    const nowVal = series[best];
+
+                    const next12 = series.slice(best, best + 12).filter(Number.isFinite);
+
+                    const dayMax = next12.length ? Math.max(...next12) : undefined;
 
                       const nowScale = scalePollen(nowVal);
                       const maxScale = scalePollen(dayMax);
-                      const label = key.split("_")[0];
+                      const label = key;
 
                       return (
                         <div key={key} className="border border-zinc-700 rounded p-3 bg-zinc-800">
                           <div className="text-sm text-zinc-400 capitalize">{label}</div>
 
-                          <div className={`inline-block mt-1 px-2 py-0.5 rounded text-xs font-medium ${nowScale.cls}`}>
-                            {nowScale.label}
-                          </div>
+                                              <div className="flex items-center gap-2 flex-wrap mt-1">
+                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${nowScale.cls}`}>
+                        {nowScale.label}
+                      </span>
+                      <span className="text-xs text-zinc-300">
+                        Now: {fmtPollen(nowVal)}
+                      </span>
+                    </div>
 
-                          <div className="text-xs text-zinc-400 mt-1">
-                            Today peak:{" "}
-                            <span className={`px-1 rounded ${maxScale.cls}`}>{maxScale.label}</span>
-                          </div>
+                    <div className="text-xs text-zinc-400 mt-1">
+                      Today peak:{" "}
+                      <span className={`px-1 rounded ${maxScale.cls}`}>{maxScale.label}</span>
+                      <span className="text-zinc-300"> ({fmtPollen(dayMax)})</span>
+                    </div>
+
                         </div>
                       );
                     })}
