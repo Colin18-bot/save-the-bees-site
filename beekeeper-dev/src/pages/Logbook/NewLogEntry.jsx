@@ -278,11 +278,12 @@ export default function NewLogEntry() {
   };
 
   const handleCancel = () => {
-    setForm(makeInitialForm());
-    setError("");
-    setSuccess("");
-    removePhoto();
-  };
+  // tidy up preview blob URLs before leaving
+  removePhoto();
+  setError("");
+  setSuccess("");
+  navigate("/logbook"); // ✅ back to LogEntryList.jsx route
+};
 
   // ---- build grouped options for "Related Inspection"
   const inspectionsGroupedByDay = useMemo(() => {

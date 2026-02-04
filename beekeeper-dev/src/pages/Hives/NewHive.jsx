@@ -502,14 +502,24 @@ const NewHive = () => {
           </div>
         )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
-             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
-        >
-          {loading ? "Saving..." : "Save Hive"}
-        </button>
+        <div className="flex items-center gap-3">
+    <button
+      type="submit"
+      disabled={loading}
+      className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+    >
+      {loading ? "Saving..." : "Save Hive"}
+    </button>
+
+    <button
+      type="button"
+      onClick={() => navigate("/hives")}
+      className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded"
+    >
+      Cancel
+    </button>
+  </div>
       </form>
     </div>
   );
