@@ -71,6 +71,7 @@ const NewInspection = () => {
     date: dayjs().format("YYYY-MM-DD"),
     weather: "",
     weather_code: "",
+    weather_observed: "",
     colony_behavior: "",
     colony_behavior_other: "",
     environmental_signs: [],
@@ -714,7 +715,7 @@ const NewInspection = () => {
             className="w-full border px-3 py-2 rounded"
           />
 
-          <label className="block font-semibold mt-4">Weather</label>
+          <label className="block font-semibold mt-4">Weather (derived)</label>
           <input
             type="text"
             name="weather"
@@ -723,6 +724,17 @@ const NewInspection = () => {
             className="w-full border px-3 py-2 rounded mt-2 bg-gray-100 text-gray-700"
             placeholder="Auto-fetched from apiary location"
           />
+
+          <label className="block font-semibold mt-4">Weather (observed)</label>
+          <input
+            type="text"
+            name="weather_observed"
+            value={formData.weather_observed}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded mt-2"
+            placeholder="What did you actually observe at the hive? (e.g. sunny, warm, light breeze)"
+          />
+
         </div>
 
         {/* Colony Behaviour */}

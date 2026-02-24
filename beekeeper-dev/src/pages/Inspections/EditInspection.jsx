@@ -100,6 +100,7 @@ const EditInspection = () => {
     date: "",
     weather: "",
     weather_code: "",
+    weather_observed: "",
     colony_behavior: "",
     colony_behavior_other: "",
     environmental_signs: [],
@@ -259,6 +260,7 @@ const EditInspection = () => {
         date: dateStr || "",
         weather: data.weather || "",
         weather_code: data.weather_code ?? "",
+        weather_observed: data.weather_observed || "",
         colony_behavior: String(data.colony_behavior ?? ""),
         colony_behavior_other: data.colony_behavior_other || "",
         environmental_signs: toArray(data.environmental_signs),
@@ -290,7 +292,10 @@ const EditInspection = () => {
           } catch {
             setHumanAddress("");
           }
-          if (dateStr) fetchWeather(apiary, dateStr);
+
+           // ✅ DO NOT refetch weather here — keep stored derived weather frozen
+          // if (dateStr) fetchWeather(apiary, dateStr);
+ 
         }
       }
 
@@ -563,6 +568,7 @@ const EditInspection = () => {
       date: formData.date || null,
       weather: formData.weather || null,
       weather_code: formData.weather_code || null,
+      weather_observed: formData.weather_observed || null,
 
       colony_behavior: formData.colony_behavior || null,
       colony_behavior_other:
@@ -780,16 +786,27 @@ const EditInspection = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Weather</label>
+            <label className="block text-sm font-medium mb-1">Weather (derived)</label>
             <input
               type="text"
               name="weather"
               value={formData.weather || ""}
               readOnly
               className="w-full border rounded px-3 py-2 bg-gray-100 text-gray-700"
-              placeholder="(auto)"
+              placeholder="Auto-fetched from apiary location"
+            />
+
+            <label className="block text-sm font-medium mb-1 mt-3">Weather (observed)</label>
+            <input
+              type="text"
+              name="weather_observed"
+              value={formData.weather_observed || ""}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2"
+              placeholder="What did you actually observe? (e.g. sunny, warm, light breeze)"
             />
           </div>
+
         </div>
 
         {/* Colony Behaviour */}

@@ -41,8 +41,18 @@ const codeMap = {
 };
 
 // time helpers
-const toDate = (t) =>
-  typeof t === "number" ? new Date(t * 1000) : new Date(t || 0);
+// ✅ Robust: supports unix seconds as number OR numeric string AND guards invalid dates
+const toDate = (t) => {
+  if (t === null || t === undefined || t === "") return new Date(0);
+
+  const n = typeof t === "number" ? t : Number(t);
+  // If it's numeric, treat as unix seconds
+  if (Number.isFinite(n)) return new Date(n * 1000);
+
+  // Otherwise assume it's a normal date string (ISO etc.)
+  const dt = new Date(t);
+  return isNaN(dt) ? new Date(0) : dt;
+};
 
 const fmtHM = (t, tz) =>
   new Intl.DateTimeFormat("en-GB", {
@@ -409,7 +419,8 @@ export default function Weather() {
               { method: "GET" }
             );
 
-            if (error) throw new Error(error.message || "Met Office warnings error");
+            if (error)
+              throw new Error(error.message || "Met Office warnings error");
 
             const features = Array.isArray(data?.features) ? data.features : [];
             const tzForWarn = localWeather?.timezone || "UTC";
@@ -430,7 +441,8 @@ export default function Weather() {
               return {
                 event: p.event || p.headline || p.type || "Weather warning",
                 headline: p.headline,
-                severity_text: p.severity || p.awareness_level || p.awarenessLevel,
+                severity_text:
+                  p.severity || p.awareness_level || p.awarenessLevel,
                 severity: sevRaw,
 
                 onset: p.onset || p.effective,
@@ -450,9 +462,7 @@ export default function Weather() {
           } catch (e) {
             console.error("Met Office warnings failed:", e);
             setWarnings([]);
-            setWarningsNote(
-              "Official warnings are temporarily unavailable (UK)."
-            );
+            setWarningsNote("Official warnings are temporarily unavailable (UK).");
           }
         }
       } else {
@@ -519,9 +529,12 @@ export default function Weather() {
   const scalePollen = (v) => {
     if (!Number.isFinite(v))
       return { label: "–", cls: "bg-zinc-800 text-zinc-300" };
-    if (v < 20) return { label: "Low", cls: "bg-emerald-900/40 text-emerald-200" };
-    if (v < 60) return { label: "Moderate", cls: "bg-amber-900/40 text-amber-200" };
-    if (v < 150) return { label: "High", cls: "bg-orange-900/40 text-orange-200" };
+    if (v < 20)
+      return { label: "Low", cls: "bg-emerald-900/40 text-emerald-200" };
+    if (v < 60)
+      return { label: "Moderate", cls: "bg-amber-900/40 text-amber-200" };
+    if (v < 150)
+      return { label: "High", cls: "bg-orange-900/40 text-orange-200" };
     return { label: "Very High", cls: "bg-red-900/40 text-red-200" };
   };
 
@@ -570,8 +583,9 @@ export default function Weather() {
       {/* Fallback banner */}
       {usedFallback && (
         <div className="text-amber-800 bg-amber-100 border border-amber-200 rounded p-3 text-sm mb-4">
-          This apiary has no coordinates, showing weather for a default location (London). Add latitude/longitude on
-          the apiary for precise local weather.
+          This apiary has no coordinates, showing weather for a default location
+          (London). Add latitude/longitude on the apiary for precise local
+          weather.
         </div>
       )}
 

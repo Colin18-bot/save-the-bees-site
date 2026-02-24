@@ -281,7 +281,7 @@ const showNext = useCallback(() => {
       let dataQuery = supabase
         .from("inspections")
         .select(
-          "id, apiary_id, hive_id, date, created_at, weather, weather_code, colony_behavior, colony_behavior_other, environmental_signs, environmental_signs_other, hive_population, brood_pattern, food_stores, queen_status, queen_status_other, signs_disease, disease_types, disease_other, signs_pests, pest_types, pest_other, notes, photos"
+          "id, apiary_id, hive_id, date, created_at, weather, weather_observed, weather_code, colony_behavior, colony_behavior_other, environmental_signs, environmental_signs_other, hive_population, brood_pattern, food_stores, queen_status, queen_status_other, signs_disease, disease_types, disease_other, signs_pests, pest_types, pest_other, notes, photos"
         )
         .is("archived_at", null)
         .order("date", { ascending: false })
@@ -336,6 +336,7 @@ const showNext = useCallback(() => {
     toFromUrl,
     pageFromUrl,
     setSearchParams,
+    location.key,
   ]);
 
   // Lookup helpers
@@ -417,7 +418,8 @@ const showNext = useCallback(() => {
       const trimmed = typeof value === "string" ? value.trim() : value;
       if (trimmed !== "" && trimmed !== false) out.push({ label, value: trimmed });
     };
-    pushIf("Weather", insp.weather);
+    pushIf("Weather (derived)", insp.weather);
+    pushIf("Weather (observed)", insp.weather_observed);
     pushIf(
       "Colony",
       insp.colony_behavior === "Other"

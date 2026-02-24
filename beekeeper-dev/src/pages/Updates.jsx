@@ -9,6 +9,51 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
   {
+  version: "1.1.2",
+  released_at: "2026-02-24T18:00:00Z",
+  summary:
+    "Weather handling improved across Inspections, Reports and printing. Inspection weather is now date-accurate, user-observable conditions are supported, and report exports include both derived and observed weather values.",
+
+  added: [
+    "Added new **Weather (observed)** field to Inspections, allowing users to manually record real-world conditions at the time of inspection.",
+    "Reports → Print Report now displays **Weather (derived)** and **Weather (observed)** as separate columns.",
+    "CSV exports (Combined + Inspections) now include a new `weather_observed` column.",
+    "Inspection list summaries now show both derived and observed weather where available."
+  ],
+
+  changed: [
+    "Weather in inspections is now **frozen to the inspection date** and no longer reflects current live conditions when editing past records.",
+    "Improved weather date parsing logic to handle mixed timestamp formats safely and prevent incorrect condition display.",
+    "Improved report clarity by labelling weather columns explicitly as **derived** vs **observed**."
+  ],
+
+  fixed: [
+    "Fixed issue where edited inspections did not immediately reflect updated observed weather in list views.",
+    "Resolved inconsistent weather behaviour between Dashboard, InspectionList and EditInspection flows.",
+    "Fixed missing weather_observed data in Reports and CSV exports.",
+    "Corrected edge cases where weather timestamps could display incorrect conditions due to format mismatches."
+  ],
+
+  removed: [],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+    { label: "Inspections", to: "/inspections" },
+    { label: "Reports", to: "/reports/print" },
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Release Notes", to: "/updates" }
+  ],
+
+  known_issues: [
+    "Weather data is derived from historical forecast APIs and may not perfectly match hyper-local microclimates.",
+    "If no historical forecast data is available for a specific timestamp, the derived weather field may be blank while observed weather remains available."
+  ]
+  },
+  
+  {
   version: "1.1.1",
   released_at: "2026-01-26T18:00:00Z",
   summary:

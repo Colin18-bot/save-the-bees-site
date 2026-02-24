@@ -195,8 +195,10 @@ export default function PrintReport() {
         let q = supabase
           .from("inspections")
           .select(
-            "id, apiary_id, hive_id, date, weather, colony_behavior, hive_population, brood_pattern, food_stores, signs_disease, disease_types, signs_pests, pest_types, notes, archived_at, created_at"
+            // ✅ includes derived + observed
+            "id, apiary_id, hive_id, date, weather, weather_observed, colony_behavior, hive_population, brood_pattern, food_stores, signs_disease, disease_types, signs_pests, pest_types, notes, archived_at, created_at"
           );
+
         if (!includeArchived) q = q.is("archived_at", null);
         if (hiveId) q = q.eq("hive_id", hiveId);
         else if (apiaryId) q = q.eq("apiary_id", apiaryId);
@@ -235,7 +237,11 @@ export default function PrintReport() {
           } else {
             q = q.is("due_date", null);
             if (fromDate) q = q.gte("created_at", fromDate);
-            if (toDate) q = q.lte("created_at", dayjs(toDate).add(1, "day").format("YYYY-MM-DD"));
+            if (toDate)
+              q = q.lte(
+                "created_at",
+                dayjs(toDate).add(1, "day").format("YYYY-MM-DD")
+              );
           }
 
           if (hiveId) q = q.eq("hive_id", hiveId);
@@ -291,7 +297,11 @@ export default function PrintReport() {
           } else {
             q = q.is("date", null);
             if (fromDate) q = q.gte("created_at", fromDate);
-            if (toDate) q = q.lte("created_at", dayjs(toDate).add(1, "day").format("YYYY-MM-DD"));
+            if (toDate)
+              q = q.lte(
+                "created_at",
+                dayjs(toDate).add(1, "day").format("YYYY-MM-DD")
+              );
           }
 
           if (hiveId) q = q.eq("hive_id", hiveId);
@@ -407,9 +417,7 @@ export default function PrintReport() {
 
   const downloadCSV = (filename, rows, headers) => {
     const headerLine = headers.map(esc).join(",");
-    const body = rows
-      .map((r) => headers.map((h) => esc(r[h])).join(","))
-      .join("\n");
+    const body = rows.map((r) => headers.map((h) => esc(r[h])).join(",")).join("\n");
     const blob = new Blob([headerLine + "\n" + body], {
       type: "text/csv;charset=utf-8;",
     });
@@ -426,6 +434,7 @@ export default function PrintReport() {
   const downloadCombinedCSV = () => {
     const allowNfc = isPremium && includeNfc;
 
+    // ✅ Added weather_observed column
     const headers = [
       "type",
       "date",
@@ -433,6 +442,7 @@ export default function PrintReport() {
       "hive",
       "title",
       "weather",
+      "weather_observed",
       "colony_behavior",
       "hive_population",
       "brood_pattern",
@@ -460,6 +470,7 @@ export default function PrintReport() {
           hive: displayHive(resolvedHiveId, resolvedApiaryId),
           title: `Inspection ${fmtUK(x.date)}`,
           weather: x.weather || "",
+          weather_observed: x.weather_observed || "",
           colony_behavior: x.colony_behavior || "",
           hive_population: x.hive_population || "",
           brood_pattern: x.brood_pattern || "",
@@ -491,6 +502,7 @@ export default function PrintReport() {
           hive: displayHive(resolvedHiveId, resolvedApiaryId),
           title: t.title || "",
           weather: "",
+          weather_observed: "",
           colony_behavior: "",
           hive_population: "",
           brood_pattern: "",
@@ -511,8 +523,7 @@ export default function PrintReport() {
     if (includeLogbook) {
       for (const l of logbook) {
         const { resolvedApiaryId, resolvedHiveId } = effectiveIds(l);
-        const text =
-          l.entry || l.notes || l.note || l.content || l.text || l.message || "";
+        const text = l.entry || l.notes || l.note || l.content || l.text || l.message || "";
         rows.push({
           type: "Logbook",
           date: fmtUK(l.date || l.created_at),
@@ -520,6 +531,7 @@ export default function PrintReport() {
           hive: displayHive(resolvedHiveId, resolvedApiaryId),
           title: l.log_type || "",
           weather: "",
+          weather_observed: "",
           colony_behavior: "",
           hive_population: "",
           brood_pattern: "",
@@ -547,6 +559,7 @@ export default function PrintReport() {
           hive: h.name || "Unnamed Hive",
           title: "NFC tag",
           weather: "",
+          weather_observed: "",
           colony_behavior: "",
           hive_population: "",
           brood_pattern: "",
@@ -568,11 +581,13 @@ export default function PrintReport() {
   };
 
   const downloadInspectionsCSV = () => {
+    // ✅ Added weather_observed column
     const headers = [
       "date",
       "apiary",
       "hive",
       "weather",
+      "weather_observed",
       "colony_behavior",
       "hive_population",
       "brood_pattern",
@@ -585,6 +600,7 @@ export default function PrintReport() {
       "created_at",
       "archived",
     ];
+
     const rows = inspections.map((x) => {
       const { resolvedApiaryId, resolvedHiveId } = effectiveIds(x);
       return {
@@ -592,6 +608,7 @@ export default function PrintReport() {
         apiary: apiaryName.get(resolvedApiaryId) || "",
         hive: displayHive(resolvedHiveId, resolvedApiaryId),
         weather: x.weather || "",
+        weather_observed: x.weather_observed || "",
         colony_behavior: x.colony_behavior || "",
         hive_population: x.hive_population || "",
         brood_pattern: x.brood_pattern || "",
@@ -609,11 +626,21 @@ export default function PrintReport() {
         archived: x.archived_at ? "Yes" : "No",
       };
     });
+
     downloadCSV(`inspections-${ukStamp()}.csv`, rows, headers);
   };
 
   const downloadTodosCSV = () => {
-    const headers = ["due_date", "apiary", "hive", "title", "notes", "status", "created_at", "archived"];
+    const headers = [
+      "due_date",
+      "apiary",
+      "hive",
+      "title",
+      "notes",
+      "status",
+      "created_at",
+      "archived",
+    ];
     const rows = todos.map((t) => {
       const { resolvedApiaryId, resolvedHiveId } = effectiveIds(t);
       return {
@@ -634,8 +661,7 @@ export default function PrintReport() {
     const headers = ["date", "apiary", "hive", "title", "text", "archived"];
     const rows = logbook.map((l) => {
       const { resolvedApiaryId, resolvedHiveId } = effectiveIds(l);
-      const text =
-        l.entry || l.notes || l.note || l.content || l.text || l.message || "";
+      const text = l.entry || l.notes || l.note || l.content || l.text || l.message || "";
       return {
         date: fmtUK(l.date || l.created_at),
         apiary: apiaryName.get(resolvedApiaryId) || "",
@@ -721,9 +747,7 @@ export default function PrintReport() {
               value={hiveId}
               onChange={(e) => setHiveId(e.target.value)}
             >
-              <option value="">
-                All Hives{apiaryId ? " in Apiary" : ""}
-              </option>
+              <option value="">All Hives{apiaryId ? " in Apiary" : ""}</option>
               {hivesForApiary.map((h) => (
                 <option key={h.id} value={h.id}>
                   {h.name}
@@ -874,7 +898,8 @@ export default function PrintReport() {
                       <th className="py-2 pr-3">Date</th>
                       <th className="py-2 pr-3">Apiary</th>
                       <th className="py-2 pr-3">Hive</th>
-                      <th className="py-2 pr-3">Weather</th>
+                      <th className="py-2 pr-3">Weather (derived)</th>
+                      <th className="py-2 pr-3">Weather (observed)</th>
                       <th className="py-2 pr-3">Colony</th>
                       <th className="py-2 pr-3">Population</th>
                       <th className="py-2 pr-3">Brood</th>
@@ -891,8 +916,11 @@ export default function PrintReport() {
                         <tr key={x.id} className="border-b align-top">
                           <td className="py-2 pr-3 whitespace-nowrap">{fmtUK(x.date)}</td>
                           <td className="py-2 pr-3">{apiaryName.get(resolvedApiaryId) || ""}</td>
-                          <td className="py-2 pr-3">{displayHive(resolvedHiveId, resolvedApiaryId)}</td>
+                          <td className="py-2 pr-3">
+                            {displayHive(resolvedHiveId, resolvedApiaryId)}
+                          </td>
                           <td className="py-2 pr-3">{x.weather || ""}</td>
+                          <td className="py-2 pr-3">{x.weather_observed || ""}</td>
                           <td className="py-2 pr-3">{x.colony_behavior || ""}</td>
                           <td className="py-2 pr-3">{x.hive_population || ""}</td>
                           <td className="py-2 pr-3">{x.brood_pattern || ""}</td>
@@ -949,7 +977,9 @@ export default function PrintReport() {
                             {fmtUK(t.due_date || t.created_at)}
                           </td>
                           <td className="py-2 pr-3">{apiaryName.get(resolvedApiaryId) || ""}</td>
-                          <td className="py-2 pr-3">{displayHive(resolvedHiveId, resolvedApiaryId)}</td>
+                          <td className="py-2 pr-3">
+                            {displayHive(resolvedHiveId, resolvedApiaryId)}
+                          </td>
                           <td className="py-2 pr-3">{t.title || ""}</td>
                           <td className="py-2 pr-3">{t.notes || ""}</td>
                           <td className="py-2 pr-3">{t.status || ""}</td>
@@ -987,9 +1017,13 @@ export default function PrintReport() {
                         l.entry || l.notes || l.note || l.content || l.text || l.message || "";
                       return (
                         <tr key={l.id} className="border-b align-top">
-                          <td className="py-2 pr-3 whitespace-nowrap">{fmtUK(l.date || l.created_at)}</td>
+                          <td className="py-2 pr-3 whitespace-nowrap">
+                            {fmtUK(l.date || l.created_at)}
+                          </td>
                           <td className="py-2 pr-3">{apiaryName.get(resolvedApiaryId) || ""}</td>
-                          <td className="py-2 pr-3">{displayHive(resolvedHiveId, resolvedApiaryId)}</td>
+                          <td className="py-2 pr-3">
+                            {displayHive(resolvedHiveId, resolvedApiaryId)}
+                          </td>
                           <td className="py-2 pr-3">{l.log_type || ""}</td>
                           <td className="py-2 pr-3">{text}</td>
                         </tr>
@@ -1007,7 +1041,8 @@ export default function PrintReport() {
           <section className="card border rounded p-4">
             <h2 className="text-xl font-semibold mb-3">NFC Tags</h2>
             <p className="text-xs text-gray-600 mb-2">
-              Shows hives that currently have an NFC tag linked. This respects the Apiary/Hive and archived filters, but not the date range.
+              Shows hives that currently have an NFC tag linked. This respects the Apiary/Hive and
+              archived filters, but not the date range.
             </p>
             {nfcHives.length === 0 ? (
               <p className="text-gray-500">No NFC tags found for this filter.</p>

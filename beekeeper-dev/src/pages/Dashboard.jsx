@@ -167,10 +167,35 @@ const Dashboard = () => {
   // Subscription level (for NFC visibility etc.)
   const [subscriptionLevel, setSubscriptionLevel] = useState("free");
 
-  const formatUKDate = (d) => {
-    if (!d) return "No date";
+  // ✅ FIX: handles unix seconds correctly (Open-Meteo daily.time is unixtime seconds)
+  // Optional tz: pass weatherTz for weather forecast dates to match apiary-local timezone.
+  const formatUKDate = (d, tz) => {
+    if (d === null || d === undefined || d === "") return "No date";
+
+    // Detect unix seconds (number or numeric string)
+    const asNumber = typeof d === "number" ? d : Number(d);
+    if (Number.isFinite(asNumber)) {
+      const dt = new Date(asNumber * 1000);
+
+      if (tz) {
+        return new Intl.DateTimeFormat("en-GB", {
+          timeZone: tz,
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        }).format(dt);
+      }
+
+      const dd = String(dt.getDate()).padStart(2, "0");
+      const mm = String(dt.getMonth() + 1).padStart(2, "0");
+      const yyyy = dt.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    }
+
+    // Otherwise assume ISO / parseable date string (Supabase dates)
     const dt = new Date(d);
-    if (isNaN(dt)) return d;
+    if (isNaN(dt)) return String(d);
+
     const dd = String(dt.getDate()).padStart(2, "0");
     const mm = String(dt.getMonth() + 1).padStart(2, "0");
     const yyyy = dt.getFullYear();
@@ -249,9 +274,7 @@ const Dashboard = () => {
     if (apiaryId !== "all") inspQ = inspQ.eq("apiary_id", apiaryId);
     const { count: inspections } = await inspQ;
 
-    let todosQ = supabase
-      .from("todos")
-      .select("*", { count: "exact", head: true });
+    let todosQ = supabase.from("todos").select("*", { count: "exact", head: true });
     if (apiaryId !== "all") todosQ = todosQ.eq("apiary_id", apiaryId);
     const { count: todos } = await todosQ;
 
@@ -390,7 +413,7 @@ const Dashboard = () => {
 
       let lat = Number(chosen?.latitude);
       let lon = Number(chosen?.longitude);
-            // ✅ Save the apiary's real latitude (if present) for season logic
+      // ✅ Save the apiary's real latitude (if present) for season logic
       // (We store this BEFORE we possibly replace lat/lon with the London fallback)
       setDefaultApiaryLatitude(Number.isFinite(lat) ? lat : null);
 
@@ -433,26 +456,26 @@ const Dashboard = () => {
         : null;
 
       setWeather({
-  timezone: json.timezone || "UTC",
-   // ✅ store coords used for this weather snapshot (real or fallback)
-  latitude: lat,
-  longitude: lon,
-  current: {
-    time: current.time, // <-- add this (unixtime)
-    temperature_2m: current.temperature_2m,
-    wind_speed_10m: current.wind_speed_10m,
-    wind_speed_mph: windMph,
-    weather_code: current.weather_code,
-  },
-  forecast: {
-    time: daily.time || [],
-    temperature_2m_min: daily.temperature_2m_min || [],
-    temperature_2m_max: daily.temperature_2m_max || [],
-    weather_code: daily.weather_code || daily.weathercode || [],
-    wind_speed_10m_max: daily.wind_speed_10m_max || [],
-    precipitation_sum: daily.precipitation_sum || [],
-  },
-});
+        timezone: json.timezone || "UTC",
+        // ✅ store coords used for this weather snapshot (real or fallback)
+        latitude: lat,
+        longitude: lon,
+        current: {
+          time: current.time, // <-- add this (unixtime)
+          temperature_2m: current.temperature_2m,
+          wind_speed_10m: current.wind_speed_10m,
+          wind_speed_mph: windMph,
+          weather_code: current.weather_code,
+        },
+        forecast: {
+          time: daily.time || [],
+          temperature_2m_min: daily.temperature_2m_min || [],
+          temperature_2m_max: daily.temperature_2m_max || [],
+          weather_code: daily.weather_code || daily.weathercode || [],
+          wind_speed_10m_max: daily.wind_speed_10m_max || [],
+          precipitation_sum: daily.precipitation_sum || [],
+        },
+      });
 
       setWeatherError(null);
       localStorage.removeItem("weather_last_fail");
@@ -562,34 +585,33 @@ const Dashboard = () => {
   }`;
 
   // --- Beekeeper Notes (Dashboard preview, based on the same rules as Weather page) ---
-const beekeeperNotes = useMemo(() => {
-  if (!weather?.forecast) return [];
+  const beekeeperNotes = useMemo(() => {
+    if (!weather?.forecast) return [];
 
-  // Convert Dashboard's "forecast" shape into the "daily" shape the shared helper expects
-  const daily = {
-    time: weather.forecast.time,
-    temperature_2m_min: weather.forecast.temperature_2m_min,
-    temperature_2m_max: weather.forecast.temperature_2m_max,
-    precipitation_sum: weather.forecast.precipitation_sum,
-    wind_speed_10m_max: weather.forecast.wind_speed_10m_max,
-    weather_code: weather.forecast.weather_code,
-  };
+    // Convert Dashboard's "forecast" shape into the "daily" shape the shared helper expects
+    const daily = {
+      time: weather.forecast.time,
+      temperature_2m_min: weather.forecast.temperature_2m_min,
+      temperature_2m_max: weather.forecast.temperature_2m_max,
+      precipitation_sum: weather.forecast.precipitation_sum,
+      wind_speed_10m_max: weather.forecast.wind_speed_10m_max,
+      weather_code: weather.forecast.weather_code,
+    };
 
- return buildBeekeeperNotes({
-  daily,
-  weather,
-  timezone: weather?.timezone || "UTC",
-  unit: "C",
-  windUnit: "kmh",
-  warnings: [],
-  pollen: null,
+    return buildBeekeeperNotes({
+      daily,
+      weather,
+      timezone: weather?.timezone || "UTC",
+      unit: "C",
+      windUnit: "kmh",
+      warnings: [],
+      pollen: null,
 
-    // ✅ drives north/south/tropical month profile
-  // Prefer the *real* apiary latitude; fall back to weather latitude if needed
-  latitude: defaultApiaryLatitude ?? weather?.latitude,
-});
-
-}, [weather, defaultApiaryLatitude]);
+      // ✅ drives north/south/tropical month profile
+      // Prefer the *real* apiary latitude; fall back to weather latitude if needed
+      latitude: defaultApiaryLatitude ?? weather?.latitude,
+    });
+  }, [weather, defaultApiaryLatitude]);
 
   return (
     <div className="p-6 space-y-6">
@@ -598,7 +620,6 @@ const beekeeperNotes = useMemo(() => {
           <h1 className="text-2xl font-bold">Dashboard</h1>
 
           {/* NEW: subtle Getting Started link */}
-         
           <Link
             to="/help/getting-started"
             className="text-xs text-gray-500 hover:text-blue-600 hover:underline"
@@ -1052,28 +1073,28 @@ const beekeeperNotes = useMemo(() => {
       <div className="bg-white rounded shadow p-4">
         <h2 className="text-lg font-semibold mb-1">Weather Snapshot</h2>
         <p className="text-xs text-gray-600 mb-3">
-  📍 Weather is based on your <strong>default apiary</strong>
-  {defaultApiaryName ? `: ${defaultApiaryName}` : ""}.{" "}
-  <Link to="/settings" className="text-blue-600 underline">
-    Change default in Settings
-  </Link>
-  .
-  {" "}
-  <span className="text-gray-500">
-    Local time ({weatherTz})
-    {Number.isFinite(weather?.current?.time)
-      ? ` • updated ${fmtLocalTime(weather.current.time, weatherTz)}`
-      : ""}
-  </span>
-  {usedFallback && (
-    <>
-      {" "}
-      <span className="text-amber-700">
-        (No coordinates set for the default apiary — showing a default location: London.)
-      </span>
-    </>
-  )}
-</p>
+          📍 Weather is based on your <strong>default apiary</strong>
+          {defaultApiaryName ? `: ${defaultApiaryName}` : ""}.{" "}
+          <Link to="/settings" className="text-blue-600 underline">
+            Change default in Settings
+          </Link>
+          .{" "}
+          <span className="text-gray-500">
+            Local time ({weatherTz})
+            {Number.isFinite(weather?.current?.time)
+              ? ` • updated ${fmtLocalTime(weather.current.time, weatherTz)}`
+              : ""}
+          </span>
+          {usedFallback && (
+            <>
+              {" "}
+              <span className="text-amber-700">
+                (No coordinates set for the default apiary — showing a default
+                location: London.)
+              </span>
+            </>
+          )}
+        </p>
         {weatherError ? (
           <p className="text-gray-500">{weatherError}</p>
         ) : !weather ? (
@@ -1083,7 +1104,11 @@ const beekeeperNotes = useMemo(() => {
             <div className="text-sm">
               <p>
                 <strong>Now:</strong> {weather?.current?.temperature_2m ?? "N/A"}
-                °C, ({Number.isFinite(weather?.current?.wind_speed_10m) ? Math.round(weather.current.wind_speed_10m) : "N/A"} km/h)
+                °C, (
+                {Number.isFinite(weather?.current?.wind_speed_10m)
+                  ? Math.round(weather.current.wind_speed_10m)
+                  : "N/A"}{" "}
+                km/h)
               </p>
               <p className="mt-2">
                 <strong>Next 5 Days:</strong>
@@ -1101,7 +1126,9 @@ const beekeeperNotes = useMemo(() => {
                       weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
                     return (
                       <li key={day ?? index}>
-                        {formatUKDate(day)}: {icon} {label && `${label} — `}
+                        {/* ✅ FIX: day is unixtime seconds, format with apiary timezone */}
+                        {formatUKDate(day, weatherTz)}: {icon}{" "}
+                        {label && `${label} — `}
                         {tmin}°C → {tmax}°C
                       </li>
                     );
