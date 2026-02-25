@@ -97,6 +97,43 @@ const isOverdue = (dateIso, status) => {
   return due < today;
 };
 
+/**
+ * Centered, “button-like” stat tile
+ * - Keeps same size via p-4 and a small min-height
+ * - Background + hover highlight stays in-keeping (amber/green)
+ */
+const StatTile = ({ to, title, value, subtitle, cta = "Open →", variant = "default" }) => {
+  const base =
+    "group relative rounded-xl p-4 border shadow-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
+  const layout = "flex flex-col items-center justify-center text-center gap-1 min-h-[108px]";
+
+  const variants = {
+    default:
+      "bg-gradient-to-br from-amber-50 to-green-50 border-amber-200/70 hover:from-amber-100 hover:to-green-100 hover:border-amber-300/80 hover:shadow-md focus-visible:ring-amber-400",
+    nfc:
+      "bg-gradient-to-br from-blue-50 to-emerald-50 border-blue-200/70 hover:from-blue-100 hover:to-emerald-100 hover:border-blue-300/80 hover:shadow-md focus-visible:ring-blue-400",
+  };
+
+  return (
+    <Link to={to} className={`${base} ${layout} ${variants[variant] || variants.default}`}>
+      <div className="text-sm text-gray-700 font-medium">{title}</div>
+
+      <div className="text-3xl font-extrabold tracking-tight text-[#1a3329] leading-none">
+        {value}
+      </div>
+
+      {subtitle ? <div className="text-xs text-gray-600">{subtitle}</div> : null}
+
+      <div className="pt-1 text-xs font-semibold text-blue-700 group-hover:text-blue-800">
+        {cta}
+      </div>
+
+      {/* subtle inner highlight ring on hover */}
+      <span className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-black/5 group-hover:ring-black/10" />
+    </Link>
+  );
+};
+
 const Dashboard = () => {
   const location = useLocation();
   const printAnchorRef = useRef(null);
@@ -235,11 +272,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchNameLookups = async () => {
       const [{ data: apiaries }, { data: hives }] = await Promise.all([
-        supabase
-          .from("apiaries")
-          .select("id, name")
-          .is("archived_at", null)
-          .order("name"),
+        supabase.from("apiaries").select("id, name").is("archived_at", null).order("name"),
         supabase.from("hives").select("id, name").is("archived_at", null),
       ]);
       const aMap = {};
@@ -285,7 +318,13 @@ const Dashboard = () => {
     if (apiaryId !== "all") logsQ = logsQ.eq("apiary_id", apiaryId);
     const { count: logbook } = await logsQ;
 
-    setStats({ apiaries, hives, inspections, todos, logbook });
+    setStats({
+      apiaries: apiaries || 0,
+      hives: hives || 0,
+      inspections: inspections || 0,
+      todos: todos || 0,
+      logbook: logbook || 0,
+    });
   };
 
   // ---- NFC summary counts (filter-aware) ----
@@ -373,7 +412,8 @@ const Dashboard = () => {
     setLoadingLogs(true);
     let q = supabase
       .from("logbook")
-      .select(`
+      .select(
+        `
         id,
         log_type,
         entry,
@@ -384,7 +424,8 @@ const Dashboard = () => {
         photo_url,
         archived_at,
         inspection:inspection_id ( id, date )
-      `)
+      `
+      )
       .order("date", { ascending: false })
       .limit(6);
     if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
@@ -413,8 +454,6 @@ const Dashboard = () => {
 
       let lat = Number(chosen?.latitude);
       let lon = Number(chosen?.longitude);
-      // ✅ Save the apiary's real latitude (if present) for season logic
-      // (We store this BEFORE we possibly replace lat/lon with the London fallback)
       setDefaultApiaryLatitude(Number.isFinite(lat) ? lat : null);
 
       const bad =
@@ -424,7 +463,6 @@ const Dashboard = () => {
         Math.abs(lon) > 180;
 
       if (bad) {
-        // London fallback
         lat = 51.5074;
         lon = -0.1278;
         setUsedFallback(true);
@@ -457,11 +495,10 @@ const Dashboard = () => {
 
       setWeather({
         timezone: json.timezone || "UTC",
-        // ✅ store coords used for this weather snapshot (real or fallback)
         latitude: lat,
         longitude: lon,
         current: {
-          time: current.time, // <-- add this (unixtime)
+          time: current.time,
           temperature_2m: current.temperature_2m,
           wind_speed_10m: current.wind_speed_10m,
           wind_speed_mph: windMph,
@@ -536,53 +573,52 @@ const Dashboard = () => {
   // Helpers for building list links with highlight + filter
   const toInspectionsList = (id) =>
     `/inspections?highlight=${encodeURIComponent(id)}&type=INSPECTION${
-      selectedApiaryId !== "all"
-        ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}`
-        : ""
+      selectedApiaryId !== "all" ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
     }`;
   const toTodosList = (id) =>
     `/todos?highlight=${encodeURIComponent(id)}&type=TODO${
-      selectedApiaryId !== "all"
-        ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}`
-        : ""
+      selectedApiaryId !== "all" ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
     }`;
   const toLogbookList = (id) =>
     `/logbook?highlight=${encodeURIComponent(id)}&type=LOGBOOK${
-      selectedApiaryId !== "all"
-        ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}`
-        : ""
+      selectedApiaryId !== "all" ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
     }`;
 
   // NEW: helper to jump into HiveList with highlight on a specific hive
   const toHiveInList = (id) =>
     `/hives?highlight=${encodeURIComponent(id)}&type=HIVE${
-      selectedApiaryId !== "all"
-        ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}`
-        : ""
+      selectedApiaryId !== "all" ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
     }`;
 
   const seeAllInspectionsHref = `/inspections${
-    selectedApiaryId !== "all"
-      ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}`
-      : ""
+    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
   }`;
   const seeAllTodosHref = `/todos${
-    selectedApiaryId !== "all"
-      ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}`
-      : ""
+    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
   }`;
   const seeAllLogbookHref = `/logbook${
-    selectedApiaryId !== "all"
-      ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}`
-      : ""
+    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
   }`;
 
   // Hives link for NFC "See all tagged hives"
   const hivesHref = `/hives${
-    selectedApiaryId !== "all"
-      ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}`
-      : ""
+    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
   }`;
+
+  // --- Dashboard stat tile links (carry apiary filter where it makes sense) ---
+  const apiariesHref = "/apiaries";
+  const inspectionsHref = `/inspections${
+    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
+  }`;
+  const todosHref = `/todos${
+    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
+  }`;
+  const logbookHref = `/logbook${
+    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
+  }`;
+
+  // ✅ your confirmed NFC manager route
+  const nfcManagerHref = "/nfc/manage";
 
   // --- Beekeeper Notes (Dashboard preview, based on the same rules as Weather page) ---
   const beekeeperNotes = useMemo(() => {
@@ -608,7 +644,6 @@ const Dashboard = () => {
       pollen: null,
 
       // ✅ drives north/south/tropical month profile
-      // Prefer the *real* apiary latitude; fall back to weather latitude if needed
       latitude: defaultApiaryLatitude ?? weather?.latitude,
     });
   }, [weather, defaultApiaryLatitude]);
@@ -619,7 +654,6 @@ const Dashboard = () => {
         <div>
           <h1 className="text-2xl font-bold">Dashboard</h1>
 
-          {/* NEW: subtle Getting Started link */}
           <Link
             to="/help/getting-started"
             className="text-xs text-gray-500 hover:text-blue-600 hover:underline"
@@ -630,10 +664,7 @@ const Dashboard = () => {
 
         {/* Filter by Apiary */}
         <div className="w-full md:w-auto flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
-          <label
-            htmlFor="apiaryFilter"
-            className="font-medium text-sm whitespace-nowrap"
-          >
+          <label htmlFor="apiaryFilter" className="font-medium text-sm whitespace-nowrap">
             Filter by Apiary:
           </label>
           <select
@@ -678,8 +709,8 @@ const Dashboard = () => {
               HiveTag NFC
             </span>
             <span className="ml-1">
-              – print or download your NFC setup guide, then tap{" "}
-              <strong>Scan NFC Tag</strong> to start using your tags.
+              – print or download your NFC setup guide, then tap <strong>Scan NFC Tag</strong> to
+              start using your tags.
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -708,66 +739,72 @@ const Dashboard = () => {
         <div>
           <h2 className="text-lg font-semibold">Reports &amp; Export</h2>
           <p className="text-gray-600 mt-1">
-            Open Reports or Export Inspections, Tasks, and Logbook by
-            Apiary/Hive and date range.
+            Open Reports or Export Inspections, Tasks, and Logbook by Apiary/Hive and date range.
           </p>
         </div>
         <div className="flex gap-3">
-          <Link
-            to={reportHref}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-          >
+          <Link to={reportHref} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
             Open Reports &amp; Export
           </Link>
         </div>
       </div>
 
-      {/* Stats cards */}
+      {/* Stats buttons (centered + nicer theme) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-        <div className="bg-white rounded shadow p-4">
-          <p className="text-sm text-gray-500">Apiaries</p>
-          {selectedApiaryId === "all" ? (
-            <>
-              <p className="text-2xl font-bold">{stats.apiaries}</p>
-              <p className="text-xs text-gray-400 mt-1">(all apiaries)</p>
-            </>
-          ) : (
-            <>
-              <p className="text-2xl font-bold">1 / {stats.apiaries}</p>
-              <p className="text-xs text-gray-400 mt-1">
-                (this apiary / total)
-              </p>
-            </>
-          )}
-        </div>
+        <StatTile
+          to={apiariesHref}
+          title="Apiaries"
+          value={selectedApiaryId === "all" ? stats.apiaries : `1 / ${stats.apiaries}`}
+          subtitle={selectedApiaryId === "all" ? null : "(this apiary / total)"}
+          cta="Open →"
+          variant="default"
+        />
 
-        <div className="bg-white rounded shadow p-4">
-          <p className="text-sm text-gray-500">Hives</p>
-          <p className="text-2xl font-bold">{stats.hives}</p>
-        </div>
-        <div className="bg-white rounded shadow p-4">
-          <p className="text-sm text-gray-500">Inspections</p>
-          <p className="text-2xl font-bold">{stats.inspections}</p>
-        </div>
-        <div className="bg-white rounded shadow p-4">
-          <p className="text-sm text-gray-500">Tasks</p>
-          <p className="text-2xl font-bold">{stats.todos}</p>
-        </div>
-        <div className="bg-white rounded shadow p-4">
-          <p className="text-sm text-gray-500">Logbook</p>
-          <p className="text-2xl font-bold">{stats.logbook}</p>
-        </div>
+        <StatTile
+          to={hivesHref}
+          title="Hives"
+          value={stats.hives}
+          subtitle={selectedApiaryId !== "all" ? "(this filter)" : null}
+          cta="Open →"
+          variant="default"
+        />
 
-        {/* NFC Tagged Hives count (Premium only) */}
+        <StatTile
+          to={inspectionsHref}
+          title="Inspections"
+          value={stats.inspections}
+          subtitle={selectedApiaryId !== "all" ? "(this filter)" : null}
+          cta="Open →"
+          variant="default"
+        />
+
+        <StatTile
+          to={todosHref}
+          title="Tasks"
+          value={stats.todos}
+          subtitle={selectedApiaryId !== "all" ? "(this filter)" : null}
+          cta="Open →"
+          variant="default"
+        />
+
+        <StatTile
+          to={logbookHref}
+          title="Logbook"
+          value={stats.logbook}
+          subtitle={selectedApiaryId !== "all" ? "(this filter)" : null}
+          cta="Open →"
+          variant="default"
+        />
+
         {subscriptionLevel === "premium" && (
-          <div className="bg-white rounded shadow p-4">
-            <p className="text-sm text-gray-500">NFC Tagged Hives</p>
-            <p className="text-2xl font-bold">{nfcSummary.tagged}</p>
-            <p className="text-xs text-gray-400 mt-1">
-              of {nfcSummary.total} hives
-              {selectedApiaryId !== "all" ? " (this filter)" : ""}
-            </p>
-          </div>
+          <StatTile
+            to={nfcManagerHref}
+            title="NFC Tagged Hives"
+            value={nfcSummary.tagged}
+            subtitle={`of ${nfcSummary.total} hives${selectedApiaryId !== "all" ? " (this filter)" : ""}`}
+            cta="Manage →"
+            variant="nfc"
+          />
         )}
       </div>
 
@@ -823,21 +860,23 @@ const Dashboard = () => {
                       <Link
                         to={toHiveInList(hive.id)}
                         className="text-xs text-blue-600 hover:underline whitespace-nowrap"
-                        aria-label={`Open hive ${
-                          hive.name || hive.id
-                        } in hive list`}
+                        aria-label={`Open hive ${hive.name || hive.id} in hive list`}
                       >
                         Open hive →
+                      </Link>
+                      <Link
+                        to={nfcManagerHref}
+                        className="text-xs text-blue-600 hover:underline whitespace-nowrap"
+                        aria-label="Open NFC tag manager"
+                      >
+                        Manage tags →
                       </Link>
                     </div>
                   </li>
                 ))}
               </ul>
               <div className="mt-3 text-right">
-                <Link
-                  to={hivesHref}
-                  className="text-sm text-blue-600 hover:underline"
-                >
+                <Link to={hivesHref} className="text-sm text-blue-600 hover:underline">
                   See all tagged hives →
                 </Link>
               </div>
@@ -859,9 +898,7 @@ const Dashboard = () => {
               {recentInspections.map((i) => (
                 <li
                   key={i.id}
-                  className={`border p-2 rounded text-sm ${
-                    i.archived_at ? "opacity-60" : ""
-                  }`}
+                  className={`border p-2 rounded text-sm ${i.archived_at ? "opacity-60" : ""}`}
                   title={i.archived_at ? "Archived inspection" : ""}
                 >
                   <div className="min-w-0">
@@ -882,9 +919,7 @@ const Dashboard = () => {
                         <Link
                           to={toInspectionsList(i.id)}
                           className="text-blue-600 hover:underline whitespace-nowrap"
-                          aria-label={`Open inspection ${formatUKDate(
-                            i.date
-                          )} in list`}
+                          aria-label={`Open inspection ${formatUKDate(i.date)} in list`}
                         >
                           Open →
                         </Link>
@@ -902,10 +937,7 @@ const Dashboard = () => {
               ))}
             </ul>
             <div className="mt-3 text-right">
-              <Link
-                to={seeAllInspectionsHref}
-                className="text-sm text-blue-600 hover:underline"
-              >
+              <Link to={seeAllInspectionsHref} className="text-sm text-blue-600 hover:underline">
                 See all inspections →
               </Link>
             </div>
@@ -928,24 +960,14 @@ const Dashboard = () => {
                 return (
                   <li
                     key={t.id}
-                    className={`border p-2 rounded text-sm ${
-                      t.archived_at ? "opacity-60" : ""
-                    }`}
+                    className={`border p-2 rounded text-sm ${t.archived_at ? "opacity-60" : ""}`}
                     title={t.archived_at ? "Archived task" : ""}
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <strong>
-                          {t.due_date ? formatUKDate(t.due_date) : "No date"}
-                        </strong>
-                        <span className={statusPill(t.status)}>
-                          {t.status || "Pending"}
-                        </span>
-                        {overdue && (
-                          <span className="text-red-700 text-xs font-semibold">
-                            Overdue
-                          </span>
-                        )}
+                        <strong>{t.due_date ? formatUKDate(t.due_date) : "No date"}</strong>
+                        <span className={statusPill(t.status)}>{t.status || "Pending"}</span>
+                        {overdue && <span className="text-red-700 text-xs font-semibold">Overdue</span>}
                       </div>
                       <div className="truncate">
                         {t.title}
@@ -982,10 +1004,7 @@ const Dashboard = () => {
               })}
             </ul>
             <div className="mt-3 text-right">
-              <Link
-                to={seeAllTodosHref}
-                className="text-sm text-blue-600 hover:underline"
-              >
+              <Link to={seeAllTodosHref} className="text-sm text-blue-600 hover:underline">
                 See all tasks →
               </Link>
             </div>
@@ -1006,15 +1025,12 @@ const Dashboard = () => {
               {recentLogs.map((l) => (
                 <li
                   key={l.id}
-                  className={`border p-2 rounded text-sm ${
-                    l.archived_at ? "opacity-60" : ""
-                  }`}
+                  className={`border p-2 rounded text-sm ${l.archived_at ? "opacity-60" : ""}`}
                   title={l.archived_at ? "Archived log entry" : ""}
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <strong className="mr-1">{formatUKDate(l.date)}</strong>:{" "}
-                      {l.log_type}
+                      <strong className="mr-1">{formatUKDate(l.date)}</strong>: {l.log_type}
                     </div>
                     {l.apiary_id && apiaryNameById[l.apiary_id]
                       ? ` • Apiary: ${apiaryNameById[l.apiary_id]}`
@@ -1023,10 +1039,7 @@ const Dashboard = () => {
                     {!l.archived_at && l.inspection?.date && (
                       <>
                         {" • "}
-                        <Link
-                          to={`/inspections/${l.inspection_id}/edit`}
-                          className="text-blue-600 underline"
-                        >
+                        <Link to={`/inspections/${l.inspection_id}/edit`} className="text-blue-600 underline">
                           Inspection ({formatUKDate(l.inspection.date)})
                         </Link>
                       </>
@@ -1058,10 +1071,7 @@ const Dashboard = () => {
               ))}
             </ul>
             <div className="mt-3 text-right">
-              <Link
-                to={seeAllLogbookHref}
-                className="text-sm text-blue-600 hover:underline"
-              >
+              <Link to={seeAllLogbookHref} className="text-sm text-blue-600 hover:underline">
                 See all log entries →
               </Link>
             </div>
@@ -1089,8 +1099,7 @@ const Dashboard = () => {
             <>
               {" "}
               <span className="text-amber-700">
-                (No coordinates set for the default apiary — showing a default
-                location: London.)
+                (No coordinates set for the default apiary — showing a default location: London.)
               </span>
             </>
           )}
@@ -1103,8 +1112,7 @@ const Dashboard = () => {
           <>
             <div className="text-sm">
               <p>
-                <strong>Now:</strong> {weather?.current?.temperature_2m ?? "N/A"}
-                °C, (
+                <strong>Now:</strong> {weather?.current?.temperature_2m ?? "N/A"}°C, (
                 {Number.isFinite(weather?.current?.wind_speed_10m)
                   ? Math.round(weather.current.wind_speed_10m)
                   : "N/A"}{" "}
@@ -1114,21 +1122,16 @@ const Dashboard = () => {
                 <strong>Next 5 Days:</strong>
               </p>
               <ul className="grid grid-cols-1 gap-x-6">
-                {Array.isArray(weather?.forecast?.time) &&
-                weather.forecast.time.length ? (
+                {Array.isArray(weather?.forecast?.time) && weather.forecast.time.length ? (
                   weather.forecast.time.slice(0, 5).map((day, index) => {
                     const wc = weather?.forecast?.weather_code?.[index];
                     const icon = WX_ICON[wc] || "⛅";
                     const label = WX_LABEL[wc] || "";
-                    const tmin =
-                      weather?.forecast?.temperature_2m_min?.[index] ?? "N/A";
-                    const tmax =
-                      weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
+                    const tmin = weather?.forecast?.temperature_2m_min?.[index] ?? "N/A";
+                    const tmax = weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
                     return (
                       <li key={day ?? index}>
-                        {/* ✅ FIX: day is unixtime seconds, format with apiary timezone */}
-                        {formatUKDate(day, weatherTz)}: {icon}{" "}
-                        {label && `${label} — `}
+                        {formatUKDate(day, weatherTz)}: {icon} {label && `${label} — `}
                         {tmin}°C → {tmax}°C
                       </li>
                     );
@@ -1139,24 +1142,18 @@ const Dashboard = () => {
               </ul>
             </div>
 
-            {/* Dashboard Seasonal Beekeeper Notes teaser */}
             <div className="mt-4 pt-3 border-t border-gray-200">
-              <h3 className="text-sm font-semibold mb-1">
-                Seasonal Beekeeper Notes
-              </h3>
+              <h3 className="text-sm font-semibold mb-1">Seasonal Beekeeper Notes</h3>
               <p className="text-[11px] text-gray-500 mb-2">
-                Guide only – this panel gives general beekeeping information
-                based on typical cool–temperate conditions and average colony
-                behaviour. Any comments about inspections, feeding, Varroa
-                control or other treatments are purely advisory and are not
-                instructions. Weather, forage, pollen and alert data come from
-                third-party services and may be inaccurate or change at short
-                notice. Conditions vary by region, altitude and micro-climate
-                and every colony is different, so always use your own judgement
-                and follow the product label, official guidance and advice from
-                your local beekeeping association, Bee Inspectors, vets and
-                experienced mentors. Do not rely on this panel alone when
-                deciding whether to inspect, feed or treat your bees.
+                Guide only – this panel gives general beekeeping information based on typical
+                cool–temperate conditions and average colony behaviour. Any comments about
+                inspections, feeding, Varroa control or other treatments are purely advisory and are
+                not instructions. Weather, forage, pollen and alert data come from third-party
+                services and may be inaccurate or change at short notice. Conditions vary by region,
+                altitude and micro-climate and every colony is different, so always use your own
+                judgement and follow the product label, official guidance and advice from your
+                local beekeeping association, Bee Inspectors, vets and experienced mentors. Do not
+                rely on this panel alone when deciding whether to inspect, feed or treat your bees.
               </p>
               {beekeeperNotes.length ? (
                 <>

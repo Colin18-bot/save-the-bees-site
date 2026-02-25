@@ -93,6 +93,10 @@ const isLikelyUK = (lat, lon) => {
   return lat >= 49 && lat <= 61 && lon >= -8.5 && lon <= 2.5;
 };
 
+// ✅ Temperature unit preference storage (shared with other pages)
+const TEMP_UNIT_KEY = "prefs.temp_unit"; // "C" | "F"
+const normalizeTempUnit = (u) => ((u || "C").toString().toUpperCase() === "F" ? "F" : "C");
+
 export default function Weather() {
   const [apiaries, setApiaries] = useState([]);
   const [selectedApiary, setSelectedApiary] = useState("");
@@ -102,12 +106,26 @@ export default function Weather() {
   const [warningsNote, setWarningsNote] = useState(""); // ✅ NEW: message shown when warnings are unavailable
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
-  const [unit, setUnit] = useState("C"); // C or F for temperature
+
+  // ✅ Default Celsius, persist selection in localStorage
+  const [unit, setUnit] = useState(() => {
+    const stored = localStorage.getItem(TEMP_UNIT_KEY);
+    const u = normalizeTempUnit(stored || "C");
+    // Ensure we always have a value stored so other pages can rely on it
+    if (!stored) localStorage.setItem(TEMP_UNIT_KEY, u);
+    return u;
+  }); // "C" | "F"
+
   const [windUnit, setWindUnit] = useState("kmh"); // kmh or mph for wind
   const [usedFallback, setUsedFallback] = useState(false);
 
   // ✅ NEW: store the *real* apiary latitude (not the fallback lat)
   const [apiaryLatitude, setApiaryLatitude] = useState(null);
+
+  // ✅ Persist changes to unit for cross-app display (Inspections etc.)
+  useEffect(() => {
+    localStorage.setItem(TEMP_UNIT_KEY, normalizeTempUnit(unit));
+  }, [unit]);
 
   // Load apiaries and pick default
   useEffect(() => {

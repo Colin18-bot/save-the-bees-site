@@ -2,6 +2,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../../services/supabase";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import {
+  formatDerivedWeather,
+  getTempUnit,
+} from "../../utils/formatDerivedWeather";
 
 const PAGE_SIZE = 9;
 
@@ -356,6 +360,27 @@ const showNext = useCallback(() => {
     return !!hv?.nfc_uid;
   }, [hives, hiveFromUrl]);
 
+  const safeParseDerivedWeather = (raw) => {
+  if (!raw || typeof raw !== "string") return null;
+  const s = raw.trim();
+  if (!s.startsWith("{")) return null;
+
+  try {
+    const obj = JSON.parse(s);
+    if (!obj || typeof obj !== "object") return null;
+
+    const desc = typeof obj.desc === "string" ? obj.desc : "";
+    const temp_c =
+      Number.isFinite(Number(obj.temp_c)) ? Number(obj.temp_c) : null;
+
+    if (!desc && temp_c === null) return null;
+
+    return { desc, temp_c };
+  } catch {
+    return null;
+  }
+};
+
   const formatDate = (primary, fallback) => {
     const value = primary || fallback;
     if (!value) return "";
@@ -418,7 +443,17 @@ const showNext = useCallback(() => {
       const trimmed = typeof value === "string" ? value.trim() : value;
       if (trimmed !== "" && trimmed !== false) out.push({ label, value: trimmed });
     };
-    pushIf("Weather (derived)", insp.weather);
+          // Derived weather formatting (JSON-aware)
+      const parsedWeather = safeParseDerivedWeather(insp.weather);
+      if (parsedWeather) {
+        const unit = getTempUnit();
+        pushIf(
+          "Weather (derived)",
+          formatDerivedWeather(parsedWeather, unit)
+        );
+      } else {
+        pushIf("Weather (derived)", insp.weather);
+    }
     pushIf("Weather (observed)", insp.weather_observed);
     pushIf(
       "Colony",

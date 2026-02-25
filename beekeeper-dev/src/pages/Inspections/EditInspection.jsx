@@ -10,6 +10,11 @@ import {
   smartDeleteInspection,
 } from "../../services/actions";
 
+import {
+  formatDerivedWeather,
+  getTempUnit,
+} from "../../utils/formatDerivedWeather.js";
+
 /* --- Option sets (mirror NewInspection.jsx) --- */
 const COLONY_BEHAVIOUR_OPTS = ["Calm", "Aggressive", "Other"];
 const ENVIRONMENTAL_SIGNS_OPTS = [
@@ -78,6 +83,22 @@ const weatherCodeMap = {
   99: "Thunderstorm with heavy hail",
 };
 
+const safeParseDerivedWeather = (raw) => {
+  if (!raw || typeof raw !== "string") return null;
+  const s = raw.trim();
+  if (!s.startsWith("{")) return null;
+  try {
+    const obj = JSON.parse(s);
+    if (!obj || typeof obj !== "object") return null;
+    const desc = typeof obj.desc === "string" ? obj.desc : "";
+    const temp_c = Number.isFinite(Number(obj.temp_c)) ? Number(obj.temp_c) : null;
+    if (!desc && temp_c === null) return null;
+    return { desc, temp_c };
+  } catch {
+    return null;
+  }
+};
+
 const EditInspection = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -120,6 +141,10 @@ const EditInspection = () => {
     photos: [],
   });
 
+  // ✅ Derived weather canonical storage (JSON string) + display string
+  const [derivedWeatherJson, setDerivedWeatherJson] = useState("");
+  const [derivedWeatherDisplay, setDerivedWeatherDisplay] = useState("");
+
   const [originalPhotos, setOriginalPhotos] = useState([]);
   const fileInputRef = useRef(null);
 
@@ -142,23 +167,28 @@ const EditInspection = () => {
   const hiveById = useMemo(() => new Map(hives.map((h) => [h.id, h])), [hives]);
   const apiaryById = useMemo(() => new Map(apiaries.map((a) => [a.id, a])), [apiaries]);
 
-  // Weather helper
+  const clearDerivedWeather = () => {
+    setDerivedWeatherJson("");
+    setDerivedWeatherDisplay("");
+    setFormData((f) => ({ ...f, weather: "", weather_code: "" }));
+  };
+
+  // Weather helper (avg of min/max, canonical C)
   const fetchWeather = async (apiary, dateStr) => {
-    if (!apiary?.latitude || !apiary?.longitude || !dateStr) {
-      setFormData((f) => ({
-        ...f,
-        weather: f.weather || "",
-        weather_code: f.weather_code || "",
-      }));
+    const lat = Number(apiary?.latitude);
+    const lon = Number(apiary?.longitude);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lon) || !dateStr) {
+      clearDerivedWeather();
       return;
     }
 
     try {
       const day = new Date(dateStr).toISOString().slice(0, 10);
       const qs = new URLSearchParams({
-        latitude: String(apiary.latitude),
-        longitude: String(apiary.longitude),
-        daily: "weather_code",
+        latitude: String(lat),
+        longitude: String(lon),
+        daily: "weather_code,temperature_2m_max,temperature_2m_min",
         start_date: day,
         end_date: day,
         timezone: "auto",
@@ -174,17 +204,37 @@ const EditInspection = () => {
       if (idx !== -1 && idx != null) {
         const codes = data?.daily?.weather_code || data?.daily?.weathercode || [];
         const code = codes[idx];
+
+        const tMaxArr = data?.daily?.temperature_2m_max || [];
+        const tMinArr = data?.daily?.temperature_2m_min || [];
+        const tMax = Number(tMaxArr[idx]);
+        const tMin = Number(tMinArr[idx]);
+
+        const temp_c =
+          Number.isFinite(tMax) && Number.isFinite(tMin)
+            ? Math.round((tMax + tMin) / 2)
+            : null;
+
+        const desc = weatherCodeMap[code] || "Unknown";
+
+        const canonical = JSON.stringify({ desc, temp_c });
+        setDerivedWeatherJson(canonical);
+
+        const unit = getTempUnit();
+        const display = formatDerivedWeather({ desc, temp_c }, unit);
+        setDerivedWeatherDisplay(display);
+
         setFormData((f) => ({
           ...f,
-          weather: weatherCodeMap[code] || "Unknown",
+          weather: display, // UI-friendly string
           weather_code: String(code ?? ""),
         }));
       } else {
-        setFormData((f) => ({ ...f, weather: "", weather_code: "" }));
+        clearDerivedWeather();
       }
     } catch (e) {
       console.error("Weather fetch failed:", e);
-      setFormData((f) => ({ ...f, weather: "", weather_code: "" }));
+      clearDerivedWeather();
     }
   };
 
@@ -254,10 +304,25 @@ const EditInspection = () => {
         }
       }
 
+      // ✅ If stored derived weather is JSON, display it with unit preference
+      const parsed = safeParseDerivedWeather(data.weather);
+      if (parsed) {
+        const canonical = JSON.stringify({
+          desc: parsed.desc,
+          temp_c: parsed.temp_c,
+        });
+        setDerivedWeatherJson(canonical);
+        setDerivedWeatherDisplay(formatDerivedWeather(parsed, getTempUnit()));
+      } else {
+        setDerivedWeatherJson("");
+        setDerivedWeatherDisplay("");
+      }
+
       setFormData({
         apiary_id: data.apiary_id || "",
         hive_id: data.hive_id || "",
         date: dateStr || "",
+        // NOTE: keep whatever is stored; UI will prefer derivedWeatherDisplay if we have it
         weather: data.weather || "",
         weather_code: data.weather_code ?? "",
         weather_observed: data.weather_observed || "",
@@ -293,9 +358,8 @@ const EditInspection = () => {
             setHumanAddress("");
           }
 
-           // ✅ DO NOT refetch weather here — keep stored derived weather frozen
-          // if (dateStr) fetchWeather(apiary, dateStr);
- 
+          // ✅ We DO NOT auto-refetch on load. We respect the stored derived weather.
+          // If it’s legacy (plain string) and you want to “upgrade” it, change date/apiary/hive and it will refetch.
         }
       }
 
@@ -307,9 +371,10 @@ const EditInspection = () => {
     loadAll();
 
     return () => {
-      (previewsRef.current || []).forEach((u) => u?.startsWith("blob:") && URL.revokeObjectURL(u));
+      (previewsRef.current || []).forEach(
+        (u) => u?.startsWith("blob:") && URL.revokeObjectURL(u)
+      );
     };
-     
   }, [id]);
 
   const hivesForApiary = useMemo(() => {
@@ -374,6 +439,7 @@ const EditInspection = () => {
         } else {
           setApiaryLocation(null);
           setHumanAddress("");
+          clearDerivedWeather();
         }
 
         if (safeHiveId === "" && prev.hive_id) {
@@ -562,11 +628,16 @@ const EditInspection = () => {
     // URLs the user removed from existing list
     const removed = originalPhotos.filter((oldUrl) => !(formData.photos || []).includes(oldUrl));
 
+    // ✅ Persist canonical derived JSON if we have it; otherwise keep legacy value as-is
+    const weatherToSave =
+      derivedWeatherJson || (typeof formData.weather === "string" ? formData.weather : null);
+
     const payload = {
       apiary_id: formData.apiary_id || null,
       hive_id: formData.hive_id || null,
       date: formData.date || null,
-      weather: formData.weather || null,
+
+      weather: weatherToSave || null,
       weather_code: formData.weather_code || null,
       weather_observed: formData.weather_observed || null,
 
@@ -588,13 +659,17 @@ const EditInspection = () => {
       food_stores: formData.food_stores || null,
 
       queen_status:
-        Array.isArray(formData.queen_status) && formData.queen_status.length ? formData.queen_status : null,
+        Array.isArray(formData.queen_status) && formData.queen_status.length
+          ? formData.queen_status
+          : null,
       queen_status_other:
         (formData.queen_status || []).includes("Other") ? (formData.queen_status_other || null) : null,
 
       signs_disease: Boolean(formData.signs_disease),
       disease_types: formData.signs_disease
-        ? (Array.isArray(formData.disease_types) && formData.disease_types.length ? formData.disease_types : null)
+        ? (Array.isArray(formData.disease_types) && formData.disease_types.length
+            ? formData.disease_types
+            : null)
         : null,
       disease_other: formData.signs_disease
         ? ((formData.disease_types || []).includes("Other") ? (formData.disease_other || null) : null)
@@ -790,7 +865,7 @@ const EditInspection = () => {
             <input
               type="text"
               name="weather"
-              value={formData.weather || ""}
+              value={derivedWeatherDisplay || formData.weather || ""}
               readOnly
               className="w-full border rounded px-3 py-2 bg-gray-100 text-gray-700"
               placeholder="Auto-fetched from apiary location"
@@ -806,7 +881,6 @@ const EditInspection = () => {
               placeholder="What did you actually observe? (e.g. sunny, warm, light breeze)"
             />
           </div>
-
         </div>
 
         {/* Colony Behaviour */}

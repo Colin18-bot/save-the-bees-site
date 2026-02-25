@@ -6,6 +6,12 @@ import dayjs from "dayjs";
 // ✅ GA custom events (respects consent)
 import { trackEvent } from "../Legal/gaEvents";
 
+// ✅ Shared formatter + unit preference (localStorage)
+import {
+  formatDerivedWeather,
+  getTempUnit,
+} from "../../utils/formatDerivedWeather.js";
+
 // WMO → text
 const weatherCodeMap = {
   0: "Clear sky",
@@ -90,6 +96,10 @@ const NewInspection = () => {
     notes: "",
   });
 
+  // Derived weather (stored as JSON string in DB), and display string for the read-only input
+  const [derivedWeatherJson, setDerivedWeatherJson] = useState("");
+  const [derivedWeatherDisplay, setDerivedWeatherDisplay] = useState("");
+
   const [apiaries, setApiaries] = useState([]);
   const [hives, setHives] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -110,21 +120,33 @@ const NewInspection = () => {
   // cleanup previews on unmount
   useEffect(() => {
     return () => {
-      previews.forEach((p) => p.url?.startsWith("blob:") && URL.revokeObjectURL(p.url));
+      previews.forEach(
+        (p) => p.url?.startsWith("blob:") && URL.revokeObjectURL(p.url)
+      );
     };
   }, [previews]);
 
+  const clearDerivedWeather = () => {
+    setDerivedWeatherJson("");
+    setDerivedWeatherDisplay("");
+    setFormData((f) => ({ ...f, weather: "", weather_code: "" }));
+  };
+
   const fetchWeather = async (apiary, dateStr) => {
-    if (!apiary?.latitude || !apiary?.longitude) {
-      setFormData((f) => ({ ...f, weather: "", weather_code: "" }));
+    const lat = Number(apiary?.latitude);
+    const lon = Number(apiary?.longitude);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+      clearDerivedWeather();
       return;
     }
+
     try {
       const day = dayjs(dateStr || formData.date).format("YYYY-MM-DD");
       const qs = new URLSearchParams({
-        latitude: String(apiary.latitude),
-        longitude: String(apiary.longitude),
-        daily: "weather_code",
+        latitude: String(lat),
+        longitude: String(lon),
+        daily: "weather_code,temperature_2m_max,temperature_2m_min",
         start_date: day,
         end_date: day,
         timezone: "auto",
@@ -133,22 +155,49 @@ const NewInspection = () => {
       const res = await fetch(`https://api.open-meteo.com/v1/forecast?${qs}`);
       if (!res.ok) throw new Error(`Open-Meteo HTTP ${res.status}`);
       const data = await res.json();
+
       const times = data?.daily?.time || [];
       const idx = times.indexOf(day);
+
       if (idx !== -1 && idx != null) {
-        const codes = data.daily.weather_code || data.daily.weathercode || [];
+        const codes = data?.daily?.weather_code || data?.daily?.weathercode || [];
         const code = codes[idx];
+
+        const tMaxArr = data?.daily?.temperature_2m_max || [];
+        const tMinArr = data?.daily?.temperature_2m_min || [];
+        const tMax = Number(tMaxArr[idx]);
+        const tMin = Number(tMinArr[idx]);
+
+        // ✅ Average of min/max, stored as Celsius canonical
+        const temp_c =
+          Number.isFinite(tMax) && Number.isFinite(tMin)
+            ? Math.round((tMax + tMin) / 2)
+            : null;
+
+        const desc = weatherCodeMap[code] || "Unknown";
+
+        // ✅ Store canonical JSON for DB
+        const json = JSON.stringify({ desc, temp_c });
+        setDerivedWeatherJson(json);
+
+        // ✅ Display respects unit preference from Weather.jsx localStorage
+        const unit = getTempUnit();
+        const display = formatDerivedWeather({ desc, temp_c }, unit);
+
+        setDerivedWeatherDisplay(display);
+
         setFormData((f) => ({
           ...f,
-          weather: weatherCodeMap[code] || "Unknown",
+          // keep UI readable (NOT JSON)
+          weather: display,
           weather_code: String(code ?? ""),
         }));
       } else {
-        setFormData((f) => ({ ...f, weather: "", weather_code: "" }));
+        clearDerivedWeather();
       }
     } catch (e) {
       console.error("Weather fetch failed:", e);
-      setFormData((f) => ({ ...f, weather: "", weather_code: "" }));
+      clearDerivedWeather();
     }
   };
 
@@ -169,8 +218,14 @@ const NewInspection = () => {
       setSubscriptionLevel(level);
 
       const [{ data: hivesData }, { data: apiariesData }] = await Promise.all([
-        supabase.from("hives").select("id, name, apiary_id, nfc_uid").is("archived_at", null),
-        supabase.from("apiaries").select("id, name, latitude, longitude").is("archived_at", null),
+        supabase
+          .from("hives")
+          .select("id, name, apiary_id, nfc_uid")
+          .is("archived_at", null),
+        supabase
+          .from("apiaries")
+          .select("id, name, latitude, longitude")
+          .is("archived_at", null),
       ]);
 
       const safeHives = hivesData || [];
@@ -199,7 +254,9 @@ const NewInspection = () => {
       // 3) NFC param – PREMIUM ONLY
       if (level === "premium" && nfc_uidParam) {
         const matches = safeHives.filter(
-          (h) => (h.nfc_uid || "").trim().toLowerCase() === nfc_uidParam.trim().toLowerCase()
+          (h) =>
+            (h.nfc_uid || "").trim().toLowerCase() ===
+            nfc_uidParam.trim().toLowerCase()
         );
 
         if (matches.length > 1) {
@@ -221,9 +278,12 @@ const NewInspection = () => {
         apiary_id: chosenApiaryId || f.apiary_id,
       }));
 
-      const today = dayjs().format("YYYY-MM-DD");
-      const apiary = safeApiaries.find((a) => a.id === (chosenApiaryId || formData.apiary_id));
-      if (apiary) fetchWeather(apiary, today);
+      // ✅ Fetch derived weather for the inspection date (not always "today")
+      const targetDate = dayjs().format("YYYY-MM-DD");
+      const apiary = safeApiaries.find(
+        (a) => a.id === (chosenApiaryId || formData.apiary_id)
+      );
+      if (apiary) fetchWeather(apiary, targetDate);
     };
 
     fetchDefaults();
@@ -262,7 +322,9 @@ const NewInspection = () => {
         const next = [...prev];
         for (const f of selected) {
           next.push({
-            id: `${f.name}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+            id: `${f.name}-${Date.now()}-${Math.random()
+              .toString(16)
+              .slice(2)}`,
             url: URL.createObjectURL(f),
             name: f.name,
           });
@@ -407,6 +469,11 @@ const NewInspection = () => {
       signs_disease: formData.signs_disease === "yes",
       signs_pests: formData.signs_pests === "yes",
     };
+
+    // ✅ Ensure DB stores canonical JSON derived weather if available
+    if (derivedWeatherJson) {
+      base.weather = derivedWeatherJson;
+    }
 
     if (!base.signs_disease) {
       base.disease_types = null;
@@ -719,7 +786,7 @@ const NewInspection = () => {
           <input
             type="text"
             name="weather"
-            value={formData.weather}
+            value={derivedWeatherDisplay || formData.weather}
             readOnly
             className="w-full border px-3 py-2 rounded mt-2 bg-gray-100 text-gray-700"
             placeholder="Auto-fetched from apiary location"
@@ -734,7 +801,6 @@ const NewInspection = () => {
             className="w-full border px-3 py-2 rounded mt-2"
             placeholder="What did you actually observe at the hive? (e.g. sunny, warm, light breeze)"
           />
-
         </div>
 
         {/* Colony Behaviour */}
@@ -1030,7 +1096,7 @@ const NewInspection = () => {
             type="submit"
             disabled={saving}
             className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
-             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-5000"
+             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
           >
             {saving ? "Saving…" : "Save Inspection"}
           </button>

@@ -3,11 +3,38 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import dayjs from "dayjs";
 import { supabase } from "../../services/supabase";
+import { formatDerivedWeather, getTempUnit } from "../../utils/formatDerivedWeather";
 
 // Helpers: UK display vs ISO for inputs/queries
 const fmtUK = (d) => (d ? dayjs(d).format("DD/MM/YYYY") : "");
 const DEFAULT_FROM = dayjs().subtract(30, "day").format("YYYY-MM-DD"); // ISO for inputs
 const DEFAULT_TO = dayjs().format("YYYY-MM-DD"); // ISO for inputs
+const safeParseDerivedWeather = (raw) => {
+  if (!raw || typeof raw !== "string") return null;
+  const s = raw.trim();
+  if (!s.startsWith("{")) return null;
+
+  try {
+    const obj = JSON.parse(s);
+    if (!obj || typeof obj !== "object") return null;
+
+    const desc = typeof obj.desc === "string" ? obj.desc : "";
+    const temp_c = Number.isFinite(Number(obj.temp_c)) ? Number(obj.temp_c) : null;
+
+    if (!desc && temp_c === null) return null;
+    return { desc, temp_c };
+  } catch {
+    return null;
+  }
+};
+
+const formatWeatherForDisplay = (rawWeather) => {
+  const parsed = safeParseDerivedWeather(rawWeather);
+  if (!parsed) return rawWeather || "";
+
+  const unit = getTempUnit();
+  return formatDerivedWeather(parsed, unit);
+};
 
 export default function PrintReport() {
   const location = useLocation();
@@ -469,7 +496,7 @@ export default function PrintReport() {
           apiary: apiaryName.get(resolvedApiaryId) || "",
           hive: displayHive(resolvedHiveId, resolvedApiaryId),
           title: `Inspection ${fmtUK(x.date)}`,
-          weather: x.weather || "",
+          weather: formatWeatherForDisplay(x.weather),
           weather_observed: x.weather_observed || "",
           colony_behavior: x.colony_behavior || "",
           hive_population: x.hive_population || "",
@@ -607,7 +634,7 @@ export default function PrintReport() {
         date: fmtUK(x.date),
         apiary: apiaryName.get(resolvedApiaryId) || "",
         hive: displayHive(resolvedHiveId, resolvedApiaryId),
-        weather: x.weather || "",
+        weather: formatWeatherForDisplay(x.weather),
         weather_observed: x.weather_observed || "",
         colony_behavior: x.colony_behavior || "",
         hive_population: x.hive_population || "",
@@ -919,7 +946,7 @@ export default function PrintReport() {
                           <td className="py-2 pr-3">
                             {displayHive(resolvedHiveId, resolvedApiaryId)}
                           </td>
-                          <td className="py-2 pr-3">{x.weather || ""}</td>
+                          <td className="py-2 pr-3">{formatWeatherForDisplay(x.weather)}</td>
                           <td className="py-2 pr-3">{x.weather_observed || ""}</td>
                           <td className="py-2 pr-3">{x.colony_behavior || ""}</td>
                           <td className="py-2 pr-3">{x.hive_population || ""}</td>

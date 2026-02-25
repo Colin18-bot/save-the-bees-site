@@ -12,26 +12,30 @@ const NOTES = [
   version: "1.1.2",
   released_at: "2026-02-24T18:00:00Z",
   summary:
-    "Weather handling improved across Inspections, Reports and printing. Inspection weather is now date-accurate, user-observable conditions are supported, and report exports include both derived and observed weather values.",
+    "Weather handling improved across Inspections, Reports, printing and dashboard UX. Inspection weather is now date-accurate, temperature-aware, user-observable conditions are supported, and report exports include fully formatted weather values.",
 
   added: [
     "Added new **Weather (observed)** field to Inspections, allowing users to manually record real-world conditions at the time of inspection.",
-    "Reports → Print Report now displays **Weather (derived)** and **Weather (observed)** as separate columns.",
-    "CSV exports (Combined + Inspections) now include a new `weather_observed` column.",
-    "Inspection list summaries now show both derived and observed weather where available."
+    "Derived inspection weather now includes **average daily temperature (min/max)**, stored canonically in Celsius.",
+    "Reports → Print Report now displays formatted **Weather (derived)** and **Weather (observed)** values.",
+    "CSV exports (Combined + Inspections) now include a new `weather_observed` column and properly formatted derived weather.",
+    "Dashboard stat tiles are now fully clickable and link directly to their respective sections (Apiaries, Hives, Inspections, Tasks, Logbook, NFC Manager)."
   ],
 
   changed: [
     "Weather in inspections is now **frozen to the inspection date** and no longer reflects current live conditions when editing past records.",
+    "Derived weather now displays in the format `12°C – Light drizzle` and automatically respects the user’s temperature preference (°C / °F).",
     "Improved weather date parsing logic to handle mixed timestamp formats safely and prevent incorrect condition display.",
-    "Improved report clarity by labelling weather columns explicitly as **derived** vs **observed**."
+    "Improved report clarity by labelling weather columns explicitly as **derived** vs **observed**.",
+    "Dashboard stat tiles redesigned for improved mobile UX with centred layout and enhanced visual feedback."
   ],
 
   fixed: [
     "Fixed issue where edited inspections did not immediately reflect updated observed weather in list views.",
     "Resolved inconsistent weather behaviour between Dashboard, InspectionList and EditInspection flows.",
     "Fixed missing weather_observed data in Reports and CSV exports.",
-    "Corrected edge cases where weather timestamps could display incorrect conditions due to format mismatches."
+    "Corrected edge cases where weather timestamps could display incorrect conditions due to format mismatches.",
+    "Prevented raw JSON weather strings from appearing in Print Reports or CSV exports."
   ],
 
   removed: [],
@@ -49,7 +53,8 @@ const NOTES = [
 
   known_issues: [
     "Weather data is derived from historical forecast APIs and may not perfectly match hyper-local microclimates.",
-    "If no historical forecast data is available for a specific timestamp, the derived weather field may be blank while observed weather remains available."
+    "If no historical forecast data is available for a specific timestamp, the derived weather field may be blank while observed weather remains available.",
+    "Temperature display relies on stored canonical Celsius values and converts for display only."
   ]
   },
   
