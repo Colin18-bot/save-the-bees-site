@@ -1,3 +1,6 @@
+# Redirect www to non-www
+https://www.beezknees.co.uk/*   https://beezknees.co.uk/:splat   301
+
 # Home
 /index.html              /                         301
 
