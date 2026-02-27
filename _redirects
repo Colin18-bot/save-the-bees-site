@@ -1,5 +1,7 @@
-# Redirect www to non-www
-https://www.beezknees.co.uk/*   https://beezknees.co.uk/:splat   301
+# Force HTTPS and remove www
+http://beezknees.co.uk/*        https://beezknees.co.uk/:splat    301
+https://www.beezknees.co.uk/*   https://beezknees.co.uk/:splat    301
+http://www.beezknees.co.uk/*    https://beezknees.co.uk/:splat    301
 
 # Home
 /index.html              /                         301
