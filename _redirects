@@ -5,7 +5,7 @@ http://www.beezknees.co.uk/*    https://beezknees.co.uk/:splat    301
 
 # Home
 /index.html              /                         301
-/index.html              /                         301
+
 # Top-level content pages
 /about-us.html           /about-us                 301
 /contact.html            /contact                  301
