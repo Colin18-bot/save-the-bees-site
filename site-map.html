@@ -41,41 +41,60 @@
 
     <!-- Schema.org Structured Data – CollectionPage -->
     <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        "name": "BeezKnees Site Map",
-        "description": "Complete site map of BeezKnees including guides, calendar pages, HiveTag members links and legal pages.",
-        "url": "https://beezknees.co.uk/site-map",
-        "publisher": {
-          "@type": "Organization",
-          "name": "BeezKnees",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
-          }
-        },
-        "author": {
-          "@type": "Person",
-          "name": "Colin Chorley"
-        },
-        "datePublished": "2024-06-01",
-        "dateModified": "2026-01-03",
-        "inLanguage": "en-GB"
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://beezknees.co.uk/#organization",
+      "name": "BeezKnees",
+      "url": "https://beezknees.co.uk/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
       }
-    </script>
-
-    <!-- Schema.org Structured Data – Breadcrumbs -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://beezknees.co.uk/" },
-          { "@type": "ListItem", "position": 2, "name": "Site Map", "item": "https://beezknees.co.uk/site-map" }
-        ]
-      }
-    </script>
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://beezknees.co.uk/site-map#webpage",
+      "url": "https://beezknees.co.uk/site-map",
+      "name": "BeezKnees Beekeeping Site Map – All Pages",
+      "description": "Full BeezKnees site map including guides, varroa resources, monthly apiary tasks, honeybee facts, help-the-bees pages, downloads, HiveTag members area links, and legal pages.",
+      "isPartOf": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Colin Chorley"
+      },
+      "inLanguage": "en-GB",
+      "datePublished": "2024-06-01T00:00:00+00:00",
+      "dateModified": "2026-01-03T00:00:00+00:00"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://beezknees.co.uk/site-map#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://beezknees.co.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Site Map",
+          "item": "https://beezknees.co.uk/site-map"
+        }
+      ]
+    }
+  ]
+}
+</script>
   </head>
 
   <body>

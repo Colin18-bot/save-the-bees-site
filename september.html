@@ -32,116 +32,138 @@
       <link rel="manifest" href="/site.webmanifest">
       <!-- Schema.org Structured Data -->
       <script type="application/ld+json">
-         [
-           {
-             "@context": "https://schema.org",
-             "@type": "TechArticle",
-             "headline": "September Beekeeping Tasks in the UK – Feeding, Varroa Control & Winter Prep",
-             "description": "Discover essential beekeeping tasks for September in the UK, including winter feeding, varroa mite treatment, combining weak colonies, fitting mouse guards and preparing hives for colder weather.",
-             "image": "https://beezknees.co.uk/images/extracted-honey.jpg",
-             "author": {
-               "@type": "Person",
-               "name": "Colin Chorley",
-               "url": "https://www.tiktok.com/@colinchorley"
-             },
-             "publisher": {
-               "@type": "Organization",
-               "name": "BeezKnees",
-               "logo": {
-                 "@type": "ImageObject",
-                 "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
-               }
-             },
-             "mainEntityOfPage": {
-               "@type": "WebPage",
-               "@id": "https://beezknees.co.uk/september"
-             },
-             "datePublished": "2024-06-01",
-             "dateModified": "2025-12-11",
-             "inLanguage": "en-GB"
-           },
-           {
-             "@context": "https://schema.org",
-             "@type": "BreadcrumbList",
-             "itemListElement": [
-               {
-                 "@type": "ListItem",
-                 "position": 1,
-                 "name": "Home",
-                 "item": "https://beezknees.co.uk/"
-               },
-               {
-                 "@type": "ListItem",
-                 "position": 2,
-                 "name": "September",
-                 "item": "https://beezknees.co.uk/september"
-               }
-             ]
-           },
-           {
-             "@context": "https://schema.org",
-             "@type": "FAQPage",
-             "mainEntity": [
-               {
-                 "@type": "Question",
-                 "name": "What are the main beekeeping tasks in September in the UK?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "In September, UK beekeepers focus on checking and increasing winter stores, feeding colonies where necessary, completing varroa treatments, combining weak colonies, fitting mouse guards, reducing entrances and weatherproofing hives for winter."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "How much food should a hive have by the end of September?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "By late September, colonies should be well on their way to having around 20–25 kg of stores ready for winter. Weaker or late-season colonies may need extra feeding to reach this target by late autumn."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "Should I still be feeding bees in September?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Yes, many UK beekeepers feed in September using a strong sugar syrup or commercial invert feed to build winter stores. Aim to complete the bulk of feeding before temperatures drop and nights become too cold for bees to process the syrup."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "Is it too late to treat for varroa in September?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Ideally, varroa treatments should begin soon after the main honey harvest, but many products can still be used in early September. Check your chosen treatment’s instructions carefully and ensure winter bees are raised in a low-mite environment wherever possible."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "When should I fit mouse guards to my hives?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "September is a good time to fit mouse guards before nights become cold and mice look for warm, dry places to nest. Make sure guards are secure and that entrances are still large enough for normal bee traffic."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "Do I still need weekly inspections in September?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "You usually no longer need weekly swarm-control inspections in September, but you should still check stores, colony strength and general health every couple of weeks, and keep an eye on wasp or robbing activity."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "Should I remove the queen excluder in September?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Yes, queen excluders are normally removed before winter. If left in place, the cluster can move up away from the queen in cold weather, risking her being left behind to chill and die."
-                 }
-               }
-             ]
-           }
-         ]
-      </script>
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://beezknees.co.uk/#organization",
+      "name": "BeezKnees",
+      "url": "https://beezknees.co.uk/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://beezknees.co.uk/september#webpage",
+      "url": "https://beezknees.co.uk/september",
+      "name": "September Beekeeping Tasks in the UK – Feeding, Varroa Control & Winter Prep",
+      "description": "What to do with your bees in September in the UK: key beekeeping tasks for feeding, varroa treatment, combining weak colonies, fitting mouse guards, reducing entrances and preparing hives for winter.",
+      "isPartOf": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "inLanguage": "en-GB",
+      "datePublished": "2024-06-01T00:00:00+00:00",
+      "dateModified": "2025-12-11T00:00:00+00:00"
+    },
+    {
+      "@type": "Article",
+      "@id": "https://beezknees.co.uk/september#article",
+      "headline": "September Beekeeping Tasks in the UK – Feeding, Varroa Control & Winter Prep",
+      "description": "Discover essential beekeeping tasks for September in the UK, including winter feeding, varroa mite treatment, combining weak colonies, fitting mouse guards and preparing hives for colder weather.",
+      "image": "https://beezknees.co.uk/images/extracted-honey.jpg",
+      "author": {
+        "@type": "Person",
+        "name": "Colin Chorley"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://beezknees.co.uk/september#webpage"
+      },
+      "datePublished": "2024-06-01T00:00:00+00:00",
+      "dateModified": "2025-12-11T00:00:00+00:00",
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://beezknees.co.uk/september#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://beezknees.co.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "September",
+          "item": "https://beezknees.co.uk/september"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://beezknees.co.uk/september#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What are the main beekeeping tasks in September in the UK?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In September, UK beekeepers focus on checking and increasing winter stores, feeding colonies where necessary, completing varroa treatments, combining weak colonies, fitting mouse guards, reducing entrances and weatherproofing hives for winter."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much food should a hive have by the end of September?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "By late September, colonies should be well on their way to having around 20–25 kg of stores ready for winter. Weaker or late-season colonies may need extra feeding to reach this target by late autumn."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I still be feeding bees in September?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, many UK beekeepers feed in September using a strong sugar syrup or commercial invert feed to build winter stores. Aim to complete the bulk of feeding before temperatures drop and nights become too cold for bees to process the syrup."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is it too late to treat for varroa in September?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ideally, varroa treatments should begin soon after the main honey harvest, but many products can still be used in early September. Check your chosen treatment’s instructions carefully and ensure winter bees are raised in a low-mite environment wherever possible."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When should I fit mouse guards to my hives?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "September is a good time to fit mouse guards before nights become cold and mice look for warm, dry places to nest. Make sure guards are secure and that entrances are still large enough for normal bee traffic."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I still need weekly inspections in September?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You usually no longer need weekly swarm-control inspections in September, but you should still check stores, colony strength and general health every couple of weeks, and keep an eye on wasp or robbing activity."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I remove the queen excluder in September?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, queen excluders are normally removed before winter. If left in place, the cluster can move up away from the queen in cold weather, risking her being left behind to chill and die."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
    </head>
    <body>
       <!-- Fixed Header and Nav Container -->

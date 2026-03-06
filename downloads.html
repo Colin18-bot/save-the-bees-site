@@ -62,115 +62,200 @@
 
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
-      [
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://beezknees.co.uk/#organization",
+      "name": "BeezKnees",
+      "url": "https://beezknees.co.uk/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+      },
+      "sameAs": [
+        "https://www.tiktok.com/@colinchorley"
+      ]
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://beezknees.co.uk/downloads#webpage",
+      "url": "https://beezknees.co.uk/downloads",
+      "name": "Free Beekeeping Downloads (UK) – Guides, Checklists & Templates | BeezKnees",
+      "description": "Free BeezKnees downloads for UK beekeepers: bee health checker (PDF/Word), varroa chemical and non-chemical guides, PPE checklist, official veterinary medicine record form (external), apiary risk assessment templates (Word + PDF), and Year in the Apiary planning PDFs.",
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/beehive_11-hero.webp"
+      },
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "Article",
+      "@id": "https://beezknees.co.uk/downloads#article",
+      "headline": "Free Beekeeping Downloads (UK) – Guides, Checklists & Templates",
+      "description": "Free BeezKnees downloads for UK beekeepers: bee health checker (PDF/Word), varroa chemical and non-chemical guides, PPE checklist, official veterinary medicine record form (external), apiary risk assessment templates (Word + PDF), and Year in the Apiary planning PDFs.",
+      "author": {
+        "@type": "Person",
+        "name": "Colin Chorley"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://beezknees.co.uk/downloads#webpage"
+      },
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/beehive_11-hero.webp"
+      },
+      "inLanguage": "en-GB",
+      "dateModified": "2025-12-29"
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://beezknees.co.uk/downloads#downloads-list",
+      "name": "BeezKnees free downloads",
+      "itemListElement": [
         {
-          "@context": "https://schema.org",
-          "@type": "CollectionPage",
-          "name": "Free Beekeeping Downloads (UK) – BeezKnees",
-          "description": "A collection of free printable downloads for UK beekeepers, including bee health checker resources, varroa treatment guides, PPE guidance, record-keeping resources, Word/PDF templates, and planning PDFs.",
-          "url": "https://beezknees.co.uk/downloads",
-          "publisher": {
-            "@type": "Organization",
-            "name": "BeezKnees",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
-            }
-          },
-          "author": {
-            "@type": "Person",
-            "name": "Colin Chorley"
-          },
-          "dateModified": "2025-12-29",
-          "hasPart": [
-            {
-              "@type": "DigitalDocument",
-              "name": "Veterinary Medicine Administration Record (official PDF – BeeBase / National Bee Unit)",
-              "fileFormat": "application/pdf",
-              "url": "https://www.nationalbeeunit.com/assets/PDFs/3_Resources_for_beekeepers/Fact_Sheets/Fact_28_Veterinary_Medicine_Administration_Record.pdf"
-            },
-            {
-              "@type": "DigitalDocument",
-              "name": "Bee Health Checker (UK) – Printable Checklist (PDF)",
-              "fileFormat": "application/pdf",
-              "url": "https://beezknees.co.uk/downloads/BeezKnees_Bee_Health_Checker_UK.pdf"
-            },
-            {
-              "@type": "DigitalDocument",
-              "name": "Bee Health Checker (UK) – Printable Checklist (Word)",
-              "fileFormat": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-              "url": "https://beezknees.co.uk/downloads/BeezKnees_Bee_Health_Checker_UK.docx"
-            },
-            {
-              "@type": "DigitalDocument",
-              "name": "Varroa Chemical Treatments – UK Seasonal Overview (PDF)",
-              "fileFormat": "application/pdf",
-              "url": "https://beezknees.co.uk/downloads/BeezKnees_Varroa_Chemical_Treatments_Overview.pdf"
-            },
-            {
-              "@type": "DigitalDocument",
-              "name": "Non-Chemical Varroa Control – Integrated Pest Management (PDF)",
-              "fileFormat": "application/pdf",
-              "url": "https://beezknees.co.uk/downloads/BeezKnees_Varroa_Non_Chemical_Methods.pdf"
-            },
-            {
-              "@type": "DigitalDocument",
-              "name": "Personal Protective Equipment (PPE) for Varroa Treatments – Safety Guide (PDF)",
-              "fileFormat": "application/pdf",
-              "url": "https://beezknees.co.uk/downloads/BeezKnees_PPE_for_Varroa_Treatments.pdf"
-            },
-            {
-              "@type": "DigitalDocument",
-              "name": "Apiary Risk Assessment Template (PDF)",
-              "fileFormat": "application/pdf",
-              "url": "https://beezknees.co.uk/downloads/apiary-risk-assessment-template.pdf"
-            },
-            {
-              "@type": "DigitalDocument",
-              "name": "Apiary Risk Assessment Template (Word)",
-              "fileFormat": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-              "url": "https://beezknees.co.uk/downloads/apiary-risk-assessment-template.docx"
-            },
-            {
-              "@type": "DigitalDocument",
-              "name": "Landowner–Beekeeper Agreement Template (Word)",
-              "fileFormat": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-              "url": "https://beezknees.co.uk/downloads/landowner-beekeeper-agreement.docx"
-            },
-            {
-              "@type": "DigitalDocument",
-              "name": "Year in the Apiary – UK Beekeeping Calendar (PDF)",
-              "fileFormat": "application/pdf",
-              "url": "https://beezknees.co.uk/downloads/year-in-the-apiary-uk-beekeeping-calendar.pdf"
-            },
-            {
-              "@type": "DigitalDocument",
-              "name": "Year in the Apiary – Monthly Seasonal Strategy (PDF)",
-              "fileFormat": "application/pdf",
-              "url": "https://beezknees.co.uk/downloads/year-in-the-apiary-monthly-seasonal-strategy.pdf"
-            }
-          ]
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@type": "DigitalDocument",
+            "name": "Veterinary Medicine Administration Record (official PDF – BeeBase / National Bee Unit)",
+            "fileFormat": "application/pdf",
+            "url": "https://www.nationalbeeunit.com/assets/PDFs/3_Resources_for_beekeepers/Fact_Sheets/Fact_28_Veterinary_Medicine_Administration_Record.pdf"
+          }
         },
         {
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://beezknees.co.uk/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "Downloads",
-              "item": "https://beezknees.co.uk/downloads"
-            }
-          ]
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@type": "DigitalDocument",
+            "name": "Bee Health Checker (UK) – Printable Checklist (PDF)",
+            "fileFormat": "application/pdf",
+            "url": "https://beezknees.co.uk/downloads/BeezKnees_Bee_Health_Checker_UK.pdf"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@type": "DigitalDocument",
+            "name": "Bee Health Checker (UK) – Printable Checklist (Word)",
+            "fileFormat": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "url": "https://beezknees.co.uk/downloads/BeezKnees_Bee_Health_Checker_UK.docx"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "item": {
+            "@type": "DigitalDocument",
+            "name": "Varroa Chemical Treatments – UK Seasonal Overview (PDF)",
+            "fileFormat": "application/pdf",
+            "url": "https://beezknees.co.uk/downloads/BeezKnees_Varroa_Chemical_Treatments_Overview.pdf"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "item": {
+            "@type": "DigitalDocument",
+            "name": "Non-Chemical Varroa Control – Integrated Pest Management (PDF)",
+            "fileFormat": "application/pdf",
+            "url": "https://beezknees.co.uk/downloads/BeezKnees_Varroa_Non_Chemical_Methods.pdf"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "item": {
+            "@type": "DigitalDocument",
+            "name": "Personal Protective Equipment (PPE) for Varroa Treatments – Safety Guide (PDF)",
+            "fileFormat": "application/pdf",
+            "url": "https://beezknees.co.uk/downloads/BeezKnees_PPE_for_Varroa_Treatments.pdf"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "item": {
+            "@type": "DigitalDocument",
+            "name": "Apiary Risk Assessment Template (PDF)",
+            "fileFormat": "application/pdf",
+            "url": "https://beezknees.co.uk/downloads/apiary-risk-assessment-template.pdf"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "item": {
+            "@type": "DigitalDocument",
+            "name": "Apiary Risk Assessment Template (Word)",
+            "fileFormat": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "url": "https://beezknees.co.uk/downloads/apiary-risk-assessment-template.docx"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 9,
+          "item": {
+            "@type": "DigitalDocument",
+            "name": "Landowner–Beekeeper Agreement Template (Word)",
+            "fileFormat": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "url": "https://beezknees.co.uk/downloads/landowner-beekeeper-agreement.docx"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 10,
+          "item": {
+            "@type": "DigitalDocument",
+            "name": "Year in the Apiary – UK Beekeeping Calendar (PDF)",
+            "fileFormat": "application/pdf",
+            "url": "https://beezknees.co.uk/downloads/year-in-the-apiary-uk-beekeeping-calendar.pdf"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 11,
+          "item": {
+            "@type": "DigitalDocument",
+            "name": "Year in the Apiary – Monthly Seasonal Strategy (PDF)",
+            "fileFormat": "application/pdf",
+            "url": "https://beezknees.co.uk/downloads/year-in-the-apiary-monthly-seasonal-strategy.pdf"
+          }
         }
       ]
-    </script>
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://beezknees.co.uk/downloads#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://beezknees.co.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Downloads",
+          "item": "https://beezknees.co.uk/downloads"
+        }
+      ]
+    }
+  ]
+}
+</script>
   </head>
 
   <body>

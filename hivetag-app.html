@@ -54,130 +54,184 @@
 
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
-      [
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://beezknees.co.uk/#organization",
+      "name": "BeezKnees",
+      "url": "https://beezknees.co.uk/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+      },
+      "sameAs": [
+        "https://www.tiktok.com/@colinchorley"
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://beezknees.co.uk/hivetag-app#webpage",
+      "url": "https://beezknees.co.uk/hivetag-app",
+      "name": "Beekeeping Records App (UK) – Hive Inspections, Tasks & Apiary Logs | HiveTag by BeezKnees",
+      "description": "A simple UK beekeeping records app for hive inspections, apiaries, tasks, colony health notes and costs. Includes a bee disease observation helper. Built by a beekeeper in South Wales.",
+      "isPartOf": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+      },
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "Article",
+      "@id": "https://beezknees.co.uk/hivetag-app#article",
+      "headline": "Beekeeping Records App (UK) – Hive Inspections, Tasks & Apiary Logs | HiveTag by BeezKnees",
+      "description": "A simple UK beekeeping records app for hive inspections, apiaries, tasks, colony health notes and costs. Includes a bee disease observation helper. Built by a beekeeper in South Wales.",
+      "author": {
+        "@type": "Person",
+        "name": "Colin Chorley"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://beezknees.co.uk/hivetag-app#webpage"
+      },
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+      },
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://beezknees-members.netlify.app/#webapplication",
+      "name": "HiveTag",
+      "url": "https://beezknees-members.netlify.app/",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": "HiveTag is a web-based beekeeping records app for UK hobby and small-scale beekeepers. Record apiaries, hives, inspections, tasks, colony health notes, inventory, sales and expenses. Includes a Colony Health Check (bee disease observation helper) to guide what you record during inspections.",
+      "creator": {
+        "@type": "Person",
+        "name": "Colin Chorley"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "BeezKnees",
+        "url": "https://beezknees.co.uk/"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "United Kingdom"
+      },
+      "offers": [
         {
-          "@context": "https://schema.org",
-          "@type": "WebApplication",
-          "name": "HiveTag",
-          "url": "https://beezknees-members.netlify.app/",
-          "applicationCategory": "BusinessApplication",
-          "operatingSystem": "Web",
-          "description": "HiveTag is a web-based beekeeping records app for UK hobby and small-scale beekeepers. Record apiaries, hives, inspections, tasks, colony health notes, inventory, sales and expenses. Includes a Colony Health Check (bee disease observation helper) to guide what you record during inspections.",
-          "creator": {
-            "@type": "Person",
-            "name": "Colin Chorley"
-          },
-          "publisher": {
-            "@type": "Organization",
-            "name": "BeezKnees"
-          },
-          "areaServed": {
-            "@type": "Country",
-            "name": "United Kingdom"
-          },
-          "spatialCoverage": [
-            {
-              "@type": "Place",
-              "name": "Cardiff, South Wales, UK"
-            },
-            {
-              "@type": "Place",
-              "name": "Vale of Glamorgan, Wales, UK"
-            }
-          ],
-          "offers": [
-            {
-              "@type": "Offer",
-              "name": "HiveTag Free Plan",
-              "price": "0",
-              "priceCurrency": "GBP",
-              "category": "Free",
-              "url": "https://beezknees-members.netlify.app/Register"
-            }
-          ]
+          "@type": "Offer",
+          "name": "HiveTag Free Plan",
+          "price": "0",
+          "priceCurrency": "GBP",
+          "category": "Free",
+          "url": "https://beezknees-members.netlify.app/Register"
         },
         {
-          "@context": "https://schema.org",
-          "@type": "BreadcrumbList",
-          "itemListElement": [
-            {
-              "@type": "ListItem",
-              "position": 1,
-              "name": "Home",
-              "item": "https://beezknees.co.uk/"
-            },
-            {
-              "@type": "ListItem",
-              "position": 2,
-              "name": "HiveTag App",
-              "item": "https://beezknees.co.uk/hivetag-app"
-            }
-          ]
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          "mainEntity": [
-            {
-              "@type": "Question",
-              "name": "What is HiveTag?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "HiveTag is a simple, web-based beekeeping records app designed for hobby and small-scale beekeepers in the UK. It helps you record apiaries, hives, inspections, tasks, colony health notes, inventory, sales and expenses in one place."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Do I need to install anything to use HiveTag?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "No – HiveTag runs in your web browser on phone, tablet or desktop. There is nothing to install. You simply create an account, log in and use it from wherever you keep your bees."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Is there a free plan for HiveTag?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes. HiveTag has a Free plan and you can start for free in the Members Area. The Free plan is designed for one apiary and up to two hives so you can try HiveTag properly before upgrading."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Who is HiveTag designed for?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "HiveTag is designed for beekeepers who want clearer records without complicated software – especially hobby and small-scale beekeepers in the UK."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Does HiveTag include a bee disease checker?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "HiveTag includes a Colony Health Check (bee disease observation helper) that guides you through common symptoms so you can record what you observe during inspections. It is not a diagnosis tool and it does not replace official advice for notifiable diseases."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Does HiveTag work with NFC hive tags?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes — as an optional Premium feature. NFC hive tags can link to your hives so a quick tap opens the hive’s record in the app. NFC features require a compatible device and separately purchased tags."
-              }
-            },
-            {
-              "@type": "Question",
-              "name": "Can I upgrade from Free to Premium later?",
-              "acceptedAnswer": {
-                "@type": "Answer",
-                "text": "Yes. You can start on the Free plan and upgrade securely through Stripe from inside the app if your beekeeping grows and you want more room for apiaries, hives and records."
-              }
-            }
-          ]
+          "@type": "Offer",
+          "name": "HiveTag Premium Plan",
+          "price": "4.99",
+          "priceCurrency": "GBP",
+          "category": "Premium",
+          "url": "https://beezknees-members.netlify.app/Register"
         }
       ]
-    </script>
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://beezknees.co.uk/hivetag-app#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://beezknees.co.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "HiveTag App",
+          "item": "https://beezknees.co.uk/hivetag-app"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://beezknees.co.uk/hivetag-app#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is HiveTag?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HiveTag is a simple, web-based beekeeping records app designed for hobby and small-scale beekeepers in the UK. It helps you record apiaries, hives, inspections, tasks, colony health notes, inventory, sales and expenses in one place."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need to install anything to use HiveTag?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No – HiveTag runs in your web browser on phone, tablet or desktop. There is nothing to install. You simply create an account, log in and use it from wherever you keep your bees."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is there a free plan for HiveTag?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. HiveTag has a Free plan and you can start for free in the Members Area. The Free plan is designed for one apiary and up to two hives so you can try HiveTag properly before upgrading."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who is HiveTag designed for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HiveTag is designed for beekeepers who want clearer records without complicated software – especially hobby and small-scale beekeepers in the UK."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does HiveTag include a bee disease checker?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HiveTag includes a Colony Health Check (bee disease observation helper) that guides you through common symptoms so you can record what you observe during inspections. It is not a diagnosis tool and it does not replace official advice for notifiable diseases."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does HiveTag work with NFC hive tags?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — as an optional Premium feature. NFC hive tags can link to your hives so a quick tap opens the hive’s record in the app. NFC features require a compatible device and separately purchased tags."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I upgrade from Free to Premium later?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. You can start on the Free plan and upgrade securely through Stripe from inside the app if your beekeeping grows and you want more room for apiaries, hives and records."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
   </head>
 
   <body>

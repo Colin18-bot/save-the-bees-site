@@ -44,40 +44,91 @@
       <!-- Page-only styling (keeps theme; improves conversion layout; mobile safe) -->
       <!-- Structured Data (WebPage + DonateAction + Breadcrumbs) -->
       <script type="application/ld+json">
-         [
-           {
-             "@context": "https://schema.org",
-             "@type": "WebPage",
-             "name": "Donate to Help Bees (UK) – Support BeezKnees",
-             "description": "Donate to support UK-focused bee education, practical beekeeping guidance and pollinator resources created by BeezKnees.",
-             "url": "https://beezknees.co.uk/donate",
-             "inLanguage": "en-GB",
-             "isPartOf": {
-               "@type": "WebSite",
-               "name": "BeezKnees",
-               "url": "https://beezknees.co.uk/"
-             }
-           },
-           {
-             "@context": "https://schema.org",
-             "@type": "DonateAction",
-             "name": "Donate to BeezKnees",
-             "target": "https://beezknees.co.uk/donate",
-             "recipient": {
-               "@type": "Organization",
-               "name": "BeezKnees"
-             }
-           },
-           {
-             "@context": "https://schema.org",
-             "@type": "BreadcrumbList",
-             "itemListElement": [
-               { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://beezknees.co.uk/" },
-               { "@type": "ListItem", "position": 2, "name": "Donate", "item": "https://beezknees.co.uk/donate" }
-             ]
-           }
-         ]
-      </script>
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://beezknees.co.uk/#organization",
+      "name": "BeezKnees",
+      "url": "https://beezknees.co.uk/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+      },
+      "sameAs": [
+        "https://www.tiktok.com/@colinchorley"
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://beezknees.co.uk/donate#webpage",
+      "url": "https://beezknees.co.uk/donate",
+      "name": "Donate to Help Bees (UK) – Support BeezKnees Education, Guidance & Pollinator Action",
+      "description": "Donate to help bees in the UK. Your support helps BeezKnees create practical beekeeping guidance, pollinator-friendly resources, and tools that encourage responsible hive care and better records.",
+      "inLanguage": "en-GB",
+      "isPartOf": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/swarm.jpg"
+      }
+    },
+    {
+      "@type": "Article",
+      "@id": "https://beezknees.co.uk/donate#article",
+      "headline": "Donate to Help Bees (UK) – Support BeezKnees Education, Guidance & Pollinator Action",
+      "description": "Donate to help bees in the UK. Your support helps BeezKnees create practical beekeeping guidance, pollinator-friendly resources, and tools that encourage responsible hive care and better records.",
+      "author": {
+        "@type": "Person",
+        "name": "Colin Chorley"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://beezknees.co.uk/donate#webpage"
+      },
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/swarm.jpg"
+      },
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "DonateAction",
+      "@id": "https://beezknees.co.uk/donate#donate",
+      "name": "Donate to BeezKnees",
+      "target": "https://beezknees.co.uk/donate",
+      "recipient": {
+        "@id": "https://beezknees.co.uk/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://beezknees.co.uk/donate#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://beezknees.co.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Donate",
+          "item": "https://beezknees.co.uk/donate"
+        }
+      ]
+    }
+  ]
+}
+</script>
    </head>
    <body>
       <!-- Fixed Header and Nav Container -->

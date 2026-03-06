@@ -56,136 +56,146 @@
       <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "BeezKnees",
-  "description": "Practical UK beekeeping guides for beginners and hobbyists: seasonal tasks, hive health, bee diseases, equipment checklists, plus HiveTag for recording apiaries, inspections and notes.",
-  "url": "https://beezknees.co.uk/",
-  "logo": {
-    "@type": "ImageObject",
-    "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
-  },
-  "sameAs": [
-    "https://www.facebook.com/beezkneesbeekeeping"
-  ],
-  "founder": {
-    "@type": "Person",
-    "name": "Colin Chorley"
-  },
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "telephone": "",
-    "contactType": "Customer Support"
-  }
-}
-      </script>
-
-      <!-- Schema.org Structured Data - WebSite -->
-      <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "BeezKnees",
-  "url": "https://beezknees.co.uk/",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": {
-      "@type": "EntryPoint",
-      "urlTemplate": "https://beezknees.co.uk/search?q={search_term_string}"
-    }
-  }
-}
-      </script>
-
-      <!-- Schema.org Structured Data - FAQPage -->
-      <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+  "@graph": [
     {
-      "@type": "Question",
-      "name": "Is BeezKnees UK-focused?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes — the guides are written for UK seasons, forage patterns and common beginner questions, with links to trusted UK resources where appropriate."
+      "@type": "Organization",
+      "@id": "https://beezknees.co.uk/#organization",
+      "name": "BeezKnees",
+      "description": "Practical UK beekeeping guides for beginners and hobbyists: seasonal tasks, hive health, bee diseases, equipment checklists, plus HiveTag for recording apiaries, inspections and notes.",
+      "url": "https://beezknees.co.uk/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+      },
+      "sameAs": [
+        "https://www.facebook.com/beezkneesbeekeeping"
+      ],
+      "founder": {
+        "@type": "Person",
+        "name": "Colin Chorley"
       }
     },
     {
-      "@type": "Question",
-      "name": "When is the best time to start beekeeping in the UK?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Most beginners start planning in winter and spring. The best time to get bees is usually spring to early summer, once temperatures and forage improve."
+      "@type": "WebSite",
+      "@id": "https://beezknees.co.uk/#website",
+      "name": "BeezKnees",
+      "url": "https://beezknees.co.uk/",
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "inLanguage": "en-GB",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://beezknees.co.uk/search?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
       }
     },
     {
-      "@type": "Question",
-      "name": "Do I need a garden to keep bees?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No. Many beekeepers keep hives in apiaries, farmland margins or shared sites. You do need permission, suitable forage nearby and a safe, sensible placement."
-      }
+      "@type": "WebPage",
+      "@id": "https://beezknees.co.uk/#webpage",
+      "url": "https://beezknees.co.uk/",
+      "name": "BeezKnees – UK Beekeeping Guides, Seasonal Tips & Hive Records",
+      "description": "Practical UK beekeeping guides for beginners and hobbyists: seasonal tasks, hive health, bee diseases, equipment checklists, plus HiveTag for recording apiaries, inspections and notes.",
+      "isPartOf": {
+        "@id": "https://beezknees.co.uk/#website"
+      },
+      "about": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/honeybee-on-orange-flower.jpg"
+      },
+      "inLanguage": "en-GB"
     },
     {
-      "@type": "Question",
-      "name": "What equipment do I need to begin?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "At minimum you'll need a hive, suit/veil, gloves, smoker, hive tool and a way to feed if needed. Our equipment guide breaks this down into essential vs optional."
-      }
+      "@type": "BreadcrumbList",
+      "@id": "https://beezknees.co.uk/#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://beezknees.co.uk/"
+        }
+      ]
     },
     {
-      "@type": "Question",
-      "name": "How often should I inspect my hive?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "In spring and summer, inspections are often weekly (weather permitting). In colder months, inspections reduce — the monthly calendar explains what's normal."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What should I do if I see a swarm?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Don't panic. Keep people and pets away, and contact a local swarm collector. Our swarm page explains what to do and what not to do."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is HiveTag?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "HiveTag is the BeezKnees members area for recording apiaries, hives and inspections. There's a free tier, with optional Premium for unlimited use and NFC hive tags."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How can I help bees if I don't keep hives?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Plant bee-friendly flowers, avoid pesticides where possible, provide water, and support local conservation. Our 'Help the Bees' page has practical UK ideas."
-      }
+      "@type": "FAQPage",
+      "@id": "https://beezknees.co.uk/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is BeezKnees UK-focused?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes — the guides are written for UK seasons, forage patterns and common beginner questions, with links to trusted UK resources where appropriate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "When is the best time to start beekeeping in the UK?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most beginners start planning in winter and spring. The best time to get bees is usually spring to early summer, once temperatures and forage improve."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need a garden to keep bees?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Many beekeepers keep hives in apiaries, farmland margins or shared sites. You do need permission, suitable forage nearby and a safe, sensible placement."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What equipment do I need to begin?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "At minimum you'll need a hive, suit or veil, gloves, smoker, hive tool and a way to feed if needed. Our equipment guide breaks this down into essential vs optional."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How often should I inspect my hive?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In spring and summer, inspections are often weekly, weather permitting. In colder months, inspections reduce — the monthly calendar explains what's normal."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What should I do if I see a swarm?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Don't panic. Keep people and pets away, and contact a local swarm collector. Our swarm page explains what to do and what not to do."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is HiveTag?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HiveTag is the BeezKnees members area for recording apiaries, hives and inspections. There's a free tier, with optional Premium for unlimited use and NFC hive tags."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I help bees if I don't keep hives?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Plant bee-friendly flowers, avoid pesticides where possible, provide water, and support local conservation. Our 'Help the Bees' page has practical UK ideas."
+          }
+        }
+      ]
     }
   ]
 }
-      </script>
-
-      <!-- Schema.org Structured Data - BreadcrumbList -->
-      <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://beezknees.co.uk/"
-    }
-  ]
-}
-      </script>
-  
+</script>  
    </head>
    <body>
       <!-- Fixed Header and Nav Container -->

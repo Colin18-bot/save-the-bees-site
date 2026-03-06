@@ -45,114 +45,143 @@
       <link rel="manifest" href="/site.webmanifest">
       <!-- Schema.org Structured Data (single, valid JSON-LD) -->
       <script type="application/ld+json">
-         {
-         "@context": "https://schema.org",
-         "@graph": [
-           {
-             "@type": "Organization",
-             "@id": "https://beezknees.co.uk/#organization",
-             "name": "BeezKnees",
-             "url": "https://beezknees.co.uk/",
-             "logo": {
-               "@type": "ImageObject",
-               "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
-             },
-             "sameAs": ["https://www.tiktok.com/@colinchorley"],
-             "contactPoint": [
-               {
-                 "@type": "ContactPoint",
-                 "contactType": "Customer Service",
-                 "email": "info@beezknees.co.uk"
-               }
-             ]
-           },
-           {
-             "@type": "CollectionPage",
-             "@id": "https://beezknees.co.uk/beekeeping-guides#webpage",
-             "url": "https://beezknees.co.uk/beekeeping-guides",
-             "name": "Beekeeping Guides in the UK – Getting Started, Hive Management, Varroa & Honey | BeezKnees",
-             "description": "A UK beekeeping guides hub covering getting started, equipment, inspections, hive management, swarm control, varroa, hygiene and honey extraction, plus seasonal tasks.",
-             "isPartOf": { "@id": "https://beezknees.co.uk/#organization" },
-             "publisher": { "@id": "https://beezknees.co.uk/#organization" },
-             "primaryImageOfPage": {
-               "@type": "ImageObject",
-               "url": "https://beezknees.co.uk/images/Frame-of-bees.jpg"
-             }
-           },
-           {
-             "@type": "BreadcrumbList",
-             "itemListElement": [
-               {
-                 "@type": "ListItem",
-                 "position": 1,
-                 "name": "Home",
-                 "item": "https://beezknees.co.uk/"
-               },
-               {
-                 "@type": "ListItem",
-                 "position": 2,
-                 "name": "Beekeeping Guides",
-                 "item": "https://beezknees.co.uk/beekeeping-guides"
-               }
-             ]
-           },
-           {
-             "@type": "FAQPage",
-             "@id": "https://beezknees.co.uk/beekeeping-guides#faq",
-             "mainEntity": [
-               {
-                 "@type": "Question",
-                 "name": "When is the best time to start beekeeping in the UK?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Many beginners plan over winter and early spring, then get bees in spring to early summer when temperatures rise and forage improves. Local beekeeping associations can help advise on timing for specific areas."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "How often should I inspect my hive?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "During spring build-up and swarm season, weekly inspections are common when weather allows. Outside peak season, inspections reduce, and in winter unnecessary disturbance should be avoided."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "What equipment do I actually need as a beginner?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Most beginners start with a suitable hive, a veil or suit, gloves, a smoker, a hive tool and a feeder. Additional equipment can be added gradually as confidence and experience grow."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "What is varroa, and do I need to worry about it in the UK?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Varroa destructor is a parasitic mite that weakens colonies and spreads viruses. In the UK, effective management relies on monitoring, seasonal awareness and appropriate intervention rather than guesswork."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "How can I reduce the risk of spreading disease between hives?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Good hygiene reduces risk: clean tools between colonies, avoid swapping unknown frames, be cautious with second-hand equipment and learn early warning signs of serious brood disease."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "What is HiveTag?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "HiveTag is the BeezKnees members area for recording apiaries, hives and inspections. It includes a free tier for getting started, with optional Premium features for more advanced record keeping."
-                 }
-               }
-             ]
-           }
-         ]
-         }
-      </script>
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://beezknees.co.uk/#organization",
+      "name": "BeezKnees",
+      "url": "https://beezknees.co.uk/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+      },
+      "sameAs": [
+        "https://www.tiktok.com/@colinchorley"
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "Customer Service",
+          "email": "info@beezknees.co.uk"
+        }
+      ]
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://beezknees.co.uk/beekeeping-guides#webpage",
+      "url": "https://beezknees.co.uk/beekeeping-guides",
+      "name": "Beekeeping Guides in the UK – Getting Started, Hive Management, Varroa & Honey | BeezKnees",
+      "description": "A practical UK beekeeping guides hub for beginners and hobbyists: getting started, equipment, inspections, hive management, swarm control, varroa monitoring, hygiene, honey extraction and a month-by-month apiary calendar.",
+      "isPartOf": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/Frame-of-bees.jpg"
+      },
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "Article",
+      "@id": "https://beezknees.co.uk/beekeeping-guides#article",
+      "headline": "Beekeeping Guides in the UK – Getting Started, Hive Management, Varroa & Honey",
+      "description": "A practical UK beekeeping guides hub for beginners and hobbyists: getting started, equipment, inspections, hive management, swarm control, varroa monitoring, hygiene, honey extraction and a month-by-month apiary calendar.",
+      "author": {
+        "@type": "Person",
+        "name": "Colin Chorley"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://beezknees.co.uk/beekeeping-guides#webpage"
+      },
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/Frame-of-bees.jpg"
+      },
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://beezknees.co.uk/beekeeping-guides#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://beezknees.co.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Beekeeping Guides",
+          "item": "https://beezknees.co.uk/beekeeping-guides"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://beezknees.co.uk/beekeeping-guides#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "When is the best time to start beekeeping in the UK?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Many beginners plan over winter and early spring, then get bees in spring to early summer when temperatures rise and forage improves. Local beekeeping associations can help advise on timing for specific areas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How often should I inspect my hive?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "During spring build-up and swarm season, weekly inspections are common when weather allows. Outside peak season, inspections reduce, and in winter unnecessary disturbance should be avoided."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What equipment do I actually need as a beginner?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Most beginners start with a suitable hive, a veil or suit, gloves, a smoker, a hive tool and a feeder. Additional equipment can be added gradually as confidence and experience grow."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is varroa, and do I need to worry about it in the UK?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Varroa destructor is a parasitic mite that weakens colonies and spreads viruses. In the UK, effective management relies on monitoring, seasonal awareness and appropriate intervention rather than guesswork."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I reduce the risk of spreading disease between hives?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Good hygiene reduces risk: clean tools between colonies, avoid swapping unknown frames, be cautious with second-hand equipment and learn early warning signs of serious brood disease."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is HiveTag?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "HiveTag is the BeezKnees members area for recording apiaries, hives and inspections. It includes a free tier for getting started, with optional Premium features for more advanced record keeping."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
    </head>
    <body>
       <!-- Fixed Header and Nav Container -->

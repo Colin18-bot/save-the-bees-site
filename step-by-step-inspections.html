@@ -34,114 +34,123 @@
 
 <!-- Schema.org Structured Data -->
 <script type="application/ld+json">
-[
-  {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": "Step-by-Step Hive Inspections (UK)",
-    "description": "A practical step-by-step hive inspection guide for UK beekeepers, with season-aware tips and a quick field-reference layout.",
-    "image": "https://beezknees.co.uk/images/beehives_10.jpg",
-    "author": {
-      "@type": "Person",
-      "name": "Colin Chorley"
-    },
-    "publisher": {
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
       "@type": "Organization",
+      "@id": "https://beezknees.co.uk/#organization",
       "name": "BeezKnees",
+      "url": "https://beezknees.co.uk/",
       "logo": {
         "@type": "ImageObject",
         "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
       }
     },
-    "mainEntityOfPage": {
-      "@type": "WebPage",
-      "@id": "https://beezknees.co.uk/step-by-step-inspections"
+    {
+      "@type": "Article",
+      "@id": "https://beezknees.co.uk/step-by-step-inspections#article",
+      "headline": "Step-by-Step Hive Inspections (UK)",
+      "description": "A practical step-by-step hive inspection guide for UK beekeepers, with season-aware tips and a quick field-reference layout.",
+      "image": "https://beezknees.co.uk/images/beehives_10.jpg",
+      "author": {
+        "@type": "Person",
+        "name": "Colin Chorley"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://beezknees.co.uk/step-by-step-inspections"
+      },
+      "datePublished": "2025-12-12T00:00:00+00:00",
+      "dateModified": "2026-01-02T00:00:00+00:00",
+      "inLanguage": "en-GB",
+      "articleSection": [
+        "Entrance observation",
+        "Opening the hive safely",
+        "Stores and space check",
+        "Brood inspection",
+        "Swarm and queen-cell checks",
+        "Pests and disease awareness",
+        "Hive hardware checks",
+        "Closing up and record keeping"
+      ]
     },
-    "datePublished": "2025-12-12",
-    "dateModified": "2026-01-02",
-    "articleSection": [
-      "Entrance observation",
-      "Opening the hive safely",
-      "Stores and space check",
-      "Brood inspection",
-      "Swarm and queen-cell checks",
-      "Pests and disease awareness",
-      "Hive hardware checks",
-      "Closing up and record keeping"
+    {
+      "@type": "FAQPage",
+      "@id": "https://beezknees.co.uk/step-by-step-inspections#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How often should I inspect my hives in the UK?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In spring and early summer, many UK beekeepers inspect every 7–10 days when weather allows to manage swarm risk and monitor brood. In poorer weather or later in the season, inspections are usually less frequent and more purpose-driven."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need to find the queen on every inspection?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Not usually. Evidence of a laying queen (fresh eggs and young larvae) plus a healthy brood pattern is often enough. Finding the queen can be useful for certain management tasks, but it can also prolong inspections."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where should I look for queen cells during a swarm check?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Queen cells are commonly found on the lower edges of brood frames and in pockets along the face of comb. Distinguish between empty cups and charged or capped queen cells when deciding what to do next."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are quick signs of brood problems to watch for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Unusual brood cappings (sunken or perforated), patchy brood patterns, odd smells, and abnormal larvae can indicate issues. If you suspect a serious disease, minimise disturbance and seek local bee health advice."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What should I record after an inspection?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Record evidence-based notes such as queen status (eggs seen or queen seen), brood quantity and pattern, stores level, actions taken, and a clear follow-up goal for the next visit."
+          }
+        }
+      ]
     },
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How often should I inspect my hives in the UK?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "In spring and early summer, many UK beekeepers inspect every 7–10 days when weather allows to manage swarm risk and monitor brood. In poorer weather or later in the season, inspections are usually less frequent and more purpose-driven."
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://beezknees.co.uk/step-by-step-inspections#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://beezknees.co.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Beekeeping Guides",
+          "item": "https://beezknees.co.uk/beekeeping-guides"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Step-by-Step Hive Inspections",
+          "item": "https://beezknees.co.uk/step-by-step-inspections"
         }
-      },
-      {
-        "@type": "Question",
-        "name": "Do I need to find the queen on every inspection?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Not usually. Evidence of a laying queen (fresh eggs and young larvae) plus a healthy brood pattern is often enough. Finding the queen can be useful for certain management tasks, but it can also prolong inspections."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Where should I look for queen cells during a swarm check?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Queen cells are commonly found on the lower edges of brood frames and in pockets along the face of comb. Distinguish between empty cups and charged or capped queen cells when deciding what to do next."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What are quick signs of brood problems to watch for?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Unusual brood cappings (sunken or perforated), patchy brood patterns, odd smells, and abnormal larvae can indicate issues. If you suspect a serious disease, minimise disturbance and seek local bee health advice."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What should I record after an inspection?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Record evidence-based notes such as queen status (eggs seen/queen seen), brood quantity and pattern, stores level, actions taken, and a clear follow-up goal for the next visit."
-        }
-      }
-    ]
-  },
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://beezknees.co.uk/"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Beekeeping Guides",
-        "item": "https://beezknees.co.uk/beekeeping-guides"
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": "Step-by-Step Hive Inspections",
-        "item": "https://beezknees.co.uk/step-by-step-inspections"
-      }
-    ]
-  }
-]
+      ]
+    }
+  ]
+}
 </script>
-
 </head>
    <body>
       <!-- Fixed Header and Nav Container -->

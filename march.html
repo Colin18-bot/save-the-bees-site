@@ -36,136 +36,166 @@
       <link rel="manifest" href="/site.webmanifest">
       <!-- Schema.org Structured Data -->
       <script type="application/ld+json">
-         [
-           {
-             "@context": "https://schema.org",
-             "@type": "TechArticle",
-             "headline": "March Beekeeping Tasks UK – Spring Hive Inspections & Apiary Prep",
-             "description": "March is a crucial month for UK beekeepers. Learn how to check food stores, inspect brood, add supers, clean equipment and prepare hives for spring growth and colony expansion.",
-             "author": {
-               "@type": "Person",
-               "name": "Colin Chorley"
-             },
-             "publisher": {
-               "@type": "Organization",
-               "name": "BeezKnees",
-               "logo": {
-                 "@type": "ImageObject",
-                 "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
-               }
-             },
-             "mainEntityOfPage": {
-               "@type": "WebPage",
-               "@id": "https://beezknees.co.uk/march"
-             },
-             "image": "https://beezknees.co.uk/images/beehives-march.jpg",
-             "datePublished": "2024-03-01",
-             "dateModified": "2025-12-10",
-             "articleSection": [
-               "March beekeeping tasks UK",
-               "First spring hive inspection",
-               "Feeding and food stores",
-               "Brood and queen assessment",
-               "Adding supers",
-               "Apiary and equipment preparation"
-             ]
-           },
-           {
-             "@context": "https://schema.org",
-             "@type": "FAQPage",
-             "mainEntity": [
-               {
-                 "@type": "Question",
-                 "name": "When should I do my first full hive inspection in March?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "In much of the UK, the first full spring inspection is carried out in March or early April when the weather is suitable. Choose a calm day with temperatures consistently around 12°C or above, work efficiently, and only open the hive if conditions are safe for the bees."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "How do I check food stores for bees in March?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Continue to heft hives from the back or side to judge their weight, and confirm during your first spring inspection that there are still frames of sealed stores close to the brood. If a colony feels light or stores are low, consider feeding with fondant or, later in spring, with syrup as appropriate."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "What should I look for in the brood nest during a March inspection?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Look for a healthy, compact brood pattern, eggs and young larvae, and signs that the queen is laying well. Check for any obvious signs of disease, such as patchy brood, sunken cappings or unusual smells, and make sure there is both food and space around the brood nest."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "Is March a good time to add supers?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Yes, in some areas. When colonies are strong, brood is expanding and early nectar flows (such as dandelions or oilseed rape) are underway, beekeepers often add supers in March to provide space and reduce congestion. Timing will depend on local conditions and colony strength."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "What equipment tasks should I do in March?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "March is ideal for cleaning and scorching spare boxes, repairing or replacing damaged frames, preparing new brood and super frames, and checking floors, roofs and stands. Having equipment ready before colonies expand makes later work much easier."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "Can record keeping tools like HiveTag help with March decisions?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Yes. Good records of winter weight, feeding, varroa treatments and previous season performance help you prioritise which colonies to inspect first, which may need support and which could be candidates for splits or queen rearing later. Tools like the HiveTag web app make these patterns easier to see."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "Should I still worry about starvation in March?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Starvation is still a risk in March, especially if the weather turns cold after bees have begun foraging and brood rearing has increased. Continue to monitor hive weight and be prepared to add fondant or syrup when appropriate if stores are running low."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "How does March fit into swarm control planning?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "March is early for full swarm control, but it is the right time to assess colony strength and temperament, check that queens are marked and clipped if that is your practice, and plan which colonies might be split later. Reviewing swarm control methods in advance makes it easier to act promptly when the time comes."
-                 }
-               }
-             ]
-           },
-           {
-             "@context": "https://schema.org",
-             "@type": "BreadcrumbList",
-             "itemListElement": [
-               {
-                 "@type": "ListItem",
-                 "position": 1,
-                 "name": "Home",
-                 "item": "https://beezknees.co.uk/"
-               },
-               {
-                 "@type": "ListItem",
-                 "position": 2,
-                 "name": "Year in the Apiary",
-                 "item": "https://beezknees.co.uk/year-in-the-apiary"
-               },
-               {
-                 "@type": "ListItem",
-                 "position": 3,
-                 "name": "March",
-                 "item": "https://beezknees.co.uk/march"
-               }
-             ]
-           }
-         ]
-      </script><!-- CSS -->
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://beezknees.co.uk/#organization",
+      "name": "BeezKnees",
+      "url": "https://beezknees.co.uk/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://beezknees.co.uk/march#webpage",
+      "url": "https://beezknees.co.uk/march",
+      "name": "March Beekeeping Tasks UK – Spring Hive Inspections, Feeding & Apiary Prep | BeezKnees",
+      "description": "March beekeeping tasks in the UK: when to carry out first spring inspections, how to check brood, monitor food stores, add supers, clean equipment and prepare your apiary for colony growth.",
+      "isPartOf": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/beehives-march.jpg"
+      },
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "Article",
+      "@id": "https://beezknees.co.uk/march#article",
+      "headline": "March Beekeeping Tasks UK – Spring Hive Inspections & Apiary Prep",
+      "description": "March is a crucial month for UK beekeepers. Learn how to check food stores, inspect brood, add supers, clean equipment and prepare hives for spring growth and colony expansion.",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://beezknees.co.uk/images/beehives-march.jpg"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Colin Chorley"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "mainEntityOfPage": {
+        "@id": "https://beezknees.co.uk/march#webpage"
+      },
+      "datePublished": "2024-03-01",
+      "dateModified": "2025-12-10",
+      "articleSection": [
+        "March beekeeping tasks UK",
+        "First spring hive inspection",
+        "Feeding and food stores",
+        "Brood and queen assessment",
+        "Adding supers",
+        "Apiary and equipment preparation"
+      ],
+      "inLanguage": "en-GB"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://beezknees.co.uk/march#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://beezknees.co.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Year in the Apiary",
+          "item": "https://beezknees.co.uk/year-in-the-apiary"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "March",
+          "item": "https://beezknees.co.uk/march"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://beezknees.co.uk/march#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "When should I do my first full hive inspection in March?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "In much of the UK, the first full spring inspection is carried out in March or early April when the weather is suitable. Choose a calm day with temperatures consistently around 12°C or above, work efficiently, and only open the hive if conditions are safe for the bees."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I check food stores for bees in March?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Continue to heft hives from the back or side to judge their weight, and confirm during your first spring inspection that there are still frames of sealed stores close to the brood. If a colony feels light or stores are low, consider feeding with fondant or, later in spring, with syrup as appropriate."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What should I look for in the brood nest during a March inspection?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Look for a healthy, compact brood pattern, eggs and young larvae, and signs that the queen is laying well. Check for any obvious signs of disease, such as patchy brood, sunken cappings or unusual smells, and make sure there is both food and space around the brood nest."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is March a good time to add supers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, in some areas. When colonies are strong, brood is expanding and early nectar flows, such as dandelions or oilseed rape, are underway, beekeepers often add supers in March to provide space and reduce congestion. Timing will depend on local conditions and colony strength."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What equipment tasks should I do in March?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "March is ideal for cleaning and scorching spare boxes, repairing or replacing damaged frames, preparing new brood and super frames, and checking floors, roofs and stands. Having equipment ready before colonies expand makes later work much easier."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can record keeping tools like HiveTag help with March decisions?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Good records of winter weight, feeding, varroa treatments and previous season performance help you prioritise which colonies to inspect first, which may need support and which could be candidates for splits or queen rearing later. Tools like the HiveTag web app make these patterns easier to see."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Should I still worry about starvation in March?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Starvation is still a risk in March, especially if the weather turns cold after bees have begun foraging and brood rearing has increased. Continue to monitor hive weight and be prepared to add fondant or syrup when appropriate if stores are running low."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does March fit into swarm control planning?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "March is early for full swarm control, but it is the right time to assess colony strength and temperament, check that queens are marked and clipped if that is your practice, and plan which colonies might be split later. Reviewing swarm control methods in advance makes it easier to act promptly when the time comes."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>      
+      <!-- CSS -->
       <link rel="stylesheet" href="css/style.css">
       <!-- Hamburger button -->
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
