@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://www.beezknees.co.uk/sitemap.xml
+Sitemap: https://beezknees.co.uk/sitemap.xml
