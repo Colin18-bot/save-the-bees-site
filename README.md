@@ -5,7 +5,7 @@ support new and experienced beekeepers across the UK. The site covers everything
 from getting started with a hive to disease management and seasonal apiary tasks,
 with a strong focus on bee welfare, good husbandry, and environmental stewardship.
 
-🌐 **Live website:** https://beezknees.co.uk
+🌐 **Live website:** https://beezknees.co.uk/
 
 ---
 

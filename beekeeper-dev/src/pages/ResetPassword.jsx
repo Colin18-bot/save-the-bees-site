@@ -57,7 +57,7 @@ const ResetPassword = () => {
     <div className="max-w-md mx-auto mt-10 bg-white p-6 rounded shadow relative">
       <button
         className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
-        onClick={() => (window.location.href = "https://www.beezknees.co.uk")}
+        onClick={() => (window.location.href = "https://www.beezknees.co.uk/")}
         aria-label="Close"
       >
         &times;
