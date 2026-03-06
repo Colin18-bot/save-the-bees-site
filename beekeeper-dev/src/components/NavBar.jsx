@@ -43,7 +43,7 @@ const NavBar = ({ isMobileMenuOpen, setIsMobileMenuOpen, displayName, avatarUrl 
         <div className="flex justify-between items-center">
           {/* Logo */}
           <a
-            href="https://www./"
+            href="https://beezknees.co.uk/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center space-x-2"
