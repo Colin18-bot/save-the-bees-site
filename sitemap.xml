@@ -10,6 +10,11 @@
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
   </url>
+   <url>
+      <loc>https://beezknees.co.uk/after-split</loc>
+      <lastmod>2026-03-22</lastmod>
+      <priority>0.5</priority>
+  </url>
   <url>
     <loc>https://beezknees.co.uk/anatomy</loc>
     <lastmod>2025-12-10</lastmod>
@@ -23,6 +28,11 @@
   <url>
     <loc>https://beezknees.co.uk/april</loc>
     <lastmod>2025-12-10</lastmod>
+    <priority>0.5</priority>
+  </url>
+     <url>
+    <loc>https://beezknees.co.uk/artificial-swarm</loc>
+    <lastmod>2026-03-22</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -72,7 +82,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/beekeeping-insurance-uk</loc>
-    <lastmod>2025-12-18</lastmod>
+    <lastmod>2026-03-22</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -88,6 +98,21 @@
   <url>
     <loc>https://beezknees.co.uk/brood-pattern-guide</loc>
     <lastmod>2026-01-02</lastmod>
+    <priority>0.5</priority>
+  </url>
+    <url>
+    <loc>https://beezknees.co.uk/cant-find-queen</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/capped-queen-cells</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+    <url>
+    <loc>https://beezknees.co.uk/charged-queen-cells</loc>
+    <lastmod>2026-03-22</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -107,7 +132,12 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/downloads</loc>
-    <lastmod>2025-12-15</lastmod>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/emergency-queen-cells</loc>
+    <lastmod>2026-03-22</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -196,6 +226,11 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://beezknees.co.uk/missed-swarm</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://beezknees.co.uk/november</loc>
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
@@ -227,7 +262,32 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/queen-cell-guide</loc>
-    <lastmod>2026-02-02</lastmod>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+   <url>
+    <loc>https://beezknees.co.uk/queen-cells-action</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/queen-cells-swarm-control</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/queen-cups</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/queen-timeline</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+   <url>
+    <loc>https://beezknees.co.uk/queenless-or-supersedure</loc>
+    <lastmod>2026-03-22</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -242,7 +302,17 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/site-map</loc>
-    <lastmod>2025-12-10</lastmod>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/split-hive</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+   <url>
+    <loc>https://beezknees.co.uk/split-methods</loc>
+    <lastmod>2026-03-22</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -251,8 +321,33 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://beezknees.co.uk/swarm-responsibilities-uk</loc>
-    <lastmod>2025-12-18</lastmod>
+    <loc>https://beezknees.co.uk/supersedure-action</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/supersedure-queen-cells</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/swarm-eggs</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/swarm-prevention</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/swarm-queen</loc>
+    <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/swarm-responsibilities</loc>
+    <lastmod>2026-03-22</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -293,6 +388,11 @@
   <url>
     <loc>https://beezknees.co.uk/viral-diseases</loc>
     <lastmod>2025-12-10</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/virgin-queen-timeline</loc>
+    <lastmod>2026-03-22</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
