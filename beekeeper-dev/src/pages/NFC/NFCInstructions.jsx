@@ -43,8 +43,7 @@ export default function NFCInstructions() {
                 HiveTag NFC is a <strong>Premium</strong> feature.
               </li>
               <li>
-                Stick the NFC tag onto a clean, dry part of the hive where your
-                phone can easily reach it.
+                Attach the NFC tag to a clean, dry part of the hive where your phone can easily reach it. You can also secure it with a small screw through the centre to prevent it coming loose.
               </li>
               <li>
                 Open <strong>Scan NFC Tag</strong> in HiveTag to choose the
@@ -95,11 +94,23 @@ export default function NFCInstructions() {
                 Tap <strong>Copy NFC Link</strong>.
               </li>
               <li>
-                Open an NFC writing app on your iPhone and paste that copied
-                HiveTag link into the app.
+                Open an NFC writing app on your iPhone or iPad, such as{" "}
+                <a
+                  href="https://apps.apple.com/gb/app/nfc-tools/id1252962749"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-blue-600 underline"
+                >
+                  NFC Tools
+                </a>
+                , and paste the copied HiveTag link into the app.
               </li>
               <li>
                 Write the link to the NFC tag.
+              </li>
+              <li>
+                Once written, you do not need the writing app again just to scan the tag —
+                tapping the tag should open HiveTag directly.
               </li>
               <li>
                 Next time you tap that tag with your iPhone, it will open the
@@ -118,8 +129,9 @@ export default function NFCInstructions() {
                 HiveTag by updating the hive linked to that tag ID.
               </li>
               <li>
-                <strong>iPhone / iPad:</strong> you can reuse the same physical
-                tag by writing a new HiveTag link onto it.
+                <strong>iPhone / iPad:</strong> you can clear the saved iPhone / iPad NFC
+                status in HiveTag, then reuse the same physical tag by writing a new
+                HiveTag link onto it.
               </li>
               <li>
                 In most NFC writing apps, you can simply overwrite the existing
@@ -175,8 +187,9 @@ export default function NFCInstructions() {
                 <strong>Scan Blank NFC Tag</strong>, and then tap the tag again.
               </li>
               <li>
-                If an iPhone tag opens the wrong hive, rewrite the tag with the
-                correct copied HiveTag link.
+                If an iPhone tag opens the wrong hive, clear the iPhone / iPad NFC
+                status in HiveTag if needed, then rewrite the tag with the correct
+                copied HiveTag link.
               </li>
             </ul>
           </div>
