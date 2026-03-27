@@ -380,7 +380,7 @@ export default function Help() {
                     <li>
                       <strong>NFC summary (Premium):</strong> Premium users see an{" "}
                       <strong>NFC Tagged Hives</strong> panel showing how many
-                      hives have Android-scanned tag IDs linked in HiveTag and a
+                      hives have NFC enabled in HiveTag and a
                       short list of recent tagged hives.{" "}
                       <Badge tone="blue">Premium</Badge>
                     </li>
@@ -431,8 +431,9 @@ export default function Help() {
                       New Inspection.
                     </li>
                     <li>
-                      If an Android NFC tag is linked, a small <strong>NFC Tag</strong>{" "}
-                      pill appears on the hive card (Premium).
+                     If NFC is enabled for a hive, a small <strong>NFC Tag</strong>{" "}
+                     pill appears on the hive card (Premium). This can represent either an
+                     Android-linked tag ID or an iPhone / iPad NFC link setup.
                     </li>
                     <li>
                       Photos open in a <strong>lightbox</strong> when clicked;
@@ -1154,7 +1155,7 @@ export default function Help() {
                     <strong>Manage Android NFC Tags:</strong> view all Android-scanned tag ID links, filter them, and clear them if you want to reuse them.
                   </li>
                   <li>
-                    <strong>Reusing iPhone / iPad tags:</strong> overwrite the old HiveTag link on the physical tag with a new copied HiveTag link.
+                    <strong>Reusing iPhone / iPad tags:</strong> you can clear the saved iPhone / iPad NFC status in <strong>Set Up NFC Tags</strong>, then overwrite the physical tag with a new copied HiveTag link if needed.
                   </li>
                   <li>
                     <strong>Buy tags:</strong> uses Stripe checkout and UK-only flat shipping.
@@ -1475,7 +1476,9 @@ export default function Help() {
                 <div>
                   <p className="font-medium">Can I reuse NFC tags?</p>
                   <p className="text-gray-700">
-                    Yes. Android tags can be cleared in <strong>Manage Android NFC Tags</strong>. iPhone / iPad tags can be reused by overwriting the old HiveTag link on the physical tag with a new one.
+                    Yes. Android tags can be cleared in <strong>Manage Android NFC Tags</strong>.
+                    iPhone / iPad NFC status can be cleared in <strong>Set Up NFC Tags</strong>,
+                    and the physical tag can then be reused by writing a new HiveTag link to it.
                   </p>
                 </div>
 
@@ -1554,7 +1557,7 @@ export default function Help() {
                   <strong>Android tag won’t link:</strong> if it is already linked elsewhere, clear it from <strong>Manage Android NFC Tags</strong> first and then scan it again.
                 </li>
                 <li>
-                  <strong>iPhone tag opens the wrong hive:</strong> rewrite the tag with a newly copied HiveTag link from the iPhone / iPad setup card.
+                  <strong>iPhone tag opens the wrong hive:</strong> clear the iPhone / iPad NFC status in <strong>Set Up NFC Tags</strong> if needed, then copy a fresh HiveTag link and rewrite the physical tag.
                 </li>
                 <li>
                   <strong>Back button on siting guides doesn’t return:</strong> the Back button relies on browser history. If you open a

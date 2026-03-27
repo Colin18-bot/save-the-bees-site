@@ -52,13 +52,16 @@ const HiveList = () => {
     urls: [],
     index: 0,
   });
+
   const closeLightbox = () =>
     setLightbox((s) => ({ ...s, isOpen: false, urls: [], index: 0 }));
+
   const showPrev = () =>
     setLightbox((s) => ({
       ...s,
       index: (s.index + s.urls.length - 1) % s.urls.length,
     }));
+
   const showNext = () =>
     setLightbox((s) => ({ ...s, index: (s.index + 1) % s.urls.length }));
 
@@ -88,9 +91,15 @@ const HiveList = () => {
     const incoming = new URLSearchParams(location.search || "");
     const params = new URLSearchParams();
 
-    if (nextApiary && nextApiary !== "all") params.set("apiary_id", nextApiary);
-    if (incoming.get("highlight")) params.set("highlight", incoming.get("highlight"));
-    if (incoming.get("type")) params.set("type", incoming.get("type"));
+    if (nextApiary && nextApiary !== "all") {
+      params.set("apiary_id", nextApiary);
+    }
+    if (incoming.get("highlight")) {
+      params.set("highlight", incoming.get("highlight"));
+    }
+    if (incoming.get("type")) {
+      params.set("type", incoming.get("type"));
+    }
 
     navigate({ search: params.toString() }, { replace: true });
   };
@@ -131,7 +140,7 @@ const HiveList = () => {
     };
   }, []);
 
-  // ✅ If user is not Premium, force this feature off (avoids confusing state)
+  // ✅ If user is not Premium, force this feature off
   useEffect(() => {
     if (!isPremium && showTaggedOnly) setShowTaggedOnly(false);
   }, [isPremium, showTaggedOnly]);
@@ -143,13 +152,16 @@ const HiveList = () => {
         .select("id, name, latitude, longitude")
         .is("archived_at", null)
         .order("created_at", { ascending: false });
+
       if (!error) setApiaryOptions(data || []);
     };
+
     fetchApiaries();
   }, []);
 
   useEffect(() => {
     let cancelled = false;
+
     const fetchHives = async () => {
       setLoading(true);
 
@@ -159,7 +171,9 @@ const HiveList = () => {
         .is("archived_at", null)
         .order("created_at", { ascending: false });
 
-      if (selectedApiary !== "all") query = query.eq("apiary_id", selectedApiary);
+      if (selectedApiary !== "all") {
+        query = query.eq("apiary_id", selectedApiary);
+      }
 
       const { data, error } = await query;
       if (cancelled) return;
@@ -209,7 +223,9 @@ const HiveList = () => {
           if (!cancelled) {
             if (!inspErr && inspRows) {
               const counts = {};
-              for (const r of inspRows) counts[r.hive_id] = (counts[r.hive_id] || 0) + 1;
+              for (const r of inspRows) {
+                counts[r.hive_id] = (counts[r.hive_id] || 0) + 1;
+              }
               setInspectionCounts(counts);
             } else {
               setInspectionCounts({});
@@ -224,6 +240,7 @@ const HiveList = () => {
     };
 
     fetchHives();
+
     return () => {
       cancelled = true;
     };
@@ -244,13 +261,18 @@ const HiveList = () => {
     }
   };
 
-  // Tagged hives info (only shown in UI for Premium, but safe to compute always)
-  const taggedCount = useMemo(() => hives.filter((h) => !!h.nfc_uid).length, [hives]);
+  // Tagged hives info (Android nfc_uid OR iPhone/iPad nfc_link_enabled)
+  const taggedCount = useMemo(
+    () => hives.filter((h) => !!h.nfc_uid || !!h.nfc_link_enabled).length,
+    [hives]
+  );
 
   // ✅ Only allow tagged-only filtering when Premium
   const filteredHives = useMemo(() => {
     if (!isPremium) return hives;
-    return showTaggedOnly ? hives.filter((h) => !!h.nfc_uid) : hives;
+    return showTaggedOnly
+      ? hives.filter((h) => !!h.nfc_uid || !!h.nfc_link_enabled)
+      : hives;
   }, [hives, showTaggedOnly, isPremium]);
 
   const total = filteredHives.length;
@@ -260,7 +282,10 @@ const HiveList = () => {
     if (jumpedToHighlightPageRef.current) return;
     if (!filteredHives.length) return;
 
-    const idx = filteredHives.findIndex((h) => String(h.id) === String(highlightId));
+    const idx = filteredHives.findIndex(
+      (h) => String(h.id) === String(highlightId)
+    );
+
     if (idx >= 0) {
       const targetPage = Math.floor(idx / PAGE_SIZE) + 1;
       if (targetPage !== page) setPage(targetPage);
@@ -282,7 +307,11 @@ const HiveList = () => {
   const hasValidCoords = (apiaries) => {
     const lat = Number(apiaries?.latitude);
     const lon = Number(apiaries?.longitude);
-    return Number.isFinite(lat) && Number.isFinite(lon) && !(lat === 0 && lon === 0);
+    return (
+      Number.isFinite(lat) &&
+      Number.isFinite(lon) &&
+      !(lat === 0 && lon === 0)
+    );
   };
 
   const lightboxNode =
@@ -360,26 +389,26 @@ const HiveList = () => {
   return (
     <div className="p-6">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-  <h1 className="text-2xl font-bold">Your Hives</h1>
+        <h1 className="text-2xl font-bold">Your Hives</h1>
 
-  <div className="flex flex-col sm:flex-row gap-2">
-    <Link
-      to="/hives/new"
-      className="inline-flex items-center justify-center bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
-      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
-    >
-      New Hive
-    </Link>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Link
+            to="/hives/new"
+            className="inline-flex items-center justify-center bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+          >
+            New Hive
+          </Link>
 
-    <Link
-      to="/hives/step-by-step"
-      className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50
-      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-slate-400"
-    >
-      Hive Siting Guide
-    </Link>
-  </div>
-</div>
+          <Link
+            to="/hives/step-by-step"
+            className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-slate-400"
+          >
+            Hive Siting Guide
+          </Link>
+        </div>
+      </div>
 
       <div className="flex flex-wrap gap-4 items-center mb-4">
         <div>
@@ -516,16 +545,20 @@ const HiveList = () => {
                   <h2 className="text-lg font-semibold flex flex-col gap-1">
                     <span>{hive.name}</span>
 
-                    {isPremium && hive.nfc_uid && (
+                    {isPremium && (hive.nfc_uid || hive.nfc_link_enabled) && (
                       <span
                         className="inline-flex items-center gap-2 text-[11px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-200 max-w-full"
-                        title={`NFC tag: ${hive.nfc_uid}`}
+                        title={
+                          hive.nfc_uid
+                            ? `Android NFC tag: ${hive.nfc_uid}`
+                            : "iPhone / iPad NFC link enabled"
+                        }
                       >
                         <span className="font-semibold uppercase tracking-wide">
                           NFC tag
                         </span>
                         <span className="font-mono truncate max-w-[170px]">
-                          {hive.nfc_uid}
+                          {hive.nfc_uid ? hive.nfc_uid : "iPhone / iPad"}
                         </span>
                       </span>
                     )}
@@ -549,7 +582,9 @@ const HiveList = () => {
 
                   <p className="text-sm text-gray-600">
                     {(inspectionCounts[hive.id] ?? 0)}{" "}
-                    {inspectionCounts[hive.id] === 1 ? "inspection" : "inspections"}
+                    {inspectionCounts[hive.id] === 1
+                      ? "inspection"
+                      : "inspections"}
                   </p>
 
                   {hive.hive_type && (
@@ -563,7 +598,7 @@ const HiveList = () => {
                     <Link
                       to={`/hives/${hive.id}/edit`}
                       className="text-sm px-3 py-2 bg-green-700 hover:bg-green-800 text-white rounded text-center
-             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
                     >
                       Edit Hive
                     </Link>
@@ -571,7 +606,7 @@ const HiveList = () => {
                     <Link
                       to={`/inspections/new?hive_id=${hive.id}&apiary_id=${hive.apiary_id}`}
                       className="text-sm px-3 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-center
-             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-yellow-600/40"
+                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-yellow-600/40"
                     >
                       New Inspection
                     </Link>
@@ -580,7 +615,7 @@ const HiveList = () => {
                       type="button"
                       onClick={() => checkInspectionsAndNavigate(hive.id)}
                       className="text-sm px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-center
-             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-blue-500"
+                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-blue-500"
                     >
                       View Inspections
                     </button>
@@ -613,7 +648,7 @@ const HiveList = () => {
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
                 className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50 disabled:pointer-events-none
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
               >
                 Prev
               </button>
@@ -623,7 +658,7 @@ const HiveList = () => {
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
                 className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded disabled:opacity-50 disabled:pointer-events-none
-           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
               >
                 Next
               </button>

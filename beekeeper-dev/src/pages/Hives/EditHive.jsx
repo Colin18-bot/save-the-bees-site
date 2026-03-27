@@ -53,13 +53,14 @@ const EditHive = () => {
     status: "active",
     notes: "",
     photo_url: "",
-    photo_path: null, // ✅ NEW: stored path for reliable deletion
-    nfc_uid: "", // read-only, set from DB or ?nfc_uid for premium users
+    photo_path: null,
+    nfc_uid: "",
+    nfc_link_enabled: false,
   });
 
   const [apiaries, setApiaries] = useState([]);
-  const [photoPreview, setPhotoPreview] = useState(null); // public url or blob url
-  const [currentObject, setCurrentObject] = useState(null); // legacy: {bucket, path} from url
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [currentObject, setCurrentObject] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [subscriptionLevel, setSubscriptionLevel] = useState("free");
@@ -89,7 +90,7 @@ const EditHive = () => {
       setApiaries(apiaryRes.error ? [] : apiaryRes.data || []);
       setPhotoPreview(hive.photo_url || null);
 
-      // ✅ Prefer photo_path if present; otherwise fall back to parsing url
+      // Prefer photo_path if present; otherwise fall back to parsing url
       const legacy = parseStoragePublicUrl(hive.photo_url);
       setCurrentObject(
         hive.photo_path ? { bucket: "photos", path: hive.photo_path } : legacy
@@ -120,8 +121,9 @@ const EditHive = () => {
         status: hive.status || "active",
         notes: hive.notes || "",
         photo_url: hive.photo_url || "",
-        photo_path: hive.photo_path || null, // ✅ NEW
+        photo_path: hive.photo_path || null,
         nfc_uid: nfcToUse,
+        nfc_link_enabled: !!hive.nfc_link_enabled,
       });
 
       setLoading(false);
@@ -149,7 +151,6 @@ const EditHive = () => {
     setPhotoPreview(URL.createObjectURL(file));
   };
 
-  // ✅ UPDATED: returns BOTH url and path
   const uploadPhoto = async () => {
     const file = fileInputRef.current?.files?.[0];
     if (!file) {
@@ -183,7 +184,6 @@ const EditHive = () => {
     return { url: data.publicUrl, path: photo_path, bucket: "photos" };
   };
 
-  // ✅ UPDATED: storage-first clear using Edge Function (no client remove)
   const handleRemovePhoto = async () => {
     try {
       await deleteWithPhotos({ table: "hives", id, mode: "clear_photo" });
@@ -254,10 +254,8 @@ const EditHive = () => {
       }
     }
 
-    // Upload optional
     const { url: newUrl, path: newPath } = await uploadPhoto();
 
-    // If we uploaded a new file and we had a previous storage object, clean old one (non-fatal)
     if (
       newPath &&
       (formData.photo_path || currentObject?.path) &&
@@ -273,7 +271,6 @@ const EditHive = () => {
       }
     }
 
-    // Normalize: empty strings -> null
     const normalize = (obj) =>
       Object.fromEntries(
         Object.entries(obj).map(([k, v]) => [k, v === "" ? null : v])
@@ -282,12 +279,17 @@ const EditHive = () => {
     const base = normalize({
       ...formData,
       photo_url: newUrl || formData.photo_url || null,
-      photo_path: newPath || formData.photo_path || null, // ✅ NEW
+      photo_path: newPath || formData.photo_path || null,
       nfc_uid:
         subscriptionLevel === "premium" ? (formData.nfc_uid || null) : null,
+      nfc_link_enabled:
+        subscriptionLevel === "premium" ? !!formData.nfc_link_enabled : false,
     });
 
-    const { error: updateErr } = await supabase.from("hives").update(base).eq("id", id);
+    const { error: updateErr } = await supabase
+      .from("hives")
+      .update(base)
+      .eq("id", id);
 
     if (updateErr) {
       console.error("Update error", updateErr);
@@ -308,7 +310,6 @@ const EditHive = () => {
     }
   };
 
-  // ✅ UPDATED: delete uses Edge Function (storage-first) not client deleteRowWithPhoto
   const handleDelete = async () => {
     const { data, error: checkErr } = await supabase.rpc("check_hive_children", {
       hive_id: id,
@@ -341,7 +342,12 @@ const EditHive = () => {
     try {
       await deleteWithPhotos({ table: "hives", id, mode: "delete_row" });
     } catch (e) {
-      alert(humaniseSupabaseError({ message: String(e?.message || e) }, { table: "hives" }));
+      alert(
+        humaniseSupabaseError(
+          { message: String(e?.message || e) },
+          { table: "hives" }
+        )
+      );
       return;
     }
 
@@ -439,18 +445,29 @@ const EditHive = () => {
           className="w-full px-3 py-2 border rounded min-h-[100px]"
         />
 
-        {subscriptionLevel === "premium" && formData.nfc_uid && (
-          <div className="p-3 border rounded bg-gray-50 text-sm">
-            <span className="font-medium">NFC Tag Linked:</span>{" "}
-            <code className="px-1 py-0.5 bg-white border rounded">
-              {formData.nfc_uid}
-            </code>
-            <div className="text-gray-600 mt-1">
-              NFC tags are auto-assigned via scan links and can’t be edited here.
-              To change the tag, start from an NFC scan that passes a new code.
+        {subscriptionLevel === "premium" &&
+          (formData.nfc_uid || formData.nfc_link_enabled) && (
+            <div className="p-3 border rounded bg-gray-50 text-sm">
+              <div>
+                <span className="font-medium">NFC status:</span>{" "}
+                {formData.nfc_uid ? (
+                  <>
+                    <code className="px-1 py-0.5 bg-white border rounded">
+                      Android: {formData.nfc_uid}
+                    </code>
+                  </>
+                ) : (
+                  <code className="px-1 py-0.5 bg-white border rounded">
+                    iPhone / iPad NFC enabled
+                  </code>
+                )}
+              </div>
+
+              <div className="text-gray-600 mt-1">
+                NFC setup is managed from the NFC pages and can’t be edited here.
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         <div className="flex flex-col items-start gap-2">
           {photoPreview && (

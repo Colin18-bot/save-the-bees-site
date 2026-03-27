@@ -10,15 +10,17 @@ dayjs.locale("en-gb");
 const NOTES = [
   {
   version: "1.1.3",
-  released_at: "2026-03-27T12:00:00Z",
+  released_at: "2026-03-27T14:30:00Z",
   summary:
-    "NFC setup has been reworked to better support both Android and iPhone / iPad, with a clearer single setup hub, improved wording across NFC pages, and a new iPhone-friendly link-based tag flow.",
+    "NFC setup has been fully unified across Android and iPhone / iPad, with improved visibility of NFC status across the app and the ability to enable or clear iPhone NFC directly from the setup screen.",
 
   added: [
     "Added a new **iPhone / iPad NFC link flow** using **/nfc/open?hive_id=...**, allowing HiveTag links to be written directly to NFC tags for Apple devices.",
     "Added **Copy NFC Link** generation so iPhone / iPad users can copy the correct hive link without typing it manually.",
     "Added a new **NFC open route** that redirects straight into **New Inspection** for the linked hive.",
-    "Scan NFC Tag now includes a new **iPhone / iPad setup card** with Apiary + Hive selection and link generation."
+    "Scan NFC Tag now includes a new **iPhone / iPad setup card** with Apiary + Hive selection and link generation.",
+    "Added **iPhone NFC status tracking** (`nfc_link_enabled`) to distinguish iPhone-linked hives from Android tag-based hives.",
+    "Added **Clear iPhone NFC status** button in the setup screen, allowing users to remove iPhone NFC from a hive without affecting Android tags."
   ],
 
   changed: [
@@ -27,13 +29,17 @@ const NOTES = [
     "Updated **NFC Setup Card** instructions to include both Android blank-tag scanning and iPhone / iPad link-based setup.",
     "Updated **NFC Tag Manager** wording to clarify that it manages **Android tag ID links** only.",
     "Updated **NFC Tag Store** product wording so compatibility, reuse and setup instructions now accurately reflect the two-device approach.",
-    "Updated **NFC Link Hive** wording so it is clearly positioned as the **Android scanned tag ID** linking page."
+    "Updated **NFC Link Hive** wording so it is clearly positioned as the **Android scanned tag ID** linking page.",
+    "Updated **Hive List** so NFC badges now display for both Android (tag ID) and iPhone / iPad (link-enabled) hives.",
+    "Updated **Edit Hive** to show NFC status (Android tag or iPhone enabled) in a read-only format."
   ],
 
   fixed: [
     "Reduced subscriber confusion caused by NFC setup being split across different pages and device types.",
     "Fixed inconsistent NFC guidance where some pages still implied that iPhone and Android used the same blank-tag scanning process.",
-    "Improved iPhone / iPad setup reliability by removing the need for users to manually type HiveTag links onto NFC tags."
+    "Improved iPhone / iPad setup reliability by removing the need for users to manually type HiveTag links onto NFC tags.",
+    "Fixed issue where iPhone NFC-enabled hives were not visible in the Hive List.",
+    "Ensured NFC status persists correctly when editing and saving hives."
   ],
 
   removed: [],
@@ -58,8 +64,6 @@ const NOTES = [
     "Android-tagged hives and iPhone link-written tags are reusable, but they are reassigned in different ways."
   ]
   },
-
-  
   {
   version: "1.1.2",
   released_at: "2026-02-24T18:00:00Z",

@@ -98,19 +98,21 @@ export default function NFCScan() {
       setLoadingHiveData(true);
 
       try {
-        const [{ data: apiaryData, error: apiaryError }, { data: hiveData, error: hiveError }] =
-          await Promise.all([
-            supabase
-              .from("apiaries")
-              .select("id, name")
-              .is("archived_at", null)
-              .order("name", { ascending: true }),
-            supabase
-              .from("hives")
-              .select("id, name, apiary_id, archived_at")
-              .is("archived_at", null)
-              .order("name", { ascending: true }),
-          ]);
+        const [
+          { data: apiaryData, error: apiaryError },
+          { data: hiveData, error: hiveError },
+        ] = await Promise.all([
+          supabase
+            .from("apiaries")
+            .select("id, name")
+            .is("archived_at", null)
+            .order("name", { ascending: true }),
+          supabase
+            .from("hives")
+            .select("id, name, apiary_id, archived_at, nfc_link_enabled")
+            .is("archived_at", null)
+            .order("name", { ascending: true }),
+        ]);
 
         if (apiaryError) {
           console.error("Error loading apiaries in NFCScan:", apiaryError);
@@ -178,6 +180,10 @@ export default function NFCScan() {
     return hives.filter((hive) => hive.apiary_id === selectedApiaryId);
   }, [hives, selectedApiaryId]);
 
+  const selectedHive = useMemo(() => {
+    return hives.find((h) => h.id === selectedHiveId) || null;
+  }, [hives, selectedHiveId]);
+
   useEffect(() => {
     if (!filteredHives.length) {
       setSelectedHiveId("");
@@ -197,7 +203,7 @@ export default function NFCScan() {
     : "";
 
   const handleCopyAppleLink = async () => {
-    if (!generatedAppleLink) {
+    if (!generatedAppleLink || !selectedHiveId) {
       setCopyMessage("Please select a hive first.");
       setTimeout(() => setCopyMessage(""), 2500);
       return;
@@ -205,7 +211,26 @@ export default function NFCScan() {
 
     try {
       await navigator.clipboard.writeText(generatedAppleLink);
-      setCopyMessage("NFC link copied.");
+
+      const { error } = await supabase
+        .from("hives")
+        .update({ nfc_link_enabled: true })
+        .eq("id", selectedHiveId);
+
+      if (error) {
+        console.error("Failed to save iPhone NFC status:", error);
+        setCopyMessage("Link copied, but HiveTag could not save NFC status.");
+        setTimeout(() => setCopyMessage(""), 3000);
+        return;
+      }
+
+      setHives((prev) =>
+        prev.map((h) =>
+          h.id === selectedHiveId ? { ...h, nfc_link_enabled: true } : h
+        )
+      );
+
+      setCopyMessage("NFC link copied and iPhone NFC enabled.");
       setTimeout(() => setCopyMessage(""), 2500);
     } catch (err) {
       console.error("Copy failed:", err);
@@ -214,181 +239,214 @@ export default function NFCScan() {
     }
   };
 
-  const handleScan = useCallback(
-    async () => {
-      setInfoMessage("");
-      setErrorMessage("");
-      setCopyMessage("");
+  const handleClearAppleNfc = async () => {
+    if (!selectedHiveId) {
+      setCopyMessage("Please select a hive first.");
+      setTimeout(() => setCopyMessage(""), 2500);
+      return;
+    }
 
-      if (supportStatus !== "supported") {
+    const ok = window.confirm(
+      "Clear iPhone / iPad NFC status for this hive?"
+    );
+    if (!ok) return;
+
+    try {
+      const { error } = await supabase
+        .from("hives")
+        .update({ nfc_link_enabled: false })
+        .eq("id", selectedHiveId);
+
+      if (error) {
+        console.error("Failed to clear iPhone NFC status:", error);
+        setCopyMessage("Could not clear iPhone NFC status. Please try again.");
+        setTimeout(() => setCopyMessage(""), 3000);
+        return;
+      }
+
+      setHives((prev) =>
+        prev.map((h) =>
+          h.id === selectedHiveId ? { ...h, nfc_link_enabled: false } : h
+        )
+      );
+
+      setCopyMessage("iPhone / iPad NFC status cleared.");
+      setTimeout(() => setCopyMessage(""), 2500);
+    } catch (err) {
+      console.error("Failed to clear iPhone NFC status:", err);
+      setCopyMessage("Could not clear iPhone NFC status. Please try again.");
+      setTimeout(() => setCopyMessage(""), 3000);
+    }
+  };
+
+  const handleScan = useCallback(async () => {
+    setInfoMessage("");
+    setErrorMessage("");
+    setCopyMessage("");
+
+    if (supportStatus !== "supported") {
+      setErrorMessage(
+        "This device or browser doesn’t support Web NFC. Use Chrome on Android for tag scanning, or use the iPhone / iPad NFC link method below."
+      );
+      setDebugInfo((prev) => ({
+        ...prev,
+        lastError: {
+          reason: "NotSupported",
+          at: new Date().toISOString(),
+        },
+      }));
+      return;
+    }
+
+    if (isScanning) {
+      return;
+    }
+
+    try {
+      const ndef = new NDEFReader();
+
+      ndef.onreadingerror = () => {
+        setIsScanning(false);
+        setInfoMessage("");
         setErrorMessage(
-          "This device or browser doesn’t support Web NFC. Use Chrome on Android for tag scanning, or use the iPhone / iPad NFC link method below."
+          "We couldn’t read this NFC tag. Try holding your phone closer or try another tag."
         );
         setDebugInfo((prev) => ({
           ...prev,
           lastError: {
-            reason: "NotSupported",
+            reason: "ReadingErrorEvent",
             at: new Date().toISOString(),
           },
         }));
-        return;
-      }
+      };
 
-      if (isScanning) {
-        return;
-      }
+      ndef.onreading = async (event) => {
+        setIsScanning(false);
+        setInfoMessage("");
+        setErrorMessage("");
 
-      try {
-        const ndef = new NDEFReader();
+        const serial = event.serialNumber || "";
+        const records = event.message?.records || [];
+        const recordTypes = records.map((r) => r.recordType);
 
-        ndef.onreadingerror = () => {
-          setIsScanning(false);
-          setInfoMessage("");
+        const scanDebug = {
+          serialNumber: serial || "(empty)",
+          recordCount: records.length,
+          recordTypes,
+          rawMessageType: event.message?.records?.[0]?.mediaType || null,
+          at: new Date().toISOString(),
+        };
+
+        setDebugInfo((prev) => ({
+          ...prev,
+          lastSuccessfulScan: scanDebug,
+        }));
+
+        if (!serial) {
           setErrorMessage(
-            "We couldn’t read this NFC tag. Try holding your phone closer or try another tag."
+            "The tag was read but didn’t provide a serial number. Try another tag."
           );
           setDebugInfo((prev) => ({
             ...prev,
             lastError: {
-              reason: "ReadingErrorEvent",
+              reason: "EmptySerial",
               at: new Date().toISOString(),
             },
           }));
-        };
-
-        ndef.onreading = async (event) => {
-          setIsScanning(false);
-          setInfoMessage("");
-          setErrorMessage("");
-
-          const serial = event.serialNumber || "";
-          const records = event.message?.records || [];
-          const recordTypes = records.map((r) => r.recordType);
-
-          const scanDebug = {
-            serialNumber: serial || "(empty)",
-            recordCount: records.length,
-            recordTypes,
-            rawMessageType: event.message?.records?.[0]?.mediaType || null,
-            at: new Date().toISOString(),
-          };
-
-          setDebugInfo((prev) => ({
-            ...prev,
-            lastSuccessfulScan: scanDebug,
-          }));
-
-          if (!serial) {
-            setErrorMessage(
-              "The tag was read but didn’t provide a serial number. Try another tag."
-            );
-            setDebugInfo((prev) => ({
-              ...prev,
-              lastError: {
-                reason: "EmptySerial",
-                at: new Date().toISOString(),
-              },
-            }));
-            return;
-          }
-
-          setInfoMessage(
-            "Tag detected. Looking up the hive linked to this tag…"
-          );
-
-          const { data: hive, error } = await supabase
-            .from("hives")
-            .select("id, apiary_id, name, archived_at")
-            .eq("nfc_uid", serial)
-            .maybeSingle();
-
-          setDebugInfo((prev) => ({
-            ...prev,
-            lastLookup: {
-              serial,
-              at: new Date().toISOString(),
-              error: error ? error.message : null,
-              foundHiveId: hive?.id || null,
-              archivedAt: hive?.archived_at || null,
-            },
-          }));
-
-          if (error) {
-            console.error("Error looking up hive by NFC serial:", error);
-            setErrorMessage(
-              "We read the tag, but there was a problem checking your hives. Please try again."
-            );
-            setInfoMessage("");
-            return;
-          }
-
-          if (hive && !hive.archived_at) {
-            setInfoMessage(
-              `Found hive “${hive.name}”. Opening a new inspection for this hive…`
-            );
-            navigate(
-              `/inspections/new?hive_id=${encodeURIComponent(
-                hive.id
-              )}&apiary_id=${encodeURIComponent(
-                hive.apiary_id
-              )}&source=nfc`
-            );
-            return;
-          }
-
-          if (hive && hive.archived_at) {
-            setErrorMessage(
-              "This tag is linked to an archived hive. Unarchive or update the hive first, or assign this tag to a new hive."
-            );
-            setInfoMessage("");
-            return;
-          }
-
-          setInfoMessage(
-            "This Android tag isn’t linked to any hive yet. Choose a hive to link it to, or create a new hive."
-          );
-          navigate(`/nfc/link?nfc_uid=${encodeURIComponent(serial)}`);
-        };
-
-        setIsScanning(true);
-        setInfoMessage("Hold your phone close to the NFC tag…");
-        setErrorMessage("");
-
-        await ndef.scan();
-      } catch (err) {
-        console.error("Error starting NFC scan:", err);
-        setIsScanning(false);
-        setInfoMessage("");
-
-        let userMsg =
-          "Something went wrong while starting the NFC scan. Please try again.";
-
-        if (err && err.name === "NotAllowedError") {
-          userMsg =
-            "NFC permission was blocked. Please allow NFC access for your browser and try again.";
-        } else if (err && err.name === "NotSupportedError") {
-          userMsg =
-            "This device or browser doesn’t support Web NFC. Use Chrome on Android for tag scanning, or use the iPhone / iPad NFC link method below.";
-          setSupportStatus("unsupported");
-        } else if (err && err.name === "AbortError") {
-          userMsg =
-            "The NFC scan was cancelled before a tag was read. Try again when you’re ready.";
+          return;
         }
 
-        setErrorMessage(userMsg);
+        setInfoMessage("Tag detected. Looking up the hive linked to this tag…");
+
+        const { data: hive, error } = await supabase
+          .from("hives")
+          .select("id, apiary_id, name, archived_at")
+          .eq("nfc_uid", serial)
+          .maybeSingle();
 
         setDebugInfo((prev) => ({
           ...prev,
-          lastException: {
-            name: err?.name || "UnknownError",
-            message: err?.message || String(err),
+          lastLookup: {
+            serial,
             at: new Date().toISOString(),
+            error: error ? error.message : null,
+            foundHiveId: hive?.id || null,
+            archivedAt: hive?.archived_at || null,
           },
         }));
+
+        if (error) {
+          console.error("Error looking up hive by NFC serial:", error);
+          setErrorMessage(
+            "We read the tag, but there was a problem checking your hives. Please try again."
+          );
+          setInfoMessage("");
+          return;
+        }
+
+        if (hive && !hive.archived_at) {
+          setInfoMessage(
+            `Found hive “${hive.name}”. Opening a new inspection for this hive…`
+          );
+          navigate(
+            `/inspections/new?hive_id=${encodeURIComponent(
+              hive.id
+            )}&apiary_id=${encodeURIComponent(hive.apiary_id)}&source=nfc`
+          );
+          return;
+        }
+
+        if (hive && hive.archived_at) {
+          setErrorMessage(
+            "This tag is linked to an archived hive. Unarchive or update the hive first, or assign this tag to a new hive."
+          );
+          setInfoMessage("");
+          return;
+        }
+
+        setInfoMessage(
+          "This Android tag isn’t linked to any hive yet. Choose a hive to link it to, or create a new hive."
+        );
+        navigate(`/nfc/link?nfc_uid=${encodeURIComponent(serial)}`);
+      };
+
+      setIsScanning(true);
+      setInfoMessage("Hold your phone close to the NFC tag…");
+      setErrorMessage("");
+
+      await ndef.scan();
+    } catch (err) {
+      console.error("Error starting NFC scan:", err);
+      setIsScanning(false);
+      setInfoMessage("");
+
+      let userMsg =
+        "Something went wrong while starting the NFC scan. Please try again.";
+
+      if (err && err.name === "NotAllowedError") {
+        userMsg =
+          "NFC permission was blocked. Please allow NFC access for your browser and try again.";
+      } else if (err && err.name === "NotSupportedError") {
+        userMsg =
+          "This device or browser doesn’t support Web NFC. Use Chrome on Android for tag scanning, or use the iPhone / iPad NFC link method below.";
+        setSupportStatus("unsupported");
+      } else if (err && err.name === "AbortError") {
+        userMsg =
+          "The NFC scan was cancelled before a tag was read. Try again when you’re ready.";
       }
-    },
-    [supportStatus, isScanning, navigate]
-  );
+
+      setErrorMessage(userMsg);
+
+      setDebugInfo((prev) => ({
+        ...prev,
+        lastException: {
+          name: err?.name || "UnknownError",
+          message: err?.message || String(err),
+          at: new Date().toISOString(),
+        },
+      }));
+    }
+  }, [supportStatus, isScanning, navigate]);
 
   const disabledReason =
     supportStatus !== "supported"
@@ -521,7 +579,9 @@ export default function NFCScan() {
                     }`}
                     title={disabledReason || undefined}
                   >
-                    {isScanning ? "Scanning… Hold near the tag" : "Scan Blank NFC Tag"}
+                    {isScanning
+                      ? "Scanning… Hold near the tag"
+                      : "Scan Blank NFC Tag"}
                   </button>
 
                   <p className="text-xs text-gray-500">
@@ -598,18 +658,39 @@ export default function NFCScan() {
                       </div>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={handleCopyAppleLink}
-                      disabled={!generatedAppleLink}
-                      className={`inline-flex items-center justify-center px-4 py-2 rounded text-sm font-semibold transition-colors ${
-                        generatedAppleLink
-                          ? "bg-blue-700 text-white hover:bg-blue-800"
-                          : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                      }`}
-                    >
-                      Copy NFC Link
-                    </button>
+                    {selectedHive?.nfc_link_enabled && (
+                      <div className="rounded border border-blue-200 bg-blue-50 px-3 py-2 text-xs text-blue-800">
+                        iPhone / iPad NFC is currently enabled for this hive.
+                      </div>
+                    )}
+
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={handleCopyAppleLink}
+                        disabled={!generatedAppleLink}
+                        className={`inline-flex items-center justify-center px-4 py-2 rounded text-sm font-semibold transition-colors ${
+                          generatedAppleLink
+                            ? "bg-blue-700 text-white hover:bg-blue-800"
+                            : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        }`}
+                      >
+                        Copy NFC Link
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleClearAppleNfc}
+                        disabled={!selectedHiveId || !selectedHive?.nfc_link_enabled}
+                        className={`inline-flex items-center justify-center px-4 py-2 rounded text-sm font-semibold transition-colors ${
+                          selectedHiveId && selectedHive?.nfc_link_enabled
+                            ? "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                            : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        }`}
+                      >
+                        Clear iPhone NFC status
+                      </button>
+                    </div>
 
                     {copyMessage && (
                       <div className="rounded border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800">
