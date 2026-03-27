@@ -1,0 +1,307 @@
+:root {
+  --bg: #f8faf7;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --line: #d1d5db;
+  --yellow: #facc15;
+  --yellow-2: #fef3c7;
+  --green: #dcfce7;
+  --green-line: #86efac;
+  --red: #fee2e2;
+  --red-line: #fca5a5;
+  --amber: #fef3c7;
+  --amber-line: #fcd34d;
+}
+
+.colony-health-triage-page * {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* 🔒 Scoped container instead of body */
+.colony-health-triage-page {
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.colony-health-triage-page .wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.colony-health-triage-page .card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.colony-health-triage-page .stack > * + * {
+  margin-top: 16px;
+}
+
+.colony-health-triage-page .muted {
+  color: var(--muted);
+}
+
+.colony-health-triage-page .small {
+  font-size: 0.92rem;
+}
+
+/* 🔒 Headings scoped */
+.colony-health-triage-page h1,
+.colony-health-triage-page h2,
+.colony-health-triage-page h3,
+.colony-health-triage-page p {
+  margin: 0;
+}
+
+.colony-health-triage-page h1 {
+  font-size: 2rem;
+  margin-bottom: 6px;
+}
+
+.colony-health-triage-page h2 {
+  font-size: 1.1rem;
+}
+
+.colony-health-triage-page h3 {
+  font-size: 1.05rem;
+}
+
+.colony-health-triage-page .toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.colony-health-triage-page .toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* 🔒 Buttons scoped (IMPORTANT FIX) */
+.colony-health-triage-page button,
+.colony-health-triage-page select {
+  font: inherit;
+}
+
+.colony-health-triage-page button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+}
+
+.colony-health-triage-page button:hover {
+  background: #f9fafb;
+}
+
+.colony-health-triage-page button.primary {
+  background: var(--yellow);
+  border-color: #eab308;
+  color: #111827;
+  font-weight: 700;
+}
+
+.colony-health-triage-page button.primary:hover {
+  background: #eab308;
+}
+
+.colony-health-triage-page button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.colony-health-triage-page .banner-yellow {
+  border: 1px solid #fde68a;
+  background: #fffbeb;
+}
+
+.colony-health-triage-page .banner-green {
+  border: 1px solid var(--green-line);
+  background: var(--green);
+}
+
+.colony-health-triage-page .banner-red {
+  border: 1px solid var(--red-line);
+  background: var(--red);
+}
+
+.colony-health-triage-page .question {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  background: #fff;
+}
+
+.colony-health-triage-page .question.highlight {
+  outline: 3px solid #facc15;
+  background: var(--yellow-2);
+}
+
+.colony-health-triage-page .question.multi {
+  background: #f9fafb;
+}
+
+.colony-health-triage-page .question-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.colony-health-triage-page .question-help {
+  color: var(--muted);
+  font-size: 0.86rem;
+  margin-bottom: 12px;
+}
+
+.colony-health-triage-page select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.colony-health-triage-page .tri-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.colony-health-triage-page .tri-btn.active {
+  background: var(--yellow);
+  border-color: #eab308;
+  font-weight: 700;
+}
+
+.colony-health-triage-page .grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 10px;
+}
+
+@media (max-width: 720px) {
+  .colony-health-triage-page .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.colony-health-triage-page .check-label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.colony-health-triage-page .check-label input {
+  margin-top: 3px;
+}
+
+.colony-health-triage-page .section-title {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.colony-health-triage-page .result-info,
+.colony-health-triage-page .result-warning,
+.colony-health-triage-page .result-alert {
+  border-radius: 14px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.colony-health-triage-page .result-warning {
+  background: var(--amber);
+  border-color: var(--amber-line);
+}
+
+.colony-health-triage-page .result-alert {
+  background: var(--red);
+  border-color: var(--red-line);
+}
+
+/* 🔒 UL FIX (VERY IMPORTANT) */
+.colony-health-triage-page ul {
+  margin: 8px 0 0;
+  padding-left: 20px;
+}
+
+.colony-health-triage-page .result-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.colony-health-triage-page .right-meta {
+  font-size: 0.84rem;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* 🔒 Hidden fix */
+.colony-health-triage-page .hidden {
+  display: none !important;
+}
+
+.colony-health-triage-page .debug pre {
+  white-space: pre-wrap;
+  overflow: auto;
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
+.colony-health-triage-page details summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.colony-health-triage-page .intro-block {
+  margin-top: 12px;
+}
+
+.colony-health-triage-page .jump-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* 🔒 Print styles scoped */
+@media print {
+  .colony-health-triage-page .no-print {
+    display: none !important;
+  }
+
+  .colony-health-triage-page {
+    background: white;
+  }
+
+  .colony-health-triage-page .wrap {
+    max-width: none;
+    padding: 0;
+  }
+
+  .colony-health-triage-page .card,
+  .colony-health-triage-page .question,
+  .colony-health-triage-page .result-info,
+  .colony-health-triage-page .result-warning,
+  .colony-health-triage-page .result-alert {
+    break-inside: avoid;
+  }
+}
