@@ -1,5 +1,5 @@
 const BEE_HEALTH_RULES = {
-  version: "2.4.0-uk-outcomes-120plus-tightened",
+  version: "2.5.1-uk-post-mortem-varroa-update-fixed",
   safety: {
     topBanner: [
       "This is not a diagnosis — it’s a triage helper to guide what to check next.",
@@ -22,6 +22,7 @@ const BEE_HEALTH_RULES = {
     { id: "route_entrance_activity", label: "Lots of flying / unusual entrance activity", description: "Orientation flights, robbing, wasps/hornets, bearding, cleansing flights, drones, etc." },
     { id: "route_queen_brood", label: "Eggs / brood / queen concerns", description: "No eggs, odd brood pattern, queen cells, drone brood, laying workers, swarming, supersedure, etc." },
     { id: "route_dead_dying", label: "Dead/dying bees / crawling / can’t fly", description: "Poisoning suspicion, starvation, chilling, disease, varroa/virus signs, etc." },
+    { id: "route_post_mortem", label: "Colony has died / empty hive / post-mortem", description: "Winter losses, starvation, isolation starvation, wasp attack, robbing, varroa-related collapse, absconding, etc." },
     { id: "route_feeding_stores", label: "Feeding / stores / syrup not taken", description: "Nectar flow vs cold weather, feeder issues, weak colony, robbing risk, starvation risk." },
     { id: "route_comb_building", label: "Comb / drawing foundation / building issues", description: "Strength/flow, stimulation feeding, timing, space, foundation acceptance, temperature." },
     { id: "route_pests_predators", label: "Pests / predators suspected", description: "Wasps, hornets, ants, mice, wax moth, woodpecker, SHB (notifiable), etc." },
@@ -39,6 +40,7 @@ const BEE_HEALTH_RULES = {
           { value: "route_entrance_activity", label: "Lots of flying / unusual entrance activity" },
           { value: "route_queen_brood", label: "Eggs / brood / queen concerns" },
           { value: "route_dead_dying", label: "Dead/dying bees / crawling / can’t fly" },
+          { value: "route_post_mortem", label: "Colony has died / empty hive / post-mortem" },
           { value: "route_feeding_stores", label: "Feeding / stores / syrup not taken" },
           { value: "route_comb_building", label: "Comb / drawing foundation / building issues" },
           { value: "route_pests_predators", label: "Pests / predators suspected" },
@@ -122,6 +124,7 @@ const BEE_HEALTH_RULES = {
       { id: "ea_cleansing_flights", label: "Do you see many bees doing quick 'toilet flights' and returning?", kind: "tri", showIf: { any: ["route_entrance_activity", "route_unsure"] }, help: "Common after confinement (winter/poor weather)." },
       { id: "ea_drones_visible", label: "Do you see lots of larger drones coming and going?", kind: "tri", showIf: { any: ["route_entrance_activity", "route_unsure"] } },
     ],
+
     queen_brood: [
       { id: "qb_opened_hive", label: "Have you opened the hive and looked at frames?", kind: "tri", showIf: { any: ["route_queen_brood", "route_unsure"] } },
       { id: "qb_eggs_seen", label: "Did you see eggs today?", kind: "tri", showIf: { all: ["route_queen_brood", "opened_frames_ok"] } },
@@ -148,16 +151,49 @@ const BEE_HEALTH_RULES = {
       { id: "qb_drone_brood_in_worker_cells", label: "Do you see drone brood in worker-sized cells (bullet caps in worker area)?", kind: "tri", showIf: { all: ["route_queen_brood", "opened_frames_ok"] } },
       { id: "qb_brood_pattern_poor", label: "Is the brood pattern patchy/erratic (lots of missed cells)?", kind: "tri", showIf: { all: ["route_queen_brood", "opened_frames_ok"] } },
       { id: "symptom_deformed_wings", label: "Do you see bees with deformed/shrunken wings?", kind: "tri", showIf: { all: ["route_queen_brood", "opened_frames_ok"] } },
+      {
+        id: "qb_visible_varroa",
+        label: "Can you see small red/brown mites (varroa) on adult bees?",
+        kind: "tri",
+        showIf: { all: ["route_queen_brood", "opened_frames_ok"] },
+        help: "They look like tiny reddish-brown dots on the bee’s body (often on the thorax or abdomen)."
+      },
+      {
+        id: "qb_varroa_monitoring",
+        label: "Have you checked mite levels (e.g. board drop, sugar roll, alcohol wash)?",
+        kind: "tri",
+        showIf: { all: ["route_queen_brood", "opened_frames_ok"] },
+        help: "Even if you can’t see mites on bees, levels can still be high."
+      },
       { id: "symptom_ropey_larvae", label: "Do any larvae look brown/ropey (stringy) or smell foul?", kind: "tri", showIf: { all: ["route_queen_brood", "opened_frames_ok"] } },
     ],
+
     dead_dying: [
       { id: "dd_piles_dead_bees", label: "Are there piles of dead bees (inside the hive or outside at the entrance)?", kind: "tri", showIf: { any: ["route_dead_dying", "route_unsure"] } },
       { id: "dd_crawling_cant_fly", label: "Are many bees crawling / unable to fly?", kind: "tri", showIf: { any: ["route_dead_dying", "route_unsure"] } },
       { id: "dd_tongues_out", label: "Do dead bees have tongues out?", kind: "tri", showIf: { all: ["dd_piles_dead_bees_yes"], any: ["route_dead_dying", "route_unsure"] } },
       { id: "dd_deformed_wings", label: "Do you see deformed wings?", kind: "tri", showIf: { any: ["route_dead_dying", "route_unsure"] } },
+      { id: "dd_visible_varroa", label: "Can you see small red/brown mites on adult bees?", kind: "tri", showIf: { any: ["route_dead_dying", "route_unsure"] }, help: "Visible mites on adult bees are a strong clue for significant Varroa pressure." },
       { id: "dd_stores_very_light", label: "Is the hive very light (stores very low) when hefted?", kind: "tri", showIf: { any: ["route_dead_dying", "route_unsure"] } },
       { id: "dd_cold_spell", label: "Has there been a cold spell / prolonged bad weather recently?", kind: "tri", showIf: { any: ["route_dead_dying", "route_unsure"] } },
     ],
+
+    post_mortem: [
+      { id: "pm_dead_bees_present", label: "Are there dead bees still in the hive / on the floor / at the entrance?", kind: "tri", showIf: { all: ["route_post_mortem"] } },
+      { id: "pm_headfirst_cells", label: "Are many dead bees head-first in cells?", kind: "tri", showIf: { all: ["route_post_mortem", "pm_dead_bees_present_yes"] }, help: "This is a classic starvation clue." },
+      { id: "pm_dead_cluster", label: "Is there still a dead cluster of bees together?", kind: "tri", showIf: { all: ["route_post_mortem", "pm_dead_bees_present_yes"] } },
+      { id: "pm_stores_present", label: "Are there still food stores left in the hive?", kind: "tri", showIf: { all: ["route_post_mortem"] } },
+      { id: "pm_plenty_stores", label: "Are there still plenty of stores left?", kind: "tri", showIf: { all: ["route_post_mortem", "pm_stores_present_yes"] } },
+      { id: "pm_dysentery_signs", label: "Is there obvious bee poo / brown spotting on frames, comb, or around the entrance?", kind: "tri", showIf: { all: ["route_post_mortem"] } },
+      { id: "pm_brood_present", label: "Was there brood still present when the colony died?", kind: "tri", showIf: { all: ["route_post_mortem"], not: ["inspection_level_entrance_only"] } },
+      { id: "pm_brood_problem", label: "Did the brood look patchy / sunken / odd / unhealthy?", kind: "tri", showIf: { all: ["route_post_mortem", "pm_brood_present_yes"], not: ["inspection_level_entrance_only"] } },
+      { id: "pm_visible_varroa", label: "Could you see small red/brown mites on bees before collapse — or can you still see them now?", kind: "tri", showIf: { all: ["route_post_mortem"] }, help: "Visible mites are a strong sign that Varroa may have played a major role." },
+      { id: "pm_population_dropped", label: "Did the bee numbers drop sharply before the colony died?", kind: "tri", showIf: { all: ["route_post_mortem"] } },
+      { id: "pm_hive_empty_now", label: "Is the hive now mostly empty of bees?", kind: "tri", showIf: { all: ["route_post_mortem"] } },
+      { id: "pm_wasp_attack_signs", label: "Are there signs of wasp attack or robbing (chewed cappings, debris, torn comb, fighting previously seen)?", kind: "tri", showIf: { all: ["route_post_mortem"] }, help: "A weak colony can be overwhelmed by wasps or robber bees, especially in late summer/autumn." },
+      { id: "pm_wasps_seen", label: "Were wasps seen bothering the hive before collapse?", kind: "tri", showIf: { all: ["route_post_mortem"] } },
+    ],
+
     feeding_stores: [
       {
         id: "fs_why_feeding",
@@ -213,6 +249,7 @@ const BEE_HEALTH_RULES = {
       { id: "fs_smell_ferment", label: "Does the syrup smell sour/fermented or look cloudy?", kind: "tri", showIf: { any: ["route_feeding_stores", "route_unsure"] }, help: "Old/fermented syrup can be ignored and can upset bees." },
       { id: "fs_recent_treatment_effect", label: "Was there a Varroa treatment very recently (last 7–10 days)?", kind: "tri", showIf: { any: ["route_feeding_stores", "route_unsure"] }, help: "Some treatments and brood breaks can temporarily alter behaviour and intake." },
     ],
+
     comb_building: [
       {
         id: "cb_what_not_drawing",
@@ -264,6 +301,7 @@ const BEE_HEALTH_RULES = {
       { id: "cb_congestion", label: "Is the brood box congested (little space, lots of bees)?", kind: "tri", showIf: { any: ["route_comb_building", "route_unsure"] }, help: "Congestion + flow often drives comb building and swarming behaviours." },
       { id: "cb_queen_excluder_in_way", label: "Is there a queen excluder on and they won’t go into the super?", kind: "tri", showIf: { any: ["route_comb_building", "route_unsure"] }, help: "Sometimes bees hesitate to cross an excluder unless conditions are right." },
     ],
+
     pests_predators: [
       { id: "pp_wasps_pressure", label: "Wasps bothering the entrance (hovering/attempting entry)?", kind: "tri", showIf: { any: ["route_pests_predators", "route_unsure"] } },
       { id: "pp_hornet_hawking", label: "Large hornets 'hawking' at the entrance?", kind: "tri", showIf: { any: ["route_pests_predators", "route_unsure"] } },
@@ -273,6 +311,7 @@ const BEE_HEALTH_RULES = {
       { id: "pp_ants_seen", label: "Ants in/around the hive?", kind: "tri", showIf: { any: ["route_pests_predators", "route_unsure"] } },
       { id: "pp_slimy_fermented_frames", label: "Slimy/fermented frames / slime trails (rare but high significance)?", kind: "tri", showIf: { any: ["route_pests_predators", "route_unsure"] } },
     ],
+
     brood_disease: [
       { id: "bd_chalk_mummies", label: "Chalk-like mummies (white/grey/black) in cells or on floor?", kind: "tri", showIf: { any: ["route_brood_disease", "route_unsure"], not: ["inspection_level_entrance_only"] } },
       { id: "bd_sacbrood", label: "Fluid-filled larvae / slipper-shaped remains?", kind: "tri", showIf: { any: ["route_brood_disease", "route_unsure"], not: ["inspection_level_entrance_only"] } },
@@ -280,6 +319,7 @@ const BEE_HEALTH_RULES = {
       { id: "bd_smell_foul", label: "Unpleasant smell from brood area?", kind: "tri", showIf: { any: ["route_brood_disease", "route_unsure"], not: ["inspection_level_entrance_only"] } },
       { id: "bd_ropey_larvae", label: "Brown/ropey larvae (stringy) or sunken/perforated cappings together?", kind: "tri", showIf: { any: ["route_brood_disease", "route_unsure"], not: ["inspection_level_entrance_only"] } },
     ],
+
     temperament: [
       { id: "tm_changed_suddenly", label: "Did aggression change suddenly (rather than gradually)?", kind: "tri", showIf: { any: ["route_temperament", "route_unsure"] } },
       { id: "tm_robbery_pressure", label: "Is robbing pressure present (frenzied entrance, fighting)?", kind: "tri", showIf: { any: ["route_temperament", "route_unsure"] } },
@@ -287,11 +327,13 @@ const BEE_HEALTH_RULES = {
       { id: "tm_weather_windy", label: "Is the weather poor/windy/cold (bees defensive)?", kind: "tri", showIf: { any: ["route_temperament", "route_unsure"] } },
     ],
   },
+
   urgentReporting: [
     { mode: "asian_hornet", label: "Possible Asian hornet activity — urgent reporting advised", any: ["pp_hornet_hawking_yes", "pp_hornet_persistent_yes"] },
     { mode: "shb", label: "Small hive beetle suspicion — urgent reporting advised", any: ["pp_slimy_fermented_frames_yes"] },
     { mode: "foulbrood", label: "Possible foulbrood red flag — do not move equipment", any: ["bd_ropey_larvae_yes", "symptom_ropey_larvae_yes"] },
   ],
+
   redFlags: ["bd_ropey_larvae_yes", "symptom_ropey_larvae_yes"],
   outcomes: buildOutcomeLibrary(),
 };
@@ -299,6 +341,7 @@ const BEE_HEALTH_RULES = {
 function buildOutcomeLibrary() {
   const O = {};
   const add = (key, def) => { O[key] = def; };
+
   const basicActions = {
     monitor: ["Monitor over 24–72 hours. Update answers if symptoms change."],
     reduceDisturbance: ["Avoid repeated heavy disturbance until the situation stabilises."],
@@ -318,13 +361,17 @@ function buildOutcomeLibrary() {
       "Re-check hive weight within 48–72 hours.",
     ],
   };
+
   const meaningfulSignals = [
     "ea_fighting_rolling_yes","ea_bees_shiny_black_thieving_yes","fs_robbery_signs_yes","fs_feeder_leaks_yes","tm_robbery_pressure_yes",
     "fs_stores_low_yes","dd_stores_very_light_yes","dd_piles_dead_bees_yes","dd_crawling_cant_fly_yes","dd_tongues_out_yes",
     "qb_multiple_eggs_per_cell_yes","qb_drone_brood_in_worker_cells_yes","qb_brood_pattern_poor_yes","qb_queen_cells_seen_yes","qb_queen_cells_opened_yes",
     "bd_ropey_larvae_yes","symptom_ropey_larvae_yes","bd_chalk_mummies_yes","bd_sacbrood_yes","bd_chilled_pattern_yes","dd_deformed_wings_yes","symptom_deformed_wings_yes",
+    "qb_visible_varroa_yes","dd_visible_varroa_yes","pm_visible_varroa_yes",
+    "pm_headfirst_cells_yes","pm_dead_cluster_yes","pm_dysentery_signs_yes","pm_brood_problem_yes","pm_population_dropped_yes","pm_hive_empty_now_yes","pm_wasp_attack_signs_yes","pm_wasps_seen_yes",
     "pp_hornet_hawking_yes","pp_hornet_persistent_yes","pp_slimy_fermented_frames_yes","pp_wax_moth_webbing_yes","pp_mouse_signs_yes",
   ];
+
   const seasons = ["early_spring", "spring", "summer", "autumn", "winter"];
   const onsets = ["sudden", "fast", "slow", "ongoing"];
 
@@ -551,16 +598,56 @@ function buildOutcomeLibrary() {
     nextChecks: ["qb_young_larvae_seen", "qb_eggs_seen", "qb_sealed_worker_brood_seen"]
   });
 
+  add("queen_varroa_monitoring_not_done", {
+    title: "Varroa levels have not been checked yet (important next step)",
+    severity: "info",
+    urgency: "watch",
+    confidence: "medium",
+    when: {
+      all: ["route_queen_brood", "opened_frames_ok"],
+      any: ["qb_varroa_monitoring_no", "qb_varroa_monitoring_unknown"]
+    },
+    excludeIf: {
+      any: ["bd_ropey_larvae_yes", "symptom_ropey_larvae_yes"]
+    },
+    why: [
+      "You have not confirmed mite levels yet, so Varroa pressure has not been ruled in or ruled out.",
+      "Colonies can carry significant Varroa loads even when mites are not obvious on adult bees."
+    ],
+    actions: [
+      "Use an appropriate monitoring method for the season if you can (for example board drop, sugar roll, or alcohol wash).",
+      "Interpret the result alongside any visible clues such as deformed wings, patchy brood, or colony decline.",
+      "If the colony is deteriorating, do not rely only on whether you can physically see mites on bees.",
+      ...basicActions.monitor
+    ],
+    whenToWorry: [
+      "If you also see deformed wings, patchy brood, or a shrinking adult population.",
+      "If another colony in the apiary is also showing decline."
+    ],
+    nextChecks: ["qb_visible_varroa", "symptom_deformed_wings", "qb_brood_pattern_poor"]
+  });
+
   add("disease_varroa_dwv_pressure", {
     title: "Varroa / Deformed Wing Virus pressure likely",
     severity: "warning",
     urgency: "watch",
     confidence: "strong",
-    when: { any: ["symptom_deformed_wings_yes","dd_deformed_wings_yes"] },
+    when: { any: ["symptom_deformed_wings_yes","dd_deformed_wings_yes","qb_visible_varroa_yes","dd_visible_varroa_yes","pm_visible_varroa_yes"] },
     excludeIf: { any: ["dd_tongues_out_yes","bd_ropey_larvae_yes","symptom_ropey_larvae_yes"] },
-    why: ["Deformed wings are a strong field signal for virus expression often associated with high Varroa pressure.","It can present alongside weakening, crawling bees, and patchy brood (but those can have other causes too)."],
-    actions: ["Check Varroa levels if you can (monitoring method appropriate to season).","Review your seasonal Varroa plan; treat if thresholds indicate.","Avoid combining colonies until you understand what’s happening (risk of spreading problems).", ...basicActions.monitor],
-    whenToWorry: ["If deformed wings are widespread, the colony is shrinking quickly, or you’re seeing lots of crawling bees.","If you have repeated losses despite treatment — get local help to review plan/timing."]
+    why: [
+      "Deformed wings are a strong field signal for virus expression often associated with high Varroa pressure.",
+      "Visible mites on adult bees is a strong indicator of significant varroa load."
+    ],
+    actions: [
+      "Check Varroa levels if you can (monitoring method appropriate to season).",
+      "Review your seasonal Varroa plan; treat if thresholds indicate.",
+      "Avoid combining colonies until you understand what’s happening (risk of spreading problems).",
+      ...basicActions.monitor
+    ],
+    whenToWorry: [
+      "If deformed wings are widespread, the colony is shrinking quickly, or you’re seeing lots of crawling bees.",
+      "If you have repeated losses despite treatment — get local help to review plan/timing."
+    ]
   });
 
   add("disease_foulbrood_red_flag", {
@@ -983,14 +1070,119 @@ function buildOutcomeLibrary() {
   });
 
   add("dead_varroa_virus_signal_in_dead_route", {
-    title: "Varroa/virus pressure possible (deformed wings / crawling)",
+    title: "Varroa/virus pressure possible (deformed wings / crawling / visible mites)",
     severity: "warning",
     urgency: "watch",
     confidence: "medium",
-    when: { any: ["dd_deformed_wings_yes","symptom_deformed_wings_yes","dd_crawling_cant_fly_yes"] },
+    when: { any: ["dd_deformed_wings_yes","symptom_deformed_wings_yes","dd_crawling_cant_fly_yes","dd_visible_varroa_yes"] },
     excludeIf: { any: ["dd_stores_very_light_yes","fs_stores_low_yes"] },
-    actions: ["Check Varroa levels if you can (monitoring methods).","Review your seasonal Varroa plan; treat if thresholds indicate.","Avoid combining colonies until you understand what’s happening.", ...basicActions.monitor],
-    whenToWorry: ["Increasing numbers of bees with deformed wings.","Rapid population drop alongside deformed wings."]
+    why: [
+      "Crawling bees and deformed wings can fit Varroa/virus pressure.",
+      "Visible mites on adult bees strengthens that suspicion."
+    ],
+    actions: [
+      "Check Varroa levels if you can (monitoring methods).",
+      "Review your seasonal Varroa plan; treat if thresholds indicate.",
+      "Avoid combining colonies until you understand what’s happening.",
+      ...basicActions.monitor
+    ],
+    whenToWorry: [
+      "Increasing numbers of bees with deformed wings.",
+      "Rapid population drop alongside deformed wings or visible mites."
+    ]
+  });
+
+  add("dead_visible_varroa_signal", {
+    title: "Visible Varroa mites seen on adult bees",
+    severity: "warning",
+    urgency: "watch",
+    confidence: "strong",
+    when: { any: ["dd_visible_varroa_yes","qb_visible_varroa_yes","pm_visible_varroa_yes"] },
+    excludeIf: { any: ["bd_ropey_larvae_yes","symptom_ropey_larvae_yes"] },
+    why: ["Visible red/brown mites on adult bees usually suggests a significant Varroa burden rather than a low background level.","This fits especially strongly if there are also deformed wings, crawling bees, or a colony that dwindled before collapse."],
+    actions: ["Treat this as an important Varroa clue and review monitoring/treatment history.","Check other colonies too — if one colony shows visible mites, others may also be under pressure.","Avoid combining colonies until you understand the cause.", ...basicActions.monitor],
+    whenToWorry: ["Visible mites plus deformed wings or rapid colony decline.","A winter dead-out following a shrinking adult bee population."]
+  });
+
+  add("postmortem_starvation_classic", {
+    title: "Post-mortem: starvation likely",
+    severity: "warning",
+    urgency: "urgent",
+    confidence: "strong",
+    when: { all: ["route_post_mortem"], any: ["pm_headfirst_cells_yes","pm_stores_present_no"] },
+    excludeIf: { any: ["pm_wasp_attack_signs_yes"] },
+    why: ["Dead bees head-first in cells is a classic starvation sign.","If there are no usable stores left, starvation becomes the leading explanation."],
+    actions: ["Check the remaining combs carefully to confirm how much usable food was actually available.","Review winter feeding timing and whether fondant/feed stayed within reach of the cluster.","Check neighbouring colonies urgently if stores are also getting low."],
+    whenToWorry: ["If more than one colony is becoming light.","If cold weather is still ongoing and other colonies are marginal on stores."]
+  });
+
+  add("postmortem_isolation_starvation", {
+    title: "Post-mortem: isolation starvation / cold cluster loss possible",
+    severity: "warning",
+    urgency: "watch",
+    confidence: "strong",
+    when: { all: ["route_post_mortem","pm_dead_cluster_yes","pm_plenty_stores_yes"] },
+    excludeIf: { any: ["pm_wasp_attack_signs_yes"] },
+    why: ["A dead cluster with stores still present often suggests bees could not move across to food.","This is common in cold snaps, with small clusters, or when stores were present but not within reach."],
+    actions: ["Review colony strength going into winter and how stores were positioned around the cluster.","Reduce space and support weaker colonies earlier next season.","Check other small colonies for isolation risk during cold spells."],
+    whenToWorry: ["If other weak colonies are still in cold conditions.","If dead-outs follow a recent prolonged cold snap."]
+  });
+
+  add("postmortem_dysentery_nosema_possible", {
+    title: "Post-mortem: dysentery / gut stress / possible Nosema pattern",
+    severity: "info",
+    urgency: "watch",
+    confidence: "medium",
+    when: { all: ["route_post_mortem","pm_dysentery_signs_yes"] },
+    excludeIf: { any: ["pm_wasp_attack_signs_yes"] },
+    why: ["Brown spotting or obvious bee poo suggests gut stress and can fit dysentery-like patterns.","Damp, confinement, poor wintering conditions, or Nosema-type stress can contribute."],
+    actions: ["Review ventilation, damp, and feed quality issues.","Avoid reusing obviously contaminated material without checking local best practice.","Monitor surviving colonies for similar soiling or poor spring build-up."],
+    whenToWorry: ["If multiple colonies show heavy spotting.","If surviving colonies are also weak and failing to build."]
+  });
+
+  add("postmortem_wasp_or_robbing_collapse", {
+    title: "Post-mortem: wasp attack / robbing likely contributed to collapse",
+    severity: "warning",
+    urgency: "watch",
+    confidence: "strong",
+    when: { all: ["route_post_mortem"], any: ["pm_wasp_attack_signs_yes","pm_wasps_seen_yes"] },
+    why: ["Signs of attack, torn comb, debris, or previous fighting fit wasp pressure or robbing rather than simple absconding.","Weak colonies can be stripped very quickly, especially in late summer or autumn."],
+    actions: ["Review whether the entrance was small enough and whether the colony was strong enough to defend itself.","Be extra careful with late-season feeding and avoid syrup spills or exposed comb.","Protect weaker colonies earlier if wasp pressure builds in the apiary."],
+    whenToWorry: ["If other weak colonies nearby are still under attack.","If you are seeing wasps probing multiple hives now."]
+  });
+
+  add("postmortem_varroa_collapse", {
+    title: "Post-mortem: varroa-related collapse possible",
+    severity: "warning",
+    urgency: "watch",
+    confidence: "strong",
+    when: { all: ["route_post_mortem"], any: ["pm_visible_varroa_yes","pm_population_dropped_yes","pm_brood_problem_yes"] },
+    excludeIf: { any: ["pm_wasp_attack_signs_yes","pm_headfirst_cells_yes","pm_stores_present_no"] },
+    why: ["Colonies that collapse with food still present are often linked to high varroa loads going into winter."],
+    actions: ["Review the timing and effectiveness of Varroa monitoring/treatments in that colony and across the apiary.","Check your surviving colonies promptly rather than assuming this was an isolated loss.","Avoid combining suspect dead-out material with other colonies until the wider picture is clearer."],
+    whenToWorry: ["If another colony is also dwindling.","If visible mites or deformed wings are being seen elsewhere in the apiary."]
+  });
+
+  add("postmortem_absconding_or_near_empty", {
+    title: "Post-mortem: near-empty hive / disappearance pattern needs narrowing down",
+    severity: "info",
+    urgency: "watch",
+    confidence: "low",
+    when: { all: ["route_post_mortem","pm_hive_empty_now_yes","pm_stores_present_yes"] },
+    excludeIf: { any: ["pm_wasp_attack_signs_yes","pm_wasps_seen_yes","pm_visible_varroa_yes","pm_population_dropped_yes","pm_headfirst_cells_yes"] },
+    why: [
+      "A mostly empty hive with stores remaining can look like absconding, but it can also follow collapse for other reasons.",
+      "If there are no strong signs of attack, starvation, or Varroa, keep the conclusion cautious rather than jumping straight to absconding."
+    ],
+    actions: [
+      "Review season, colony strength, and any major disturbance or queen event before the loss.",
+      "Check combs carefully for subtle clues before reusing equipment.",
+      "Treat this as a prompt to inspect the rest of the apiary rather than assuming a single simple cause."
+    ],
+    whenToWorry: [
+      "If another colony starts dwindling or disappearing.",
+      "If you later notice signs that point more clearly to robbing, wasp attack, or Varroa."
+    ]
   });
 
   add("dead_crawling_multi_causes", {
@@ -1102,7 +1294,7 @@ function buildOutcomeLibrary() {
     });
   });
 
-  const routes = ["route_entrance_activity","route_queen_brood","route_dead_dying","route_feeding_stores","route_comb_building","route_pests_predators","route_brood_disease","route_temperament","route_unsure"];
+  const routes = ["route_entrance_activity","route_queen_brood","route_dead_dying","route_post_mortem","route_feeding_stores","route_comb_building","route_pests_predators","route_brood_disease","route_temperament","route_unsure"];
   let idx = 0;
   routes.forEach((r) => {
     seasons.forEach((s) => {
@@ -1148,7 +1340,6 @@ function prettyRoute(r) {
 }
 
 (function () {
-  // Only run on the colony health triage page
   if (!document.body || document.body.id !== "colony-health-triage-page") {
     return;
   }
@@ -1166,7 +1357,6 @@ function prettyRoute(r) {
     debugBtn: document.getElementById("debugBtn"),
   };
 
-  // Safety check: only run if the triage containers actually exist
   if (
     !el.topBannerList ||
     !el.guidedView ||
@@ -1298,9 +1488,19 @@ function prettyRoute(r) {
         if (v === "yes") f[k] = true;
       }
     });
+
     if (state.answers.primary_route) f[state.answers.primary_route] = true;
-    f.opened_frames_ok = state.answers.inspection_level === "opened_quick" || state.answers.inspection_level === "full_inspection";
+
+    f.opened_frames_ok =
+      state.answers.inspection_level === "opened_quick" ||
+      state.answers.inspection_level === "full_inspection";
+
     f.season_winter_or_early_spring = !!(f.season_winter || f.season_early_spring);
+
+    if (state.answers.primary_route === "route_unsure" && f.opened_frames_ok) {
+      f.route_queen_brood = true;
+    }
+
     return f;
   }
 
@@ -1321,12 +1521,12 @@ function prettyRoute(r) {
       route_entrance_activity: "entrance_activity",
       route_queen_brood: "queen_brood",
       route_dead_dying: "dead_dying",
+      route_post_mortem: "post_mortem",
       route_feeding_stores: "feeding_stores",
       route_comb_building: "comb_building",
       route_pests_predators: "pests_predators",
       route_brood_disease: "brood_disease",
       route_temperament: "temperament",
-      route_unsure: "entrance_activity",
     };
     return map[r] || null;
   }
@@ -1334,8 +1534,37 @@ function prettyRoute(r) {
   function allQuestionsInOrder() {
     const currentFlags = flags();
     const foundation = BEE_HEALTH_RULES.questions.foundation || [];
+    const selectedRoute = state.answers.primary_route;
+
+    if (!selectedRoute) {
+      return [...foundation].filter(Boolean);
+    }
+
+    if (selectedRoute === "route_unsure") {
+      const unsureOrder = [
+        "entrance_activity",
+        "dead_dying",
+        "post_mortem",
+        "queen_brood",
+        "pests_predators",
+        "brood_disease",
+        "feeding_stores",
+        "temperament",
+        "comb_building"
+      ];
+
+      const unsureQuestions = unsureOrder.flatMap((key) =>
+        (BEE_HEALTH_RULES.questions[key] || []).filter(q => evalClause(q.showIf, currentFlags))
+      );
+
+      return [...foundation, ...unsureQuestions].filter(Boolean);
+    }
+
     const rk = routeKey();
-    const routeQuestions = rk ? (BEE_HEALTH_RULES.questions[rk] || []).filter(q => evalClause(q.showIf, currentFlags)) : [];
+    const routeQuestions = rk
+      ? (BEE_HEALTH_RULES.questions[rk] || []).filter(q => evalClause(q.showIf, currentFlags))
+      : [];
+
     return [...foundation, ...routeQuestions].filter(Boolean);
   }
 
@@ -1414,6 +1643,7 @@ function prettyRoute(r) {
     const currentFlags = flags();
     const urgentHit = getUrgentHit(currentFlags);
     const redHit = (BEE_HEALTH_RULES.redFlags || []).find(k => currentFlags[k] === true);
+
     if (redHit) {
       state.results = { type: "override", redHit, urgentHit, top: [], nextChecks: [] };
       render();
