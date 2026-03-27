@@ -9,6 +9,58 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
   {
+  version: "1.1.3",
+  released_at: "2026-03-27T12:00:00Z",
+  summary:
+    "NFC setup has been reworked to better support both Android and iPhone / iPad, with a clearer single setup hub, improved wording across NFC pages, and a new iPhone-friendly link-based tag flow.",
+
+  added: [
+    "Added a new **iPhone / iPad NFC link flow** using **/nfc/open?hive_id=...**, allowing HiveTag links to be written directly to NFC tags for Apple devices.",
+    "Added **Copy NFC Link** generation so iPhone / iPad users can copy the correct hive link without typing it manually.",
+    "Added a new **NFC open route** that redirects straight into **New Inspection** for the linked hive.",
+    "Scan NFC Tag now includes a new **iPhone / iPad setup card** with Apiary + Hive selection and link generation."
+  ],
+
+  changed: [
+    "Reworked **Scan NFC Tag** into a single NFC setup hub covering both **Android** and **iPhone / iPad** methods.",
+    "Updated NFC wording across the app so Android tag scanning and iPhone link-writing are clearly explained as separate setup methods.",
+    "Updated **NFC Setup Card** instructions to include both Android blank-tag scanning and iPhone / iPad link-based setup.",
+    "Updated **NFC Tag Manager** wording to clarify that it manages **Android tag ID links** only.",
+    "Updated **NFC Tag Store** product wording so compatibility, reuse and setup instructions now accurately reflect the two-device approach.",
+    "Updated **NFC Link Hive** wording so it is clearly positioned as the **Android scanned tag ID** linking page."
+  ],
+
+  fixed: [
+    "Reduced subscriber confusion caused by NFC setup being split across different pages and device types.",
+    "Fixed inconsistent NFC guidance where some pages still implied that iPhone and Android used the same blank-tag scanning process.",
+    "Improved iPhone / iPad setup reliability by removing the need for users to manually type HiveTag links onto NFC tags."
+  ],
+
+  removed: [],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+    { label: "Set Up NFC Tags", to: "/nfc" },
+    { label: "Manage Android NFC Tags", to: "/nfc/manage" },
+    { label: "NFC Setup Card", to: "/nfc/instructions" },
+    { label: "Buy NFC Tags", to: "/nfc/tags" },
+    { label: "Hives", to: "/hives" },
+    { label: "Inspections", to: "/inspections" },
+    { label: "Release Notes", to: "/updates" }
+  ],
+
+  known_issues: [
+    "Browser-based Web NFC scanning still depends on device/browser support and works best in Chrome on Android.",
+    "iPhone / iPad NFC setup still requires a separate NFC writing app to write the copied HiveTag link onto the physical tag.",
+    "Android-tagged hives and iPhone link-written tags are reusable, but they are reassigned in different ways."
+  ]
+  },
+
+  
+  {
   version: "1.1.2",
   released_at: "2026-02-24T18:00:00Z",
   summary:

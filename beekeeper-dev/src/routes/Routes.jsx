@@ -67,6 +67,7 @@ import NFCScan from "../pages/NFCScan.jsx";
 import NFCInstructions from "../pages/NFC/NFCInstructions.jsx";
 import NFCTagManager from "../pages/NFC/NFCTagManager.jsx";
 import NFCLinkHive from "../pages/NFC/NFCLinkHive.jsx";
+import NFCOpen from "../pages/NFC/NFCOpen.jsx";
 // NEW: NFC Tag Store (product page)
 import NFCTagStore from "../pages/NFC/NFCTagStore.jsx";
 
@@ -192,6 +193,7 @@ function AppRoutes() {
       <Route path="/nfc/manage" element={<Guarded><NFCTagManager /></Guarded>} />
       <Route path="/nfc/tags" element={<Guarded><NFCTagStore /></Guarded>} />
       <Route path="/nfc/link" element={<Guarded><NFCLinkHive /></Guarded>} />
+      <Route path="/nfc/open" element={<Guarded><NFCOpen /></Guarded>} />
 
       {/* Inventory */}
       <Route path="/inventory" element={<Guarded><InventoryList /></Guarded>} />

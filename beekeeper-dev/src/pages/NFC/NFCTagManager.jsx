@@ -10,14 +10,13 @@ export default function NFCTagManager() {
   const [apiaries, setApiaries] = useState([]);
   const [apiaryNameById, setApiaryNameById] = useState({});
   const [selectedApiaryId, setSelectedApiaryId] = useState("all");
-  const [tags, setTags] = useState([]); // list of hives with nfc_uid
+  const [tags, setTags] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     document.title = "NFC Tag Manager • BeezKnees";
   }, []);
 
-  // Load apiaries list for filter + name map
   useEffect(() => {
     const loadApiaries = async () => {
       try {
@@ -43,7 +42,6 @@ export default function NFCTagManager() {
     loadApiaries();
   }, []);
 
-  // Load NFC-tagged hives whenever the filter changes
   useEffect(() => {
     const loadTags = async () => {
       setLoading(true);
@@ -78,10 +76,11 @@ export default function NFCTagManager() {
   }, [selectedApiaryId]);
 
   const handleClearTag = async (hiveId) => {
-    if (!window.confirm("Clear this NFC tag from the hive?")) return;
+    if (!window.confirm("Clear this Android NFC tag from the hive?")) return;
 
     try {
       setSaving(true);
+
       const { error: updErr } = await supabase
         .from("hives")
         .update({ nfc_uid: null })
@@ -89,7 +88,6 @@ export default function NFCTagManager() {
 
       if (updErr) throw updErr;
 
-      // Remove from local list
       setTags((prev) => prev.filter((h) => h.id !== hiveId));
     } catch (e) {
       console.error("Failed to clear NFC tag:", e);
@@ -111,15 +109,16 @@ export default function NFCTagManager() {
   return (
     <main className="p-6">
       <div className="max-w-5xl mx-auto space-y-6">
-        {/* Header / intro */}
         <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
             <h1 className="text-2xl font-bold">NFC Tag Manager</h1>
             <p className="mt-1 text-sm text-gray-600">
-              See which hives have HiveTag NFC linked, search by tag or hive
-              name, and clear tags when you want to reuse them.
+              Manage Android NFC tags that are linked to hives by tag ID. Search
+              by hive name or tag ID, and clear Android tag links when you want
+              to reuse them.
             </p>
           </div>
+
           <div className="flex flex-wrap gap-2 text-xs">
             <Link
               to="/nfc"
@@ -127,6 +126,7 @@ export default function NFCTagManager() {
             >
               ← Back to Scan NFC Tag
             </Link>
+
             <Link
               to="/nfc/instructions"
               className="px-3 py-1.5 rounded border border-blue-200 bg-blue-50 text-blue-800 hover:bg-blue-100"
@@ -136,7 +136,20 @@ export default function NFCTagManager() {
           </div>
         </header>
 
-        {/* Filters */}
+        <section className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+          <p className="font-medium">Important</p>
+          <p className="mt-1">
+            This page manages <strong>Android NFC tag ID links</strong> stored in
+            HiveTag.
+          </p>
+          <p className="mt-1">
+            If you are using the <strong>iPhone / iPad NFC link method</strong>,
+            the tag is reused by writing a new HiveTag link onto the physical
+            tag with an NFC writing app. iPhone tags are not cleared from this
+            page.
+          </p>
+        </section>
+
         <section className="bg-white rounded-lg shadow p-4 space-y-4">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-2">
@@ -146,6 +159,7 @@ export default function NFCTagManager() {
               >
                 Filter by Apiary:
               </label>
+
               <select
                 id="nfcApiaryFilter"
                 className="border rounded px-3 py-2 text-sm"
@@ -168,11 +182,12 @@ export default function NFCTagManager() {
               >
                 Search:
               </label>
+
               <input
                 id="nfcSearch"
                 type="text"
                 className="border rounded px-3 py-1.5 text-sm w-full md:w-64"
-                placeholder="Hive name or tag ID…"
+                placeholder="Hive name or Android tag ID…"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -180,14 +195,17 @@ export default function NFCTagManager() {
           </div>
 
           <p className="text-xs text-gray-500">
-            Tip: If a physical tag is damaged or moved, clear it here and then
-            scan it again on the new hive to link it.
+            Tip: If an Android NFC tag is damaged or moved, clear it here and
+            then scan the replacement tag again from the{" "}
+            <Link to="/nfc" className="text-blue-600 underline">
+              Scan NFC Tag
+            </Link>{" "}
+            page.
           </p>
         </section>
 
-        {/* Table / list */}
         <section className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-3">Tagged hives</h2>
+          <h2 className="text-lg font-semibold mb-3">Android-tagged hives</h2>
 
           {error && (
             <p className="mb-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded px-3 py-2">
@@ -199,7 +217,8 @@ export default function NFCTagManager() {
             <p className="text-sm text-gray-500">Loading NFC tags…</p>
           ) : filteredTags.length === 0 ? (
             <p className="text-sm text-gray-500">
-              No NFC tags found for this filter. Try scanning a tag from the{" "}
+              No Android NFC tags found for this filter. Try scanning a blank
+              tag from the{" "}
               <Link to="/nfc" className="text-blue-600 underline">
                 Scan NFC Tag
               </Link>{" "}
@@ -207,7 +226,6 @@ export default function NFCTagManager() {
             </p>
           ) : (
             <>
-              {/* MOBILE: stacked cards */}
               <div className="space-y-3 md:hidden">
                 {filteredTags.map((hive) => (
                   <div
@@ -217,24 +235,28 @@ export default function NFCTagManager() {
                     <div className="font-semibold">
                       {hive.name || "Unnamed hive"}
                     </div>
+
                     <div className="text-xs text-gray-500">
                       Created:{" "}
                       {hive.created_at
                         ? new Date(hive.created_at).toLocaleDateString("en-GB")
                         : "—"}
                     </div>
+
                     <div className="text-xs text-gray-600 mt-1">
                       <span className="font-medium">Apiary:</span>{" "}
                       {hive.apiary_id && apiaryNameById[hive.apiary_id]
                         ? apiaryNameById[hive.apiary_id]
                         : "—"}
                     </div>
+
                     <div className="text-xs text-gray-600">
-                      <span className="font-medium">Tag ID:</span>{" "}
+                      <span className="font-medium">Android Tag ID:</span>{" "}
                       <code className="break-all bg-gray-50 px-1.5 py-0.5 rounded border border-gray-200">
                         {hive.nfc_uid}
                       </code>
                     </div>
+
                     <div className="pt-2 flex flex-col items-stretch gap-1">
                       <Link
                         to={`/hives?highlight=${encodeURIComponent(
@@ -250,20 +272,20 @@ export default function NFCTagManager() {
                       >
                         Open hive in list →
                       </Link>
+
                       <button
                         type="button"
                         onClick={() => handleClearTag(hive.id)}
                         disabled={saving}
                         className="text-xs text-rose-700 hover:text-rose-800 disabled:text-gray-400 text-left"
                       >
-                        {saving ? "Working…" : "Clear tag from hive"}
+                        {saving ? "Working…" : "Clear Android tag from hive"}
                       </button>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* DESKTOP/TABLET: table view */}
               <div className="hidden md:block overflow-x-auto">
                 <table className="min-w-full text-sm border-t border-gray-200">
                   <thead className="bg-gray-50">
@@ -275,13 +297,14 @@ export default function NFCTagManager() {
                         Apiary
                       </th>
                       <th className="text-left px-3 py-2 font-medium text-gray-700">
-                        Tag ID
+                        Android Tag ID
                       </th>
                       <th className="text-right px-3 py-2 font-medium text-gray-700">
                         Actions
                       </th>
                     </tr>
                   </thead>
+
                   <tbody>
                     {filteredTags.map((hive) => (
                       <tr
@@ -295,22 +318,25 @@ export default function NFCTagManager() {
                           <div className="text-xs text-gray-500">
                             Created:{" "}
                             {hive.created_at
-                              ? new Date(
-                                  hive.created_at
-                                ).toLocaleDateString("en-GB")
+                              ? new Date(hive.created_at).toLocaleDateString(
+                                  "en-GB"
+                                )
                               : "—"}
                           </div>
                         </td>
+
                         <td className="px-3 py-2 align-top">
                           {hive.apiary_id && apiaryNameById[hive.apiary_id]
                             ? apiaryNameById[hive.apiary_id]
                             : "—"}
                         </td>
+
                         <td className="px-3 py-2 align-top">
                           <code className="text-xs break-all bg-gray-50 px-1.5 py-0.5 rounded border border-gray-200">
                             {hive.nfc_uid}
                           </code>
                         </td>
+
                         <td className="px-3 py-2 align-top">
                           <div className="flex flex-col items-end gap-1">
                             <Link
@@ -327,13 +353,14 @@ export default function NFCTagManager() {
                             >
                               Open hive in list →
                             </Link>
+
                             <button
                               type="button"
                               onClick={() => handleClearTag(hive.id)}
                               disabled={saving}
                               className="text-xs text-rose-700 hover:text-rose-800 disabled:text-gray-400"
                             >
-                              {saving ? "Working…" : "Clear tag from hive"}
+                              {saving ? "Working…" : "Clear Android tag from hive"}
                             </button>
                           </div>
                         </td>

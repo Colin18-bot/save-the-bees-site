@@ -1,5 +1,5 @@
 // src/pages/NFCScan.jsx
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
@@ -16,6 +16,14 @@ export default function NFCScan() {
   const [isScanning, setIsScanning] = useState(false);
   const [infoMessage, setInfoMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  // Apple / iPhone setup
+  const [apiaries, setApiaries] = useState([]);
+  const [hives, setHives] = useState([]);
+  const [loadingHiveData, setLoadingHiveData] = useState(false);
+  const [selectedApiaryId, setSelectedApiaryId] = useState("");
+  const [selectedHiveId, setSelectedHiveId] = useState("");
+  const [copyMessage, setCopyMessage] = useState("");
 
   // Debug panel
   const [debugOpen, setDebugOpen] = useState(false);
@@ -50,6 +58,7 @@ export default function NFCScan() {
         const {
           data: { user },
         } = await supabase.auth.getUser();
+
         if (!user) {
           setSubscriptionLevel("free");
           setLoadingSub(false);
@@ -81,6 +90,69 @@ export default function NFCScan() {
     loadSub();
   }, []);
 
+  // Load hive data for Apple / iPhone setup
+  useEffect(() => {
+    const loadHiveData = async () => {
+      if (loadingSub || subscriptionLevel !== "premium") return;
+
+      setLoadingHiveData(true);
+
+      try {
+        const [{ data: apiaryData, error: apiaryError }, { data: hiveData, error: hiveError }] =
+          await Promise.all([
+            supabase
+              .from("apiaries")
+              .select("id, name")
+              .is("archived_at", null)
+              .order("name", { ascending: true }),
+            supabase
+              .from("hives")
+              .select("id, name, apiary_id, archived_at")
+              .is("archived_at", null)
+              .order("name", { ascending: true }),
+          ]);
+
+        if (apiaryError) {
+          console.error("Error loading apiaries in NFCScan:", apiaryError);
+        }
+
+        if (hiveError) {
+          console.error("Error loading hives in NFCScan:", hiveError);
+        }
+
+        const safeApiaries = apiaryData || [];
+        const safeHives = hiveData || [];
+
+        setApiaries(safeApiaries);
+        setHives(safeHives);
+
+        // Default apiary/hive selection
+        if (safeApiaries.length > 0 && !selectedApiaryId) {
+          const firstApiaryId = safeApiaries[0].id;
+          setSelectedApiaryId(firstApiaryId);
+
+          const firstHiveInApiary = safeHives.find(
+            (h) => h.apiary_id === firstApiaryId
+          );
+
+          if (firstHiveInApiary) {
+            setSelectedHiveId(firstHiveInApiary.id);
+          } else if (safeHives.length > 0) {
+            setSelectedHiveId(safeHives[0].id);
+          }
+        } else if (!selectedHiveId && safeHives.length > 0) {
+          setSelectedHiveId(safeHives[0].id);
+        }
+      } catch (err) {
+        console.error("Failed to load hive data in NFCScan:", err);
+      } finally {
+        setLoadingHiveData(false);
+      }
+    };
+
+    loadHiveData();
+  }, [loadingSub, subscriptionLevel, selectedApiaryId, selectedHiveId]);
+
   // Show messages when returning from NFC tag checkout
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -101,14 +173,56 @@ export default function NFCScan() {
     }
   }, [location.search]);
 
+  const filteredHives = useMemo(() => {
+    if (!selectedApiaryId) return hives;
+    return hives.filter((hive) => hive.apiary_id === selectedApiaryId);
+  }, [hives, selectedApiaryId]);
+
+  useEffect(() => {
+    if (!filteredHives.length) {
+      setSelectedHiveId("");
+      return;
+    }
+
+    const stillValid = filteredHives.some((hive) => hive.id === selectedHiveId);
+    if (!stillValid) {
+      setSelectedHiveId(filteredHives[0].id);
+    }
+  }, [filteredHives, selectedHiveId]);
+
+  const generatedAppleLink = selectedHiveId
+    ? `${window.location.origin}/nfc/open?hive_id=${encodeURIComponent(
+        selectedHiveId
+      )}`
+    : "";
+
+  const handleCopyAppleLink = async () => {
+    if (!generatedAppleLink) {
+      setCopyMessage("Please select a hive first.");
+      setTimeout(() => setCopyMessage(""), 2500);
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(generatedAppleLink);
+      setCopyMessage("NFC link copied.");
+      setTimeout(() => setCopyMessage(""), 2500);
+    } catch (err) {
+      console.error("Copy failed:", err);
+      setCopyMessage("Could not copy link. Please try again.");
+      setTimeout(() => setCopyMessage(""), 2500);
+    }
+  };
+
   const handleScan = useCallback(
     async () => {
       setInfoMessage("");
       setErrorMessage("");
+      setCopyMessage("");
 
       if (supportStatus !== "supported") {
         setErrorMessage(
-          "This device or browser doesn’t support Web NFC. Try Chrome for Android, or use the normal inspection flow."
+          "This device or browser doesn’t support Web NFC. Use Chrome on Android for tag scanning, or use the iPhone / iPad NFC link method below."
         );
         setDebugInfo((prev) => ({
           ...prev,
@@ -125,7 +239,6 @@ export default function NFCScan() {
       }
 
       try {
-        // Web NFC setup
         const ndef = new NDEFReader();
 
         ndef.onreadingerror = () => {
@@ -183,7 +296,6 @@ export default function NFCScan() {
             "Tag detected. Looking up the hive linked to this tag…"
           );
 
-          // Look up hive by NFC UID
           const { data: hive, error } = await supabase
             .from("hives")
             .select("id, apiary_id, name, archived_at")
@@ -211,7 +323,6 @@ export default function NFCScan() {
           }
 
           if (hive && !hive.archived_at) {
-            // Known + active hive → New Inspection
             setInfoMessage(
               `Found hive “${hive.name}”. Opening a new inspection for this hive…`
             );
@@ -226,7 +337,6 @@ export default function NFCScan() {
           }
 
           if (hive && hive.archived_at) {
-            // Tag linked to archived hive
             setErrorMessage(
               "This tag is linked to an archived hive. Unarchive or update the hive first, or assign this tag to a new hive."
             );
@@ -234,12 +344,10 @@ export default function NFCScan() {
             return;
           }
 
-          // Unknown tag → Link screen (choose existing hive or create new)
-setInfoMessage(
-  "This tag isn’t linked to any hive yet. Choose a hive to link it to, or create a new hive."
-);
-navigate(`/nfc/link?nfc_uid=${encodeURIComponent(serial)}`);
-
+          setInfoMessage(
+            "This Android tag isn’t linked to any hive yet. Choose a hive to link it to, or create a new hive."
+          );
+          navigate(`/nfc/link?nfc_uid=${encodeURIComponent(serial)}`);
         };
 
         setIsScanning(true);
@@ -260,7 +368,7 @@ navigate(`/nfc/link?nfc_uid=${encodeURIComponent(serial)}`);
             "NFC permission was blocked. Please allow NFC access for your browser and try again.";
         } else if (err && err.name === "NotSupportedError") {
           userMsg =
-            "This device or browser doesn’t support Web NFC. Try Chrome for Android, or use the normal inspection flow.";
+            "This device or browser doesn’t support Web NFC. Use Chrome on Android for tag scanning, or use the iPhone / iPad NFC link method below.";
           setSupportStatus("unsupported");
         } else if (err && err.name === "AbortError") {
           userMsg =
@@ -299,15 +407,15 @@ navigate(`/nfc/link?nfc_uid=${encodeURIComponent(serial)}`);
 
   return (
     <main className="p-6">
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-3xl mx-auto space-y-6">
         <header>
-          <h1 className="text-2xl font-bold mb-1">Scan NFC Tag</h1>
+          <h1 className="text-2xl font-bold mb-1">Set Up NFC Tags</h1>
           <p className="text-gray-600 text-sm">
-            Tap a HiveTag NFC label with your phone to jump straight into that
-            hive’s inspection flow. Works best with Chrome on Android.
+            Set up and use HiveTag NFC labels for both Android and iPhone / iPad.
+            Android can scan blank tags directly in the app. iPhone / iPad uses
+            a HiveTag link written to the tag instead.
           </p>
 
-          {/* NFC helper links: instructions + tag manager + store */}
           <div className="mt-3 mb-1 flex flex-wrap items-center gap-2 text-xs">
             <Link
               to="/nfc/instructions"
@@ -322,7 +430,7 @@ navigate(`/nfc/link?nfc_uid=${encodeURIComponent(serial)}`);
               className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-amber-800 hover:bg-amber-100"
             >
               <span aria-hidden="true">📋</span>
-              <span>Manage NFC tags</span>
+              <span>Manage Android NFC tags</span>
             </Link>
 
             <Link
@@ -342,75 +450,185 @@ navigate(`/nfc/link?nfc_uid=${encodeURIComponent(serial)}`);
           </p>
         </header>
 
-        {/* Main NFC card */}
-        <section className="bg-white rounded-lg shadow p-5 space-y-4">
-          {loadingSub ? (
+        {loadingSub ? (
+          <section className="bg-white rounded-lg shadow p-5">
             <p className="text-sm text-gray-600">
               Checking your plan and NFC support…
             </p>
-          ) : subscriptionLevel !== "premium" ? (
-            <div className="space-y-3">
-              <p className="text-sm text-gray-700">
-                NFC tap-to-log is a{" "}
-                <span className="font-semibold text-blue-700">Premium</span>{" "}
-                feature. Upgrade to link HiveTag NFC labels to your hives and
-                jump straight into inspections from a tap.
-              </p>
-              <Link
-                to="/pricing"
-                className="inline-flex items-center justify-center px-4 py-2 rounded bg-yellow-400 text-[#1a3329] text-sm font-semibold hover:bg-yellow-300 border border-yellow-500"
-              >
-                View plans &amp; upgrade →
-              </Link>
-            </div>
-          ) : (
-            <>
-              {supportStatus === "unsupported" && (
-                <div className="mb-2 rounded border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
-                  This device or browser doesn’t support Web NFC. You can still
-                  use HiveTag labels if they’re encoded with a URL that opens
-                  this page, or use the normal inspection flow instead.
-                </div>
-              )}
+          </section>
+        ) : subscriptionLevel !== "premium" ? (
+          <section className="bg-white rounded-lg shadow p-5 space-y-3">
+            <p className="text-sm text-gray-700">
+              NFC tap-to-log is a{" "}
+              <span className="font-semibold text-blue-700">Premium</span>{" "}
+              feature. Upgrade to link HiveTag NFC labels to your hives and
+              jump straight into inspections from a tap.
+            </p>
+            <Link
+              to="/pricing"
+              className="inline-flex items-center justify-center px-4 py-2 rounded bg-yellow-400 text-[#1a3329] text-sm font-semibold hover:bg-yellow-300 border border-yellow-500"
+            >
+              View plans &amp; upgrade →
+            </Link>
+          </section>
+        ) : (
+          <>
+            {(infoMessage || errorMessage) && (
+              <section className="bg-white rounded-lg shadow p-5 space-y-3">
+                {infoMessage && (
+                  <div className="rounded border border-blue-200 bg-blue-50 px-3 py-2 text-xs text-blue-800">
+                    {infoMessage}
+                  </div>
+                )}
 
-              {infoMessage && (
-                <div className="rounded border border-blue-200 bg-blue-50 px-3 py-2 text-xs text-blue-800">
-                  {infoMessage}
-                </div>
-              )}
+                {errorMessage && (
+                  <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
+                    {errorMessage}
+                  </div>
+                )}
+              </section>
+            )}
 
-              {errorMessage && (
-                <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
-                  {errorMessage}
+            <section className="grid gap-6 md:grid-cols-2">
+              <div className="bg-white rounded-lg shadow p-5 space-y-4">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Android setup
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Use a blank NFC tag and scan it directly in HiveTag. This
+                    works best in Chrome on Android.
+                  </p>
                 </div>
-              )}
 
-              <div className="space-y-2">
-                <button
-                  type="button"
-                  onClick={handleScan}
-                  disabled={!canScan}
-                  className={`inline-flex items-center justify-center px-4 py-2 rounded text-sm font-semibold transition-colors ${
-                    canScan
-                      ? "bg-green-700 text-white hover:bg-green-800"
-                      : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                  }`}
-                  title={disabledReason || undefined}
-                >
-                  {isScanning
-                    ? "Scanning… Hold near the tag"
-                    : "Scan NFC Tag"}
-                </button>
-                <p className="text-xs text-gray-500">
-                  Make sure NFC is enabled on your phone. Hold the tag near the
-                  back of your device until it beeps or vibrates.
-                </p>
+                {supportStatus === "unsupported" && (
+                  <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
+                    Web NFC is not supported in this browser/device. Android
+                    users should use Chrome. Apple users should use the iPhone
+                    setup card instead.
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <button
+                    type="button"
+                    onClick={handleScan}
+                    disabled={!canScan}
+                    className={`inline-flex items-center justify-center px-4 py-2 rounded text-sm font-semibold transition-colors ${
+                      canScan
+                        ? "bg-green-700 text-white hover:bg-green-800"
+                        : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                    }`}
+                    title={disabledReason || undefined}
+                  >
+                    {isScanning ? "Scanning… Hold near the tag" : "Scan Blank NFC Tag"}
+                  </button>
+
+                  <p className="text-xs text-gray-500">
+                    Android only: hold the tag near the back of your device until
+                    it beeps or vibrates. If the tag is not already linked,
+                    HiveTag will let you assign it to a hive.
+                  </p>
+                </div>
               </div>
-            </>
-          )}
-        </section>
 
-        {/* Debug panel – Premium only, for you as the app builder */}
+              <div className="bg-white rounded-lg shadow p-5 space-y-4">
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    iPhone / iPad setup
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Apple browsers do not support Web NFC in the same way.
+                    Instead, choose a hive, copy its HiveTag link, and write
+                    that link to the NFC tag using an NFC writing app.
+                  </p>
+                </div>
+
+                {loadingHiveData ? (
+                  <p className="text-sm text-gray-600">
+                    Loading your apiaries and hives…
+                  </p>
+                ) : (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Apiary
+                      </label>
+                      <select
+                        value={selectedApiaryId}
+                        onChange={(e) => setSelectedApiaryId(e.target.value)}
+                        className="w-full px-3 py-2 border rounded"
+                      >
+                        <option value="">Select apiary</option>
+                        {apiaries.map((apiary) => (
+                          <option key={apiary.id} value={apiary.id}>
+                            {apiary.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Hive
+                      </label>
+                      <select
+                        value={selectedHiveId}
+                        onChange={(e) => setSelectedHiveId(e.target.value)}
+                        className="w-full px-3 py-2 border rounded"
+                        disabled={!filteredHives.length}
+                      >
+                        <option value="">
+                          {filteredHives.length ? "Select hive" : "No hives found"}
+                        </option>
+                        {filteredHives.map((hive) => (
+                          <option key={hive.id} value={hive.id}>
+                            {hive.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        NFC link to write to the tag
+                      </label>
+                      <div className="rounded border bg-gray-50 px-3 py-2 text-xs text-gray-800 break-all">
+                        {generatedAppleLink || "Select a hive to generate a link"}
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleCopyAppleLink}
+                      disabled={!generatedAppleLink}
+                      className={`inline-flex items-center justify-center px-4 py-2 rounded text-sm font-semibold transition-colors ${
+                        generatedAppleLink
+                          ? "bg-blue-700 text-white hover:bg-blue-800"
+                          : "bg-gray-200 text-gray-500 cursor-not-allowed"
+                      }`}
+                    >
+                      Copy NFC Link
+                    </button>
+
+                    {copyMessage && (
+                      <div className="rounded border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800">
+                        {copyMessage}
+                      </div>
+                    )}
+
+                    <p className="text-xs text-gray-500">
+                      After copying the link, paste it into an NFC writing app
+                      on your iPhone / iPad and write it to the tag. To reuse
+                      the tag later, just overwrite it with a new HiveTag link.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </section>
+          </>
+        )}
+
         {subscriptionLevel === "premium" && (
           <section className="border rounded-lg bg-white p-4">
             <button

@@ -14,22 +14,17 @@ export default function NFCInstructions() {
   return (
     <main className="p-6">
       <div className="max-w-3xl mx-auto bg-white rounded-lg shadow p-6 print:shadow-none print:p-0">
-        {/* Header */}
         <header className="mb-4 border-b pb-3">
-          <h1 className="text-2xl font-bold">
-            HiveTag NFC — Quick Start
-          </h1>
+          <h1 className="text-2xl font-bold">HiveTag NFC — Quick Start</h1>
           <p className="text-gray-600 mt-1">
-            Use this page to read or print out as a handy quick start guide for
-            using your HiveTag NFC, or save as PDF to share with your
-            beekeepers.
+            Use this page as a simple quick-start guide for setting up and using
+            HiveTag NFC labels with both Android and iPhone.
           </p>
           <p className="text-xs text-gray-500 mt-1 no-print">
             Tip: Use your browser’s <strong>Print → Save as PDF</strong> to
-            create a downloadable version.
+            create a version you can share with your members or customers.
           </p>
 
-          {/* Print button – visible on screen only */}
           <button
             type="button"
             onClick={handlePrint}
@@ -40,40 +35,98 @@ export default function NFCInstructions() {
           </button>
         </header>
 
-        {/* Card content */}
-        <section className="space-y-4 text-sm leading-relaxed">
+        <section className="space-y-6 text-sm leading-relaxed">
+          <div>
+            <h2 className="text-lg font-semibold mb-1">Before you start</h2>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                HiveTag NFC is a <strong>Premium</strong> feature.
+              </li>
+              <li>
+                Stick the NFC tag onto a clean, dry part of the hive where your
+                phone can easily reach it.
+              </li>
+              <li>
+                Open <strong>Scan NFC Tag</strong> in HiveTag to choose the
+                correct setup method for your device.
+              </li>
+            </ul>
+          </div>
+
           <div>
             <h2 className="text-lg font-semibold mb-1">
-              How to set up your NFC HiveTag
+              Android setup (blank tag scan)
             </h2>
             <ol className="list-decimal pl-5 space-y-1">
               <li>
-                <strong>Stick the tag on your hive.</strong> Choose a clean, dry
-                spot on the front or roof edge where your phone can easily reach
-                it.
+                Open <strong>Scan NFC Tag</strong> in HiveTag.
               </li>
               <li>
-                <strong>Open HiveTag on your phone.</strong> Sign in and go to{" "}
-                <em>Scan NFC Tag (Premium)</em>, then tap the{" "}
-                <strong>Scan NFC Tag</strong> button.
+                In the <strong>Android setup</strong> section, tap{" "}
+                <strong>Scan Blank NFC Tag</strong>.
               </li>
               <li>
-                <strong>Tap your phone on the tag.</strong> Hold the back of
-                your phone close until it beeps or vibrates. If the tag is new,
-                the app will tell you it isn’t linked yet and guide you to set
-                up a hive.
+                Hold the back of your Android phone against the blank NFC tag.
               </li>
               <li>
-                <strong>Assign the tag to a hive.</strong> Choose the Apiary and
-                Hive in the app, then save. The tag is now linked to that hive.
+                If the tag is not linked yet, HiveTag will let you choose a hive
+                and assign the tag.
               </li>
               <li>
-                <strong>Next visits:</strong> open <em>Scan NFC Tag</em>, tap{" "}
-                <strong>Scan NFC Tag</strong>, then tap the tag again. HiveTag
-                jumps straight into that hive’s inspection flow—normally a{" "}
-                <strong>New Inspection</strong> for that hive.
+                On future visits, scan the same tag again to jump straight into
+                that hive’s inspection flow.
               </li>
             </ol>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-semibold mb-1">
+              iPhone / iPad setup (write a HiveTag link)
+            </h2>
+            <ol className="list-decimal pl-5 space-y-1">
+              <li>
+                Open <strong>Scan NFC Tag</strong> in HiveTag.
+              </li>
+              <li>
+                In the <strong>iPhone / iPad setup</strong> section, choose the{" "}
+                <strong>Apiary</strong> and <strong>Hive</strong>.
+              </li>
+              <li>
+                Tap <strong>Copy NFC Link</strong>.
+              </li>
+              <li>
+                Open an NFC writing app on your iPhone and paste that copied
+                HiveTag link into the app.
+              </li>
+              <li>
+                Write the link to the NFC tag.
+              </li>
+              <li>
+                Next time you tap that tag with your iPhone, it will open the
+                linked hive in HiveTag.
+              </li>
+            </ol>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-semibold mb-1">
+              Reusing or reassigning a tag
+            </h2>
+            <ul className="list-disc pl-5 space-y-1">
+              <li>
+                <strong>Android:</strong> you can clear or relink a tag inside
+                HiveTag by updating the hive linked to that tag ID.
+              </li>
+              <li>
+                <strong>iPhone / iPad:</strong> you can reuse the same physical
+                tag by writing a new HiveTag link onto it.
+              </li>
+              <li>
+                In most NFC writing apps, you can simply overwrite the existing
+                link. If needed, erase the tag first and then write the new
+                link.
+              </li>
+            </ul>
           </div>
 
           <div>
@@ -88,8 +141,8 @@ export default function NFCInstructions() {
                 inspection days around calmer, warmer conditions.
               </li>
               <li>
-                If a tag gets damaged, simply stick a new one on the hive and
-                assign it in the app – hive records stay intact.
+                If a tag gets damaged, replace it and set up the new tag for the
+                same hive.
               </li>
             </ul>
           </div>
@@ -97,35 +150,38 @@ export default function NFCInstructions() {
           <div>
             <h2 className="text-lg font-semibold mb-1">Troubleshooting</h2>
             <ul className="list-disc pl-5 space-y-1">
-              <li>Make sure NFC is enabled in your phone’s settings.</li>
+              <li>Make sure NFC is enabled on your phone if your device supports it.</li>
               <li>
-                Hold the phone close to different parts of the tag – NFC
-                antennas are small and their position varies by phone.
+                Hold the phone close to different parts of the tag, as antenna
+                position varies by device.
               </li>
               <li>
-                Web NFC is supported in Chrome for Android. On iOS, use
-                QR-coded tags or the standard inspection flow if NFC is not
-                available.
+                <strong>Android Web NFC</strong> works best in Chrome on Android.
               </li>
               <li>
-                If you see “Tag already linked”, open that hive in HiveTag and
-                update or clear the tag from the hive’s settings before
-                re-assigning it.
+                <strong>iPhone and iPad</strong> do not support browser-based Web
+                NFC in the same way, so use the HiveTag link method instead.
               </li>
               <li>
-                If your phone shows a system message such as{" "}
-                <strong>“New tag collected / Empty tag”</strong>, this is
-                Android’s built-in NFC handler, not HiveTag. It appears when the
-                browser isn’t actively scanning. Open{" "}
-                <strong>Scan NFC Tag (Premium)</strong> again, tap{" "}
-                <strong>Scan NFC Tag</strong>, then tap the tag so HiveTag can
-                handle the tap and take you into the correct hive.
+                If an Android tag is already linked to another hive, open{" "}
+                <strong>Manage NFC tags</strong> in HiveTag and clear or update
+                the link before reassigning it.
+              </li>
+              <li>
+                If your Android phone shows a system message such as{" "}
+                <strong>“New tag collected”</strong> or{" "}
+                <strong>“Empty tag”</strong>, reopen{" "}
+                <strong>Scan NFC Tag</strong>, tap{" "}
+                <strong>Scan Blank NFC Tag</strong>, and then tap the tag again.
+              </li>
+              <li>
+                If an iPhone tag opens the wrong hive, rewrite the tag with the
+                correct copied HiveTag link.
               </li>
             </ul>
           </div>
         </section>
 
-        {/* Footer actions (not printed as part of the card if you don't want) */}
         <footer className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-xs text-gray-500 no-print">
           <span>© {new Date().getFullYear()} BeezKnees — HiveTag NFC</span>
           <div className="flex gap-3">
@@ -133,7 +189,7 @@ export default function NFCInstructions() {
               More about NFC in Help →
             </Link>
             <Link to="/nfc/manage" className="text-blue-600 hover:underline">
-              Open NFC Tag Manager →
+              Manage Android NFC Tags →
             </Link>
           </div>
         </footer>

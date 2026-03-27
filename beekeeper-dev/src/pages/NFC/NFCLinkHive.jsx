@@ -20,12 +20,12 @@ export default function NFCLinkHive() {
   const [selectedHiveId, setSelectedHiveId] = useState("");
 
   useEffect(() => {
-    document.title = "Link NFC Tag to Hive • BeezKnees";
+    document.title = "Link Android NFC Tag to Hive • BeezKnees";
   }, []);
 
   useEffect(() => {
     if (!nfcUid) {
-      setError("No NFC tag ID was provided. Try scanning the tag again.");
+      setError("No Android NFC tag ID was provided. Try scanning the tag again.");
       setLoading(false);
       return;
     }
@@ -33,6 +33,7 @@ export default function NFCLinkHive() {
     const load = async () => {
       setLoading(true);
       setError("");
+
       try {
         const [apiaryRes, hiveRes] = await Promise.all([
           supabase
@@ -53,7 +54,6 @@ export default function NFCLinkHive() {
         setApiaries(apiaryRes.data || []);
         setHives(hiveRes.data || []);
 
-        // If there's only one apiary, preselect it.
         if ((apiaryRes.data || []).length === 1) {
           setSelectedApiaryId(apiaryRes.data[0].id);
         }
@@ -75,9 +75,10 @@ export default function NFCLinkHive() {
 
   const handleAssignToHive = async () => {
     if (!nfcUid) {
-      setError("Missing NFC tag ID. Scan the tag again.");
+      setError("Missing Android NFC tag ID. Scan the tag again.");
       return;
     }
+
     if (!selectedHiveId) {
       setError("Please choose a hive to assign this tag to.");
       return;
@@ -89,7 +90,6 @@ export default function NFCLinkHive() {
     try {
       setSaving(true);
 
-      // 1) Check if this NFC tag is already linked to some other active hive.
       const { data: existing, error: existingErr } = await supabase
         .from("hives")
         .select("id, name, apiary_id")
@@ -108,14 +108,13 @@ export default function NFCLinkHive() {
       if (existing && existing.length > 0) {
         const other = existing[0];
         setError(
-          `This NFC tag is already linked to hive “${
+          `This Android NFC tag is already linked to hive “${
             other.name || "another hive"
           }”. Clear it from that hive in NFC Tag Manager before assigning it here.`
         );
         return;
       }
 
-      // 2) Check if the selected hive already has a (different) NFC tag.
       const { data: chosen, error: chosenErr } = await supabase
         .from("hives")
         .select("id, name, nfc_uid")
@@ -132,12 +131,11 @@ export default function NFCLinkHive() {
         setError(
           `The selected hive “${
             chosen.name || "this hive"
-          }” already has a different NFC tag. Clear or change it on that hive before assigning a new tag.`
+          }” already has a different Android NFC tag. Clear or change it on that hive before assigning a new tag.`
         );
         return;
       }
 
-      // 3) Safe to assign: write the tag to this hive.
       const { error: updErr } = await supabase
         .from("hives")
         .update({ nfc_uid: nfcUid })
@@ -149,13 +147,10 @@ export default function NFCLinkHive() {
         chosen || hives.find((h) => h.id === selectedHiveId) || null;
 
       setStatus(
-        `Tag linked to hive “${
+        `Android NFC tag linked to hive “${
           assignedHive?.name || "Selected hive"
-        }”. You can now tap this tag to open that hive.`
+        }”. You can now scan this tag to open that hive.`
       );
-
-      // Optionally redirect back to the scanner:
-      // navigate("/nfc");
     } catch (e) {
       console.error("Failed to assign NFC tag to hive:", e);
       setError("Sorry, we couldn’t link this tag. Please try again.");
@@ -187,23 +182,37 @@ export default function NFCLinkHive() {
       <div className="max-w-3xl mx-auto space-y-6">
         <header className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold">Link NFC Tag to Hive</h1>
+            <h1 className="text-2xl font-bold">Link Android NFC Tag to Hive</h1>
             <p className="mt-1 text-sm text-gray-600">
-              Choose an existing hive or create a new one for this tag.
+              Choose an existing hive or create a new one for this scanned
+              Android NFC tag.
             </p>
             <p className="mt-2 text-xs text-gray-500">
-              Tag ID:{" "}
+              Android Tag ID:{" "}
               <code className="px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-[11px] break-all">
                 {nfcUid || "Missing tag ID"}
               </code>
             </p>
           </div>
+
           <div className="text-right text-xs text-gray-500">
             <Link to="/nfc" className="text-blue-600 hover:underline">
               ← Back to Scan NFC Tag
             </Link>
           </div>
         </header>
+
+        <section className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+          <p className="font-medium">Important</p>
+          <p className="mt-1">
+            This page is for <strong>Android scanned tag IDs</strong>.
+          </p>
+          <p className="mt-1">
+            If you are setting up an <strong>iPhone / iPad NFC tag</strong>, go
+            back to <strong>Scan NFC Tag</strong> and use the{" "}
+            <strong>Copy NFC Link</strong> method instead.
+          </p>
+        </section>
 
         {error && (
           <div className="rounded border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
@@ -221,11 +230,11 @@ export default function NFCLinkHive() {
           <p className="text-sm text-gray-600">Loading your hives…</p>
         ) : !nfcUid ? (
           <p className="text-sm text-gray-600">
-            No NFC tag ID found in the URL. Please go back and scan a tag again.
+            No Android NFC tag ID found in the URL. Please go back and scan a
+            tag again.
           </p>
         ) : (
           <>
-            {/* Option 1: existing hive */}
             <section className="bg-white rounded-lg shadow p-4 space-y-4">
               <h2 className="text-lg font-semibold">
                 Option 1 — Assign to an existing hive
@@ -245,7 +254,7 @@ export default function NFCLinkHive() {
                     value={selectedApiaryId}
                     onChange={(e) => {
                       setSelectedApiaryId(e.target.value);
-                      setSelectedHiveId(""); // reset hive selection
+                      setSelectedHiveId("");
                     }}
                   >
                     <option value="all">All apiaries</option>
@@ -290,25 +299,24 @@ export default function NFCLinkHive() {
                     : "bg-green-700 hover:bg-green-800"
                 }`}
               >
-                {saving ? "Linking tag…" : "Assign tag to selected hive"}
+                {saving ? "Linking tag…" : "Assign Android tag to selected hive"}
               </button>
 
               <p className="mt-2 text-xs text-gray-500">
-                This will store the tag’s ID with the chosen hive. Next time you
-                tap this tag, BeezKnees will take you straight to that hive’s
-                inspection flow.
+                This stores the scanned Android tag ID against the chosen hive.
+                Next time you scan this same tag in HiveTag, BeezKnees will take
+                you straight to that hive’s inspection flow.
               </p>
             </section>
 
-            {/* Option 2: new hive */}
             <section className="bg-white rounded-lg shadow p-4 space-y-3">
               <h2 className="text-lg font-semibold">
                 Option 2 — Create a new hive with this tag
               </h2>
               <p className="text-sm text-gray-700">
-                Prefer to create a brand new hive record for this tag? We’ll
-                carry the tag ID into the <strong>New Hive</strong> form for
-                you.
+                Prefer to create a brand new hive record for this scanned
+                Android tag? We’ll carry the tag ID into the{" "}
+                <strong>New Hive</strong> form for you.
               </p>
               <button
                 type="button"
@@ -318,19 +326,16 @@ export default function NFCLinkHive() {
                 Create new hive with this tag
               </button>
               <p className="text-xs text-gray-500">
-                Selected apiary (if any) will also be passed into the New Hive
+                Selected apiary, if any, will also be passed into the New Hive
                 form.
               </p>
             </section>
 
             <section className="text-xs text-gray-500">
               <p>
-                NFC tag: <strong>{shortUid}</strong>. If you ever need to reuse
-                a tag, clear it from a hive using the{" "}
-                <Link
-                  to="/nfc/manage"
-                  className="text-blue-600 hover:underline"
-                >
+                Android NFC tag: <strong>{shortUid}</strong>. If you ever need
+                to reuse this tag, clear it from a hive using the{" "}
+                <Link to="/nfc/manage" className="text-blue-600 hover:underline">
                   NFC Tag Manager
                 </Link>
                 .

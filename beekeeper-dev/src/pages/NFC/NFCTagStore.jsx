@@ -79,7 +79,6 @@ export default function NFCTagStore() {
   const handleCheckout = async () => {
     setError("");
 
-    // Ensure user is logged in first
     if (!user) {
       navigate("/login?redirect=/nfc/tags");
       return;
@@ -106,8 +105,6 @@ export default function NFCTagStore() {
         );
       }
 
-      // Supabase Edge Function: create-nfc-checkout
-      // expects: { quantity, price_id, user_id, success_path, cancel_path }
       const res = await fetch(`${SUPABASE_FUNCTIONS_BASE}/create-nfc-checkout`, {
         method: "POST",
         headers: {
@@ -146,18 +143,16 @@ export default function NFCTagStore() {
   return (
     <main className="p-6">
       <div className="max-w-4xl mx-auto space-y-8">
-        {/* Header / Intro */}
         <header className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-extrabold text-green-800">
               HiveTag NFC Labels
             </h1>
             <p className="mt-2 text-sm text-gray-700">
-              Commercial-grade NFC tags for your hives. Tap your phone on a tag to jump straight
-              into that hive’s inspection flow.
+              Commercial-grade NFC tags for your hives. Use them with HiveTag to
+              open the correct hive quickly in the field.
             </p>
 
-            {/* ✅ Uses subscriptionLevel so ESLint stops complaining */}
             <div className="mt-3 inline-flex items-center gap-2 text-xs text-gray-600">
               <span className="px-2 py-0.5 rounded-full border bg-gray-50">
                 Plan: <span className="font-semibold">{prettyPlan(subscriptionLevel)}</span>
@@ -183,7 +178,6 @@ export default function NFCTagStore() {
           </div>
         </header>
 
-        {/* Product main card: price + quantity + checkout */}
         <section className="bg-white rounded-2xl shadow p-6 flex flex-col md:flex-row gap-6">
           <div className="flex-1 space-y-4">
             <div>
@@ -200,7 +194,6 @@ export default function NFCTagStore() {
               </p>
             </div>
 
-            {/* Quantity selector */}
             <div className="space-y-2">
               <label htmlFor="nfcQty" className="block text-sm font-medium text-gray-700">
                 Number of tags
@@ -239,7 +232,6 @@ export default function NFCTagStore() {
             </div>
           </div>
 
-          {/* Summary + button */}
           <div className="w-full md:w-64 border-t md:border-t-0 md:border-l border-gray-200 pt-4 md:pt-0 md:pl-4 flex flex-col justify-between">
             <div className="space-y-2 text-sm">
               <div className="flex items-center justify-between">
@@ -289,20 +281,19 @@ export default function NFCTagStore() {
           </div>
         </section>
 
-        {/* Details / specs */}
         <section className="bg-white rounded-2xl shadow p-6 space-y-4 text-sm text-gray-700">
           <div>
             <h2 className="text-lg font-semibold text-green-900">Why HiveTag?</h2>
             <ul className="mt-2 list-disc pl-5 space-y-1">
-              <li>Instant access — tap your hive to open inspections.</li>
+              <li>Fast hive access in the field.</li>
               <li>Designed for outdoor use — waterproof ABS, tough enough for UK weather.</li>
               <li>Works on metal roofs and boxes — anti-metal ferrite backing for reliable reads.</li>
               <li>
                 Mount how you like — very sticky 3M backing and a{" "}
                 <strong>5&nbsp;mm central hole</strong> for screws, nails or rivets.
               </li>
-              <li>Compatible with modern iOS and Android phones.</li>
-              <li>Reusable — clear a tag and reassign it to another hive.</li>
+              <li>Works with both Android and iPhone when set up using the correct HiveTag method.</li>
+              <li>Reusable tags — the same physical tag can be reassigned to another hive.</li>
             </ul>
           </div>
 
@@ -319,12 +310,10 @@ export default function NFCTagStore() {
               <li>Anti-metal ferrite layer for mounting directly on metal.</li>
               <li>Weatherproof and waterproof; suitable for indoor or outdoor use.</li>
               <li>
-                Android: NFC tap support in most modern phones (Chrome for Android recommended for
-                Web NFC).
+                Android: best used with Chrome for Android for direct Web NFC scanning of blank tags.
               </li>
               <li>
-                iOS: NFC read support on iPhone&nbsp;7 and newer for URL-based tags that open
-                HiveTag.
+                iPhone / iPad: works with URL-based NFC tags that open HiveTag.
               </li>
             </ul>
           </div>
@@ -336,14 +325,33 @@ export default function NFCTagStore() {
                 Attach the tag to your hive using the adhesive backing or a small screw through the
                 central hole.
               </li>
-              <li>In HiveTag, go to <strong>Scan NFC Tag</strong> (Premium).</li>
-              <li>Tap your phone on the tag and assign it to a hive once.</li>
-              <li>Next time you visit that hive, tap again and jump straight into a new inspection.</li>
               <li>
-                Manage, search and clear tags from the <strong>NFC Tag Manager</strong> in your
-                dashboard.
+                In HiveTag, go to <strong>Scan NFC Tag</strong> (Premium).
+              </li>
+              <li>
+                <strong>Android:</strong> scan a blank NFC tag and link it in HiveTag.
+              </li>
+              <li>
+                <strong>iPhone / iPad:</strong> copy the HiveTag NFC link for the hive and write it
+                to the tag using an NFC writing app.
+              </li>
+              <li>
+                On later visits, tap or scan the tag to open the correct hive more quickly.
               </li>
             </ol>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-semibold text-green-900">Reusing tags</h2>
+            <ul className="mt-2 list-disc pl-5 space-y-1">
+              <li>
+                <strong>Android:</strong> clear or relink the tag inside HiveTag.
+              </li>
+              <li>
+                <strong>iPhone / iPad:</strong> overwrite the existing link on the physical tag with
+                a new HiveTag link.
+              </li>
+            </ul>
           </div>
 
           <div className="border-t border-gray-200 pt-4 text-xs text-gray-500">

@@ -16,7 +16,7 @@ const toc = [
   { id: "workflows", title: "Typical Workflows" },
   { id: "nfc", title: "NFC (Premium): How It Works" },
   { id: "weather-maps-photos", title: "Weather, Maps & Photos" },
-  { id: "apiary-map-markers", title: "Apiary Map & Markers" },
+  { id: "apiary-map-markers-2", title: "Apiary Map & Markers" },
   { id: "filters-counts-archives", title: "Filters, Counts & Archives" },
   { id: "tips", title: "Tips for Smooth Record-Keeping" },
   { id: "faqs", title: "FAQs" },
@@ -55,7 +55,7 @@ export default function Help() {
           <h1 className="text-3xl font-bold">HiveTag Help &amp; How-To</h1>
           <p className="mt-2 text-gray-600">
             Clear, practical guidance for every part of HiveTag—from your first
-            apiary to tap-to-log NFC inspections.
+            apiary to NFC tag setup and inspections.
           </p>
           <p className="mt-2 text-sm text-gray-600">
             Features labeled <Badge tone="blue">Premium</Badge> require a Premium
@@ -187,16 +187,18 @@ export default function Help() {
                         <strong>Unlimited apiaries &amp; hives</strong>
                       </li>
                       <li>
-                        <strong>NFC tap-to-log</strong> (link a tag to a hive;
-                        scan to jump into that hive’s inspection flow)
+                        <strong>NFC tools</strong>: <strong>Set Up NFC Tags</strong>,
+                        <strong> Manage Android NFC Tags</strong>, printable NFC setup
+                        card, and the iPhone / iPad link method
                       </li>
                       <li>
-                        <strong>NFC tools</strong>: Scan NFC Tag, NFC Tag
-                        Manager, and a printable NFC setup card.
+                        <strong>NFC tap-to-log</strong>: Android can scan blank
+                        tags in-app; iPhone / iPad can use a HiveTag link written
+                        to the tag
                       </li>
                       <li>
                         <strong>NFC quick-select</strong> in New Inspection (when
-                        arriving from a scan).
+                        arriving from an NFC action)
                       </li>
                       <li>
                         <strong>Stripe Customer Portal</strong>:{" "}
@@ -260,7 +262,8 @@ export default function Help() {
                 </li>
                 <li>
                   <strong>NFC</strong> <Badge tone="blue">Premium</Badge>:
-                  optional tap-to-log flow—see the NFC section below.
+                  open <strong>Set Up NFC Tags</strong> to choose either the
+                  Android scan method or the iPhone / iPad link method.
                 </li>
               </ol>
             </section>
@@ -377,7 +380,8 @@ export default function Help() {
                     <li>
                       <strong>NFC summary (Premium):</strong> Premium users see an{" "}
                       <strong>NFC Tagged Hives</strong> panel showing how many
-                      hives have tags and a short list of recent tagged hives.{" "}
+                      hives have Android-scanned tag IDs linked in HiveTag and a
+                      short list of recent tagged hives.{" "}
                       <Badge tone="blue">Premium</Badge>
                     </li>
                   </ul>
@@ -427,7 +431,7 @@ export default function Help() {
                       New Inspection.
                     </li>
                     <li>
-                      If an NFC tag is linked, a small <strong>NFC Tag</strong>{" "}
+                      If an Android NFC tag is linked, a small <strong>NFC Tag</strong>{" "}
                       pill appears on the hive card (Premium).
                     </li>
                     <li>
@@ -474,8 +478,8 @@ export default function Help() {
                       Unlimited on Free. <Badge>Free</Badge>
                     </li>
                     <li>
-                      NFC quick-select available in New Inspection when you
-                      arrive from a scan. <Badge tone="blue">Premium</Badge>
+                      NFC quick-select is available when you arrive from an NFC
+                      action. <Badge tone="blue">Premium</Badge>
                     </li>
                   </ul>
                 </div>
@@ -625,77 +629,78 @@ export default function Help() {
                 </div>
               </div>
             </section>
+
             {/* Apiary Map Markers */}
-<section id="apiary-map-markers">
-  <h2 className="text-2xl font-bold mb-3">Apiary Map Markers (Map Notes)</h2>
+            <section id="apiary-map-markers">
+              <h2 className="text-2xl font-bold mb-3">Apiary Map Markers (Map Notes)</h2>
 
-  <p className="text-gray-700">
-    The <strong>Apiary Map Markers</strong> page lets you add simple “map notes” for each apiary — for example:
-    water sources, forage hotspots, risks, access/parking, shelter/windbreaks, or Asian hornet sightings.
-    These markers are saved per apiary and are useful for remembering what’s around a site.
-  </p>
+              <p className="text-gray-700">
+                The <strong>Apiary Map Markers</strong> page lets you add simple “map notes” for each apiary — for example:
+                water sources, forage hotspots, risks, access/parking, shelter/windbreaks, or Asian hornet sightings.
+                These markers are saved per apiary and are useful for remembering what’s around a site.
+              </p>
 
-  <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div className="rounded-xl border bg-white p-4">
-      <h3 className="font-semibold">How to add a marker</h3>
-      <ol className="mt-2 list-decimal pl-6 space-y-1 text-gray-700">
-        <li>Open an apiary’s map (Apiaries → open the apiary map/markers view).</li>
-        <li>Press <strong>Add marker</strong>.</li>
-        <li>Tap/click the map where you want the marker.</li>
-        <li>Choose a <strong>Type</strong>, then optionally add a <strong>Title</strong> and <strong>Notes</strong>.</li>
-        <li>Press <strong>Save</strong>.</li>
-      </ol>
-    </div>
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">How to add a marker</h3>
+                  <ol className="mt-2 list-decimal pl-6 space-y-1 text-gray-700">
+                    <li>Open an apiary’s map (Apiaries → open the apiary map/markers view).</li>
+                    <li>Press <strong>Add marker</strong>.</li>
+                    <li>Tap/click the map where you want the marker.</li>
+                    <li>Choose a <strong>Type</strong>, then optionally add a <strong>Title</strong> and <strong>Notes</strong>.</li>
+                    <li>Press <strong>Save</strong>.</li>
+                  </ol>
+                </div>
 
-    <div className="rounded-xl border bg-white p-4">
-      <h3 className="font-semibold">Edit, delete, and “Pick again”</h3>
-      <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
-        <li>
-          Tap an existing marker to open it, then use <strong>Edit</strong> to change details or <strong>Delete</strong> to remove it.
-        </li>
-        <li>
-          <strong>Pick again</strong> is only for <em>new markers</em>: it clears the chosen point so you can tap the map again
-          to select a different location before saving.
-        </li>
-        <li>
-          If you press <strong>Pick again</strong>, you should then tap the map again to place the marker in the new spot.
-        </li>
-      </ul>
-    </div>
-  </div>
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Edit, delete, and “Pick again”</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                    <li>
+                      Tap an existing marker to open it, then use <strong>Edit</strong> to change details or <strong>Delete</strong> to remove it.
+                    </li>
+                    <li>
+                      <strong>Pick again</strong> is only for <em>new markers</em>: it clears the chosen point so you can tap the map again
+                      to select a different location before saving.
+                    </li>
+                    <li>
+                      If you press <strong>Pick again</strong>, you should then tap the map again to place the marker in the new spot.
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
-  <div className="mt-4 rounded border bg-white p-4">
-    <h3 className="font-semibold">Map layers, legend, and foraging ring</h3>
-    <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
-      <li>
-        Use the <strong>Map ↔ Satellite</strong> toggle to switch backgrounds (satellite imagery may load slower depending on provider).
-      </li>
-      <li>
-        The <strong>Legend</strong> explains marker types and the <strong>~3 mile foraging ring</strong> around the apiary.
-      </li>
-    </ul>
-    <p className="mt-2 text-sm text-gray-600">
-      Indicative range only — bees may forage further depending on conditions.
-    </p>
-  </div>
+              <div className="mt-4 rounded border bg-white p-4">
+                <h3 className="font-semibold">Map layers, legend, and foraging ring</h3>
+                <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                  <li>
+                    Use the <strong>Map ↔ Satellite</strong> toggle to switch backgrounds (satellite imagery may load slower depending on provider).
+                  </li>
+                  <li>
+                    The <strong>Legend</strong> explains marker types and the <strong>~3 mile foraging ring</strong> around the apiary.
+                  </li>
+                </ul>
+                <p className="mt-2 text-sm text-gray-600">
+                  Indicative range only — bees may forage further depending on conditions.
+                </p>
+              </div>
 
-  <div className="mt-4 rounded border border-yellow-200 bg-yellow-50 p-4 text-sm text-gray-800">
-    <div className="font-semibold">Popup behaviour</div>
-    <p className="mt-1">
-      The map is designed so popups sit <strong>above</strong> the header panels (so forms don’t get hidden).
-      The map will <strong>not</strong> automatically “jump” the view to fit a popup — if a popup is near the edge,
-      simply drag the map slightly to bring it fully into view.
-    </p>
-  </div>
+              <div className="mt-4 rounded border border-yellow-200 bg-yellow-50 p-4 text-sm text-gray-800">
+                <div className="font-semibold">Popup behaviour</div>
+                <p className="mt-1">
+                  The map is designed so popups sit <strong>above</strong> the header panels (so forms don’t get hidden).
+                  The map will <strong>not</strong> automatically “jump” the view to fit a popup — if a popup is near the edge,
+                  simply drag the map slightly to bring it fully into view.
+                </p>
+              </div>
 
-  <div className="mt-4 rounded border bg-white p-4">
-    <h3 className="font-semibold">Pollen on the Map Markers page</h3>
-    <p className="mt-2 text-gray-700">
-      Pollen data (when available) is shown in the <strong>Pollen (apiary location)</strong> panel in the header area of the map page.
-      It does <strong>not</strong> appear as a marker on the map itself. The pollen panel is tied to the apiary’s saved coordinates.
-    </p>
-  </div>
-</section>
+              <div className="mt-4 rounded border bg-white p-4">
+                <h3 className="font-semibold">Pollen on the Map Markers page</h3>
+                <p className="mt-2 text-gray-700">
+                  Pollen data (when available) is shown in the <strong>Pollen (apiary location)</strong> panel in the header area of the map page.
+                  It does <strong>not</strong> appear as a marker on the map itself. The pollen panel is tied to the apiary’s saved coordinates.
+                </p>
+              </div>
+            </section>
 
             {/* Colony Health Check */}
             <section id="bee-health-helper">
@@ -1055,28 +1060,50 @@ export default function Help() {
 
                 <div>
                   <h3 className="font-semibold">
-                    C) Tap-to-log with NFC <Badge tone="blue">Premium</Badge>
+                    C) NFC tag setup and tap-to-log <Badge tone="blue">Premium</Badge>
                   </h3>
+
                   <p className="text-gray-700">
-                    <strong>First time using a new NFC tag:</strong>
+                    <strong>Android:</strong>
                   </p>
-                  <ol className="list-decimal pl-6 space-y-1">
-                    <li>Open the <strong>Scan NFC</strong> page (Premium).</li>
+                  <ol className="list-decimal pl-6 space-y-1 text-gray-700">
+                    <li>Open <strong>Set Up NFC Tags</strong>.</li>
+                    <li>Use the <strong>Android setup</strong> card.</li>
                     <li>
-                      Tap the tag. If it isn’t linked to any hive yet, you’ll be
-                      taken to <strong>New Hive</strong> with the tag ID pre-filled
-                      and locked—choose the correct apiary, name the hive, and save.
+                      Tap <strong>Scan Blank NFC Tag</strong> and hold the phone to
+                      the tag.
                     </li>
                     <li>
-                      Tap the same tag again—because a hive now exists, the app
-                      takes you straight to <strong>New Inspection</strong>.
+                      If the Android tag is not linked yet, HiveTag will take you
+                      to the linking flow so you can assign it to an existing hive
+                      or create a new hive.
+                    </li>
+                    <li>
+                      Once linked, scanning that same Android tag opens{" "}
+                      <strong>New Inspection</strong> for the correct hive.
                     </li>
                   </ol>
-                  <p className="text-gray-700 mt-2">
-                    <strong>Future visits:</strong> once a hive is linked to a tag,
-                    every tap on that tag always opens{" "}
-                    <strong>New Inspection</strong> for that hive immediately.
+
+                  <p className="text-gray-700 mt-3">
+                    <strong>iPhone / iPad:</strong>
                   </p>
+                  <ol className="list-decimal pl-6 space-y-1 text-gray-700">
+                    <li>Open <strong>Set Up NFC Tags</strong>.</li>
+                    <li>Use the <strong>iPhone / iPad setup</strong> card.</li>
+                    <li>
+                      Choose the <strong>Apiary</strong> and <strong>Hive</strong>.
+                    </li>
+                    <li>Press <strong>Copy NFC Link</strong>.</li>
+                    <li>
+                      Paste that copied link into an NFC writing app and write it
+                      to the physical tag.
+                    </li>
+                    <li>
+                      On later visits, tapping that tag opens the linked hive in
+                      HiveTag and routes you into <strong>New Inspection</strong>.
+                    </li>
+                  </ol>
+
                   <p className="text-gray-700 mt-2">
                     <strong>Once-per-day rule:</strong> to prevent accidental
                     duplicates, the NFC “New Inspection” shortcut is limited to{" "}
@@ -1096,36 +1123,52 @@ export default function Help() {
               </h2>
               <div className="space-y-3">
                 <p className="text-gray-700">
-                  Each NFC tag has a globally unique ID and is linked to one{" "}
-                  <em>active</em> hive. When you tap, the app resolves that exact
-                  hive.
+                  HiveTag now supports two clear NFC setup methods from one place:
+                  <strong> Android scanning</strong> and <strong>iPhone / iPad link writing</strong>.
                 </p>
+
                 <ul className="list-disc pl-6">
                   <li>
-                    <strong>Support:</strong> Web NFC works on Chrome for Android.
-                    iOS Safari and many desktops don’t support Web NFC.
+                    <strong>Main NFC page:</strong> open <strong>Set Up NFC Tags</strong> to choose the correct method for your device.
                   </li>
                   <li>
-                    <strong>Linking:</strong> tap an unlinked tag → <em>New Hive</em>{" "}
-                    with its ID locked; select the apiary and save to bind that tag
-                    to the hive.
+                    <strong>Android support:</strong> Web NFC works best in Chrome for Android. Blank tags can be scanned directly in the app.
                   </li>
                   <li>
-                    <strong>Routing:</strong> once a tag is linked to a hive, every
-                    tap always opens a <strong>New Inspection</strong> for that
-                    hive.
+                    <strong>iPhone / iPad support:</strong> Apple browsers do not support Web NFC in the same way, so HiveTag uses a copied HiveTag link written to the tag with an NFC writing app.
+                  </li>
+                  <li>
+                    <strong>Android linking:</strong> scanning an unknown Android tag opens the Android linking flow where you can assign it to an existing hive or create a new hive.
+                  </li>
+                  <li>
+                    <strong>iPhone / iPad linking:</strong> choose a hive in the iPhone / iPad setup card, copy the generated HiveTag link, and write it to the tag.
+                  </li>
+                  <li>
+                    <strong>Routing:</strong> once set up, both Android tags and iPhone / iPad URL tags open the correct hive’s <strong>New Inspection</strong> flow.
                   </li>
                   <li>
                     <strong>Once-per-day rule:</strong> NFC-started inspections are limited to{" "}
                     <strong>one per hive per day</strong>.
                   </li>
                   <li>
-                    <strong>NFC Tag Manager:</strong> view all tagged hives, filter, and clear a tag if you want to re-use it.
+                    <strong>Manage Android NFC Tags:</strong> view all Android-scanned tag ID links, filter them, and clear them if you want to reuse them.
+                  </li>
+                  <li>
+                    <strong>Reusing iPhone / iPad tags:</strong> overwrite the old HiveTag link on the physical tag with a new copied HiveTag link.
                   </li>
                   <li>
                     <strong>Buy tags:</strong> uses Stripe checkout and UK-only flat shipping.
                   </li>
                 </ul>
+
+                <div className="rounded border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+                  <div className="font-semibold">In short</div>
+                  <ul className="list-disc pl-5 mt-1 space-y-1">
+                    <li><strong>Android:</strong> scan blank tag in HiveTag</li>
+                    <li><strong>iPhone / iPad:</strong> copy HiveTag link → write it to the tag</li>
+                  </ul>
+                </div>
+
                 <p className="text-gray-700 text-sm">
                   For a printable step-by-step guide, use the{" "}
                   <Link to="/nfc/instructions" className="text-blue-700 underline">
@@ -1169,94 +1212,95 @@ export default function Help() {
                 </li>
               </ul>
               <p className="mt-3 text-xs text-gray-600">
-                    Weather, warnings, pollen and notes depend on third-party providers and are for guidance only.
-                    Conditions vary by region and micro-climate. Pollen (when available) is shown in panels (e.g. Weather page and the Map Markers header),
-                    not as markers on the map.
-                  </p>
+                Weather, warnings, pollen and notes depend on third-party providers and are for guidance only.
+                Conditions vary by region and micro-climate. Pollen (when available) is shown in panels (e.g. Weather page and the Map Markers header),
+                not as markers on the map.
+              </p>
             </section>
+
             {/* Apiary Map & Markers */}
-<section id="apiary-map-markers">
-  <h2 className="text-2xl font-bold mb-3">Apiary Map &amp; Markers</h2>
+            <section id="apiary-map-markers-2">
+              <h2 className="text-2xl font-bold mb-3">Apiary Map &amp; Markers</h2>
 
-  <p className="text-gray-700">
-    The Apiary Map is a full-screen map for one apiary. It helps you keep simple
-    “map notes” (markers) for real-world features around the apiary such as forage,
-    water, access points, shelter, risks, and sightings.
-  </p>
+              <p className="text-gray-700">
+                The Apiary Map is a full-screen map for one apiary. It helps you keep simple
+                “map notes” (markers) for real-world features around the apiary such as forage,
+                water, access points, shelter, risks, and sightings.
+              </p>
 
-  <div className="mt-4 space-y-4">
-    <div className="rounded border bg-white p-4">
-      <h3 className="font-semibold">How to open the map</h3>
-      <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
-        <li>
-          Go to <strong>Apiaries</strong> and use the <strong>Map</strong> action on
-          the apiary card.
-        </li>
-        <li>
-          On the map page, you can also switch apiaries using the dropdown in the header.
-        </li>
-      </ul>
-    </div>
+              <div className="mt-4 space-y-4">
+                <div className="rounded border bg-white p-4">
+                  <h3 className="font-semibold">How to open the map</h3>
+                  <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
+                    <li>
+                      Go to <strong>Apiaries</strong> and use the <strong>Map</strong> action on
+                      the apiary card.
+                    </li>
+                    <li>
+                      On the map page, you can also switch apiaries using the dropdown in the header.
+                    </li>
+                  </ul>
+                </div>
 
-    <div className="rounded border bg-white p-4">
-      <h3 className="font-semibold">Add a marker (map note)</h3>
-      <ol className="list-decimal pl-6 mt-2 text-gray-700 space-y-1">
-        <li>Press <strong>Add marker</strong>.</li>
-        <li>
-          Tap/click the map where you want the marker placed. A “New marker” popup opens.
-        </li>
-        <li>
-          Choose a <strong>Type</strong> (forage, water source, access/parking, etc.).
-        </li>
-        <li>
-          Optional: add a <strong>Title</strong> and <strong>Notes</strong> (use this for gate codes,
-          landowner details, flowering times, or anything you want to remember).
-        </li>
-        <li>Press <strong>Save</strong> to store it.</li>
-      </ol>
+                <div className="rounded border bg-white p-4">
+                  <h3 className="font-semibold">Add a marker (map note)</h3>
+                  <ol className="list-decimal pl-6 mt-2 text-gray-700 space-y-1">
+                    <li>Press <strong>Add marker</strong>.</li>
+                    <li>
+                      Tap/click the map where you want the marker placed. A “New marker” popup opens.
+                    </li>
+                    <li>
+                      Choose a <strong>Type</strong> (forage, water source, access/parking, etc.).
+                    </li>
+                    <li>
+                      Optional: add a <strong>Title</strong> and <strong>Notes</strong> (use this for gate codes,
+                      landowner details, flowering times, or anything you want to remember).
+                    </li>
+                    <li>Press <strong>Save</strong> to store it.</li>
+                  </ol>
 
-      <div className="mt-3 text-sm text-gray-600">
-        <strong>Pick again:</strong> clears the selected point and puts you back into “tap the map to drop a marker”
-        so you can choose a different location before saving.
-      </div>
-    </div>
+                  <div className="mt-3 text-sm text-gray-600">
+                    <strong>Pick again:</strong> clears the selected point and puts you back into “tap the map to drop a marker”
+                    so you can choose a different location before saving.
+                  </div>
+                </div>
 
-    <div className="rounded border bg-white p-4">
-      <h3 className="font-semibold">Edit or delete a marker</h3>
-      <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
-        <li>Tap a marker to open its popup.</li>
-        <li>Use <strong>Edit</strong> to change the type/title/notes (and date where applicable).</li>
-        <li>Use <strong>Delete</strong> to remove the marker permanently.</li>
-      </ul>
-    </div>
+                <div className="rounded border bg-white p-4">
+                  <h3 className="font-semibold">Edit or delete a marker</h3>
+                  <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
+                    <li>Tap a marker to open its popup.</li>
+                    <li>Use <strong>Edit</strong> to change the type/title/notes (and date where applicable).</li>
+                    <li>Use <strong>Delete</strong> to remove the marker permanently.</li>
+                  </ul>
+                </div>
 
-    <div className="rounded border bg-white p-4">
-      <h3 className="font-semibold">Map layers &amp; foraging ring</h3>
-      <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
-        <li>
-          Use the map layer control to switch between standard map and satellite imagery.
-        </li>
-        <li>
-          A <strong>~3 mile foraging ring</strong> is shown around the apiary as a visual guide.
-          <div className="mt-1 text-sm text-gray-600">
-            Indicative range only — bees may forage further depending on conditions.
-          </div>
-        </li>
-      </ul>
-    </div>
+                <div className="rounded border bg-white p-4">
+                  <h3 className="font-semibold">Map layers &amp; foraging ring</h3>
+                  <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
+                    <li>
+                      Use the map layer control to switch between standard map and satellite imagery.
+                    </li>
+                    <li>
+                      A <strong>~3 mile foraging ring</strong> is shown around the apiary as a visual guide.
+                      <div className="mt-1 text-sm text-gray-600">
+                        Indicative range only — bees may forage further depending on conditions.
+                      </div>
+                    </li>
+                  </ul>
+                </div>
 
-    <div className="rounded border bg-white p-4">
-      <h3 className="font-semibold">Pollen on the map</h3>
-      <p className="text-gray-700 mt-2">
-        Pollen is shown as a small <strong>panel in the map header</strong> for the apiary’s coordinates (where available).
-        It does <strong>not</strong> draw a “pollen overlay” on the map itself.
-      </p>
-      <p className="text-sm text-gray-600 mt-2">
-        Note: Pollen data is seasonal and provider-dependent, and can vary significantly by local microclimate.
-      </p>
-    </div>
-  </div>
-</section>
+                <div className="rounded border bg-white p-4">
+                  <h3 className="font-semibold">Pollen on the map</h3>
+                  <p className="text-gray-700 mt-2">
+                    Pollen is shown as a small <strong>panel in the map header</strong> for the apiary’s coordinates (where available).
+                    It does <strong>not</strong> draw a “pollen overlay” on the map itself.
+                  </p>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Note: Pollen data is seasonal and provider-dependent, and can vary significantly by local microclimate.
+                  </p>
+                </div>
+              </div>
+            </section>
 
             {/* Filters, Counts & Archives */}
             <section id="filters-counts-archives">
@@ -1356,10 +1400,13 @@ export default function Help() {
                 <li>
                   Use the <strong>Apiary Siting Guide</strong> / <strong>Hive Siting Guide</strong> buttons when setting up new locations—small siting choices prevent most future issues.
                 </li>
+                <li>
+                  If you use NFC, send users to <strong>Set Up NFC Tags</strong> so they can choose the correct device method from one place.
+                </li>
               </ul>
             </section>
 
-{/* FAQs */}
+            {/* FAQs */}
             <section id="faqs">
               <h2 className="text-2xl font-bold mb-3">FAQs</h2>
               <div className="space-y-4">
@@ -1390,8 +1437,7 @@ export default function Help() {
                     </Link>{" "}
                     and{" "}
                     <Link to="/hives/step-by-step" className="text-blue-700 underline">
-                    
-			Hive Siting Guide
+                      Hive Siting Guide
                     </Link>
                     .
                   </p>
@@ -1416,6 +1462,20 @@ export default function Help() {
                   <p className="font-medium">Can I use the app without NFC?</p>
                   <p className="text-gray-700">
                     Yes. NFC <Badge tone="blue">Premium</Badge> just speeds up hive selection.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">Does NFC work on iPhone?</p>
+                  <p className="text-gray-700">
+                    Yes, but not with in-browser Web NFC scanning. On iPhone / iPad, use <strong>Set Up NFC Tags</strong>, copy the HiveTag link for the hive, and write that link to the tag using an NFC writing app.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">Can I reuse NFC tags?</p>
+                  <p className="text-gray-700">
+                    Yes. Android tags can be cleared in <strong>Manage Android NFC Tags</strong>. iPhone / iPad tags can be reused by overwriting the old HiveTag link on the physical tag with a new one.
                   </p>
                 </div>
 
@@ -1484,9 +1544,17 @@ export default function Help() {
                   <strong>Satellite layer is blank or slow:</strong> satellite imagery comes from an external provider and may be rate-limited or temporarily unavailable.
                   Switch back to <strong>Map</strong> and try again later.
                 </li>
-
                 <li>
-                  <strong>NFC says “not supported”:</strong> iOS Safari and many desktops don’t support Web NFC; use the standard flow.
+                  <strong>NFC says “not supported”:</strong> use Chrome on Android for direct tag scanning. On iPhone / iPad, use the NFC link method from <strong>Set Up NFC Tags</strong>.
+                </li>
+                <li>
+                  <strong>I can’t find where to set up NFC:</strong> go to <strong>Set Up NFC Tags</strong> from the sidebar. That page now contains both Android and iPhone / iPad setup methods.
+                </li>
+                <li>
+                  <strong>Android tag won’t link:</strong> if it is already linked elsewhere, clear it from <strong>Manage Android NFC Tags</strong> first and then scan it again.
+                </li>
+                <li>
+                  <strong>iPhone tag opens the wrong hive:</strong> rewrite the tag with a newly copied HiveTag link from the iPhone / iPad setup card.
                 </li>
                 <li>
                   <strong>Back button on siting guides doesn’t return:</strong> the Back button relies on browser history. If you open a
@@ -1504,8 +1572,10 @@ export default function Help() {
                   <strong>Photos are public URLs</strong> for fast loading; your CSV export includes links to these files.
                 </li>
                 <li>
-                  <strong>NFC UIDs:</strong> only the tag’s unique ID and its hive linkage are stored, used solely to route you to the
-                  correct hive/inspection. NFC tags are <strong>not tracked for location</strong>.
+                  <strong>Android NFC tag IDs:</strong> HiveTag stores the scanned Android tag ID and its hive linkage so the correct hive can be opened later.
+                </li>
+                <li>
+                  <strong>iPhone / iPad NFC tags:</strong> these use a HiveTag link written onto the physical tag. HiveTag does not track tag location.
                 </li>
                 <li>
                   <strong>Export</strong>: use <em>Settings → Export</em> to download CSVs of your data anytime.
@@ -1534,8 +1604,13 @@ export default function Help() {
                   auto-archives extras; upgrade lifts limits.
                 </li>
                 <li>
-                  <strong>NFC scan routing:</strong> unlinked tag → <em>New Hive</em>; once linked, every tap on that tag takes you
-                  directly to <em>New Inspection</em>. <Badge tone="blue">Premium</Badge>
+                  <strong>NFC setup hub:</strong> <strong>Set Up NFC Tags</strong> is now the single place for both Android and iPhone / iPad NFC setup. <Badge tone="blue">Premium</Badge>
+                </li>
+                <li>
+                  <strong>Android NFC routing:</strong> unknown Android tag → Android linking flow; once linked, scanning that tag takes you directly to <em>New Inspection</em>. <Badge tone="blue">Premium</Badge>
+                </li>
+                <li>
+                  <strong>iPhone / iPad NFC routing:</strong> copied HiveTag link → written to tag → opening the tag routes into <em>New Inspection</em>. <Badge tone="blue">Premium</Badge>
                 </li>
                 <li>
                   <strong>Reports export:</strong> CSV exports respect the Apiary/Hive filter.
@@ -1565,7 +1640,7 @@ export default function Help() {
                 <div>
                   <dt className="font-medium">NFC</dt>
                   <dd className="text-gray-700">
-                    Near Field Communication—tap a tag to identify the hive (Premium).
+                    Near Field Communication—used in HiveTag to open the correct hive more quickly (Premium).
                   </dd>
                 </div>
                 <div>
