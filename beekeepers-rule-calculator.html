@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en-GB">
-
   <head>
     <meta name="generator" content="HTML Tidy for HTML5 for Windows version 5.9.14">
     <meta charset="UTF-8" />
@@ -30,13 +29,11 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/images/android-chrome-512x512.png">
     <!-- Android / PWA -->
     <link rel="manifest" href="/site.webmanifest">
-
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://beezknees.co.uk/beekeepers-rule-calculator" />
     <meta property="og:image" content="https://beezknees.co.uk/images/beekeepers-rule-tool.webp" />
     <meta property="og:site_name" content="BeezKnees" />
     <meta property="og:locale" content="en_GB" />
-
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Beekeeper’s Rule Calculator & Apiary Planning Tool" />
     <meta name="twitter:description" content="Plan queen development, honey flows and swarm timing with this free beekeeper planning tool." />
@@ -46,69 +43,62 @@
     <link rel="stylesheet" href="css/clock.css" />
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [{
-          "@type": "Question",
-          "name": "Can I compare two saved apiary plans?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. Use the Multi-Apiary Comparison section to select two saved plans and view their key dates, modes and notes side by side."
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [{
+            "@type": "Question",
+            "name": "Can I compare two saved apiary plans?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Use the Multi-Apiary Comparison section to select two saved plans and view their key dates, modes and notes side by side."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does the seasonal task calendar replace inspections?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. It is a practical reminder tool. You should still base decisions on what you actually see in the colony, together with local weather and forage."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I still print the page as a PDF?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Use the Print / Export PDF button at the top of the page. The print view keeps the active calculator mode and removes much of the on-screen UI."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Are saved plans synced across devices?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Saved plans are stored in your browser on this device only."
+            }
           }
-        },
-        {
-          "@type": "Question",
-          "name": "Does the seasonal task calendar replace inspections?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. It is a practical reminder tool. You should still base decisions on what you actually see in the colony, together with local weather and forage."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Can I still print the page as a PDF?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Yes. Use the Print / Export PDF button at the top of the page. The print view keeps the active calculator mode and removes much of the on-screen UI."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "Are saved plans synced across devices?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "No. Saved plans are stored in your browser on this device only."
-          }
-        }
-      ]
-    }
+        ]
+      }
     </script>
   </head>
-
   <body>
-
-
     <!-- Fixed Header and Nav Container -->
     <div class="fixed-header">
       <header class="site-header" aria-label="Site Header">
         <div class="header-container" role="region" aria-label="Site Branding">
           <a href="https://beezknees.co.uk/"><img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="site-logo"></a>
-
           <h2 class="site-title">BeezKnees</h2>
-
           <!-- ✅ WORKING HAMBURGER ICON BUTTON -->
           <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"></button>
         </div>
       </header>
     </div>
-    
     <!-- Navigation Bar -->
     <nav class="navbar" role="navigation" aria-label="Main navigation">
       <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
         <li><a href="/" title="Visit the homepage">Home</a></li>
         <li class="dropdown"><a href="/about-us" title="Learn more about us">About</a></li>
-
         <!-- Beekeeping (foundations) -->
         <li class="dropdown">
           <a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a>
@@ -130,7 +120,6 @@
             <li><a href="/beekeeping-insurance-uk" title="Beekeeping insurance and public liability overview for the UK">Insurance (UK)</a></li>
           </ul>
         </li>
-
         <!-- Varroa cluster -->
         <li class="dropdown">
           <a href="/varroa-management" title="Control varroa mite infestations">Varroa</a>
@@ -144,7 +133,6 @@
             <li><a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Treatment Calendar (UK)</a></li>
           </ul>
         </li>
-
         <!-- Apiary calendar -->
         <li class="dropdown">
           <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a>
@@ -164,7 +152,6 @@
             <li><a href="/december" title="December beekeeping tasks">December</a></li>
           </ul>
         </li>
-
         <!-- Diseases -->
         <li class="dropdown">
           <a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a>
@@ -180,12 +167,10 @@
             <li><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></li>
           </ul>
         </li>
-
         <!-- Main Link to Navigate to Swarm and Queen management -->
         <li>
           <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">Swarm &amp; Queen</a>
         </li>
-
         <!-- Honeybee facts -->
         <li class="dropdown">
           <a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a>
@@ -197,7 +182,6 @@
             <li><a href="/pollination" title="Honeybee role in pollination">Pollination</a></li>
           </ul>
         </li>
-
         <!-- Help bees -->
         <li class="dropdown">
           <a href="/help-the-bees" title="How you can help save the bees">Help Bees</a>
@@ -208,19 +192,16 @@
             <li><a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a></li>
           </ul>
         </li>
-
         <!-- Members area -->
         <li>
           <a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members Area</a>
         </li>
       </ul>
     </nav>
-
     <!-- Hero Banner with Image and Alt Fallback -->
     <section role="region" aria-label="Homepage Banner">
       <div class="banner"><img src="images/close-up-hive-hero.webp" alt="Picture of a close-up of a hive"></div>
     </section>
-
     <!-- Main Content -->
     <main class="clock-page">
       <div class="page-wrap">
@@ -238,7 +219,6 @@
             <button class="btn btn-secondary" type="button" onclick="window.print()">Print / Export PDF</button>
           </div>
         </section>
-
         <section class="top-grid">
           <div class="card intro-card">
             <h2>What this tool now does</h2>
@@ -255,7 +235,6 @@
               <li>Use the seasonal task calendar for month-specific beekeeper reminders.</li>
             </ul>
           </div>
-
           <div class="card quick-card">
             <h2>Quick start</h2>
             <p>Choose the mode that matches the beekeeper question you need to answer.</p>
@@ -279,7 +258,6 @@
             </div>
           </div>
         </section>
-
         <section class="seo-grid" style="margin-bottom:24px;">
           <article class="card seo-card">
             <h2>How to Use the Beekeeper’s Rule in Practice</h2>
@@ -297,7 +275,6 @@
               especially useful for swarm control, honey flow timing and queen rearing plans.
             </p>
           </article>
-
           <article class="card seo-card">
             <h2>Using the Rule with Real Colony Checks</h2>
             <p>
@@ -314,7 +291,6 @@
             </ul>
           </article>
         </section>
-
         <section class="plans-grid no-print">
           <div class="card plans-card">
             <h2>Save / Load Apiary Plans</h2>
@@ -322,23 +298,19 @@
               Save the current calculator state as a named plan so you can return to it later.
               This stores data in your browser on this device.
             </p>
-
             <div class="plan-form-grid">
               <div class="field">
                 <label for="planName">Plan name</label>
                 <input id="planName" type="text" placeholder="e.g. Lime flow 2026" />
               </div>
-
               <div class="field">
                 <label for="planApiary">Apiary name</label>
                 <input id="planApiary" type="text" placeholder="e.g. Orchard Apiary" />
               </div>
-
               <div class="field" style="grid-column: 1 / -1;">
                 <label for="planNotes">Plan notes</label>
                 <textarea id="planNotes" placeholder="Optional notes about forage, colony strength, breeding aims or inspections"></textarea>
               </div>
-
               <div class="field" style="grid-column: 1 / -1;">
                 <div class="plan-btn-row">
                   <button class="btn btn-primary" id="savePlanBtn" type="button">Save plan</button>
@@ -346,10 +318,8 @@
                 </div>
               </div>
             </div>
-
             <div class="status-box" id="planStatus">No plan action yet.</div>
           </div>
-
           <div class="card plans-card">
             <h2>Saved Plans</h2>
             <p>
@@ -359,7 +329,6 @@
             <div class="plans-list" id="savedPlansList"></div>
           </div>
         </section>
-
         <section class="weather-grid no-print">
           <div class="card weather-card">
             <h2>Weather / Nectar Flow Overlay</h2>
@@ -367,13 +336,11 @@
               This uses manual planning inputs rather than a live weather feed.
               It lets you overlay likely apiary conditions onto the current plan.
             </p>
-
             <div class="weather-form-grid">
               <div class="field">
                 <label for="weatherRegion">Apiary region / context</label>
                 <input id="weatherRegion" type="text" placeholder="e.g. South Wales coast, inland valley, exposed hill site" />
               </div>
-
               <div class="field">
                 <label for="weatherPattern">Forecast pattern</label>
                 <select id="weatherPattern">
@@ -384,7 +351,6 @@
                   <option value="cold">Cold / held-back conditions</option>
                 </select>
               </div>
-
               <div class="field">
                 <label for="weatherTempBand">Day temperature band</label>
                 <select id="weatherTempBand">
@@ -394,7 +360,6 @@
                   <option value="high">Above 24°C</option>
                 </select>
               </div>
-
               <div class="field">
                 <label for="weatherRainRisk">Rain / interruption risk</label>
                 <select id="weatherRainRisk">
@@ -403,7 +368,6 @@
                   <option value="high">High</option>
                 </select>
               </div>
-
               <div class="field">
                 <label for="weatherFlightRisk">Bee flying conditions</label>
                 <select id="weatherFlightRisk">
@@ -413,7 +377,6 @@
                   <option value="excellent">Excellent</option>
                 </select>
               </div>
-
               <div class="field">
                 <label for="nectarStrength">Nectar flow strength</label>
                 <select id="nectarStrength">
@@ -424,12 +387,10 @@
                   <option value="peak">Peak flow</option>
                 </select>
               </div>
-
               <div class="field" style="grid-column: 1 / -1;">
                 <label for="weatherNotes">Weather / forage note</label>
                 <textarea id="weatherNotes" placeholder="Optional note: e.g. lime nearly opening, bramble just starting, windy afternoons, poor flying mornings"></textarea>
               </div>
-
               <div class="field" style="grid-column: 1 / -1;">
                 <div class="btn-row">
                   <button class="btn btn-teal" id="updateWeatherOverlayBtn" type="button">Update overlay</button>
@@ -437,63 +398,50 @@
                 </div>
               </div>
             </div>
-
             <div class="status-box" id="weatherStatus">
               Overlay ready. Add conditions to improve inspection timing guidance.
             </div>
           </div>
-
           <div class="card weather-card">
             <h2>Overlay Summary + Inspection Reminder Logic</h2>
             <p>
               These reminders combine the active planning mode with your manual weather
               and nectar conditions.
             </p>
-
             <div class="weather-summary-grid" id="weatherSummaryGrid"></div>
-
             <div class="reminder-grid" id="reminderGrid" style="margin-top:14px;"></div>
-
             <div class="note-box" id="reminderNote">
               Reminder logic is advisory. Always combine it with what you actually see in the colony.
             </div>
           </div>
-
           <div class="card weather-card" style="margin-top:18px;">
             <h2>Inspection Window + Swarm Risk</h2>
             <p>
               This combines the active planning mode, seasonal timing and your overlay
               conditions to suggest the best inspection timing and highlight swarm pressure.
             </p>
-
             <div class="weather-summary-grid" id="inspectionAdvisorGrid" style="margin-top:14px;"></div>
-
             <div class="weather-summary-grid" id="swarmRiskGrid" style="margin-top:14px;"></div>
-
             <div class="note-box" id="advisorNote">
               These indicators are guidance tools only. Always confirm decisions against live colony conditions.
             </div>
           </div>
         </section>
-
         <section class="comparison-grid no-print">
           <div class="card comparison-card">
             <h2>Multi-Apiary Comparison</h2>
             <p>
               Select two saved plans and compare their timings, modes and management focus.
             </p>
-
             <div class="comparison-form-grid">
               <div class="field">
                 <label for="comparePlanA">Plan A</label>
                 <select id="comparePlanA"></select>
               </div>
-
               <div class="field">
                 <label for="comparePlanB">Plan B</label>
                 <select id="comparePlanB"></select>
               </div>
-
               <div class="field" style="grid-column: 1 / -1;">
                 <div class="btn-row">
                   <button class="btn btn-blue" id="runComparisonBtn" type="button">Compare plans</button>
@@ -501,30 +449,25 @@
                 </div>
               </div>
             </div>
-
             <div class="status-box" id="comparisonStatus">No comparison yet.</div>
           </div>
-
           <div class="card comparison-card">
             <h2>Comparison Results</h2>
             <p>Use this to spot timing differences between two apiaries or project plans.</p>
             <div id="comparisonResults"></div>
           </div>
         </section>
-
         <section class="calendar-grid no-print">
           <div class="card calendar-card">
             <h2>Seasonal Task Calendar</h2>
             <p>
               Select a month and focus area to view practical beekeeper reminders.
             </p>
-
             <div class="calendar-form-grid">
               <div class="field">
                 <label for="taskMonth">Month</label>
                 <select id="taskMonth"></select>
               </div>
-
               <div class="field">
                 <label for="taskFocus">Focus area</label>
                 <select id="taskFocus">
@@ -538,12 +481,10 @@
                   <option value="winter">Winter prep</option>
                 </select>
               </div>
-
               <div class="field" style="grid-column: 1 / -1;">
                 <label for="taskApiaryNote">Optional apiary note</label>
                 <input id="taskApiaryNote" type="text" placeholder="e.g. Exposed coastal site, strong colonies, heather target" />
               </div>
-
               <div class="field" style="grid-column: 1 / -1;">
                 <div class="btn-row">
                   <button class="btn btn-primary" id="updateTaskCalendarBtn" type="button">Update calendar</button>
@@ -551,17 +492,14 @@
                 </div>
               </div>
             </div>
-
             <div class="status-box" id="taskCalendarStatus">Seasonal task calendar ready.</div>
           </div>
-
           <div class="card calendar-card">
             <h2 id="taskCalendarHeading">Seasonal Tasks</h2>
             <p id="taskCalendarIntro">Choose a month and task focus to see beekeeper reminders.</p>
             <div class="task-list" id="taskList"></div>
           </div>
         </section>
-
         <section id="dashboard">
           <div class="card dashboard-tabs no-print">
             <div class="tab-row">
@@ -571,7 +509,6 @@
               <button class="tab-btn" data-mode="wheel">Rule Wheel</button>
             </div>
           </div>
-
           <div class="dashboard-grid">
             <div class="card main-card">
               <div class="print-only">
@@ -579,14 +516,12 @@
                 <p>This print version shows the currently active calculator mode and its latest summary information.</p>
                 <hr />
               </div>
-
               <div class="mode-panel active" id="panel-development">
                 <div class="mode-header">
                   <div class="kicker-yellow">Mode 1 — Development Clock</div>
                   <h2>Bee Development Clock</h2>
                   <p>Choose a bee type, pick the date you observed eggs or a key event, and review the related colony timing.</p>
                 </div>
-
                 <div class="field-grid no-print">
                   <div class="field">
                     <label for="beeType">Bee type</label>
@@ -596,12 +531,10 @@
                       <option value="drone">Drone</option>
                     </select>
                   </div>
-
                   <div class="field">
                     <label for="startDate">Start date</label>
                     <input id="startDate" type="date" />
                   </div>
-
                   <div class="field">
                     <label for="startEvent">Start from</label>
                     <select id="startEvent">
@@ -611,7 +544,6 @@
                       <option value="emerged">Adult emerged</option>
                     </select>
                   </div>
-
                   <div class="field">
                     <label>&nbsp;</label>
                     <div class="btn-row">
@@ -620,20 +552,16 @@
                     </div>
                   </div>
                 </div>
-
                 <div class="summary-stack">
                   <div class="summary-box">
                     <strong id="summaryHeadline">Egg observed on selected date</strong>
                     <p id="summaryText">The dashboard is showing the selected development cycle from the date you entered.</p>
                   </div>
                 </div>
-
                 <div class="event-stack" id="eventsList"></div>
-
                 <div class="note-box" id="beeNote">
                   Swarm note: when queen cells are present, the most important point is usually the sealing date.
                 </div>
-
                 <div class="mini-grid">
                   <div class="mini-card">
                     <strong>Queen</strong>
@@ -649,35 +577,29 @@
                   </div>
                 </div>
               </div>
-
               <div class="mode-panel" id="panel-honey">
                 <div class="mode-header">
                   <div class="kicker-green">Mode 2 — Honey Flow Planning</div>
                   <h2>Honey Crop Timing Planner</h2>
                   <p>Work backwards from a main nectar flow to estimate when worker eggs should be laid so foragers are available at the right time.</p>
                 </div>
-
                 <div class="field-grid no-print">
                   <div class="field">
                     <label for="flowName">Main nectar source</label>
                     <input id="flowName" type="text" placeholder="e.g. Lime, Clover, Bramble" />
                   </div>
-
                   <div class="field">
                     <label for="apiaryNote">Apiary / note</label>
                     <input id="apiaryNote" type="text" placeholder="Optional note for this flow" />
                   </div>
-
                   <div class="field">
                     <label for="flowStart">Nectar flow start</label>
                     <input id="flowStart" type="date" />
                   </div>
-
                   <div class="field">
                     <label for="flowEnd">Nectar flow end</label>
                     <input id="flowEnd" type="date" />
                   </div>
-
                   <div class="field">
                     <label for="foragerLead">Worker age when foraging begins</label>
                     <select id="foragerLead">
@@ -687,7 +609,6 @@
                       <option value="42">About 42 days from egg</option>
                     </select>
                   </div>
-
                   <div class="field">
                     <label>&nbsp;</label>
                     <div class="btn-row">
@@ -696,49 +617,40 @@
                     </div>
                   </div>
                 </div>
-
                 <div class="summary-stack">
                   <div class="summary-box">
                     <strong id="honeyHeadline">Honey flow planning summary</strong>
                     <p id="honeySummaryText">Add your expected nectar flow period and the planner will calculate when eggs should be laid to produce foragers at the right time.</p>
                   </div>
-
                   <div class="info-card">
                     <strong>Egg-laying window for peak foragers</strong>
                     <p id="eggWindowText">Not calculated yet.</p>
                   </div>
-
                   <div class="info-card">
                     <strong>Brood stimulation guidance</strong>
                     <p id="stimText">Not calculated yet.</p>
                   </div>
                 </div>
-
                 <div class="timeline-stack" id="honeyTimeline"></div>
-
                 <div class="note-box" id="honeyAssumptions">
                   Assumption: this planner uses worker development plus the selected age at which workers begin foraging.
                 </div>
               </div>
-
               <div class="mode-panel" id="panel-breeding">
                 <div class="mode-header">
                   <div class="kicker-purple">Mode 3 — Queen Breeding</div>
                   <h2>Breeding Synchronisation Planner</h2>
                   <p>Work backwards from your desired mating date so drone production and queen rearing overlap correctly.</p>
                 </div>
-
                 <div class="field-grid no-print">
                   <div class="field">
                     <label for="desiredMatingDate">Desired mating date</label>
                     <input id="desiredMatingDate" type="date" />
                   </div>
-
                   <div class="field">
                     <label for="breedingApiary">Breeding apiary / note</label>
                     <input id="breedingApiary" type="text" placeholder="Optional breeding note" />
                   </div>
-
                   <div class="field">
                     <label for="droneMaturityLead">Drone egg to mature flying drone</label>
                     <select id="droneMaturityLead">
@@ -747,7 +659,6 @@
                       <option value="40">About 40 days</option>
                     </select>
                   </div>
-
                   <div class="field">
                     <label for="queenBuildMethod">Queen planning basis</label>
                     <select id="queenBuildMethod">
@@ -755,12 +666,10 @@
                       <option value="startRearing">Start queen rearing from that point</option>
                     </select>
                   </div>
-
                   <div class="field">
                     <label for="queenSourceNote">Queen source / breeder note</label>
                     <textarea id="queenSourceNote" placeholder="Optional note about grafting stock, breeder colony, or mating plan"></textarea>
                   </div>
-
                   <div class="field">
                     <label>&nbsp;</label>
                     <div class="btn-row">
@@ -769,38 +678,31 @@
                     </div>
                   </div>
                 </div>
-
                 <div class="summary-stack">
                   <div class="summary-box">
                     <strong id="breedingHeadline">Breeding synchronisation summary</strong>
                     <p id="breedingSummaryText">Add your desired mating date and the planner will calculate when drone production and queen rearing should begin.</p>
                   </div>
-
                   <div class="info-card">
                     <strong>Drone production timing</strong>
                     <p id="dronePlanText">Not calculated yet.</p>
                   </div>
-
                   <div class="info-card">
                     <strong>Queen rearing timing</strong>
                     <p id="queenPlanText">Not calculated yet.</p>
                   </div>
                 </div>
-
                 <div class="timeline-stack" id="breedingTimeline"></div>
-
                 <div class="note-box" id="breedingAssumptions">
                   Assumption: this planner uses a queen development period of 16 days and the selected drone maturity lead time.
                 </div>
               </div>
-
               <div class="mode-panel" id="panel-wheel">
                 <div class="mode-header">
                   <div class="kicker-blue">Mode 4 — Rule Wheel</div>
                   <h2>Digital Beekeeper’s Rule Wheel</h2>
                   <p>View worker, queen and drone timing together on one circular annual calendar.</p>
                 </div>
-
                 <div class="field-grid no-print">
                   <div class="field">
                     <label for="ruleMode">Wheel mode</label>
@@ -810,17 +712,14 @@
                       <option value="breeding">Breeding</option>
                     </select>
                   </div>
-
                   <div class="field">
                     <label for="ruleReferenceDate">Reference date</label>
                     <input id="ruleReferenceDate" type="date" />
                   </div>
-
                   <div class="field">
                     <label for="ruleManualLabel">Manual label / note</label>
                     <input id="ruleManualLabel" type="text" placeholder="Optional wheel note" />
                   </div>
-
                   <div class="field">
                     <label>&nbsp;</label>
                     <div class="btn-row">
@@ -829,29 +728,24 @@
                     </div>
                   </div>
                 </div>
-
                 <div class="summary-stack">
                   <div class="summary-box">
                     <strong id="ruleHeadline">Digital Beekeeper’s Rule summary</strong>
                     <p id="ruleSummaryText">Select a mode to map your chosen dates onto the circular calendar.</p>
                   </div>
-
                   <div class="info-card">
                     <strong>Worker timing</strong>
                     <p id="ruleWorkerText">Not calculated yet.</p>
                   </div>
-
                   <div class="info-card">
                     <strong>Queen timing</strong>
                     <p id="ruleQueenText">Not calculated yet.</p>
                   </div>
-
                   <div class="info-card">
                     <strong>Drone timing</strong>
                     <p id="ruleDroneText">Not calculated yet.</p>
                   </div>
                 </div>
-
                 <div class="wheel-wrap">
                   <div class="wheel-shell">
                     <svg class="wheel-svg" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg">
@@ -860,17 +754,14 @@
                           <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.14" />
                         </filter>
                       </defs>
-
                       <circle cx="320" cy="320" r="276" fill="none" stroke="#e7edf4" stroke-width="2" />
                       <circle cx="320" cy="320" r="236" fill="none" stroke="#e7edf4" stroke-width="2" />
                       <circle cx="320" cy="320" r="196" fill="none" stroke="#e7edf4" stroke-width="2" />
                       <circle cx="320" cy="320" r="156" fill="none" stroke="#e7edf4" stroke-width="2" />
-
                       <circle cx="320" cy="320" r="256" fill="none" stroke="#d9e0e7" stroke-width="24" />
                       <circle cx="320" cy="320" r="216" fill="none" stroke="#eef6ff" stroke-width="22" />
                       <circle cx="320" cy="320" r="176" fill="none" stroke="#f3e8ff" stroke-width="22" />
                       <circle cx="320" cy="320" r="136" fill="none" stroke="#eef9f1" stroke-width="22" />
-
                       <g id="ruleMonthLabels"></g>
                       <g id="ruleMonthTicks"></g>
                       <g id="ruleReferencePointer"></g>
@@ -879,7 +770,6 @@
                       <g id="ruleQueenMarker"></g>
                       <g id="ruleExtraMarker"></g>
                     </svg>
-
                     <div class="wheel-center">
                       <div>
                         <strong id="ruleCenterTitle">Rule Wheel</strong>
@@ -888,7 +778,6 @@
                     </div>
                   </div>
                 </div>
-
                 <div class="legend-grid">
                   <div class="legend-item">
                     <div class="legend-swatch" style="background:#c98118;"></div>
@@ -911,47 +800,39 @@
                     <span>Queen rearing timing</span>
                   </div>
                 </div>
-
                 <div class="note-box" id="ruleNote">
                   This wheel is a modern digital interpretation of the Beekeeper’s Rule.
                 </div>
               </div>
             </div>
-
             <aside class="card side-card overview-card">
               <h2>Dashboard Overview</h2>
-
               <div class="overview-kpis">
                 <div class="overview-kpi">
                   <strong>Current Mode</strong>
                   <span id="overviewMode">Development Clock</span>
                   <p id="overviewModeText">Track queen, worker or drone timing from a known observation date.</p>
                 </div>
-
                 <div class="overview-kpi">
                   <strong>Primary Date</strong>
                   <span id="overviewPrimaryDate">Not set</span>
                   <p id="overviewPrimaryText">This updates according to the active planner.</p>
                 </div>
-
                 <div class="overview-kpi">
                   <strong>Key Action</strong>
                   <span id="overviewAction">Update the selected mode</span>
                   <p id="overviewActionText">The dashboard highlights the most useful next management action.</p>
                 </div>
-
                 <div class="overview-kpi">
                   <strong>Practical Use</strong>
                   <span id="overviewUse">Development timing</span>
                   <p id="overviewUseText">Each mode focuses on a different beekeeper question.</p>
                 </div>
-
                 <div class="overview-kpi">
                   <strong>Saved Plan</strong>
                   <span id="overviewSavedPlan">None loaded</span>
                   <p id="overviewSavedPlanText">Save your current work so you can return to it later on this device.</p>
                 </div>
-
                 <div class="overview-kpi">
                   <strong>Inspection Recommendation</strong>
                   <span id="overviewReminderHeadline">Awaiting overlay</span>
@@ -961,7 +842,6 @@
             </aside>
           </div>
         </section>
-
         <section class="seo-grid">
           <article class="card seo-card">
             <h2>Why comparison matters</h2>
@@ -976,7 +856,6 @@
               coastal versus inland apiaries, or different queen rearing dates.
             </p>
           </article>
-
           <article class="card seo-card">
             <h2>Why the seasonal calendar helps</h2>
             <p>
@@ -990,10 +869,8 @@
             </p>
           </article>
         </section>
-
         <section class="card faq-card" style="margin-top:28px;">
           <h2>Frequently asked questions</h2>
-
           <div class="faq-item">
             <h3>Can I compare two saved apiary plans?</h3>
             <p>
@@ -1001,7 +878,6 @@
               and view their key dates, modes and notes side by side.
             </p>
           </div>
-
           <div class="faq-item">
             <h3>Does the seasonal task calendar replace inspections?</h3>
             <p>
@@ -1009,7 +885,6 @@
               what you actually see in the colony, together with local weather and forage.
             </p>
           </div>
-
           <div class="faq-item">
             <h3>Can I still print the page as a PDF?</h3>
             <p>
@@ -1017,7 +892,6 @@
               view keeps the active calculator mode and removes much of the on-screen UI.
             </p>
           </div>
-
           <div class="faq-item">
             <h3>Are saved plans synced across devices?</h3>
             <p>
@@ -1025,7 +899,6 @@
             </p>
           </div>
         </section>
-
         <section class="card footer-card" style="margin-top:28px;">
           <p>
             BeezKnees Beekeeper’s Rule Calculator is designed as a practical digital
@@ -1034,10 +907,9 @@
             summaries. Always combine calculator outputs with inspection findings,
             local forage knowledge and good colony management.
           </p>
-      </section>
+        </section>
       </div>
     </main>
-
     <!-- Footer -->
     <footer class="site-footer" role="region" aria-label="Site Footer">
       <div class="footer-columns">
@@ -1050,11 +922,10 @@
             <i class="fab fa-facebook-square" aria-hidden="true"></i>
             Facebook:
             <a href="https://www.facebook.com/beezkneesbeekeeping" target="_blank" rel="noopener noreferrer" aria-label="BeezKnees on Facebook">
-              BeezKnees
+            BeezKnees
             </a>
           </p>
         </div>
-
         <div class="footer-column" role="region" aria-label="Useful Site Links">
           <h3>Useful Links</h3>
           <ul>
@@ -1080,7 +951,7 @@
             </li>
             <li>
               <a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank" rel="noopener noreferrer" title="Read the Honey (Wales) Regulations 2015">The Honey (Wales) Regulations
-                2015</a>
+              2015</a>
             </li>
             <li>
               <a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer" title="Explore Bee-Friendly programme by Wales Biodiversity Partnership">Wales Biodiversity Partnership</a>
@@ -1117,5 +988,4 @@
     <script src="js/menuv2.js" defer></script>
     <script src="js/clock.js" defer></script>
   </body>
-
 </html>
