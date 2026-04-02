@@ -28,175 +28,147 @@
       <!-- Android / PWA -->
       <link rel="manifest" href="/site.webmanifest">
       <!-- Schema.org Structured Data -->
-      <script type="application/ld+json">
-         {
-           "@context": "https://schema.org",
-           "@graph": [
-             {
-               "@type": "Organization",
-               "@id": "https://beezknees.co.uk/#organization",
-               "name": "BeezKnees",
-               "url": "https://beezknees.co.uk/",
-               "logo": {
-                 "@type": "ImageObject",
-                 "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
-               }
-             },
-             {
-               "@type": "WebPage",
-               "@id": "https://beezknees.co.uk/september#webpage",
-               "url": "https://beezknees.co.uk/september",
-               "name": "September Beekeeping Tasks in the UK – Feeding, Varroa Control & Winter Prep | BeezKnees",
-               "description": "What to do with your bees in September in the UK: key beekeeping tasks for feeding, varroa treatment, combining weak colonies, fitting mouse guards, reducing entrances and preparing hives for winter.",
-               "inLanguage": "en-GB",
-               "isPartOf": {
-                 "@id": "https://beezknees.co.uk/#organization"
-               },
-               "about": {
-                 "@id": "https://beezknees.co.uk/september#article"
-               },
-               "primaryImageOfPage": {
-                 "@type": "ImageObject",
-                 "url": "https://beezknees.co.uk/images/extracted-honey.jpg"
-               },
-               "breadcrumb": {
-                 "@id": "https://beezknees.co.uk/september#breadcrumb"
-               },
-               "publisher": {
-                 "@id": "https://beezknees.co.uk/#organization"
-               }
-             },
-             {
-               "@type": "Article",
-               "@id": "https://beezknees.co.uk/september#article",
-               "mainEntityOfPage": {
-                 "@id": "https://beezknees.co.uk/september#webpage"
-               },
-               "headline": "September Beekeeping Tasks in the UK – Feeding, Varroa Control & Winter Prep",
-               "description": "Discover essential beekeeping tasks for September in the UK, including winter feeding, varroa mite treatment, combining weak colonies, fitting mouse guards and preparing hives for colder weather.",
-               "image": {
-                 "@type": "ImageObject",
-                 "url": "https://beezknees.co.uk/images/extracted-honey.jpg"
-               },
-               "author": {
-                 "@type": "Person",
-                 "name": "Colin Chorley"
-               },
-               "publisher": {
-                 "@id": "https://beezknees.co.uk/#organization"
-               },
-               "datePublished": "2024-09-01",
-               "dateModified": "2025-12-11",
-               "inLanguage": "en-GB",
-               "articleSection": [
-                 "September beekeeping tasks UK",
-                 "Autumn feeding and winter stores",
-                 "Varroa treatment and post-treatment checks",
-                 "Combining weak colonies",
-                 "Mouse guards and reducing entrances",
-                 "Preparing hives for winter"
-               ],
-               "keywords": [
-                 "September beekeeping tasks UK",
-                 "what to do with bees in September",
-                 "feeding bees September UK",
-                 "varroa treatment September",
-                 "prepare hives for winter UK",
-                 "weak colony management",
-                 "mouse guards",
-                 "wasp traps",
-                 "beekeeping autumn checklist"
-               ]
-             },
-             {
-               "@type": "BreadcrumbList",
-               "@id": "https://beezknees.co.uk/september#breadcrumb",
-               "itemListElement": [
-                 {
-                   "@type": "ListItem",
-                   "position": 1,
-                   "name": "Home",
-                   "item": "https://beezknees.co.uk/"
-                 },
-                 {
-                   "@type": "ListItem",
-                   "position": 2,
-                   "name": "Year in the Apiary",
-                   "item": "https://beezknees.co.uk/year-in-the-apiary"
-                 },
-                 {
-                   "@type": "ListItem",
-                   "position": 3,
-                   "name": "September",
-                   "item": "https://beezknees.co.uk/september"
-                 }
-               ]
-             },
-             {
-               "@type": "FAQPage",
-               "@id": "https://beezknees.co.uk/september#faq",
-               "mainEntity": [
-                 {
-                   "@type": "Question",
-                   "name": "What are the main beekeeping tasks in September in the UK?",
-                   "acceptedAnswer": {
-                     "@type": "Answer",
-                     "text": "Your main tasks are checking and increasing winter stores, feeding if colonies are light, completing varroa treatments, combining weak colonies, fitting mouse guards, reducing entrances and ensuring hives are weatherproofed for winter."
-                   }
-                 },
-                 {
-                   "@type": "Question",
-                   "name": "How much food should my bees have by the end of September?",
-                   "acceptedAnswer": {
-                     "@type": "Answer",
-                     "text": "By late September, a full-sized colony should be well on the way to having around 20–25 kg of stores. You may still need to top up with syrup in early October if the hive feels light when you heft it."
-                   }
-                 },
-                 {
-                   "@type": "Question",
-                   "name": "What syrup should I use for feeding in September?",
-                   "acceptedAnswer": {
-                     "@type": "Answer",
-                     "text": "A strong syrup around 2:1 sugar to water, or a ready-made autumn syrup, is ideal. Use a rapid feeder and offer larger feeds rather than frequent small amounts to reduce robbing risk."
-                   }
-                 },
-                 {
-                   "@type": "Question",
-                   "name": "Do I have to treat for varroa if I did it in August?",
-                   "acceptedAnswer": {
-                     "@type": "Answer",
-                     "text": "If you have already applied an effective, approved treatment and mite levels are low, you may not need another full treatment in September. However, you should continue with post-treatment checks, monitor drops and look out for signs of varroa-related stress or poor colony health after treatment."
-                   }
-                 },
-                 {
-                   "@type": "Question",
-                   "name": "When should I remove queen excluders?",
-                   "acceptedAnswer": {
-                     "@type": "Answer",
-                     "text": "Remove queen excluders before winter so the cluster can move freely through the hive. Leaving an excluder on can result in the queen being left behind when bees move up onto stores in cold weather."
-                   }
-                 },
-                 {
-                   "@type": "Question",
-                   "name": "Do I still need to worry about wasps in September?",
-                   "acceptedAnswer": {
-                     "@type": "Answer",
-                     "text": "Yes, wasp colonies can remain a nuisance in early autumn. Keep entrances reduced, traps maintained and the apiary tidy until at least the end of the month."
-                   }
-                 },
-                 {
-                   "@type": "Question",
-                   "name": "Is it okay to move hives in September?",
-                   "acceptedAnswer": {
-                     "@type": "Answer",
-                     "text": "Small moves within the apiary are usually fine if done carefully, but major moves are best planned for when flight is minimal and temperatures are moderate. Always seal entrances securely and follow the three feet or three miles rule where possible."
-                   }
-                 }
-               ]
-             }
-           ]
-         }
-      </script>
+   <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://beezknees.co.uk/#organization",
+      "name": "BeezKnees",
+      "url": "https://beezknees.co.uk/",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://beezknees.co.uk/#logo",
+        "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
+      }
+    },
+    {
+      "@type": "ImageObject",
+      "@id": "https://beezknees.co.uk/september#primaryimage",
+      "url": "https://beezknees.co.uk/images/extracted-honey.jpg"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://beezknees.co.uk/september#webpage",
+      "url": "https://beezknees.co.uk/september",
+      "name": "September Beekeeping Tasks in the UK – Feeding, Varroa Control & Winter Prep | BeezKnees",
+      "description": "What to do with your bees in September in the UK: feeding, varroa control and winter preparation.",
+      "inLanguage": "en-GB",
+      "isPartOf": {
+        "@id": "https://beezknees.co.uk/year-in-the-apiary#webpage"
+      },
+      "about": {
+        "@id": "https://beezknees.co.uk/september#article"
+      },
+      "primaryImageOfPage": {
+        "@id": "https://beezknees.co.uk/september#primaryimage"
+      },
+      "breadcrumb": {
+        "@id": "https://beezknees.co.uk/september#breadcrumb"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      }
+    },
+    {
+      "@type": "Article",
+      "@id": "https://beezknees.co.uk/september#article",
+      "mainEntityOfPage": {
+        "@id": "https://beezknees.co.uk/september#webpage"
+      },
+      "isPartOf": {
+        "@id": "https://beezknees.co.uk/year-in-the-apiary#webpage"
+      },
+      "headline": "September Beekeeping Tasks in the UK – Feeding, Varroa Control & Winter Prep",
+      "description": "Discover essential beekeeping tasks for September in the UK, including feeding, varroa control and preparing hives for winter.",
+      "image": {
+        "@id": "https://beezknees.co.uk/september#primaryimage"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Colin Chorley"
+      },
+      "publisher": {
+        "@id": "https://beezknees.co.uk/#organization"
+      },
+      "datePublished": "2024-09-01",
+      "dateModified": "2025-12-11",
+      "inLanguage": "en-GB",
+      "articleSection": [
+        "September beekeeping tasks UK",
+        "Autumn feeding and winter stores",
+        "Varroa treatment and post-treatment checks",
+        "Combining weak colonies",
+        "Preparing hives for winter"
+      ],
+      "keywords": [
+        "September beekeeping tasks UK",
+        "feeding bees September UK",
+        "varroa treatment September",
+        "prepare hives for winter UK"
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://beezknees.co.uk/september#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://beezknees.co.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Year in the Apiary",
+          "item": "https://beezknees.co.uk/year-in-the-apiary"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "September",
+          "item": "https://beezknees.co.uk/september"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://beezknees.co.uk/september#faq",
+      "isPartOf": {
+        "@id": "https://beezknees.co.uk/september#webpage"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What are the main beekeeping tasks in September in the UK?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Key tasks include feeding colonies, completing varroa treatments, combining weak hives and preparing for winter."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much food should bees have by the end of September?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A full-sized colony should aim for around 20–25 kg of stores before winter."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I still need to treat for varroa in September?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "If not completed in August, early September is the last good window to treat before winter bees are raised."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
    </head>
    <body>
       <!-- Fixed Header and Nav Container -->
