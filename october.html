@@ -31,7 +31,8 @@
       <script type="application/ld+json">
          {
            "@context": "https://schema.org",
-           "@graph": [{
+           "@graph": [
+             {
                "@type": "Organization",
                "@id": "https://beezknees.co.uk/#organization",
                "name": "BeezKnees",
@@ -47,21 +48,30 @@
                "url": "https://beezknees.co.uk/october",
                "name": "October Beekeeping Tasks in the UK – Fondant Feeding, Insulation & Winter Hive Protection | BeezKnees",
                "description": "What to do with your bees in October in the UK: fondant feeding, hive insulation and condensation control, mouse and woodpecker protection, storm-proofing, equipment cleaning and final winter checks.",
+               "inLanguage": "en-GB",
                "isPartOf": {
                  "@id": "https://beezknees.co.uk/#organization"
                },
-               "publisher": {
-                 "@id": "https://beezknees.co.uk/#organization"
+               "about": {
+                 "@id": "https://beezknees.co.uk/october#article"
                },
                "primaryImageOfPage": {
                  "@type": "ImageObject",
                  "url": "https://beezknees.co.uk/images/frames-beekeeper.jpg"
                },
-               "inLanguage": "en-GB"
+               "breadcrumb": {
+                 "@id": "https://beezknees.co.uk/october#breadcrumb"
+               },
+               "publisher": {
+                 "@id": "https://beezknees.co.uk/#organization"
+               }
              },
              {
                "@type": "Article",
                "@id": "https://beezknees.co.uk/october#article",
+               "mainEntityOfPage": {
+                 "@id": "https://beezknees.co.uk/october#webpage"
+               },
                "headline": "October Beekeeping Tasks in the UK – Fondant Feeding, Insulation & Winter Hive Protection",
                "description": "A practical UK guide to October beekeeping tasks: when and how to feed fondant, insulate hives, control condensation, protect against mice and woodpeckers, weatherproof stands and clean equipment ready for winter.",
                "image": {
@@ -75,117 +85,112 @@
                "publisher": {
                  "@id": "https://beezknees.co.uk/#organization"
                },
-               "mainEntityOfPage": {
-                 "@id": "https://beezknees.co.uk/october#webpage"
-               },
-               "datePublished": "2024-06-01T00:00:00+00:00",
-               "dateModified": "2025-12-11T00:00:00+00:00",
-               "inLanguage": "en-GB"
+               "datePublished": "2024-10-01",
+               "dateModified": "2025-12-11",
+               "inLanguage": "en-GB",
+               "articleSection": [
+                 "October beekeeping tasks UK",
+                 "Fondant feeding and winter stores",
+                 "Hive insulation and condensation control",
+                 "Mouse guards and woodpecker protection",
+                 "Storm-proofing and winter hive preparation",
+                 "Equipment cleaning and late-autumn planning"
+               ],
+               "keywords": [
+                 "October beekeeping tasks UK",
+                 "what to do with bees in October",
+                 "fondant feeding",
+                 "hive insulation UK",
+                 "condensation control",
+                 "mouse guards",
+                 "woodpecker protection",
+                 "winter hive preparation",
+                 "beekeeping equipment cleaning",
+                 "plant spring bulbs for bees"
+               ]
              },
-            {
-         "@type": "BreadcrumbList",
-         "@id": "https://beezknees.co.uk/october#breadcrumbs",
-         "itemListElement": [{
-           "@type": "ListItem",
-           "position": 1,
-           "name": "Home",
-           "item": "https://beezknees.co.uk/"
-         },
-         {
-           "@type": "ListItem",
-           "position": 2,
-           "name": "Year in the Apiary",
-           "item": "https://beezknees.co.uk/year-in-the-apiary"
-         },
-         {
-           "@type": "ListItem",
-           "position": 3,
-           "name": "October",
-           "item": "https://beezknees.co.uk/october"
-         }
-         ]
-         },
+             {
+               "@type": "BreadcrumbList",
+               "@id": "https://beezknees.co.uk/october#breadcrumb",
+               "itemListElement": [
+                 {
+                   "@type": "ListItem",
+                   "position": 1,
+                   "name": "Home",
+                   "item": "https://beezknees.co.uk/"
+                 },
+                 {
+                   "@type": "ListItem",
+                   "position": 2,
+                   "name": "Year in the Apiary",
+                   "item": "https://beezknees.co.uk/year-in-the-apiary"
+                 },
+                 {
+                   "@type": "ListItem",
+                   "position": 3,
+                   "name": "October",
+                   "item": "https://beezknees.co.uk/october"
+                 }
+               ]
+             },
              {
                "@type": "FAQPage",
                "@id": "https://beezknees.co.uk/october#faq",
-               "mainEntity": [{
+               "mainEntity": [
+                 {
                    "@type": "Question",
                    "name": "What are the main beekeeping tasks in October in the UK?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "In October, UK beekeepers focus on checking winter stores, deciding if fondant is needed, insulating hives and managing condensation, protecting against mice and woodpeckers, storm-proofing stands and roofs, cleaning equipment and making final checks before winter."
+                     "text": "Your main tasks are checking winter stores, preparing fondant for light colonies, insulating hives and controlling condensation, protecting against mice and woodpeckers, strapping hives down, cleaning equipment and making final checks before the quiet winter period."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "When should I start feeding fondant to my bees?",
+                   "name": "Should I still be feeding syrup in October?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Fondant is usually used as a cold-weather or emergency feed. In the UK, many beekeepers keep fondant ready from October onwards and put it on hives that feel light, or where liquid feeding is no longer appropriate due to low temperatures."
+                     "text": "In early October you may still feed strong syrup if conditions are mild and bees can ripen it. As nights become colder, it is generally safer to stop syrup and rely on fondant as an emergency or top-up feed when needed."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "Do I still feed syrup in October?",
+                   "name": "How do I put fondant on a hive?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "If temperatures are still mild in early October and bees can evaporate the water, you may continue feeding strong syrup for a short period. As nights get colder, it becomes safer to stop syrup and rely on fondant as needed."
+                     "text": "Place the fondant block above the cluster, ideally directly above the brood nest. Cut a slit or remove a small section of plastic, position it over the feed hole or on top of the frames and cover with an empty super or eke before replacing the roof."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "How should I insulate my beehives for winter?",
+                   "name": "Do I need to open my hives often in October?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Poly hives already provide good insulation. Wooden hives benefit from insulation above the crownboard, such as a quilt box or foam, and protection from wind and rain. Good insulation combined with ventilation helps reduce condensation issues."
+                     "text": "No. By October, full inspections are usually unnecessary unless you have a specific concern. Focus on external checks, hive weight and quick internal visits only when needed to add fondant or resolve an issue."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "How do I control condensation in winter hives?",
+                   "name": "How can I tell if condensation is a problem?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Aim for warm bees and a cool but dry hive. Provide insulation above the cluster, maintain a small but clear entrance for airflow, and ensure roofs are watertight. Avoid blocking all ventilation, as trapped moisture is more harmful than cold air."
+                     "text": "Signs include damp, mouldy frames or water droplets on the underside of the roof. Good roof insulation, a small entrance and a slight forward tilt help prevent this. Address the cause rather than just wiping moisture away."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "Why are mouse guards important for beehives?",
+                   "name": "How important is it to clean equipment at the end of the season?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Mice look for warm, dry nesting sites in autumn and can easily enter unprotected hive entrances, damaging comb and disturbing bees. Mouse guards allow bees to come and go while preventing mice from getting inside."
+                     "text": "Very important. Cleaning spare boxes, frames, feeders and tools in autumn helps reduce disease risk and ensures you are ready to respond quickly in spring when colonies expand and need more space."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "How can I protect my hives from woodpeckers?",
+                   "name": "Is October a good time to plan for next year?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "In areas with woodpeckers, hives can be wrapped in wire mesh or netting that keeps birds from pecking the boxes. Providing alternative feeding points away from the apiary and avoiding isolated hives can also help reduce risk."
-                   }
-                 },
-                 {
-                   "@type": "Question",
-                   "name": "Do I need to keep opening hives in October?",
-                   "acceptedAnswer": {
-                     "@type": "Answer",
-                     "text": "Frequent full inspections are usually no longer needed in October. Instead, check hive weight by hefting, observe entrance activity, and only open hives briefly when necessary to add fondant or check a specific concern."
-                   }
-                 },
-                 {
-                   "@type": "Question",
-                   "name": "What beekeeping equipment should I clean at the end of the season?",
-                   "acceptedAnswer": {
-                     "@type": "Answer",
-                     "text": "October is a good time to clean spare boxes, floors, roofs, crownboards, feeders and tools. Follow good hygiene practices, using appropriate cleaning methods to reduce disease risk and have equipment ready for the spring season."
-                   }
-                 },
-                 {
-                   "@type": "Question",
-                   "name": "Is October a good time to plant for bees?",
-                   "acceptedAnswer": {
-                     "@type": "Answer",
-                     "text": "Yes, October is ideal for planting spring bulbs and planning bee-friendly borders for the following year. Early-flowering plants provide valuable nectar and pollen when colonies begin building up again."
+                     "text": "Yes. With fewer hive manipulations to do, you can review your records, decide which colonies you might breed from, plan equipment purchases and think about planting more forage as outlined in Bee Gardening."
                    }
                  }
                ]
@@ -317,6 +322,18 @@
       <!-- Main Content -->
       <main class="content">
          <h1>A Year in the Apiary - October Beekeeping Tasks (UK)</h1>
+         <section aria-label="October page navigation">
+            <div class="card">
+               <div class="card-content">
+                  <p><strong>Follow the beekeeping year:</strong></p>
+                  <p>
+                     <a href="/september" title="What to do in September">← What to do in September</a><br>
+                     <a href="/november" title="What to expect in November">→ What to expect in November</a><br>
+                     <a href="/year-in-the-apiary" title="Year-round beekeeping calendar">View the full year-round beekeeping calendar</a>
+                  </p>
+               </div>
+            </div>
+         </section>
          <section aria-label="October beekeeping at a glance">
             <h2>October at a Glance – Winter Readiness Focus</h2>
             <div class="grid">
@@ -396,7 +413,7 @@
                   <li>Looking through the crownboard or gently tipping back the brood box (avoiding lengthy inspections).</li>
                   <li>
                      Reviewing your notes from earlier inspections – see <a href="/hive-management" title="Hive management records and techniques">Hive Management</a> for record-keeping tips. 
-                     <p>This is also a good moment to sense-check your season against the <a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Varroa Treatment Calendar (UK)</a>. By October, treatment should be complete and colonies should be entering winter with reduced mite pressure.</p>
+                     This is also a good moment to sense-check your season against the <a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Varroa Treatment Calendar (UK)</a>. By October, treatment should be complete and colonies should be entering winter with reduced mite pressure.
                   </li>
                </ul>
             </div>
@@ -594,27 +611,32 @@
             </div>
          </section>
          <section aria-labelledby="october-beginner-mistakes">
-            <h2 id="october-beginner-mistakes">Common beginner mistakes in October</h2>
-            <div class="callout">
-               <ul class="indented-list">
-                  <li>Relying solely on visual inspection and not <strong>hefting</strong> hives to judge stores.</li>
-                  <li>Continuing syrup feeding too late, leaving unripe stores that can ferment.</li>
-                  <li>Delaying or forgetting to fit <strong>mouse guards</strong> until damage is already done.</li>
-                  <li>Failing to address <strong>leaky roofs</strong> or unstable stands before winter storms.</li>
-                  <li>Wrapping hives too tightly and blocking all ventilation, causing condensation problems.</li>
-                  <li>Ignoring equipment cleaning and hygiene, increasing the risk of <a href="/bee-diseases" title="Bee diseases and symptoms">disease</a> carry-over into spring.</li>
-                  <li>Assuming varroa is “done” without checking results against the <a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">treatment calendar</a> or monitoring mite levels.</li>
-               </ul>
-            </div>
-            <p>If you are unsure about any aspect of winter preparation, talk to your local association or mentor, or revisit
-               pages such as <a href="/hive-management" title="Hive management advice for UK beekeepers">Hive Management</a>,
-               <a href="/hygiene" title="Hive hygiene and equipment care">Hive Hygiene</a> and <a href="/bee-gardening" title="Planting for bees">Bee Gardening</a>.
-            </p>
-         </section>
+         <h2 id="october-beginner-mistakes">Common beginner mistakes in October</h2>
+         <div class="callout">
+            <ul class="indented-list">
+               <li>Relying solely on visual inspection and not <strong>hefting</strong> hives to judge stores.</li>
+               <li>Continuing syrup feeding too late, leaving unripe stores that can ferment.</li>
+               <li>Delaying or forgetting to fit <strong>mouse guards</strong> until damage is already done.</li>
+               <li>Failing to address <strong>leaky roofs</strong> or unstable stands before winter storms.</li>
+               <li>Wrapping hives too tightly and blocking all ventilation, causing condensation problems.</li>
+               <li>Ignoring equipment cleaning and hygiene, increasing the risk of <a href="/bee-diseases" title="Bee diseases and symptoms">disease</a> carry-over into spring.</li>
+               <li>Assuming varroa is “done” without checking results against the <a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">treatment calendar</a> or monitoring mite levels.</li>
+            </ul>
+         </div>
+         <p>If you are unsure about any aspect of winter preparation, talk to your local association or mentor, or revisit
+            pages such as <a href="/hive-management" title="Hive management advice for UK beekeepers">Hive Management</a>,
+            <a href="/hygiene" title="Hive hygiene and equipment care">Hive Hygiene</a> and <a href="/bee-gardening" title="Planting for bees">Bee Gardening</a>.
+         </p>
          <section aria-label="Related October beekeeping guides">
-            <h2>What to Do Next – October Beekeeping Guides</h2>
-            <p>October is about leaving colonies secure, dry and undisturbed, while turning your attention to winter care and helping pollinators beyond the hive. These are the most useful next pages to read.</p>
+            <h2>What to Do Next – Continue the Beekeeping Year</h2>
+            <p>October is about leaving colonies secure, dry and undisturbed while turning your attention to winter care, hygiene and planning ahead. Use these pages to connect autumn preparation with the quieter months to come.</p>
             <div class="grid">
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/september" title="September beekeeping tasks">September Beekeeping Tasks</a></h3>
+                     <p>Look back at feeding, varroa follow-up and colony preparation work that should now be largely complete.</p>
+                  </div>
+               </div>
                <div class="card">
                   <div class="card-content">
                      <h3><a href="/november" title="November beekeeping tasks">November Beekeeping Tasks</a></h3>
@@ -623,8 +645,38 @@
                </div>
                <div class="card">
                   <div class="card-content">
+                     <h3><a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Varroa Treatment Calendar (UK)</a></h3>
+                     <p>Useful for checking that treatment was completed in good time and understanding what comes next through winter.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/varroa-management" title="Control varroa mite infestations">Varroa Management</a></h3>
+                     <p>Your main hub for understanding long-term mite control, seasonal timing and treatment planning.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/hive-management" title="Manage your hive effectively">Hive Management</a></h3>
+                     <p>A practical guide for winter readiness, store checks, colony condition and general hive care.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
                      <h3><a href="/hygiene" title="Keep your hive clean and healthy">Hive Hygiene</a></h3>
                      <p>Useful for equipment cleaning, disease prevention and safe winter storage of spare kit and comb.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/bee-diseases" title="Bee diseases and symptoms">Bee Diseases</a></h3>
+                     <p>Helpful if damp, poor colony condition or suspicious brood makes you question whether something more serious is going on.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/bee-pests" title="Common pests affecting bees">Bee Pests</a></h3>
+                     <p>Useful if mice, wasps or other pests are becoming a bigger concern as the weather turns colder.</p>
                   </div>
                </div>
                <div class="card">
@@ -637,6 +689,12 @@
                   <div class="card-content">
                      <h3><a href="/help-the-bees" title="How you can help save the bees">Help the Bees</a></h3>
                      <p>Broaden the focus beyond hive management with practical ways to support pollinators through habitat and seasonal action.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/year-in-the-apiary" title="See the full UK beekeeping calendar">Year in the Apiary</a></h3>
+                     <p>Follow the full month-by-month beekeeping calendar so autumn and winter jobs connect naturally.</p>
                   </div>
                </div>
             </div>
@@ -676,8 +734,8 @@
                from, plan equipment purchases and think about planting more forage as outlined in <a href="/bee-gardening" title="Plan a bee-friendly garden">Bee Gardening</a>.
             </p>
          </section>
-         <p>If you are moving into winter monitoring, checking disease risk or tidying equipment, the next pages to read are <a href="/november" title="November beekeeping tasks">November Beekeeping Tasks</a>, <a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Varroa Treatment Calendar (UK)</a>, <a href="/varroa-management" title="Control varroa mite infestations">Varroa Management</a>, <a href="/bee-diseases" title="Bee diseases and symptoms">Bee Diseases</a>, <a href="/bee-pests" title="Common pests affecting bees">Bee Pests</a> and <a href="/hygiene" title="Keep your hive clean and healthy">Hive Hygiene</a>.</p>
-         <p>Use this October guide together with the rest of the <em><a href="/year-in-the-apiary" title="See the full UK beekeeping calendar">Year in the Apiary</a></em> series to carry dry, secure and well-prepared colonies into the quietest part of the beekeeping year.</p>
+         <p>If you are moving into winter monitoring, checking disease risk or tidying equipment, the next pages to read are <a href="/september" title="September beekeeping tasks">September Beekeeping Tasks</a>, <a href="/november" title="November beekeeping tasks">November Beekeeping Tasks</a>, <a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Varroa Treatment Calendar (UK)</a>, <a href="/varroa-management" title="Control varroa mite infestations">Varroa Management</a>, <a href="/bee-diseases" title="Bee diseases and symptoms">Bee Diseases</a>, <a href="/bee-pests" title="Common pests affecting bees">Bee Pests</a>, <a href="/hive-management" title="Manage your hive effectively">Hive Management</a> and <a href="/hygiene" title="Keep your hive clean and healthy">Hive Hygiene</a>.</p>
+         <p>Use this October guide together with the rest of the <em><a href="/year-in-the-apiary" title="See the full UK beekeeping calendar">Year in the Apiary</a></em> series to carry dry, secure and well-prepared colonies into the quietest part of the beekeeping year. From here, continue into <a href="/november" title="November beekeeping tasks">November</a>, revisit <a href="/september" title="September beekeeping tasks">September</a> if you are reviewing feeding or autumn treatment timing, and use key support pages such as <a href="/varroa-management" title="Control varroa mite infestations">varroa management</a>, <a href="/hygiene" title="Keep your hive clean and healthy">hive hygiene</a>, <a href="/hive-management" title="Manage your hive effectively">hive management</a>, <a href="/bee-gardening" title="Make your garden bee friendly">bee gardening</a> and <a href="/bee-pests" title="Common pests affecting bees">bee pests</a> to connect October winter preparation with the season ahead.</p>
       </main>
       <!-- Footer -->
       <footer class="site-footer" role="region" aria-label="Site Footer">

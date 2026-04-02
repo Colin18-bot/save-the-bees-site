@@ -31,7 +31,8 @@
       <script type="application/ld+json">
          {
            "@context": "https://schema.org",
-           "@graph": [{
+           "@graph": [
+             {
                "@type": "Organization",
                "@id": "https://beezknees.co.uk/#organization",
                "name": "BeezKnees",
@@ -41,7 +42,7 @@
                  "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
                }
              },
-                     {
+             {
                "@type": "WebPage",
                "@id": "https://beezknees.co.uk/november#webpage",
                "url": "https://beezknees.co.uk/november",
@@ -50,6 +51,12 @@
                "isPartOf": {
                  "@id": "https://beezknees.co.uk/#organization"
                },
+               "about": {
+                 "@id": "https://beezknees.co.uk/november#article"
+               },
+               "breadcrumb": {
+                 "@id": "https://beezknees.co.uk/november#breadcrumb"
+               },
                "publisher": {
                  "@id": "https://beezknees.co.uk/#organization"
                },
@@ -57,8 +64,6 @@
                  "@type": "ImageObject",
                  "url": "https://beezknees.co.uk/images/November.jpg"
                },
-               "datePublished": "2024-06-01T00:00:00+00:00",
-               "dateModified": "2025-12-11T00:00:00+00:00",
                "inLanguage": "en-GB"
              },
              {
@@ -80,14 +85,23 @@
                "mainEntityOfPage": {
                  "@id": "https://beezknees.co.uk/november#webpage"
                },
-               "datePublished": "2024-06-01T00:00:00+00:00",
-               "dateModified": "2025-12-11T00:00:00+00:00",
-               "inLanguage": "en-GB"
+               "datePublished": "2024-11-01",
+               "dateModified": "2025-12-11",
+               "inLanguage": "en-GB",
+               "articleSection": [
+                 "November beekeeping tasks UK",
+                 "Winter stores and fondant feeding",
+                 "Weatherproofing hives for winter",
+                 "Mice, woodpeckers and winter pests",
+                 "Varroa monitoring and winter treatment planning",
+                 "Planning forage, equipment and next season"
+               ]
              },
-                    {
+             {
                "@type": "BreadcrumbList",
-               "@id": "https://beezknees.co.uk/november#breadcrumbs",
-               "itemListElement": [{
+               "@id": "https://beezknees.co.uk/november#breadcrumb",
+               "itemListElement": [
+                 {
                    "@type": "ListItem",
                    "position": 1,
                    "name": "Home",
@@ -110,12 +124,13 @@
              {
                "@type": "FAQPage",
                "@id": "https://beezknees.co.uk/november#faq",
-               "mainEntity": [{
+               "mainEntity": [
+                 {
                    "@type": "Question",
                    "name": "What are the main beekeeping tasks in November in the UK?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "In November, UK beekeepers focus on checking hive weight and winter stores, providing fondant to light colonies if needed, ensuring hives are weatherproof and secure, monitoring for pests such as mice, and using the quieter time to review records and plan for next season."
+                     "text": "Your main tasks are checking hive weight and winter stores, adding fondant if colonies feel light, ensuring hives are weatherproof and secure, monitoring for pests such as mice and woodpeckers, and reviewing your records and plans for next season."
                    }
                  },
                  {
@@ -123,7 +138,7 @@
                    "name": "Should I feed fondant to my bees in November?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Fondant is often used from November onwards as an emergency or top-up feed for light colonies, particularly when it is too cold for bees to process liquid syrup. Heft your hives and add fondant above the cluster on colonies that feel light."
+                     "text": "Fondant is often used from November onwards as an emergency or top-up feed, especially when it is too cold for bees to process liquid syrup. Heft your hives and add fondant above the cluster on colonies that feel light."
                    }
                  },
                  {
@@ -131,31 +146,23 @@
                    "name": "Do I still need to open my hives in November?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Frequent full inspections are not needed in November. Instead, you mainly monitor from outside – checking hive weight by hefting, watching entrance activity on mild days, and only opening hives briefly when absolutely necessary, such as to place fondant."
+                     "text": "No frequent full inspections are needed. Most monitoring is done from outside by hefting, watching entrance activity and checking for damage. Only open a hive briefly if you need to add fondant or address a specific concern."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "How can I protect my hives from bad weather in winter?",
+                   "name": "How can I protect my hives from winter storms?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Make sure hives are on stable, raised stands, roofs are watertight, and boxes are strapped or weighted down against strong winds. A slight forward tilt helps water run out, and insulation above the crownboard helps reduce condensation problems."
+                     "text": "Make sure each hive is on a stable, raised stand, the roof is watertight, and the hive is strapped or weighted down. A slight forward tilt helps water run out of the entrance rather than collecting inside."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "Why are mouse guards important in November?",
+                   "name": "Why are mouse guards important at this time of year?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Mice look for warm winter nests and can enter hives through unprotected entrances, damaging comb and disturbing the cluster. Mouse guards allow bees to fly freely while preventing rodents from getting in. By November, guards should be fitted and checked regularly."
-                   }
-                 },
-                 {
-                   "@type": "Question",
-                   "name": "Do I need to worry about woodpeckers in winter?",
-                   "acceptedAnswer": {
-                     "@type": "Answer",
-                     "text": "In some areas, green woodpeckers may peck at hives in cold weather. Wrapping hives with wire mesh or netting and avoiding isolated out-apieries can help reduce this risk."
+                     "text": "Mice look for warm nesting sites in autumn and winter. Without guards they can enter hives, destroy comb and disturb the cluster. Mouse guards allow bees to fly while keeping rodents out."
                    }
                  },
                  {
@@ -163,15 +170,15 @@
                    "name": "Is November a good time to treat for varroa?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Most main varroa treatments are completed earlier in the autumn. In November, you mainly monitor levels and plan for a suitable oxalic acid treatment in mid-winter when colonies are brood-light, following approved methods and guidance."
+                     "text": "Most main varroa treatments should have been completed earlier. In November you mainly monitor levels, review autumn outcomes and plan a suitable mid-winter oxalic acid treatment when colonies are brood-light, following approved methods and guidance."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "What planning can I do for next beekeeping season in November?",
+                   "name": "What planning can I do now for the next beekeeping season?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "November is ideal for reviewing your hive records, deciding which colonies performed well, planning equipment purchases, booking training or association events, and updating your management plans for the year ahead."
+                     "text": "Review your records, decide which colonies you might breed from, plan equipment purchases, book association events or training, and explore the Beekeeping Guides for ideas to refine your management next year."
                    }
                  }
                ]
@@ -303,6 +310,18 @@
       <!-- Main Content -->
       <main class="content">
          <h1>A Year in the Apiary - November Beekeeping Tasks (UK)</h1>
+         <section aria-label="November page navigation">
+            <div class="card">
+               <div class="card-content">
+                  <p><strong>Follow the beekeeping year:</strong></p>
+                  <p>
+                     <a href="/october" title="What to do in October">← What to do in October</a><br>
+                     <a href="/december" title="What to expect in December">→ What to expect in December</a><br>
+                     <a href="/year-in-the-apiary" title="Year-round beekeeping calendar">View the full year-round beekeeping calendar</a>
+                  </p>
+               </div>
+            </div>
+         </section>
          <section aria-label="November beekeeping at a glance">
             <h2>November at a Glance – Winter Monitoring Focus</h2>
             <div class="grid">
@@ -565,7 +584,7 @@
             </div>
             <p>If you are unsure about winter preparation, your local association, mentor or our guides on <a href="/hive-management" title="Hive management advice for UK beekeepers">Hive Management</a>, <a href="/hygiene" title="Hive hygiene and equipment care">Hive Hygiene</a> and <a href="/bee-gardening" title="Planting for bees">Bee Gardening</a> can all help.</p>
          </section>
-         <section aria-labelledby="november-faqs" id="november-faqs">
+         <section aria-labelledby="november-faqs-heading" id="november-faqs">
             <h2 id="november-faqs-heading">November beekeeping FAQs (UK)</h2>
             <h3>What are the main beekeeping tasks in November in the UK?</h3>
             <p>Your main tasks are checking hive weight and winter stores, adding fondant if colonies feel light, ensuring
@@ -597,9 +616,15 @@
             </p>
          </section>
          <section aria-label="Related November beekeeping guides">
-            <h2>What to Do Next – November Beekeeping Guides</h2>
-            <p>November is about quiet monitoring, checking stores and turning your attention toward winter care and planning ahead. These are the most useful next pages to read.</p>
+            <h2>What to Do Next – Continue the Beekeeping Year</h2>
+            <p>November is about quiet monitoring, checking stores and turning your attention toward winter care and planning ahead. Use these pages to connect early winter management with the months ahead.</p>
             <div class="grid">
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/october" title="October beekeeping tasks">October Beekeeping Tasks</a></h3>
+                     <p>Look back at the weatherproofing, fondant planning and winter preparation work that should now be in place.</p>
+                  </div>
+               </div>
                <div class="card">
                   <div class="card-content">
                      <h3><a href="/december" title="December beekeeping tasks">December Beekeeping Tasks</a></h3>
@@ -610,6 +635,36 @@
                   <div class="card-content">
                      <h3><a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Varroa Treatment Calendar (UK)</a></h3>
                      <p>Useful if you are planning later winter treatment timing and want the wider seasonal context.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/varroa-management" title="In-depth varroa management advice">Varroa Management</a></h3>
+                     <p>Helpful for reviewing autumn outcomes and planning any brood-light winter treatment correctly.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a></h3>
+                     <p>Useful if a colony looks weak, light or distressed and you want to compare possible causes before winter losses occur.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></h3>
+                     <p>Helpful for sorting out damp, stress, starvation and other winter problems that do not fit neatly into disease pages.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/bee-diseases" title="Bee diseases and pests overview">Bee Diseases and Pests</a></h3>
+                     <p>Useful if poor colony condition makes you question whether something more serious is going on over winter.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/hygiene" title="Hive hygiene and equipment care">Hive Hygiene</a></h3>
+                     <p>Important for winter equipment care, disease prevention and keeping spare kit clean and ready for spring.</p>
                   </div>
                </div>
                <div class="card">
@@ -626,20 +681,14 @@
                </div>
                <div class="card">
                   <div class="card-content">
-                     <h3><a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a></h3>
-                     <p>Useful if a colony looks weak, light or distressed and you want to compare possible causes before winter losses occur.</p>
-                  </div>
-               </div>
-               <div class="card">
-                  <div class="card-content">
-                     <h3><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></h3>
-                     <p>Helpful for sorting out damp, stress, starvation, dysentery-like signs and other winter problems that do not fit neatly into disease pages.</p>
+                     <h3><a href="/year-in-the-apiary" title="See the full UK beekeeping calendar">Year in the Apiary</a></h3>
+                     <p>Follow the full month-by-month beekeeping calendar so late autumn and winter jobs connect naturally.</p>
                   </div>
                </div>
             </div>
          </section>
-         <p>If you are planning winter checks, reviewing autumn varroa outcomes or trying to understand weak colonies before losses occur, the next pages to read are <a href="/december" title="December beekeeping tasks">December Beekeeping Tasks</a>, <a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Varroa Treatment Calendar (UK)</a>, <a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a>, <a href="/other-conditions" title="Other bee health conditions">Other Conditions</a>, <a href="/bee-diseases" title="Bee diseases and pests overview">Bee Diseases and Pests</a>, <a href="/bee-gardening" title="Make your garden bee friendly">Bee Gardening</a> and <a href="/help-the-bees" title="How you can help save the bees">Help the Bees</a>.</p>
-         <p>Use this November guide together with the rest of the <em><a href="/year-in-the-apiary" title="See the full UK beekeeping calendar">Year in the Apiary</a></em> series to keep colonies secure through the early winter period while making better plans for the season ahead.</p>
+         <p>If you are planning winter checks, reviewing autumn varroa outcomes or trying to understand weak colonies before losses occur, the next pages to read are <a href="/october" title="October beekeeping tasks">October Beekeeping Tasks</a>, <a href="/december" title="December beekeeping tasks">December Beekeeping Tasks</a>, <a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Varroa Treatment Calendar (UK)</a>, <a href="/varroa-management" title="In-depth varroa management advice">Varroa Management</a>, <a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a>, <a href="/other-conditions" title="Other bee health conditions">Other Conditions</a>, <a href="/bee-diseases" title="Bee diseases and pests overview">Bee Diseases and Pests</a>, <a href="/bee-gardening" title="Make your garden bee friendly">Bee Gardening</a> and <a href="/help-the-bees" title="How you can help save the bees">Help the Bees</a>.</p>
+         <p>Use this November guide together with the rest of the <em><a href="/year-in-the-apiary" title="See the full UK beekeeping calendar">Year in the Apiary</a></em> series to keep colonies secure through the early winter period while making better plans for the season ahead. From here, continue into <a href="/december" title="December beekeeping tasks">December</a>, revisit <a href="/october" title="October beekeeping tasks">October</a> if you are reviewing winter preparation or fondant decisions, and use key support pages such as <a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">bee health checker</a>, <a href="/other-conditions" title="Other bee health conditions">other conditions</a>, <a href="/varroa-management" title="In-depth varroa management advice">varroa management</a>, <a href="/bee-gardening" title="Make your garden bee friendly">bee gardening</a> and <a href="/hygiene" title="Hive hygiene and equipment care">hive hygiene</a> to connect November winter monitoring with the season ahead.</p>
       </main>
       <!-- Footer -->
       <footer class="site-footer" role="region" aria-label="Site Footer">

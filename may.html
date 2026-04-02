@@ -7,6 +7,10 @@
       <title>May Beekeeping Tasks UK – Swarm Control, Honey Flow & Queen Management | BeezKnees</title>
       <!-- Canonical (no www, no .html, no trailing slash) -->
       <link rel="canonical" href="https://beezknees.co.uk/may">
+      <!-- CSS -->
+      <link rel="stylesheet" href="css/style.css">
+      <!-- Hamburger button -->
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer">
       <!-- SEO Meta Tags -->
       <meta name="description" content="May beekeeping tasks in the UK – weekly hive inspections, swarm control, adding supers, managing fast colony growth, queen management and keeping clear records during the main spring nectar flow.">
       <meta name="keywords" content="May beekeeping tasks UK, swarm control, spring honey flow, queen management, weekly hive inspections, adding supers, replacing frames, nectar flow UK, beekeeping calendar May">
@@ -34,7 +38,8 @@
       <script type="application/ld+json">
          {
            "@context": "https://schema.org",
-           "@graph": [{
+           "@graph": [
+             {
                "@type": "Organization",
                "@id": "https://beezknees.co.uk/#organization",
                "name": "BeezKnees",
@@ -50,21 +55,30 @@
                "url": "https://beezknees.co.uk/may",
                "name": "May Beekeeping Tasks UK – Swarm Control, Honey Flow & Queen Management | BeezKnees",
                "description": "May beekeeping tasks in the UK – weekly hive inspections, swarm control, adding supers, managing fast colony growth, queen management and keeping clear records during the main spring nectar flow.",
+               "inLanguage": "en-GB",
                "isPartOf": {
                  "@id": "https://beezknees.co.uk/#organization"
                },
-               "publisher": {
-                 "@id": "https://beezknees.co.uk/#organization"
+               "about": {
+                 "@id": "https://beezknees.co.uk/may#article"
                },
                "primaryImageOfPage": {
                  "@type": "ImageObject",
                  "url": "https://beezknees.co.uk/images/honeybees_2.jpg"
                },
-               "inLanguage": "en-GB"
+               "breadcrumb": {
+                 "@id": "https://beezknees.co.uk/may#breadcrumb"
+               },
+               "publisher": {
+                 "@id": "https://beezknees.co.uk/#organization"
+               }
              },
              {
                "@type": "Article",
                "@id": "https://beezknees.co.uk/may#article",
+               "mainEntityOfPage": {
+                 "@id": "https://beezknees.co.uk/may#webpage"
+               },
                "headline": "May Beekeeping Tasks UK – Swarm Control & Honey Flow",
                "description": "Discover essential May beekeeping tasks in the UK, including weekly hive inspections, swarm control, queen management, adding supers and managing fast colony growth during the main spring nectar flow.",
                "image": {
@@ -78,11 +92,9 @@
                "publisher": {
                  "@id": "https://beezknees.co.uk/#organization"
                },
-               "mainEntityOfPage": {
-                 "@id": "https://beezknees.co.uk/may#webpage"
-               },
-               "datePublished": "2024-06-01T00:00:00+00:00",
-               "dateModified": "2025-12-10T00:00:00+00:00",
+               "datePublished": "2024-05-01",
+               "dateModified": "2025-12-10",
+               "inLanguage": "en-GB",
                "articleSection": [
                  "May beekeeping tasks UK",
                  "Weekly hive inspections",
@@ -91,12 +103,23 @@
                  "Adding supers and nectar flow",
                  "Apiary records and equipment"
                ],
-               "inLanguage": "en-GB"
+               "keywords": [
+                 "May beekeeping tasks UK",
+                 "swarm control",
+                 "spring honey flow",
+                 "queen management",
+                 "weekly hive inspections",
+                 "adding supers",
+                 "replacing frames",
+                 "nectar flow UK",
+                 "beekeeping calendar May"
+               ]
              },
              {
                "@type": "BreadcrumbList",
-               "@id": "https://beezknees.co.uk/may#breadcrumbs",
-               "itemListElement": [{
+               "@id": "https://beezknees.co.uk/may#breadcrumb",
+               "itemListElement": [
+                 {
                    "@type": "ListItem",
                    "position": 1,
                    "name": "Home",
@@ -119,28 +142,21 @@
              {
                "@type": "FAQPage",
                "@id": "https://beezknees.co.uk/may#faq",
-               "mainEntity": [{
+               "mainEntity": [
+                 {
                    "@type": "Question",
-                   "name": "What are the main beekeeping tasks in May in the UK?",
+                   "name": "How often should I inspect my hives in May?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "In May, UK beekeepers carry out weekly inspections, monitor for swarm preparation, add supers as colonies expand, replace old comb gradually, manage queen cells and keep detailed records as colonies reach peak spring growth."
+                     "text": "Many beekeepers aim to inspect every 7 days in May, with more frequent checks if swarm pressure is high and time allows. Regular inspections help you catch queen cells early and keep on top of space and stores."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "How often should I inspect my beehives in May?",
+                   "name": "What is the main focus of May inspections?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Many beekeepers inspect every 7 days in May to stay ahead of swarm preparations and monitor brood, queen performance and space. In very strong colonies or in heavy swarm areas, you may choose to inspect more frequently if conditions allow."
-                   }
-                 },
-                 {
-                   "@type": "Question",
-                   "name": "How do I prevent swarming in May?",
-                   "acceptedAnswer": {
-                     "@type": "Answer",
-                     "text": "Swarm prevention in May involves ensuring adequate brood and honey space, removing or managing queen cells according to a clear swarm control method and avoiding overcrowding. Planning your chosen method in advance makes it easier to act quickly when queen cells appear."
+                     "text": "The main focus is on swarm control, queen performance, brood health and space management. You are looking for eggs and brood, charged queen cells, congestion and any signs of disease or stress."
                    }
                  },
                  {
@@ -148,55 +164,71 @@
                    "name": "When should I add supers in May?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Add supers when bees are covering most brood frames and nectar flows are under way. It is usually better to add a super slightly early than to wait until the brood box is congested and bees are running out of space."
+                     "text": "Add supers when colonies are strong and working most brood frames and nectar is coming in steadily. Adding supers slightly early is usually better than waiting until bees are crowded and swarm pressure is high."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "Can I replace brood frames and comb in May?",
+                   "name": "Can I still replace old brood frames in May?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Yes. May can be a good time to continue planned comb replacement, especially if you have drawn brood frames ready. Changes should be made gradually so as not to disrupt the brood nest too severely, and recorded clearly in your hive notes."
+                     "text": "Yes. As long as colonies remain strong, you can continue planned frame replacement. Make changes gradually and avoid removing too much brood or stores in one go."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "What should I do with queen cells found in May?",
+                   "name": "What should I do if I find queen cells?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "How you handle queen cells depends on whether they indicate supersedure or swarming and which swarm control method you intend to use. The key is to have a plan and sufficient equipment ready before queen cells appear, so that you can act in a controlled way rather than reacting in a rush."
+                     "text": "First, record what you see. Then apply your chosen swarm control method calmly and consistently. Having read up and prepared equipment in advance makes this much easier."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "Is May still a risk period for starvation?",
+                   "name": "How can I reduce the risk of losing swarms?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Although forage is often better in May, strong colonies can still run short if weather turns cold or wet or if a major flow ends suddenly. Continue to check stores, heft hives and be ready to respond if colonies start to feel light."
+                     "text": "Keep to a regular inspection schedule, ensure colonies have adequate space, understand a small number of proven swarm control methods and keep clear records of when queen cells were last seen and what actions you took."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "How can HiveTag help with May inspections?",
+                   "name": "What if a member of the public reports a swarm?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "Digital tools such as the HiveTag web app make it easy to log inspection dates, queen status, queen cells, supers added, treatments and notes about behaviour. Clear records help you track decisions and spot issues early across multiple colonies."
+                     "text": "Direct them to calm, factual information such as the Report a Swarm page, which explains what swarms are, why they occur and how to contact trained swarm collectors."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "What if a member of the public sees a swarm in May?",
+                   "name": "How can HiveTag help with May record keeping?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "If a member of the public finds a swarm, they should keep calm, avoid disturbing it and consult a local swarm collector. The Report a Swarm page on this site provides guidance and links to local support so swarms can be collected safely."
+                     "text": "The HiveTag web app lets you record inspections, queen cells, splits, supers and treatments in a structured way. That makes it easier to review what you did later and compare colonies over the season."
                    }
                  },
                  {
                    "@type": "Question",
-                   "name": "How does May fit into the overall Year in the Apiary plan?",
+                   "name": "Is May still a time to worry about starvation?",
                    "acceptedAnswer": {
                      "@type": "Answer",
-                     "text": "May is the peak period for growth, swarm control and early honey production in many parts of the UK. The work you do now builds on the spring checks in March and April and sets colonies up for the main summer flow described on other Year in the Apiary pages."
+                     "text": "Yes, particularly if a major flow ends suddenly or bad weather keeps bees inside for several days. Keep checking hive weight and be ready to act if stores fall quickly."
+                   }
+                 },
+                 {
+                   "@type": "Question",
+                   "name": "Where can I learn more about May and later months?",
+                   "acceptedAnswer": {
+                     "@type": "Answer",
+                     "text": "Use this guide alongside the other Year in the Apiary pages and the broader beekeeping guides to build a clear month-by-month picture of what your bees need."
+                   }
+                 },
+                 {
+                   "@type": "Question",
+                   "name": "Where should I go after reading the May beekeeping guide?",
+                   "acceptedAnswer": {
+                     "@type": "Answer",
+                     "text": "Most beekeepers will want to continue into June as swarm outcomes, honey flow and queen performance become clearer, or use the full Year in the Apiary calendar to follow the month-by-month beekeeping season through spring and summer."
                    }
                  }
                ]
@@ -204,10 +236,6 @@
            ]
          }
       </script>
-      <!-- CSS -->
-      <link rel="stylesheet" href="css/style.css">
-      <!-- Hamburger button -->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer">
    </head>
    <body>
       <!-- Fixed Header and Nav Container -->
@@ -332,13 +360,23 @@
       <!-- Main Content -->
       <main class="content">
          <h1>A Year in the Apiary - May Beekeeping Tasks (UK)</h1>
+         <section aria-label="May page navigation">
+            <div class="card">
+               <div class="card-content">
+                  <p><strong>Follow the beekeeping year:</strong></p>
+                  <p>
+                     <a href="/april" title="What to do in April">← What to do in April</a><br>
+                     <a href="/june" title="What to expect in June">→ What to expect in June</a><br>
+                     <a href="/year-in-the-apiary" title="Year-round beekeeping calendar">View the full year-round beekeeping calendar</a>
+                  </p>
+               </div>
+            </div>
+         </section>
          <p>May is one of the busiest and most exciting months in the UK beekeeping calendar. Colonies can grow rapidly,
             nectar flows improve and swarm pressure rises. Weekly inspections, space management and clear records all become
             essential if you want healthy bees and a good honey crop.
          </p>
-         <p>This guide builds on the work done in <a href="/march" title="March beekeeping tasks">March</a> and <a href="/april" title="April beekeeping tasks">April</a> and forms part of the BeezKnees <em><a href="/year-in-the-apiary" title="View the full year-round beekeeping calendar">Year in the Apiary – monthly beekeeping calendar</a></em>. It focuses on practical May beekeeping tasks in the UK, with an emphasis on swarm control, adding supers and keeping up with rapidly expanding colonies. If queen cells are appearing, this page also works well alongside our <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">Swarm &amp; Queen</a> section and
-            <a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">step-by-step inspections</a> guide.
-         </p>
+         <p>This guide builds on the work done in <a href="/march" title="March beekeeping tasks">March</a> and <a href="/april" title="April beekeeping tasks">April</a> and forms part of the BeezKnees <em><a href="/year-in-the-apiary" title="View the full year-round beekeeping calendar">Year in the Apiary – monthly beekeeping calendar</a></em>. It focuses on practical May beekeeping tasks in the UK, with an emphasis on <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">swarm control</a>, adding supers, queen management and keeping up with rapidly expanding colonies. If queen cells are appearing, this page also works well alongside our <a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">step-by-step inspections</a> guide, the <a href="/queen-cell-guide" title="Queen cell identification guide for UK beekeepers">queen cell identification guide</a> and <a href="/swarm-prevention" title="Swarm prevention methods for UK beekeepers">swarm prevention</a> as you move toward <a href="/june" title="June beekeeping tasks">June</a>.</p>
          <!-- May at a glance -->
          <section aria-label="May beekeeping at a glance">
             <h2>May at a Glance – Peak Spring Growth</h2>
@@ -385,7 +423,7 @@
             </p>
             <p>With this rapid expansion comes an increased risk of swarming if colonies feel cramped or if older queens are
                determined to reproduce. Your task is to balance giving the bees enough space with regular checks for queen
-               cells, without over-handling the brood on cooler or unsettled days.
+               cells, without over-handling the brood on cooler or unsettled days. This is where regular <a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">inspections</a> and a clear <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">swarm control plan</a> start to work together.
             </p>
             <div class="callout">
                <strong>Tip:</strong> Make a note of when key local flows start and end each year. Over time, this helps you
@@ -412,7 +450,7 @@
                   <li>Keep an eye on temperament and note any sudden changes in behaviour.</li>
                </ul>
             </div>
-            <p>You can find general inspection advice and handling tips in the <em><a href="/hive-management" title="Manage your hive effectively">hive management guide</a></em>. For a more detailed inspection process, including what to look for frame by frame, see the <a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">step-by-step inspections guide</a> and the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a>.</p>
+            <p>You can find general inspection advice and handling tips in the <em><a href="/hive-management" title="Manage your hive effectively">hive management guide</a></em>. For a more detailed inspection process, including what to look for frame by frame, see the <a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">step-by-step inspections guide</a> and the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a>. If queen cells appear, move straight on to <a href="/queen-cells-action" title="What action to take when you find queen cells in a hive">what to do if you find queen cells</a> so you can decide on your next action calmly.</p>
          </section>
          <!-- Swarm control -->
          <section aria-label="Swarm control in May">
@@ -449,7 +487,7 @@
                   flow.
                </li>
             </ul>
-            <p>For tips on handling supers, extracting and equipment choices, visit the <em><a href="/equipment" title="Essential beekeeping equipment">equipment guide</a></em>. Good super management can help ease pressure in strong colonies, but if queen cells are already present you will usually still need a clear <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">swarm control plan</a>.</p>
+            <p>For tips on handling supers, extracting and equipment choices, visit the <em><a href="/equipment" title="Essential beekeeping equipment">equipment guide</a></em>. Good super management can help ease pressure in strong colonies, but if queen cells are already present you will usually still need a clear <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">swarm control plan</a>. This becomes especially important as you move toward <a href="/june" title="June beekeeping tasks">June</a> and colonies begin showing the results of May decisions.</p>
          </section>
          <!-- Frame replacement and comb management -->
          <section aria-label="Frame replacement in May">
@@ -469,7 +507,7 @@
                   <li>Store drawn comb carefully to protect it from wax moth and other pests.</li>
                </ul>
             </div>
-            <p>More on comb hygiene and cleaning equipment can be found in the <em><a href="/hygiene" title="Keep your hive clean and healthy">hygiene guide</a></em>.</p>
+            <p>More on comb hygiene and cleaning equipment can be found in the <em><a href="/hygiene" title="Keep your hive clean and healthy">hygiene guide</a></em>. It also helps to compare brood quality with the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a> when deciding which frames are no longer worth keeping in circulation.</p>
          </section>
          <!-- Queen management and rearing -->
          <section aria-label="Queen management in May">
@@ -490,7 +528,7 @@
                </li>
             </ul>
             <p>Local association groups and more advanced texts can provide step-by-step queen rearing methods if you decide
-               to explore this area further. If you are managing colonies that have recently swarmed or been split, it also helps to understand the likely timeline for mating and laying by reading <a href="/virgin-queen-timeline" title="Virgin queen timeline after swarm, split or supersedure">Virgin Queen Timeline</a>.
+               to explore this area further. If you are managing colonies that have recently swarmed or been split, it also helps to understand the likely timeline for mating and laying by reading <a href="/virgin-queen-timeline" title="Virgin queen timeline after swarm, split or supersedure">Virgin Queen Timeline</a>. This becomes a very useful follow-on as you move into <a href="/june" title="June beekeeping tasks">June</a> and start reviewing outcomes from May swarm control decisions.
             </p>
          </section>
          <!-- Stores and starvation risk -->
@@ -573,74 +611,101 @@
                safety</a></em> provide helpful background information for managing difficult situations safely.
             </p>
          </section>
-         <div class="grid">
-            <div class="card">
-               <div class="card-content">
-                  <h3><a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">Swarm &amp; Queen</a></h3>
-                  <p>Your main hub for queen cells, swarm control decisions, splits and queen-related hive problems.</p>
+         <section aria-label="Related May beekeeping guides">
+            <h2>What to Do Next – Continue the Beekeeping Year</h2>
+            <p>May is where inspections, queen cells, supers and swarm control all start moving quickly together. Use these pages to stay organised and make better decisions as the season accelerates.</p>
+            <div class="grid">
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/april" title="April beekeeping tasks">April Beekeeping Tasks</a></h3>
+                     <p>Look back at the inspections, supering decisions and swarm planning that set up the fast colony growth seen in May.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">Swarm &amp; Queen</a></h3>
+                     <p>Your main hub for queen cells, swarm control decisions, splits and queen-related hive problems.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/queen-cell-guide" title="Queen cell identification guide for UK beekeepers">Queen Cell Identification Guide</a></h3>
+                     <p>Learn how to identify swarm, supersedure and emergency queen cells during inspections.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/queen-cells-swarm-control" title="How to manage queen cells for swarm control">Queen Cells &amp; Swarm Control</a></h3>
+                     <p>Understand how to manage queen cells properly depending on colony behaviour.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/queen-cells-action" title="What action to take when you find queen cells in a hive">What to Do If You Find Queen Cells</a></h3>
+                     <p>A practical next step if you open a hive in May and discover queen cells during an inspection.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/charged-queen-cells" title="What charged queen cells mean and what action UK beekeepers should take">Charged Queen Cells</a></h3>
+                     <p>Learn what charged cells mean, why they matter and when you need to act quickly.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/capped-queen-cells" title="What capped queen cells mean and when swarming may occur">Capped Queen Cells</a></h3>
+                     <p>Understand timing and when swarming may be imminent once cells are sealed.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/swarm-prevention" title="Swarm prevention methods for UK beekeepers">Swarm Prevention</a></h3>
+                     <p>Plan ahead and reduce swarm risk before queen cells even appear.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/split-methods" title="Comparison of hive split and swarm control methods">Split Methods</a></h3>
+                     <p>Compare different swarm control and hive splitting approaches.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/artificial-swarm" title="Artificial swarm method for beginners to prevent swarming in UK honey bee colonies">Artificial Swarm</a></h3>
+                     <p>A step-by-step method for preventing swarming in strong colonies.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/after-split" title="What to check after a hive split">After a Split</a></h3>
+                     <p>What to check after swarm control or splitting and what to expect next.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/june" title="June beekeeping tasks">June Beekeeping Tasks</a></h3>
+                     <p>Follow-on management, honey flow and queen outcomes in June.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">Step-by-Step Inspections</a></h3>
+                     <p>Useful when weekly inspections become critical and you need a consistent routine for checking brood, stores and queen cells.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/feeding-bees" title="Feeding bees through the seasons">Feeding Bees</a></h3>
+                     <p>Helpful when poor weather interrupts the flow and you need to judge whether strong colonies are still at risk of going short.</p>
+                  </div>
+               </div>
+               <div class="card">
+                  <div class="card-content">
+                     <h3><a href="/year-in-the-apiary" title="Year-round beekeeping calendar">Year in the Apiary</a></h3>
+                     <p>Follow the full month-by-month beekeeping calendar so each seasonal task connects naturally to the next.</p>
+                  </div>
                </div>
             </div>
-            <div class="card">
-               <div class="card-content">
-                  <h3><a href="/queen-cell-guide" title="Queen cell identification guide for UK beekeepers">Queen Cell Identification Guide</a></h3>
-                  <p>Learn how to identify swarm, supersedure and emergency queen cells during inspections.</p>
-               </div>
-            </div>
-            <div class="card">
-               <div class="card-content">
-                  <h3><a href="/queen-cells-swarm-control" title="How to manage queen cells for swarm control">Queen Cells &amp; Swarm Control</a></h3>
-                  <p>Understand how to manage queen cells properly depending on colony behaviour.</p>
-               </div>
-            </div>
-            <div class="card">
-               <div class="card-content">
-                  <h3><a href="/queen-cells-action" title="What action to take when you find queen cells in a hive">What to Do If You Find Queen Cells</a></h3>
-                  <p>A practical next step if you open a hive in May and discover queen cells during an inspection.</p>
-               </div>
-            </div>
-            <div class="card">
-               <div class="card-content">
-                  <h3><a href="/charged-queen-cells" title="What charged queen cells mean and what action UK beekeepers should take">Charged Queen Cells</a></h3>
-                  <p>Learn what charged cells mean, why they matter and when you need to act quickly.</p>
-               </div>
-            </div>
-            <div class="card">
-               <div class="card-content">
-                  <h3><a href="/capped-queen-cells" title="What capped queen cells mean and when swarming may occur">Capped Queen Cells</a></h3>
-                  <p>Understand timing and when swarming may be imminent once cells are sealed.</p>
-               </div>
-            </div>
-            <div class="card">
-               <div class="card-content">
-                  <h3><a href="/swarm-prevention" title="Swarm prevention methods for UK beekeepers">Swarm Prevention</a></h3>
-                  <p>Plan ahead and reduce swarm risk before queen cells even appear.</p>
-               </div>
-            </div>
-            <div class="card">
-               <div class="card-content">
-                  <h3><a href="/split-methods" title="Comparison of hive split and swarm control methods">Split Methods</a></h3>
-                  <p>Compare different swarm control and hive splitting approaches.</p>
-               </div>
-            </div>
-            <div class="card">
-               <div class="card-content">
-                  <h3><a href="/artificial-swarm" title="Artificial swarm method for beginners to prevent swarming in UK honey bee colonies">Artificial Swarm</a></h3>
-                  <p>A step-by-step method for preventing swarming in strong colonies.</p>
-               </div>
-            </div>
-            <div class="card">
-               <div class="card-content">
-                  <h3><a href="/after-split" title="What to check after a hive split">After a Split</a></h3>
-                  <p>What to check after swarm control or splitting and what to expect next.</p>
-               </div>
-            </div>
-            <div class="card">
-               <div class="card-content">
-                  <h3><a href="/june" title="June beekeeping tasks">June Beekeeping Tasks</a></h3>
-                  <p>Follow-on management, honey flow and queen outcomes in June.</p>
-               </div>
-            </div>
-         </div>
          </section>
          <!-- Visible FAQ section -->
          <section aria-label="May beekeeping FAQ" id="may-faq">
@@ -727,11 +792,15 @@
                   month-by-month picture of what your bees need.
                </p>
             </details>
+            <details>
+               <summary>
+                  Where should I go after reading the May beekeeping guide?
+               </summary>
+               <p>Most beekeepers will want to continue into <a href="/june" title="June beekeeping tasks">June</a> as swarm outcomes, honey flow and queen performance become clearer, or use the full <a href="/year-in-the-apiary" title="Year-round beekeeping calendar">Year in the Apiary calendar</a> to follow the month-by-month beekeeping season through spring and summer.</p>
+            </details>
          </section>
-         <p>If you are finding queen cells, making splits or carrying out swarm control, the next pages to read are <a href="/queen-cell-guide">Queen Cell Identification Guide</a>, <a href="/queen-cells-swarm-control">Queen Cells &amp; Swarm Control</a>, <a href="/swarm-prevention">Swarm Prevention</a>, <a href="/split-methods">Split Methods</a>, <a href="/artificial-swarm">Artificial Swarm</a>, <a href="/after-split">After a Split</a> and <a href="/june">June Beekeeping Tasks</a>.</p>
-         <p>Use this May guide together with the rest of the <em><a href="/year-in-the-apiary" title="Year-round beekeeping calendar">Year in the Apiary calendar</a></em> to keep your beekeeping organised and
-            responsive through the busiest part of the season.
-         </p>
+         <p>If you are finding queen cells, making splits or carrying out swarm control, the next pages to read are <a href="/april" title="April beekeeping tasks">April Beekeeping Tasks</a>, <a href="/queen-cell-guide" title="Queen cell identification guide for UK beekeepers">Queen Cell Identification Guide</a>, <a href="/queen-cells-swarm-control" title="How to manage queen cells for swarm control">Queen Cells &amp; Swarm Control</a>, <a href="/swarm-prevention" title="Swarm prevention methods for UK beekeepers">Swarm Prevention</a>, <a href="/split-methods" title="Comparison of hive split and swarm control methods">Split Methods</a>, <a href="/artificial-swarm" title="Artificial swarm method for beginners to prevent swarming in UK honey bee colonies">Artificial Swarm</a>, <a href="/after-split" title="What to check after a hive split">After a Split</a> and <a href="/june" title="June beekeeping tasks">June Beekeeping Tasks</a>.</p>
+         <p>Use this May guide together with the rest of the <em><a href="/year-in-the-apiary" title="Year-round beekeeping calendar">Year in the Apiary calendar</a></em> to keep your beekeeping organised and responsive through the busiest part of the season. From here, continue into <a href="/june" title="June beekeeping tasks">June</a>, revisit <a href="/april" title="April beekeeping tasks">April</a> if you are reviewing how swarm pressure built, and use key support pages such as <a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">step-by-step inspections</a>, <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">swarm and queen management</a>, <a href="/queen-cell-guide" title="Queen cell identification guide for UK beekeepers">queen cell identification</a>, <a href="/feeding-bees" title="Feeding bees through the seasons">feeding bees</a> and <a href="/after-split" title="What to check after a hive split">after a split</a> to connect May swarm control with the season ahead.</p>
       </main>
       <!-- Footer -->
       <footer class="site-footer" role="region" aria-label="Site Footer">
