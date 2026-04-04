@@ -35,15 +35,51 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // ✅ Cookie Consent Logic
+    // ✅ Cookie Consent Logic
   const popup = document.getElementById('cookie-consent');
   const acceptAllBtn = document.getElementById('accept-all');
   const acceptSelectedBtn = document.getElementById('accept-selected');
   const analyticsCheckbox = document.getElementById('analytics');
   const marketingCheckbox = document.getElementById('marketing');
 
-  if (popup && !localStorage.getItem('cookieConsent')) {
+  const GA_MEASUREMENT_ID = 'G-T1974NZN05';
+
+    function loadGoogleAnalytics() {
+    if (window.gaLoaded) return;
+    window.gaLoaded = true;
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () {
+      window.dataLayer.push(arguments);
+    };
+
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
+    document.head.appendChild(script);
+
+    window.gtag('js', new Date());
+    window.gtag('config', GA_MEASUREMENT_ID);
+  }
+
+  function applyConsent(consent) {
+    if (consent && consent.analytics === true) {
+      loadGoogleAnalytics();
+    }
+  }
+
+  const savedConsent = localStorage.getItem('cookieConsent');
+
+  if (popup && !savedConsent) {
     popup.style.display = 'block';
+  }
+
+  if (savedConsent) {
+    try {
+      applyConsent(JSON.parse(savedConsent));
+    } catch (error) {
+      console.error('Invalid cookie consent data:', error);
+    }
   }
 
   function savePreferences(analytics, marketing) {
@@ -52,7 +88,10 @@ document.addEventListener('DOMContentLoaded', function () {
       analytics: analytics,
       marketing: marketing
     };
+
     localStorage.setItem('cookieConsent', JSON.stringify(consent));
+    applyConsent(consent);
+
     if (popup) popup.style.display = 'none';
   }
 
