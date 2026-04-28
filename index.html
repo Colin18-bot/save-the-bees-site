@@ -1,29 +1,35 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en">
   <head>
     <meta name="generator" content="HTML Tidy for HTML5 for Windows version 5.9.14">
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>BeezKnees | UK Beekeeping Guides & HiveTag Records</title>
-    <meta name="description" content="Practical UK beekeeping guides for beginners, covering seasonal tasks, hive health, bee diseases, equipment, swarm control and HiveTag records.">
+    <title>BeezKnees – UK Beekeeping Guides, Seasonal Tips & Hive Records</title>
+    <!-- Hamburger button -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" rel="stylesheet">
+    <!-- Your CSS file -->
+    <link href="css/style.css" rel="stylesheet">
+    <!-- Small inline styles for HiveTag promo / layout / lightbox -->
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Practical UK beekeeping guides for beginners and hobbyists: seasonal tasks, hive health, bee diseases, equipment checklists, plus HiveTag for recording apiaries, inspections and notes.">
     <meta name="keywords" content="beekeeping UK, UK beekeeping guide, beekeeping for beginners UK, seasonal beekeeping tasks, hive care, bee diseases UK, pollinator protection, apiary tips, swarm control, beekeeping equipment">
     <meta name="author" content="Colin Chorley">
+    <!-- Canonical URL -->
     <link rel="canonical" href="https://beezknees.co.uk/">
+    <!-- Open Graph (Homepage) -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="BeezKnees">
     <meta property="og:locale" content="en_GB">
-    <meta property="og:title" content="BeezKnees | UK Beekeeping Guides & HiveTag Records">
-    <meta property="og:description" content="Practical UK beekeeping guides for beginners, covering seasonal tasks, hive health, bee diseases, equipment, swarm control and HiveTag records.">
+    <meta property="og:title" content="BeezKnees – UK Beekeeping Guides, Seasonal Tips &amp; Hive Records">
+    <meta property="og:description" content="Practical UK beekeeping guides for beginners and hobbyists: seasonal tasks, hive health, bee diseases, equipment checklists, plus HiveTag for recording apiaries, inspections and notes.">
     <meta property="og:url" content="https://beezknees.co.uk/">
-    <meta property="og:image" content="https://beezknees.co.uk/images/honeybee-on-orange-flower.webp">
-    <meta property="og:image:alt" content="Honeybee foraging on an orange flower in spring">
-    <meta property="og:image:width" content="1600">
-    <meta property="og:image:height" content="874">
+    <meta property="og:image" content="https://beezknees.co.uk/images/honeybee-on-orange-flower.jpg">
+    <!-- Twitter Card (Homepage) -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="BeezKnees | UK Beekeeping Guides & HiveTag Records">
-    <meta name="twitter:description" content="Practical UK beekeeping guides for beginners, covering seasonal tasks, hive health, bee diseases, equipment, swarm control and HiveTag records.">
-    <meta name="twitter:image" content="https://beezknees.co.uk/images/honeybee-on-orange-flower.webp">
-    <meta name="twitter:image:alt" content="Honeybee foraging on an orange flower in spring">
+    <meta name="twitter:title" content="BeezKnees – UK Beekeeping Guides, Seasonal Tips &amp; Hive Records">
+    <meta name="twitter:description" content="Practical UK beekeeping guides for beginners and hobbyists: seasonal tasks, hive health, bee diseases, equipment checklists, plus HiveTag for recording apiaries, inspections and notes.">
+    <meta name="twitter:image" content="https://beezknees.co.uk/images/honeybee-on-orange-flower.jpg">
+    <!-- Favicons -->
     <link href="/images/favicon.ico" rel="icon" type="image/x-icon">
     <link href="/images/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png">
     <link href="/images/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png">
@@ -31,13 +37,22 @@
     <link href="/images/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png">
     <link href="/images/android-chrome-512x512.png" rel="icon" sizes="512x512" type="image/png">
     <link href="/site.webmanifest" rel="manifest">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T1974NZN05"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-T1974NZN05");
+    </script>
+    <!-- Schema.org Structured Data - Organization -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@graph": [
-          {
+        "@graph": [{
             "@type": "Organization",
             "@id": "https://beezknees.co.uk/#organization",
             "name": "BeezKnees",
@@ -45,9 +60,7 @@
             "url": "https://beezknees.co.uk/",
             "logo": {
               "@type": "ImageObject",
-              "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png",
-              "width": 1024,
-                     "height": 1024
+              "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
             },
             "sameAs": [
               "https://www.facebook.com/beezkneesbeekeeping"
@@ -79,10 +92,8 @@
             "@type": "WebPage",
             "@id": "https://beezknees.co.uk/#webpage",
             "url": "https://beezknees.co.uk/",
-         "name": "BeezKnees | UK Beekeeping Guides & HiveTag Records",
-      "description": "Practical UK beekeeping guides for beginners, covering seasonal tasks, hive health, bee diseases, equipment, swarm control and HiveTag records.",
-            "datePublished": "2026-05-01",
-            "dateModified": "2026-05-01",
+            "name": "BeezKnees – UK Beekeeping Guides, Seasonal Tips & Hive Records",
+            "description": "Practical UK beekeeping guides for beginners and hobbyists: seasonal tasks, hive health, bee diseases, equipment checklists, plus HiveTag for recording apiaries, inspections and notes.",
             "isPartOf": {
               "@id": "https://beezknees.co.uk/#website"
             },
@@ -91,29 +102,24 @@
             },
             "primaryImageOfPage": {
               "@type": "ImageObject",
-              "url": "https://beezknees.co.uk/images/honeybee-on-orange-flower.webp",
-               "width": 1600,
-                "height": 874
+              "url": "https://beezknees.co.uk/images/honeybee-on-orange-flower.jpg"
             },
             "inLanguage": "en-GB"
           },
           {
             "@type": "BreadcrumbList",
             "@id": "https://beezknees.co.uk/#breadcrumbs",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://beezknees.co.uk/"
-              }
-            ]
+            "itemListElement": [{
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://beezknees.co.uk/"
+            }]
           },
           {
             "@type": "FAQPage",
             "@id": "https://beezknees.co.uk/#faq",
-            "mainEntity": [
-              {
+            "mainEntity": [{
                 "@type": "Question",
                 "name": "Is BeezKnees UK-focused?",
                 "acceptedAnswer": {
@@ -142,7 +148,7 @@
                 "name": "What equipment do I need to begin?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "At minimum you'll need a hive, suit or veil, gloves, smoker, hive tool and a way to feed if needed. Our equipment guide breaks this down into essential versus optional."
+                  "text": "At minimum you'll need a hive, suit or veil, gloves, smoker, hive tool and a way to feed if needed. Our equipment guide breaks this down into essential vs optional."
                 }
               },
               {
@@ -166,7 +172,7 @@
                 "name": "What is HiveTag?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "HiveTag is the BeezKnees beekeeping app for recording apiaries, hives, inspections, tasks and notes. There is a free tier, with Premium for unlimited use and NFC hive tags."
+                  "text": "HiveTag is the BeezKnees members area for recording apiaries, hives and inspections. There's a free tier, with optional Premium for unlimited use and NFC hive tags."
                 }
               },
               {
@@ -174,7 +180,7 @@
                 "name": "How can I help bees if I don't keep hives?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Plant bee-friendly flowers, avoid pesticides where possible, provide water, and support local conservation. Our Help the Bees page has practical UK ideas."
+                  "text": "Plant bee-friendly flowers, avoid pesticides where possible, provide water, and support local conservation. Our 'Help the Bees' page has practical UK ideas."
                 }
               }
             ]
@@ -184,427 +190,408 @@
     </script>
   </head>
   <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    <header class="site-header">
-      <div class="topbar">
-        <a href="/" class="brand" aria-label="BeezKnees home">
-        <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
-        <span>BeezKnees</span>
-        </a>
-        <div class="header-actions">
-          <button class="search-toggle" id="openSearch" aria-label="Open site search">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          </button>
-          <button class="mobile-menu-toggle" id="openMobileMain" aria-label="Open mobile navigation">
-          <i class="fa-solid fa-bars"></i>
-          </button>
+    <!-- Fixed Header and Nav Container -->
+    <div class="fixed-header">
+      <header aria-label="Site Header" class="site-header" role="region">
+        <div aria-label="Site Branding" class="header-container" role="region">
+          <a href="https://beezknees.co.uk/"><img alt="BeezKnees beekeeping guides logo" class="site-logo" src="images/BeezKnees-Logo.png"></a>
+          <div class="site-title">BeezKnees</div>
+          <!-- ✅ WORKING HAMBURGER ICON BUTTON -->
+          <button aria-label="Toggle menu" class="menu-toggle" id="menuToggle"></button>
         </div>
-      </div>
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
-        <ul class="nav-menu" aria-label="Main Navigation Links">
-          <li><span aria-current="page">Home</span></li>
-          <li><a href="/about-us">About Us</a></li>
-          <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
-          <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
-          <li><a href="/bee-diseases">Bee Health</a></li>
-          <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
-          <li><a href="/hivetag-app">HiveTag</a></li>
-          <li>
-            <a class="members-link" href="https://beezknees-members.netlify.app/login">
-            Members Area
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </header>
-    <section class="hero" aria-label="Homepage Banner">
-      <div class="hero-banner-image">
-        <img src="images/honeybee-on-orange-flower.webp" alt="Honeybee foraging on an orange flower in spring" width="1600" height="874" loading="eager" fetchpriority="high" decoding="async">
-      </div>
-      <div class="hero-inner">
-        <div class="hero-card">
-          <span class="hero-kicker">Practical UK beekeeping guidance and digital hive records</span>
-          <h2 class="hero-title">Learn beekeeping, follow the season and manage your hives with HiveTag</h2>
+      </header>
+    </div>
+    <!-- Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+        <li><a href="/" title="Visit the homepage">Home</a></li>
+        <li class="dropdown"><a href="/about-us" title="Learn more about us">About</a></li>
+        <!-- Beekeeping (foundations) -->
+        <li class="dropdown">
+          <a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a></li>
+            <li><a href="/equipment" title="Essential beekeeping equipment">Equipment</a></li>
+            <li><a href="/hive-management" title="Manage your hive effectively">Hive Management</a></li>
+            <li><a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">Step-by-Step Inspections</a></li>
+            <li><a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">Brood Pattern Guide</a></li>
+            <li><a href="/beekeepers-rule-calculator" title="Plan queen development, honey flows and swarm timing with the Beekeeper's Rule Calculator">Beekeeper's Rule Calculator</a></li>
+            <li><a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a></li>
+            <li><a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a></li>
+            <li><a href="/honey-extraction" title="How to harvest and bottle honey safely">Extracting Honey</a></li>
+            <li><a href="/honey-regulations-uk" title="UK Honey Regulations, Labelling Requirements and Food Safety Guidance for Beekeepers">UK Honey Regulations</a></li>
+            <li><a href="/beekeeping-responsibilities-uk" title="Beekeeping responsibilities, safety and good practice in the UK">Beekeeping Responsibilities (UK)</a></li>
+            <li><a href="/apiary-risk-assessment" title="Apiary risk assessment guidance and templates for UK beekeepers">Apiary Risk Assessment</a></li>
+            <li><a href="/landowner-beekeeper-agreement" title="Landowner and beekeeper agreement guidance and template">Landowner Agreement</a></li>
+            <li><a href="/beekeeping-insurance-uk" title="Beekeeping insurance and public liability overview for the UK">Insurance (UK)</a></li>
+          </ul>
+        </li>
+        <!-- Varroa cluster -->
+        <li class="dropdown">
+          <a href="/varroa-management" title="Control varroa mite infestations">Varroa</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">Varroa Overview (5-min)</a></li>
+            <li><a href="/varroa-chemical-treatments" title="Chemical varroa treatments and safe seasonal use in the UK">Chemical Treatments</a></li>
+            <li><a href="/varroa-non-chemical-methods" title="Non-chemical varroa control and IPM methods">Non-chemical Methods (IPM)</a></li>
+            <li><a href="/ppe-varroa-treatments" title="PPE and safety guidance for varroa treatments">PPE for Treatments</a></li>
+            <li><a href="/varroa-monitoring-methods" title="How to monitor varroa levels using common methods">Monitoring Methods</a></li>
+            <li><a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Treatment Calendar (UK)</a></li>
+          </ul>
+        </li>
+        <!-- Apiary calendar -->
+        <li class="dropdown">
+          <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/january" title="January beekeeping tasks">January</a></li>
+            <li><a href="/february" title="February beekeeping tasks">February</a></li>
+            <li><a href="/march" title="March beekeeping tasks">March</a></li>
+            <li><a href="/april" title="April beekeeping tasks">April</a></li>
+            <li><a href="/may" title="May beekeeping tasks">May</a></li>
+            <li><a href="/june" title="June beekeeping tasks">June</a></li>
+            <li><a href="/july" title="July beekeeping tasks">July</a></li>
+            <li><a href="/august" title="August beekeeping tasks">August</a></li>
+            <li><a href="/september" title="September beekeeping tasks">September</a></li>
+            <li><a href="/october" title="October beekeeping tasks">October</a></li>
+            <li><a href="/november" title="November beekeeping tasks">November</a></li>
+            <li><a href="/december" title="December beekeeping tasks">December</a></li>
+          </ul>
+        </li>
+        <!-- Diseases -->
+        <li class="dropdown">
+          <a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/veterinary-medicine-records" title="How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a></li>
+            <li><a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a></li>
+            <li><a href="/colony-health-triage" title="Interactive bee colony health triage tool for UK beekeepers">Colony Health Triage Tool</a></li>
+            <li><a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a></li>
+            <li><a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a></li>
+            <li><a href="/bee-pests" title="Common pests affecting bees">Pests</a></li>
+            <li><a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a></li>
+            <li><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></li>
+          </ul>
+        </li>
+        <!-- Main Link to Navigate to Swarm and Queen management -->
+        <li>
+          <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">Swarm &amp; Queen</a>
+        </li>
+        <!-- Honeybee facts -->
+        <li class="dropdown">
+          <a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a></li>
+            <li><a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a></li>
+            <li><a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a></li>
+            <li><a href="/pollination" title="Honeybee role in pollination">Pollination</a></li>
+          </ul>
+        </li>
+        <!-- Help bees -->
+        <li class="dropdown">
+          <a href="/help-the-bees" title="How you can help save the bees">Help Bees</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a></li>
+            <li><a href="/donate" title="Make a donation to support bees">Donate</a></li>
+            <li><a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a></li>
+          </ul>
+        </li>
+        <!-- Members area -->
+        <li>
+          <a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members Area</a>
+        </li>
+      </ul>
+    </nav>
+    <!-- Hero Banner with Image and Alt Fallback -->
+    <section aria-label="Homepage Banner" role="region">
+      <div class="banner">
+        <img alt="Honeybee foraging on an orange flower in spring" src="images/honeybee-on-orange-flower-hero.webp">
+        <div class="carousel-caption">
+          <h1>BeezKnees – Practical UK Beekeeping</h1>
           <p>
-            Clear UK-focused guidance for beginners and hobbyists, covering inspections, bee health, swarm control, seasonal tasks and practical hive management.
+            Clear, hands-on guides for UK beekeepers —
+            plus <strong>HiveTag</strong>, a simple app for recording apiaries,
+            hives and inspections.
           </p>
           <p>
-            BeezKnees also includes <strong>HiveTag</strong>, a simple beekeeping app for recording apiaries, hives, inspections, tasks and notes in one place.
+            Built for real beekeeping, real seasons,
+            and real decisions at the hive.
           </p>
-          <div class="hero-actions">
-            <a href="/beekeeping-guides" class="btn btn-primary">
-            <i class="fa-solid fa-book-open"></i>
-            Explore Beekeeping Guides
-            </a>
-            <a href="/hivetag-app" class="btn btn-ghost">
-            <i class="fa-solid fa-mobile-screen-button"></i>
-            View HiveTag
-            </a>
-            <a href="/year-in-the-apiary" class="btn btn-secondary">
-            <i class="fa-solid fa-calendar-days"></i>
-            View Apiary Calendar
-            </a>
-          </div>
-          <form class="hero-search" action="/search" method="get" role="search" aria-label="Site search">
-            <input
-              type="search"
-              name="q"
-              placeholder="Search the site... e.g. brood pattern, varroa treatment calendar, swarm control"
-              aria-label="Search the whole site">
-            <button type="submit">Search</button>
-          </form>
+          <!-- Reworked: instead of "Launch app", explain via a lightbox -->
+          <button class="hero-cta" id="openHiveTagInfo" title="Find out what the HiveTag app does" type="button">What is
+          HiveTag?</button>
         </div>
       </div>
     </section>
-    <main id="main-content" class="page-wrap">
-      <section class="section">
-        <div class="card">
-          <h1>Learn, manage and stay organised</h1>
-          <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
-          <p>
-            BeezKnees combines practical UK beekeeping guidance with HiveTag, a simple app for recording apiaries, hives, inspections, tasks and notes.
-          </p>
-          <div class="hub-grid">
-            <a class="hub-link" href="/beekeeping-guides">
-            <strong>Learn Beekeeping</strong>
-            <span>Beginner-friendly guides covering equipment, inspections, hive management and practical first steps.</span>
-            </a>
-            <a class="hub-link" href="/year-in-the-apiary">
-            <strong>Follow the Apiary Year</strong>
-            <span>Month-by-month UK guidance to help you know what to do and when throughout the season.</span>
-            </a>
-            <a class="hub-link" href="/bee-diseases">
-            <strong>Solve Hive Problems</strong>
-            <span>Bee health, disease signs, colony checks, swarm decisions and practical support pages.</span>
-            </a>
-            <a class="hub-link" href="/hivetag-app">
-            <strong>Use HiveTag</strong>
-            <span>A simple beekeeping app for recording apiaries, hives, inspections, tasks and colony notes.</span>
-            </a>
+    <!-- Main Content -->
+    <main aria-label="Main Beekeeping Content" class="content">
+      <!-- Welcome Section: Image Left, Text Right -->
+      <section aria-label="Welcome Section" class="container" role="region">
+        <div class="row">
+          <div class="img-box"><img alt="Lavender field in full bloom – a bee-friendly flower for UK gardens" src="images/Lavendar-field.webp"></div>
+          <div class="text-box">
+            <h2>UK Beekeeping Guides & Seasonal Tips</h2>
+            <p>We offer practical guides to honeybee conservation and beginner-friendly beekeeping. Our mission is to
+              raise awareness about the vital role bees play in pollination and food production, while offering tips and
+              tools to help you care for your hives, support pollinators, and learn the basics of beekeeping — one hive at
+              a time.
+            </p>
           </div>
         </div>
       </section>
-      <section class="section">
-        <div class="card hivetag-spotlight">
-          <span class="hero-kicker">BeezKnees App</span>
-          <h2>HiveTag: simple digital hive records for UK beekeepers</h2>
-          <p>
-            HiveTag helps you keep inspections, apiaries, hives, notes and tasks in one place, so you can stay organised in the apiary and at home.
-          </p>
-          <div class="quick-answer">
-            <div class="mini-card">
-              <h3>Log inspections on your phone</h3>
-              <p>Record what you see in the apiary while it is fresh in your mind.</p>
-            </div>
-            <div class="mini-card">
-              <h3>Keep hives and tasks together</h3>
-              <p>Track colonies, follow-up actions and seasonal notes in one simple system.</p>
-            </div>
-            <div class="mini-card">
-              <h3>Start free, upgrade later</h3>
-              <p>Use the free tier, then upgrade for unlimited use and NFC hive tag support.</p>
-            </div>
-          </div>
-          <p class="hivetag-links">
-            <a class="btn btn-primary" href="/hivetag-app">
-            <i class="fa-solid fa-mobile-screen-button"></i>
-            Learn More about HiveTag
-            </a>
-            <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/">
-            <i class="fa-solid fa-right-to-bracket"></i>
-            Open Members Area
-            </a>
-          </p>
-        </div>
-      </section>
-      <section class="section">
-        <div class="card">
-          <h2>Start here</h2>
-          <div class="resource-grid">
-            <article class="resource-card">
-              <img alt="Beekeeper inspecting a hive frame during a routine check" src="images/bees-in-hive.webp" width="800" height="1067" loading="lazy" decoding="async">
-              <div class="resource-card-content">
-                <h3>Getting Started with Beekeeping</h3>
-                <p>
-                  A practical starting point for beginners covering equipment, planning, hive setup and early decisions.
-                </p>
-                <a class="text-link" href="/getting-started">Read the guide</a>
-              </div>
-            </article>
-            <article class="resource-card">
-              <img alt="Open hive inspection showing brood comb and active bees" src="images/hive_1.webp" width="800" height="533" loading="lazy" decoding="async">
-              <div class="resource-card-content">
-                <h3>Step-by-Step Hive Inspections</h3>
-                <p>
-                  Learn what to look for during inspections, how to stay calm and how to spot issues early.
-                </p>
-                <a class="text-link" href="/step-by-step-inspections">View inspection guide</a>
-              </div>
-            </article>
-            <article class="resource-card">
-              <img alt="Beehives in an apiary through the changing seasons" src="images/apiary.webp" width="800" height="533" loading="lazy" decoding="async">
-              <div class="resource-card-content">
-                <h3>Year in the Apiary</h3>
-                <p>
-                  Follow the UK beekeeping year month by month, from spring build-up to winter preparation.
-                </p>
-                <a class="text-link" href="/year-in-the-apiary">View the calendar</a>
-              </div>
-            </article>
+      <!-- Purpose Section: Text Left, Image Right (reverse layout) -->
+      <section aria-label="Purpose Section" class="container" role="region">
+        <div class="row reverse">
+          <div class="img-box"><img alt="Interior of a healthy honeybee hive with brood comb and bees" src="images/hive_1.webp"></div>
+          <div class="text-box">
+            <h2>Our Purpose</h2>
+            <p>BeezKnees exists to help you care for your hives and protect pollinators. We combine practical knowledge
+              with conservation to make beekeeping easier, smarter, and more impactful. Whether you're a beginner or an
+              experienced keeper, we provide expert tips, seasonal tasks, and disease awareness to support your journey —
+              and the bees. Our goal is to build confidence, inform beekeepers and inspire action to safeguard our
+              pollinators for future generations.
+            </p>
           </div>
         </div>
       </section>
-      <section class="section split-section">
-        <div class="card">
-          <h2>Why BeezKnees?</h2>
-          <p>
-            BeezKnees is designed to make beekeeping clearer and more practical for UK hobbyists and beginners. The site combines straightforward guidance with HiveTag, so you can both learn what to do and keep proper records of what you did.
-          </p>
-          <ul class="feature-list">
-            <li>UK-focused advice written around real beekeeping seasons and common hive problems</li>
-            <li>Clear routes into inspections, swarm control, varroa management and bee health</li>
-            <li>HiveTag support for apiaries, hives, inspections, notes and tasks</li>
-          </ul>
-        </div>
-        <div class="split-image">
-          <img alt="Lavender field in bloom showing forage for pollinators and honeybees" width="800" height="533" loading="lazy" decoding="async" src="images/Lavender-field.webp">
-        </div>
+      <!-- HiveTag Members Area promo section -->
+      <section aria-label="HiveTag Members Area" class="container" role="region">
+        <h2>HiveTag Members Area</h2>
+        <p>HiveTag is the BeezKnees members area app for recording apiaries, hives and inspections in one place. It's
+          built for UK hobbyists and beginners who want simple records now — with optional Premium NFC hive tag support
+          later.
+        </p>
+        <ul>
+          <li>Record hives and inspections from your phone (in the apiary).</li>
+          <li>Track seasonal notes, problems and actions so nothing gets missed.</li>
+          <li>Free tier for getting started, with Premium for unlimited use and NFC tags.</li>
+        </ul>
+        <br>
+        <p><a class="text-link" href="hivetag-app">Learn about HiveTag</a> · <a class="text-link" href="https://beezknees-members.netlify.app/">Open the members area</a></p>
       </section>
-      <section class="section">
-        <div class="card">
-          <h2>Frequently Asked Questions about UK Beekeeping</h2>
-          <div class="faq-list">
-            <div class="faq-item open">
-              <button class="faq-question" type="button">
-              <span>Is BeezKnees UK-focused?</span>
-              <span>+</span>
-              </button>
-              <div class="faq-answer">
-                <p>Yes — the guides are written for UK seasons, forage patterns and common beginner questions, with links to trusted UK resources where appropriate.</p>
-              </div>
+      <!-- Essential Beekeeping Guides Section -->
+      <section aria-label="Essential Beekeeping Guides" class="container" role="region">
+        <h2>Essential Beekeeping Guides for UK Beekeepers</h2>
+        <p>Start with these popular guides to build your beekeeping knowledge:</p>
+        <ul>
+          <li>
+            <a href="/getting-started" title="Beginner's guide to starting beekeeping in the UK">Getting Started with Beekeeping</a> – Begin your beekeeping journey with essential setup tips.
+          </li>
+          <li>
+            <a href="/varroa-overview" title="Quick varroa mite overview for UK beekeepers">Varroa Control in 5 Minutes</a> – Understand varroa mite management quickly.
+          </li>
+          <li>
+            <a href="/year-in-the-apiary" title="Monthly beekeeping tasks and seasonal calendar for UK">Year in the Apiary – Monthly Calendar</a> – Learn what to do each month to keep your hives healthy.
+          </li>
+          <li>
+            <a href="/step-by-step-inspections" title="How to inspect a honeybee hive safely">Step-by-Step Hive Inspections</a> – Master the art of inspecting your bees safely.
+          </li>
+        </ul>
+      </section>
+      <!-- Card Grid Section -->
+      <section aria-label="Explore More Resources" class="container" role="region">
+        <h2>Explore Popular Resources</h2>
+        <div class="grid">
+          <div class="card">
+            <img alt="Honeybees working together inside a healthy hive on wax comb" src="images/bees-in-hive.webp">
+            <div class="card-content">
+              <h3>About Us</h3>
+              <p>BeezKnees is a friendly guide to beekeeping and pollinator protection. Created by hobbyist beekeeper
+                Colin Chorley, our goal is to make beekeeping simple, accessible, and rewarding. Whether you're starting
+                your first hive or curious about bees, we're here to help.
+              </p>
+              <a class="read-more" href="about-us" title="Read the BeezKnees story">Read our story</a>
             </div>
-            <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>When is the best time to start beekeeping in the UK?</span>
-              <span>+</span>
-              </button>
-              <div class="faq-answer">
-                <p>Most beginners start planning in winter and spring. The best time to get bees is usually spring to early summer, once temperatures and forage improve.</p>
-              </div>
+          </div>
+          <div class="card">
+            <img alt="Colorful spring flowers – bee-friendly plants for your garden" src="images/flowers.webp">
+            <div class="card-content">
+              <h3>How You Can Help Bees</h3>
+              <p>You don't need to be a beekeeper to support honeybees. Simple actions like planting seasonal flowers,
+                avoiding pesticides, and offering water or nesting sites can make a big difference. You can also support
+                local beekeepers and raise awareness to help protect pollinators.
+              </p>
+              <a class="read-more" href="help-the-bees" title="Ways to help bees in the UK">Help the bees</a>
             </div>
-            <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>Do I need a garden to keep bees?</span>
-              <span>+</span>
-              </button>
-              <div class="faq-answer">
-                <p>No. Many beekeepers keep hives in apiaries, farmland margins or shared sites. You do need permission, suitable forage nearby and a safe, sensible placement.</p>
-              </div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>What equipment do I need to begin?</span>
-              <span>+</span>
-              </button>
-              <div class="faq-answer">
-                <p>At minimum you'll need a hive, suit or veil, gloves, smoker, hive tool and a way to feed if needed. Our equipment guide breaks this down into essential versus optional.</p>
-              </div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>How often should I inspect my hive?</span>
-              <span>+</span>
-              </button>
-              <div class="faq-answer">
-                <p>In spring and summer, inspections are often weekly, weather permitting. In colder months, inspections reduce — the monthly calendar explains what's normal.</p>
-              </div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>What should I do if I see a swarm?</span>
-              <span>+</span>
-              </button>
-              <div class="faq-answer">
-                <p>Don't panic. Keep people and pets away, and contact a local swarm collector. Our swarm page explains what to do and what not to do.</p>
-              </div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>What is HiveTag?</span>
-              <span>+</span>
-              </button>
-              <div class="faq-answer">
-                <p>HiveTag is the BeezKnees beekeeping app for recording apiaries, hives, inspections, tasks and notes. There is a free tier, with Premium for unlimited use and NFC hive tags.</p>
-              </div>
-            </div>
-            <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>How can I help bees if I don't keep hives?</span>
-              <span>+</span>
-              </button>
-              <div class="faq-answer">
-                <p>Plant bee-friendly flowers, avoid pesticides where possible, provide water, and support local conservation. Our Help the Bees page has practical UK ideas.</p>
-              </div>
+          </div>
+          <div class="card">
+            <img alt="Beehives in an apiary with garden forage nearby" src="images/Apiary.webp">
+            <div class="card-content">
+              <h3>An Apiary Year</h3>
+              <p>Beekeeping changes with the seasons. From winter checks and early spring feeding to swarm control in
+                summer and preparing hives for autumn, each month brings key tasks. Our calendar guides you through
+                seasonal jobs to keep your bees healthy all year.
+              </p>
+              <a class="read-more" href="year-in-the-apiary" title="Monthly beekeeping calendar (UK)">View the calendar</a>
             </div>
           </div>
         </div>
+      </section>
+      <section aria-label="Frequently Asked Questions" class="container" id="faqs" role="region">
+        <h2>Frequently Asked Questions about UK Beekeeping</h2>
+        <h3>Is BeezKnees UK-focused?</h3>
+        <p>Yes — the guides are written for UK seasons, forage patterns and common beginner questions, with links to
+          trusted UK resources where appropriate.
+        </p>
+        <h3>When is the best time to start beekeeping in the UK?</h3>
+        <p>Most beginners start planning in winter and spring. The best time to get bees is usually spring to early
+          summer, once temperatures and forage improve.
+        </p>
+        <h3>Do I need a garden to keep bees?</h3>
+        <p>No. Many beekeepers keep hives in apiaries, farmland margins or shared sites. You do need permission, suitable
+          forage nearby and a safe, sensible placement.
+        </p>
+        <h3>What equipment do I need to begin?</h3>
+        <p>At minimum you'll need a hive, suit/veil, gloves, smoker, hive tool and a way to feed if needed. Our equipment
+          guide breaks this down into essential vs optional.
+        </p>
+        <h3>How often should I inspect my hive?</h3>
+        <p>In spring and summer, inspections are often weekly (weather permitting). In colder months, inspections reduce
+          — the monthly calendar explains what's normal.
+        </p>
+        <h3>What should I do if I see a swarm?</h3>
+        <p>Don't panic. Keep people and pets away, and contact a local swarm collector. Our swarm page explains what to
+          do and what not to do.
+        </p>
+        <h3>What is HiveTag?</h3>
+        <p>HiveTag is the BeezKnees members area for recording apiaries, hives and inspections. There's a free tier, with
+          optional Premium for unlimited use and NFC hive tags.
+        </p>
+        <h3>How can I help bees if I don't keep hives?</h3>
+        <p>Plant bee-friendly flowers, avoid pesticides where possible, provide water, and support local conservation.
+          Our 'Help the Bees' page has practical UK ideas.
+        </p>
       </section>
     </main>
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <div>
-          <h3>Contact &amp; Social</h3>
-          <ul class="footer-links">
-            <li>Email: <a href="/contact" title="Send us a message">Contact</a></li>
+    <!-- Footer -->
+    <footer class="site-footer" role="region" aria-label="Site Footer">
+      <div class="footer-columns">
+        <div class="footer-column" role="region" aria-label="Contact Information">
+          <h3>Contact</h3>
+          <address>
+            <p>Email: <a href="/contact" title="Send us a message via our contact page">Contact</a></p>
+          </address>
+          <p>
+            <i class="fab fa-facebook-square" aria-hidden="true"></i>
+            Facebook:
+            <a href="https://www.facebook.com/beezkneesbeekeeping" target="_blank" rel="noopener noreferrer" aria-label="BeezKnees on Facebook">
+            BeezKnees
+            </a>
+          </p>
+        </div>
+        <div class="footer-column" role="region" aria-label="Useful Site Links">
+          <h3>Useful Links</h3>
+          <ul>
             <li>
-              Facebook:
-              <a href="https://www.facebook.com/beezkneesbeekeeping" target="_blank" rel="noopener noreferrer" aria-label="BeezKnees on Facebook">
-              BeezKnees
-              </a>
+              <a href="/downloads" title="Free beekeeping downloads and printable guides">Free Downloads</a>
+            </li>
+            <li>
+              <a href="/privacy" title="Read our privacy policy">Privacy Policy</a>
+            </li>
+            <li>
+              <a href="/site-map" title="View a map of our entire website">Site Map</a>
             </li>
           </ul>
         </div>
-        <div>
-          <h3>Quick Links</h3>
-          <ul class="footer-links">
-            <li><span aria-current="page">Home</span></li>
-            <li><a href="/about-us">About Us</a></li>
-            <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
-            <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
-            <li><a href="/bee-diseases">Bee Health</a></li>
-            <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
-            <li><a href="/hivetag-app">HiveTag</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3>Useful Pages</h3>
-          <ul class="footer-links">
-            <li><a href="/downloads">Free Downloads</a></li>
-            <li><a href="/privacy">Privacy Policy</a></li>
-            <li><a href="#" data-open-cookie-settings>Cookie Settings</a></li>
-            <li><a href="/site-map">Site Map</a></li>
-            <li><a href="/donate">Donate</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3>Beekeeping Resources</h3>
-          <ul class="footer-links">
-            <li><a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer">British Beekeepers Association</a></li>
-            <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer">Cardiff, Vale and Valleys Beekeepers Association</a></li>
-            <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank" rel="noopener noreferrer">The Honey (Wales) Regulations 2015</a></li>
-            <li><a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer">Wales Biodiversity Partnership</a></li>
-            <li><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer">BeeBase</a></li>
+        <div class="footer-column" role="region" aria-label="Beekeeping Resources">
+          <h3>Resources</h3>
+          <ul>
+            <li>
+              <a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer" title="Visit the British Beekeepers Association website">British Beekeepers Association</a>
+            </li>
+            <li>
+              <a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer" title="Visit the Cardiff Beekeepers Association site">Cardiff, Vale and Valleys Beekeepers Association</a>
+            </li>
+            <li>
+              <a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank" rel="noopener noreferrer" title="Read the Honey (Wales) Regulations 2015">The Honey (Wales) Regulations
+              2015</a>
+            </li>
+            <li>
+              <a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer" title="Explore Bee-Friendly programme by Wales Biodiversity Partnership">Wales Biodiversity Partnership</a>
+            </li>
+            <li>
+              <a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title="Access BeeBase for UK bee health information">BeeBase</a>
+            </li>
           </ul>
         </div>
       </div>
-      <div class="footer-bottom">
-        <span>&copy; 2025 BeezKnees. All rights reserved.</span>
-        <span>Practical beekeeping guidance and resources for UK beekeepers.</span>
+      <div class="footer-bottom" role="region" aria-label="Copyright">
+        © 2025 BeezKnees. All rights reserved.
       </div>
     </footer>
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-    <aside class="mobile-menu" id="mobileMenu" aria-labelledby="mobileMenuTitle" aria-hidden="true">
-      <div class="mobile-menu-header">
-        <h2 id="mobileMenuTitle">Menu</h2>
-        <button class="mobile-close" id="closeMobileMenu" aria-label="Close mobile menu">
-        <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="mobile-menu-content">
-        <ul class="mobile-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/about-us">About Us</a></li>
-          <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
-          <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
-          <li><a href="/bee-diseases">Bee Health</a></li>
-          <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
-        </ul>
-        <div class="mobile-menu-cta">
-          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          Try HiveTag Free
-          </a>
-          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/hivetag-app">
-          <i class="fa-solid fa-circle-info"></i>
-          More Information
-          </a>
-        </div>
-      </div>
-    </aside>
-    <div class="search-overlay" id="searchOverlay"></div>
-    <div class="search-panel" id="searchPanel" aria-label="Search panel">
-      <form class="search-form" action="/search" method="get" role="search">
-        <input type="search" name="q" placeholder="Search all pages... e.g. spring build-up, swarm control, feeding" aria-label="Search all pages">
-        <button type="submit">Search</button>
-      </form>
-    </div>
-    <div class="cookie-popup" id="cookieBanner" role="dialog" aria-modal="false" aria-labelledby="cookieBannerTitle">
-      <div class="cookie-copy cookie-panel" id="cookieIntroPanel">
-        <span class="cookie-eyebrow">Privacy choices</span>
-        <h2 id="cookieBannerTitle">We use cookies to keep the site working and measure what helps visitors most.</h2>
-        <p>
-          Necessary cookies help core parts of the site work. Analytics cookies help us understand page use through Google Analytics, but only if you choose to allow them.
-          Read our <a href="/privacy">Privacy Policy</a>.
+    <!-- Cookie Consent Popup -->
+    <div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
+      <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+        <h2>🍪 We Use Cookies</h2>
+        <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and
+          marketing purposes.
         </p>
-      </div>
-      <div class="cookie-copy cookie-panel cookie-settings-panel" id="cookieSettingsPanel" hidden>
-        <span class="cookie-eyebrow">Cookie settings</span>
-        <h2>Manage your cookie preferences</h2>
-        <div class="cookie-setting-row">
-          <div class="cookie-setting-text">
-            <strong>Strictly necessary</strong>
-            <p>Always active. These are needed for core site functions such as saving your cookie preference.</p>
-          </div>
-          <div class="cookie-setting-control">
-            <span class="cookie-status-pill">Always on</span>
-          </div>
+        <form id="cookie-options" name="cookie-options">
+          <label><input type="checkbox" checked disabled> Essential (always active)</label><br>
+          <label><input type="checkbox" id="analytics"> Analytics</label><br>
+          <label><input type="checkbox" id="marketing"> Marketing</label><br>
+        </form>
+        <div class="cookie-buttons">
+          <button id="accept-selected">Accept Selected</button> <button id="accept-all">Accept All</button>
         </div>
-        <div class="cookie-setting-row">
-          <div class="cookie-setting-text">
-            <label for="analyticsCookiesToggle"><strong>Analytics</strong></label>
-            <p>Allows Google Analytics so we can understand which pages are used and how visitors move around the site.</p>
-          </div>
-          <div class="cookie-setting-control">
-            <label class="cookie-switch" for="analyticsCookiesToggle">
-            <input type="checkbox" id="analyticsCookiesToggle">
-            <span class="cookie-slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="cookie-actions" id="cookieIntroActions">
-        <button type="button" class="cookie-btn cookie-btn-secondary" id="rejectCookies">Reject all</button>
-        <button type="button" class="cookie-btn cookie-btn-outline" id="openCookieSettings">Change settings</button>
-        <button type="button" class="cookie-btn cookie-btn-primary" id="acceptCookies">Accept all</button>
-      </div>
-      <div class="cookie-actions" id="cookieSettingsActions" hidden>
-        <button type="button" class="cookie-btn cookie-btn-secondary" id="backToCookieIntro">Back</button>
-        <button type="button" class="cookie-btn cookie-btn-primary" id="saveCookieSettings">Save settings</button>
       </div>
     </div>
-    <button class="back-to-top" id="backToTop" aria-label="Back to top">
-    <i class="fa-solid fa-arrow-up"></i>
-    </button>
-    <div class="modal-overlay" id="hivetag-modal" aria-labelledby="hivetagModalTitle" aria-modal="true" role="dialog">
-      <div class="modal-box">
+    <!-- Back to Top Button -->
+    <button id="backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button> <!-- HiveTag lightbox / modal -->
+    <div aria-labelledby="hivetagModalTitle" aria-modal="true" class="hivetag-modal-overlay" id="hivetag-modal" role="dialog">
+      <div class="hivetag-modal">
         <h3 id="hivetagModalTitle">What is HiveTag?</h3>
-        <p>
-          HiveTag is a simple web app that helps you keep all your beekeeping records in one place – apiaries, hives, inspections, tasks and notes.
+        <p>HiveTag is a simple web app that helps you keep all your beekeeping records in one place – apiaries, hives,
+          inspections, tasks and notes.
         </p>
-        <p>
-          Use it on desktop, tablet or phone with your BeezKnees members account, so you can update records at the apiary or back at home.
+        <p>Use it on desktop, tablet or phone with your BeezKnees members account, so you can update records at the
+          apiary or back at home.
         </p>
-        <div class="modal-actions">
-          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/login">Open Members Area</a>
-          <a class="btn btn-primary" href="/hivetag-app">Learn More about HiveTag</a>
-          <button class="btn btn-ghost" id="closeHiveTagInfo" type="button">Close</button>
+        <div class="hivetag-modal-actions">
+          <a class="hero-cta" href="https://beezknees-members.netlify.app/login" title="Open the HiveTag Members Area">Open Members Area</a> <a class="hivetag-secondary-btn" href="/hivetag-app" title="Read more about the HiveTag app">Learn more about HiveTag</a> <button aria-label="Close HiveTag information" class="hivetag-close-btn" id="closeHiveTagInfo" type="button">Close</button>
         </div>
       </div>
     </div>
-    <script src="js/search-data.js" defer></script>
-    <script src="js/script.js" defer></script>
+    <script src="js/menuv2.js"></script> <!-- Small script to wire up the HiveTag lightbox -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        var openBtn = document.getElementById("openHiveTagInfo");
+        var modal = document.getElementById("hivetag-modal");
+        var closeBtn = document.getElementById("closeHiveTagInfo");
+      
+        if (!modal) return;
+      
+        function closeModal() {
+          modal.classList.remove("active");
+        }
+      
+        if (openBtn) {
+          openBtn.addEventListener("click", function() {
+            modal.classList.add("active");
+          });
+        }
+      
+        if (closeBtn) {
+          closeBtn.addEventListener("click", function() {
+            closeModal();
+          });
+        }
+      
+        modal.addEventListener("click", function(e) {
+          if (e.target === modal) {
+            closeModal();
+          }
+        });
+      
+        document.addEventListener("keydown", function(e) {
+          if (e.key === "Escape" && modal.classList.contains("active")) {
+            closeModal();
+          }
+        });
+      });
+    </script>
   </body>
 </html>

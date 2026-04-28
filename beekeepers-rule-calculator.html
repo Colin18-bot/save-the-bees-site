@@ -4,8 +4,9 @@
     <meta name="generator" content="HTML Tidy for HTML5 for Windows version 5.9.14">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Beekeeper’s Rule Calculator | Queen & Swarm Tool | BeezKnees</title>
-    <meta name="description" content="Free Beekeeper’s Rule calculator for queen development, swarm timing, honey flow planning, breeding dates and seasonal apiary decisions." />
+    <title>Beekeeper’s Rule Calculator – Queen Development, Swarm Timing & Honey Flow Planner | BeezKnees</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Free Beekeeper’s Rule calculator and apiary planning tool for queen development, swarm timing, honey flow planning, breeding dates, inspections and seasonal beekeeping decisions." />
     <meta name="keywords" content="Beekeeper’s Rule, beekeeper calculator, queen development calculator, swarm timing calculator, honey flow planner, bee development timeline, queen breeding planner" />
     <meta name="author" content="Colin Chorley" />
     <meta name="robots" content="index,follow" />
@@ -30,1297 +31,978 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://beezknees.co.uk/beekeepers-rule-calculator" />
-    <meta property="og:image" content="https://beezknees.co.uk/images/close-up-hive.webp" />
-    <meta property="og:image:alt" content="Beekeepers rule calculator">
-    <meta property="og:image:width" content="1600">
-    <meta property="og:image:height" content="1067">
+    <meta property="og:image" content="https://beezknees.co.uk/images/beekeepers-rule-tool.webp" />
     <meta property="og:site_name" content="BeezKnees" />
     <meta property="og:locale" content="en_GB" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Beekeeper’s Rule Calculator & Apiary Planning Tool" />
     <meta name="twitter:description" content="Plan queen development, honey flows and swarm timing with this free beekeeper planning tool." />
-    <meta name="twitter:image" content="https://beezknees.co.uk/images/close-up-hive.webp" />
-    <meta name="twitter:image:alt" content="Beekeepers rule calculator">
+    <meta name="twitter:image" content="https://beezknees.co.uk/images/beekeepers-rule-tool.webp" />
     <!-- Your CSS file -->
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/clock.css">
+    <link rel="stylesheet" href="css/clock.css" />
     <!-- Schema.org Structured Data -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "WebSite",
-            "@id": "https://beezknees.co.uk/#website",
-            "name": "BeezKnees",
-            "url": "https://beezknees.co.uk/",
-            "inLanguage": "en-GB",
-            "publisher": {
-              "@id": "https://beezknees.co.uk/#organization"
-            },
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": "https://beezknees.co.uk/search?q={search_term_string}",
-              "query-input": "required name=search_term_string"
+        "@type": "FAQPage",
+        "mainEntity": [{
+            "@type": "Question",
+            "name": "Can I compare two saved apiary plans?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Use the Multi-Apiary Comparison section to select two saved plans and view their key dates, modes and notes side by side."
             }
           },
           {
-            "@type": "Organization",
-            "@id": "https://beezknees.co.uk/#organization",
-            "name": "BeezKnees",
-            "url": "https://beezknees.co.uk/",
-            "logo": {
-              "@type": "ImageObject",
-              "@id": "https://beezknees.co.uk/#logo",
-              "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png",
-              "width": 1024,
-              "height": 1024
+            "@type": "Question",
+            "name": "Does the seasonal task calendar replace inspections?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. It is a practical reminder tool. You should still base decisions on what you actually see in the colony, together with local weather and forage."
             }
           },
           {
-            "@type": "Person",
-            "@id": "https://beezknees.co.uk/#colin-chorley",
-            "name": "Colin Chorley",
-            "url": "https://beezknees.co.uk/about-us"
-          },
-          {
-            "@type": "ImageObject",
-            "@id": "https://beezknees.co.uk/beekeepers-rule-calculator#primaryimage",
-            "url": "https://beezknees.co.uk/images/close-up-hive.webp",
-            "width": 1600,
-            "height": 1067,
-            "caption": "Close-up beehive used in beekeeper’s rule calculator guide"
-          },
-          {
-            "@type": "WebPage",
-            "@id": "https://beezknees.co.uk/beekeepers-rule-calculator#webpage",
-            "url": "https://beezknees.co.uk/beekeepers-rule-calculator",
-         "name": "Beekeeper’s Rule Calculator | Queen & Swarm Tool | BeezKnees",
-           "description": "Free Beekeeper’s Rule calculator for queen development, swarm timing, honey flow planning, breeding dates and seasonal apiary decisions.",
-            "inLanguage": "en-GB",
-            "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
-            "isPartOf": {
-              "@id": "https://beezknees.co.uk/#website"
-            },
-            "about": {
-              "@id": "https://beezknees.co.uk/beekeepers-rule-calculator#webapp"
-            },
-            "primaryImageOfPage": {
-              "@id": "https://beezknees.co.uk/beekeepers-rule-calculator#primaryimage"
-            },
-            "publisher": {
-              "@id": "https://beezknees.co.uk/#organization"
+            "@type": "Question",
+            "name": "Can I still print the page as a PDF?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Use the Print / Export PDF button at the top of the page. The print view keeps the active calculator mode and removes much of the on-screen UI."
             }
           },
           {
-            "@type": "WebApplication",
-            "@id": "https://beezknees.co.uk/beekeepers-rule-calculator#webapp",
-            "name": "Beekeeper’s Rule Calculator",
-            "url": "https://beezknees.co.uk/beekeepers-rule-calculator",
-            "applicationCategory": "EducationalApplication",
-            "operatingSystem": "All",
-            "description": "Interactive beekeeper calculator for predicting queen development, swarm timing, honey flow planning, breeding synchronisation and seasonal apiary decisions.",
-            "image": {
-              "@id": "https://beezknees.co.uk/beekeepers-rule-calculator#primaryimage"
-            },
-            "author": {
-              "@id": "https://beezknees.co.uk/#colin-chorley"
-            },
-            "publisher": {
-              "@id": "https://beezknees.co.uk/#organization"
-            },
-            "inLanguage": "en-GB",
-            "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
-            "featureList": [
-              "Queen development timeline calculator",
-              "Swarm timing prediction",
-              "Honey flow planning tool",
-              "Queen breeding synchronisation planner",
-              "Seasonal beekeeping calendar",
-              "Apiary plan saving and comparison",
-              "Weather and nectar flow overlay"
-            ],
-            "browserRequirements": "Requires JavaScript enabled",
-            "softwareVersion": "1.0"
-          },
-          {
-            "@type": "FAQPage",
-            "@id": "https://beezknees.co.uk/beekeepers-rule-calculator#faq",
-            "isPartOf": {
-              "@id": "https://beezknees.co.uk/beekeepers-rule-calculator#webpage"
-            },
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "Can I compare two saved apiary plans?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes. Use the Multi-Apiary Comparison section to select two saved plans and view their key dates, modes and notes side by side."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Does the seasonal task calendar replace inspections?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "No. It is a practical reminder tool. You should still base decisions on what you actually see in the colony, together with local weather and forage."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Can I still print the page as a PDF?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes. Use the Print / Export PDF button at the top of the page. The print view keeps the active calculator mode and removes much of the on-screen UI."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Are saved plans synced across devices?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "No. Saved plans are stored in your browser on this device only."
-                }
-              }
-            ]
-          },
-          {
-            "@type": "BreadcrumbList",
-            "@id": "https://beezknees.co.uk/beekeepers-rule-calculator#breadcrumb",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://beezknees.co.uk/"
-              },
-              {
-                "@type": "ListItem",
-                "position": 2,
-                "name": "Beekeeping Guides",
-                "item": "https://beezknees.co.uk/beekeeping-guides"
-              },
-              {
-                "@type": "ListItem",
-                "position": 3,
-                "name": "Beekeeper’s Rule Calculator",
-                "item": "https://beezknees.co.uk/beekeepers-rule-calculator"
-              }
-            ]
+            "@type": "Question",
+            "name": "Are saved plans synced across devices?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Saved plans are stored in your browser on this device only."
+            }
           }
         ]
       }
     </script>
   </head>
   <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-    <header class="site-header">
-      <!-- Top Tier: Logo + Search/Mobile Menu -->
-      <div class="topbar">
-        <a href="/" class="brand" aria-label="BeezKnees home">
-        <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
-        <span>BeezKnees</span>
-        </a>
-        <div class="header-actions">
-          <button class="search-toggle" id="openSearch" aria-label="Open site search">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          </button>
-          <button class="mobile-menu-toggle" id="openMobileMain" aria-label="Open mobile navigation">
-          <i class="fa-solid fa-bars"></i>
-          </button>
+    <!-- Fixed Header and Nav Container -->
+    <div class="fixed-header">
+      <header class="site-header" aria-label="Site Header">
+        <div class="header-container" role="region" aria-label="Site Branding">
+          <a href="https://beezknees.co.uk/"><img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="site-logo"></a>
+          <h2 class="site-title">BeezKnees</h2>
+          <!-- ✅ WORKING HAMBURGER ICON BUTTON -->
+          <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"></button>
         </div>
-      </div>
-      <!-- Top Navigation -->
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
-        <ul class="nav-menu" aria-label="Main Navigation Links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/about-us">About Us</a></li>
-          <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
-          <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
-          <li><a href="/bee-diseases">Bee Health</a></li>
-          <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
-          <li><a href="/hivetag-app">HiveTag</a></li>
-          <li>
-            <a class="members-link" href="https://beezknees-members.netlify.app/login">
-            Members Area
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </header>
-    <section class="hero hero--article hero--month" aria-label="Beekeeping guides banner">
-      <div class="hero-image">
-        <img src="images/close-up-hive.webp" alt="Beekeeper’s rule calculator tool interface" width="1600" height="1067" loading="eager" fetchpriority="high" decoding="async">   
-      </div>
-      <div class="hero-inner">
-        <div class="hero-card hero-card--compact">
-          <span class="hero-kicker">UK beekeeping hub</span>
-          <h2 class="hero-title">Beekeeper’s Rule Calculator</h2>
-          <p>
-            A practical hub page bringing together getting started, equipment, inspections, hive management, hygiene, varroa, honey extraction and seasonal planning for UK beekeepers.
-          </p>
-          <p>
-            Plan queen development, swarm timing and honey flows using this interactive beekeeper tool.
-          </p>
-          <p>
-            Use this page to understand the bigger picture first, then move into the detailed guides that match your stage, season and hive situation.
-          </p>
-          <div class="hero-actions">
-            <a href="#main-content" class="btn btn-primary">
-            <i class="fa-solid fa-book-open"></i>
-            Explore the Guides
-            </a>
-            <a href="/getting-started" class="btn btn-secondary">
-            <i class="fa-solid fa-seedling"></i>
-            Start Here
-            </a>
-          </div>
-        </div>
-      </div>
+      </header>
+    </div>
+    <!-- Navigation Bar -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
+        <li><a href="/" title="Visit the homepage">Home</a></li>
+        <li class="dropdown"><a href="/about-us" title="Learn more about us">About</a></li>
+        <!-- Beekeeping (foundations) -->
+        <li class="dropdown">
+          <a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a></li>
+            <li><a href="/equipment" title="Essential beekeeping equipment">Equipment</a></li>
+            <li><a href="/hive-management" title="Manage your hive effectively">Hive Management</a></li>
+            <li><a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">Step-by-Step Inspections</a></li>
+            <li><a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">Brood Pattern Guide</a></li>
+            <li><a href="/beekeepers-rule-calculator" title="Plan queen development, honey flows and swarm timing with the Beekeeper's Rule Calculator">Beekeeper's Rule Calculator</a></li>
+            <li><a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a></li>
+            <li><a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a></li>
+            <li><a href="/honey-extraction" title="How to harvest and bottle honey safely">Extracting Honey</a></li>
+            <li><a href="/honey-regulations-uk" title="UK Honey Regulations, Labelling Requirements and Food Safety Guidance for Beekeepers">UK Honey Regulations</a></li>
+            <li><a href="/beekeeping-responsibilities-uk" title="Beekeeping responsibilities, safety and good practice in the UK">Beekeeping Responsibilities (UK)</a></li>
+            <li><a href="/apiary-risk-assessment" title="Apiary risk assessment guidance and templates for UK beekeepers">Apiary Risk Assessment</a></li>
+            <li><a href="/landowner-beekeeper-agreement" title="Landowner and beekeeper agreement guidance and template">Landowner Agreement</a></li>
+            <li><a href="/beekeeping-insurance-uk" title="Beekeeping insurance and public liability overview for the UK">Insurance (UK)</a></li>
+          </ul>
+        </li>
+        <!-- Varroa cluster -->
+        <li class="dropdown">
+          <a href="/varroa-management" title="Control varroa mite infestations">Varroa</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">Varroa Overview (5-min)</a></li>
+            <li><a href="/varroa-chemical-treatments" title="Chemical varroa treatments and safe seasonal use in the UK">Chemical Treatments</a></li>
+            <li><a href="/varroa-non-chemical-methods" title="Non-chemical varroa control and IPM methods">Non-chemical Methods (IPM)</a></li>
+            <li><a href="/ppe-varroa-treatments" title="PPE and safety guidance for varroa treatments">PPE for Treatments</a></li>
+            <li><a href="/varroa-monitoring-methods" title="How to monitor varroa levels using common methods">Monitoring Methods</a></li>
+            <li><a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Treatment Calendar (UK)</a></li>
+          </ul>
+        </li>
+        <!-- Apiary calendar -->
+        <li class="dropdown">
+          <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/january" title="January beekeeping tasks">January</a></li>
+            <li><a href="/february" title="February beekeeping tasks">February</a></li>
+            <li><a href="/march" title="March beekeeping tasks">March</a></li>
+            <li><a href="/april" title="April beekeeping tasks">April</a></li>
+            <li><a href="/may" title="May beekeeping tasks">May</a></li>
+            <li><a href="/june" title="June beekeeping tasks">June</a></li>
+            <li><a href="/july" title="July beekeeping tasks">July</a></li>
+            <li><a href="/august" title="August beekeeping tasks">August</a></li>
+            <li><a href="/september" title="September beekeeping tasks">September</a></li>
+            <li><a href="/october" title="October beekeeping tasks">October</a></li>
+            <li><a href="/november" title="November beekeeping tasks">November</a></li>
+            <li><a href="/december" title="December beekeeping tasks">December</a></li>
+          </ul>
+        </li>
+        <!-- Diseases -->
+        <li class="dropdown">
+          <a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/veterinary-medicine-records" title="How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a></li>
+            <li><a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a></li>
+            <li><a href="/colony-health-triage" title="Interactive bee colony health triage tool for UK beekeepers">Colony Health Triage Tool</a></li>
+            <li><a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a></li>
+            <li><a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a></li>
+            <li><a href="/bee-pests" title="Common pests affecting bees">Pests</a></li>
+            <li><a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a></li>
+            <li><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></li>
+          </ul>
+        </li>
+        <!-- Main Link to Navigate to Swarm and Queen management -->
+        <li>
+          <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">Swarm &amp; Queen</a>
+        </li>
+        <!-- Honeybee facts -->
+        <li class="dropdown">
+          <a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a></li>
+            <li><a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a></li>
+            <li><a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a></li>
+            <li><a href="/pollination" title="Honeybee role in pollination">Pollination</a></li>
+          </ul>
+        </li>
+        <!-- Help bees -->
+        <li class="dropdown">
+          <a href="/help-the-bees" title="How you can help save the bees">Help Bees</a>
+          <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
+          <ul class="dropdown-menu">
+            <li><a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a></li>
+            <li><a href="/donate" title="Make a donation to support bees">Donate</a></li>
+            <li><a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a></li>
+          </ul>
+        </li>
+        <!-- Members area -->
+        <li>
+          <a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members Area</a>
+        </li>
+      </ul>
+    </nav>
+    <!-- Hero Banner with Image and Alt Fallback -->
+    <section role="region" aria-label="Homepage Banner">
+      <div class="banner"><img src="images/close-up-hive-hero.webp" alt="Picture of a close-up of a hive"></div>
     </section>
-    <main id="main-content" class="page-wrap">
-      <button class="section-mobile-toggle" id="sectionNavToggle" aria-expanded="true" aria-controls="sectionNavMobile">
-      Beekeeping Guides Menu ▲
-      </button>
-      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Beekeeping guides section navigation" data-active-group="Start Here">
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Start Here</summary>
-          <ul>
-            <li><a href="/getting-started">Getting Started</a></li>
-            <li><a href="/equipment">Equipment</a></li>
-            <li><a href="/hive-management">Hive Management</a></li>
-          </ul>
-        </details>
-        <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Core Skills</summary>
-          <ul>
-            <li><a href="/step-by-step-inspections">Step-by-Step Inspections</a></li>
-            <li><a href="/hygiene">Hygiene</a></li>
-            <li><a href="/honey-extraction">Honey Extraction</a></li>
-          </ul>
-        </details>
-        <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Beekeeping Guides</summary>
-          <ul>
-            <li><a href="/brood-pattern-guide">Brood Pattern Guides</a></li>
-            <li><a href="/feeding-bees">Feeding</a></li>
-            <li><a href="/beekeepers-rule-calculator">Beekeepers Rule Calculator</a></li>
-            <li><a href="/apiary-risk-assessment">Apiary Risk Assessment</a></li>
-          </ul>
-        </details>
-        <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Understanding Bees</summary>
-          <ul>
-            <li><a href="/honeybee-facts">Honeybee Facts</a></li>
-            <li><a href="/bee-stings">Bee Stings</a></li>
-            <li><a href="/how-bees-make-honey">How Bees Make Honey</a></li>
-            <li><a href="/pollination">Pollination</a></li>
-          </ul>
-        </details>
-        <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Helping Bees</summary>
-          <ul>
-            <li><a href="/bee-gardening">Bee Gardening</a></li>
-            <li><a href="/help-the-bees">Help the Bees</a></li>
-          </ul>
-        </details>
-        <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Legal &amp; Responsibilities</summary>
-          <ul>
-            <li><a href="/honey-regulations-uk">Honey Regulations (UK)</a></li>
-            <li><a href="/landowner-beekeeper-agreement">Landowner-Beekeeper Agreement</a></li>
-            <li><a href="/beekeeping-insurance-uk">Beekeeping Insurance</a></li>
-            <li><a href="/beekeeping-responsibilities-uk">Beekeeping Responsibilities (UK)</a></li>
-          </ul>
-        </details>
-        <!-- On this page mobile view -->
-        <details class="section-mobile-group">
-          <summary class="section-mobile-summary">On this page</summary>
-          <ul>
-            <li><a href="#overview">Overview</a></li>
-            <li><a href="#dashboard">Open the calculator</a></li>
-            <li><a href="#faq">Frequently asked questions</a></li>
-          </ul>
-        </details>
-        <div class="hivetag-side-cta pulse-once">
-          <span class="hero-kicker">BeezKnees App</span>
-          <h3>Stay on Top of Every Hive, Every Inspection</h3>
-          <p>Track inspections, feeding, treatments and seasonal notes — all in one place.</p>
-          <a class="btn btn-primary" href="/hivetag-app">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          Explore HiveTag
-          </a>
-          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          Open Members Area
-          </a>
-        </div>
-      </nav>
-      <div class="hub-layout">
-        <aside class="hub-sidebar" aria-label="Beekeeping guides section navigation" data-active-group="Start Here">
-          <h2 class="hub-sidebar-title">Beekeeping Guides</h2>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Start Here</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/getting-started">Getting Started</a></li>
-              <li><a href="/equipment">Equipment</a></li>
-              <li><a href="/hive-management">Hive Management</a></li>
-            </ul>
-          </details>
-          <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Core Skills</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/step-by-step-inspections">Step-by-Step Inspections</a></li>
-              <li><a href="/hygiene">Hygiene</a></li>
-              <li><a href="/honey-extraction">Honey Extraction</a></li>
-            </ul>
-          </details>
-          <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Beekeeping Guides</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/brood-pattern-guide">Brood Pattern Guides</a></li>
-              <li><a href="/feeding-bees">Feeding</a></li>
-              <li><a href="/beekeepers-rule-calculator">Beekeepers Rule Calculator</a></li>
-              <li><a href="/apiary-risk-assessment">Apiary Risk Assessment</a></li>
-            </ul>
-          </details>
-          <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Understanding Bees</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/honeybee-facts">Honeybee Facts</a></li>
-              <li><a href="/bee-stings">Bee Stings</a></li>
-              <li><a href="/how-bees-make-honey">How Bees Make Honey</a></li>
-              <li><a href="/pollination">Pollination</a></li>
-            </ul>
-          </details>
-          <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Helping Bees</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/bee-gardening">Bee Gardening</a></li>
-              <li><a href="/help-the-bees">Help the Bees</a></li>
-            </ul>
-          </details>
-          <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Legal &amp; Responsibilities</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/honey-regulations-uk">Honey Regulations (UK)</a></li>
-              <li><a href="/landowner-beekeeper-agreement">Landowner-Beekeeper Agreement</a></li>
-              <li><a href="/beekeeping-insurance-uk">Beekeeping Insurance</a></li>
-              <li><a href="/beekeeping-responsibilities-uk">Beekeeping Responsibilities (UK)</a></li>
-            </ul>
-          </details>
-          <!-- On this page under side nav -->
-          <div class="article-sidebar-card">
-            <h3>On this page</h3>
-            <ul class="toc-list">
-              <li><a href="#overview">Overview</a></li>
-              <li><a href="#dashboard">Open the calculator</a></li>
-              <li><a href="#faq">Frequently asked questions</a></li>
+    <!-- Main Content -->
+    <main class="clock-page">
+      <div class="page-wrap">
+        <section class="hero">
+          <div class="hero-kicker">BeezKnees Flagship Tool</div>
+          <h1>Beekeeper’s Rule Calculator</h1>
+          <p>
+            The Beekeeper’s Rule is a classic method used to predict queen development,
+            swarm timing and colony behaviour. This interactive calculator helps
+            beekeepers plan inspections, honey flows and breeding schedules by
+            combining colony timing with weather and nectar conditions.
+          </p>
+          <p>
+          It works best when used alongside practical guides on <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">swarm and queen management</a>, the <a href="/queen-timeline" title="Day-by-day queen development and swarm timing">queen timeline</a>, <a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">step-by-step inspections</a> and the <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">seasonal changes in the colony</a>. The calculator gives you timing estimates, but those pages help you interpret what the colony is actually doing.
+          </p>
+          <div class="hero-cta-row no-print">
+            <a class="btn btn-primary" href="#dashboard">Open the calculator</a>
+            <button class="btn btn-secondary" type="button" onclick="window.print()">Print / Export PDF</button>
+          </div>
+        </section>
+        <section class="top-grid">
+          <div class="card intro-card">
+            <h2>What this tool now does</h2>
+            <p>
+              This version combines planning, saved plans, side-by-side comparison
+              and seasonal guidance. That means you can use it not only to calculate
+              dates, but also to manage and compare real apiary plans over time.
+            </p>
+            <ul class="bullet-list">
+              <li>Track queen, worker and drone development from a known observation.</li>
+              <li>Work backwards from a nectar flow to build maximum forager numbers.</li>
+              <li>Synchronise drone maturity and queen emergence for breeding work.</li>
+              <li>Save named apiary plans and compare two saved plans side by side.</li>
+              <li>Use the seasonal task calendar for month-specific beekeeper reminders.</li>
             </ul>
           </div>
-          <div class="hivetag-side-cta">
-            <span class="hero-kicker">BeezKnees App</span>
-            <h3>Stay on Top of Every Hive, Every Inspection</h3>
-            <p>Track inspections, feeding, treatments and seasonal notes — all in one place.</p>
-            <a class="btn btn-primary" href="/hivetag-app">
-            <i class="fa-solid fa-mobile-screen-button"></i>
-            Explore HiveTag
-            </a>
-            <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/">
-            <i class="fa-solid fa-right-to-bracket"></i>
-            Open Members Area
-            </a>
+          <div class="card quick-card">
+            <h2>Quick start</h2>
+            <p>Choose the mode that matches the beekeeper question you need to answer.</p>
+            <div class="quick-grid">
+              <div class="quick-pill">
+                <strong>Development Clock</strong>
+                <span>Best for swarm timing, queen emergence and brood-stage planning.</span>
+              </div>
+              <div class="quick-pill">
+                <strong>Honey Flow Planning</strong>
+                <span>Best for timing brood build-up so maximum foragers are available during a nectar flow.</span>
+              </div>
+              <div class="quick-pill">
+                <strong>Queen Breeding</strong>
+                <span>Best for aligning mature drones and virgin queens for mating.</span>
+              </div>
+              <div class="quick-pill">
+                <strong>Rule Wheel</strong>
+                <span>Best for visual calendar alignment of worker, queen and drone timing.</span>
+              </div>
+            </div>
           </div>
-        </aside>
-        <!-- Main Content -->
-        <section class="clock-page" id="overview">
-          <div class="clock-page-wrap">
-            <section class="clock-hero">
-              <div class="hero-kicker">BeezKnees Flagship Tool</div>
-              <h1>Beekeeper’s Rule Calculator</h1>
-              <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
-              <p>
-                The Beekeeper’s Rule is a classic method used to predict queen development,
-                swarm timing and colony behaviour. This interactive calculator helps
-                beekeepers plan inspections, honey flows and breeding schedules by
-                combining colony timing with weather and nectar conditions.
-              </p>
-              <p>
-                It works best when used alongside practical guides on <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">swarm and queen management</a>, the <a href="/queen-timeline" title="Day-by-day queen development and swarm timing">queen timeline</a>, <a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">step-by-step inspections</a> and the <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">seasonal changes in the colony</a>. The calculator gives you timing estimates, but those pages help you interpret what the colony is actually doing.
-              </p>
-              <div class="hero-cta-row no-print">
-                <a class="btn btn-primary" href="#dashboard">Open the calculator</a>
-                <button class="btn btn-secondary" type="button" onclick="window.print()">Print / Export PDF</button>
+        </section>
+        <section class="seo-grid" style="margin-bottom:24px;">
+          <article class="card seo-card">
+            <h2>How to Use the Beekeeper’s Rule in Practice</h2>
+            <p>
+              The Beekeeper’s Rule is most useful when you start from something you have
+              actually seen in the hive. That might be eggs, sealed queen cells, capped brood,
+              a known nectar flow date or a planned queen mating period. Once you have a real
+              starting point, you can work forwards or backwards to predict what is likely to
+              happen next.
+            </p>
+            <p>
+              In practical beekeeping, this helps you decide when to inspect for swarm cells, when to expect virgin queen emergence, when workers should begin foraging for a honey flow, and when drone production needs to begin for queen breeding. It is especially useful for <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">swarm control</a>, honey flow timing and queen rearing plans, especially when cross-checked against the <a href="/queen-timeline" title="Day-by-day queen development and swarm timing">queen timeline</a>.
+            </p>
+          </article>
+          <article class="card seo-card">
+            <h2>Using the Rule with Real Colony Checks</h2>
+            <p>
+              The rule is not a guarantee. It works best as a planning guide alongside
+              live colony observations, weather, forage conditions and seasonal behaviour.
+              A calculator can help you estimate timing, but the colony itself always gives
+              the final answer.
+            </p>
+            <ul class="bullet-list">
+              <li><strong>Example 1:</strong> If queen cells are sealed today, a swarm may be imminent and a virgin queen may emerge about 8 days later. See <a href="/capped-queen-cells" title="What capped queen cells mean and what UK beekeepers should do next">Capped Queen Cells</a> and <a href="/queen-timeline" title="Day-by-day queen development and swarm timing">Queen Timeline</a>.</li>
+              <li><strong>Example 2:</strong> If a main nectar flow starts in around 40 days, worker eggs laid now may become your key foragers. This fits closely with the <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Year in the Apiary</a> and local forage timing.</li>
+              <li><strong>Example 3:</strong> If you want queens mated by a target date, drone production needs to begin several weeks earlier. The wider swarm and queen section helps interpret this timing in real colonies: <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">Swarm &amp; Queen</a>.</li>
+              <li><strong>Always:</strong> Confirm calculator outputs against what you actually see in the colony.</li>
+            </ul>
+          </article>
+        </section>
+        <section class="plans-grid no-print">
+          <div class="card plans-card">
+            <h2>Save / Load Apiary Plans</h2>
+            <p>
+              Save the current calculator state as a named plan so you can return to it later.
+              This stores data in your browser on this device.
+            </p>
+            <div class="plan-form-grid">
+              <div class="field">
+                <label for="planName">Plan name</label>
+                <input id="planName" type="text" placeholder="e.g. Lime flow 2026" />
               </div>
-            </section>
-            <section class="top-grid">
-              <div class="card intro-card">
-                <h2>What this tool now does</h2>
-                <p>
-                  This version combines planning, saved plans, side-by-side comparison
-                  and seasonal guidance. That means you can use it not only to calculate
-                  dates, but also to manage and compare real apiary plans over time.
-                </p>
-                <ul class="bullet-list">
-                  <li>Track queen, worker and drone development from a known observation.</li>
-                  <li>Work backwards from a nectar flow to build maximum forager numbers.</li>
-                  <li>Synchronise drone maturity and queen emergence for breeding work.</li>
-                  <li>Save named apiary plans and compare two saved plans side by side.</li>
-                  <li>Use the seasonal task calendar for month-specific beekeeper reminders.</li>
-                </ul>
+              <div class="field">
+                <label for="planApiary">Apiary name</label>
+                <input id="planApiary" type="text" placeholder="e.g. Orchard Apiary" />
               </div>
-              <div class="card quick-card">
-                <h2>Quick start</h2>
-                <p>Choose the mode that matches the beekeeper question you need to answer.</p>
-                <div class="quick-grid">
-                  <div class="quick-pill">
-                    <strong>Development Clock</strong>
-                    <span>Best for swarm timing, queen emergence and brood-stage planning.</span>
-                  </div>
-                  <div class="quick-pill">
-                    <strong>Honey Flow Planning</strong>
-                    <span>Best for timing brood build-up so maximum foragers are available during a nectar flow.</span>
-                  </div>
-                  <div class="quick-pill">
-                    <strong>Queen Breeding</strong>
-                    <span>Best for aligning mature drones and virgin queens for mating.</span>
-                  </div>
-                  <div class="quick-pill">
-                    <strong>Rule Wheel</strong>
-                    <span>Best for visual calendar alignment of worker, queen and drone timing.</span>
-                  </div>
+              <div class="field" style="grid-column: 1 / -1;">
+                <label for="planNotes">Plan notes</label>
+                <textarea id="planNotes" placeholder="Optional notes about forage, colony strength, breeding aims or inspections"></textarea>
+              </div>
+              <div class="field" style="grid-column: 1 / -1;">
+                <div class="plan-btn-row">
+                  <button class="btn btn-primary" id="savePlanBtn" type="button">Save plan</button>
+                  <button class="btn btn-secondary" id="clearPlanFieldsBtn" type="button">Clear plan fields</button>
                 </div>
               </div>
-            </section>
-            <section class="seo-grid" style="margin-bottom:24px;">
-              <article class="card seo-card">
-                <h2>How to Use the Beekeeper’s Rule in Practice</h2>
-                <p>
-                  The Beekeeper’s Rule is most useful when you start from something you have
-                  actually seen in the hive. That might be eggs, sealed queen cells, capped brood,
-                  a known nectar flow date or a planned queen mating period. Once you have a real
-                  starting point, you can work forwards or backwards to predict what is likely to
-                  happen next.
-                </p>
-                <p>
-                  In practical beekeeping, this helps you decide when to inspect for swarm cells, when to expect virgin queen emergence, when workers should begin foraging for a honey flow, and when drone production needs to begin for queen breeding. It is especially useful for <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">swarm control</a>, honey flow timing and queen rearing plans, especially when cross-checked against the <a href="/queen-timeline" title="Day-by-day queen development and swarm timing">queen timeline</a>.
-                </p>
-              </article>
-              <article class="card seo-card">
-                <h2>Using the Rule with Real Colony Checks</h2>
-                <p>
-                  The rule is not a guarantee. It works best as a planning guide alongside
-                  live colony observations, weather, forage conditions and seasonal behaviour.
-                  A calculator can help you estimate timing, but the colony itself always gives
-                  the final answer.
-                </p>
-                <ul class="bullet-list">
-                  <li><strong>Example 1:</strong> If queen cells are sealed today, a swarm may be imminent and a virgin queen may emerge about 8 days later. See <a href="/capped-queen-cells" title="What capped queen cells mean and what UK beekeepers should do next">Capped Queen Cells</a> and <a href="/queen-timeline" title="Day-by-day queen development and swarm timing">Queen Timeline</a>.</li>
-                  <li><strong>Example 2:</strong> If a main nectar flow starts in around 40 days, worker eggs laid now may become your key foragers. This fits closely with the <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Year in the Apiary</a> and local forage timing.</li>
-                  <li><strong>Example 3:</strong> If you want queens mated by a target date, drone production needs to begin several weeks earlier. The wider swarm and queen section helps interpret this timing in real colonies: <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">Swarm &amp; Queen</a>.</li>
-                  <li><strong>Always:</strong> Confirm calculator outputs against what you actually see in the colony.</li>
-                </ul>
-              </article>
-            </section>
-            <section class="plans-grid no-print">
-              <div class="card plans-card">
-                <h2>Save / Load Apiary Plans</h2>
-                <p>
-                  Save the current calculator state as a named plan so you can return to it later.
-                  This stores data in your browser on this device.
-                </p>
-                <div class="plan-form-grid">
-                  <div class="field">
-                    <label for="planName">Plan name</label>
-                    <input id="planName" type="text" placeholder="e.g. Lime flow 2026" />
-                  </div>
-                  <div class="field">
-                    <label for="planApiary">Apiary name</label>
-                    <input id="planApiary" type="text" placeholder="e.g. Orchard Apiary" />
-                  </div>
-                  <div class="field" style="grid-column: 1 / -1;">
-                    <label for="planNotes">Plan notes</label>
-                    <textarea id="planNotes" placeholder="Optional notes about forage, colony strength, breeding aims or inspections"></textarea>
-                  </div>
-                  <div class="field" style="grid-column: 1 / -1;">
-                    <div class="plan-btn-row">
-                      <button class="btn btn-primary" id="savePlanBtn" type="button">Save plan</button>
-                      <button class="btn btn-secondary" id="clearPlanFieldsBtn" type="button">Clear plan fields</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="status-box" id="planStatus">No plan action yet.</div>
-              </div>
-              <div class="card plans-card">
-                <h2>Saved Plans</h2>
-                <p>
-                  Load, overwrite or delete saved plans. Loading a plan restores the saved
-                  mode, dates, notes and calculator inputs.
-                </p>
-                <div class="plans-list" id="savedPlansList"></div>
-              </div>
-            </section>
-            <section class="weather-grid no-print">
-              <div class="card weather-card">
-                <h2>Weather / Nectar Flow Overlay</h2>
-                <p>
-                  This uses manual planning inputs rather than a live weather feed.
-                  It lets you overlay likely apiary conditions onto the current plan.
-                </p>
-                <div class="weather-form-grid">
-                  <div class="field">
-                    <label for="weatherRegion">Apiary region / context</label>
-                    <input id="weatherRegion" type="text" placeholder="e.g. South Wales coast, inland valley, exposed hill site" />
-                  </div>
-                  <div class="field">
-                    <label for="weatherPattern">Forecast pattern</label>
-                    <select id="weatherPattern">
-                      <option value="settled">Settled / improving</option>
-                      <option value="mixed" selected>Mixed / changeable</option>
-                      <option value="wet">Wet / unstable</option>
-                      <option value="hot">Hot / fast flow conditions</option>
-                      <option value="cold">Cold / held-back conditions</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label for="weatherTempBand">Day temperature band</label>
-                    <select id="weatherTempBand">
-                      <option value="low">Below 12°C</option>
-                      <option value="moderate" selected>12–18°C</option>
-                      <option value="good">18–24°C</option>
-                      <option value="high">Above 24°C</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label for="weatherRainRisk">Rain / interruption risk</label>
-                    <select id="weatherRainRisk">
-                      <option value="low">Low</option>
-                      <option value="moderate" selected>Moderate</option>
-                      <option value="high">High</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label for="weatherFlightRisk">Bee flying conditions</label>
-                    <select id="weatherFlightRisk">
-                      <option value="poor">Poor</option>
-                      <option value="fair" selected>Fair</option>
-                      <option value="good">Good</option>
-                      <option value="excellent">Excellent</option>
-                    </select>
-                  </div>
-                  <div class="field">
-                    <label for="nectarStrength">Nectar flow strength</label>
-                    <select id="nectarStrength">
-                      <option value="none">None / little forage</option>
-                      <option value="light">Light trickle</option>
-                      <option value="building" selected>Building</option>
-                      <option value="strong">Strong flow</option>
-                      <option value="peak">Peak flow</option>
-                    </select>
-                  </div>
-                  <div class="field" style="grid-column: 1 / -1;">
-                    <label for="weatherNotes">Weather / forage note</label>
-                    <textarea id="weatherNotes" placeholder="Optional note: e.g. lime nearly opening, bramble just starting, windy afternoons, poor flying mornings"></textarea>
-                  </div>
-                  <div class="field" style="grid-column: 1 / -1;">
-                    <div class="btn-row">
-                      <button class="btn btn-teal" id="updateWeatherOverlayBtn" type="button">Update overlay</button>
-                      <button class="btn btn-secondary" id="weatherExampleBtn" type="button">Use example overlay</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="status-box" id="weatherStatus">
-                  Overlay ready. Add conditions to improve inspection timing guidance.
-                </div>
-              </div>
-              <div class="card weather-card">
-                <h2>Overlay Summary + Inspection Reminder Logic</h2>
-                <p>
-                  These reminders combine the active planning mode with your manual weather
-                  and nectar conditions.
-                </p>
-                <div class="weather-summary-grid" id="weatherSummaryGrid"></div>
-                <div class="reminder-grid" id="reminderGrid" style="margin-top:14px;"></div>
-                <div class="note-box" id="reminderNote">
-                  Reminder logic is advisory. Always combine it with what you actually see in the colony.
-                </div>
-              </div>
-              <div class="card weather-card weather-card-full" style="margin-top:18px;">
-                <h2>Inspection Window + Swarm Risk</h2>
-                <p>
-                  This combines the active planning mode, seasonal timing and your overlay
-                  conditions to suggest the best inspection timing and highlight swarm pressure.
-                </p>
-                <div class="weather-summary-grid" id="inspectionAdvisorGrid" style="margin-top:14px;"></div>
-                <div class="weather-summary-grid" id="swarmRiskGrid" style="margin-top:14px;"></div>
-                <div class="note-box" id="advisorNote">
-                  These indicators are guidance tools only. Always confirm decisions against live colony conditions.
-                </div>
-              </div>
-            </section>
-            <section class="comparison-grid no-print">
-              <div class="card comparison-card">
-                <h2>Multi-Apiary Comparison</h2>
-                <p>
-                  Select two saved plans and compare their timings, modes and management focus.
-                </p>
-                <div class="comparison-form-grid">
-                  <div class="field">
-                    <label for="comparePlanA">Plan A</label>
-                    <select id="comparePlanA"></select>
-                  </div>
-                  <div class="field">
-                    <label for="comparePlanB">Plan B</label>
-                    <select id="comparePlanB"></select>
-                  </div>
-                  <div class="field" style="grid-column: 1 / -1;">
-                    <div class="btn-row">
-                      <button class="btn btn-blue" id="runComparisonBtn" type="button">Compare plans</button>
-                      <button class="btn btn-secondary" id="clearComparisonBtn" type="button">Clear comparison</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="status-box" id="comparisonStatus">No comparison yet.</div>
-              </div>
-              <div class="card comparison-card">
-                <h2>Comparison Results</h2>
-                <p>Use this to spot timing differences between two apiaries or project plans.</p>
-                <div id="comparisonResults"></div>
-              </div>
-            </section>
-            <section class="calendar-grid no-print">
-              <div class="card calendar-card">
-                <h2>Seasonal Task Calendar</h2>
-                <p>
-                  Select a month and focus area to view practical beekeeper reminders.
-                </p>
-                <div class="calendar-form-grid">
-                  <div class="field">
-                    <label for="taskMonth">Month</label>
-                    <select id="taskMonth"></select>
-                  </div>
-                  <div class="field">
-                    <label for="taskFocus">Focus area</label>
-                    <select id="taskFocus">
-                      <option value="all">All tasks</option>
-                      <option value="inspections">Inspections</option>
-                      <option value="swarm">Swarm management</option>
-                      <option value="feeding">Feeding & stores</option>
-                      <option value="honey">Honey crop</option>
-                      <option value="breeding">Queen breeding</option>
-                      <option value="health">Bee health</option>
-                      <option value="winter">Winter prep</option>
-                    </select>
-                  </div>
-                  <div class="field" style="grid-column: 1 / -1;">
-                    <label for="taskApiaryNote">Optional apiary note</label>
-                    <input id="taskApiaryNote" type="text" placeholder="e.g. Exposed coastal site, strong colonies, heather target" />
-                  </div>
-                  <div class="field" style="grid-column: 1 / -1;">
-                    <div class="btn-row">
-                      <button class="btn btn-primary" id="updateTaskCalendarBtn" type="button">Update calendar</button>
-                      <button class="btn btn-secondary" id="useCurrentMonthBtn" type="button">Use current month</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="status-box" id="taskCalendarStatus">Seasonal task calendar ready.</div>
-              </div>
-              <div class="card calendar-card">
-                <h2 id="taskCalendarHeading">Seasonal Tasks</h2>
-                <p id="taskCalendarIntro">Choose a month and task focus to see beekeeper reminders.</p>
-                <div class="task-list" id="taskList"></div>
-              </div>
-            </section>
-            <section id="dashboard">
-              <div class="card dashboard-tabs no-print">
-                <div class="tab-row">
-                  <button class="tab-btn active" data-mode="development">Development Clock</button>
-                  <button class="tab-btn" data-mode="honey">Honey Flow Planning</button>
-                  <button class="tab-btn" data-mode="breeding">Queen Breeding</button>
-                  <button class="tab-btn" data-mode="wheel">Rule Wheel</button>
-                </div>
-              </div>
-              <div class="dashboard-grid">
-                <div class="card main-card">
-                  <div class="print-only">
-                    <h2>Printed Beekeeper’s Rule Summary</h2>
-                    <p>This print version shows the currently active calculator mode and its latest summary information.</p>
-                    <hr />
-                  </div>
-                  <div class="mode-panel active" id="panel-development">
-                    <div class="mode-header">
-                      <div class="kicker-yellow">Mode 1 — Development Clock</div>
-                      <h2>Bee Development Clock</h2>
-                      <p>Choose a bee type, pick the date you observed eggs or a key event, and review the related colony timing.</p>
-                    </div>
-                    <div class="field-grid no-print">
-                      <div class="field">
-                        <label for="beeType">Bee type</label>
-                        <select id="beeType">
-                          <option value="queen">Queen</option>
-                          <option value="worker">Worker</option>
-                          <option value="drone">Drone</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label for="startDate">Start date</label>
-                        <input id="startDate" type="date" />
-                      </div>
-                      <div class="field">
-                        <label for="startEvent">Start from</label>
-                        <select id="startEvent">
-                          <option value="egg">Egg laid</option>
-                          <option value="hatched">Egg hatched / larva visible</option>
-                          <option value="capped">Cell capped</option>
-                          <option value="emerged">Adult emerged</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label>&nbsp;</label>
-                        <div class="btn-row">
-                          <button class="action-btn" id="updateClockBtn">Update clock</button>
-                          <button class="action-btn secondary" id="todayClockBtn" type="button">Use today</button>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="summary-stack">
-                      <div class="summary-box">
-                        <strong id="summaryHeadline">Egg observed on selected date</strong>
-                        <p id="summaryText">The dashboard is showing the selected development cycle from the date you entered.</p>
-                      </div>
-                    </div>
-                    <div class="event-stack" id="eventsList"></div>
-                    <div class="note-box" id="beeNote">
-                      Swarm note: when queen cells are present, the most important point is usually the sealing date.
-                    </div>
-                    <div class="mini-grid">
-                      <div class="mini-card">
-                        <strong>Queen</strong>
-                        <span>3 days egg, 5 days larva, 8 days capped, 16 days total.</span>
-                      </div>
-                      <div class="mini-card">
-                        <strong>Worker</strong>
-                        <span>3 days egg, 6 days larva, 12 days capped, 21 days total.</span>
-                      </div>
-                      <div class="mini-card">
-                        <strong>Drone</strong>
-                        <span>3 days egg, 7 days larva, 14 days capped, 24 days total.</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="mode-panel" id="panel-honey">
-                    <div class="mode-header">
-                      <div class="kicker-green">Mode 2 — Honey Flow Planning</div>
-                      <h2>Honey Crop Timing Planner</h2>
-                      <p>Work backwards from a main nectar flow to estimate when worker eggs should be laid so foragers are available at the right time.</p>
-                    </div>
-                    <div class="field-grid no-print">
-                      <div class="field">
-                        <label for="flowName">Main nectar source</label>
-                        <input id="flowName" type="text" placeholder="e.g. Lime, Clover, Bramble" />
-                      </div>
-                      <div class="field">
-                        <label for="apiaryNote">Apiary / note</label>
-                        <input id="apiaryNote" type="text" placeholder="Optional note for this flow" />
-                      </div>
-                      <div class="field">
-                        <label for="flowStart">Nectar flow start</label>
-                        <input id="flowStart" type="date" />
-                      </div>
-                      <div class="field">
-                        <label for="flowEnd">Nectar flow end</label>
-                        <input id="flowEnd" type="date" />
-                      </div>
-                      <div class="field">
-                        <label for="foragerLead">Worker age when foraging begins</label>
-                        <select id="foragerLead">
-                          <option value="35">About 35 days from egg</option>
-                          <option value="38">About 38 days from egg</option>
-                          <option value="40" selected>About 40 days from egg</option>
-                          <option value="42">About 42 days from egg</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label>&nbsp;</label>
-                        <div class="btn-row">
-                          <button class="action-btn" id="updateHoneyBtn" type="button">Update planner</button>
-                          <button class="action-btn secondary" id="useExampleBtn" type="button">Use example</button>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="summary-stack">
-                      <div class="summary-box">
-                        <strong id="honeyHeadline">Honey flow planning summary</strong>
-                        <p id="honeySummaryText">Add your expected nectar flow period and the planner will calculate when eggs should be laid to produce foragers at the right time.</p>
-                      </div>
-                      <div class="info-card">
-                        <strong>Egg-laying window for peak foragers</strong>
-                        <p id="eggWindowText">Not calculated yet.</p>
-                      </div>
-                      <div class="info-card">
-                        <strong>Brood stimulation guidance</strong>
-                        <p id="stimText">Not calculated yet.</p>
-                      </div>
-                    </div>
-                    <div class="timeline-stack" id="honeyTimeline"></div>
-                    <div class="note-box" id="honeyAssumptions">
-                      Assumption: this planner uses worker development plus the selected age at which workers begin foraging.
-                    </div>
-                  </div>
-                  <div class="mode-panel" id="panel-breeding">
-                    <div class="mode-header">
-                      <div class="kicker-purple">Mode 3 — Queen Breeding</div>
-                      <h2>Breeding Synchronisation Planner</h2>
-                      <p>Work backwards from your desired mating date so drone production and queen rearing overlap correctly.</p>
-                    </div>
-                    <div class="field-grid no-print">
-                      <div class="field">
-                        <label for="desiredMatingDate">Desired mating date</label>
-                        <input id="desiredMatingDate" type="date" />
-                      </div>
-                      <div class="field">
-                        <label for="breedingApiary">Breeding apiary / note</label>
-                        <input id="breedingApiary" type="text" placeholder="Optional breeding note" />
-                      </div>
-                      <div class="field">
-                        <label for="droneMaturityLead">Drone egg to mature flying drone</label>
-                        <select id="droneMaturityLead">
-                          <option value="36">About 36 days</option>
-                          <option value="38" selected>About 38 days</option>
-                          <option value="40">About 40 days</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label for="queenBuildMethod">Queen planning basis</label>
-                        <select id="queenBuildMethod">
-                          <option value="virginOnDate" selected>Virgin queen ready on desired date</option>
-                          <option value="startRearing">Start queen rearing from that point</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label for="queenSourceNote">Queen source / breeder note</label>
-                        <textarea id="queenSourceNote" placeholder="Optional note about grafting stock, breeder colony, or mating plan"></textarea>
-                      </div>
-                      <div class="field">
-                        <label>&nbsp;</label>
-                        <div class="btn-row">
-                          <button class="action-btn purple" id="updateBreedingBtn" type="button">Update breeding plan</button>
-                          <button class="action-btn secondary" id="useBreedingExampleBtn" type="button">Use example</button>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="summary-stack">
-                      <div class="summary-box">
-                        <strong id="breedingHeadline">Breeding synchronisation summary</strong>
-                        <p id="breedingSummaryText">Add your desired mating date and the planner will calculate when drone production and queen rearing should begin.</p>
-                      </div>
-                      <div class="info-card">
-                        <strong>Drone production timing</strong>
-                        <p id="dronePlanText">Not calculated yet.</p>
-                      </div>
-                      <div class="info-card">
-                        <strong>Queen rearing timing</strong>
-                        <p id="queenPlanText">Not calculated yet.</p>
-                      </div>
-                    </div>
-                    <div class="timeline-stack" id="breedingTimeline"></div>
-                    <div class="note-box" id="breedingAssumptions">
-                      Assumption: this planner uses a queen development period of 16 days and the selected drone maturity lead time.
-                    </div>
-                  </div>
-                  <div class="mode-panel" id="panel-wheel">
-                    <div class="mode-header">
-                      <div class="kicker-blue">Mode 4 — Rule Wheel</div>
-                      <h2>Digital Beekeeper’s Rule Wheel</h2>
-                      <p>View worker, queen and drone timing together on one circular annual calendar.</p>
-                    </div>
-                    <div class="field-grid no-print">
-                      <div class="field">
-                        <label for="ruleMode">Wheel mode</label>
-                        <select id="ruleMode">
-                          <option value="reference">Reference / lifecycle</option>
-                          <option value="honey" selected>Honey flow</option>
-                          <option value="breeding">Breeding</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label for="ruleReferenceDate">Reference date</label>
-                        <input id="ruleReferenceDate" type="date" />
-                      </div>
-                      <div class="field">
-                        <label for="ruleManualLabel">Manual label / note</label>
-                        <input id="ruleManualLabel" type="text" placeholder="Optional wheel note" />
-                      </div>
-                      <div class="field">
-                        <label>&nbsp;</label>
-                        <div class="btn-row">
-                          <button class="action-btn blue" id="updateRuleWheelBtn" type="button">Update wheel</button>
-                          <button class="action-btn secondary" id="ruleTodayBtn" type="button">Use today</button>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="summary-stack">
-                      <div class="summary-box">
-                        <strong id="ruleHeadline">Digital Beekeeper’s Rule summary</strong>
-                        <p id="ruleSummaryText">Select a mode to map your chosen dates onto the circular calendar.</p>
-                      </div>
-                      <div class="info-card">
-                        <strong>Worker timing</strong>
-                        <p id="ruleWorkerText">Not calculated yet.</p>
-                      </div>
-                      <div class="info-card">
-                        <strong>Queen timing</strong>
-                        <p id="ruleQueenText">Not calculated yet.</p>
-                      </div>
-                      <div class="info-card">
-                        <strong>Drone timing</strong>
-                        <p id="ruleDroneText">Not calculated yet.</p>
-                      </div>
-                    </div>
-                    <div class="wheel-wrap">
-                      <div class="wheel-shell">
-                        <svg class="wheel-svg" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg">
-                          <defs>
-                            <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-                              <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.14" />
-                            </filter>
-                          </defs>
-                          <circle cx="320" cy="320" r="276" fill="none" stroke="#e7edf4" stroke-width="2" />
-                          <circle cx="320" cy="320" r="236" fill="none" stroke="#e7edf4" stroke-width="2" />
-                          <circle cx="320" cy="320" r="196" fill="none" stroke="#e7edf4" stroke-width="2" />
-                          <circle cx="320" cy="320" r="156" fill="none" stroke="#e7edf4" stroke-width="2" />
-                          <circle cx="320" cy="320" r="256" fill="none" stroke="#d9e0e7" stroke-width="24" />
-                          <circle cx="320" cy="320" r="216" fill="none" stroke="#eef6ff" stroke-width="22" />
-                          <circle cx="320" cy="320" r="176" fill="none" stroke="#f3e8ff" stroke-width="22" />
-                          <circle cx="320" cy="320" r="136" fill="none" stroke="#eef9f1" stroke-width="22" />
-                          <g id="ruleMonthLabels"></g>
-                          <g id="ruleMonthTicks"></g>
-                          <g id="ruleReferencePointer"></g>
-                          <g id="ruleWorkerMarker"></g>
-                          <g id="ruleDroneMarker"></g>
-                          <g id="ruleQueenMarker"></g>
-                          <g id="ruleExtraMarker"></g>
-                        </svg>
-                        <div class="wheel-center">
-                          <div>
-                            <strong id="ruleCenterTitle">Rule Wheel</strong>
-                            <span id="ruleCenterMeta">Planning alignment</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="legend-grid">
-                      <div class="legend-item">
-                        <div class="legend-swatch" style="background:#c98118;"></div>
-                        <strong>Reference</strong>
-                        <span>Primary selected date</span>
-                      </div>
-                      <div class="legend-item">
-                        <div class="legend-swatch" style="background:#1d4ed8;"></div>
-                        <strong>Worker</strong>
-                        <span>Forager / worker timing</span>
-                      </div>
-                      <div class="legend-item">
-                        <div class="legend-swatch" style="background:#7c3aed;"></div>
-                        <strong>Drone</strong>
-                        <span>Drone maturity timing</span>
-                      </div>
-                      <div class="legend-item">
-                        <div class="legend-swatch" style="background:#2f6f3e;"></div>
-                        <strong>Queen</strong>
-                        <span>Queen rearing timing</span>
-                      </div>
-                    </div>
-                    <div class="note-box" id="ruleNote">
-                      This wheel is a modern digital interpretation of the Beekeeper’s Rule.
-                    </div>
-                  </div>
-                </div>
-                <aside class="card side-card overview-card">
-                  <h2>Dashboard Overview</h2>
-                  <div class="overview-kpis">
-                    <div class="overview-kpi">
-                      <strong>Current Mode</strong>
-                      <span id="overviewMode">Development Clock</span>
-                      <p id="overviewModeText">Track queen, worker or drone timing from a known observation date.</p>
-                    </div>
-                    <div class="overview-kpi">
-                      <strong>Primary Date</strong>
-                      <span id="overviewPrimaryDate">Not set</span>
-                      <p id="overviewPrimaryText">This updates according to the active planner.</p>
-                    </div>
-                    <div class="overview-kpi">
-                      <strong>Key Action</strong>
-                      <span id="overviewAction">Update the selected mode</span>
-                      <p id="overviewActionText">The dashboard highlights the most useful next management action.</p>
-                    </div>
-                    <div class="overview-kpi">
-                      <strong>Practical Use</strong>
-                      <span id="overviewUse">Development timing</span>
-                      <p id="overviewUseText">Each mode focuses on a different beekeeper question.</p>
-                    </div>
-                    <div class="overview-kpi">
-                      <strong>Saved Plan</strong>
-                      <span id="overviewSavedPlan">None loaded</span>
-                      <p id="overviewSavedPlanText">Save your current work so you can return to it later on this device.</p>
-                    </div>
-                    <div class="overview-kpi">
-                      <strong>Inspection Recommendation</strong>
-                      <span id="overviewReminderHeadline">Awaiting overlay</span>
-                      <p id="overviewReminderText">Update the weather overlay to generate inspection guidance.</p>
-                    </div>
-                  </div>
-                </aside>
-              </div>
-            </section>
-            <section class="seo-grid">
-              <article class="card seo-card">
-                <h2>Why comparison matters</h2>
-                <p>
-                  Different apiaries, forage locations and breeding projects rarely behave
-                  in exactly the same way. Comparing two saved plans side by side helps you
-                  spot timing differences, identify which colonies need earlier preparation,
-                  and decide where management effort should be focused first.
-                </p>
-                <p style="margin-top:12px;">
-                  This becomes especially useful when you are managing multiple nectar flows,
-                  coastal versus inland apiaries, or different queen rearing dates.
-                </p>
-              </article>
-              <article class="card seo-card">
-                <h2>Why the seasonal calendar helps</h2>
-                <p>
-                  Good beekeeping is not only about exact dates. It is also about seasonal rhythm. The task calendar gives you a practical layer on top of the calculations by reminding you what usually matters most in each month. This fits directly with the <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Year in the Apiary</a> and helps place the calculator inside the wider beekeeping season.
-                </p>
-                <p style="margin-top:12px;">
-                  Use it as a prompt alongside inspection findings, local forage knowledge,
-                  colony condition and weather patterns.
-                </p>
-              </article>
-            </section>
-            <section class="seo-grid" style="margin-top:28px;">
-              <article class="card seo-card">
-                <h2>Related guides: use the calculator with real colony decisions</h2>
-                <p>
-                  The calculator works best when paired with practical pages that explain what you should actually expect to see in the hive.
-                </p>
-                <ul class="bullet-list">
-                  <li><a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">Swarm &amp; Queen</a> for the wider decision-making context.</li>
-                  <li><a href="/queen-timeline" title="Day-by-day queen development and swarm timing">Queen Timeline</a> for day-by-day queen development.</li>
-                  <li><a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">Step-by-Step Inspections</a> for checking what is really happening in the colony.</li>
-                  <li><a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Year in the Apiary</a> for seasonal timing and monthly context.</li>
-                  <li><a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a> for queen, worker and drone roles.</li>
-                </ul>
-              </article>
-              <article class="card seo-card">
-                <h2>When this tool is most useful</h2>
-                <p>
-                  This calculator is most useful when you already have a known date or observed event: eggs seen, queen cells sealed, a target nectar flow, or a breeding target.
-                </p>
-                <p style="margin-top:12px;">
-                  It is less useful when used in isolation without an inspection result. That is why it should sit alongside pages like <a href="/queenless-or-supersedure" title="How to tell the difference between a queenless colony and supersedure">Queenless or Supersedure</a>, <a href="/cant-find-queen" title="How to assess the hive if you cannot find the queen">Can’t Find Queen</a> and <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">Brood Pattern Guide</a>.
-                </p>
-              </article>
-            </section>
-            <section class="section">
-              <div class="card faq-card" id="faq">
-                <h2>Frequently asked questions</h2>
-                <div class="faq-list">
-                  <div class="faq-item open">
-                    <button class="faq-question" type="button">
-                    <span>Can I compare two saved apiary plans?</span>
-                    <span>+</span>
-                    </button>
-                    <div class="faq-answer">
-                      <p>
-                        Yes. Use the Multi-Apiary Comparison section to select two saved plans
-                        and view their key dates, modes and notes side by side.
-                      </p>
-                    </div>
-                  </div>
-                  <div class="faq-item">
-                    <button class="faq-question" type="button">
-                    <span>Does the seasonal task calendar replace inspections?</span>
-                    <span>+</span>
-                    </button>
-                    <div class="faq-answer">
-                      <p>
-                        No. It is a practical reminder tool. You should still base decisions on what you actually see in the colony, together with local weather and forage. Use it alongside <a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">Step-by-Step Inspections</a> and the <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Year in the Apiary</a>.
-                      </p>
-                    </div>
-                  </div>
-                  <div class="faq-item">
-                    <button class="faq-question" type="button">
-                    <span>Can I still print the page as a PDF?</span>
-                    <span>+</span>
-                    </button>
-                    <div class="faq-answer">
-                      <p>
-                        Yes. Use the Print / Export PDF button at the top of the page. The print
-                        view keeps the active calculator mode and removes much of the on-screen UI.
-                      </p>
-                    </div>
-                  </div>
-                  <div class="faq-item">
-                    <button class="faq-question" type="button">
-                    <span>Are saved plans synced across devices?</span>
-                    <span>+</span>
-                    </button>
-                    <div class="faq-answer">
-                      <p>
-                        No. Saved plans are stored in your browser on this device only.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
+            </div>
+            <div class="status-box" id="planStatus">No plan action yet.</div>
           </div>
+          <div class="card plans-card">
+            <h2>Saved Plans</h2>
+            <p>
+              Load, overwrite or delete saved plans. Loading a plan restores the saved
+              mode, dates, notes and calculator inputs.
+            </p>
+            <div class="plans-list" id="savedPlansList"></div>
+          </div>
+        </section>
+        <section class="weather-grid no-print">
+          <div class="card weather-card">
+            <h2>Weather / Nectar Flow Overlay</h2>
+            <p>
+              This uses manual planning inputs rather than a live weather feed.
+              It lets you overlay likely apiary conditions onto the current plan.
+            </p>
+            <div class="weather-form-grid">
+              <div class="field">
+                <label for="weatherRegion">Apiary region / context</label>
+                <input id="weatherRegion" type="text" placeholder="e.g. South Wales coast, inland valley, exposed hill site" />
+              </div>
+              <div class="field">
+                <label for="weatherPattern">Forecast pattern</label>
+                <select id="weatherPattern">
+                  <option value="settled">Settled / improving</option>
+                  <option value="mixed" selected>Mixed / changeable</option>
+                  <option value="wet">Wet / unstable</option>
+                  <option value="hot">Hot / fast flow conditions</option>
+                  <option value="cold">Cold / held-back conditions</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="weatherTempBand">Day temperature band</label>
+                <select id="weatherTempBand">
+                  <option value="low">Below 12°C</option>
+                  <option value="moderate" selected>12–18°C</option>
+                  <option value="good">18–24°C</option>
+                  <option value="high">Above 24°C</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="weatherRainRisk">Rain / interruption risk</label>
+                <select id="weatherRainRisk">
+                  <option value="low">Low</option>
+                  <option value="moderate" selected>Moderate</option>
+                  <option value="high">High</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="weatherFlightRisk">Bee flying conditions</label>
+                <select id="weatherFlightRisk">
+                  <option value="poor">Poor</option>
+                  <option value="fair" selected>Fair</option>
+                  <option value="good">Good</option>
+                  <option value="excellent">Excellent</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="nectarStrength">Nectar flow strength</label>
+                <select id="nectarStrength">
+                  <option value="none">None / little forage</option>
+                  <option value="light">Light trickle</option>
+                  <option value="building" selected>Building</option>
+                  <option value="strong">Strong flow</option>
+                  <option value="peak">Peak flow</option>
+                </select>
+              </div>
+              <div class="field" style="grid-column: 1 / -1;">
+                <label for="weatherNotes">Weather / forage note</label>
+                <textarea id="weatherNotes" placeholder="Optional note: e.g. lime nearly opening, bramble just starting, windy afternoons, poor flying mornings"></textarea>
+              </div>
+              <div class="field" style="grid-column: 1 / -1;">
+                <div class="btn-row">
+                  <button class="btn btn-teal" id="updateWeatherOverlayBtn" type="button">Update overlay</button>
+                  <button class="btn btn-secondary" id="weatherExampleBtn" type="button">Use example overlay</button>
+                </div>
+              </div>
+            </div>
+            <div class="status-box" id="weatherStatus">
+              Overlay ready. Add conditions to improve inspection timing guidance.
+            </div>
+          </div>
+          <div class="card weather-card">
+            <h2>Overlay Summary + Inspection Reminder Logic</h2>
+            <p>
+              These reminders combine the active planning mode with your manual weather
+              and nectar conditions.
+            </p>
+            <div class="weather-summary-grid" id="weatherSummaryGrid"></div>
+            <div class="reminder-grid" id="reminderGrid" style="margin-top:14px;"></div>
+            <div class="note-box" id="reminderNote">
+              Reminder logic is advisory. Always combine it with what you actually see in the colony.
+            </div>
+          </div>
+          <div class="card weather-card" style="margin-top:18px;">
+            <h2>Inspection Window + Swarm Risk</h2>
+            <p>
+              This combines the active planning mode, seasonal timing and your overlay
+              conditions to suggest the best inspection timing and highlight swarm pressure.
+            </p>
+            <div class="weather-summary-grid" id="inspectionAdvisorGrid" style="margin-top:14px;"></div>
+            <div class="weather-summary-grid" id="swarmRiskGrid" style="margin-top:14px;"></div>
+            <div class="note-box" id="advisorNote">
+              These indicators are guidance tools only. Always confirm decisions against live colony conditions.
+            </div>
+          </div>
+        </section>
+        <section class="comparison-grid no-print">
+          <div class="card comparison-card">
+            <h2>Multi-Apiary Comparison</h2>
+            <p>
+              Select two saved plans and compare their timings, modes and management focus.
+            </p>
+            <div class="comparison-form-grid">
+              <div class="field">
+                <label for="comparePlanA">Plan A</label>
+                <select id="comparePlanA"></select>
+              </div>
+              <div class="field">
+                <label for="comparePlanB">Plan B</label>
+                <select id="comparePlanB"></select>
+              </div>
+              <div class="field" style="grid-column: 1 / -1;">
+                <div class="btn-row">
+                  <button class="btn btn-blue" id="runComparisonBtn" type="button">Compare plans</button>
+                  <button class="btn btn-secondary" id="clearComparisonBtn" type="button">Clear comparison</button>
+                </div>
+              </div>
+            </div>
+            <div class="status-box" id="comparisonStatus">No comparison yet.</div>
+          </div>
+          <div class="card comparison-card">
+            <h2>Comparison Results</h2>
+            <p>Use this to spot timing differences between two apiaries or project plans.</p>
+            <div id="comparisonResults"></div>
+          </div>
+        </section>
+        <section class="calendar-grid no-print">
+          <div class="card calendar-card">
+            <h2>Seasonal Task Calendar</h2>
+            <p>
+              Select a month and focus area to view practical beekeeper reminders.
+            </p>
+            <div class="calendar-form-grid">
+              <div class="field">
+                <label for="taskMonth">Month</label>
+                <select id="taskMonth"></select>
+              </div>
+              <div class="field">
+                <label for="taskFocus">Focus area</label>
+                <select id="taskFocus">
+                  <option value="all">All tasks</option>
+                  <option value="inspections">Inspections</option>
+                  <option value="swarm">Swarm management</option>
+                  <option value="feeding">Feeding & stores</option>
+                  <option value="honey">Honey crop</option>
+                  <option value="breeding">Queen breeding</option>
+                  <option value="health">Bee health</option>
+                  <option value="winter">Winter prep</option>
+                </select>
+              </div>
+              <div class="field" style="grid-column: 1 / -1;">
+                <label for="taskApiaryNote">Optional apiary note</label>
+                <input id="taskApiaryNote" type="text" placeholder="e.g. Exposed coastal site, strong colonies, heather target" />
+              </div>
+              <div class="field" style="grid-column: 1 / -1;">
+                <div class="btn-row">
+                  <button class="btn btn-primary" id="updateTaskCalendarBtn" type="button">Update calendar</button>
+                  <button class="btn btn-secondary" id="useCurrentMonthBtn" type="button">Use current month</button>
+                </div>
+              </div>
+            </div>
+            <div class="status-box" id="taskCalendarStatus">Seasonal task calendar ready.</div>
+          </div>
+          <div class="card calendar-card">
+            <h2 id="taskCalendarHeading">Seasonal Tasks</h2>
+            <p id="taskCalendarIntro">Choose a month and task focus to see beekeeper reminders.</p>
+            <div class="task-list" id="taskList"></div>
+          </div>
+        </section>
+        <section id="dashboard">
+          <div class="card dashboard-tabs no-print">
+            <div class="tab-row">
+              <button class="tab-btn active" data-mode="development">Development Clock</button>
+              <button class="tab-btn" data-mode="honey">Honey Flow Planning</button>
+              <button class="tab-btn" data-mode="breeding">Queen Breeding</button>
+              <button class="tab-btn" data-mode="wheel">Rule Wheel</button>
+            </div>
+          </div>
+          <div class="dashboard-grid">
+            <div class="card main-card">
+              <div class="print-only">
+                <h2>Printed Beekeeper’s Rule Summary</h2>
+                <p>This print version shows the currently active calculator mode and its latest summary information.</p>
+                <hr />
+              </div>
+              <div class="mode-panel active" id="panel-development">
+                <div class="mode-header">
+                  <div class="kicker-yellow">Mode 1 — Development Clock</div>
+                  <h2>Bee Development Clock</h2>
+                  <p>Choose a bee type, pick the date you observed eggs or a key event, and review the related colony timing.</p>
+                </div>
+                <div class="field-grid no-print">
+                  <div class="field">
+                    <label for="beeType">Bee type</label>
+                    <select id="beeType">
+                      <option value="queen">Queen</option>
+                      <option value="worker">Worker</option>
+                      <option value="drone">Drone</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="startDate">Start date</label>
+                    <input id="startDate" type="date" />
+                  </div>
+                  <div class="field">
+                    <label for="startEvent">Start from</label>
+                    <select id="startEvent">
+                      <option value="egg">Egg laid</option>
+                      <option value="hatched">Egg hatched / larva visible</option>
+                      <option value="capped">Cell capped</option>
+                      <option value="emerged">Adult emerged</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>&nbsp;</label>
+                    <div class="btn-row">
+                      <button class="action-btn" id="updateClockBtn">Update clock</button>
+                      <button class="action-btn secondary" id="todayClockBtn" type="button">Use today</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="summary-stack">
+                  <div class="summary-box">
+                    <strong id="summaryHeadline">Egg observed on selected date</strong>
+                    <p id="summaryText">The dashboard is showing the selected development cycle from the date you entered.</p>
+                  </div>
+                </div>
+                <div class="event-stack" id="eventsList"></div>
+                <div class="note-box" id="beeNote">
+                  Swarm note: when queen cells are present, the most important point is usually the sealing date.
+                </div>
+                <div class="mini-grid">
+                  <div class="mini-card">
+                    <strong>Queen</strong>
+                    <span>3 days egg, 5 days larva, 8 days capped, 16 days total.</span>
+                  </div>
+                  <div class="mini-card">
+                    <strong>Worker</strong>
+                    <span>3 days egg, 6 days larva, 12 days capped, 21 days total.</span>
+                  </div>
+                  <div class="mini-card">
+                    <strong>Drone</strong>
+                    <span>3 days egg, 7 days larva, 14 days capped, 24 days total.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mode-panel" id="panel-honey">
+                <div class="mode-header">
+                  <div class="kicker-green">Mode 2 — Honey Flow Planning</div>
+                  <h2>Honey Crop Timing Planner</h2>
+                  <p>Work backwards from a main nectar flow to estimate when worker eggs should be laid so foragers are available at the right time.</p>
+                </div>
+                <div class="field-grid no-print">
+                  <div class="field">
+                    <label for="flowName">Main nectar source</label>
+                    <input id="flowName" type="text" placeholder="e.g. Lime, Clover, Bramble" />
+                  </div>
+                  <div class="field">
+                    <label for="apiaryNote">Apiary / note</label>
+                    <input id="apiaryNote" type="text" placeholder="Optional note for this flow" />
+                  </div>
+                  <div class="field">
+                    <label for="flowStart">Nectar flow start</label>
+                    <input id="flowStart" type="date" />
+                  </div>
+                  <div class="field">
+                    <label for="flowEnd">Nectar flow end</label>
+                    <input id="flowEnd" type="date" />
+                  </div>
+                  <div class="field">
+                    <label for="foragerLead">Worker age when foraging begins</label>
+                    <select id="foragerLead">
+                      <option value="35">About 35 days from egg</option>
+                      <option value="38">About 38 days from egg</option>
+                      <option value="40" selected>About 40 days from egg</option>
+                      <option value="42">About 42 days from egg</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label>&nbsp;</label>
+                    <div class="btn-row">
+                      <button class="action-btn" id="updateHoneyBtn" type="button">Update planner</button>
+                      <button class="action-btn secondary" id="useExampleBtn" type="button">Use example</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="summary-stack">
+                  <div class="summary-box">
+                    <strong id="honeyHeadline">Honey flow planning summary</strong>
+                    <p id="honeySummaryText">Add your expected nectar flow period and the planner will calculate when eggs should be laid to produce foragers at the right time.</p>
+                  </div>
+                  <div class="info-card">
+                    <strong>Egg-laying window for peak foragers</strong>
+                    <p id="eggWindowText">Not calculated yet.</p>
+                  </div>
+                  <div class="info-card">
+                    <strong>Brood stimulation guidance</strong>
+                    <p id="stimText">Not calculated yet.</p>
+                  </div>
+                </div>
+                <div class="timeline-stack" id="honeyTimeline"></div>
+                <div class="note-box" id="honeyAssumptions">
+                  Assumption: this planner uses worker development plus the selected age at which workers begin foraging.
+                </div>
+              </div>
+              <div class="mode-panel" id="panel-breeding">
+                <div class="mode-header">
+                  <div class="kicker-purple">Mode 3 — Queen Breeding</div>
+                  <h2>Breeding Synchronisation Planner</h2>
+                  <p>Work backwards from your desired mating date so drone production and queen rearing overlap correctly.</p>
+                </div>
+                <div class="field-grid no-print">
+                  <div class="field">
+                    <label for="desiredMatingDate">Desired mating date</label>
+                    <input id="desiredMatingDate" type="date" />
+                  </div>
+                  <div class="field">
+                    <label for="breedingApiary">Breeding apiary / note</label>
+                    <input id="breedingApiary" type="text" placeholder="Optional breeding note" />
+                  </div>
+                  <div class="field">
+                    <label for="droneMaturityLead">Drone egg to mature flying drone</label>
+                    <select id="droneMaturityLead">
+                      <option value="36">About 36 days</option>
+                      <option value="38" selected>About 38 days</option>
+                      <option value="40">About 40 days</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="queenBuildMethod">Queen planning basis</label>
+                    <select id="queenBuildMethod">
+                      <option value="virginOnDate" selected>Virgin queen ready on desired date</option>
+                      <option value="startRearing">Start queen rearing from that point</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="queenSourceNote">Queen source / breeder note</label>
+                    <textarea id="queenSourceNote" placeholder="Optional note about grafting stock, breeder colony, or mating plan"></textarea>
+                  </div>
+                  <div class="field">
+                    <label>&nbsp;</label>
+                    <div class="btn-row">
+                      <button class="action-btn purple" id="updateBreedingBtn" type="button">Update breeding plan</button>
+                      <button class="action-btn secondary" id="useBreedingExampleBtn" type="button">Use example</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="summary-stack">
+                  <div class="summary-box">
+                    <strong id="breedingHeadline">Breeding synchronisation summary</strong>
+                    <p id="breedingSummaryText">Add your desired mating date and the planner will calculate when drone production and queen rearing should begin.</p>
+                  </div>
+                  <div class="info-card">
+                    <strong>Drone production timing</strong>
+                    <p id="dronePlanText">Not calculated yet.</p>
+                  </div>
+                  <div class="info-card">
+                    <strong>Queen rearing timing</strong>
+                    <p id="queenPlanText">Not calculated yet.</p>
+                  </div>
+                </div>
+                <div class="timeline-stack" id="breedingTimeline"></div>
+                <div class="note-box" id="breedingAssumptions">
+                  Assumption: this planner uses a queen development period of 16 days and the selected drone maturity lead time.
+                </div>
+              </div>
+              <div class="mode-panel" id="panel-wheel">
+                <div class="mode-header">
+                  <div class="kicker-blue">Mode 4 — Rule Wheel</div>
+                  <h2>Digital Beekeeper’s Rule Wheel</h2>
+                  <p>View worker, queen and drone timing together on one circular annual calendar.</p>
+                </div>
+                <div class="field-grid no-print">
+                  <div class="field">
+                    <label for="ruleMode">Wheel mode</label>
+                    <select id="ruleMode">
+                      <option value="reference">Reference / lifecycle</option>
+                      <option value="honey" selected>Honey flow</option>
+                      <option value="breeding">Breeding</option>
+                    </select>
+                  </div>
+                  <div class="field">
+                    <label for="ruleReferenceDate">Reference date</label>
+                    <input id="ruleReferenceDate" type="date" />
+                  </div>
+                  <div class="field">
+                    <label for="ruleManualLabel">Manual label / note</label>
+                    <input id="ruleManualLabel" type="text" placeholder="Optional wheel note" />
+                  </div>
+                  <div class="field">
+                    <label>&nbsp;</label>
+                    <div class="btn-row">
+                      <button class="action-btn blue" id="updateRuleWheelBtn" type="button">Update wheel</button>
+                      <button class="action-btn secondary" id="ruleTodayBtn" type="button">Use today</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="summary-stack">
+                  <div class="summary-box">
+                    <strong id="ruleHeadline">Digital Beekeeper’s Rule summary</strong>
+                    <p id="ruleSummaryText">Select a mode to map your chosen dates onto the circular calendar.</p>
+                  </div>
+                  <div class="info-card">
+                    <strong>Worker timing</strong>
+                    <p id="ruleWorkerText">Not calculated yet.</p>
+                  </div>
+                  <div class="info-card">
+                    <strong>Queen timing</strong>
+                    <p id="ruleQueenText">Not calculated yet.</p>
+                  </div>
+                  <div class="info-card">
+                    <strong>Drone timing</strong>
+                    <p id="ruleDroneText">Not calculated yet.</p>
+                  </div>
+                </div>
+                <div class="wheel-wrap">
+                  <div class="wheel-shell">
+                    <svg class="wheel-svg" viewBox="0 0 640 640" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+                          <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.14" />
+                        </filter>
+                      </defs>
+                      <circle cx="320" cy="320" r="276" fill="none" stroke="#e7edf4" stroke-width="2" />
+                      <circle cx="320" cy="320" r="236" fill="none" stroke="#e7edf4" stroke-width="2" />
+                      <circle cx="320" cy="320" r="196" fill="none" stroke="#e7edf4" stroke-width="2" />
+                      <circle cx="320" cy="320" r="156" fill="none" stroke="#e7edf4" stroke-width="2" />
+                      <circle cx="320" cy="320" r="256" fill="none" stroke="#d9e0e7" stroke-width="24" />
+                      <circle cx="320" cy="320" r="216" fill="none" stroke="#eef6ff" stroke-width="22" />
+                      <circle cx="320" cy="320" r="176" fill="none" stroke="#f3e8ff" stroke-width="22" />
+                      <circle cx="320" cy="320" r="136" fill="none" stroke="#eef9f1" stroke-width="22" />
+                      <g id="ruleMonthLabels"></g>
+                      <g id="ruleMonthTicks"></g>
+                      <g id="ruleReferencePointer"></g>
+                      <g id="ruleWorkerMarker"></g>
+                      <g id="ruleDroneMarker"></g>
+                      <g id="ruleQueenMarker"></g>
+                      <g id="ruleExtraMarker"></g>
+                    </svg>
+                    <div class="wheel-center">
+                      <div>
+                        <strong id="ruleCenterTitle">Rule Wheel</strong>
+                        <span id="ruleCenterMeta">Planning alignment</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="legend-grid">
+                  <div class="legend-item">
+                    <div class="legend-swatch" style="background:#c98118;"></div>
+                    <strong>Reference</strong>
+                    <span>Primary selected date</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-swatch" style="background:#1d4ed8;"></div>
+                    <strong>Worker</strong>
+                    <span>Forager / worker timing</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-swatch" style="background:#7c3aed;"></div>
+                    <strong>Drone</strong>
+                    <span>Drone maturity timing</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-swatch" style="background:#2f6f3e;"></div>
+                    <strong>Queen</strong>
+                    <span>Queen rearing timing</span>
+                  </div>
+                </div>
+                <div class="note-box" id="ruleNote">
+                  This wheel is a modern digital interpretation of the Beekeeper’s Rule.
+                </div>
+              </div>
+            </div>
+            <aside class="card side-card overview-card">
+              <h2>Dashboard Overview</h2>
+              <div class="overview-kpis">
+                <div class="overview-kpi">
+                  <strong>Current Mode</strong>
+                  <span id="overviewMode">Development Clock</span>
+                  <p id="overviewModeText">Track queen, worker or drone timing from a known observation date.</p>
+                </div>
+                <div class="overview-kpi">
+                  <strong>Primary Date</strong>
+                  <span id="overviewPrimaryDate">Not set</span>
+                  <p id="overviewPrimaryText">This updates according to the active planner.</p>
+                </div>
+                <div class="overview-kpi">
+                  <strong>Key Action</strong>
+                  <span id="overviewAction">Update the selected mode</span>
+                  <p id="overviewActionText">The dashboard highlights the most useful next management action.</p>
+                </div>
+                <div class="overview-kpi">
+                  <strong>Practical Use</strong>
+                  <span id="overviewUse">Development timing</span>
+                  <p id="overviewUseText">Each mode focuses on a different beekeeper question.</p>
+                </div>
+                <div class="overview-kpi">
+                  <strong>Saved Plan</strong>
+                  <span id="overviewSavedPlan">None loaded</span>
+                  <p id="overviewSavedPlanText">Save your current work so you can return to it later on this device.</p>
+                </div>
+                <div class="overview-kpi">
+                  <strong>Inspection Recommendation</strong>
+                  <span id="overviewReminderHeadline">Awaiting overlay</span>
+                  <p id="overviewReminderText">Update the weather overlay to generate inspection guidance.</p>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+        <section class="seo-grid">
+          <article class="card seo-card">
+            <h2>Why comparison matters</h2>
+            <p>
+              Different apiaries, forage locations and breeding projects rarely behave
+              in exactly the same way. Comparing two saved plans side by side helps you
+              spot timing differences, identify which colonies need earlier preparation,
+              and decide where management effort should be focused first.
+            </p>
+            <p style="margin-top:12px;">
+              This becomes especially useful when you are managing multiple nectar flows,
+              coastal versus inland apiaries, or different queen rearing dates.
+            </p>
+          </article>
+          <article class="card seo-card">
+            <h2>Why the seasonal calendar helps</h2>
+            <p>
+              Good beekeeping is not only about exact dates. It is also about seasonal rhythm. The task calendar gives you a practical layer on top of the calculations by reminding you what usually matters most in each month. This fits directly with the <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Year in the Apiary</a> and helps place the calculator inside the wider beekeeping season.
+            </p>
+            <p style="margin-top:12px;">
+              Use it as a prompt alongside inspection findings, local forage knowledge,
+              colony condition and weather patterns.
+            </p>
+          </article>
+        </section>
+        <section class="seo-grid" style="margin-top:28px;">
+          <article class="card seo-card">
+            <h2>Related guides: use the calculator with real colony decisions</h2>
+            <p>
+              The calculator works best when paired with practical pages that explain what you should actually expect to see in the hive.
+            </p>
+            <ul class="bullet-list">
+              <li><a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">Swarm &amp; Queen</a> for the wider decision-making context.</li>
+              <li><a href="/queen-timeline" title="Day-by-day queen development and swarm timing">Queen Timeline</a> for day-by-day queen development.</li>
+              <li><a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">Step-by-Step Inspections</a> for checking what is really happening in the colony.</li>
+              <li><a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Year in the Apiary</a> for seasonal timing and monthly context.</li>
+              <li><a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a> for queen, worker and drone roles.</li>
+            </ul>
+          </article>
+          <article class="card seo-card">
+            <h2>When this tool is most useful</h2>
+            <p>
+              This calculator is most useful when you already have a known date or observed event: eggs seen, queen cells sealed, a target nectar flow, or a breeding target.
+            </p>
+            <p style="margin-top:12px;">
+              It is less useful when used in isolation without an inspection result. That is why it should sit alongside pages like <a href="/queenless-or-supersedure" title="How to tell the difference between a queenless colony and supersedure">Queenless or Supersedure</a>, <a href="/cant-find-queen" title="How to assess the hive if you cannot find the queen">Can’t Find Queen</a> and <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">Brood Pattern Guide</a>.
+            </p>
+          </article>
+        </section>
+        <section class="card faq-card" style="margin-top:28px;">
+          <h2>Frequently asked questions</h2>
+          <div class="faq-item">
+            <h3>Can I compare two saved apiary plans?</h3>
+            <p>
+              Yes. Use the Multi-Apiary Comparison section to select two saved plans
+              and view their key dates, modes and notes side by side.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Does the seasonal task calendar replace inspections?</h3>
+           <p>
+            No. It is a practical reminder tool. You should still base decisions on what you actually see in the colony, together with local weather and forage. Use it alongside <a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">Step-by-Step Inspections</a> and the <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Year in the Apiary</a>.
+          </p>
+          </div>
+          <div class="faq-item">
+            <h3>Can I still print the page as a PDF?</h3>
+            <p>
+              Yes. Use the Print / Export PDF button at the top of the page. The print
+              view keeps the active calculator mode and removes much of the on-screen UI.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Are saved plans synced across devices?</h3>
+            <p>
+              No. Saved plans are stored in your browser on this device only.
+            </p>
+          </div>
+        </section>
+        <section class="card footer-card" style="margin-top:28px;">
+          <p>
+            BeezKnees Beekeeper’s Rule Calculator is designed as a practical digital planning tool for queen development, honey flow timing, breeding synchronisation, multi-apiary comparison, seasonal planning and printable summaries. Always combine calculator outputs with inspection findings, local forage knowledge and good colony management, especially through <a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">Step-by-Step Inspections</a>, <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">Swarm &amp; Queen</a> and <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Year in the Apiary</a>.
+          </p>
         </section>
       </div>
     </main>
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <div>
-          <h3>Contact &amp; Social</h3>
-          <ul class="footer-links">
-            <li>Email: <a href="/contact" title="Send us a message">Contact</a></li>
+    <!-- Footer -->
+    <footer class="site-footer" role="region" aria-label="Site Footer">
+      <div class="footer-columns">
+        <div class="footer-column" role="region" aria-label="Contact Information">
+          <h3>Contact</h3>
+          <address>
+            <p>Email: <a href="/contact" title="Send us a message via our contact page">Contact</a></p>
+          </address>
+          <p>
+            <i class="fab fa-facebook-square" aria-hidden="true"></i>
+            Facebook:
+            <a href="https://www.facebook.com/beezkneesbeekeeping" target="_blank" rel="noopener noreferrer" aria-label="BeezKnees on Facebook">
+            BeezKnees
+            </a>
+          </p>
+        </div>
+        <div class="footer-column" role="region" aria-label="Useful Site Links">
+          <h3>Useful Links</h3>
+          <ul>
             <li>
-              Facebook:
-              <a href="https://www.facebook.com/beezkneesbeekeeping" target="_blank" rel="noopener noreferrer" aria-label="BeezKnees on Facebook">
-              BeezKnees
-              </a>
+              <a href="/downloads" title="Free beekeeping downloads and printable guides">Free Downloads</a>
+            </li>
+            <li>
+              <a href="/privacy" title="Read our privacy policy">Privacy Policy</a>
+            </li>
+            <li>
+              <a href="/site-map" title="View a map of our entire website">Site Map</a>
             </li>
           </ul>
         </div>
-        <div>
-          <h3>Quick Links</h3>
-          <ul class="footer-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/about-us">About Us</a></li>
-            <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
-            <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
-            <li><a href="/bee-diseases">Bee Health</a></li>
-            <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
-            <li><a href="/hivetag-app">HiveTag</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3>Useful Pages</h3>
-          <ul class="footer-links">
-            <li><a href="/downloads">Free Downloads</a></li>
-            <li><a href="/privacy">Privacy Policy</a></li>
-            <li><a href="#" data-open-cookie-settings>Cookie Settings</a></li>
-            <li><a href="/site-map">Site Map</a></li>
-            <li><a href="/donate">Donate</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3>Beekeeping Resources</h3>
-          <ul class="footer-links">
-            <li><a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer">British Beekeepers Association</a></li>
-            <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer">Cardiff, Vale and Valleys Beekeepers Association</a></li>
-            <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank" rel="noopener noreferrer">The Honey (Wales) Regulations 2015</a></li>
-            <li><a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer">Wales Biodiversity Partnership</a></li>
-            <li><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer">BeeBase</a></li>
+        <div class="footer-column" role="region" aria-label="Beekeeping Resources">
+          <h3>Resources</h3>
+          <ul>
+            <li>
+              <a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer" title="Visit the British Beekeepers Association website">British Beekeepers Association</a>
+            </li>
+            <li>
+              <a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer" title="Visit the Cardiff Beekeepers Association site">Cardiff, Vale and Valleys Beekeepers Association</a>
+            </li>
+            <li>
+              <a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank" rel="noopener noreferrer" title="Read the Honey (Wales) Regulations 2015">The Honey (Wales) Regulations
+              2015</a>
+            </li>
+            <li>
+              <a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer" title="Explore Bee-Friendly programme by Wales Biodiversity Partnership">Wales Biodiversity Partnership</a>
+            </li>
+            <li>
+              <a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title="Access BeeBase for beekeeping information">BeeBase</a>
+            </li>
           </ul>
         </div>
       </div>
-      <div class="footer-bottom">
-        <span>&copy; 2025 BeezKnees. All rights reserved.</span>
-        <span>Practical beekeeping guidance and resources for UK beekeepers.</span>
+      <div class="footer-bottom" role="region" aria-label="Copyright">
+        © 2025 BeezKnees. All rights reserved.
       </div>
     </footer>
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-    <aside class="mobile-menu" id="mobileMenu" aria-labelledby="mobileMenuTitle" aria-hidden="true">
-      <div class="mobile-menu-header">
-        <h2 id="mobileMenuTitle">Menu</h2>
-        <button class="mobile-close" id="closeMobileMenu" aria-label="Close mobile menu">
-        <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-      <div class="mobile-menu-content">
-        <ul class="mobile-links">
-          <li><a href="/">Home</a></li>
-          <li><a href="/about-us">About Us</a></li>
-          <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
-          <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
-          <li><a href="/bee-diseases">Bee Health</a></li>
-          <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
-        </ul>
-        <div class="mobile-menu-cta">
-          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          Try HiveTag Free
-          </a>
-          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/hivetag-app">
-          <i class="fa-solid fa-circle-info"></i>
-          More Information
-          </a>
-        </div>
-      </div>
-    </aside>
-    <div class="search-overlay" id="searchOverlay"></div>
-    <div class="search-panel" id="searchPanel" aria-label="Search panel">
-      <form class="search-form" action="/search" method="get" role="search">
-        <input type="search" name="q" placeholder="Search all pages... e.g. spring build-up, swarm control, feeding" aria-label="Search all pages">
-        <button type="submit">Search</button>
-      </form>
-    </div>
-    <div class="cookie-popup" id="cookieBanner" role="dialog" aria-modal="false" aria-labelledby="cookieBannerTitle">
-      <div class="cookie-copy cookie-panel" id="cookieIntroPanel">
-        <span class="cookie-eyebrow">Privacy choices</span>
-        <h2 id="cookieBannerTitle">We use cookies to keep the site working and measure what helps visitors most.</h2>
-        <p>
-          Necessary cookies help core parts of the site work. Analytics cookies help us understand page use through Google Analytics, but only if you choose to allow them.
-          Read our <a href="/privacy">Privacy Policy</a>.
+    <!-- Cookie Consent Popup -->
+    <div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
+      <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
+        <h2>🍪 We Use Cookies</h2>
+        <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and
+          marketing purposes.
         </p>
-      </div>
-      <div class="cookie-copy cookie-panel cookie-settings-panel" id="cookieSettingsPanel" hidden>
-        <span class="cookie-eyebrow">Cookie settings</span>
-        <h2>Manage your cookie preferences</h2>
-        <div class="cookie-setting-row">
-          <div class="cookie-setting-text">
-            <strong>Strictly necessary</strong>
-            <p>Always active. These are needed for core site functions such as saving your cookie preference.</p>
-          </div>
-          <div class="cookie-setting-control">
-            <span class="cookie-status-pill">Always on</span>
-          </div>
+        <form id="cookie-options" name="cookie-options">
+          <label><input type="checkbox" checked disabled> Essential (always active)</label><br>
+          <label><input type="checkbox" id="analytics"> Analytics</label><br>
+          <label><input type="checkbox" id="marketing"> Marketing</label><br>
+        </form>
+        <div class="cookie-buttons">
+          <button id="accept-selected">Accept Selected</button> <button id="accept-all">Accept All</button>
         </div>
-        <div class="cookie-setting-row">
-          <div class="cookie-setting-text">
-            <label for="analyticsCookiesToggle"><strong>Analytics</strong></label>
-            <p>Allows Google Analytics so we can understand which pages are used and how visitors move around the site.</p>
-          </div>
-          <div class="cookie-setting-control">
-            <label class="cookie-switch" for="analyticsCookiesToggle">
-            <input type="checkbox" id="analyticsCookiesToggle">
-            <span class="cookie-slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-      <div class="cookie-actions" id="cookieIntroActions">
-        <button type="button" class="cookie-btn cookie-btn-secondary" id="rejectCookies">Reject all</button>
-        <button type="button" class="cookie-btn cookie-btn-outline" id="openCookieSettings">Change settings</button>
-        <button type="button" class="cookie-btn cookie-btn-primary" id="acceptCookies">Accept all</button>
-      </div>
-      <div class="cookie-actions" id="cookieSettingsActions" hidden>
-        <button type="button" class="cookie-btn cookie-btn-secondary" id="backToCookieIntro">Back</button>
-        <button type="button" class="cookie-btn cookie-btn-primary" id="saveCookieSettings">Save settings</button>
       </div>
     </div>
-    <button class="back-to-top" id="backToTop" aria-label="Back to top">
-    <i class="fa-solid fa-arrow-up"></i>
-    </button>
-    <script src="js/search-data.js" defer></script>
-    <script src="js/script.js" defer></script>
+    <!-- Back to Top Button -->
+    <button id="backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button>
+    <script src="js/menuv2.js" defer></script>
     <script src="js/clock.js" defer></script>
   </body>
 </html>
