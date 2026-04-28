@@ -1,555 +1,687 @@
 <!DOCTYPE html>
-<html lang="en">
-   <head>
-      <meta name="generator" content="HTML Tidy for HTML5 for Windows version 5.9.14">
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Bee Health Checker (UK) – Symptoms, Likely Causes and What to Do | BeezKnees</title>
-      <!-- Hamburger button -->
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer">
-      <!-- Your CSS file -->
-      <link rel="stylesheet" href="css/style.css">
-      <!-- Canonical URL -->
-      <link rel="canonical" href="https://beezknees.co.uk/bee-health-checker">
-      <!-- SEO Meta Tags -->
-      <meta name="description" content="A practical UK-focused bee health checker. Match hive symptoms to likely causes and safe actions, including foulbrood, viruses, Nosema, chalkbrood, varroa and common pests.">
-      <meta name="keywords" content="bee health checker UK, bee disease symptoms, foulbrood symptoms, EFB AFB UK, Nosema symptoms, chalkbrood Ascosphaera apis, varroa symptoms, bee paralysis virus, wax moth, bee louse">
-      <meta name="author" content="Colin Chorley">
-      <!-- Favicons -->
-      <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-      <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
-      <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
-      <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
-      <link rel="icon" type="image/png" sizes="192x192" href="/images/android-chrome-192x192.png">
-      <link rel="icon" type="image/png" sizes="512x512" href="/images/android-chrome-512x512.png">
-      <link rel="manifest" href="/site.webmanifest">
-      <!-- Schema.org Structured Data -->
-      <script type="application/ld+json">
-         [{
-             "@context": "https://schema.org",
-             "@type": "Article",
-             "headline": "Bee Health Checker (UK) – Symptoms, Likely Causes and What to Do",
-             "description": "A practical UK-focused bee health checker to match hive symptoms to likely causes and safe next actions.",
-             "author": {
-               "@type": "Person",
-               "name": "Colin Chorley"
-             },
-             "publisher": {
-               "@type": "Organization",
-               "name": "BeezKnees",
-               "logo": {
-                 "@type": "ImageObject",
-                 "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png"
-               }
-             },
-             "mainEntityOfPage": {
-               "@type": "WebPage",
-               "@id": "https://beezknees.co.uk/bee-health-checker"
-             },
-             "image": "https://beezknees.co.uk/images/cluster-of-bees_2.webp",
-             "datePublished": "2024-06-01T00:00:00+00:00",
-             "dateModified": "2025-12-29T00:00:00+00:00",
-             "keywords": [
-               "bee health checker UK",
-               "bee disease symptoms",
-               "foulbrood UK",
-               "Nosema",
-               "chalkbrood Ascosphaera apis",
-               "varroa"
-             ]
-           },
-           {
-             "@context": "https://schema.org",
-             "@type": "FAQPage",
-             "mainEntity": [{
-                 "@type": "Question",
-                 "name": "Is this table a diagnosis tool?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "No. It’s a symptom-to-action guide to help you make safe decisions. Where notifiable diseases are possible, the recommended action is to isolate and seek official help."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "Should I include Ascosphaera apis as a separate disease?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Ascosphaera apis is the fungus that causes chalkbrood, so it’s best presented as part of the Chalkbrood section (e.g. 'Chalkbrood (caused by Ascosphaera apis)')."
-                 }
-               },
-               {
-                 "@type": "Question",
-                 "name": "Can I log these symptoms in the BeezKnees Members Area?",
-                 "acceptedAnswer": {
-                   "@type": "Answer",
-                   "text": "Yes. You can record what you saw during inspections, attach photos, and track follow-up actions over time in the Members Area."
-                 }
-               }
-             ]
-           },
-           {
-             "@context": "https://schema.org",
-             "@type": "BreadcrumbList",
-             "itemListElement": [{
-                 "@type": "ListItem",
-                 "position": 1,
-                 "name": "Home",
-                 "item": "https://beezknees.co.uk/"
-               },
-               {
-                 "@type": "ListItem",
-                 "position": 2,
-                 "name": "Bee Health Checker",
-                 "item": "https://beezknees.co.uk/bee-health-checker"
-               }
-             ]
-           }
-         ]
-      </script>
-   </head>
-   <body>
-      <!-- Fixed Header and Nav Container -->
-      <div class="fixed-header">
-         <header class="site-header" role="region" aria-label="Site Header">
-            <div class="header-container" role="region" aria-label="Site Branding">
-               <a href="https://beezknees.co.uk/"><img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="site-logo"></a>
-               <h2 class="site-title">BeezKnees</h2>
-               <!-- Hamburger Icon Button -->
-               <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu"></button>
-            </div>
-         </header>
+<html lang="en-GB">
+  <head>
+    <meta name="generator" content="HTML Tidy for HTML5 for Windows version 5.9.14">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bee Health Checker UK | Symptoms & What to Do | BeezKnees</title>
+    <link rel="canonical" href="https://beezknees.co.uk/bee-health-checker">
+    <meta name="description" content="Use this UK bee health checker to match hive symptoms to likely causes and safe actions, including varroa, foulbrood, viruses and pests.">
+    <meta name="keywords" content="bee health checker UK, bee disease symptoms, foulbrood symptoms, EFB AFB UK, Nosema symptoms, chalkbrood Ascosphaera apis, varroa symptoms, bee paralysis virus, wax moth, bee louse">
+    <meta name="author" content="Colin Chorley">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="BeezKnees">
+    <meta property="og:locale" content="en_GB">
+    <meta property="og:title" content="Bee Health Checker UK | Symptoms & What to Do | BeezKnees">
+    <meta property="og:description" content="Use this UK bee health checker to match hive symptoms to likely causes and safe actions, including varroa, foulbrood and viruses.">
+    <meta property="og:url" content="https://beezknees.co.uk/bee-health-checker">
+    <meta property="og:image" content="https://beezknees.co.uk/images/cluster-of-bees_2.webp">
+    <meta property="og:image:alt" content="Honey bees clustered on a frame during a health check in a UK hive">
+    <meta property="og:image:width" content="600">
+    <meta property="og:image:height" content="899">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bee Health Checker UK | Symptoms & What to Do | BeezKnees">
+    <meta name="twitter:description" content="Use this UK bee health checker to match hive symptoms to likely causes and safe actions.">
+    <meta name="twitter:image" content="https://beezknees.co.uk/images/cluster-of-bees_2.webp">
+    <meta name="twitter:image:alt" content="Honey bees clustered on a frame during a health check in a UK hive">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/images/android-chrome-512x512.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="css/style.css">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://beezknees.co.uk/#website",
+            "name": "BeezKnees",
+            "url": "https://beezknees.co.uk/",
+            "inLanguage": "en-GB",
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://beezknees.co.uk/search?q={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://beezknees.co.uk/#organization",
+            "name": "BeezKnees",
+            "url": "https://beezknees.co.uk/",
+            "logo": {
+              "@type": "ImageObject",
+              "@id": "https://beezknees.co.uk/#logo",
+              "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png",
+              "width": 1024,
+              "height": 1024
+            }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://beezknees.co.uk/#colin-chorley",
+            "name": "Colin Chorley",
+            "url": "https://beezknees.co.uk/about-us"
+          },
+          {
+            "@type": "ImageObject",
+            "@id": "https://beezknees.co.uk/bee-health-checker#primaryimage",
+            "url": "https://beezknees.co.uk/images/cluster-of-bees_2.webp",
+            "width": 600,
+            "height": 899,
+            "caption": "Honey bees clustered on a frame during a health check in a UK hive"
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://beezknees.co.uk/bee-health-checker#webpage",
+            "url": "https://beezknees.co.uk/bee-health-checker",
+          "name": "Bee Health Checker UK | Symptoms & What to Do | BeezKnees",
+      "description": "Use this UK bee health checker to match hive symptoms to likely causes and safe actions, including varroa, foulbrood and viruses.",
+            "inLanguage": "en-GB",
+            "datePublished": "2025-12-29",
+            "dateModified": "2026-04-28",
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/#website"
+            },
+            "about": {
+              "@id": "https://beezknees.co.uk/bee-health-checker#article"
+            },
+            "image": {
+              "@id": "https://beezknees.co.uk/bee-health-checker#primaryimage"
+            },
+            "primaryImageOfPage": {
+              "@id": "https://beezknees.co.uk/bee-health-checker#primaryimage"
+            },
+            "breadcrumb": {
+              "@id": "https://beezknees.co.uk/bee-health-checker#breadcrumb"
+            },
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            }
+          },
+          {
+            "@type": "Article",
+            "@id": "https://beezknees.co.uk/bee-health-checker#article",
+            "headline": "Bee Health Checker (UK) – Symptoms, Likely Causes and What to Do",
+            "description": "A practical UK-focused bee health checker. Match hive symptoms to likely causes and safe actions, including foulbrood, viruses, Nosema, chalkbrood, varroa and common pests.",
+            "image": {
+              "@id": "https://beezknees.co.uk/bee-health-checker#primaryimage"
+            },
+            "author": {
+              "@id": "https://beezknees.co.uk/#colin-chorley"
+            },
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            },
+            "mainEntityOfPage": {
+              "@id": "https://beezknees.co.uk/bee-health-checker#webpage"
+            },
+            "inLanguage": "en-GB",
+            "datePublished": "2025-12-29",
+            "dateModified": "2026-04-28",
+            "articleSection": [
+              "Bee health overview",
+              "How to use the checker",
+              "Red flags",
+              "Symptoms table",
+              "Downloadable checker",
+              "What to read next"
+            ],
+            "keywords": [
+              "bee health checker UK",
+              "bee disease symptoms",
+              "foulbrood symptoms",
+              "EFB AFB UK",
+              "Nosema symptoms",
+              "chalkbrood Ascosphaera apis",
+              "varroa symptoms",
+              "bee paralysis virus",
+              "wax moth",
+              "bee louse"
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://beezknees.co.uk/bee-health-checker#faq",
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/bee-health-checker#webpage"
+            },
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Is this table a diagnosis tool?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. It is a symptom-to-action guide to help you make safe decisions. Where notifiable diseases are possible, the recommended action is to isolate the colony and seek official help."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Should I include Ascosphaera apis as a separate disease?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Ascosphaera apis is the fungus that causes chalkbrood, so it is best presented as part of the Chalkbrood section, for example 'Chalkbrood (caused by Ascosphaera apis)'."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I log these symptoms in the BeezKnees Members Area?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. You can record what you saw during inspections, attach photos, and track follow-up actions over time in the Members Area."
+                }
+              }
+            ]
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": "https://beezknees.co.uk/bee-health-checker#breadcrumb",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://beezknees.co.uk/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Bee Health",
+                "item": "https://beezknees.co.uk/bee-diseases"
+              },
+              {
+                "@type": "ListItem",
+                "position": 3,
+                "name": "Bee Health Checker",
+                "item": "https://beezknees.co.uk/bee-health-checker"
+              }
+            ]
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <header class="site-header">
+      <!-- Top Tier: Logo + Search/Mobile Menu -->
+      <div class="topbar">
+        <a href="/" class="brand" aria-label="BeezKnees home">
+        <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
+        <span>BeezKnees</span>
+        </a>
+        <div class="header-actions">
+          <button class="search-toggle" id="openSearch" aria-label="Open site search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+          <button class="mobile-menu-toggle" id="openMobileMain" aria-label="Open mobile navigation">
+          <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
       </div>
-      <!-- Navigation Bar -->
+      <!-- Top Navigation -->
       <nav class="navbar" role="navigation" aria-label="Main navigation">
-         <ul class="nav-menu" role="region" aria-label="Main Navigation Links">
-            <li><a href="/" title="Visit the homepage">Home</a></li>
-            <li class="dropdown"><a href="/about-us" title="Learn more about us">About</a></li>
-            <!-- Beekeeping (foundations) -->
-            <li class="dropdown">
-               <a href="/beekeeping-guides" title="Explore our beekeeping guides">Beekeeping</a>
-               <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-               <ul class="dropdown-menu">
-                  <li><a href="/getting-started" title="Begin your beekeeping journey">Getting Started</a></li>
-                  <li><a href="/equipment" title="Essential beekeeping equipment">Equipment</a></li>
-                  <li><a href="/hive-management" title="Manage your hive effectively">Hive Management</a></li>
-                  <li><a href="/step-by-step-inspections" title="Step-by-step hive inspection guide for UK beekeepers">Step-by-Step Inspections</a></li>
-                  <li><a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">Brood Pattern Guide</a></li>
-                  <li><a href="/beekeepers-rule-calculator" title="Plan queen development, honey flows and swarm timing with the Beekeeper's Rule Calculator">Beekeeper's Rule Calculator</a></li>
-                  <li><a href="/hygiene" title="Keep your hive clean and healthy">Hygiene</a></li>
-                  <li><a href="/bee-stings" title="Understand and treat bee stings">Bee Stings</a></li>
-                  <li><a href="/honey-extraction" title="How to harvest and bottle honey safely">Extracting Honey</a></li>
-                  <li><a href="/honey-regulations-uk" title="UK Honey Regulations, Labelling Requirements and Food Safety Guidance for Beekeepers">UK Honey Regulations</a></li>
-                  <li><a href="/beekeeping-responsibilities-uk" title="Beekeeping responsibilities, safety and good practice in the UK">Beekeeping Responsibilities (UK)</a></li>
-                  <li><a href="/apiary-risk-assessment" title="Apiary risk assessment guidance and templates for UK beekeepers">Apiary Risk Assessment</a></li>
-                  <li><a href="/landowner-beekeeper-agreement" title="Landowner and beekeeper agreement guidance and template">Landowner Agreement</a></li>
-                  <li><a href="/beekeeping-insurance-uk" title="Beekeeping insurance and public liability overview for the UK">Insurance (UK)</a></li>
-               </ul>
-            </li>
-            <!-- Varroa cluster -->
-            <li class="dropdown">
-               <a href="/varroa-management" title="Control varroa mite infestations">Varroa</a>
-               <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-               <ul class="dropdown-menu">
-                  <li><a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">Varroa Overview (5-min)</a></li>
-                  <li><a href="/varroa-chemical-treatments" title="Chemical varroa treatments and safe seasonal use in the UK">Chemical Treatments</a></li>
-                  <li><a href="/varroa-non-chemical-methods" title="Non-chemical varroa control and IPM methods">Non-chemical Methods (IPM)</a></li>
-                  <li><a href="/ppe-varroa-treatments" title="PPE and safety guidance for varroa treatments">PPE for Treatments</a></li>
-                  <li><a href="/varroa-monitoring-methods" title="How to monitor varroa levels using common methods">Monitoring Methods</a></li>
-                  <li><a href="/varroa-treatment-calendar-uk" title="UK varroa treatment calendar and seasonal planning">Treatment Calendar (UK)</a></li>
-               </ul>
-            </li>
-            <!-- Apiary calendar -->
-            <li class="dropdown">
-               <a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Apiary Calendar</a>
-               <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-               <ul class="dropdown-menu">
-                  <li><a href="/january" title="January beekeeping tasks">January</a></li>
-                  <li><a href="/february" title="February beekeeping tasks">February</a></li>
-                  <li><a href="/march" title="March beekeeping tasks">March</a></li>
-                  <li><a href="/april" title="April beekeeping tasks">April</a></li>
-                  <li><a href="/may" title="May beekeeping tasks">May</a></li>
-                  <li><a href="/june" title="June beekeeping tasks">June</a></li>
-                  <li><a href="/july" title="July beekeeping tasks">July</a></li>
-                  <li><a href="/august" title="August beekeeping tasks">August</a></li>
-                  <li><a href="/september" title="September beekeeping tasks">September</a></li>
-                  <li><a href="/october" title="October beekeeping tasks">October</a></li>
-                  <li><a href="/november" title="November beekeeping tasks">November</a></li>
-                  <li><a href="/december" title="December beekeeping tasks">December</a></li>
-               </ul>
-            </li>
-            <!-- Diseases -->
-            <li class="dropdown">
-               <a href="/bee-diseases" title="Bee diseases and pests overview">Diseases and Pests</a>
-               <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-               <ul class="dropdown-menu">
-                  <li><a href="/veterinary-medicine-records" title="How to keep hive treatment and veterinary medicine records in the UK">Medicine Records</a></li>
-                  <li><a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a></li>
-                  <li><a href="/colony-health-triage" title="Interactive bee colony health triage tool for UK beekeepers">Colony Health Triage Tool</a></li>
-                  <li><a href="/bacterial-diseases" title="Learn about bacterial bee diseases">Bacterial</a></li>
-                  <li><a href="/viral-diseases" title="Learn about viral bee diseases">Viral</a></li>
-                  <li><a href="/bee-pests" title="Common pests affecting bees">Pests</a></li>
-                  <li><a href="/parasitic-mites" title="Parasitic mites in bee colonies">Mites</a></li>
-                  <li><a href="/other-conditions" title="Other bee health conditions">Other Conditions</a></li>
-               </ul>
-            </li>
-            <!-- Main Link to Navigate to Swarm and Queen management -->
-            <li>
-               <a href="/swarm-queen" title="Swarm control, queen cells, splits and queen-related hive decisions">Swarm &amp; Queen</a>
-            </li>
-            <!-- Honeybee facts -->
-            <li class="dropdown">
-               <a href="/honeybee-facts" title="Interesting facts about honeybees">Honeybee Facts</a>
-               <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-               <ul class="dropdown-menu">
-                  <li><a href="/anatomy" title="Honeybee anatomy explained">Anatomy</a></li>
-                  <li><a href="/behaviour" title="Learn about honeybee behaviour">Behaviour</a></li>
-                  <li><a href="/how-bees-make-honey" title="How bees make honey">Make Honey</a></li>
-                  <li><a href="/pollination" title="Honeybee role in pollination">Pollination</a></li>
-               </ul>
-            </li>
-            <!-- Help bees -->
-            <li class="dropdown">
-               <a href="/help-the-bees" title="How you can help save the bees">Help Bees</a>
-               <button class="dropdown-toggle" aria-label="Toggle Submenu">▼</button>
-               <ul class="dropdown-menu">
-                  <li><a href="/bee-gardening" title="Make your garden bee friendly">Gardening</a></li>
-                  <li><a href="/donate" title="Make a donation to support bees">Donate</a></li>
-                  <li><a href="/report-a-swarm" title="Report a bee swarm">Report a Swarm</a></li>
-               </ul>
-            </li>
-            <!-- Members area -->
-            <li>
-               <a href="https://beezknees-members.netlify.app/login" title="Login or Register for HiveTag Dashboard">Members Area</a>
-            </li>
-         </ul>
+        <ul class="nav-menu" aria-label="Main Navigation Links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about-us">About Us</a></li>
+          <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
+          <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
+          <li><a href="/hivetag-app">HiveTag</a></li>
+          <li>
+            <a class="members-link" href="https://beezknees-members.netlify.app/login">
+            Members Area
+            </a>
+          </li>
+        </ul>
       </nav>
-      <!-- Hero Banner -->
-      <section role="region" aria-label="Bee health banner">
-         <div class="banner">
-            <img src="images/cluster-of-bees_2.webp" alt="Honey bees clustered on a frame during a health check in a UK hive">
-         </div>
-      </section>
-      <!-- Main Content -->
-      <main class="content">
-         <h1>Bee Health Checker (UK) – Symptoms, Likely Causes and What to Do</h1>
-         <img src="images/beehives_5-hero.webp" alt="UK apiary beehives where routine inspections and health checks take place" class="float-right-img">
-         <p>
-            When something looks “off” in a hive, it helps to start with what you can see: brood pattern, cappings,
-            bee behaviour, and what’s on the floor and frames. This guide is designed as a practical, UK-style
-            <strong>symptoms → likely cause → action</strong> checker. It works best as a first-stop page that helps you move from
-            <strong>“I’m worried”</strong> to <strong>“what exactly should I read next?”</strong>. If you want a more guided route,
-            use the <a href="/colony-health-triage" title="Interactive colony health triage tool for UK beekeepers">interactive colony health triage tool</a>.
-            If the main issue seems to be brood quality or odd cappings, compare what you are seeing with the
-            <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a>.
-         </p>
-         <div class="warning-callout" role="alert">
-            <strong>Important:</strong> This is not a diagnosis tool. If notifiable disease is possible (especially foulbrood),
-            isolate the colony and seek official advice. Avoid moving bees, frames or equipment between apiaries.
-            If you are still at the “what am I even looking at?” stage, go first to the
-            <a href="/colony-health-triage" title="Interactive bee colony health triage tool for UK beekeepers">colony health triage tool</a>
-            or the main <a href="/bee-diseases" title="Bee diseases and pests overview">bee diseases and pests guide</a>.
-         </div>
-         <div class="callout" role="note">
-            <strong>Members tip (HiveTag):</strong> If you’re using the BeezKnees Members Area, you can log symptoms during an inspection,
-            attach photos, and track “what you did next” over time (treatment, requeen, unite, feed, comb change).
-            <br>
-            <a class="hero-cta" href="https://beezknees-members.netlify.app/login" title="Log an inspection in the HiveTag Members Area">Log an inspection in Members Area</a>
-            <a class="hero-cta secondary" href="/veterinary-medicine-records" title="Keep UK treatment and medicine records">Medicine Records (UK)</a>
-         </div>
-         <h2>Quick navigation</h2>
-         <ul class="anchor-list">
-            <li><a href="#how-to-use" title="How to use the checker">How to use this checker</a></li>
-            <li><a href="#red-flags" title="Red flags and notifiable disease">Red flags (act immediately)</a></li>
-            <li><a href="#symptom-table" title="Symptoms to likely causes and actions">Symptoms → causes → actions table</a></li>
-            <li><a href="#notes-on-terms" title="Notes on common terms like CCD and chalkbrood fungus">Notes on terms (CCD, Ascosphaera apis, bee louse)</a></li>
-            <li><a href="#download" title="Download the printable Bee Health Checker">Download printable checker</a></li>
-            <li><a href="#next-steps" title="Next steps and related guides">Next steps</a></li>
-         </ul>
-         <section id="how-to-use" aria-labelledby="how-to-use-title">
-            <h2 id="how-to-use-title">How to use this checker</h2>
-            <div class="indented-list">
-               <ul>
-                  <li>Start with the <strong>most obvious symptom</strong> (e.g. perforated cappings, mummified larvae, crawling bees).</li>
-                  <li>Match it to the closest row in the table and read the <strong>likely causes</strong>.</li>
-                  <li>Use the links provided to decide <strong>what to read next</strong> — for example the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a>, <a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">varroa overview</a> or the main <a href="/bee-diseases" title="Bee diseases and pests overview">bee diseases guide</a>.</li>
-                  <li>Take the <strong>safest action first</strong>: isolate, reduce stress, verify, record.</li>
-                  <li>If you can’t confirm, treat it as “unknown” and use the <a href="/colony-health-triage" title="Use the colony health triage tool for uncertain hive symptoms">colony health triage tool</a> before doing anything irreversible.</li>
-               </ul>
-            </div>
-         </section>
-         <section id="red-flags" aria-labelledby="red-flags-title">
-            <h2 id="red-flags-title">Red flags (act immediately)</h2>
-            <div class="warning-callout" role="alert">
-               <strong>If you see any of the following, slow down and treat it seriously:</strong>
-               <ul>
-                  <li><strong>Ropy larval remains</strong>, sunken/perforated cappings and a strong foul smell (possible AFB).</li>
-                  <li><strong>Widespread “melted” larvae</strong> with an uneven brood pattern (possible EFB).</li>
-                  <li><strong>Unusual larvae/pupae breakdown</strong> you can’t confidently explain.</li>
-               </ul>
-               <p>
-                  In these cases, <strong>do not</strong> move frames or equipment off site, and avoid robbing.
-                  Record what you saw, take photos, and contact an inspector / BeeBase guidance route.
-               </p>
-            </div>
-         </section>
-         <section id="symptom-table" aria-labelledby="symptom-table-title">
-            <h2 id="symptom-table-title">Symptoms → likely causes → recommended actions</h2>
-            <p>
-               Use this table as a practical guide. Many issues overlap (e.g. varroa + virus + stress), so more than one row may apply.
-               Your inspection notes matter as much as the symptom itself. If you are unsure where to start, the
-               <a href="/colony-health-triage" title="Use the colony health triage tool for uncertain hive symptoms">colony health triage tool</a>
-               can help narrow things down first. If your concern began during a routine inspection, it is also worth reviewing
-               <a href="/hive-management" title="Inspection and hive management guide">inspection and hive management</a> so you can compare what you found
-               against a normal inspection routine.
-            </p>
-            <div class="table-wrapper">
-               <table class="simple-table" aria-label="Bee health symptoms likely cause and action table">
-                  <thead>
-                     <tr>
-                        <th scope="col">Observed symptoms</th>
-                        <th scope="col">Likely cause(s)</th>
-                        <th scope="col">Recommended action (safe first steps)</th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     <tr>
-                        <td><strong>Sunken / greasy cappings</strong>, perforations, foul smell; larval remains can look “ropy”</td>
-                        <td><strong>American Foulbrood (AFB)</strong> (notifiable)</td>
-                        <td>
-                           Stop inspection early. Isolate hive. Do not swap frames. Photograph and seek official confirmation.
-                           Avoid moving bees/equipment between apiaries.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Patchy brood pattern; larvae twisted or “melted”, often before capping</td>
-                        <td><strong>European Foulbrood (EFB)</strong> (often notifiable/managed via inspectors)</td>
-                        <td>
-                           Reduce stress: ensure food, avoid over-manipulation. Record, photograph, seek advice/inspection.
-                           Review hygiene and comb age.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>White/grey <strong>mummified larvae</strong> (“chalk mummies”) in cells or on floor</td>
-                        <td><strong>Chalkbrood</strong> (caused by <strong>Ascosphaera apis</strong>)</td>
-                        <td>
-                           Improve ventilation and dryness. Replace badly affected comb. Avoid chilling brood.
-                           Consider requeening if repeated year-on-year.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Hard, dark “stone-like” dead brood; mummified and tough</td>
-                        <td><strong>Stonebrood</strong> (Aspergillus spp.)</td>
-                        <td>
-                           Improve hygiene and hive conditions (dry, well-sited). Remove affected material where practical.
-                           Strong colonies often recover once conditions improve.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Deformed/crumpled wings; poor flyers; brood looks stressed; colony dwindles late summer/autumn</td>
-                        <td><strong>Varroa</strong> + virus association (esp. <strong>Deformed Wing Virus</strong>)</td>
-                        <td>
-                           Check mite levels promptly. Apply an appropriate treatment for the season.
-                           Review IPM plan (monitoring, brood breaks, treatment timing).
-                           Then read the <a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">quick varroa overview</a>
-                           and follow up with your broader varroa pages if needed.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Bees <strong>trembling/shaking</strong>, crawling, unable to fly; sudden adult losses</td>
-                        <td><strong>Acute Bee Paralysis Virus (ABPV)</strong>, <strong>Israeli Acute Paralysis Virus (IAPV)</strong> (often linked with varroa pressure)</td>
-                        <td>
-                           Treat varroa if levels are high. Reduce stress, ensure nutrition.
-                           Avoid combining colonies unless you’re confident you’re not spreading a virus problem.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Hairless, <strong>shiny black bees</strong>; trembling; piles of crawling bees at entrance</td>
-                        <td><strong>Chronic Bee Paralysis Virus (CBPV)</strong></td>
-                        <td>
-                           Reduce overcrowding and stress. Improve ventilation and feeding if needed.
-                           Replace old comb where practical. Keep notes—patterns over time help.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Brood dies in sealed cells; queen cells darkened/blackened</td>
-                        <td><strong>Black Queen Cell Virus (BQCV)</strong> (can be associated with stress / Nosema)</td>
-                        <td>
-                           Focus on colony strength: good nutrition, reduce stressors, manage varroa.
-                           Consider requeening if queen performance is affected.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Larvae look like a “sac” with fluid; head often raised; larvae turn yellow-brown</td>
-                        <td><strong>Sacbrood virus</strong></td>
-                        <td>
-                           Support the colony: feeding, reduce stress, avoid chilling brood.
-                           Replace old comb if heavily affected; requeen if persistent.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Dysentery staining on hive front/frames; crawling bees; reduced spring build-up</td>
-                        <td><strong>Nosema</strong> (N. apis / N. ceranae)</td>
-                        <td>
-                           Improve ventilation, reduce damp, check food, replace old comb where possible.
-                           Record and monitor—confirm before using any medication route.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Weak colony + comb damage: tunnels, webbing, frass; frames collapse when handled</td>
-                        <td><strong>Wax moth</strong> (usually consequence of weak colony / poor storage)</td>
-                        <td>
-                           Reduce unused space; strengthen colony; remove badly damaged comb.
-                           Store comb correctly between seasons.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Unusual beetles/larvae; “slimed” comb; fermenting smell; rapid comb damage</td>
-                        <td><strong>Small Hive Beetle</strong> (high concern; not established in UK in most contexts)</td>
-                        <td>
-                           Treat as suspect and report promptly through official channels.
-                           Do not move bees/equipment until guidance received.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Small reddish-brown “mini-lobster” insects on adult bees; irritation but usually mild</td>
-                        <td><strong>Braula coeca</strong> (<strong>bee louse</strong>)</td>
-                        <td>
-                           Confirm identification first (rarely serious). Record presence and monitor.
-                           Focus on general colony health; avoid unnecessary chemical use.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Fast brood decline, deformed brood, poor development; suspected exotic mite issue</td>
-                        <td><strong>Tropilaelaps mite</strong> (notifiable/high concern if suspected)</td>
-                        <td>
-                           Treat as suspect and report promptly. Stop movements of bees/equipment.
-                           Follow official guidance.
-                        </td>
-                     </tr>
-                     <tr>
-                        <td>Sudden “empty hive” feeling with queen present; food sometimes left; no single clear culprit</td>
-                        <td><strong>Colony loss / multi-factor decline</strong> (often varroa, viruses, starvation, stress, weather, management factors)</td>
-                        <td>
-                           Review the timeline: varroa monitoring + treatments, forage gaps, feeding, queen status,
-                           wasp pressure, disease signs. Record lessons learned and adjust the plan.
-                        </td>
-                     </tr>
-                  </tbody>
-               </table>
-            </div>
-            <div class="callout" role="note">
-               <strong>Good record-keeping makes this table far more useful.</strong> If you’re a HiveTag member, log:
-               what you saw, what you did, and what changed by the next inspection (photos help). If your notes are mainly about brood quality,
-               compare them with the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a>.
-               If the issue began during routine colony checks, also review <a href="/hive-management" title="Inspection and hive management guide">inspection and hive management</a>.
-            </div>
-         </section>
-         <section id="download" aria-labelledby="download-title">
-            <h2 id="download-title">Download (printable)</h2>
-            <p>
-               If you’d like a version you can keep in your toolbox or take to the apiary, you can download the
-               Bee Health Checker as a printable checklist.
-            </p>
-            <div class="callout callout-tip" role="note">
-               <strong>Free download:</strong> Includes confirming checks, severity ratings, and mini callouts
-               for red flags and common UK issues.
-               <br>
-               <a class="hero-cta" href="/downloads#bee-health-checker-download" title="Download the Bee Health Checker from the downloads page">
-               View on Downloads page
-               </a>
-               <a class="hero-cta secondary" href="/downloads/BeezKnees_Bee_Health_Checker_UK.pdf" title="Download Bee Health Checker (PDF)">
-               Download PDF
-               </a>
-               <a class="hero-cta secondary" href="/downloads/BeezKnees_Bee_Health_Checker_UK.docx" title="Download Bee Health Checker (Word)">
-               Download Word
-               </a>
-            </div>
-         </section>
-         <section id="next-steps" aria-labelledby="next-steps-title">
-            <h2 id="next-steps-title">What to read next</h2>
-            <p>This page is designed to help you choose the most useful next guide, depending on what worried you during the inspection.</p>
-            <div class="indented-list">
-               <ul>
-                  <li><strong>I’m still not sure what category this falls into:</strong> <a href="/colony-health-triage" title="Interactive bee colony health triage tool for UK beekeepers">Colony Health Triage Tool</a></li>
-                  <li><strong>I want the main overview first:</strong> <a href="/bee-diseases" title="Bee diseases and pests overview">Bee diseases and pests guide</a></li>
-                  <li><strong>The brood looks patchy, uneven or suspicious:</strong> <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">Brood pattern guide</a></li>
-                  <li><strong>I think varroa may be involved:</strong> <a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">Quick varroa overview</a></li>
-                  <li><strong>I want to compare this against a normal inspection routine:</strong> <a href="/hive-management" title="Inspection and hive management guide">Inspection and hive management</a></li>
-                  <li><strong>I think this may be foulbrood or another brood disease:</strong> <a href="/bacterial-diseases" title="Bacterial bee diseases">Bacterial diseases (AFB/EFB)</a></li>
-                  <li><strong>I think this is more likely virus-related:</strong> <a href="/viral-diseases" title="Viral bee diseases">Viral diseases (DWV, paralysis viruses, etc.)</a></li>
-                  <li><strong>I need treatment record guidance too:</strong> <a href="/veterinary-medicine-records" title="UK treatment and medicine record guidance">Veterinary medicine records</a></li>
-               </ul>
-            </div>
-            <div class="callout" role="note">
-               <strong>Best workflow:</strong> Start here when you are worried → choose the closest issue → read the detailed guide →
-               record what you saw in your inspection notes → review at the next inspection.
-            </div>
-         </section>
-         <p>
-            Think of this page as a gateway rather than a final answer. Its job is to help you move from symptom spotting
-            to the most relevant next guide, whether that is the <a href="/colony-health-triage" title="Interactive bee colony health triage tool for UK beekeepers">colony health triage tool</a>,
-            the main <a href="/bee-diseases" title="Bee diseases and pests overview">bee diseases and pests guide</a>,
-            the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a>,
-            the <a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">quick varroa overview</a>,
-            or the <a href="/hive-management" title="Inspection and hive management guide">inspection and hive management</a> page.
-         </p>
-      </main>
-      <!-- Footer -->
-      <footer class="site-footer" role="region" aria-label="Site Footer">
-         <div class="footer-columns">
-            <div class="footer-column" role="region" aria-label="Contact Information">
-               <h3>Contact</h3>
-               <address>
-                  <p>Email: <a href="/contact" title="Send us a message via our contact page">Contact</a></p>
-               </address>
-               <p>
-                  <i class="fab fa-facebook-square" aria-hidden="true"></i>
-                  Facebook:
-                  <a href="https://www.facebook.com/beezkneesbeekeeping" target="_blank" rel="noopener noreferrer" aria-label="BeezKnees on Facebook">
-                  BeezKnees
-                  </a>
-               </p>
-            </div>
-            <div class="footer-column" role="region" aria-label="Useful Site Links">
-               <h3>Useful Links</h3>
-               <ul>
-                  <li><a href="/downloads" title="Free beekeeping downloads and printable guides">Free Downloads</a></li>
-                  <li><a href="/privacy" title="Read our privacy policy">Privacy Policy</a></li>
-                  <li><a href="/site-map" title="View a map of our entire website">Site Map</a></li>
-               </ul>
-            </div>
-            <div class="footer-column" role="region" aria-label="Beekeeping Resources">
-               <h3>Resources</h3>
-               <ul>
-                  <li><a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer" title="Visit the British Beekeepers Association website">British Beekeepers Association</a></li>
-                  <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer" title="Visit the Cardiff Beekeepers Association site">Cardiff, Vale and Valleys Beekeepers Association</a></li>
-                  <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank" rel="noopener noreferrer" title="Read the Honey (Wales) Regulations 2015">The Honey (Wales) Regulations 2015</a></li>
-                  <li><a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer" title="Explore Bee-Friendly programme by Wales Biodiversity Partnership">Wales Biodiversity Partnership</a></li>
-                  <li><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title="Access BeeBase for UK bee health information">BeeBase</a></li>
-               </ul>
-            </div>
-         </div>
-         <div class="footer-bottom" role="region" aria-label="Copyright">
-            © 2025 BeezKnees. All rights reserved.
-         </div>
-      </footer>
-      <!-- Cookie Consent Popup -->
-      <div id="cookie-consent" class="cookie-popup" role="region" aria-label="Cookie Consent Settings">
-         <div class="cookie-content" role="region" aria-label="Cookie Consent Options">
-            <h2>🍪 We Use Cookies</h2>
-            <p>We use essential cookies for site functionality. With your consent, we may also use cookies for analytics and marketing purposes.</p>
-            <form id="cookie-options" name="cookie-options">
-               <label><input type="checkbox" checked disabled> Essential (always active)</label><br>
-               <label><input type="checkbox" id="analytics"> Analytics</label><br>
-               <label><input type="checkbox" id="marketing"> Marketing</label><br>
-            </form>
-            <div class="cookie-buttons">
-               <button id="accept-selected">Accept Selected</button> <button id="accept-all">Accept All</button>
-            </div>
-         </div>
+    </header>
+    <section class="hero hero--article hero--month" aria-label="Bee health checker banner">
+      <div class="hero-image">
+        <img src="images/cluster-of-bees_2.webp" alt="Honey bees clustered on a frame during a health check in a UK hive" width="600" height="899" loading="eager" fetchpriority="high" decoding="async">
       </div>
-      <!-- Back to Top Button -->
-      <button id="backToTop" title="Back to top" aria-label="Back to top">⬆ Top</button>
-      <script src="js/menuv2.js" defer></script>
-   </body>
+      <div class="hero-inner">
+        <div class="hero-card hero-card--compact">
+          <span class="hero-kicker">Bee Health</span>
+          <h2 class="hero-title">Bee Health Checker</h2>
+          <p class="hero-intro">
+            Symptoms, likely causes and what to do – a practical UK guide
+          </p>
+          <div class="hero-actions">
+            <a href="#main-content" class="btn btn-primary">
+            <i class="fa-solid fa-book-open"></i>
+            Read the Guide
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <main id="main-content" class="page-wrap">
+      <button class="section-mobile-toggle" id="sectionNavToggle" aria-expanded="true" aria-controls="sectionNavMobile">
+      Bee Health Menu ▲
+      </button>
+      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Bee diseases section navigation" data-active-group="Bee Health">
+        <details class="section-mobile-group" open>
+          <summary class="section-mobile-summary">Start Here</summary>
+          <ul>
+            <li><a href="/behaviour">Bee Behaviour</a></li>
+            <li><a href="/colony-health-triage">Colony Health Triage Tool</a></li>
+            <li><span aria-current="page">Bee Health Checker</span></li>
+            <li><a href="/anatomy">Bee Anatomy</a></li>
+            <li><a href="/other-conditions">Other Conditions</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Disease &amp; Pest Guides</summary>
+          <ul>
+            <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
+            <li><a href="/viral-diseases">Viral Diseases</a></li>
+            <li><a href="/bee-pests">Bee Pests</a></li>
+            <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Prevention &amp; Planning</summary>
+          <ul>
+            <li><a href="/hygiene">Hive Hygiene</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
+          </ul>
+        </details>
+        <!-- On this page mobile view -->
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">On this page</summary>
+          <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#how-to-use">How to use</a></li>
+            <li><a href="#red-flags">Red flags</a></li>
+            <li><a href="#symptom-table">Symptoms table</a></li>
+            <li><a href="#download">Download</a></li>
+            <li><a href="#next-steps">Next steps</a></li>
+          </ul>
+        </details>
+        <div class="hivetag-side-cta pulse-once">
+          <span class="hero-kicker">BeezKnees App</span>
+          <h3>Stay on Top of Every Hive, Every Inspection</h3>
+          <p>Track inspections, feeding, treatments and seasonal notes — all in one place.</p>
+          <a class="btn btn-primary" href="/hivetag-app">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          Explore HiveTag
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/">
+          <i class="fa-solid fa-right-to-bracket"></i>
+          Open Members Area
+          </a>
+        </div>
+      </nav>
+      <div class="hub-layout">
+        <aside class="hub-sidebar" aria-label="Bee diseases section navigation" data-active-group="Bee Health">
+          <h2 class="hub-sidebar-title">Bee Health</h2>
+          <details class="hub-nav-group" open>
+            <summary class="hub-nav-summary">Start Here</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/behaviour">Bee Behaviour</a></li>
+              <li><a href="/colony-health-triage">Colony Health Triage Tool</a></li>
+              <li><span aria-current="page">Bee Health Checker</span></li>
+              <li><a href="/anatomy">Bee Anatomy</a></li>
+              <li><a href="/other-conditions">Other Conditions</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Disease &amp; Pest Guides</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
+              <li><a href="/viral-diseases">Viral Diseases</a></li>
+              <li><a href="/bee-pests">Bee Pests</a></li>
+              <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Prevention &amp; Planning</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/hygiene">Hive Hygiene</a></li>
+              <li><a href="/varroa-management">Varroa Management</a></li>
+            </ul>
+          </details>
+          <!-- On this page under side nav -->
+          <div class="article-sidebar-card">
+            <h3>On this page</h3>
+            <ul class="toc-list">
+              <li><a href="#overview">Overview</a></li>
+              <li><a href="#how-to-use">How to use</a></li>
+              <li><a href="#red-flags">Red flags</a></li>
+              <li><a href="#symptom-table">Symptoms table</a></li>
+              <li><a href="#download">Download</a></li>
+              <li><a href="#next-steps">Next steps</a></li>
+            </ul>
+          </div>
+          <div class="hivetag-side-cta">
+            <span class="hero-kicker">BeezKnees App</span>
+            <h3>Stay on Top of Every Hive, Every Inspection</h3>
+            <p>Track inspections, feeding, treatments and seasonal notes — all in one place.</p>
+            <a class="btn btn-primary" href="/hivetag-app">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+            Explore HiveTag
+            </a>
+            <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            Open Members Area
+            </a>
+          </div>
+        </aside>
+        <section class="hub-main-content">
+          <div class="content-card" id="overview">
+            <h1>Bee Health Checker (UK) – Symptoms, Likely Causes and What to Do</h1>
+            <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
+            <img src="images/beehives_5.webp" alt="UK apiary beehives where routine inspections and health checks take place" class="float-right-img" width="1600" height="900" loading="lazy" decoding="async">
+            <p>When something looks "off" in a hive, it helps to start with what you can see: brood pattern, cappings, bee behaviour, and what's on the floor and frames. This guide is designed as a practical, UK-style <strong>symptoms → likely cause → action</strong> checker. It works best as a first-stop page that helps you move from <strong>"I'm worried"</strong> to <strong>"what exactly should I read next?"</strong>. If you want a more guided route, use the <a href="/colony-health-triage" title="Interactive colony health triage tool for UK beekeepers">interactive colony health triage tool</a>. If the main issue seems to be brood quality or odd cappings, compare what you are seeing with the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a>.</p>
+            <div class="callout callout-warning" role="alert">
+              <strong>Important:</strong> This is not a diagnosis tool. If notifiable disease is possible (especially foulbrood), isolate the colony and seek official advice. Avoid moving bees, frames or equipment between apiaries. If you are still at the "what am I even looking at?" stage, go first to the <a href="/colony-health-triage" title="Interactive bee colony health triage tool for UK beekeepers">colony health triage tool</a> or the main <a href="/bee-diseases" title="Bee diseases and pests overview">bee diseases and pests guide</a>.
+            </div>
+            <div class="callout" role="note">
+              <strong>Members tip (HiveTag):</strong> If you're using the BeezKnees Members Area, you can log symptoms during an inspection, attach photos, and track "what you did next" over time (treatment, requeen, unite, feed, comb change).
+              <br>
+              <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login" title="Log an inspection in the HiveTag Members Area">Log an inspection in Members Area</a>
+            </div>
+          </div>
+          <div class="content-card" id="how-to-use">
+            <h2>How to Use This Checker</h2>
+            <ul class="indented-list">
+              <li>Start with the <strong>most obvious symptom</strong> (e.g. perforated cappings, mummified larvae, crawling bees).</li>
+              <li>Match it to the closest row in the table and read the <strong>likely causes</strong>.</li>
+              <li>Use the links provided to decide <strong>what to read next</strong> — for example the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a>, <a href="/varroa-management" title="Varroa management hub">varroa management</a> or the main <a href="/bee-diseases" title="Bee diseases and pests overview">bee diseases guide</a>.</li>
+              <li>Take the <strong>safest action first</strong>: isolate, reduce stress, verify, record.</li>
+              <li>If you can't confirm, treat it as "unknown" and use the <a href="/colony-health-triage" title="Use the colony health triage tool for uncertain hive symptoms">colony health triage tool</a> before doing anything irreversible.</li>
+            </ul>
+          </div>
+          <div class="content-card" id="red-flags">
+            <h2>Red Flags (Act Immediately)</h2>
+            <div class="callout callout-warning" role="alert">
+              <strong>If you see any of the following, slow down and treat it seriously:</strong>
+              <ul class="indented-list">
+                <li><strong>Ropy larval remains</strong>, sunken/perforated cappings and a strong foul smell (possible AFB).</li>
+                <li><strong>Widespread "melted" larvae</strong> with an uneven brood pattern (possible EFB).</li>
+                <li><strong>Unusual larvae/pupae breakdown</strong> you can't confidently explain.</li>
+              </ul>
+              <p>In these cases, <strong>do not</strong> move frames or equipment off site, and avoid robbing. Record what you saw, take photos, and contact an inspector / BeeBase guidance route.</p>
+            </div>
+          </div>
+          <div class="content-card" id="symptom-table">
+            <h2>Symptoms → Likely Causes → Recommended Actions</h2>
+            <p>Use this table as a practical guide. Many issues overlap (e.g. varroa + virus + stress), so more than one row may apply. Your inspection notes matter as much as the symptom itself. If you are unsure where to start, the <a href="/colony-health-triage" title="Use the colony health triage tool for uncertain hive symptoms">colony health triage tool</a> can help narrow things down first. If your concern began during a routine inspection, it is also worth reviewing <a href="/hive-management" title="Inspection and hive management guide">inspection and hive management</a> so you can compare what you found against a normal inspection routine.</p>
+            <div class="table-wrapper">
+              <table class="site-table" aria-label="Bee health symptoms likely cause and action table">
+                <thead>
+                  <tr>
+                    <th scope="col">Observed Symptoms</th>
+                    <th scope="col">Likely Cause(s)</th>
+                    <th scope="col">Recommended Action (Safe First Steps)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Sunken / greasy cappings</strong>, perforations, foul smell; larval remains can look "ropy"</td>
+                    <td><strong>American Foulbrood (AFB)</strong> (notifiable)</td>
+                    <td>Stop inspection early. Isolate hive. Do not swap frames. Photograph and seek official confirmation. Avoid moving bees/equipment between apiaries.</td>
+                  </tr>
+                  <tr>
+                    <td>Patchy brood pattern; larvae twisted or "melted", often before capping</td>
+                    <td><strong>European Foulbrood (EFB)</strong> (often notifiable/managed via inspectors)</td>
+                    <td>Reduce stress: ensure food, avoid over-manipulation. Record, photograph, seek advice/inspection. Review hygiene and comb age.</td>
+                  </tr>
+                  <tr>
+                    <td>White/grey <strong>mummified larvae</strong> ("chalk mummies") in cells or on floor</td>
+                    <td><strong>Chalkbrood</strong> (caused by <strong>Ascosphaera apis</strong>)</td>
+                    <td>Improve ventilation and dryness. Replace badly affected comb. Avoid chilling brood. Consider requeening if repeated year-on-year.</td>
+                  </tr>
+                  <tr>
+                    <td>Hard, dark "stone-like" dead brood; mummified and tough</td>
+                    <td><strong>Stonebrood</strong> (Aspergillus spp.)</td>
+                    <td>Improve hygiene and hive conditions (dry, well-sited). Remove affected material where practical. Strong colonies often recover once conditions improve.</td>
+                  </tr>
+                  <tr>
+                    <td>Deformed/crumpled wings; poor flyers; brood looks stressed; colony dwindles late summer/autumn</td>
+                    <td><strong>Varroa</strong> + virus association (esp. <strong>Deformed Wing Virus</strong>)</td>
+                    <td>Check mite levels promptly. Apply an appropriate treatment for the season. Review IPM plan (monitoring, brood breaks, treatment timing). Then read the <a href="/varroa-management" title="Varroa management guide">varroa management</a> guide if needed.</td>
+                  </tr>
+                  <tr>
+                    <td>Bees <strong>trembling/shaking</strong>, crawling, unable to fly; sudden adult losses</td>
+                    <td><strong>Acute Bee Paralysis Virus (ABPV)</strong>, <strong>Israeli Acute Paralysis Virus (IAPV)</strong> (often linked with varroa pressure)</td>
+                    <td>Treat varroa if levels are high. Reduce stress, ensure nutrition. Avoid combining colonies unless you're confident you're not spreading a virus problem.</td>
+                  </tr>
+                  <tr>
+                    <td>Hairless, <strong>shiny black bees</strong>; trembling; piles of crawling bees at entrance</td>
+                    <td><strong>Chronic Bee Paralysis Virus (CBPV)</strong></td>
+                    <td>Reduce overcrowding and stress. Improve ventilation and feeding if needed. Replace old comb where practical. Keep notes—patterns over time help.</td>
+                  </tr>
+                  <tr>
+                    <td>Brood dies in sealed cells; queen cells darkened/blackened</td>
+                    <td><strong>Black Queen Cell Virus (BQCV)</strong> (can be associated with stress / Nosema)</td>
+                    <td>Focus on colony strength: good nutrition, reduce stressors, manage varroa. Consider requeening if queen performance is affected.</td>
+                  </tr>
+                  <tr>
+                    <td>Larvae look like a "sac" with fluid; head often raised; larvae turn yellow-brown</td>
+                    <td><strong>Sacbrood virus</strong></td>
+                    <td>Support the colony: feeding, reduce stress, avoid chilling brood. Replace old comb if heavily affected; requeen if persistent.</td>
+                  </tr>
+                  <tr>
+                    <td>Dysentery staining on hive front/frames; crawling bees; reduced spring build-up</td>
+                    <td><strong>Nosema</strong> (N. apis / N. ceranae)</td>
+                    <td>Improve ventilation, reduce damp, check food, replace old comb where possible. Record and monitor—confirm before using any medication route.</td>
+                  </tr>
+                  <tr>
+                    <td>Weak colony + comb damage: tunnels, webbing, frass; frames collapse when handled</td>
+                    <td><strong>Wax moth</strong> (usually consequence of weak colony / poor storage)</td>
+                    <td>Reduce unused space; strengthen colony; remove badly damaged comb. Store comb correctly between seasons.</td>
+                  </tr>
+                  <tr>
+                    <td>Unusual beetles/larvae; "slimed" comb; fermenting smell; rapid comb damage</td>
+                    <td><strong>Small Hive Beetle</strong> (high concern; not established in UK in most contexts)</td>
+                    <td>Treat as suspect and report promptly through official channels. Do not move bees/equipment until guidance received.</td>
+                  </tr>
+                  <tr>
+                    <td>Small reddish-brown "mini-lobster" insects on adult bees; irritation but usually mild</td>
+                    <td><strong>Braula coeca</strong> (<strong>bee louse</strong>)</td>
+                    <td>Confirm identification first (rarely serious). Record presence and monitor. Focus on general colony health; avoid unnecessary chemical use.</td>
+                  </tr>
+                  <tr>
+                    <td>Fast brood decline, deformed brood, poor development; suspected exotic mite issue</td>
+                    <td><strong>Tropilaelaps mite</strong> (notifiable/high concern if suspected)</td>
+                    <td>Treat as suspect and report promptly. Stop movements of bees/equipment. Follow official guidance.</td>
+                  </tr>
+                  <tr>
+                    <td>Sudden "empty hive" feeling with queen present; food sometimes left; no single clear culprit</td>
+                    <td><strong>Colony loss / multi-factor decline</strong> (often varroa, viruses, starvation, stress, weather, management factors)</td>
+                    <td>Review the timeline: varroa monitoring + treatments, forage gaps, feeding, queen status, wasp pressure, disease signs. Record lessons learned and adjust the plan.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="callout" role="note">
+              <strong>Good record-keeping makes this table far more useful.</strong> If you're a HiveTag member, log: what you saw, what you did, and what changed by the next inspection (photos help). If your notes are mainly about brood quality, compare them with the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a>. If the issue began during routine colony checks, also review <a href="/hive-management" title="Inspection and hive management guide">inspection and hive management</a>.
+            </div>
+          </div>
+          <div class="content-card" id="download">
+            <h2>Download (Printable)</h2>
+            <p>If you'd like a version you can keep in your toolbox or take to the apiary, you can download the Bee Health Checker as a printable checklist.</p>
+            <div class="callout callout-tip" role="note">
+              <strong>Free download:</strong> Includes confirming checks, severity ratings, and mini callouts for red flags and common UK issues.
+              <br>
+              <a class="btn btn-primary" href="/downloads#bee-health-checker-download" title="Download the Bee Health Checker from the downloads page">View on Downloads Page</a>
+              <a class="btn btn-secondary" href="/downloads/BeezKnees_Bee_Health_Checker_UK.pdf" title="Download Bee Health Checker (PDF)">Download PDF</a>
+              <a class="btn btn-secondary" href="/downloads/BeezKnees_Bee_Health_Checker_UK.docx" title="Download Bee Health Checker (Word)">Download Word</a>
+            </div>
+          </div>
+          <div class="content-card" id="next-steps">
+            <h2>What to Read Next</h2>
+            <p>This page is designed to help you choose the most useful next guide, depending on what worried you during the inspection.</p>
+            <ul class="indented-list">
+              <li><strong>I'm still not sure what category this falls into:</strong> <a href="/colony-health-triage" title="Interactive bee colony health triage tool for UK beekeepers">Colony Health Triage Tool</a></li>
+              <li><strong>I want the main overview first:</strong> <a href="/bee-diseases" title="Bee diseases and pests overview">Bee diseases and pests guide</a></li>
+              <li><strong>The brood looks patchy, uneven or suspicious:</strong> <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">Brood pattern guide</a></li>
+              <li><strong>I think varroa may be involved:</strong> <a href="/varroa-management" title="Varroa management guide for UK beekeepers">Varroa management guide</a></li>
+              <li><strong>I want to compare this against a normal inspection routine:</strong> <a href="/hive-management" title="Inspection and hive management guide">Inspection and hive management</a></li>
+              <li><strong>I think this may be foulbrood or another brood disease:</strong> <a href="/bacterial-diseases" title="Bacterial bee diseases">Bacterial diseases (AFB/EFB)</a></li>
+              <li><strong>I think this is more likely virus-related:</strong> <a href="/viral-diseases" title="Viral bee diseases">Viral diseases (DWV, paralysis viruses, etc.)</a></li>
+              <li><strong>I need treatment record guidance too:</strong> <a href="/veterinary-medicine-records" title="UK treatment and medicine record guidance">Veterinary medicine records</a></li>
+            </ul>
+            <div class="callout" role="note">
+              <strong>Best workflow:</strong> Start here when you are worried → choose the closest issue → read the detailed guide → record what you saw in your inspection notes → review at the next inspection.
+            </div>
+          </div>
+          <div class="content-card" id="closing">
+            <p>Think of this page as a gateway rather than a final answer. Its job is to help you move from symptom spotting to the most relevant next guide, whether that is the <a href="/colony-health-triage" title="Interactive bee colony health triage tool for UK beekeepers">colony health triage tool</a>, the main <a href="/bee-diseases" title="Bee diseases and pests overview">bee diseases and pests guide</a>, the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a>, the <a href="/varroa-management" title="Varroa management guide for UK beekeepers">varroa management guide</a>, or the <a href="/hive-management" title="Inspection and hive management guide">inspection and hive management</a> page.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div>
+          <h3>Contact &amp; Social</h3>
+          <ul class="footer-links">
+            <li>Email: <a href="/contact" title="Send us a message">Contact</a></li>
+            <li>
+              Facebook:
+              <a href="https://www.facebook.com/beezkneesbeekeeping" target="_blank" rel="noopener noreferrer" aria-label="BeezKnees on Facebook">
+              BeezKnees
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="/">Home</a></li>
+            <li><a href="/about-us">About Us</a></li>
+            <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
+            <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
+            <li><a href="/hivetag-app">HiveTag</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Useful Pages</h3>
+          <ul class="footer-links">
+            <li><a href="/downloads">Free Downloads</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="#" data-open-cookie-settings>Cookie Settings</a></li>
+            <li><a href="/site-map">Site Map</a></li>
+            <li><a href="/donate">Donate</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Beekeeping Resources</h3>
+          <ul class="footer-links">
+            <li><a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer">British Beekeepers Association</a></li>
+            <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer">Cardiff, Vale and Valleys Beekeepers Association</a></li>
+            <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank" rel="noopener noreferrer">The Honey (Wales) Regulations 2015</a></li>
+            <li><a href="https://www.biodiversitywales.org.uk/Bee-Friendly" target="_blank" rel="noopener noreferrer">Wales Biodiversity Partnership</a></li>
+            <li><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer">BeeBase</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2025 BeezKnees. All rights reserved.</span>
+        <span>Practical beekeeping guidance and resources for UK beekeepers.</span>
+      </div>
+    </footer>
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <aside class="mobile-menu" id="mobileMenu" aria-labelledby="mobileMenuTitle" aria-hidden="true">
+      <div class="mobile-menu-header">
+        <h2 id="mobileMenuTitle">Menu</h2>
+        <button class="mobile-close" id="closeMobileMenu" aria-label="Close mobile menu">
+        <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="mobile-menu-content">
+        <ul class="mobile-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about-us">About Us</a></li>
+          <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
+          <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
+        </ul>
+        <div class="mobile-menu-cta">
+          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          Try HiveTag Free
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/hivetag-app">
+          <i class="fa-solid fa-circle-info"></i>
+          More Information
+          </a>
+        </div>
+      </div>
+    </aside>
+    <div class="search-overlay" id="searchOverlay"></div>
+    <div class="search-panel" id="searchPanel" aria-label="Search panel">
+      <form class="search-form" action="/search" method="get" role="search">
+        <input type="search" name="q" placeholder="Search all pages... e.g. spring build-up, swarm control, feeding" aria-label="Search all pages">
+        <button type="submit">Search</button>
+      </form>
+    </div>
+    <div class="cookie-popup" id="cookieBanner" role="dialog" aria-modal="false" aria-labelledby="cookieBannerTitle">
+      <div class="cookie-copy cookie-panel" id="cookieIntroPanel">
+        <span class="cookie-eyebrow">Privacy choices</span>
+        <h2 id="cookieBannerTitle">We use cookies to keep the site working and measure what helps visitors most.</h2>
+        <p>
+          Necessary cookies help core parts of the site work. Analytics cookies help us understand page use through Google Analytics, but only if you choose to allow them.
+          Read our <a href="/privacy">Privacy Policy</a>.
+        </p>
+      </div>
+      <div class="cookie-copy cookie-panel cookie-settings-panel" id="cookieSettingsPanel" hidden>
+        <span class="cookie-eyebrow">Cookie settings</span>
+        <h2>Manage your cookie preferences</h2>
+        <div class="cookie-setting-row">
+          <div class="cookie-setting-text">
+            <strong>Strictly necessary</strong>
+            <p>Always active. These are needed for core site functions such as saving your cookie preference.</p>
+          </div>
+          <div class="cookie-setting-control">
+            <span class="cookie-status-pill">Always on</span>
+          </div>
+        </div>
+        <div class="cookie-setting-row">
+          <div class="cookie-setting-text">
+            <label for="analyticsCookiesToggle"><strong>Analytics</strong></label>
+            <p>Allows Google Analytics so we can understand which pages are used and how visitors move around the site.</p>
+          </div>
+          <div class="cookie-setting-control">
+            <label class="cookie-switch" for="analyticsCookiesToggle">
+            <input type="checkbox" id="analyticsCookiesToggle">
+            <span class="cookie-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="cookie-actions" id="cookieIntroActions">
+        <button type="button" class="cookie-btn cookie-btn-secondary" id="rejectCookies">Reject all</button>
+        <button type="button" class="cookie-btn cookie-btn-outline" id="openCookieSettings">Change settings</button>
+        <button type="button" class="cookie-btn cookie-btn-primary" id="acceptCookies">Accept all</button>
+      </div>
+      <div class="cookie-actions" id="cookieSettingsActions" hidden>
+        <button type="button" class="cookie-btn cookie-btn-secondary" id="backToCookieIntro">Back</button>
+        <button type="button" class="cookie-btn cookie-btn-primary" id="saveCookieSettings">Save settings</button>
+      </div>
+    </div>
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <i class="fa-solid fa-arrow-up"></i>
+    </button>
+    <script src="js/search-data.js" defer></script>
+    <script src="js/script.js" defer></script>
+  </body>
 </html>
