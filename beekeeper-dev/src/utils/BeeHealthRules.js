@@ -6,7 +6,7 @@
 // - multi: <id> === true (e.g. recent_feeding, recent_treatment)
 
 export const BEE_HEALTH_RULES = {
-  version: "2.4.0-uk-outcomes-120plus-tightened",
+  version: "2.5.1-uk-post-mortem-varroa-update-fixed",
 
   // ---------------------------
   // SAFETY / PRINT DISCLAIMERS
@@ -55,6 +55,11 @@ export const BEE_HEALTH_RULES = {
       description: "Poisoning suspicion, starvation, chilling, disease, varroa/virus signs, etc.",
     },
     {
+      id: "route_post_mortem",
+      label: "Colony has died / empty hive / post-mortem",
+      description: "Winter losses, starvation, isolation starvation, wasp attack, robbing, varroa-related collapse, absconding, etc.",
+    },
+    {
       id: "route_feeding_stores",
       label: "Feeding / stores / syrup not taken",
       description: "Nectar flow vs cold weather, feeder issues, weak colony, robbing risk, starvation risk.",
@@ -100,6 +105,7 @@ export const BEE_HEALTH_RULES = {
           { value: "route_entrance_activity", label: "Lots of flying / unusual entrance activity" },
           { value: "route_queen_brood", label: "Eggs / brood / queen concerns" },
           { value: "route_dead_dying", label: "Dead/dying bees / crawling / can’t fly" },
+          { value: "route_post_mortem", label: "Colony has died / empty hive / post-mortem" },
           { value: "route_feeding_stores", label: "Feeding / stores / syrup not taken" },
           { value: "route_comb_building", label: "Comb / drawing foundation / building issues" },
           { value: "route_pests_predators", label: "Pests / predators suspected" },
@@ -316,6 +322,20 @@ export const BEE_HEALTH_RULES = {
         showIf: { all: ["route_queen_brood", "opened_frames_ok"] },
       },
       {
+        id: "qb_visible_varroa",
+        label: "Can you see small red/brown mites (varroa) on adult bees?",
+        kind: "tri",
+        showIf: { all: ["route_queen_brood", "opened_frames_ok"] },
+        help: "They look like tiny reddish-brown dots on the bee’s body, often on the thorax or abdomen.",
+      },
+      {
+        id: "qb_varroa_monitoring",
+        label: "Have you checked mite levels, such as board drop, sugar roll, or alcohol wash?",
+        kind: "tri",
+        showIf: { all: ["route_queen_brood", "opened_frames_ok"] },
+        help: "Even if you can’t see mites on bees, levels can still be high.",
+      },
+      {
         id: "symptom_ropey_larvae",
         label: "Do any larvae look brown/ropey (stringy) or smell foul?",
         kind: "tri",
@@ -350,6 +370,13 @@ export const BEE_HEALTH_RULES = {
         showIf: { any: ["route_dead_dying", "route_unsure"] },
       },
       {
+        id: "dd_visible_varroa",
+        label: "Can you see small red/brown mites on adult bees?",
+        kind: "tri",
+        showIf: { any: ["route_dead_dying", "route_unsure"] },
+        help: "Visible mites on adult bees are a strong clue for significant Varroa pressure.",
+      },
+      {
         id: "dd_stores_very_light",
         label: "Is the hive very light (stores very low) when hefted?",
         kind: "tri",
@@ -361,6 +388,22 @@ export const BEE_HEALTH_RULES = {
         kind: "tri",
         showIf: { any: ["route_dead_dying", "route_unsure"] },
       },
+    ],
+
+    post_mortem: [
+      { id: "pm_dead_bees_present", label: "Are there dead bees still in the hive / on the floor / at the entrance?", kind: "tri", showIf: { all: ["route_post_mortem"] } },
+      { id: "pm_headfirst_cells", label: "Are many dead bees head-first in cells?", kind: "tri", showIf: { all: ["route_post_mortem", "pm_dead_bees_present_yes"] }, help: "This is a classic starvation clue." },
+      { id: "pm_dead_cluster", label: "Is there still a dead cluster of bees together?", kind: "tri", showIf: { all: ["route_post_mortem", "pm_dead_bees_present_yes"] } },
+      { id: "pm_stores_present", label: "Are there still food stores left in the hive?", kind: "tri", showIf: { all: ["route_post_mortem"] } },
+      { id: "pm_plenty_stores", label: "Are there still plenty of stores left?", kind: "tri", showIf: { all: ["route_post_mortem", "pm_stores_present_yes"] } },
+      { id: "pm_dysentery_signs", label: "Is there obvious bee poo / brown spotting on frames, comb, or around the entrance?", kind: "tri", showIf: { all: ["route_post_mortem"] } },
+      { id: "pm_brood_present", label: "Was there brood still present when the colony died?", kind: "tri", showIf: { all: ["route_post_mortem"], not: ["inspection_level_entrance_only"] } },
+      { id: "pm_brood_problem", label: "Did the brood look patchy / sunken / odd / unhealthy?", kind: "tri", showIf: { all: ["route_post_mortem", "pm_brood_present_yes"], not: ["inspection_level_entrance_only"] } },
+      { id: "pm_visible_varroa", label: "Could you see small red/brown mites on bees before collapse — or can you still see them now?", kind: "tri", showIf: { all: ["route_post_mortem"] }, help: "Visible mites are a strong sign that Varroa may have played a major role." },
+      { id: "pm_population_dropped", label: "Did the bee numbers drop sharply before the colony died?", kind: "tri", showIf: { all: ["route_post_mortem"] } },
+      { id: "pm_hive_empty_now", label: "Is the hive now mostly empty of bees?", kind: "tri", showIf: { all: ["route_post_mortem"] } },
+      { id: "pm_wasp_attack_signs", label: "Are there signs of wasp attack or robbing, such as chewed cappings, debris, torn comb, or fighting previously seen?", kind: "tri", showIf: { all: ["route_post_mortem"] }, help: "A weak colony can be overwhelmed by wasps or robber bees, especially in late summer/autumn." },
+      { id: "pm_wasps_seen", label: "Were wasps seen bothering the hive before collapse?", kind: "tri", showIf: { all: ["route_post_mortem"] } },
     ],
 
     // ROUTE: Feeding / stores (deepened)
@@ -809,6 +852,17 @@ function buildOutcomeLibrary() {
     "bd_chilled_pattern_yes",
     "dd_deformed_wings_yes",
     "symptom_deformed_wings_yes",
+    "qb_visible_varroa_yes",
+    "dd_visible_varroa_yes",
+    "pm_visible_varroa_yes",
+    "pm_headfirst_cells_yes",
+    "pm_dead_cluster_yes",
+    "pm_dysentery_signs_yes",
+    "pm_brood_problem_yes",
+    "pm_population_dropped_yes",
+    "pm_hive_empty_now_yes",
+    "pm_wasp_attack_signs_yes",
+    "pm_wasps_seen_yes",
 
     // pests/predators high significance
     "pp_hornet_hawking_yes",
@@ -2202,8 +2256,129 @@ add("pests_shb_suspicion", {
 });
 
 // -------------------------
+// G.5) POST MORTEM OUTCOMES
+// -------------------------
+
+add("postmortem_starvation_classic", {
+  title: "Post-mortem: starvation likely",
+  severity: "warning",
+  urgency: "urgent",
+  confidence: "strong",
+  when: { all: ["route_post_mortem"], any: ["pm_headfirst_cells_yes", "pm_stores_present_no"] },
+  excludeIf: { any: ["pm_wasp_attack_signs_yes"] },
+  why: [
+    "Dead bees head-first in cells is a classic starvation sign.",
+    "If there are no usable stores left, starvation becomes the leading explanation.",
+  ],
+  actions: [
+    "Check the remaining combs carefully to confirm how much usable food was actually available.",
+    "Review winter feeding timing and whether fondant/feed stayed within reach of the cluster.",
+    "Check neighbouring colonies urgently if stores are also getting low.",
+  ],
+  whenToWorry: [
+    "If more than one colony is becoming light.",
+    "If cold weather is still ongoing and other colonies are marginal on stores.",
+  ],
+});
+
+add("postmortem_isolation_starvation", {
+  title: "Post-mortem: isolation starvation / cold cluster loss possible",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "strong",
+  when: { all: ["route_post_mortem", "pm_dead_cluster_yes", "pm_plenty_stores_yes"] },
+  excludeIf: { any: ["pm_wasp_attack_signs_yes"] },
+  why: [
+    "A dead cluster with stores still present often suggests bees could not move across to food.",
+    "This is common in cold snaps, with small clusters, or when stores were present but not within reach.",
+  ],
+  actions: [
+    "Review colony strength going into winter and how stores were positioned around the cluster.",
+    "Reduce space and support weaker colonies earlier next season.",
+    "Check other small colonies for isolation risk during cold spells.",
+  ],
+});
+
+add("postmortem_varroa_collapse", {
+  title: "Post-mortem: varroa-related collapse possible",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "strong",
+  when: { all: ["route_post_mortem"], any: ["pm_visible_varroa_yes", "pm_population_dropped_yes", "pm_brood_problem_yes"] },
+  excludeIf: { any: ["pm_wasp_attack_signs_yes", "pm_headfirst_cells_yes", "pm_stores_present_no"] },
+  why: [
+    "Colonies that collapse with food still present are often linked to high varroa loads going into winter.",
+  ],
+  actions: [
+    "Review the timing and effectiveness of Varroa monitoring/treatments in that colony and across the apiary.",
+    "Check your surviving colonies promptly rather than assuming this was an isolated loss.",
+    "Avoid combining suspect dead-out material with other colonies until the wider picture is clearer.",
+  ],
+});
+
+add("postmortem_wasp_or_robbing_collapse", {
+  title: "Post-mortem: wasp attack / robbing likely contributed to collapse",
+  severity: "warning",
+  urgency: "watch",
+  confidence: "strong",
+  when: { all: ["route_post_mortem"], any: ["pm_wasp_attack_signs_yes", "pm_wasps_seen_yes"] },
+  why: [
+    "Signs of attack, torn comb, debris, or previous fighting fit wasp pressure or robbing.",
+    "Weak colonies can be stripped very quickly, especially in late summer or autumn.",
+  ],
+  actions: [
+    "Review whether the entrance was small enough and whether the colony was strong enough to defend itself.",
+    "Be extra careful with late-season feeding and avoid syrup spills or exposed comb.",
+    "Protect weaker colonies earlier if wasp pressure builds in the apiary.",
+  ],
+});
+
+add("postmortem_dysentery_nosema_possible", {
+  title: "Post-mortem: dysentery / gut stress possible",
+  severity: "info",
+  urgency: "watch",
+  confidence: "medium",
+  when: { all: ["route_post_mortem", "pm_dysentery_signs_yes"] },
+  excludeIf: { any: ["pm_wasp_attack_signs_yes"] },
+  why: [
+    "Brown spotting or obvious bee poo suggests gut stress and can fit dysentery-like patterns.",
+  ],
+  actions: [
+    "Review ventilation, damp, and feed quality issues.",
+    "Avoid reusing obviously contaminated material without checking local best practice.",
+    "Monitor surviving colonies for similar soiling or poor spring build-up.",
+  ],
+});
+
+add("postmortem_absconding_or_near_empty", {
+  title: "Post-mortem: near-empty hive / disappearance pattern needs narrowing down",
+  severity: "info",
+  urgency: "watch",
+  confidence: "low",
+  when: { all: ["route_post_mortem", "pm_hive_empty_now_yes", "pm_stores_present_yes"] },
+  excludeIf: {
+    any: [
+      "pm_wasp_attack_signs_yes",
+      "pm_wasps_seen_yes",
+      "pm_visible_varroa_yes",
+      "pm_population_dropped_yes",
+      "pm_headfirst_cells_yes",
+    ],
+  },
+  why: [
+    "A mostly empty hive with stores remaining can look like absconding, but it can also follow collapse for other reasons.",
+  ],
+  actions: [
+    "Review season, colony strength, and any major disturbance or queen event before the loss.",
+    "Check combs carefully for subtle clues before reusing equipment.",
+    "Inspect the rest of the apiary rather than assuming a single simple cause.",
+  ],
+});
+
+// -------------------------
 // H) DEAD / DYING / POISONING / CHILLING (core)
 // -------------------------
+
 add("dead_poisoning_strong_signal", {
   title: "Strong signal: possible pesticide poisoning / acute exposure",
   severity: "warning",
@@ -2499,6 +2674,7 @@ const routes = [
   "route_entrance_activity",
   "route_queen_brood",
   "route_dead_dying",
+  "route_post_mortem",
   "route_feeding_stores",
   "route_comb_building",
   "route_pests_predators",

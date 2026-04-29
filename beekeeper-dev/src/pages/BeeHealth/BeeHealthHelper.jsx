@@ -16,7 +16,7 @@ import { BEE_HEALTH_RULES } from "../../utils/BeeHealthRules";
  */
 
 export default function BeeHealthHelper() {
-  const { questions, outcomes, redFlags, urgentReporting, confidence } = BEE_HEALTH_RULES;
+  const { questions, outcomes, redFlags, urgentReporting, confidence, safety, routes } = BEE_HEALTH_RULES;
 
   const initialState = useMemo(
     () => ({
@@ -121,6 +121,7 @@ export default function BeeHealthHelper() {
       route_entrance_activity: "entrance_activity",
       route_queen_brood: "queen_brood",
       route_dead_dying: "dead_dying",
+      route_post_mortem: "post_mortem",
       route_feeding_stores: "feeding_stores",
       route_comb_building: "comb_building",
       route_pests_predators: "pests_predators",
@@ -138,6 +139,11 @@ export default function BeeHealthHelper() {
     const bank = questions?.[routeKey] || [];
     return bank.filter((q) => evalClause(q.showIf, flags));
   }, [routeKey, questions, flags]);
+
+  const selectedRouteInfo = useMemo(() => {
+  if (!answers.primary_route) return null;
+  return (routes || []).find((r) => r.id === answers.primary_route) || null;
+}, [answers.primary_route, routes]);
 
   const allQuestionsInOrder = useMemo(() => {
     return [...foundation, ...routeQuestions].filter(Boolean);
@@ -524,15 +530,13 @@ export default function BeeHealthHelper() {
       <div className="mb-4 rounded border border-yellow-200 bg-yellow-50 p-4 text-sm text-gray-800 no-print">
         <div className="font-semibold">Important</div>
         <ul className="list-disc pl-5 mt-1 space-y-1">
-          <li>
-            This tool is <b>not a diagnosis</b>. It’s a triage helper to guide what to check next.
-          </li>
-          <li>
-            Use <b>Not sure</b> whenever you haven’t opened the hive or can’t observe something reliably.
-          </li>
-          <li>
-            If you suspect a <b>notifiable disease/pest</b>, avoid moving colonies/equipment and follow official guidance.
-          </li>
+          {(safety?.topBanner || [
+            "This tool is not a diagnosis — it’s a triage helper to guide what to check next.",
+            "Use Not sure whenever you haven’t opened the hive or can’t observe something reliably.",
+            "If you suspect a notifiable disease/pest, avoid moving colonies/equipment and follow official guidance.",
+          ]).map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
         </ul>
       </div>
 
@@ -628,6 +632,13 @@ export default function BeeHealthHelper() {
           </div>
         </div>
       </div>
+
+      {selectedRouteInfo ? (
+        <div className="mb-4 rounded border bg-white p-4 text-sm text-gray-800 no-print">
+          <div className="font-semibold">{selectedRouteInfo.label}</div>
+          <p className="mt-1 text-gray-600">{selectedRouteInfo.description}</p>
+        </div>
+      ) : null}
 
       {showDebug ? (
         <div className="no-print mb-4 rounded border bg-white p-4 text-xs">
@@ -761,11 +772,12 @@ export default function BeeHealthHelper() {
           </div>
 
           <ResultsPanel
-            results={results}
-            onPrint={() => window.print()}
-            onJump={jumpToQuestion}
-            qLabelById={qLabelById}
-          />
+              results={results}
+              onPrint={() => window.print()}
+              onJump={jumpToQuestion}
+              qLabelById={qLabelById}
+              safety={safety}
+            />
         </div>
       ) : (
         <div className="space-y-4">
@@ -843,12 +855,13 @@ export default function BeeHealthHelper() {
             </div>
           </div>
 
-          <ResultsPanel
-            results={results}
-            onPrint={() => window.print()}
-            onJump={jumpToQuestion}
-            qLabelById={qLabelById}
-          />
+        <ResultsPanel
+              results={results}
+              onPrint={() => window.print()}
+              onJump={jumpToQuestion}
+              qLabelById={qLabelById}
+              safety={safety}
+            />
         </div>
       )}
     </div>
@@ -960,7 +973,7 @@ function MultiCard({ label, help, options, answers, onToggle }) {
 
 /* ---------------- Results ---------------- */
 
-function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
+function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
   const InspectorSafeDisclaimer = () => (
     <div className="p-4 rounded border bg-white print-card">
       <div className="font-semibold">Safety / inspector-safe notes</div>
@@ -999,16 +1012,30 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
 
         <InspectorSafeDisclaimer />
 
+                {results.urgentHit ? (
+          <div className="p-5 rounded border border-red-300 bg-red-50 print-card">
+            <div className="font-bold text-red-800">Urgent reporting note</div>
+            <p className="text-sm text-red-900 mt-1">{results.urgentHit.label}</p>
+          </div>
+        ) : null}
+
         <div className="no-print">
           <button type="button" onClick={onPrint} className="px-4 py-2 rounded border bg-white hover:bg-gray-50 text-sm">
             Print results
           </button>
         </div>
+              {safety?.printFooter?.length ? (
+        <div className="hidden print-only text-xs text-gray-700 mt-4 border-t pt-3">
+          {safety.printFooter.map((item, index) => (
+            <div key={index}>{item}</div>
+          ))}
+        </div>
+      ) : null}
       </div>
     );
   }
 
-  return (
+    return (
     <div className="space-y-3">
       <div className="p-4 rounded border bg-white no-print print-card">
         <div className="flex items-start justify-between gap-3">
@@ -1024,6 +1051,13 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
       </div>
 
       <InspectorSafeDisclaimer />
+
+      {results.urgentHit ? (
+        <div className="p-5 rounded border border-red-300 bg-red-50 print-card">
+          <div className="font-bold text-red-800">Urgent reporting note</div>
+          <p className="text-sm text-red-900 mt-1">{results.urgentHit.label}</p>
+        </div>
+      ) : null}
 
       {results.nextChecks?.length ? (
         <div className="p-5 rounded border bg-white print-card no-print">
@@ -1098,12 +1132,20 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById }) {
             </div>
           );
         })
-      ) : (
+            ) : (
         <div className="p-5 rounded border bg-green-50 border-green-300 print-card">
           <h3 className="font-semibold">No clear issue identified</h3>
           <p className="text-sm mt-1">Try switching your route at the top or adding more observations.</p>
         </div>
       )}
+
+      {safety?.printFooter?.length ? (
+        <div className="hidden print-only text-xs text-gray-700 mt-4 border-t pt-3">
+          {safety.printFooter.map((item, index) => (
+            <div key={index}>{item}</div>
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
