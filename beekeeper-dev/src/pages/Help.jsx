@@ -6,7 +6,7 @@ const toc = [
   { id: "concepts", title: "Key Concepts" },
   { id: "membership", title: "Membership & Feature Availability" },
   { id: "getting-started", title: "Getting Started" },
-  { id: "siting-guides", title: "Apiary & Hive Siting Guides" },
+ { id: "siting-guides", title: "Apiary & Hive Siting Guides" },
   { id: "navigation", title: "Navigation Overview" },
   { id: "apiary-map-markers", title: "Apiary Map Markers (Map Notes)" },
   { id: "bee-health-helper", title: "Colony Health Check (Bee Health Helper)" },
@@ -163,12 +163,6 @@ export default function Help() {
                         <strong>Export my data (CSV)</strong> via{" "}
                         <em>Settings → Export</em>
                       </li>
-                      <li>
-                        <strong>Colony Health Check</strong> (Bee Health Helper)
-                      </li>
-                      <li>
-                        <strong>Siting Guides</strong> (Apiary Siting Guide + Hive Siting Guide)
-                      </li>
                     </ul>
                     <p className="mt-2 text-sm text-gray-600">
                       If you downgrade from Premium to Free, we keep{" "}
@@ -182,9 +176,27 @@ export default function Help() {
                     <h3 className="font-semibold flex items-center gap-2">
                       Premium plan <Badge tone="blue">Premium</Badge>
                     </h3>
-                    <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                   <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
                       <li>
                         <strong>Unlimited apiaries &amp; hives</strong>
+                      </li>
+                      <li>
+                        <strong>Colony Health Check</strong> (Bee Health Helper)
+                      </li>
+                      <li>
+                        <strong>Apiary Siting Guide</strong>, <strong>Hive Siting Guide</strong>, and{" "}
+                        <strong>Step-by-step Inspection Guide</strong>
+                      </li>
+                      <li>
+                        <strong>Apiary Map Markers</strong> for saving forage, water, risk,
+                        access and site notes on apiary maps
+                      </li>
+                      <li>
+                        <strong>Reports &amp; Exports</strong>, including printable reports
+                        and filtered CSV exports
+                      </li>
+                      <li>
+                        <strong>Inventory, Sales, Expenses and Profit &amp; Loss</strong>
                       </li>
                       <li>
                         <strong>NFC tools</strong>: <strong>Set Up NFC Tags</strong>,
@@ -197,14 +209,13 @@ export default function Help() {
                         to the tag
                       </li>
                       <li>
-                        <strong>NFC quick-select</strong> in New Inspection (when
-                        arriving from an NFC action)
+                        <strong>NFC quick-select</strong> in New Inspection when arriving
+                        from an NFC action
                       </li>
                       <li>
                         <strong>Stripe Customer Portal</strong>:{" "}
                         <em>Settings → Manage billing</em>
                       </li>
-                      <li>Priority enhancements &amp; future advanced features</li>
                     </ul>
                   </div>
                 </div>
@@ -254,12 +265,12 @@ export default function Help() {
                   . Weather auto-fills from the apiary’s coordinates for that
                   date. <Badge>Free</Badge>
                 </li>
-                <li>
-                  <strong>Try the Colony Health Check:</strong>{" "}
-                  <span className="text-gray-700">Colony Health Check</span>{" "}
-                  helps you decide what to check next when something looks “off”.
-                  <Badge>Free</Badge>
-                </li>
+               <li>
+  <strong>Try the Colony Health Check:</strong>{" "}
+  <span className="text-gray-700">Colony Health Check</span>{" "}
+  helps you decide what to check next when something looks “off”.
+  <Badge tone="blue">Premium</Badge>
+</li>
                 <li>
                   <strong>NFC</strong> <Badge tone="blue">Premium</Badge>:
                   open <strong>Set Up NFC Tags</strong> to choose either the
@@ -270,7 +281,9 @@ export default function Help() {
 
             {/* NEW: Siting Guides */}
             <section id="siting-guides">
-              <h2 className="text-2xl font-bold mb-3">Apiary &amp; Hive Siting Guides</h2>
+              <h2 className="text-2xl font-bold mb-3">
+                Apiary &amp; Hive Siting Guides <Badge tone="blue">Premium</Badge>
+              </h2>
 
               <p className="text-gray-700">
                 HiveTag includes two beginner-friendly guides designed to be used while you are setting up new records:
@@ -372,7 +385,7 @@ export default function Help() {
                       link that takes you to the full Weather page.
                     </li>
                     <li>
-                      <strong>Reports &amp; Export card:</strong> opens the{" "}
+                      <strong>Reports &amp; Export card</strong> <Badge tone="blue">Premium</Badge>: opens the{" "}
                       <em>Reports &amp; Exports</em> page, where you can print
                       multi-section reports and download CSVs using the same
                       Apiary/Hive/date filters.
@@ -399,7 +412,7 @@ export default function Help() {
                       <strong>lightbox</strong>.
                     </li>
                     <li>
-                      <strong>Apiary Map (markers):</strong> the Apiaries list includes a{" "}
+                      <strong>Apiary Map (markers)</strong> <Badge tone="blue">Premium</Badge>: the Apiaries list includes a{" "}   
                       <strong>Map</strong> action (on the apiary card) that opens a full-screen map
                       for that apiary. Use it to add simple map notes like forage hotspots, water
                       sources, access/parking, shelter/windbreaks, risks, and Asian hornet sightings.
@@ -409,7 +422,7 @@ export default function Help() {
                       toggle.
                     </li>
                     <li>
-                      New Apiary includes an <strong>Apiary Siting Guide</strong> button at the top for beginners.
+                      New Apiary includes an <strong>Apiary Siting Guide</strong> button at the top for Premium users.
                       (Quick link:{" "}
                       <Link to="/apiaries/step-by-step" className="text-blue-700 underline">
                         Apiary Siting Guide
@@ -440,7 +453,7 @@ export default function Help() {
                       location and map come from the parent apiary.
                     </li>
                     <li>
-                      New Hive includes a <strong>Hive Siting Guide</strong> button at the top to help choose entrance direction,
+                      New Hive includes a <strong>Hive Siting Guide</strong> button at the top for Premium users to help choose entrance direction,
                       working space, and nuisance reduction. (Quick link:{" "}
                       <Link to="/hives/step-by-step" className="text-blue-700 underline">
                         Hive Siting Guide
@@ -486,7 +499,9 @@ export default function Help() {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold">Colony Health Check</h3>
+                 <h3 className="font-semibold">
+                    Colony Health Check <Badge tone="blue">Premium</Badge>
+                  </h3>
                   <ul className="list-disc pl-6">
                     <li>
                       A guided helper that asks one question at a time and suggests
@@ -633,10 +648,12 @@ export default function Help() {
 
             {/* Apiary Map Markers */}
             <section id="apiary-map-markers">
-              <h2 className="text-2xl font-bold mb-3">Apiary Map Markers (Map Notes)</h2>
+             <h2 className="text-2xl font-bold mb-3">
+  Apiary Map Markers (Map Notes) <Badge tone="blue">Premium</Badge>
+</h2>
 
               <p className="text-gray-700">
-                The <strong>Apiary Map Markers</strong> page lets you add simple “map notes” for each apiary — for example:
+                The <strong>Apiary Map Markers</strong> page <Badge tone="blue">Premium</Badge> lets you add simple “map notes” for each apiary — for example:
                 water sources, forage hotspots, risks, access/parking, shelter/windbreaks, or Asian hornet sightings.
                 These markers are saved per apiary and are useful for remembering what’s around a site.
               </p>
@@ -705,10 +722,9 @@ export default function Help() {
 
             {/* Colony Health Check */}
             <section id="bee-health-helper">
-              <h2 className="text-2xl font-bold mb-3">
-                Colony Health Check (Bee Health Helper)
-              </h2>
-
+             <h2 className="text-2xl font-bold mb-3">
+  Colony Health Check (Bee Health Helper) <Badge tone="blue">Premium</Badge>
+</h2>
               <div className="mb-4 rounded border border-yellow-200 bg-yellow-50 p-4 text-sm text-gray-800">
                 <div className="font-semibold">Important</div>
                 <ul className="list-disc pl-5 mt-1 space-y-1">
@@ -842,7 +858,7 @@ export default function Help() {
             {/* Inventory, Sales & Expenses (overview) */}
             <section id="business-inventory">
               <h2 className="text-2xl font-bold mb-3">
-                Inventory, Sales &amp; Expenses
+              Inventory, Sales &amp; Expenses <Badge tone="blue">Premium</Badge>
               </h2>
               <p className="text-gray-700 mb-2">
                 The business tools are optional but handy if you sell honey,
@@ -972,7 +988,9 @@ export default function Help() {
 
             {/* Reports */}
             <section id="reports">
-              <h2 className="text-2xl font-bold mb-3">Reports</h2>
+              <h2 className="text-2xl font-bold mb-3">
+                Reports <Badge tone="blue">Premium</Badge>
+              </h2>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
                   Open <strong>Reports</strong> from the Sidebar to access the main{" "}
@@ -1042,7 +1060,9 @@ export default function Help() {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold">B) Quick “something’s not right” check</h3>
+                  <h3 className="font-semibold">
+  B) Quick “something’s not right” check <Badge tone="blue">Premium</Badge>
+</h3>
                   <ol className="list-decimal pl-6 space-y-1 text-gray-700">
                     <li>
                       Open <em>Colony Health Check</em> and answer the first few context questions.
@@ -1203,8 +1223,8 @@ export default function Help() {
                 </li>
                 <li>
                   <strong>Maps:</strong> set apiary coordinates by clicking the map or searching by address.
-                  HiveTag also includes an <strong>Apiary Map Markers</strong> page where you can save map notes (forage, water, risks, access, etc.)
-                  per apiary.
+                  HiveTag also includes an <strong>Apiary Map Markers</strong> page <Badge tone="blue">Premium</Badge> where you can save map notes (forage, water, risks, access, etc.)
+per apiary.
                 </li>
                 <li>
                   <strong>Photos:</strong> Apiary/Hive support one optional photo;
@@ -1221,7 +1241,9 @@ export default function Help() {
 
             {/* Apiary Map & Markers */}
             <section id="apiary-map-markers-2">
-              <h2 className="text-2xl font-bold mb-3">Apiary Map &amp; Markers</h2>
+           <h2 className="text-2xl font-bold mb-3">
+  Apiary Map &amp; Markers <Badge tone="blue">Premium</Badge>
+</h2>
 
               <p className="text-gray-700">
                 The Apiary Map is a full-screen map for one apiary. It helps you keep simple
@@ -1412,7 +1434,9 @@ export default function Help() {
               <h2 className="text-2xl font-bold mb-3">FAQs</h2>
               <div className="space-y-4">
                 <div>
-                  <p className="font-medium">Is the Colony Health Check a diagnosis?</p>
+                  <p className="font-medium">
+  Is the Colony Health Check a diagnosis? <Badge tone="blue">Premium</Badge>
+</p>
                   <p className="text-gray-700">
                     No. It’s a triage helper that suggests what to check next. If a UK action/reporting panel appears,
                     follow official guidance.
@@ -1429,7 +1453,9 @@ export default function Help() {
                 </div>
 
                 <div>
-                  <p className="font-medium">Where do I find the Apiary Siting Guide and Hive Siting Guide?</p>
+                <p className="font-medium">
+  Where do I find the Apiary Siting Guide and Hive Siting Guide? <Badge tone="blue">Premium</Badge>
+</p>
                   <p className="text-gray-700">
                     On the <strong>New Apiary</strong> page and <strong>New Hive</strong> page there’s a guide button at the top.
                     You can also open them directly here:{" "}
@@ -1502,8 +1528,7 @@ export default function Help() {
                 <div>
                   <p className="font-medium">What exactly do I get on Free?</p>
                   <p className="text-gray-700">
-                    1 active apiary, 2 active hives total, unlimited inspections, weather tools, calendar, tasks, logbook entries,
-                    Colony Health Check, and CSV export from Settings.
+                    1 active apiary, 2 active hives total, unlimited inspections, weather tools, calendar, tasks, logbook entries, and CSV export from Settings.
                   </p>
                 </div>
 
@@ -1521,11 +1546,11 @@ export default function Help() {
               <h2 className="text-2xl font-bold mb-3">Troubleshooting</h2>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
-                  <strong>Colony Health Check seems stuck:</strong> switch to <strong>Expand all</strong> to see everything relevant,
+                  <strong>Colony Health Check seems stuck</strong> <Badge tone="blue">Premium</Badge><strong>:</strong> switch to <strong>Expand all</strong> to see everything relevant,
                   or press <strong>Reset all</strong> and start again.
                 </li>
                 <li>
-                  <strong>Colony Health Check shows a UK action panel:</strong> pause before moving equipment, and use the official
+                  <strong>Colony Health Check shows a UK action panel</strong> <Badge tone="blue">Premium</Badge><strong>:</strong> pause before moving equipment, and use the official
                   links shown for guidance/reporting.
                 </li>
                 <li>
@@ -1599,7 +1624,7 @@ export default function Help() {
               </p>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
-                  <strong>Colony Health Check:</strong> use <strong>Expand all</strong> to answer in any order. Use{" "}
+                 <strong>Colony Health Check</strong> <Badge tone="blue">Premium</Badge><strong>:</strong> use <strong>Expand all</strong> to answer in any order. Use{" "}
                   <strong>Recommended next checks</strong> to narrow down the results efficiently.
                 </li>
                 <li>

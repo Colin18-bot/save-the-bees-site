@@ -144,8 +144,28 @@ const NewApiary = () => {
   const [addressSearch, setAddressSearch] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [isPremium, setIsPremium] = useState(false);
+  useEffect(() => {
+  const checkPlan = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
+    if (!user) return;
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("subscription_level")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    setIsPremium(data?.subscription_level === "premium");
+  };
+
+  checkPlan();
+}, []);
   // Reusable button styles (consistent sizes)
   const greenBtn =
     "bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded " +
@@ -281,6 +301,7 @@ const NewApiary = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMessage("");
+    setShowUpgradePrompt(false);
     setSuccessMessage("");
 
     const cleanName = name.trim();
@@ -327,8 +348,13 @@ const NewApiary = () => {
           .is("archived_at", null);
         if (cntErr) throw cntErr;
         if ((count ?? 0) >= 1) {
-          throw new Error("Free plan allows only 1 apiary.");
-        }
+        setShowUpgradePrompt(true);
+        setErrorMessage(
+          "You’ve reached the Free plan limit of 1 apiary. Upgrade to Premium to add unlimited apiaries, unlimited hives, NFC hive tags and full reporting."
+        );
+        setSaving(false);
+        return;
+      }
       }
 
       // Prevent duplicate names (trim + exact match)
@@ -457,14 +483,29 @@ const NewApiary = () => {
   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
     <h2 className="text-2xl font-bold">New Apiary</h2>
 
-    <Link
-      to="/apiaries/step-by-step"
-      className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100 w-full sm:w-auto"
-      title="Open the apiary siting guide"
-      onClick={() => trackEvent("apiary_siting_guide_open", { source: "new_apiary" })}
-    >
-      Apiary Siting Guide
-    </Link>
+    {isPremium ? (
+        <Link
+          to="/apiaries/step-by-step"
+          className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100 w-full sm:w-auto"
+          title="Open the apiary siting guide"
+          onClick={() =>
+            trackEvent("apiary_siting_guide_open", { source: "new_apiary" })
+          }
+        >
+          Apiary Siting Guide
+        </Link>
+      ) : (
+        <Link
+  to="/premium-required"
+  className="inline-flex items-center justify-center text-sm px-3 py-2 border border-amber-300 bg-amber-50 text-amber-900 rounded hover:bg-amber-100 w-full sm:w-auto"
+  title="Apiary Siting Guide is a Premium feature"
+          onClick={() =>
+            trackEvent("apiary_siting_guide_locked_click", { source: "new_apiary" })
+          }
+        >
+          🔒 Apiary Siting Guide
+        </Link>
+      )}
   </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -659,10 +700,27 @@ const NewApiary = () => {
         </div>
 
         {errorMessage && (
-          <div className="text-red-700 bg-red-50 border border-red-200 rounded-lg p-3 text-sm">
-            <strong>{errorMessage}</strong>
-          </div>
-        )}
+        <div
+          className={`rounded-lg border p-3 text-sm ${
+            showUpgradePrompt
+              ? "text-amber-900 bg-amber-50 border-amber-200"
+              : "text-red-700 bg-red-50 border-red-200"
+          }`}
+        >
+          <strong>{errorMessage}</strong>
+
+          {showUpgradePrompt && (
+            <div className="mt-3">
+              <Link
+                to="/pricing"
+                className="inline-flex items-center justify-center rounded bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800"
+              >
+                Upgrade to Premium
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
 
         {successMessage && (
           <div

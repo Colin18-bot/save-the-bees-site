@@ -667,16 +667,31 @@ const NewInspection = () => {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
         <h1 className="text-2xl font-bold">New Inspection</h1>
 
+{subscriptionLevel === "premium" ? (
         <Link
           to="/inspections/step-by-step"
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100 w-full sm:w-auto"
           title="Open the step-by-step inspection guide"
-          onClick={() => trackEvent("inspection_guide_open", { source: "new_inspection" })}
+          onClick={() =>
+            trackEvent("inspection_guide_open", { source: "new_inspection" })
+          }
         >
           Step-by-step inspection guide
         </Link>
+      ) : (
+        <Link
+          to="/premium-required"
+          className="inline-flex items-center justify-center text-sm px-3 py-2 border border-amber-300 bg-amber-50 text-amber-900 rounded hover:bg-amber-100 w-full sm:w-auto"
+          title="Step-by-step inspection guide is a Premium feature"
+          onClick={() =>
+            trackEvent("inspection_guide_locked_click", { source: "new_inspection" })
+          }
+        >
+          🔒 Step-by-step inspection guide
+        </Link>
+      )}
       </div>
 
       {fromParam === "saved" && nfc_uidParam && resolvedHiveId && (

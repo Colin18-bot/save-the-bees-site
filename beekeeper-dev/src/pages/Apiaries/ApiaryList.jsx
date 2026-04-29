@@ -13,6 +13,27 @@ const PAGE_SIZE = 3;
 const ApiaryList = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isPremium, setIsPremium] = useState(false);
+
+    useEffect(() => {
+      const checkPlan = async () => {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        if (!user) return;
+
+       const { data } = await supabase
+  .from("profiles")
+  .select("subscription_level")
+  .eq("user_id", user.id)
+  .maybeSingle();
+
+        setIsPremium(data?.subscription_level === "premium");
+      };
+
+      checkPlan();
+    }, []);
 
   const [apiaries, setApiaries] = useState([]);
   const [filteredApiaries, setFilteredApiaries] = useState([]);
@@ -323,6 +344,7 @@ const ApiaryList = () => {
       New Apiary
     </Link>
 
+   {isPremium ? (
     <Link
       to="/apiaries/step-by-step"
       className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50
@@ -330,9 +352,17 @@ const ApiaryList = () => {
     >
       Apiary Siting Guide
     </Link>
+  ) : (
+    <Link
+     to="/premium-required"
+      className="inline-flex items-center justify-center rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-amber-400"
+    >
+      🔒 Apiary Siting Guide
+    </Link>
+  )}
   </div>
 </div>
-
       <div className="flex flex-wrap gap-4 items-center mb-4">
         <div>
           <label className="mr-2 font-medium">Filter:</label>
@@ -479,13 +509,23 @@ const ApiaryList = () => {
                       View Hives
                     </Link>
 
+                    {isPremium ? (
                     <Link
                       to={`/apiaries/${a.id}/map`}
                       className="text-sm px-3 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded text-center
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-slate-500"
+                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-slate-500"
                     >
                       Map markers
                     </Link>
+                  ) : (
+                    <Link
+                      to="/premium-required"
+                      className="text-sm px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded text-center
+                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-amber-400"
+                    >
+                      🔒 Map markers
+                    </Link>
+                  )}
 
                     <Link
                       to={`/hives/new?apiary_id=${a.id}`}

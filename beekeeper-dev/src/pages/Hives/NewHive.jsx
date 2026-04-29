@@ -32,6 +32,7 @@ const NewHive = () => {
 
   const [apiaries, setApiaries] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -209,6 +210,7 @@ const NewHive = () => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage("");
+    setShowUpgradePrompt(false);
     setSuccessMessage("");
 
     // Normalize outgoing fields (empty strings -> null)
@@ -294,11 +296,23 @@ const NewHive = () => {
     // Unique index fallback / general error
     if (insertError) {
       console.error(insertError);
+
+      const dbMessage = insertError.message || "";
+
       if (insertError.code === "23505") {
         setErrorMessage("This NFC tag is already linked to another hive.");
+      } else if (
+        dbMessage.toLowerCase().includes("free plan limit") ||
+        dbMessage.toLowerCase().includes("only 2 active hives")
+      ) {
+        setShowUpgradePrompt(true);
+        setErrorMessage(
+          "You’ve reached the Free plan limit of 2 active hives. Upgrade to Premium to add unlimited hives, use NFC hive tags and unlock full reporting."
+        );
       } else {
-        setErrorMessage("Failed to save hive. " + insertError.message);
+        setErrorMessage("Failed to save hive. " + dbMessage);
       }
+
       setLoading(false);
       return;
     }
@@ -340,14 +354,29 @@ const NewHive = () => {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
   <h1 className="text-2xl font-bold">New Hive</h1>
 
+{subscriptionLevel === "premium" ? (
   <Link
     to="/hives/step-by-step"
     className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100 w-full sm:w-auto"
     title="Open the hive siting guide"
-    onClick={() => trackEvent("hive_siting_guide_open", { source: "new_hive" })}
+    onClick={() =>
+      trackEvent("hive_siting_guide_open", { source: "new_hive" })
+    }
   >
     Hive Siting Guide
   </Link>
+) : (
+  <Link
+  to="/premium-required"
+  className="inline-flex items-center justify-center text-sm px-3 py-2 border border-amber-300 bg-amber-50 text-amber-900 rounded hover:bg-amber-100 w-full sm:w-auto"
+  title="Hive Siting Guide is a Premium feature"
+    onClick={() =>
+      trackEvent("hive_siting_guide_locked_click", { source: "new_hive" })
+    }
+  >
+    🔒 Hive Siting Guide
+  </Link>
+)}
 </div>
 
       {/* ✅ NFC banner when coming from a scan */}
@@ -486,10 +515,27 @@ const NewHive = () => {
           className="block w-full px-3 py-2 border rounded"
         />
 
-        {/* 🔴 Error box styled like NewApiary */}
+       {/* Error / upgrade message */}
         {errorMessage && (
-          <div className="text-red-700 bg-red-50 border border-red-200 rounded-lg p-3 text-sm">
+          <div
+            className={`rounded-lg border p-3 text-sm ${
+              showUpgradePrompt
+                ? "text-amber-900 bg-amber-50 border-amber-200"
+                : "text-red-700 bg-red-50 border-red-200"
+            }`}
+          >
             <strong>{errorMessage}</strong>
+
+            {showUpgradePrompt && (
+              <div className="mt-3">
+                <Link
+                  to="/pricing"
+                  className="inline-flex items-center justify-center rounded bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800"
+                >
+                  Upgrade to Premium
+                </Link>
+              </div>
+            )}
           </div>
         )}
 

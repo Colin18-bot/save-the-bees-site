@@ -9,6 +9,57 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
   {
+  
+  version: "1.1.4",
+  released_at: "2026-04-29T18:00:00Z",
+  summary:
+    "Premium access rules updated across BeezKnees so Free and Premium plans are clearer, locked features are shown consistently, and protected routes now prevent direct URL access to Premium-only tools.",
+
+  added: [
+    "Added Premium gating for **Colony Health Check**, **Apiary Siting Guide**, **Hive Siting Guide**, and **Step-by-step Inspection Guide**.",
+    "Added Premium gating for **Apiary Map Markers**.",
+    "Added Premium gating for **Reports & Export**.",
+    "Added Premium gating for **Inventory**, **Sales**, **Expenses**, **Profit & Loss**, **New Inventory**, **New Sale**, and **New Expense**.",
+    "Added protected route checks so Premium-only pages cannot be accessed by typing the URL directly."
+  ],
+
+  changed: [
+    "Updated sidebar links so Free users see locked Premium feature buttons instead of normal access links.",
+    "Updated Dashboard **Open Reports & Export** access so it follows the new Premium-only rules.",
+    "Updated pricing content so Free and Premium plan features now match the actual feature access rules.",
+    "Updated guide buttons across Apiary, Hive and Inspection pages so locked Premium tools are shown consistently."
+  ],
+
+  fixed: [
+    "Fixed cases where Free users could still reach Premium-only pages by entering the route manually.",
+    "Fixed inconsistent locked-link behaviour where some buttons went to Pricing and others used the Premium-required flow.",
+    "Fixed Premium plan checks using the correct `profiles.user_id` lookup."
+  ],
+
+  removed: [],
+
+  security: [
+    "Strengthened client-side route protection for Premium-only tools and reporting pages."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Pricing", to: "/pricing" },
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Apiaries", to: "/apiaries" },
+    { label: "Hives", to: "/hives" },
+    { label: "Inspections", to: "/inspections" },
+    { label: "Reports", to: "/reports/print" },
+    { label: "Inventory", to: "/inventory" }
+  ],
+
+  known_issues: [
+    "Locked feature buttons are intentionally still visible to Free users so they can see what Premium unlocks.",
+    "Server-side database access is still governed separately by Supabase RLS and app policies."
+  ]
+  },
+  {
   version: "1.1.3",
   released_at: "2026-03-27T14:30:00Z",
   summary:

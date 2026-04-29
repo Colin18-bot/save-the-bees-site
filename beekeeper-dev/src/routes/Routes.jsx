@@ -46,6 +46,7 @@ import GettingStarted from "../pages/Help/GettingStarted.jsx";
 
 import BeeHealthHelper from "../pages/BeeHealth/BeeHealthHelper.jsx";
 
+import PremiumRequired from "../pages/PremiumRequired.jsx";
 
 // Step by Step Inspections
 import StepByStepInspections from "../pages/step-by-step-inspections.jsx";
@@ -101,6 +102,12 @@ const Guarded = ({ children }) => (
   </ProtectedRoute>
 );
 
+const PremiumGuarded = ({ children }) => (
+  <ProtectedRoute minPlan="premium">
+    <Layout>{children}</Layout>
+  </ProtectedRoute>
+);
+
 function AppRoutes() {
   const location = useLocation();
 
@@ -115,6 +122,7 @@ function AppRoutes() {
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/pricing" element={<Pricing />} />
+      <Route path="/premium-required" element={<PremiumRequired />} />
 
       {/* Public/legal (lazy) wrapped in Layout */}
       <Route
@@ -166,7 +174,7 @@ function AppRoutes() {
 
       <Route path="/inspections/step-by-step" element={<Guarded><StepByStepInspections /></Guarded>} />
 
-      <Route path="/apiaries/step-by-step" element={<Guarded><StepByStepApiarySiting /></Guarded>} />
+      <Route path="/apiaries/step-by-step" element={<PremiumGuarded><StepByStepApiarySiting /></PremiumGuarded>} />
       <Route path="/hives/step-by-step" element={<Guarded><StepByStepHiveSiting /></Guarded>} />
 
       <Route path="/logbook" element={<Guarded><Logbook /></Guarded>} />
@@ -196,23 +204,23 @@ function AppRoutes() {
       <Route path="/nfc/open" element={<Guarded><NFCOpen /></Guarded>} />
 
       {/* Inventory */}
-      <Route path="/inventory" element={<Guarded><InventoryList /></Guarded>} />
-      <Route path="/inventory/new" element={<Guarded><NewItem /></Guarded>} />
-      <Route path="/inventory/:id/edit" element={<Guarded><EditItem /></Guarded>} />
+      <Route path="/inventory" element={<PremiumGuarded><InventoryList /></PremiumGuarded>} />
+      <Route path="/inventory/new" element={<PremiumGuarded><NewItem /></PremiumGuarded>} />
+      <Route path="/inventory/:id/edit" element={<PremiumGuarded><EditItem /></PremiumGuarded>} />
 
       {/* Finance: Expenses */}
-      <Route path="/finance/expenses" element={<Guarded><ExpensesList /></Guarded>} />
-      <Route path="/finance/expenses/new" element={<Guarded><NewExpense /></Guarded>} />
-      <Route path="/finance/expenses/:id/edit" element={<Guarded><EditExpense /></Guarded>} />
+      <Route path="/finance/expenses" element={<PremiumGuarded><ExpensesList /></PremiumGuarded>} />
+      <Route path="/finance/expenses/new" element={<PremiumGuarded><NewExpense /></PremiumGuarded>} />
+      <Route path="/finance/expenses/:id/edit" element={<PremiumGuarded><EditExpense /></PremiumGuarded>} />
 
       {/* Sales */}
-      <Route path="/sales" element={<Guarded><SalesList /></Guarded>} />
-      <Route path="/sales/new" element={<Guarded><NewSale /></Guarded>} />
-      <Route path="/sales/:id/edit" element={<Guarded><EditSale /></Guarded>} />
+      <Route path="/sales" element={<PremiumGuarded><SalesList /></PremiumGuarded>} />
+      <Route path="/sales/new" element={<PremiumGuarded><NewSale /></PremiumGuarded>} />
+      <Route path="/sales/:id/edit" element={<PremiumGuarded><EditSale /></PremiumGuarded>} />
 
       {/* Reports */}
-      <Route path="/reports/pnl" element={<Guarded><ProfitLoss /></Guarded>} />
-      <Route path="/reports/print" element={<Guarded><PrintReport /></Guarded>} />
+      <Route path="/reports/pnl" element={<PremiumGuarded><ProfitLoss /></PremiumGuarded>} />
+      <Route path="/reports/print" element={<PremiumGuarded><PrintReport /></PremiumGuarded>} />
 
       {/* Release Notes */}
       <Route path="/updates" element={<Guarded><Updates /></Guarded>} />

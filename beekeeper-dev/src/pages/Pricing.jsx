@@ -293,18 +293,17 @@ export default function Pricing() {
         <PlanCard
           title="Free"
           price="£0"
-          description="A perfect starter plan with all features included — just limited to one apiary and two hives."
+          description="A simple starter plan for trying BeezKnees with one apiary, two hives and the core record-keeping tools."
           features={[
-            "Full inspection records",
-            "To-Dos & calendar reminders",
-            "Weather overview",
-            "Photo uploads",
-            "Printable reports",
-            "Logbook & archive",
-            "Seasonal & per-apiary reporting",
-            "Step-by-step inspection guide",
-            "1 apiary • Up to 2 hives",
-          ]}
+          "1 apiary",
+          "Up to 2 hives",
+          "Inspection records",
+          "To-Dos & calendar",
+          "Weather overview",
+          "Photo uploads",
+          "Logbook & archive",
+          "Basic hive, apiary and inspection management",
+        ]}
           disabled={subscriptionLevel === "free" && !!user}
           busy={false}
           onClick={() => navigate(user ? "/dashboard" : "/register?redirect=/dashboard")}
@@ -318,18 +317,21 @@ export default function Pricing() {
         <PlanCard
           title="Premium"
           price={PREMIUM_PRICE_TEXT}
-          description="Everything in Free — without limits, plus NFC tap-to-log inspections and a dashboard view of your tagged hives."
+          description="Unlock unlimited apiaries and hives, premium guides, reporting, exports, finance tools, map markers and HiveTag NFC features."
           features={[
-            "Unlimited apiaries",
-            "Unlimited hives",
-            "HiveTag NFC tap-to-log inspections (Scan NFC page)",
-            "NFC quick-select in New Inspection",
-            "NFC dashboard summary & tagged hives list",
-            "All features included — nothing locked",
-            "Ideal for growing hobbyists & sideline/commercial setups",
-            "Priority support",
-            "Directly supports ongoing development of BeezKnees",
-          ]}
+          "Unlimited apiaries",
+          "Unlimited hives",
+          "Colony Health Check",
+          "Apiary and Hive Siting Guides",
+          "Step-by-step Inspection Guide",
+          "Map markers for apiaries",
+          "Reports, exports and combined CSV downloads",
+          "Inventory, sales, expenses and Profit & Loss",
+          "New Inventory, New Sale and New Expense tools",
+          "HiveTag NFC tap-to-log inspections",
+          "NFC dashboard summary and tagged hives list",
+          "Directly supports ongoing development of BeezKnees",
+        ]}
           disabled={false}
           busy={upgrading || openingBilling}
           onClick={() => (isPremium ? handleManageBilling() : handleUpgrade())}

@@ -22,6 +22,7 @@ const InspectionList = () => {
 
   const [inspections, setInspections] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isPremium, setIsPremium] = useState(false);
 
   const [apiaries, setApiaries] = useState([]);
   const [hives, setHives] = useState([]);
@@ -110,6 +111,29 @@ const showNext = useCallback(() => {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [lightbox.isOpen, closeLightbox, showPrev, showNext]);
+
+
+// Check subscription level
+useEffect(() => {
+  const checkPlan = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) return;
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("subscription_level")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    setIsPremium(data?.subscription_level === "premium");
+  };
+
+  checkPlan();
+}, []);
+
 
   // Load lookup options (ACTIVE only)
   useEffect(() => {
@@ -508,13 +532,23 @@ const showNext = useCallback(() => {
             Start new inspection
           </Link>
 
-          <Link
-            to="/inspections/step-by-step"
-            className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100"
-            title="View the step-by-step inspection guide"
-          >
-            Step-by-step inspection guide
-          </Link>
+      {isPremium ? (
+        <Link
+          to="/inspections/step-by-step"
+          className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100"
+          title="View the step-by-step inspection guide"
+        >
+          Step-by-step inspection guide
+        </Link>
+      ) : (
+        <Link
+          to="/premium-required"
+          className="inline-flex items-center justify-center text-sm px-3 py-2 border border-amber-300 bg-amber-50 text-amber-900 rounded hover:bg-amber-100"
+          title="Step-by-step inspection guide is a Premium feature"
+        >
+          🔒 Step-by-step inspection guide
+        </Link>
+      )}
         </div>
       </div>
 

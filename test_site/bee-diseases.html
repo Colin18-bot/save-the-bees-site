@@ -375,7 +375,7 @@
                <i class="fa-solid fa-mobile-screen-button"></i>
                Explore HiveTag
                </a>
-               <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/">
+               <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
                <i class="fa-solid fa-right-to-bracket"></i>
                Open Members Area
                </a>
@@ -442,7 +442,7 @@
                   <i class="fa-solid fa-mobile-screen-button"></i>
                   Explore HiveTag
                   </a>
-                  <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/">
+                  <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
                   <i class="fa-solid fa-right-to-bracket"></i>
                   Open Members Area
                   </a>
@@ -675,21 +675,27 @@
                <li><a href="/bee-diseases">Bee Health</a></li>
                <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             </ul>
-            <div class="mobile-menu-cta">
-               <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
-               <i class="fa-solid fa-mobile-screen-button"></i>
-               Try HiveTag Free
-               </a>
-               <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/hivetag-app">
-               <i class="fa-solid fa-circle-info"></i>
-               More Information
-               </a>
-            </div>
+           <div class="mobile-menu-cta">
+         <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+            <i class="fa-solid fa-mobile-screen-button"></i>
+            Try HiveTag Free
+         </a>
+
+         <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            Login
+         </a>
+
+         <a class="btn btn-secondary" href="/hivetag-app">
+            <i class="fa-solid fa-circle-info"></i>
+            More Information
+         </a>
+         </div>
          </div>
       </aside>
       <div class="search-overlay" id="searchOverlay"></div>
       <div class="search-panel" id="searchPanel" aria-label="Search panel">
-         <form class="search-form" action="/search" method="get" role="search">
+         <form class="search-form" role="search" onsubmit="return false;">
             <input type="search" name="q" placeholder="Search all pages... e.g. spring build-up, swarm control, feeding" aria-label="Search all pages">
             <button type="submit">Search</button>
          </form>

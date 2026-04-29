@@ -400,6 +400,7 @@ const HiveList = () => {
             New Hive
           </Link>
 
+                {isPremium ? (
           <Link
             to="/hives/step-by-step"
             className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50
@@ -407,6 +408,16 @@ const HiveList = () => {
           >
             Hive Siting Guide
           </Link>
+        ) : (
+
+            <Link
+  to="/premium-required"
+  className="inline-flex items-center justify-center rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-amber-400"
+          >
+            🔒 Hive Siting Guide
+          </Link>
+        )}
         </div>
       </div>
 

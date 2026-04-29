@@ -80,42 +80,43 @@ export default function PrintReport() {
     document.title = `Reports & Exports — ${fmtUK(fromDate)}–${fmtUK(toDate)}`;
   }, [fromDate, toDate]);
 
-  // Load subscription level (premium / free)
-  useEffect(() => {
-    (async () => {
-      try {
-        const { data: userWrap } = await supabase.auth.getUser();
-        const uid = userWrap?.user?.id;
+  // Load subscription level for Premium-only NFC options
+useEffect(() => {
+  (async () => {
+    try {
+      const { data: userWrap } = await supabase.auth.getUser();
+      const uid = userWrap?.user?.id;
 
-        if (!uid) {
-          setSubscriptionLevel("free");
-          setIncludeNfc(false);
-          return;
-        }
-
-        const { data: profile, error: profErr } = await supabase
-          .from("profiles")
-          .select("subscription_level")
-          .eq("user_id", uid)
-          .maybeSingle();
-
-        if (profErr) {
-          setSubscriptionLevel("free");
-          setIncludeNfc(false);
-          return;
-        }
-
-        const level = profile?.subscription_level || "free";
-        setSubscriptionLevel(level);
-
-        // Safety: if Free, force NFC off
-        if (level !== "premium") setIncludeNfc(false);
-      } catch {
+      if (!uid) {
         setSubscriptionLevel("free");
         setIncludeNfc(false);
+        return;
       }
-    })();
-  }, []);
+
+      const { data: profile, error: profErr } = await supabase
+        .from("profiles")
+        .select("subscription_level")
+        .eq("user_id", uid)
+        .maybeSingle();
+
+      if (profErr) {
+        setSubscriptionLevel("free");
+        setIncludeNfc(false);
+        return;
+      }
+
+      const level = profile?.subscription_level || "free";
+      setSubscriptionLevel(level);
+
+      if (level !== "premium") {
+        setIncludeNfc(false);
+      }
+    } catch {
+      setSubscriptionLevel("free");
+      setIncludeNfc(false);
+    }
+  })();
+}, []);
 
   // name lookups
   const apiaryName = useMemo(

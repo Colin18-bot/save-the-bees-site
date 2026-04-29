@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
 // APP_VERSION=1.2.3
-const APP_VERSION = "1.1.3";
+const APP_VERSION = "1.1.4";
 
 const Sidebar = ({ setIsMobileMenuOpen }) => {
   const [quickCreateOpen, setQuickCreateOpen] = useState(true);
@@ -86,11 +86,17 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
 
   // Always-visible "guide" buttons (dark green style)
   // Order: Getting Started -> Colony Health Check -> Inspection Guide
-  const corePinnedGuides = [
-    { to: "/help/getting-started", label: "Getting Started" },
-    { to: "/bee-health", label: "Colony Health Check" },
-    { to: "/inspections/step-by-step", label: "Inspection Guide" },
-  ];
+ const corePinnedGuides = [
+  { to: "/help/getting-started", label: "Getting Started" },
+
+  userIsPremium
+    ? { to: "/bee-health", label: "Colony Health Check" }
+    : { to: "/premium-required", label: "🔒 Colony Health Check", lockedPremium: true },
+
+  userIsPremium
+    ? { to: "/inspections/step-by-step", label: "Inspection Guide" }
+    : { to: "/premium-required", label: "🔒 Inspection Guide", lockedPremium: true },
+];
 
   const coreSecondaryNavItems = [
     { to: "/apiaries", label: "Apiaries" },
@@ -124,19 +130,33 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
       : []),
   ];
 
-  const businessListLinks = [
-    { to: "/inventory", label: "Inventory" },
-    { to: "/sales", label: "Sales" },
-    { to: "/finance/expenses", label: "Expenses" },
-    { to: "/reports/pnl", label: "Profit & Loss" },
-    { to: "/reports/print", label: "Reports" },
-  ];
+const businessListLinks = userIsPremium
+  ? [
+      { to: "/inventory", label: "Inventory" },
+      { to: "/sales", label: "Sales" },
+      { to: "/finance/expenses", label: "Expenses" },
+      { to: "/reports/pnl", label: "Profit & Loss" },
+      { to: "/reports/print", label: "Reports" },
+    ]
+  : [
+      { to: "/premium-required", label: "🔒 Inventory", lockedPremium: true },
+      { to: "/premium-required", label: "🔒 Sales", lockedPremium: true },
+      { to: "/premium-required", label: "🔒 Expenses", lockedPremium: true },
+      { to: "/premium-required", label: "🔒 Profit & Loss", lockedPremium: true },
+      { to: "/premium-required", label: "🔒 Reports", lockedPremium: true },
+    ];
 
-  const businessQuickCreate = [
-    { to: "/inventory/new", label: "New Inventory" },
-    { to: "/sales/new", label: "New Sale" },
-    { to: "/finance/expenses/new", label: "New Expense" },
-  ];
+ const businessQuickCreate = userIsPremium
+  ? [
+      { to: "/inventory/new", label: "New Inventory" },
+      { to: "/sales/new", label: "New Sale" },
+      { to: "/finance/expenses/new", label: "New Expense" },
+    ]
+  : [
+      { to: "/premium-required", label: "🔒 New Inventory", lockedPremium: true },
+      { to: "/premium-required", label: "🔒 New Sale", lockedPremium: true },
+      { to: "/premium-required", label: "🔒 New Expense", lockedPremium: true },
+    ];
 
   const SectionTitle = ({ children }) => (
     <div className="mt-6 mb-2 px-2 text-xs font-semibold text-yellow-300 uppercase tracking-wider opacity-90">
@@ -151,7 +171,9 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
       onClick={handleLinkClick}
       className={({ isActive }) =>
         `block px-4 py-2 rounded text-sm font-medium transition-colors duration-150 ${
-          item.highlight
+          item.lockedPremium
+            ? "bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100"
+            : item.highlight
             ? "bg-orange-400 text-[#1a3329] font-bold border border-white"
             : isActive
             ? "bg-yellow-400 text-[#1a3329]"
@@ -165,19 +187,23 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
 
   // pinned guide button (always dark green, even when active)
   const PinnedGuideItem = ({ item }) => (
-    <NavLink
-      key={item.to}
-      to={item.to}
-      onClick={handleLinkClick}
-      className={() =>
-        "block px-4 py-2 rounded text-sm font-semibold transition-colors duration-150 " +
-        "bg-[#0f241c] text-green-100 border border-green-300/30 " +
-        "hover:bg-[#133023] hover:text-green-50 hover:border-green-200/40"
-      }
-    >
-      {item.label}
-    </NavLink>
-  );
+  <NavLink
+    key={item.to}
+    to={item.to}
+    onClick={handleLinkClick}
+    className={() =>
+      item.lockedPremium
+        ? "block px-4 py-2 rounded text-sm font-semibold transition-colors duration-150 " +
+          "bg-amber-50 text-amber-900 border border-amber-300 " +
+          "hover:bg-amber-100"
+        : "block px-4 py-2 rounded text-sm font-semibold transition-colors duration-150 " +
+          "bg-[#0f241c] text-green-100 border border-green-300/30 " +
+          "hover:bg-[#133023] hover:text-green-50 hover:border-green-200/40"
+    }
+  >
+    {item.label}
+  </NavLink>
+);
 
   return (
     <div className="w-64 bg-[#1a3329] h-full flex flex-col pt-10 px-4 pb-4">
@@ -274,12 +300,14 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
                 to={item.to}
                 onClick={handleLinkClick}
                 className={({ isActive }) =>
-                  `block px-4 py-2 rounded text-sm font-medium transition-colors duration-150 ${
-                    isActive
-                      ? "bg-yellow-400 text-[#1a3329]"
-                      : "text-white hover:bg-yellow-400 hover:text-[#1a3329]"
-                  }`
-                }
+                `block px-4 py-2 rounded text-sm font-medium transition-colors duration-150 ${
+                  item.lockedPremium
+                    ? "bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100"
+                    : isActive
+                    ? "bg-yellow-400 text-[#1a3329]"
+                    : "text-white hover:bg-yellow-400 hover:text-[#1a3329]"
+                }`
+              }
               >
                 {item.label}
               </NavLink>

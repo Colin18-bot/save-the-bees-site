@@ -743,10 +743,22 @@ const Dashboard = () => {
           </p>
         </div>
         <div className="flex gap-3">
-          <Link to={reportHref} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-            Open Reports &amp; Export
-          </Link>
-        </div>
+  {subscriptionLevel === "premium" ? (
+    <Link
+      to={reportHref}
+      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+    >
+      Open Reports &amp; Export
+    </Link>
+  ) : (
+    <Link
+      to="/pricing"
+      className="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-4 py-2 rounded"
+    >
+      🔒 Reports &amp; Export
+    </Link>
+  )}
+</div>
       </div>
 
       {/* Stats buttons (centered + nicer theme) */}

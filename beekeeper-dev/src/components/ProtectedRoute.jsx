@@ -139,7 +139,7 @@ const ProtectedRoute = ({ children, requireVerified = false, minPlan = "free" })
     if (!planOK) {
       return (
         <Navigate
-          to={`/pricing?from=${encodeURIComponent(redirectTo)}`}
+          to={`/premium-required?from=${encodeURIComponent(redirectTo)}`}
           replace
           state={{ needsUpgrade: true }}
         />
