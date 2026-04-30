@@ -5,6 +5,321 @@
 // - select: <id>_<value> (e.g. season_summer, onset_speed_fast, qb_population_change_dropped_a_lot)
 // - multi: <id> === true (e.g. recent_feeding, recent_treatment)
 
+const SITE_URL = "https://beezknees.co.uk";
+
+const page = (label, slug) => ({
+  label,
+  url: `${SITE_URL}/${slug}`,
+});
+
+const LEARN_MORE_BY_OUTCOME = {
+  // Entrance / normal behaviour
+  normal_orientation_flights: [
+    page("Read: Honey bee behaviour", "behaviour"),
+  ],
+  normal_cleansing_flights: [
+    page("Read: Honey bee behaviour", "behaviour"),
+    page("Read: Winter bee checks", "winter-bee-checks-uk"),
+  ],
+  normal_summer_bearding: [
+    page("Read: Honey bee behaviour", "behaviour"),
+    page("Read: Summer beekeeping", "summer-beekeeping-uk"),
+  ],
+  normal_fanning_ventilation: [
+    page("Read: Honey bee behaviour", "behaviour"),
+  ],
+  normal_drones_spring_summer: [
+    page("Read: Honey bee behaviour", "behaviour"),
+  ],
+  entrance_activity_not_flight_weather: [
+    page("Read: Honey bee behaviour", "behaviour"),
+    page("Read: When to inspect bees", "when-to-inspect-bees-uk"),
+  ],
+
+  // Robbing / entrance conflict
+  robbing_active_likely: [
+    page("Read: Bee pests and robbing pressure", "bee-pests"),
+    page("Read: Autumn beekeeping", "autumn-beekeeping-uk"),
+  ],
+  robbing_risk_feeder_leak: [
+    page("Read: Feeding bees", "feeding-bees"),
+    page("Read: Bee pests and robbing pressure", "bee-pests"),
+  ],
+  wasp_pressure_entrance: [
+    page("Read: Bee pests", "bee-pests"),
+  ],
+  hornet_pressure_entrance: [
+    page("Read: Bee pests", "bee-pests"),
+  ],
+
+  // Queen / brood state
+  queen_swarmed_recently: [
+    page("Read: Missed swarm guide", "missed-swarm"),
+    page("Read: Swarm and queen guide", "swarm-queen"),
+  ],
+  queen_virgin_mating_window: [
+    page("Read: Virgin queen timeline", "virgin-queen-timeline"),
+    page("Read: Queen timeline", "queen-timeline"),
+  ],
+  queen_supersedure_underway: [
+    page("Read: Supersedure queen cells", "supersedure-queen-cells"),
+    page("Read: Supersedure action guide", "supersedure-action"),
+  ],
+  queen_failing_or_poor_queen: [
+    page("Read: Queenless or supersedure", "queenless-or-supersedure"),
+    page("Read: Brood pattern guide", "brood-pattern-guide"),
+  ],
+  queenless_likely: [
+    page("Read: Queenless or supersedure", "queenless-or-supersedure"),
+    page("Read: Can't find the queen", "cant-find-queen"),
+  ],
+  queenless_possible_brood_break: [
+    page("Read: Queenless or supersedure", "queenless-or-supersedure"),
+    page("Read: Virgin queen timeline", "virgin-queen-timeline"),
+  ],
+  laying_workers_suspected: [
+    page("Read: Queenless or supersedure", "queenless-or-supersedure"),
+  ],
+  drone_laying_queen_suspected: [
+    page("Read: Queenless or supersedure", "queenless-or-supersedure"),
+    page("Read: Brood pattern guide", "brood-pattern-guide"),
+  ],
+  queen_brood_break_after_treatment_or_disturbance: [
+    page("Read: Queen timeline", "queen-timeline"),
+    page("Read: Varroa management", "varroa-management"),
+  ],
+
+  // Disease / parasites
+  disease_varroa_dwv_pressure: [
+    page("Read: Varroa symptoms", "varroa-symptoms-uk"),
+    page("Read: Varroa monitoring methods", "varroa-monitoring-methods"),
+  ],
+  disease_foulbrood_red_flag: [
+    page("Read: When to call a bee inspector", "when-to-call-bee-inspector-uk"),
+    page("Read: Foulbrood vs chalkbrood", "foulbrood-vs-chalkbrood"),
+  ],
+  disease_chalkbrood_likely: [
+    page("Read: Foulbrood vs chalkbrood", "foulbrood-vs-chalkbrood"),
+    page("Read: Brood problems", "brood-problems-uk"),
+  ],
+  disease_sacbrood_likely: [
+    page("Read: Viral diseases", "viral-diseases"),
+    page("Read: Brood problems", "brood-problems-uk"),
+  ],
+  disease_chilled_brood_likely: [
+    page("Read: Brood problems", "brood-problems-uk"),
+    page("Read: First spring inspection", "first-spring-inspection"),
+  ],
+  disease_poisoning_suspected: [
+    page("Read: Dead bees outside the hive", "dead-bees-outside-hive"),
+  ],
+  disease_nosema_dysentery_possible: [
+    page("Read: Other bee conditions", "other-conditions"),
+    page("Read: Winter bee checks", "winter-bee-checks-uk"),
+  ],
+
+  // Feeding / stores
+  feeding_starvation_risk_imminent: [
+    page("Read: Feeding bees", "feeding-bees"),
+    page("Read: When to feed fondant", "when-to-feed-fondant-to-bees"),
+  ],
+  feeding_robbing_triggered_by_feeding: [
+    page("Read: Feeding bees", "feeding-bees"),
+    page("Read: Bee pests and robbing pressure", "bee-pests"),
+  ],
+  feeding_not_taking_syrup_because_flow: [
+    page("Read: Feeding bees", "feeding-bees"),
+  ],
+  feeding_not_taking_syrup_too_cold_switch_feed: [
+    page("Read: When to feed fondant", "when-to-feed-fondant-to-bees"),
+  ],
+  feeding_feeder_access_or_design_issue: [
+    page("Read: Feeding bees", "feeding-bees"),
+  ],
+  feeding_syrup_ferment_or_off: [
+    page("Read: Feeding bees", "feeding-bees"),
+  ],
+  feeding_recent_treatment_or_brood_break_effect: [
+    page("Read: Varroa management", "varroa-management"),
+    page("Read: Feeding bees", "feeding-bees"),
+  ],
+  feeding_weak_colony_processing_limit: [
+    page("Read: Feeding bees in spring", "feeding-bees-in-spring-uk"),
+    page("Read: Feeding bees", "feeding-bees"),
+  ],
+
+  // Comb / foundation / space
+  comb_no_flow_no_stimulus: [
+    page("Read: Spring build-up", "spring-build-up-bees"),
+    page("Read: Feeding bees in spring", "feeding-bees-in-spring-uk"),
+  ],
+  comb_colony_too_weak_to_draw: [
+    page("Read: Spring build-up", "spring-build-up-bees"),
+  ],
+  comb_temperature_limiting: [
+    page("Read: Spring beekeeping", "spring-beekeeping-uk"),
+  ],
+  comb_too_much_space_added_too_early: [
+    page("Read: Adding supers", "adding-supers-uk"),
+    page("Read: Spring build-up", "spring-build-up-bees"),
+  ],
+  comb_foundation_condition_problem: [
+    page("Read: Beekeeping equipment", "equipment"),
+  ],
+  comb_plastic_not_waxed: [
+    page("Read: Beekeeping equipment", "equipment"),
+  ],
+  comb_wrong_placement_cross_comb_risk: [
+    page("Read: Hive management", "hive-management"),
+  ],
+  comb_super_ignored_not_ready_or_no_flow: [
+    page("Read: Adding supers", "adding-supers-uk"),
+  ],
+  comb_excluder_reluctance: [
+    page("Read: Adding supers", "adding-supers-uk"),
+  ],
+  comb_inserting_foundation_mid_brood_risk: [
+    page("Read: Brood pattern guide", "brood-pattern-guide"),
+    page("Read: Hive management", "hive-management"),
+  ],
+
+  // Pests / predators
+  pests_wasps_pressure: [
+    page("Read: Bee pests", "bee-pests"),
+  ],
+  pests_wasps_escalating_to_robbing: [
+    page("Read: Bee pests", "bee-pests"),
+    page("Read: Autumn beekeeping", "autumn-beekeeping-uk"),
+  ],
+  pests_hornet_hawking_generic: [
+    page("Read: Bee pests", "bee-pests"),
+  ],
+  pests_asian_hornet_reporting: [
+    page("Read: Bee pests", "bee-pests"),
+  ],
+  pests_wax_moth_secondary_weakness: [
+    page("Read: Bee pests", "bee-pests"),
+  ],
+  pests_wax_moth_present_but_strong: [
+    page("Read: Bee pests", "bee-pests"),
+  ],
+  pests_mice_intrusion_likely: [
+    page("Read: Bee pests", "bee-pests"),
+    page("Read: Winter beekeeping", "winter-beekeeping-uk"),
+  ],
+  pests_ants_nuisance: [
+    page("Read: Bee pests", "bee-pests"),
+  ],
+  pests_shb_suspicion: [
+    page("Read: When to call a bee inspector", "when-to-call-bee-inspector-uk"),
+    page("Read: Bee pests", "bee-pests"),
+  ],
+
+  // Post-mortem
+  postmortem_starvation_classic: [
+    page("Read: Winter bee checks", "winter-bee-checks-uk"),
+    page("Read: Feeding bees for winter", "feeding-bees-for-winter-uk"),
+  ],
+  postmortem_isolation_starvation: [
+    page("Read: Winter bee checks", "winter-bee-checks-uk"),
+    page("Read: When to feed fondant", "when-to-feed-fondant-to-bees"),
+  ],
+  postmortem_varroa_collapse: [
+    page("Read: Late summer varroa", "late-summer-varroa"),
+    page("Read: Varroa management", "varroa-management"),
+  ],
+  postmortem_wasp_or_robbing_collapse: [
+    page("Read: Bee pests", "bee-pests"),
+    page("Read: Autumn beekeeping", "autumn-beekeeping-uk"),
+  ],
+  postmortem_dysentery_nosema_possible: [
+    page("Read: Other bee conditions", "other-conditions"),
+    page("Read: Winter bee checks", "winter-bee-checks-uk"),
+  ],
+  postmortem_absconding_or_near_empty: [
+    page("Read: Dead bees outside the hive", "dead-bees-outside-hive"),
+    page("Read: Varroa symptoms", "varroa-symptoms-uk"),
+  ],
+
+  // Dead / dying bees
+  dead_poisoning_strong_signal: [
+    page("Read: Dead bees outside the hive", "dead-bees-outside-hive"),
+  ],
+  dead_poisoning_possible: [
+    page("Read: Dead bees outside the hive", "dead-bees-outside-hive"),
+  ],
+  dead_starvation_likely: [
+    page("Read: Feeding bees", "feeding-bees"),
+    page("Read: Winter bee checks", "winter-bee-checks-uk"),
+  ],
+  dead_chilling_stress_likely: [
+    page("Read: Winter bee checks", "winter-bee-checks-uk"),
+    page("Read: First spring inspection", "first-spring-inspection"),
+  ],
+  dead_varroa_virus_signal_in_dead_route: [
+    page("Read: Varroa symptoms", "varroa-symptoms-uk"),
+    page("Read: Viral diseases", "viral-diseases"),
+  ],
+  dead_crawling_multi_causes: [
+    page("Read: Dead bees outside the hive", "dead-bees-outside-hive"),
+    page("Read: Varroa symptoms", "varroa-symptoms-uk"),
+  ],
+  dead_small_numbers_normal_context: [
+    page("Read: Dead bees outside the hive", "dead-bees-outside-hive"),
+  ],
+  dead_small_numbers_normal_context_unsure: [
+    page("Read: Dead bees outside the hive", "dead-bees-outside-hive"),
+  ],
+  dead_onset_sudden_triage: [
+    page("Read: Dead bees outside the hive", "dead-bees-outside-hive"),
+  ],
+  dead_onset_fast_triage: [
+    page("Read: Dead bees outside the hive", "dead-bees-outside-hive"),
+  ],
+  dead_onset_slow_triage: [
+    page("Read: Dead bees outside the hive", "dead-bees-outside-hive"),
+  ],
+  dead_onset_ongoing_triage: [
+    page("Read: Dead bees outside the hive", "dead-bees-outside-hive"),
+  ],
+
+  // Temperament
+  temperament_weather_defensive: [
+    page("Read: When to inspect bees", "when-to-inspect-bees-uk"),
+  ],
+  temperament_robbery_related: [
+    page("Read: Bee pests", "bee-pests"),
+  ],
+  temperament_recent_disturbance_related: [
+    page("Read: Hive management", "hive-management"),
+  ],
+  temperament_queen_event_related: [
+    page("Read: Queenless or supersedure", "queenless-or-supersedure"),
+  ],
+  temperament_genetics_or_failing_queen_possible: [
+    page("Read: Queenless or supersedure", "queenless-or-supersedure"),
+  ],
+  temperament_sudden_change_flag: [
+    page("Read: Hive management", "hive-management"),
+    page("Read: Bee pests", "bee-pests"),
+  ],
+  temperament_season_early_spring_note: [
+    page("Read: Spring beekeeping", "spring-beekeeping-uk"),
+  ],
+  temperament_season_spring_note: [
+    page("Read: Spring beekeeping", "spring-beekeeping-uk"),
+  ],
+  temperament_season_summer_note: [
+    page("Read: Summer beekeeping", "summer-beekeeping-uk"),
+  ],
+  temperament_season_autumn_note: [
+    page("Read: Autumn beekeeping", "autumn-beekeeping-uk"),
+  ],
+  temperament_season_winter_note: [
+    page("Read: Winter beekeeping", "winter-beekeeping-uk"),
+  ],
+};
+
 export const BEE_HEALTH_RULES = {
   version: "2.5.1-uk-post-mortem-varroa-update-fixed",
 
@@ -203,9 +518,10 @@ export const BEE_HEALTH_RULES = {
       },
       {
         id: "ea_bees_shiny_black_thieving",
-        label: "Do bees look 'shiny' and darting (thieving/robbing style)?",
+        label: "Do bees move quickly and erratically at the entrance (darting, zig-zagging)?",
         kind: "tri",
         showIf: { any: ["route_entrance_activity", "route_unsure"] },
+        help: "You may also notice some bees look darker or smoother than normal, with less fuzz. This can be a supporting clue for robbing, but the movement is the main thing to look for.",
       },
       {
         id: "ea_bearding",
@@ -795,8 +1111,13 @@ brood_disease: [
 function buildOutcomeLibrary() {
   const O = {};
   const add = (key, def) => {
-    O[key] = def;
+  O[key] = {
+    ...def,
+    learnMore: Array.isArray(def.learnMore)
+      ? def.learnMore
+      : LEARN_MORE_BY_OUTCOME[key] || [],
   };
+};
 
   const basicActions = {
     monitor: ["Monitor over 24–72 hours. Update answers if symptoms change."],
