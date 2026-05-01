@@ -5,6 +5,8 @@
 // - select: <id>_<value> (e.g. season_summer, onset_speed_fast, qb_population_change_dropped_a_lot)
 // - multi: <id> === true (e.g. recent_feeding, recent_treatment)
 
+
+
 const SITE_URL = "https://beezknees.co.uk";
 
 const page = (label, slug) => ({
@@ -12,6 +14,664 @@ const page = (label, slug) => ({
   url: `${SITE_URL}/${slug}`,
 });
 
+
+const OUTCOME_IMAGES = {
+  disease_foulbrood_red_flag: [
+    {
+      fileName: "disease-foulbrood-red-flag.webp",
+      alt: "Foulbrood infected brood with sunken perforated cappings",
+      caption: "Sunken, perforated cappings and uneven brood pattern are classic foulbrood warning signs."
+    }
+  ],
+
+  pests_asian_hornet_reporting: [
+    {
+      fileName: "pest-wasps.webp",
+      alt: "Large wasp-like insect near a hive entrance",
+      caption: "Suspected Asian hornet activity should be photographed if safe and reported through official routes."
+    }
+  ],
+
+  pests_shb_suspicion: [
+    {
+      fileName: "stores-poor-quality-or-contaminated.webp",
+      alt: "Slimy or poor-quality comb surface",
+      caption: "Slimy or fermented comb is a serious warning sign and should be treated cautiously."
+    }
+  ],
+
+  hornet_pressure_entrance: [
+    {
+      fileName: "pest-wasps.webp",
+      alt: "Large wasp-like insects near a hive entrance",
+      caption: "Hornets may hawk near hive entrances and cause stress or forager losses."
+    }
+  ],
+
+  disease_varroa_dwv_pressure: [
+    {
+      fileName: "varroa-deformed-wing-virus.webp",
+      alt: "Bee with deformed wings",
+      caption: "Deformed wings can be associated with virus pressure often linked to varroa."
+    }
+  ],
+
+  disease_chalkbrood_likely: [
+    {
+      fileName: "disease-chalkbrood.webp",
+      alt: "Chalkbrood mummies in brood cells",
+      caption: "Chalk-like white, grey, or black mummies may appear in cells, on the floor, or at the entrance."
+    }
+  ],
+
+  disease_sacbrood_likely: [
+    {
+      fileName: "disease-sacbrood.webp",
+      alt: "Sacbrood-like larval remains in cells",
+      caption: "Sacbrood may appear as fluid-filled or slipper-shaped larval remains."
+    }
+  ],
+
+  disease_chilled_brood_likely: [
+    {
+      fileName: "stress-chilled-brood.webp",
+      alt: "Chilled brood pattern on comb",
+      caption: "Chilled brood often affects brood at the edges or areas bees could not cover."
+    }
+  ],
+
+  disease_poisoning_suspected: [
+    {
+      fileName: "dead-bees-poisoning-suspected.webp",
+      alt: "Dead bees outside a hive entrance",
+      caption: "Sudden piles of dead bees may need urgent investigation and documentation."
+    }
+  ],
+
+  disease_nosema_dysentery_possible: [
+    {
+      fileName: "stress-damp-mould.webp",
+      alt: "Damp or stressed hive conditions",
+      caption: "Brown spotting or soiling can indicate gut stress, damp, feed issues, or confinement problems."
+    }
+  ],
+
+  robbing_active_likely: [
+    {
+      fileName: "pest-robber-bees.webp",
+      alt: "Robber bees fighting or forcing entry at a hive entrance",
+      caption: "Look for fighting, frantic movement, bees forcing entry, or bees probing gaps."
+    }
+  ],
+
+  robbing_risk_feeder_leak: [
+    {
+      fileName: "feeding-syrup-taken.webp",
+      alt: "Bees around a feeder near a hive",
+      caption: "Syrup leaks or spills can attract robber bees and wasps very quickly."
+    }
+  ],
+
+  wasp_pressure_entrance: [
+    {
+      fileName: "pest-wasps.webp",
+      alt: "Wasps near a hive entrance",
+      caption: "Wasps may hover, probe the entrance, or target weak colonies."
+    }
+  ],
+
+  queen_swarmed_recently: [
+    {
+      fileName: "queen-cells-swarm-prep.webp",
+      alt: "Queen cells hanging from brood comb",
+      caption: "Opened queen cells and a reduced adult population can fit a recent swarm."
+    }
+  ],
+
+  queen_virgin_mating_window: [
+    {
+      fileName: "queen-cells-swarm-prep.webp",
+      alt: "Queen cells on brood comb during a queen change",
+      caption: "A brood break can occur while a virgin queen emerges, mates, and begins laying."
+    }
+  ],
+
+  queen_supersedure_underway: [
+    {
+      fileName: "queen-cells-swarm-prep.webp",
+      alt: "Queen cells on brood comb",
+      caption: "Supersedure often involves queen replacement while the colony remains relatively stable."
+    }
+  ],
+
+  queen_failing_or_poor_queen: [
+    {
+      fileName: "queen-failing-spotty-brood.webp",
+      alt: "Patchy brood pattern on a brood frame",
+      caption: "A patchy or erratic brood pattern can suggest queen quality, stress, or disease pressure."
+    }
+  ],
+
+  queenless_likely: [
+    {
+      fileName: "queen-missing-no-eggs.webp",
+      alt: "Brood frame with no obvious eggs or young brood",
+      caption: "Absence of eggs, larvae, and sealed brood may suggest queenlessness."
+    }
+  ],
+
+  queenless_possible_brood_break: [
+    {
+      fileName: "queen-missing-no-eggs.webp",
+      alt: "Brood frame during a possible brood break",
+      caption: "A brood break can look similar to queenlessness until the colony is rechecked."
+    }
+  ],
+
+  laying_workers_suspected: [
+    {
+      fileName: "queen-laying-worker-brood.webp",
+      alt: "Multiple eggs or uneven laying pattern in worker cells",
+      caption: "Multiple eggs per cell or eggs on side walls can suggest laying workers."
+    }
+  ],
+
+  drone_laying_queen_suspected: [
+    {
+      fileName: "queen-laying-worker-brood.webp",
+      alt: "Drone brood pattern in worker cells",
+      caption: "Bullet-shaped drone cappings in worker cells can suggest a drone-laying queen."
+    }
+  ],
+
+  queen_brood_break_after_treatment_or_disturbance: [
+    {
+      fileName: "queen-missing-no-eggs.webp",
+      alt: "Temporary brood break on a brood frame",
+      caption: "Recent treatment, movement, harvest, or queen events can interrupt laying temporarily."
+    }
+  ],
+
+  normal_orientation_flights: [
+    {
+      fileName: "normal-orientation-flights.webp",
+      alt: "Bees flying around a hive entrance during orientation flights",
+      caption: "Young bees may circle and face the hive while learning the hive location."
+    }
+  ],
+
+  normal_cleansing_flights: [
+    {
+      fileName: "normal-orientation-flights.webp",
+      alt: "Bees flying near a hive entrance after confinement",
+      caption: "Cleansing flights are often seen after cold or wet weather confinement."
+    }
+  ],
+
+  normal_summer_bearding: [
+    {
+      fileName: "normal-bearding.webp",
+      alt: "Bees clustered outside a hive entrance",
+      caption: "Bearding can happen in warm weather when bees gather outside to regulate hive temperature."
+    }
+  ],
+
+  normal_fanning_ventilation: [
+    {
+      fileName: "stress-overheating.webp",
+      alt: "Bees gathered at the entrance in warm conditions",
+      caption: "Fanning can relate to ventilation, scenting, or hive organisation."
+    }
+  ],
+
+  normal_drones_spring_summer: [
+    {
+      fileName: "normal-drones-present.webp",
+      alt: "Drone brood and drones visible on comb",
+      caption: "Drones are larger male bees and are commonly seen in spring and summer."
+    }
+  ],
+
+  entrance_activity_not_flight_weather: [
+    {
+      fileName: "pest-robber-bees.webp",
+      alt: "Unusual activity at a hive entrance",
+      caption: "High entrance activity in poor flying weather may point to disturbance, feeding issues, or robbing pressure."
+    }
+  ],
+
+  feeding_starvation_risk_imminent: [
+    {
+      fileName: "stores-starvation.webp",
+      alt: "Low food stores on a brood frame",
+      caption: "A very light hive or low stores should be treated urgently."
+    }
+  ],
+
+  feeding_robbing_triggered_by_feeding: [
+    {
+      fileName: "feeding-syrup-taken.webp",
+      alt: "Bees gathered around a feeder",
+      caption: "Feeding leaks, exposed syrup, or open feeding can trigger robbing."
+    }
+  ],
+
+  feeding_not_taking_syrup_because_flow: [
+    {
+      fileName: "normal-heavy-pollen.webp",
+      alt: "Foraging bee with pollen during a nectar flow",
+      caption: "Bees may ignore syrup when natural nectar is available."
+    }
+  ],
+
+  feeding_not_taking_syrup_too_cold_switch_feed: [
+    {
+      fileName: "feeding-syrup-ignored.webp",
+      alt: "Feeder with little bee activity",
+      caption: "Fondant is often more suitable than syrup in cold conditions."
+    }
+  ],
+
+  feeding_feeder_access_or_design_issue: [
+    {
+      fileName: "feeding-syrup-ignored.webp",
+      alt: "Hive feeder with limited bee activity",
+      caption: "Poor feeder alignment, missing ladders, or inaccessible feed can stop bees taking syrup."
+    }
+  ],
+
+  feeding_syrup_ferment_or_off: [
+    {
+      fileName: "stores-poor-quality-or-contaminated.webp",
+      alt: "Poor quality or contaminated stores",
+      caption: "Old, cloudy, sour, or fermented syrup should be removed and replaced."
+    }
+  ],
+
+  feeding_recent_treatment_or_brood_break_effect: [
+    {
+      fileName: "queen-missing-no-eggs.webp",
+      alt: "Brood frame during temporary disruption",
+      caption: "Recent treatments or brood breaks can temporarily change feeding behaviour."
+    }
+  ],
+
+  feeding_weak_colony_processing_limit: [
+    {
+      fileName: "normal-spring-build-up.webp",
+      alt: "Small colony cluster on frames",
+      caption: "Weak colonies may struggle to take, warm, defend, or process feed."
+    }
+  ],
+
+  comb_no_flow_no_stimulus: [
+    {
+      fileName: "stores-low-food.webp",
+      alt: "Frame with little available food or activity",
+      caption: "Bees often draw comb best during a nectar flow or with careful stimulation feeding."
+    }
+  ],
+
+  comb_colony_too_weak_to_draw: [
+    {
+      fileName: "normal-spring-build-up.webp",
+      alt: "Weak colony covering frames",
+      caption: "Weak colonies may not have enough bees or warmth to draw foundation."
+    }
+  ],
+
+  comb_temperature_limiting: [
+    {
+      fileName: "stress-chilled-brood.webp",
+      alt: "Cold-stressed brood area",
+      caption: "Chilly weather or cold nights can slow or stop wax drawing."
+    }
+  ],
+
+  comb_too_much_space_added_too_early: [
+    {
+      fileName: "normal-spring-build-up.webp",
+      alt: "Hive frames with a developing colony",
+      caption: "Excess space can make it harder for bees to heat, defend, and work the hive."
+    }
+  ],
+
+  comb_foundation_condition_problem: [
+    {
+      fileName: "stores-poor-quality-or-contaminated.webp",
+      alt: "Comb or stores in poor condition",
+      caption: "Old, dry, damaged, or contaminated foundation may be ignored."
+    }
+  ],
+
+  comb_plastic_not_waxed: [
+    {
+      fileName: "stores-low-food.webp",
+      alt: "Frame surface with limited bee work",
+      caption: "Plastic foundation is often accepted better when wax-coated."
+    }
+  ],
+
+  comb_wrong_placement_cross_comb_risk: [
+    {
+      fileName: "stores-honey-bound.webp",
+      alt: "Dense comb area on a frame",
+      caption: "Cross comb can occur when spacing, guides, or available space are not right."
+    }
+  ],
+
+  comb_super_ignored_not_ready_or_no_flow: [
+    {
+      fileName: "normal-spring-build-up.webp",
+      alt: "Hive box with bees on frames",
+      caption: "Bees may ignore supers if the colony is not strong enough or there is no nectar flow."
+    }
+  ],
+
+  comb_excluder_reluctance: [
+    {
+      fileName: "normal-spring-build-up.webp",
+      alt: "Bees working across hive frames",
+      caption: "Bees may hesitate to cross a queen excluder unless conditions are right."
+    }
+  ],
+
+  comb_inserting_foundation_mid_brood_risk: [
+    {
+      fileName: "stress-chilled-brood.webp",
+      alt: "Brood comb affected by cold or poor coverage",
+      caption: "Placing foundation in the brood nest can chill brood if the colony cannot cover it."
+    }
+  ],
+
+  pests_wasps_pressure: [
+    {
+      fileName: "pest-wasps.webp",
+      alt: "Wasps near a hive entrance",
+      caption: "Wasp pressure can escalate quickly, especially around weak colonies."
+    }
+  ],
+
+  pests_wasps_escalating_to_robbing: [
+    {
+      fileName: "pest-wasps.webp",
+      alt: "Wasps and entrance pressure around a hive",
+      caption: "Fighting, pressure at the entrance, and exposed stores can indicate escalation."
+    }
+  ],
+
+  pests_hornet_hawking_generic: [
+    {
+      fileName: "pest-wasps.webp",
+      alt: "Large wasp-like insect near hive entrance",
+      caption: "Hornets may hover near entrances and intercept returning bees."
+    }
+  ],
+
+  pests_wax_moth_secondary_weakness: [
+    {
+      fileName: "pest-wax-moth.webp",
+      alt: "Wax moth larvae and webbing on comb",
+      caption: "Wax moth webbing, tunnels, or cocoons often indicate weakness or unguarded comb."
+    }
+  ],
+
+  pests_wax_moth_present_but_strong: [
+    {
+      fileName: "pest-wax-moth.webp",
+      alt: "Limited wax moth signs on comb",
+      caption: "A strong colony may cope with small or historical wax moth damage."
+    }
+  ],
+
+  pests_mice_intrusion_likely: [
+    {
+      fileName: "pest-mice.webp",
+      alt: "Mouse near a hive entrance",
+      caption: "Gnawing, debris, shredded comb, or nesting material may suggest mouse intrusion."
+    }
+  ],
+
+  pests_ants_nuisance: [
+    {
+      fileName: "pest-ants.webp",
+      alt: "Ants around a hive stand",
+      caption: "Ants are usually a nuisance but can be encouraged by spills or damp conditions."
+    }
+  ],
+
+  postmortem_starvation_classic: [
+    {
+      fileName: "stores-starvation.webp",
+      alt: "Starvation signs on comb",
+      caption: "Dead bees head-first in cells is a classic starvation clue."
+    }
+  ],
+
+  postmortem_isolation_starvation: [
+    {
+      fileName: "stores-low-food.webp",
+      alt: "Food stores separated from bee cluster",
+      caption: "A dead cluster with food still present can suggest isolation starvation or cold cluster loss."
+    }
+  ],
+
+  postmortem_varroa_collapse: [
+    {
+      fileName: "varroa-high-load-brood.webp",
+      alt: "Brood comb with signs of heavy varroa pressure",
+      caption: "Collapse with food still present can be associated with varroa-related winter loss."
+    }
+  ],
+
+  postmortem_wasp_or_robbing_collapse: [
+    {
+      fileName: "pest-robber-bees.webp",
+      alt: "Robbing pressure at hive entrance",
+      caption: "Torn cappings, debris, and stripped stores can suggest wasp attack or robbing."
+    }
+  ],
+
+  postmortem_dysentery_nosema_possible: [
+    {
+      fileName: "stress-damp-mould.webp",
+      alt: "Damp or soiled hive conditions",
+      caption: "Heavy spotting can suggest gut stress, damp, confinement, or feed-related issues."
+    }
+  ],
+
+  postmortem_absconding_or_near_empty: [
+    {
+      fileName: "queen-missing-no-eggs.webp",
+      alt: "Near-empty hive frame with few bees",
+      caption: "A near-empty hive needs careful checking before assuming a single cause."
+    }
+  ],
+
+  dead_poisoning_strong_signal: [
+    {
+      fileName: "dead-bees-poisoning-suspected.webp",
+      alt: "Dead bees outside a hive",
+      caption: "Sudden large numbers of dead bees should be documented and investigated."
+    }
+  ],
+
+  dead_poisoning_possible: [
+    {
+      fileName: "dead-bees-at-entrance.webp",
+      alt: "Dead bees at a hive entrance",
+      caption: "Dead bees can have several causes, so stores, weather, and varroa signs should also be checked."
+    }
+  ],
+
+  dead_starvation_likely: [
+    {
+      fileName: "stores-starvation.webp",
+      alt: "Low stores and starvation risk on comb",
+      caption: "A light hive, crawling bees, or low stores may indicate urgent starvation risk."
+    }
+  ],
+
+  dead_chilling_stress_likely: [
+    {
+      fileName: "stress-chilled-brood.webp",
+      alt: "Cold-stressed brood or colony conditions",
+      caption: "Cold stress is more likely in weak colonies, cold spells, or over-expanded hives."
+    }
+  ],
+
+  dead_varroa_virus_signal_in_dead_route: [
+    {
+      fileName: "varroa-deformed-wing-virus.webp",
+      alt: "Bee showing deformed wing symptoms",
+      caption: "Deformed wings, crawling bees, and weakening can suggest varroa or virus pressure."
+    }
+  ],
+
+  dead_crawling_multi_causes: [
+    {
+      fileName: "dead-bees-with-tongues-out.webp",
+      alt: "Weak or dying bee on the ground",
+      caption: "Crawling bees can relate to starvation, cold, varroa, virus pressure, or poisoning."
+    }
+  ],
+
+  dead_small_numbers_normal_context: [
+    {
+      fileName: "dead-bees-at-entrance.webp",
+      alt: "Small number of dead bees at the entrance",
+      caption: "A small number of dead bees can be normal housekeeping."
+    }
+  ],
+
+  dead_small_numbers_normal_context_unsure: [
+    {
+      fileName: "dead-bees-at-entrance.webp",
+      alt: "Normal hive entrance debris and dead bees",
+      caption: "Small numbers of dead bees should be judged in context and monitored for change."
+    }
+  ],
+
+  dead_onset_sudden_triage: [
+    {
+      fileName: "dead-bees-poisoning-suspected.webp",
+      alt: "Sudden bee losses near a hive",
+      caption: "Sudden losses need urgent checks for stores, exposure, poisoning, and varroa or virus signs."
+    }
+  ],
+
+  dead_onset_fast_triage: [
+    {
+      fileName: "dead-bees-at-entrance.webp",
+      alt: "Fast-developing bee losses at a hive entrance",
+      caption: "Fast losses should be checked against stores, weather, varroa signs, and possible exposure."
+    }
+  ],
+
+  dead_onset_slow_triage: [
+    {
+      fileName: "dead-bees-at-entrance.webp",
+      alt: "Gradual bee losses near a hive entrance",
+      caption: "Slow losses may need repeated checks and comparison with colony strength."
+    }
+  ],
+
+  dead_onset_ongoing_triage: [
+    {
+      fileName: "dead-bees-at-entrance.webp",
+      alt: "Ongoing colony decline with dead bees present",
+      caption: "Ongoing decline should be reviewed alongside stores, brood, queen status, and varroa pressure."
+    }
+  ],
+
+  temperament_weather_defensive: [
+    {
+      fileName: "stress-overheating.webp",
+      alt: "Bees gathered on a hive during stressful weather",
+      caption: "Bees can become more defensive in cold, windy, hot, or unsettled weather."
+    }
+  ],
+
+  temperament_robbery_related: [
+    {
+      fileName: "pest-robber-bees.webp",
+      alt: "Defensive bees during robbing pressure",
+      caption: "Robbing pressure can make a colony suddenly defensive."
+    }
+  ],
+
+  temperament_recent_disturbance_related: [
+    {
+      fileName: "normal-spring-build-up.webp",
+      alt: "Opened hive after handling",
+      caption: "Harvesting, moving, treating, or repeated inspections can temporarily affect temperament."
+    }
+  ],
+
+  temperament_queen_event_related: [
+    {
+      fileName: "queen-cells-swarm-prep.webp",
+      alt: "Queen cells and brood disruption",
+      caption: "Queen loss, supersedure, or introduction can temporarily change colony behaviour."
+    }
+  ],
+
+  temperament_genetics_or_failing_queen_possible: [
+    {
+      fileName: "queen-failing-spotty-brood.webp",
+      alt: "Patchy brood pattern linked with queen concerns",
+      caption: "Persistent defensiveness across good conditions may relate to queen quality, genetics, or stress."
+    }
+  ],
+
+  temperament_sudden_change_flag: [
+    {
+      fileName: "pest-robber-bees.webp",
+      alt: "Sudden defensive activity at a hive entrance",
+      caption: "Sudden temperament change should prompt checks for robbing, queen issues, disturbance, and weather."
+    }
+  ],
+
+  temperament_season_early_spring_note: [
+    {
+      fileName: "normal-spring-build-up.webp",
+      alt: "Early spring colony build-up",
+      caption: "Early spring behaviour can be affected by cold, colony size, stores and disturbance."
+    }
+  ],
+
+  temperament_season_spring_note: [
+    {
+      fileName: "normal-spring-build-up.webp",
+      alt: "Spring colony build-up",
+      caption: "Spring temperament can be affected by build-up, queen state, weather and forage conditions."
+    }
+  ],
+
+  temperament_season_summer_note: [
+    {
+      fileName: "stress-overheating.webp",
+      alt: "Summer bees around hive entrance",
+      caption: "Summer temperament can be affected by heat, congestion, forage changes and disturbance."
+    }
+  ],
+
+  temperament_season_autumn_note: [
+    {
+      fileName: "pest-wasps.webp",
+      alt: "Late-season wasp pressure near hive",
+      caption: "Autumn temperament can be affected by wasps, robbing pressure, feeding and forage dearth."
+    }
+  ],
+
+  temperament_season_winter_note: [
+    {
+      fileName: "stores-low-food.webp",
+      alt: "Winter stores and colony stress",
+      caption: "Winter disturbance should be kept low and checked against stores, damp and colony strength."
+    }
+  ]
+};
 const LEARN_MORE_BY_OUTCOME = {
   // Entrance / normal behaviour
   normal_orientation_flights: [
@@ -1110,14 +1770,18 @@ brood_disease: [
 // ---------------------------------------------------------
 function buildOutcomeLibrary() {
   const O = {};
+
   const add = (key, def) => {
-  O[key] = {
-    ...def,
-    learnMore: Array.isArray(def.learnMore)
-      ? def.learnMore
-      : LEARN_MORE_BY_OUTCOME[key] || [],
+    O[key] = {
+      ...def,
+      learnMore: Array.isArray(def.learnMore)
+        ? def.learnMore
+        : LEARN_MORE_BY_OUTCOME[key] || [],
+      images: Array.isArray(def.images)
+        ? def.images
+        : OUTCOME_IMAGES[key] || [],
+    };
   };
-};
 
   const basicActions = {
     monitor: ["Monitor over 24–72 hours. Update answers if symptoms change."],
@@ -1752,6 +2416,8 @@ add("disease_foulbrood_red_flag", {
   when: {
     any: ["bd_ropey_larvae_yes", "symptom_ropey_larvae_yes"],
   },
+
+
   why: [
     "Ropey/brown larvae and foul smell can be consistent with notifiable brood disease patterns.",
     "Because consequences are serious, treat as notifiable until ruled out by an inspector.",
@@ -1779,7 +2445,8 @@ add("disease_chalkbrood_likely", {
       "symptom_ropey_larvae_yes",
     ],
   },
-  why: [
+
+   why: [
     "Chalk-like mummies are a classic sign; it often improves as the colony strengthens and conditions dry out.",
   ],
   actions: [

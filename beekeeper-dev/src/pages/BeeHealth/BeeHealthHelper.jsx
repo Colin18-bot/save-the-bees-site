@@ -436,22 +436,32 @@ export default function BeeHealthHelper() {
     if (redHit) {
   const overrideOutcome = outcomes?.disease_foulbrood_red_flag || null;
 
-  setResults({
-    type: "override",
-    redHit,
-    urgentHit,
-    top: [],
-    nextChecks: [],
-    learnMore: Array.isArray(overrideOutcome?.learnMore)
-      ? overrideOutcome.learnMore
-      : [],
-  });
-  return;
-}
+ setResults({ 
+  type: "override",
+  redHit,
+  urgentHit,
+  top: [],
+  nextChecks: [],
+  learnMore: Array.isArray(overrideOutcome?.learnMore)
+    ? overrideOutcome.learnMore
+    : [],
+  images: Array.isArray(overrideOutcome?.images)
+    ? overrideOutcome.images
+    : [],
+  whatToLookFor: Array.isArray(overrideOutcome?.whatToLookFor)
+    ? overrideOutcome.whatToLookFor
+    : [],
+  confidenceWhy: Array.isArray(overrideOutcome?.confidenceWhy)
+    ? overrideOutcome.confidenceWhy
+    : [],
+});
+return;
+        }
 
     const matched = [];
 
     for (const [key, def] of Object.entries(outcomes || {})) {
+      if (key === "disease_foulbrood_red_flag") continue;
       const when = normalizeWhen(def.when || {});
       const ok = evalClause({ all: when.all || [], any: when.any || [], not: when.not || [] }, flags);
       if (!ok) continue;
@@ -476,6 +486,9 @@ export default function BeeHealthHelper() {
         whenToWorry: def.whenToWorry || [],
         nextChecks,
         learnMore: Array.isArray(def.learnMore) ? def.learnMore : [],
+        images: Array.isArray(def.images) ? def.images : [],
+        whatToLookFor: Array.isArray(def.whatToLookFor) ? def.whatToLookFor : [],
+        confidenceWhy: Array.isArray(def.confidenceWhy) ? def.confidenceWhy : [],
       });
     }
 
@@ -492,6 +505,8 @@ export default function BeeHealthHelper() {
     });
 
     const top = matched.slice(0, 5);
+
+    console.log("BEE HEALTH TOP RESULTS:", top);
 
     // Build recommended next checks:
     const validQIds = new Set(allQuestionsInOrder.map((q) => q.id));
@@ -980,6 +995,41 @@ function MultiCard({ label, help, options, answers, onToggle }) {
   );
 }
 
+/* ---------------- Outcome images ---------------- */
+
+function OutcomeImages({ images }) {
+  if (!images?.length) return null;
+
+  return (
+    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+      {images.map((img, i) => {
+        const src = img.fileName
+  ? `/images/bee-health/outcomes/${img.fileName}`
+  : img.src || "";
+
+        if (!src) return null;
+
+        return (
+          <figure key={i} className="rounded border bg-white overflow-hidden">
+            <img
+              src={src}
+              alt={img.alt || "Illustrative bee health example"}
+              className="w-full h-44 object-cover"
+              loading="lazy"
+            />
+            <figcaption className="p-3 text-xs text-gray-700">
+              <div className="font-semibold text-gray-800">
+                Illustrative example — not a diagnosis
+              </div>
+              {img.caption ? <div className="mt-1">{img.caption}</div> : null}
+            </figcaption>
+          </figure>
+        );
+      })}
+    </div>
+  );
+}
+
 /* ---------------- Results ---------------- */
 
 function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
@@ -1021,6 +1071,8 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
         </div>
 
         <InspectorSafeDisclaimer />
+           
+        <OutcomeImages images={results.images} />
 
                 {results.urgentHit ? (
           <div className="p-5 rounded border border-red-300 bg-red-50 print-card">
@@ -1143,18 +1195,9 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
               </div>
               </div>
 
-              {r.why?.length ? (
-                <>
-                  <div className="mt-3 font-semibold text-sm">Why</div>
-                  <ul className="list-disc pl-5 text-sm mt-1 space-y-1">
-                    {r.why.map((x, i) => (
-                      <li key={i}>{x}</li>
-                    ))}
-                  </ul>
-                </>
-              ) : null}
-
-              {r.actions?.length ? (
+              <OutcomeImages images={r.images} />
+            
+                  {r.actions?.length ? (
                 <>
                   <div className="mt-3 font-semibold text-sm">What to do next</div>
                   <ul className="list-disc pl-5 text-sm mt-1 space-y-1">
