@@ -186,11 +186,11 @@ export default function SeasonalGuide() {
           </div>
 
           <div className="min-h-0 flex-1 overflow-auto rounded-2xl bg-white p-2">
-            <img
-              src={selected.image}
-              alt={`${selected.month} full seasonal beekeeping guide`}
-              className="mx-auto h-auto max-w-none sm:max-w-full"
-            />
+           <img
+                src={selected.image}
+                alt={`${selected.month} full seasonal beekeeping guide`}
+                className="mx-auto h-auto max-w-full md:max-w-none"
+              />
           </div>
 
           <button
