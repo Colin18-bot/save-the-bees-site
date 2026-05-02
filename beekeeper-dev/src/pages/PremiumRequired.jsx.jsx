@@ -21,7 +21,7 @@ const PremiumRequired = () => {
 
         <p className="text-gray-700 mb-4">
           Upgrade to Premium to unlock advanced tools such as reports, exports,
-          inventory, sales, expenses, NFC hive tags and premium beekeeping guides.
+          inventory, sales, expenses, NFC hive tags, the Year in the Apiary seasonal guide and premium beekeeping tools.
         </p>
 
         <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1 mb-6">

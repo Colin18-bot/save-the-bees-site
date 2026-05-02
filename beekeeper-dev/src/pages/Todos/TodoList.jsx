@@ -111,7 +111,7 @@ const TodoList = () => {
     let todoQuery = supabase
       .from("todos")
       .select(
-        "id, title, due_date, apiary_id, hive_id, hive_name, status, notes, completed_at, archived_at"
+        "id, title, due_date, apiary_id, hive_id, hive_name, status, notes, completed_at, archived_at, category, priority, source, seasonal_month"
       )
       .is("archived_at", null)
       .order("due_date", { ascending: true });
@@ -541,6 +541,25 @@ const TodoList = () => {
                       {apiaryName && <span className="mr-2">Apiary: {apiaryName}</span>}
                       {hiveLabel && <span>Hive: {hiveLabel}</span>}
                     </p>
+                    {(todo.category || todo.priority || todo.seasonal_month) && (
+                    <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                      {todo.priority && (
+                        <span className="rounded-full bg-amber-100 px-2 py-1 font-semibold text-amber-800">
+                          {todo.priority} priority
+                        </span>
+                      )}
+                      {todo.category && (
+                        <span className="rounded-full bg-green-100 px-2 py-1 font-semibold text-green-800">
+                          {todo.category}
+                        </span>
+                      )}
+                      {todo.seasonal_month && (
+                        <span className="rounded-full bg-blue-100 px-2 py-1 font-semibold text-blue-800">
+                          {todo.seasonal_month}
+                        </span>
+                      )}
+                    </div>
+                  )}
                     {todo.notes && <p className="mt-2 whitespace-pre-wrap text-sm">{todo.notes}</p>}
                   </div>
 
@@ -659,6 +678,25 @@ const TodoList = () => {
                         {hiveLabel && <span>Hive: {hiveLabel}</span>}
                       </p>
 
+                      {(todo.category || todo.priority || todo.seasonal_month) && (
+                      <div className="mt-2 flex flex-wrap gap-2 text-xs">
+                        {todo.priority && (
+                          <span className="rounded-full bg-amber-100 px-2 py-1 font-semibold text-amber-800">
+                            {todo.priority} priority
+                          </span>
+                        )}
+                        {todo.category && (
+                          <span className="rounded-full bg-green-100 px-2 py-1 font-semibold text-green-800">
+                            {todo.category}
+                          </span>
+                        )}
+                        {todo.seasonal_month && (
+                          <span className="rounded-full bg-blue-100 px-2 py-1 font-semibold text-blue-800">
+                            {todo.seasonal_month}
+                          </span>
+                        )}
+                      </div>
+                    )}
                       {todo.notes && (
                         <p className="mt-2 text-gray-800 whitespace-pre-wrap">{todo.notes}</p>
                       )}

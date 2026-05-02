@@ -9,7 +9,59 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
   {
-  
+  version: "1.1.5",
+  released_at: "2026-05-02T18:00:00Z",
+  summary:
+    "Added the new Premium Year in the Apiary seasonal guide, with monthly infographic guidance, practical checklists, and direct task creation from seasonal actions.",
+
+  added: [
+    "Added new **Year in the Apiary** Premium seasonal guide page.",
+    "Added all 12 monthly beekeeping infographic guides into the app.",
+    "Added month selector so users can quickly switch between January to December guidance.",
+    "Added full-screen infographic viewer with previous/next month navigation.",
+    "Added practical monthly action checklists.",
+    "Added individual **+ Add task** buttons for each seasonal action.",
+    "Added structured task metadata for seasonal actions, including category, priority, source and seasonal month."
+  ],
+
+  changed: [
+    "Updated Seasonal Guide actions from plain text into structured task-ready data.",
+    "Updated New Task flow so seasonal guide actions pre-fill the task title and source information.",
+    "Updated Tasks list to display seasonal task badges for priority, category and month.",
+    "Updated Edit Task so seasonal task category and priority can be viewed and edited.",
+    "Updated Premium Required messaging to mention the Year in the Apiary seasonal guide.",
+    "Updated Pricing content to include the Year in the Apiary seasonal guide as a Premium benefit."
+  ],
+
+  fixed: [
+    "Fixed full-screen guide viewer layering so the infographic opens above the desktop navigation.",
+    "Fixed React rendering issues caused by converting checklist actions from text into structured objects.",
+    "Fixed duplicate/obsolete checklist-level Add Task behaviour by using individual task buttons instead."
+  ],
+
+  removed: [
+    "Removed the generic Add Task button from the Practical Checklist section because each action now has its own task button."
+  ],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+    { label: "Seasonal Guide", to: "/seasonal-guide" },
+    { label: "Tasks", to: "/todos" },
+    { label: "New Task", to: "/todos/new" },
+    { label: "Pricing", to: "/pricing" },
+    { label: "Dashboard", to: "/dashboard" }
+  ],
+
+  known_issues: [
+    "Seasonal guide tasks still require the user to select an apiary and hive, or All Hives, before saving.",
+    "Checklist tick boxes are for quick planning only and are not currently saved between sessions.",
+    "Task filtering by category, priority or seasonal month may be added in a future update."
+      ]
+  },
+  {
   version: "1.1.4",
   released_at: "2026-04-29T18:00:00Z",
   summary:

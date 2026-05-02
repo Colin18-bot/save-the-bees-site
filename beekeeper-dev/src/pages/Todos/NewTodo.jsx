@@ -1,10 +1,11 @@
 // src/pages/Todos/NewTodo.jsx
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 
 function NewTodo() {
   const navigate = useNavigate();
+const location = useLocation();
 
   // Preset metadata: emoji + suggested offset in days
   const TASK_META = {
@@ -19,6 +20,12 @@ function NewTodo() {
     "Other": { emoji: "📝", days: null },
   };
   const PRESET_TASKS = Object.keys(TASK_META);
+  const queryParams = new URLSearchParams(location.search);
+  const seasonalTitle = queryParams.get("title") || "";
+  const seasonalCategory = queryParams.get("category") || "";
+  const seasonalPriority = queryParams.get("priority") || "";
+  const seasonalMonth = queryParams.get("month") || "";
+  const isSeasonalTask = queryParams.get("source") === "seasonal-guide";
 
   const [selectedTask, setSelectedTask] = useState("");
   const [apiaries, setApiaries] = useState([]);
@@ -67,6 +74,17 @@ function NewTodo() {
       setHives(hData || []);
     })();
   }, []);
+
+  useEffect(() => {
+  if (!isSeasonalTask || !seasonalTitle) return;
+
+  setSelectedTask("Other");
+  setForm((p) => ({
+    ...p,
+    other_title: seasonalTitle,
+    notes: seasonalMonth ? `Created from Seasonal Guide: ${seasonalMonth}` : "Created from Seasonal Guide",
+  }));
+}, [isSeasonalTask, seasonalTitle, seasonalMonth]);
 
   const hivesForApiary = useMemo(() => {
     if (!form.apiary_id) return [];
@@ -169,6 +187,10 @@ function NewTodo() {
       hive_id: form.all_hives ? null : form.hive_id,
       hive_name: form.all_hives ? "ALL" : form.hive_name || null,
       notes: form.notes || null,
+      category: isSeasonalTask ? seasonalCategory || "Seasonal guide" : null,
+      priority: isSeasonalTask ? seasonalPriority || "Medium" : null,
+      source: isSeasonalTask ? "seasonal-guide" : null,
+      seasonal_month: isSeasonalTask ? seasonalMonth || null : null,
     };
 
     // Insert and get id so we can highlight on the list
@@ -367,7 +389,22 @@ function NewTodo() {
               This task will be shown for <strong>all hives</strong> in the selected apiary.
             </div>
           )}
-
+          {selectedTask === "Other" && (
+  <div>
+    <label htmlFor="other_title" className="block text-sm font-medium mb-1">
+      Task Title
+    </label>
+    <input
+      id="other_title"
+      type="text"
+      className="w-full border rounded-lg px-3 py-2 focus:outline-none"
+      placeholder="Enter task title..."
+      value={form.other_title}
+      onChange={onChange}
+      required
+    />
+  </div>
+)}
           {/* Notes */}
           <div>
             <label htmlFor="notes" className="block text-sm font-medium mb-1">

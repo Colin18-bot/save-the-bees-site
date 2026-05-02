@@ -16,6 +16,10 @@ const EditTodo = () => {
     hive_id: "",
     hive_name: "",
     notes: "",
+    category: "",
+    priority: "",
+    source: "",
+    seasonal_month: "",
   });
 
   const [apiaries, setApiaries] = useState([]);
@@ -43,7 +47,7 @@ const EditTodo = () => {
         supabase
           .from("todos")
           .select(
-            "id, title, due_date, status, apiary_id, hive_id, hive_name, notes, archived_at"
+            "id, title, due_date, status, apiary_id, hive_id, hive_name, notes, archived_at, category, priority, source, seasonal_month"
           )
           .eq("id", id)
           .single(),
@@ -81,6 +85,10 @@ const EditTodo = () => {
         hive_id: todo?.hive_id || "",
         hive_name: todo?.hive_name || "",
         notes: todo?.notes || "",
+        category: todo?.category || "",
+        priority: todo?.priority || "",
+        source: todo?.source || "",
+        seasonal_month: todo?.seasonal_month || "",
       });
 
       setApiaries(apiaryData || []);
@@ -205,6 +213,10 @@ const EditTodo = () => {
         hive_id: isAllHives ? null : form.hive_id || null,
         hive_name: isAllHives ? "ALL" : form.hive_name || null,
         notes: form.notes || null,
+        category: form.category || null,
+        priority: form.priority || null,
+        source: form.source || null,
+        seasonal_month: form.seasonal_month || null,
       };
 
       const { error: upErr } = await supabase.from("todos").update(payload).eq("id", id);
@@ -391,6 +403,47 @@ const EditTodo = () => {
             </p>
           )}
         </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <label htmlFor="category" className="block text-sm font-medium mb-1">
+              Category
+            </label>
+            <input
+              id="category"
+              name="category"
+              value={form.category || ""}
+              onChange={onChange}
+              className="w-full px-3 py-2 border rounded focus:outline-none"
+              placeholder="e.g. Stores & feeding"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="priority" className="block text-sm font-medium mb-1">
+              Priority
+            </label>
+            <select
+              id="priority"
+              name="priority"
+              value={form.priority || ""}
+              onChange={onChange}
+              className="w-full px-3 py-2 border rounded focus:outline-none"
+            >
+              <option value="">None</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+        </div>
+
+        {form.source === "seasonal-guide" && (
+          <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-900">
+            Seasonal Guide task
+            {form.seasonal_month ? ` · ${form.seasonal_month}` : ""}
+          </div>
+        )}
 
         <div>
           <label htmlFor="notes" className="block text-sm font-medium mb-1">

@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
 // APP_VERSION=1.2.3
-const APP_VERSION = "1.1.4";
+const APP_VERSION = "1.1.5";
 
 const Sidebar = ({ setIsMobileMenuOpen }) => {
   const [quickCreateOpen, setQuickCreateOpen] = useState(true);
@@ -96,6 +96,10 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
   userIsPremium
     ? { to: "/inspections/step-by-step", label: "Inspection Guide" }
     : { to: "/premium-required", label: "🔒 Inspection Guide", lockedPremium: true },
+
+  userIsPremium
+    ? { to: "/seasonal-guide", label: "Seasonal Guide" }
+    : { to: "/premium-required", label: "🔒 Seasonal Guide", lockedPremium: true },
 ];
 
   const coreSecondaryNavItems = [

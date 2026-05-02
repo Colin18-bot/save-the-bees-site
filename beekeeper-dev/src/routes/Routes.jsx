@@ -45,6 +45,7 @@ import Help from "../pages/Help.jsx";
 import GettingStarted from "../pages/Help/GettingStarted.jsx";
 
 import BeeHealthHelper from "../pages/BeeHealth/BeeHealthHelper.jsx";
+import SeasonalGuide from "../pages/SeasonalGuide.jsx";
 
 import PremiumRequired from "../pages/PremiumRequired.jsx";
 
@@ -194,6 +195,7 @@ function AppRoutes() {
       <Route path="/help/getting-started" element={<Guarded><GettingStarted /></Guarded>} />
 
       <Route path="/bee-health" element={<Guarded><BeeHealthHelper /></Guarded>} />
+      <Route path="/seasonal-guide" element={<PremiumGuarded><SeasonalGuide /></PremiumGuarded>} />
 
       {/* NFC scan + instructions + manager + tag store */}
       <Route path="/nfc" element={<Guarded><NFCScan /></Guarded>} />

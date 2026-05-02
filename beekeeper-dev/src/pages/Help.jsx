@@ -10,6 +10,7 @@ const toc = [
   { id: "navigation", title: "Navigation Overview" },
   { id: "apiary-map-markers", title: "Apiary Map Markers (Map Notes)" },
   { id: "bee-health-helper", title: "Colony Health Check (Bee Health Helper)" },
+  { id: "seasonal-guide", title: "Year in the Apiary Seasonal Guide" },
   { id: "business-inventory", title: "Inventory, Sales & Expenses" },
   { id: "currency-defaults", title: "Default Currency (How It Works)" },
   { id: "reports", title: "Reports" },
@@ -184,8 +185,8 @@ export default function Help() {
                         <strong>Colony Health Check</strong> (Bee Health Helper)
                       </li>
                       <li>
-                        <strong>Apiary Siting Guide</strong>, <strong>Hive Siting Guide</strong>, and{" "}
-                        <strong>Step-by-step Inspection Guide</strong>
+                        <strong>Year in the Apiary Seasonal Guide</strong>: monthly infographic guidance,
+                        practical checklists, and one-click seasonal task creation
                       </li>
                       <li>
                         <strong>Apiary Map Markers</strong> for saving forage, water, risk,
@@ -519,6 +520,32 @@ export default function Help() {
                 </div>
 
                 <div>
+                    <h3 className="font-semibold">
+                      Year in the Apiary Seasonal Guide <Badge tone="blue">Premium</Badge>
+                    </h3>
+                    <ul className="list-disc pl-6">
+                      <li>
+                        A Premium monthly guide showing seasonal beekeeping priorities from January to December.
+                      </li>
+                      <li>
+                        Use the month selector to switch between months, or open the current month automatically.
+                      </li>
+                      <li>
+                        Each month includes a quick summary, key risks, practical checklist actions, and a full infographic guide.
+                      </li>
+                      <li>
+                        Use <strong>View full guide</strong> to open the monthly infographic in a full-screen viewer.
+                      </li>
+                      <li>
+                        Use the individual <strong>+ Add task</strong> buttons to turn a seasonal action into a normal HiveTag task.
+                      </li>
+                      <li>
+                        Seasonal tasks are saved with structured details such as category, priority, source, and seasonal month.
+                      </li>
+                    </ul>
+                  </div>
+
+                <div>
                   <h3 className="font-semibold">Tasks &amp; Calendar</h3>
                   <ul className="list-disc pl-6">
                     <li>
@@ -540,9 +567,27 @@ export default function Help() {
                       The calendar surfaces dated items across apiaries and hives.{" "}
                       <Badge>Free</Badge>
                     </li>
+                    <li>
+                      Tasks created from the <strong>Year in the Apiary Seasonal Guide</strong>{" "}
+                      <Badge tone="blue">Premium</Badge> behave like normal tasks, but also show
+                      seasonal badges such as priority, category, and month.
+                    </li>
                   </ul>
                 </div>
 
+                <div>
+                  <h3 className="font-semibold">
+                    C) Plan monthly seasonal tasks <Badge tone="blue">Premium</Badge>
+                  </h3>
+                  <ol className="list-decimal pl-6 space-y-1 text-gray-700">
+                    <li>Open <strong>Seasonal Guide</strong>.</li>
+                    <li>Select the current month, or another month you want to prepare for.</li>
+                    <li>Review the key focus, risks, and practical checklist.</li>
+                    <li>Use <strong>+ Add task</strong> beside any action you want to schedule.</li>
+                    <li>Choose the apiary and hive, or select <strong>All Hives</strong>.</li>
+                    <li>Save the task. It will appear in <strong>Tasks</strong> and the calendar like any other task.</li>
+                  </ol>
+                </div>
                 <div>
                   <h3 className="font-semibold">Logbook</h3>
                   <p className="text-gray-700">
@@ -855,6 +900,86 @@ export default function Help() {
               </div>
             </section>
 
+            {/* Year in the Apiary Seasonal Guide */}
+            <section id="seasonal-guide">
+              <h2 className="text-2xl font-bold mb-3">
+                Year in the Apiary Seasonal Guide <Badge tone="blue">Premium</Badge>
+              </h2>
+
+              <p className="text-gray-700">
+                The <strong>Year in the Apiary</strong> seasonal guide is a Premium monthly
+                beekeeping guide built into HiveTag. It helps you see what to focus on each
+                month, what risks to watch for, and which practical actions to plan next.
+              </p>
+
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">How to use it</h3>
+                  <ol className="mt-2 list-decimal pl-6 space-y-1 text-gray-700">
+                    <li>Open <strong>Seasonal Guide</strong> from the Premium tools area.</li>
+                    <li>Select a month from the month buttons, or start with the current month.</li>
+                    <li>Review the month’s <strong>Key focus</strong> and <strong>Risks to watch</strong>.</li>
+                    <li>Use the practical checklist to plan what you want to do next.</li>
+                    <li>Open <strong>View full guide</strong> to see the full monthly infographic.</li>
+                  </ol>
+                </div>
+
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Checklist vs task</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                    <li>
+                      The checkbox is for quick planning only. It helps you mark what you are
+                      considering while viewing the guide.
+                    </li>
+                    <li>
+                      The checkbox is not saved between sessions.
+                    </li>
+                    <li>
+                      To create a real task, use the individual <strong>+ Add task</strong> button
+                      next to the relevant action.
+                    </li>
+                    <li>
+                      The task then appears in your normal <strong>Tasks</strong> list and can be
+                      edited, completed, filtered by date, or viewed in the calendar.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">Creating tasks from seasonal actions</h3>
+                <ol className="mt-2 list-decimal pl-6 space-y-1 text-gray-700">
+                  <li>Choose the month you want to work from.</li>
+                  <li>Find the action you want to carry out.</li>
+                  <li>Click <strong>+ Add task</strong>.</li>
+                  <li>The New Task page opens with the task title pre-filled.</li>
+                  <li>Select the relevant <strong>Apiary</strong> and <strong>Hive</strong>, or choose <strong>All Hives</strong>.</li>
+                  <li>Set or adjust the due date, add any extra notes, then save.</li>
+                </ol>
+
+                <p className="mt-3 text-sm text-gray-600">
+                  Seasonal tasks are saved with extra structured information such as
+                  <strong> category</strong>, <strong>priority</strong>, <strong>source</strong>,
+                  and <strong>seasonal month</strong>. These appear as badges on the Tasks list.
+                </p>
+              </div>
+
+              <div className="mt-4 rounded border border-yellow-200 bg-yellow-50 p-4 text-sm text-gray-800">
+                <div className="font-semibold">Important note</div>
+                <p className="mt-1">
+                  The seasonal guide is general beekeeping guidance. Always use your own judgement,
+                  local weather, colony condition, and official UK bee health advice where relevant.
+                </p>
+              </div>
+
+              <div className="mt-4 text-sm text-gray-600">
+                Quick link:{" "}
+                <Link to="/seasonal-guide" className="text-blue-700 underline">
+                  Open Year in the Apiary Seasonal Guide
+                </Link>
+              </div>
+            </section>
+
             {/* Inventory, Sales & Expenses (overview) */}
             <section id="business-inventory">
               <h2 className="text-2xl font-bold mb-3">
@@ -1081,7 +1206,7 @@ export default function Help() {
 
                 <div>
                   <h3 className="font-semibold">
-                    C) NFC tag setup and tap-to-log <Badge tone="blue">Premium</Badge>
+                    D) NFC tag setup and tap-to-log <Badge tone="blue">Premium</Badge>
                   </h3>
 
                   <p className="text-gray-700">
@@ -1412,6 +1537,10 @@ per apiary.
                   Capture next-visit actions in <strong>Tasks</strong> and give them
                   clear due dates.
                 </li>
+                <li>
+                  Premium users can use the <strong>Year in the Apiary Seasonal Guide</strong> to
+                  turn monthly beekeeping actions into scheduled tasks.
+                </li>
                 <li>Add apiary coordinates for accurate weather and map displays.</li>
                 <li>
                   Set a <strong>default apiary</strong> to power Dashboard weather and
@@ -1449,6 +1578,28 @@ per apiary.
                     The Apiary Map is a full-screen map for one apiary where you can add “map notes” (markers) like forage, water,
                     access, shelter, risks, and sightings. When adding a new marker, <strong>Pick again</strong> clears the selected
                     point so you can tap the map again to choose a different location before saving.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">
+                    What is the Year in the Apiary Seasonal Guide? <Badge tone="blue">Premium</Badge>
+                  </p>
+                  <p className="text-gray-700">
+                    It is a monthly Premium guide showing what to focus on in the apiary, what risks
+                    to watch for, and which practical actions to plan. Each month includes a full
+                    infographic and task-ready checklist actions.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">
+                    Do Seasonal Guide checklist ticks save? <Badge tone="blue">Premium</Badge>
+                  </p>
+                  <p className="text-gray-700">
+                    No. The checkbox ticks are only for quick planning while viewing the guide.
+                    To save something properly, use <strong>+ Add task</strong>. That creates a normal
+                    task with category, priority and seasonal month details.
                   </p>
                 </div>
 
@@ -1554,6 +1705,11 @@ per apiary.
                   links shown for guidance/reporting.
                 </li>
                 <li>
+                  <strong>Seasonal Guide task will not save</strong> <Badge tone="blue">Premium</Badge><strong>:</strong>{" "}
+                  make sure you have selected an <strong>Apiary</strong> and either a specific
+                  <strong> Hive</strong> or <strong>All Hives</strong> before saving.
+                </li>
+                <li>
                   <strong>Can’t add another apiary/hive:</strong> Free plan allows 1 active apiary and 2 active hives total. Upgrade
                   to add more.
                 </li>
@@ -1641,6 +1797,12 @@ per apiary.
                   <strong>iPhone / iPad NFC routing:</strong> copied HiveTag link → written to tag → opening the tag routes into <em>New Inspection</em>. <Badge tone="blue">Premium</Badge>
                 </li>
                 <li>
+                  <strong>Seasonal Guide tasks</strong> <Badge tone="blue">Premium</Badge><strong>:</strong>{" "}
+                  tasks created from the guide are saved with structured metadata:
+                  <code> category</code>, <code>priority</code>, <code>source</code>, and{" "}
+                  <code>seasonal_month</code>.
+                </li>
+                <li>
                   <strong>Reports export:</strong> CSV exports respect the Apiary/Hive filter.
                 </li>
                 <li>
@@ -1666,6 +1828,12 @@ per apiary.
                   <dd className="text-gray-700">Structured record of a hive’s status.</dd>
                 </div>
                 <div>
+                  <div>
+                  <dt className="font-medium">Seasonal Guide</dt>
+                  <dd className="text-gray-700">
+                    Premium Year in the Apiary guide with monthly infographic guidance and task-ready seasonal actions.
+                  </dd>
+                </div>
                   <dt className="font-medium">NFC</dt>
                   <dd className="text-gray-700">
                     Near Field Communication—used in HiveTag to open the correct hive more quickly (Premium).

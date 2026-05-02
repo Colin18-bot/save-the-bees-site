@@ -324,6 +324,7 @@ export default function Pricing() {
           "Colony Health Check",
           "Apiary and Hive Siting Guides",
           "Step-by-step Inspection Guide",
+          "Year in the Apiary seasonal guide with monthly actions",
           "Map markers for apiaries",
           "Reports, exports and combined CSV downloads",
           "Inventory, sales, expenses and Profit & Loss",
