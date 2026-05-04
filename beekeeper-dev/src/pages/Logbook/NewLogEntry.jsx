@@ -1,6 +1,6 @@
 // src/pages/Logbook/NewLogEntry.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 
 const LOG_TYPES = [
@@ -47,11 +47,20 @@ function formatHM(isoOrNull) {
 
 export default function NewLogEntry() {
   const navigate = useNavigate();
+  const location = useLocation();
   const successRef = useRef(null);
+
+  const queryParams = new URLSearchParams(location.search);
+  const inspectionId = queryParams.get("inspection_id") || "";
+  const returnTo = queryParams.get("return_to") || "";
+  const prefillApiaryId = queryParams.get("apiary_id") || "";
+  const prefillHiveId = queryParams.get("hive_id") || "";
+  const preset = queryParams.get("preset") || "";
 
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isPremium, setIsPremium] = useState(false);
 
   const [apiaries, setApiaries] = useState([]);
   const [hives, setHives] = useState([]);
@@ -76,10 +85,24 @@ export default function NewLogEntry() {
     return m;
   }, [hives]);
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await supabase
-        .from("apiaries")
+ useEffect(() => {
+  (async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user?.id) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("subscription_level")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      setIsPremium(profile?.subscription_level === "premium");
+    }
+
+    const { data } = await supabase
+      .from("apiaries")
         .select("id, name")
         .is("archived_at", null)
         .order("name");
@@ -102,6 +125,38 @@ export default function NewLogEntry() {
       setHives(data || []);
     })();
   }, [form.apiary_id]);
+
+useEffect(() => {
+  if (!inspectionId && !prefillApiaryId && !prefillHiveId && !preset) return;
+
+  const presetMap = {
+    feeding: "Fed Bees",
+    treatment: "Treatment",
+    swarm: "Other",
+    queen: "Requeen",
+    colony: "Other",
+    disease: "Other",
+  };
+
+  const customMap = {
+    swarm: "Swarm note",
+    colony: "Colony note",
+    disease: "Disease note",
+  };
+
+  setForm((p) => ({
+    ...p,
+    apiary_id: prefillApiaryId || p.apiary_id,
+    hive_id: prefillHiveId || p.hive_id,
+    all_hives: false,
+    inspection_id: inspectionId || p.inspection_id,
+    log_type_select: presetMap[preset] || p.log_type_select,
+    log_type_custom: customMap[preset] || p.log_type_custom,
+    entry: inspectionId
+  ? "Log entry created from the inspection insights page."
+  : p.entry,
+  }));
+}, [inspectionId, prefillApiaryId, prefillHiveId, preset]);
 
   useEffect(() => {
     (async () => {
@@ -274,7 +329,7 @@ export default function NewLogEntry() {
     setSuccess("Log entry saved successfully!");
     successRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     await new Promise((r) => setTimeout(r, 1200));
-    navigate("/logbook");
+    navigate(returnTo ? `${returnTo}?created=log` : "/logbook");
   };
 
   const handleCancel = () => {
@@ -282,7 +337,7 @@ export default function NewLogEntry() {
   removePhoto();
   setError("");
   setSuccess("");
-  navigate("/logbook"); // ✅ back to LogEntryList.jsx route
+  navigate(returnTo || "/logbook"); // ✅ back to insight page if provided
 };
 
   // ---- build grouped options for "Related Inspection"
@@ -312,6 +367,16 @@ export default function NewLogEntry() {
   return (
     <div className="p-6 max-w-4xl mx-auto bg-white rounded-xl shadow-lg">
       <h1 className="text-2xl font-bold mb-4">New Hive Logbook Entry</h1>
+      {isPremium && returnTo && (
+  <div className="mb-4">
+    <Link
+      to={returnTo}
+      className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100"
+    >
+      ← Back to inspection insights
+    </Link>
+  </div>
+)}
 
       <form onSubmit={saveEntry} className="space-y-6">
         {/* Core fields grid */}

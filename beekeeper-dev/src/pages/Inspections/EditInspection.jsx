@@ -27,6 +27,9 @@ const ENVIRONMENTAL_SIGNS_OPTS = [
 const HIVE_POPULATION_OPTS = ["Low", "Moderate", "Strong"];
 const BROOD_PATTERN_OPTS = ["Spotty", "Solid"];
 const FOOD_STORES_OPTS = ["Low", "Moderate", "Full"];
+const FRAMES_OF_BEES_OPTS = ["1-2", "3-4", "5-6", "7-8", "9+"];
+const QUEEN_CELLS_OPTS = ["None", "Cups", "Charged", "Sealed", "Supersedure"];
+const BROOD_BOX_CONGESTION_OPTS = ["Low", "Medium", "High"];
 const QUEEN_OPTIONS = ["Seen", "Eggs", "Capped brood", "Uncapped brood", "Other"];
 const PEST_TYPES = ["Mice", "Ants", "Beetles", "Wax Moths", "Wasps", "Other"];
 const DISEASE_TYPES = [
@@ -118,6 +121,7 @@ const EditInspection = () => {
   const [formData, setFormData] = useState({
     apiary_id: "",
     hive_id: "",
+    inspection_type: "full_inspection",
     date: "",
     weather: "",
     weather_code: "",
@@ -129,6 +133,10 @@ const EditInspection = () => {
     hive_population: "",
     brood_pattern: "",
     food_stores: "",
+    frames_of_bees: "",
+    queen_cells: "",
+    varroa_seen: false,
+    brood_box_congestion: "",
     queen_status: [],
     queen_status_other: "",
     signs_disease: false,
@@ -321,6 +329,7 @@ const EditInspection = () => {
       setFormData({
         apiary_id: data.apiary_id || "",
         hive_id: data.hive_id || "",
+        inspection_type: data.inspection_type || "full_inspection",
         date: dateStr || "",
         // NOTE: keep whatever is stored; UI will prefer derivedWeatherDisplay if we have it
         weather: data.weather || "",
@@ -333,6 +342,10 @@ const EditInspection = () => {
         hive_population: data.hive_population || "",
         brood_pattern: data.brood_pattern || "",
         food_stores: data.food_stores || "",
+        frames_of_bees: data.frames_of_bees || "",
+        queen_cells: data.queen_cells || "",
+        varroa_seen: Boolean(data.varroa_seen),
+        brood_box_congestion: data.brood_box_congestion || "",
         queen_status: toArray(data.queen_status),
         queen_status_other: data.queen_status_other || "",
         signs_disease: Boolean(data.signs_disease),
@@ -635,6 +648,7 @@ const EditInspection = () => {
     const payload = {
       apiary_id: formData.apiary_id || null,
       hive_id: formData.hive_id || null,
+      inspection_type: formData.inspection_type || "full_inspection",
       date: formData.date || null,
 
       weather: weatherToSave || null,
@@ -657,6 +671,10 @@ const EditInspection = () => {
       hive_population: formData.hive_population || null,
       brood_pattern: formData.brood_pattern || null,
       food_stores: formData.food_stores || null,
+      frames_of_bees: formData.frames_of_bees || null,
+      queen_cells: formData.queen_cells || null,
+      varroa_seen: Boolean(formData.varroa_seen),
+      brood_box_congestion: formData.brood_box_congestion || null,
 
       queen_status:
         Array.isArray(formData.queen_status) && formData.queen_status.length
@@ -735,30 +753,133 @@ const EditInspection = () => {
     navigate("/inspections");
   };
 
-  const handleArchive = async () => {
-    if (!window.confirm("Are you sure you want to archive this inspection?")) return;
+const getLinkedInspectionCounts = async () => {
+  const [{ count: logs = 0, error: logErr }, { count: todos = 0, error: todoErr }] =
+    await Promise.all([
+      supabase
+        .from("logbook")
+        .select("id", { count: "exact", head: true })
+        .eq("inspection_id", id)
+        .is("archived_at", null),
 
-    const { error } = await archiveItem("inspections", id);
-    if (error) {
-      alert(humaniseSupabaseError(error) || "Failed to archive inspection.");
+      supabase
+        .from("todos")
+        .select("id", { count: "exact", head: true })
+        .eq("inspection_id", id)
+        .is("archived_at", null),
+    ]);
+
+  return { logs, todos, error: logErr || todoErr };
+};
+
+const archiveInspectionAndLinkedItems = async () => {
+  const now = new Date().toISOString();
+
+  const [inspectionRes, logbookRes, todoRes] = await Promise.all([
+    supabase.from("inspections").update({ archived_at: now }).eq("id", id),
+    supabase
+      .from("logbook")
+      .update({ archived_at: now })
+      .eq("inspection_id", id)
+      .is("archived_at", null),
+    supabase
+      .from("todos")
+      .update({ archived_at: now })
+      .eq("inspection_id", id)
+      .is("archived_at", null),
+  ]);
+
+  return inspectionRes.error || logbookRes.error || todoRes.error;
+};
+
+const handleArchive = async () => {
+  const { logs, todos, error } = await getLinkedInspectionCounts();
+
+  if (error) {
+    console.error("Linked item check failed:", error);
+    alert(
+      "HiveTag could not check all linked records safely.\n\n" +
+        "Nothing has been archived. Please refresh and try again."
+    );
+    return;
+  }
+
+  const linkedParts = [];
+  if (logs > 0) linkedParts.push(`${logs} linked logbook entr${logs === 1 ? "y" : "ies"}`);
+  if (todos > 0) linkedParts.push(`${todos} linked task${todos === 1 ? "" : "s"}`);
+
+  const message =
+    linkedParts.length > 0
+      ? `This inspection has ${linkedParts.join(" and ")}.\n\nArchive the inspection and linked items?`
+      : "Archive this inspection?";
+
+  if (!window.confirm(message)) return;
+
+  const archiveErr = await archiveInspectionAndLinkedItems();
+
+  if (archiveErr) {
+    console.error("Archive failed:", archiveErr);
+    alert(humaniseSupabaseError(archiveErr) || "Failed to archive inspection and linked items.");
+    return;
+  }
+
+  alert("Inspection and linked items archived.");
+  navigate("/inspections");
+};
+
+const handleDelete = async () => {
+  const { logs, todos, error } = await getLinkedInspectionCounts();
+
+  if (error) {
+    console.error("Linked item check failed:", error);
+    alert(
+      "HiveTag could not safely check whether this inspection has linked records.\n\n" +
+        "To protect your records, the inspection has not been deleted."
+    );
+    return;
+  }
+
+  const linkedParts = [];
+  if (logs > 0) linkedParts.push(`${logs} linked logbook entr${logs === 1 ? "y" : "ies"}`);
+  if (todos > 0) linkedParts.push(`${todos} linked task${todos === 1 ? "" : "s"}`);
+
+  if (linkedParts.length > 0) {
+    const ok = window.confirm(
+      `This inspection has ${linkedParts.join(" and ")}.\n\nArchive the inspection and linked items instead?`
+    );
+
+    if (!ok) return;
+
+    const archiveErr = await archiveInspectionAndLinkedItems();
+
+    if (archiveErr) {
+      console.error("Archive failed:", archiveErr);
+      alert(humaniseSupabaseError(archiveErr) || "Failed to archive inspection and linked items.");
       return;
     }
-    alert("Inspection archived.");
+
+    alert("Inspection and linked items archived.");
     navigate("/inspections");
-  };
+    return;
+  }
 
-  const handleDelete = async () => {
-    if (!window.confirm("Delete this inspection permanently? This cannot be undone.")) return;
+  if (!window.confirm("Delete this inspection permanently? This cannot be undone.")) return;
 
-    const { error } = await smartDeleteInspection(id);
-    if (error) {
-      alert(humaniseSupabaseError(error, { table: "inspections" }) || "Failed to delete inspection.");
-      return;
-    }
+  const { error: deleteErr } = await smartDeleteInspection(id);
 
-    alert("Inspection deleted.");
-    navigate("/inspections");
-  };
+  if (deleteErr) {
+    console.error("Inspection delete failed:", deleteErr);
+    alert(
+      humaniseSupabaseError(deleteErr, { table: "inspections" }) ||
+        deleteErr.message ||
+        "Failed to delete inspection."
+    );
+    return;
+  }
+
+  alert("Inspection deleted.");
+  navigate("/inspections");
+};
 
   const totalPhotos = (formData.photos?.length || 0) + (newFiles?.length || 0);
   const canAddMorePhotos = totalPhotos < 3;
@@ -846,9 +967,25 @@ const EditInspection = () => {
           </div>
         </div>
 
-        {/* Date / Weather */}
+                {/* Date / Weather */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
+            <label className="block text-sm font-medium mb-1">Inspection Type</label>
+            <select
+              name="inspection_type"
+              value={formData.inspection_type || "full_inspection"}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2 mb-3"
+            >
+              <option value="full_inspection">Full inspection - hive opened</option>
+              <option value="external_check">External check - hive not opened</option>
+              <option value="observation_only">Observation only</option>
+            </select>
+
+            <p className="text-xs text-gray-600 mb-3">
+              Use External check for winter hefting, entrance checks, roof/strap checks, or visits where no brood frames are lifted.
+            </p>
+
             <label className="block text-sm font-medium mb-1">Date</label>
             <input
               type="date"
@@ -940,8 +1077,8 @@ const EditInspection = () => {
           )}
         </div>
 
-        {/* Hive Population / Brood Pattern / Food Stores */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Hive Population / Frames / Brood / Stores */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-1">Hive Population</label>
             <select
@@ -952,6 +1089,23 @@ const EditInspection = () => {
             >
               <option value="">Select</option>
               {HIVE_POPULATION_OPTS.map((o) => (
+                <option key={o} value={o}>
+                  {o}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Frames Covered by Bees</label>
+            <select
+              name="frames_of_bees"
+              value={formData.frames_of_bees}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2"
+            >
+              <option value="">Select</option>
+              {FRAMES_OF_BEES_OPTS.map((o) => (
                 <option key={o} value={o}>
                   {o}
                 </option>
@@ -977,6 +1131,26 @@ const EditInspection = () => {
           </div>
 
           <div>
+            <label className="block text-sm font-medium mb-1">Brood Box Congestion</label>
+            <p className="text-xs text-gray-600 mb-1">
+              Based on brood box space, not supers.
+            </p>
+            <select
+              name="brood_box_congestion"
+              value={formData.brood_box_congestion}
+              onChange={onChange}
+              className="w-full border rounded px-3 py-2"
+            >
+              <option value="">Select</option>
+              {BROOD_BOX_CONGESTION_OPTS.map((o) => (
+                <option key={o} value={o}>
+                  {o}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
             <label className="block text-sm font-medium mb-1">Food Stores</label>
             <select
               name="food_stores"
@@ -992,6 +1166,24 @@ const EditInspection = () => {
               ))}
             </select>
           </div>
+        </div>
+
+        {/* Queen Cells */}
+        <div>
+          <label className="block text-sm font-medium mb-1">Queen Cells</label>
+          <select
+            name="queen_cells"
+            value={formData.queen_cells}
+            onChange={onChange}
+            className="w-full border rounded px-3 py-2"
+          >
+            <option value="">Select</option>
+            {QUEEN_CELLS_OPTS.map((o) => (
+              <option key={o} value={o}>
+                {o}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Queen Status */}
@@ -1023,6 +1215,23 @@ const EditInspection = () => {
           )}
         </div>
 
+        {/* Varroa Seen */}
+        <div className="border rounded p-3">
+          <label className="inline-flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="varroa_seen"
+              checked={formData.varroa_seen}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  varroa_seen: e.target.checked,
+                }))
+              }
+            />
+            <span className="font-medium">Varroa Seen</span>
+          </label>
+        </div>
         {/* Pests / Disease */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="border rounded p-3">

@@ -8,6 +8,82 @@ dayjs.locale("en-gb");
 
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
+
+ {
+  version: "1.1.6",
+  released_at: "2026-05-03T22:00:00Z",
+
+  summary:
+    "Completed full inspection workflow integration including Insights, task/log linking, improved weather handling, and manual inspection linking across the app.",
+
+  added: [
+    "Added new **Inspection Insights** detail screen for Premium users.",
+    "Added smart insight detection for swarm risk, queen issues, colony strength, low stores, varroa and disease concerns.",
+    "Added suggested kit prompts for next inspection visits (e.g. supers, feeders, nuc boxes, monitoring kits, test frames).",
+    "Added insight-based actions to create pre-filled follow-up tasks and logbook entries.",
+    "Added persistent database linking between inspections, tasks and logbook entries using `inspection_id`.",
+    "Added task and logbook counts with quick navigation directly on Inspection List cards.",
+    "Added manual **'Related Inspection' dropdown** when creating tasks outside of Insights.",
+    "Added dynamic inspection lookup filtered by apiary/hive in New Task screen.",
+    "Added ability to link tasks to inspections even when created manually or from Seasonal Guide.",
+    "Added return-to-inspection behaviour when tasks are created from Insights.",
+    "Added highlight-based navigation between inspections, tasks and logbook entries.",
+    "Added safe archive flow to include linked tasks and logbook entries.",
+    "Added detection of linked records before delete actions with user confirmation.",
+    "Added support for JSON-based derived weather storage with proper UI formatting."
+  ],
+
+  changed: [
+    "Updated Inspection List cards to display insight badges, suggested kit prompts and linked record counts.",
+    "Updated Inspection List to correctly display derived weather from JSON or fallback values.",
+    "Updated inspection insight logic to prevent false 'queen issue' warnings when queen data is not recorded.",
+    "Updated New Task flow to support both automatic (Insights) and manual inspection linking.",
+    "Updated New Task to reset inspection linkage when apiary or hive changes.",
+    "Updated Inspection Edit screen to preserve and display derived weather correctly.",
+    "Updated archive behaviour so inspections, tasks and logbook entries are always kept in sync.",
+    "Updated navigation so linked records open in filtered list views with highlight support.",
+    "Updated Premium feature gating for Inspection Insights.",
+    "Updated Seasonal Guide task creation to optionally link to inspections."
+  ],
+
+  fixed: [
+    "Fixed false 'Possible queen issue' insight when no queen data was recorded.",
+    "Fixed tasks not appearing on Inspection List when created outside of Insights.",
+    "Fixed missing `inspection_id` when creating tasks manually.",
+    "Fixed archive flow not including linked tasks in some cases.",
+    "Fixed inconsistent linking caused by relying on notes instead of proper database relationships.",
+    "Fixed navigation inconsistencies between Inspection Insights, Tasks and Logbook.",
+    "Fixed derived weather display inconsistencies across pages.",
+    "Improved inspection-to-task linking reliability across all entry points."
+  ],
+
+  removed: [
+    "Removed reliance on note-based linking between inspections, tasks and logbook entries.",
+    "Removed inconsistent archive logic that did not include all linked records.",
+    "Removed assumption that tasks must be created via Insights to be linked."
+  ],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+    { label: "Inspections", to: "/inspections" },
+    { label: "New Inspection", to: "/inspections/new" },
+    { label: "Tasks", to: "/todos" },
+    { label: "New Task", to: "/todos/new" },
+    { label: "Logbook", to: "/logbook" },
+    { label: "New Logbook Entry", to: "/logbook/new" },
+    { label: "Pricing", to: "/pricing" }
+  ],
+
+  known_issues: [
+    "Inspection Insights are based on recorded data and do not account for intentionally skipped inputs.",
+    "Older tasks and logbook entries created before inspection linking was introduced will not be automatically associated.",
+    "Suggested kit prompts are advisory and should be validated against real apiary conditions.",
+    "Manual inspection linking requires user selection when not created from Insights."
+  ]
+},
   {
   version: "1.1.5",
   released_at: "2026-05-02T18:00:00Z",

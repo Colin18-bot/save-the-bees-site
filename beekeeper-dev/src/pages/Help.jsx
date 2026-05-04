@@ -6,10 +6,11 @@ const toc = [
   { id: "concepts", title: "Key Concepts" },
   { id: "membership", title: "Membership & Feature Availability" },
   { id: "getting-started", title: "Getting Started" },
- { id: "siting-guides", title: "Apiary & Hive Siting Guides" },
+  { id: "siting-guides", title: "Apiary & Hive Siting Guides" },
   { id: "navigation", title: "Navigation Overview" },
   { id: "apiary-map-markers", title: "Apiary Map Markers (Map Notes)" },
   { id: "bee-health-helper", title: "Colony Health Check (Bee Health Helper)" },
+  { id: "inspection-insights", title: "Inspection Insights" },
   { id: "seasonal-guide", title: "Year in the Apiary Seasonal Guide" },
   { id: "business-inventory", title: "Inventory, Sales & Expenses" },
   { id: "currency-defaults", title: "Default Currency (How It Works)" },
@@ -17,7 +18,6 @@ const toc = [
   { id: "workflows", title: "Typical Workflows" },
   { id: "nfc", title: "NFC (Premium): How It Works" },
   { id: "weather-maps-photos", title: "Weather, Maps & Photos" },
-  { id: "apiary-map-markers-2", title: "Apiary Map & Markers" },
   { id: "filters-counts-archives", title: "Filters, Counts & Archives" },
   { id: "tips", title: "Tips for Smooth Record-Keeping" },
   { id: "faqs", title: "FAQs" },
@@ -107,7 +107,7 @@ export default function Help() {
                 </li>
                 <li>
                   <strong>Tasks</strong> — scheduled actions with a due date and
-                  status; can reference an apiary and/or hive.
+                  status; can reference an apiary, hive, and related inspection.
                 </li>
                 <li>
                   <strong>Logbook</strong> — free-form notes (can link to an
@@ -123,7 +123,7 @@ export default function Help() {
               </ul>
               <p className="mt-3 text-gray-700">
                 Relationship: <em>Apiary → Hives → Inspections</em>. Tasks and
-                Logbook entries can reference either or both.
+                Logbook entries can also be linked back to a related inspection.
               </p>
             </section>
 
@@ -187,6 +187,10 @@ export default function Help() {
                       <li>
                         <strong>Year in the Apiary Seasonal Guide</strong>: monthly infographic guidance,
                         practical checklists, and one-click seasonal task creation
+                      </li>
+                      <li>
+                        <strong>Inspection Insights</strong>: smart inspection summaries, risk badges,
+                        suggested kit, and one-click follow-up tasks or logbook entries
                       </li>
                       <li>
                         <strong>Apiary Map Markers</strong> for saving forage, water, risk,
@@ -266,17 +270,26 @@ export default function Help() {
                   . Weather auto-fills from the apiary’s coordinates for that
                   date. <Badge>Free</Badge>
                 </li>
-               <li>
-  <strong>Try the Colony Health Check:</strong>{" "}
-  <span className="text-gray-700">Colony Health Check</span>{" "}
-  helps you decide what to check next when something looks “off”.
-  <Badge tone="blue">Premium</Badge>
-</li>
                 <li>
-                  <strong>NFC</strong> <Badge tone="blue">Premium</Badge>:
-                  open <strong>Set Up NFC Tags</strong> to choose either the
-                  Android scan method or the iPhone / iPad link method.
+                  <strong>Review Inspection Insights:</strong>{" "}
+                  <span className="text-gray-700">
+                    Inspections → View Insights
+                  </span>
+                  . Premium users can review smart findings, suggested kit, and create
+                  follow-up tasks or logbook entries from the insight cards.
+                  <Badge tone="blue">Premium</Badge>
                 </li>
+                <li>
+                    <strong>Try the Colony Health Check:</strong>{" "}
+                    <span className="text-gray-700">Colony Health Check</span>{" "}
+                    helps you decide what to check next when something looks “off”.
+                    <Badge tone="blue">Premium</Badge>
+                  </li>
+                  <li>
+                    <strong>NFC</strong> <Badge tone="blue">Premium</Badge>:
+                    open <strong>Set Up NFC Tags</strong> to choose either the
+                    Android scan method or the iPhone / iPad link method.
+                  </li>
               </ol>
             </section>
 
@@ -482,12 +495,22 @@ export default function Help() {
                       diseases.
                     </li>
                     <li>
-                      <strong>Linked Logbook:</strong> where logbook entries
-                      reference an inspection, the card shows a count with a{" "}
-                      <em>View logbook</em> link. Clicking it opens the{" "}
-                      <strong>Logbook</strong> list <em>filtered to that
-                      inspection</em> with a blue banner and a one-click “Clear
-                      inspection filter”.
+                      <strong>Linked Records:</strong> where tasks or logbook entries
+                      reference an inspection, the card shows linked record counts.
+                      You can open the related <strong>Tasks</strong> or{" "}
+                      <strong>Logbook</strong> list filtered to that inspection.
+                    </li>
+                    <li>
+                      <strong>Deleting inspections:</strong> if an inspection has linked
+                      tasks or logbook entries, HiveTag will warn you and offer to archive
+                      instead so the related records stay together.
+                    </li>
+                    <li>
+                      <strong>Archiving inspections:</strong> archiving an inspection also
+                      archives linked tasks and logbook entries.
+                    </li>
+                    <li>
+                      <strong>Inspection Insights</strong> <Badge tone="blue">Premium</Badge>: saved inspections can be reviewed on a dedicated insights page with smart badges, suggested kit, and one-click follow-up actions for Tasks and Logbook.
                     </li>
                     <li>
                       Unlimited on Free. <Badge>Free</Badge>
@@ -552,6 +575,10 @@ export default function Help() {
                       Create tasks with due dates and statuses; filter by{" "}
                       <strong>apiary</strong>, <strong>hive</strong>, and a{" "}
                       <strong>From/To date range</strong>.
+                    </li>
+                    <li>
+                      Tasks can optionally be linked to a saved inspection using the{" "}
+                      <strong>Related Inspection</strong> dropdown. Linked tasks appear on the relevant inspection card.
                     </li>
                     <li>
                       <strong>Marking completed:</strong> update the status from
@@ -764,7 +791,58 @@ export default function Help() {
                 </p>
               </div>
             </section>
+            {/* Inspection Insights */}
+            <section id="inspection-insights">
+              <h2 className="text-2xl font-bold mb-3">
+                Inspection Insights <Badge tone="blue">Premium</Badge>
+              </h2>
 
+              <p className="text-gray-700">
+                <strong>Inspection Insights</strong> turns a saved inspection into a clearer
+                review page. It highlights useful patterns such as swarm risk, queen issues, low stores, weak colonies, varroa observations, and disease concerns where enough relevant inspection data has been recorded.
+              </p>
+
+              <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Where to find it</h3>
+                  <ol className="mt-2 list-decimal pl-6 space-y-1 text-gray-700">
+                    <li>Open <strong>Inspections</strong>.</li>
+                    <li>Find the inspection card you want to review.</li>
+                    <li>Premium users can press <strong>View Insights</strong>.</li>
+                    <li>Free users will see the feature locked with an upgrade message.</li>
+                  </ol>
+                </div>
+
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">What the insight cards show</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                    <li>Risk or status badges such as swarm risk, queen OK, low stores, or varroa seen.</li>
+                    <li>The inspection observations that triggered the insight.</li>
+                    <li>Suggested follow-up actions where useful.</li>
+                    <li>Suggested kit for the next visit, such as feed, feeder, super, nuc box, or test frame.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">Creating tasks and logbook entries from insights</h3>
+                <ol className="mt-2 list-decimal pl-6 space-y-1 text-gray-700">
+                  <li>Open the relevant inspection insight.</li>
+                  <li>Use the action pill, such as <strong>Create feeding task</strong> or <strong>Add feeding log</strong>.</li>
+                  <li>The Task or Logbook page opens with the apiary, hive, related inspection, and useful starting text pre-filled.</li>
+                  <li>Review or amend the details, then save.</li>
+                  <li>After saving, you return to the Inspection Insights page with a confirmation message.</li>
+                </ol>
+              </div>
+
+              <div className="mt-4 rounded border border-yellow-200 bg-yellow-50 p-4 text-sm text-gray-800">
+                <div className="font-semibold">Important note</div>
+                <p className="mt-1">
+                  Inspection Insights are advisory prompts based on the inspection data you entered.
+                  They do not replace beekeeper judgement, official UK bee health guidance, or local association advice.
+                </p>
+              </div>
+            </section>
             {/* Colony Health Check */}
             <section id="bee-health-helper">
              <h2 className="text-2xl font-bold mb-3">
@@ -1206,7 +1284,7 @@ export default function Help() {
 
                 <div>
                   <h3 className="font-semibold">
-                    D) NFC tag setup and tap-to-log <Badge tone="blue">Premium</Badge>
+                    C) NFC tag setup and tap-to-log <Badge tone="blue">Premium</Badge>
                   </h3>
 
                   <p className="text-gray-700">
@@ -1364,92 +1442,6 @@ per apiary.
               </p>
             </section>
 
-            {/* Apiary Map & Markers */}
-            <section id="apiary-map-markers-2">
-           <h2 className="text-2xl font-bold mb-3">
-  Apiary Map &amp; Markers <Badge tone="blue">Premium</Badge>
-</h2>
-
-              <p className="text-gray-700">
-                The Apiary Map is a full-screen map for one apiary. It helps you keep simple
-                “map notes” (markers) for real-world features around the apiary such as forage,
-                water, access points, shelter, risks, and sightings.
-              </p>
-
-              <div className="mt-4 space-y-4">
-                <div className="rounded border bg-white p-4">
-                  <h3 className="font-semibold">How to open the map</h3>
-                  <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
-                    <li>
-                      Go to <strong>Apiaries</strong> and use the <strong>Map</strong> action on
-                      the apiary card.
-                    </li>
-                    <li>
-                      On the map page, you can also switch apiaries using the dropdown in the header.
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="rounded border bg-white p-4">
-                  <h3 className="font-semibold">Add a marker (map note)</h3>
-                  <ol className="list-decimal pl-6 mt-2 text-gray-700 space-y-1">
-                    <li>Press <strong>Add marker</strong>.</li>
-                    <li>
-                      Tap/click the map where you want the marker placed. A “New marker” popup opens.
-                    </li>
-                    <li>
-                      Choose a <strong>Type</strong> (forage, water source, access/parking, etc.).
-                    </li>
-                    <li>
-                      Optional: add a <strong>Title</strong> and <strong>Notes</strong> (use this for gate codes,
-                      landowner details, flowering times, or anything you want to remember).
-                    </li>
-                    <li>Press <strong>Save</strong> to store it.</li>
-                  </ol>
-
-                  <div className="mt-3 text-sm text-gray-600">
-                    <strong>Pick again:</strong> clears the selected point and puts you back into “tap the map to drop a marker”
-                    so you can choose a different location before saving.
-                  </div>
-                </div>
-
-                <div className="rounded border bg-white p-4">
-                  <h3 className="font-semibold">Edit or delete a marker</h3>
-                  <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
-                    <li>Tap a marker to open its popup.</li>
-                    <li>Use <strong>Edit</strong> to change the type/title/notes (and date where applicable).</li>
-                    <li>Use <strong>Delete</strong> to remove the marker permanently.</li>
-                  </ul>
-                </div>
-
-                <div className="rounded border bg-white p-4">
-                  <h3 className="font-semibold">Map layers &amp; foraging ring</h3>
-                  <ul className="list-disc pl-6 mt-2 text-gray-700 space-y-1">
-                    <li>
-                      Use the map layer control to switch between standard map and satellite imagery.
-                    </li>
-                    <li>
-                      A <strong>~3 mile foraging ring</strong> is shown around the apiary as a visual guide.
-                      <div className="mt-1 text-sm text-gray-600">
-                        Indicative range only — bees may forage further depending on conditions.
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="rounded border bg-white p-4">
-                  <h3 className="font-semibold">Pollen on the map</h3>
-                  <p className="text-gray-700 mt-2">
-                    Pollen is shown as a small <strong>panel in the map header</strong> for the apiary’s coordinates (where available).
-                    It does <strong>not</strong> draw a “pollen overlay” on the map itself.
-                  </p>
-                  <p className="text-sm text-gray-600 mt-2">
-                    Note: Pollen data is seasonal and provider-dependent, and can vary significantly by local microclimate.
-                  </p>
-                </div>
-              </div>
-            </section>
-
             {/* Filters, Counts & Archives */}
             <section id="filters-counts-archives">
               <h2 className="text-2xl font-bold mb-3">
@@ -1519,8 +1511,7 @@ per apiary.
                     <em>Archive</em> and include it in CSV exports.
                   </li>
                   <li>
-                    Public photo URLs remain accessible unless you delete the files from
-                    storage.
+                   Archiving does not delete photos. Photos remain attached to the archived record unless the record or photo is deleted.
                   </li>
                 </ul>
               </div>
@@ -1540,6 +1531,9 @@ per apiary.
                 <li>
                   Premium users can use the <strong>Year in the Apiary Seasonal Guide</strong> to
                   turn monthly beekeeping actions into scheduled tasks.
+                </li>
+                <li>
+                  Premium users can open <strong>Inspection Insights</strong> after saving an inspection to quickly create follow-up tasks or logbook entries from key findings.
                 </li>
                 <li>Add apiary coordinates for accurate weather and map displays.</li>
                 <li>
@@ -1564,8 +1558,8 @@ per apiary.
               <div className="space-y-4">
                 <div>
                   <p className="font-medium">
-  Is the Colony Health Check a diagnosis? <Badge tone="blue">Premium</Badge>
-</p>
+                    Is the Colony Health Check a diagnosis? <Badge tone="blue">Premium</Badge>
+                  </p>
                   <p className="text-gray-700">
                     No. It’s a triage helper that suggests what to check next. If a UK action/reporting panel appears,
                     follow official guidance.
@@ -1589,6 +1583,26 @@ per apiary.
                     It is a monthly Premium guide showing what to focus on in the apiary, what risks
                     to watch for, and which practical actions to plan. Each month includes a full
                     infographic and task-ready checklist actions.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">
+                    What are Inspection Insights? <Badge tone="blue">Premium</Badge>
+                  </p>
+                  <p className="text-gray-700">
+                    Inspection Insights are smart review cards created from a saved inspection. They can highlight things like swarm risk,
+                    queen concerns, low stores, varroa, disease concerns, colony strength, and suggested kit for the next visit.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">
+                    Can Inspection Insights create tasks or logbook entries? <Badge tone="blue">Premium</Badge>
+                  </p>
+                  <p className="text-gray-700">
+                    Yes. Where an insight has a useful follow-up, you can use its action pill to create a pre-filled task or logbook entry,
+                    linked back to the inspection.
                   </p>
                 </div>
 
@@ -1705,6 +1719,10 @@ per apiary.
                   links shown for guidance/reporting.
                 </li>
                 <li>
+                  <strong>View Insights is locked</strong> <Badge tone="blue">Premium</Badge><strong>:</strong>{" "}
+                  Inspection Insights are a Premium feature. Free users can still view their saved inspection information on the normal Inspection List.
+                </li>
+                <li>
                   <strong>Seasonal Guide task will not save</strong> <Badge tone="blue">Premium</Badge><strong>:</strong>{" "}
                   make sure you have selected an <strong>Apiary</strong> and either a specific
                   <strong> Hive</strong> or <strong>All Hives</strong> before saving.
@@ -1811,44 +1829,68 @@ per apiary.
               </ul>
             </section>
 
-            {/* Glossary */}
+          {/* Glossary */}
             <section id="glossary">
               <h2 className="text-2xl font-bold mb-3">Glossary</h2>
+
               <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
                 <div>
                   <dt className="font-medium">Apiary</dt>
                   <dd className="text-gray-700">Site where you keep bees.</dd>
                 </div>
+
                 <div>
                   <dt className="font-medium">Hive</dt>
                   <dd className="text-gray-700">Individual bee colony housing.</dd>
                 </div>
+
                 <div>
                   <dt className="font-medium">Inspection</dt>
                   <dd className="text-gray-700">Structured record of a hive’s status.</dd>
                 </div>
+
                 <div>
-                  <div>
+                  <dt className="font-medium">Inspection Insights</dt>
+                  <dd className="text-gray-700">
+                    Premium inspection review page with smart badges, suggested kit, and linked follow-up task/logbook actions.
+                  </dd>
+                </div>
+
+                <div>
                   <dt className="font-medium">Seasonal Guide</dt>
                   <dd className="text-gray-700">
                     Premium Year in the Apiary guide with monthly infographic guidance and task-ready seasonal actions.
                   </dd>
                 </div>
+
+                <div>
                   <dt className="font-medium">NFC</dt>
                   <dd className="text-gray-700">
-                    Near Field Communication—used in HiveTag to open the correct hive more quickly (Premium).
+                    Near Field Communication — used in HiveTag to open the correct hive more quickly.
                   </dd>
                 </div>
+
                 <div>
                   <dt className="font-medium">Archive</dt>
-                  <dd className="text-gray-700">Hide from active lists without deleting.</dd>
+                  <dd className="text-gray-700">
+                    Hide from active lists without deleting. Linked inspection tasks and logbook entries are archived together.
+                  </dd>
                 </div>
+
+                <div>
+                  <dt className="font-medium">Linked Records</dt>
+                  <dd className="text-gray-700">
+                    Tasks or logbook entries connected to a specific inspection.
+                  </dd>
+                </div>
+
                 <div>
                   <dt className="font-medium">Triage</dt>
                   <dd className="text-gray-700">
                     A “what to check next” approach, not a medical/veterinary diagnosis.
                   </dd>
                 </div>
+
                 <div>
                   <dt className="font-medium">Notifiable (UK)</dt>
                   <dd className="text-gray-700">

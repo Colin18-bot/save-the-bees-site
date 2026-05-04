@@ -27,6 +27,7 @@ import EditHive from "../pages/Hives/EditHive.jsx";
 import InspectionList from "../pages/Inspections/InspectionList.jsx";
 import NewInspection from "../pages/Inspections/NewInspection.jsx";
 import EditInspection from "../pages/Inspections/EditInspection.jsx";
+import InspectionDetail from "../pages/Inspections/InspectionDetail.jsx";
 
 import Logbook from "../pages/Logbook/LogEntryList.jsx";
 import NewLogEntry from "../pages/Logbook/NewLogEntry.jsx";
@@ -171,6 +172,7 @@ function AppRoutes() {
 
       <Route path="/inspections" element={<Guarded><InspectionList /></Guarded>} />
       <Route path="/inspections/new" element={<Guarded><NewInspection /></Guarded>} />
+      <Route path="/inspections/:id" element={<PremiumGuarded><InspectionDetail /></PremiumGuarded>} />
       <Route path="/inspections/:id/edit" element={<Guarded><EditInspection /></Guarded>} />
 
       <Route path="/inspections/step-by-step" element={<Guarded><StepByStepInspections /></Guarded>} />

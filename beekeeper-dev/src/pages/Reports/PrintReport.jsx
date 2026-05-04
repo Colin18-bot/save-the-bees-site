@@ -171,6 +171,17 @@ useEffect(() => {
     return "Unknown Hive";
   };
 
+    const relatedInspectionLabel = (row) => {
+    if (!row?.inspection_id) return "";
+    const inspection = inspectionById.get(row.inspection_id);
+    if (!inspection) return "Linked inspection";
+
+    const date = inspection.date ? fmtUK(inspection.date) : "Unknown date";
+    const hive = inspection.hive_id ? hiveName(inspection.hive_id) : "Unknown hive";
+
+    return `${date} — ${hive}`;
+  };
+
   const effectiveIds = (row) => {
     const i = row?.inspection_id ? inspectionById.get(row.inspection_id) : null;
     const resolvedHiveId = row.hive_id || i?.hive_id || "";
@@ -199,7 +210,10 @@ useEffect(() => {
       // SAFETY: Free users must never query NFC, even if state is tampered
       const allowNfc = isPremium && includeNfc;
 
-      // ---- SAFE schema detection (no 400s) ----
+            // ---- SAFE schema detection (no 400s) ----
+      let todoInspectionAvailable = hasTodoInspectionCol;
+      let logInspectionAvailable = hasLogInspectionCol;
+
       const detectHasInspectionId = async (table) => {
         const { data, error } = await supabase.from(table).select("*").range(0, 0);
         if (error) return false;
@@ -212,10 +226,15 @@ useEffect(() => {
           detectHasInspectionId("todos"),
           detectHasInspectionId("logbook"),
         ]);
+
+        todoInspectionAvailable = todoHasInsp;
+        logInspectionAvailable = logHasInsp;
+
         setHasTodoInspectionCol(todoHasInsp);
         setHasLogInspectionCol(logHasInsp);
       } catch {
-        // ignore
+        todoInspectionAvailable = false;
+        logInspectionAvailable = false;
       }
 
       // ---------- Inspections ----------
@@ -240,8 +259,9 @@ useEffect(() => {
 
       // inspection ids for linking (if needed)
       let inspIds = [];
-      const needInspIds =
-        (includeTodos && hasTodoInspectionCol) || (includeLogbook && hasLogInspectionCol);
+        const needInspIds =
+        (includeTodos && todoInspectionAvailable) ||
+        (includeLogbook && logInspectionAvailable);
 
       if (needInspIds && (hiveId || apiaryId)) {
         let iq = supabase.from("inspections").select("id");
@@ -390,19 +410,21 @@ useEffect(() => {
         nfcData = [];
       }
 
-      // build inspection lookup (for rows that only have inspection_id)
-      if (hasTodoInspectionCol || hasLogInspectionCol) {
+            // build inspection lookup for linked tasks/logbook entries
+      if (todoInspectionAvailable || logInspectionAvailable) {
         const refIds = new Set(
           [
-            ...(hasTodoInspectionCol ? todosData : []),
-            ...(hasLogInspectionCol ? logbookData : []),
+            ...(todoInspectionAvailable ? todosData : []),
+            ...(logInspectionAvailable ? logbookData : []),
           ]
             .map((r) => r.inspection_id)
             .filter(Boolean)
         );
+
         if (refIds.size) {
           const ids = Array.from(refIds);
           const batches = [];
+
           for (let i = 0; i < ids.length; i += 500) {
             batches.push(
               supabase
@@ -411,6 +433,7 @@ useEffect(() => {
                 .in("id", ids.slice(i, i + 500))
             );
           }
+
           const results = await Promise.all(batches);
           const all = results.flatMap((r) => r.data || []);
           setInspectionById(new Map(all.map((r) => [r.id, r])));
@@ -479,7 +502,12 @@ useEffect(() => {
       "disease_types",
       "signs_pests",
       "pest_types",
-      "notes",
+       "notes",
+      "related_inspection",
+      "category",
+      "priority",
+      "source",
+      "seasonal_month",
       "due_date",
       "status",
       "created_at",
@@ -512,6 +540,11 @@ useEffect(() => {
             ? x.pest_types.join("; ")
             : x.pest_types || "",
           notes: x.notes || "",
+          related_inspection: "",
+          category: "",
+          priority: "",
+          source: "",
+          seasonal_month: "",
           due_date: "",
           status: "",
           created_at: fmtUK(x.created_at),
@@ -540,6 +573,11 @@ useEffect(() => {
           signs_pests: "",
           pest_types: "",
           notes: t.notes || "",
+          related_inspection: relatedInspectionLabel(t),
+          category: t.category || "",
+          priority: t.priority || "",
+          source: t.source || "",
+          seasonal_month: t.seasonal_month || "",
           due_date: fmtUK(t.due_date),
           status: t.status || "",
           created_at: fmtUK(t.created_at),
@@ -569,6 +607,11 @@ useEffect(() => {
           signs_pests: "",
           pest_types: "",
           notes: text,
+          related_inspection: relatedInspectionLabel(l),
+          category: "",
+          priority: "",
+          source: "",
+          seasonal_month: "",
           due_date: "",
           status: "",
           created_at: fmtUK(l.created_at),
@@ -597,6 +640,11 @@ useEffect(() => {
           signs_pests: "",
           pest_types: "",
           notes: h.nfc_uid ? `NFC UID: ${h.nfc_uid}` : "",
+          related_inspection: "",
+          category: "",
+          priority: "",
+          source: "",
+          seasonal_month: "",
           due_date: "",
           status: "",
           created_at: "",
@@ -659,12 +707,17 @@ useEffect(() => {
   };
 
   const downloadTodosCSV = () => {
-    const headers = [
+        const headers = [
       "due_date",
       "apiary",
       "hive",
       "title",
       "notes",
+      "related_inspection",
+      "category",
+      "priority",
+      "source",
+      "seasonal_month",
       "status",
       "created_at",
       "archived",
@@ -677,6 +730,11 @@ useEffect(() => {
         hive: displayHive(resolvedHiveId, resolvedApiaryId),
         title: t.title || "",
         notes: t.notes || "",
+        related_inspection: relatedInspectionLabel(t),
+        category: t.category || "",
+        priority: t.priority || "",
+        source: t.source || "",
+        seasonal_month: t.seasonal_month || "",
         status: t.status || "",
         created_at: fmtUK(t.created_at),
         archived: t.archived_at ? "Yes" : "No",
@@ -686,7 +744,7 @@ useEffect(() => {
   };
 
   const downloadLogbookCSV = () => {
-    const headers = ["date", "apiary", "hive", "title", "text", "archived"];
+      const headers = ["date", "apiary", "hive", "title", "text", "related_inspection", "archived"];
     const rows = logbook.map((l) => {
       const { resolvedApiaryId, resolvedHiveId } = effectiveIds(l);
       const text = l.entry || l.notes || l.note || l.content || l.text || l.message || "";
@@ -696,6 +754,7 @@ useEffect(() => {
         hive: displayHive(resolvedHiveId, resolvedApiaryId),
         title: l.log_type || "",
         text,
+        related_inspection: relatedInspectionLabel(l),
         archived: l.archived_at ? "Yes" : "No",
       };
     });
@@ -993,6 +1052,8 @@ useEffect(() => {
                       <th className="py-2 pr-3">Hive</th>
                       <th className="py-2 pr-3">Title</th>
                       <th className="py-2 pr-3">Notes</th>
+                      <th className="py-2 pr-3">Related Inspection</th>
+                      <th className="py-2 pr-3">Seasonal</th>
                       <th className="py-2 pr-3">Status</th>
                     </tr>
                   </thead>
@@ -1010,6 +1071,10 @@ useEffect(() => {
                           </td>
                           <td className="py-2 pr-3">{t.title || ""}</td>
                           <td className="py-2 pr-3">{t.notes || ""}</td>
+                          <td className="py-2 pr-3">{relatedInspectionLabel(t)}</td>
+                          <td className="py-2 pr-3">
+                            {[t.category, t.priority, t.seasonal_month].filter(Boolean).join(" • ")}
+                          </td>
                           <td className="py-2 pr-3">{t.status || ""}</td>
                         </tr>
                       );
@@ -1036,6 +1101,7 @@ useEffect(() => {
                       <th className="py-2 pr-3">Hive</th>
                       <th className="py-2 pr-3">Title</th>
                       <th className="py-2 pr-3">Text</th>
+                      <th className="py-2 pr-3">Related Inspection</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1054,6 +1120,7 @@ useEffect(() => {
                           </td>
                           <td className="py-2 pr-3">{l.log_type || ""}</td>
                           <td className="py-2 pr-3">{text}</td>
+                          <td className="py-2 pr-3">{relatedInspectionLabel(l)}</td>
                         </tr>
                       );
                     })}

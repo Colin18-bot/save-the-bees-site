@@ -26,13 +26,19 @@ const location = useLocation();
   const seasonalPriority = queryParams.get("priority") || "";
   const seasonalMonth = queryParams.get("month") || "";
   const isSeasonalTask = queryParams.get("source") === "seasonal-guide";
-
+  const inspectionId = queryParams.get("inspection_id") || "";
+  const returnTo = queryParams.get("return_to") || "";
+  const prefillApiaryId = queryParams.get("apiary_id") || "";
+  const prefillHiveId = queryParams.get("hive_id") || "";
+  const prefillTitle = queryParams.get("title") || "";
   const [selectedTask, setSelectedTask] = useState("");
   const [apiaries, setApiaries] = useState([]);
   const [hives, setHives] = useState([]);
+  const [inspections, setInspections] = useState([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isPremium, setIsPremium] = useState(false);
 
   // track if user manually edited the due date (so we don't overwrite with autosuggest later)
   const [userEditedDueDate, setUserEditedDueDate] = useState(false);
@@ -61,12 +67,27 @@ const location = useLocation();
     all_hives: false,
     notes: "",
     other_title: "",
+    inspection_id: inspectionId || "",
   });
 
   // --- Lookups ---
   useEffect(() => {
-    (async () => {
-      const [{ data: aData }, { data: hData }] = await Promise.all([
+  (async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user?.id) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("subscription_level")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      setIsPremium(profile?.subscription_level === "premium");
+    }
+
+    const [{ data: aData }, { data: hData }] = await Promise.all([
         supabase.from("apiaries").select("id, name").order("name"),
         supabase.from("hives").select("id, name, apiary_id").order("name"),
       ]);
@@ -85,14 +106,86 @@ const location = useLocation();
     notes: seasonalMonth ? `Created from Seasonal Guide: ${seasonalMonth}` : "Created from Seasonal Guide",
   }));
 }, [isSeasonalTask, seasonalTitle, seasonalMonth]);
+useEffect(() => {
+  if (!inspectionId) return;
+
+  setSelectedTask("Other");
+
+  setForm((p) => ({
+    ...p,
+    apiary_id: prefillApiaryId || p.apiary_id,
+    hive_id: prefillHiveId || p.hive_id,
+    other_title: prefillTitle || p.other_title,
+    inspection_id: inspectionId || p.inspection_id,
+    notes: inspectionId
+  ? "Follow-up task created from the inspection insights page."
+  : p.notes,
+  }));
+}, [prefillTitle, prefillApiaryId, prefillHiveId, inspectionId]);
 
   const hivesForApiary = useMemo(() => {
     if (!form.apiary_id) return [];
     // be robust to string/uuid comparisons
     return hives.filter((h) => String(h.apiary_id) === String(form.apiary_id));
   }, [hives, form.apiary_id]);
+  useEffect(() => {
+  if (!prefillHiveId || !hives.length) return;
+
+  const hive = hives.find((h) => String(h.id) === String(prefillHiveId));
+  if (!hive) return;
+
+  setForm((p) => ({
+    ...p,
+    hive_id: prefillHiveId,
+    hive_name: hive.name || p.hive_name,
+    all_hives: false,
+  }));
+}, [prefillHiveId, hives]);
 
   const noHives = form.apiary_id && hivesForApiary.length === 0;
+    useEffect(() => {
+    const loadInspections = async () => {
+      if (!form.apiary_id) {
+        setInspections([]);
+        return;
+      }
+
+      let q = supabase
+        .from("inspections")
+        .select("id, date, created_at, apiary_id, hive_id")
+        .eq("apiary_id", form.apiary_id)
+        .is("archived_at", null)
+        .order("date", { ascending: false })
+        .order("created_at", { ascending: false });
+
+      if (!form.all_hives && form.hive_id) {
+        q = q.eq("hive_id", form.hive_id);
+      }
+
+      const { data, error } = await q;
+
+      if (error) {
+        console.error("Failed to load related inspections:", error);
+        setInspections([]);
+        return;
+      }
+
+      setInspections(data || []);
+    };
+
+    loadInspections();
+  }, [form.apiary_id, form.hive_id, form.all_hives]);
+
+  const formatInspectionLabel = (inspection) => {
+    const date = inspection.date
+      ? new Date(inspection.date).toLocaleDateString("en-GB")
+      : "Unknown date";
+
+    const hive = hives.find((h) => String(h.id) === String(inspection.hive_id));
+    const hiveName = hive?.name || "Hive";
+
+    return `${date} — ${hiveName}`;
+  };
 
   // --- Handlers ---
   const selectTask = (label) => {
@@ -117,6 +210,7 @@ const location = useLocation();
       all_hives: false,
       notes: "",
       other_title: "",
+      inspection_id: "",
     });
     setUserEditedDueDate(false);
     setError("");
@@ -132,14 +226,15 @@ const location = useLocation();
         hive_id: "",
         hive_name: "",
         all_hives: false,
+        inspection_id: "",
       }));
       setError("");
     } else if (id === "hive_id") {
       if (value === "ALL_SPECIAL") {
-        setForm((p) => ({ ...p, hive_id: "", hive_name: "ALL", all_hives: true }));
+          setForm((p) => ({ ...p, hive_id: "", hive_name: "ALL", all_hives: true, inspection_id: "" }));
       } else {
         const hiveName = value ? (hives.find((h) => String(h.id) === String(value))?.name || "") : "";
-        setForm((p) => ({ ...p, hive_id: value, hive_name: hiveName, all_hives: false }));
+          setForm((p) => ({ ...p, hive_id: value, hive_name: hiveName, all_hives: false, inspection_id: "" }));
       }
     } else if (id === "due_date") {
       setUserEditedDueDate(true);
@@ -186,6 +281,7 @@ const location = useLocation();
       apiary_id: form.apiary_id || null,
       hive_id: form.all_hives ? null : form.hive_id,
       hive_name: form.all_hives ? "ALL" : form.hive_name || null,
+      inspection_id: form.inspection_id || null,
       notes: form.notes || null,
       category: isSeasonalTask ? seasonalCategory || "Seasonal guide" : null,
       priority: isSeasonalTask ? seasonalPriority || "Medium" : null,
@@ -212,7 +308,11 @@ const location = useLocation();
     qs.set("highlight", inserted.id);
     qs.set("type", "TODO");
     if (inserted.apiary_id) qs.set("apiary_id", inserted.apiary_id);
+    if (returnTo) {
+    navigate(`${returnTo}?created=task`);
+  } else {
     navigate(`/todos?${qs.toString()}`);
+  }
   };
 
   // --- UI ---
@@ -237,6 +337,16 @@ const location = useLocation();
   return (
     <div className="p-6 bg-white rounded-xl shadow-lg max-w-5xl mx-auto">
       <h1 className="text-2xl font-bold mb-2 text-center text-black">New Task</h1>
+      {isPremium && returnTo && (
+      <div className="mb-4 text-center">
+        <Link
+          to={returnTo}
+          className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100"
+        >
+          ← Back to inspection insights
+        </Link>
+      </div>
+    )}
       <p className="text-center text-sm text-gray-600 mb-6">
         Create a reminder for your <strong>next visit</strong> to the apiary — e.g. feed colonies, treat for varroa,
         requeen, or prep for winter. Pick a hive (or <em>All Hives</em>), set a due date, and it’ll appear in your Tasks
@@ -380,6 +490,29 @@ const location = useLocation();
                   ))}
                 </select>
               )}
+            </div>
+
+                        <div>
+              <label htmlFor="inspection_id" className="block text-sm font-medium mb-1">
+                Related Inspection (optional)
+              </label>
+              <select
+                id="inspection_id"
+                className="w-full border rounded-lg px-3 py-2 focus:outline-none"
+                value={form.inspection_id}
+                onChange={onChange}
+                disabled={!form.apiary_id || inspections.length === 0}
+              >
+                <option value="">None</option>
+                {inspections.map((inspection) => (
+                  <option key={inspection.id} value={inspection.id}>
+                    {formatInspectionLabel(inspection)}
+                  </option>
+                ))}
+              </select>
+              <p className="text-xs text-gray-500 mt-1">
+                Optional. Link this task to a saved inspection so it appears on that inspection card.
+              </p>
             </div>
           </div>
 

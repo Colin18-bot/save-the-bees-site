@@ -19,22 +19,26 @@ const TodoList = () => {
   const navigate = useNavigate();
 
   // Read URL params (highlight + type + apiary/hive + from/to)
-  const {
+    const {
     highlightId,
     highlightType,
     apiaryFromUrl,
     hiveFromUrl,
+    inspectionIdFromUrl,
     fromFromUrl,
     toFromUrl,
+    returnPageFromUrl,
   } = useMemo(() => {
     const params = new URLSearchParams(location.search || "");
     return {
       highlightId: params.get("highlight") || null,
-      highlightType: (params.get("type") || "").toUpperCase() || null, // ✅ normalize: "TODO"
+      highlightType: (params.get("type") || "").toUpperCase() || null,
       apiaryFromUrl: params.get("apiary_id") || "",
       hiveFromUrl: params.get("hive_id") || "",
+      inspectionIdFromUrl: params.get("inspection_id") || "",
       fromFromUrl: params.get("from") || "",
       toFromUrl: params.get("to") || "",
+      returnPageFromUrl: params.get("return_page") || "",
     };
   }, [location.search]);
 
@@ -62,6 +66,7 @@ const TodoList = () => {
   const [error, setError] = useState("");
   const [page, setPage] = useState(1);
   const [view, setView] = useState("list"); // "grid" or "list"
+  const [inspectionMeta, setInspectionMeta] = useState(null);
 
   // ✅ Sync filters from URL, but ONLY reset page when filters actually change
   // (so adding highlight/type won't kick you back to page 1)
@@ -97,6 +102,8 @@ const TodoList = () => {
     // Preserve context params exactly as they arrived
     if (incoming.get("highlight")) params.set("highlight", incoming.get("highlight"));
     if (incoming.get("type")) params.set("type", incoming.get("type"));
+    if (incoming.get("inspection_id")) params.set("inspection_id", incoming.get("inspection_id"));
+    if (incoming.get("return_page")) params.set("return_page", incoming.get("return_page"));
 
     const next = params.toString();
     const curr = (location.search || "").replace(/^\?/, "");
@@ -111,13 +118,17 @@ const TodoList = () => {
     let todoQuery = supabase
       .from("todos")
       .select(
-        "id, title, due_date, apiary_id, hive_id, hive_name, status, notes, completed_at, archived_at, category, priority, source, seasonal_month"
+         "id, title, due_date, apiary_id, hive_id, hive_name, inspection_id, status, notes, completed_at, archived_at, category, priority, source, seasonal_month"
       )
       .is("archived_at", null)
       .order("due_date", { ascending: true });
 
-    if (selectedApiary) todoQuery = todoQuery.eq("apiary_id", selectedApiary);
-    if (selectedHive) todoQuery = todoQuery.eq("hive_id", selectedHive);
+        if (inspectionIdFromUrl) {
+        todoQuery = todoQuery.eq("inspection_id", inspectionIdFromUrl);
+      } else {
+        if (selectedApiary) todoQuery = todoQuery.eq("apiary_id", selectedApiary);
+        if (selectedHive) todoQuery = todoQuery.eq("hive_id", selectedHive);
+      }
 
     // Date range filters (todos.due_date is DATE)
     if (dateFrom) todoQuery = todoQuery.gte("due_date", dateFrom);
@@ -162,7 +173,7 @@ const TodoList = () => {
   useEffect(() => {
     fetchAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedApiary, selectedHive, dateFrom, dateTo]);
+    }, [selectedApiary, selectedHive, inspectionIdFromUrl, dateFrom, dateTo]);
 
   const apiaryNameById = useMemo(() => {
     const map = new Map();
@@ -248,6 +259,40 @@ const TodoList = () => {
     const mm = String(dt.getMonth() + 1).padStart(2, "0");
     const yyyy = dt.getFullYear();
     return `${dd}-${mm}-${yyyy}`;
+  };
+
+    useEffect(() => {
+    let ignore = false;
+
+    const loadInspectionMeta = async () => {
+      if (!inspectionIdFromUrl) {
+        setInspectionMeta(null);
+        return;
+      }
+
+      const { data } = await supabase
+        .from("inspections")
+        .select("id, date")
+        .eq("id", inspectionIdFromUrl)
+        .single();
+
+      if (!ignore) setInspectionMeta(data || null);
+    };
+
+    loadInspectionMeta();
+
+    return () => {
+      ignore = true;
+    };
+  }, [inspectionIdFromUrl]);
+
+  const clearInspectionFilter = () => {
+    const params = new URLSearchParams(location.search || "");
+    params.delete("inspection_id");
+    params.delete("highlight");
+    params.delete("type");
+    params.delete("return_page");
+    navigate({ search: params.toString() || "" }, { replace: true });
   };
 
   const clearDates = () => {
@@ -481,6 +526,38 @@ const TodoList = () => {
           </Link>
         </div>
       </div>
+      
+            {inspectionIdFromUrl && (
+        <div className="mb-4 p-3 rounded border bg-blue-50 border-blue-200 text-blue-900 flex flex-wrap items-center gap-3">
+          <span className="text-sm">
+            {inspectionMeta?.date ? (
+              <>
+                Showing tasks for the inspection on{" "}
+                <strong>{formatUKDate(inspectionMeta.date)}</strong>.
+              </>
+            ) : (
+              <>Showing tasks linked to this inspection.</>
+            )}
+          </span>
+
+          <button
+            type="button"
+            onClick={clearInspectionFilter}
+            className="text-sm underline text-blue-800 hover:text-blue-900"
+          >
+            Clear inspection filter
+          </button>
+
+          <Link
+            to={`/inspections/${inspectionIdFromUrl}/edit${
+              returnPageFromUrl ? `?return_page=${encodeURIComponent(returnPageFromUrl)}` : ""
+            }`}
+            className="text-sm underline text-blue-800 hover:text-blue-900"
+          >
+            Edit this inspection
+          </Link>
+        </div>
+      )}
 
       {/* Error */}
       {error && (

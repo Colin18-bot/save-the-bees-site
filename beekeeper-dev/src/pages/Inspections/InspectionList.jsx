@@ -6,6 +6,7 @@ import {
   formatDerivedWeather,
   getTempUnit,
 } from "../../utils/formatDerivedWeather";
+import { buildInspectionInsights, buildKitSuggestions } from "./inspectionInsights";
 
 const PAGE_SIZE = 9;
 
@@ -38,8 +39,9 @@ const InspectionList = () => {
   const [, setPage] = useState(1);
   const [total, setTotal] = useState(0);
 
-  // related logbook map { [inspection_id]: { count, recent: Log[] } }
+  // related logbook/task maps { [inspection_id]: { count, recent: [] } }
   const [logMap, setLogMap] = useState({});
+  const [taskMap, setTaskMap] = useState({});
 
   // Lightbox state
   const [lightbox, setLightbox] = useState({
@@ -309,7 +311,7 @@ useEffect(() => {
       let dataQuery = supabase
         .from("inspections")
         .select(
-          "id, apiary_id, hive_id, date, created_at, weather, weather_observed, weather_code, colony_behavior, colony_behavior_other, environmental_signs, environmental_signs_other, hive_population, brood_pattern, food_stores, queen_status, queen_status_other, signs_disease, disease_types, disease_other, signs_pests, pest_types, pest_other, notes, photos"
+          "id, apiary_id, hive_id, inspection_type, date, created_at, weather, weather_observed, weather_code, colony_behavior, colony_behavior_other, environmental_signs, environmental_signs_other, hive_population, brood_pattern, food_stores, frames_of_bees, queen_cells, varroa_seen, brood_box_congestion, queen_status, queen_status_other, signs_disease, disease_types, disease_other, signs_pests, pest_types, pest_other, notes, photos"
         )
         .is("archived_at", null)
         .order("date", { ascending: false })
@@ -328,27 +330,48 @@ useEffect(() => {
       if (!error) {
         setInspections(data || []);
 
-        // Batch fetch related logbook entries for these inspections
-        const ids = (data || []).map((x) => x.id);
-        if (ids.length > 0) {
-          const { data: logs } = await supabase
-            .from("logbook")
-            .select("id, inspection_id, date, log_type, entry, archived_at")
-            .is("archived_at", null)
-            .in("inspection_id", ids)
-            .order("date", { ascending: false });
+        // Batch fetch related logbook entries and tasks for these inspections
+const ids = (data || []).map((x) => x.id);
 
-          const m = {};
-          (logs || []).forEach((l) => {
-            if (!l.inspection_id) return;
-            if (!m[l.inspection_id]) m[l.inspection_id] = { count: 0, recent: [] };
-            m[l.inspection_id].count += 1;
-            if (m[l.inspection_id].recent.length < 2) m[l.inspection_id].recent.push(l);
-          });
-          setLogMap(m);
-        } else {
-          setLogMap({});
-        }
+if (ids.length > 0) {
+  const [{ data: logs }, { data: tasks }] = await Promise.all([
+    supabase
+      .from("logbook")
+      .select("id, inspection_id, date, log_type, entry, archived_at")
+      .is("archived_at", null)
+      .in("inspection_id", ids)
+      .order("date", { ascending: false }),
+
+    supabase
+      .from("todos")
+      .select("id, inspection_id, title, due_date, status, archived_at")
+      .is("archived_at", null)
+      .in("inspection_id", ids)
+      .order("due_date", { ascending: true }),
+  ]);
+
+      const logM = {};
+      (logs || []).forEach((l) => {
+        if (!l.inspection_id) return;
+        if (!logM[l.inspection_id]) logM[l.inspection_id] = { count: 0, recent: [] };
+        logM[l.inspection_id].count += 1;
+        if (logM[l.inspection_id].recent.length < 2) logM[l.inspection_id].recent.push(l);
+      });
+
+      const taskM = {};
+      (tasks || []).forEach((t) => {
+        if (!t.inspection_id) return;
+        if (!taskM[t.inspection_id]) taskM[t.inspection_id] = { count: 0, recent: [] };
+        taskM[t.inspection_id].count += 1;
+        if (taskM[t.inspection_id].recent.length < 2) taskM[t.inspection_id].recent.push(t);
+      });
+
+      setLogMap(logM);
+      setTaskMap(taskM);
+    } else {
+      setLogMap({});
+      setTaskMap({});
+    }
       } else {
         console.warn("fetchInspections error:", error);
       }
@@ -411,6 +434,24 @@ useEffect(() => {
     const dt = new Date(value);
     if (Number.isNaN(dt.getTime())) return String(value);
     return dt.toLocaleDateString("en-GB");
+  };
+
+    const formatInspectionType = (value) => {
+    if (value === "external_check") return "External check";
+    if (value === "observation_only") return "Observation only";
+    return "Full inspection";
+  };
+
+  const inspectionTypeClass = (value) => {
+    if (value === "external_check") {
+      return "bg-blue-50 text-blue-800 border-blue-200";
+    }
+
+    if (value === "observation_only") {
+      return "bg-slate-50 text-slate-700 border-slate-200";
+    }
+
+    return "bg-green-50 text-green-800 border-green-200";
   };
 
   const hivesForSelectedApiary = useMemo(() => {
@@ -487,10 +528,14 @@ useEffect(() => {
     );
     pushIf("Env. signs", insp.environmental_signs);
     if (insp.environmental_signs?.includes("Other"))
-      pushIf("Env. other", insp.environmental_signs_other);
+    pushIf("Env. other", insp.environmental_signs_other);
     pushIf("Population", insp.hive_population);
+    pushIf("Frames of bees", insp.frames_of_bees);
     pushIf("Brood", insp.brood_pattern);
+    pushIf("Brood box congestion", insp.brood_box_congestion);
+    pushIf("Queen cells", insp.queen_cells);
     pushIf("Stores", insp.food_stores);
+    if (insp.varroa_seen) pushIf("Varroa seen", "Yes");
     pushIf("Queen", insp.queen_status);
     if (insp.queen_status?.includes("Other"))
       pushIf("Queen other", insp.queen_status_other);
@@ -502,7 +547,13 @@ useEffect(() => {
     return out;
   };
 
-  const getDiseaseInfo = (insp) => {
+const insightClass = (level) => {
+    if (level === "high") return "bg-red-50 border-red-200 text-red-800";
+    if (level === "medium") return "bg-amber-50 border-amber-200 text-amber-900";
+    return "bg-green-50 border-green-200 text-green-800";
+  };
+
+    const getDiseaseInfo = (insp) => {
     const types = Array.isArray(insp?.disease_types) ? insp.disease_types : [];
     const other = (insp?.disease_other || "").trim();
     const hasAFB = types.includes("AFB");
@@ -709,13 +760,17 @@ useEffect(() => {
               const summary = buildSummary(insp);
               const photos = Array.isArray(insp.photos) ? insp.photos : [];
               const diseaseInfo = insp.signs_disease ? getDiseaseInfo(insp) : null;
-
+              const insights = buildInspectionInsights(insp);
+              const visibleInsights = insights.slice(0, 3);
+              const hiddenInsightCount = Math.max(0, insights.length - visibleInsights.length);
+              const kitSuggestions = buildKitSuggestions(insp);
               const isHighlighted =
                 highlightId &&
                 String(insp.id) === String(highlightId) &&
                 (!highlightType || highlightType === "INSPECTION");
 
               const logs = logMap[insp.id] || { count: 0, recent: [] };
+              const tasks = taskMap[insp.id] || { count: 0, recent: [] };
 
               const hiveForCard = hives.find((h) => String(h.id) === String(insp.hive_id));
               const showNfcHeaderPill =
@@ -748,30 +803,94 @@ useEffect(() => {
                     </span>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-2">{apiaryName(insp.apiary_id)}</p>
+                                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                    <p className="text-sm text-gray-600">{apiaryName(insp.apiary_id)}</p>
 
-                  <div className="mb-2 flex items-center gap-3">
                     <span
-                      className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded border ${
-                        logs.count > 0
-                          ? "bg-gray-100 text-gray-800 border-gray-200"
-                          : "bg-gray-50 text-gray-400 border-gray-100"
-                      }`}
-                      title={`${logs.count} linked logbook entr${logs.count === 1 ? "y" : "ies"}`}
+                      className={`inline-flex items-center text-[11px] font-medium px-2 py-0.5 rounded-full border ${inspectionTypeClass(
+                        insp.inspection_type
+                      )}`}
+                      title="Inspection type"
                     >
-                      {logs.count} log{logs.count === 1 ? "" : "s"}
+                      {formatInspectionType(insp.inspection_type)}
                     </span>
+                  </div>
 
-                    {logs.count > 0 && (
-                      <Link
-                        to={buildLogbookLink(insp.id, logs.recent[0]?.id)}
-                        className="text-blue-600 hover:underline text-sm"
-                        aria-label="View related logbook entries"
+                  {visibleInsights.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {visibleInsights.map((insight, idx) => (
+                      <span
+                        key={`${insight.title}-${idx}`}
+                        className={`text-xs px-2 py-1 rounded-full border font-medium ${insightClass(
+                          insight.level
+                        )}`}
+                        title={insight.reasons?.join(", ")}
                       >
-                        View logs →
-                      </Link>
+                        {insight.level === "high" ? "⚠️ " : insight.level === "medium" ? "⚠️ " : "✔ "}
+                       {insight.title}
+                      </span>
+                    ))}
+
+                    {hiddenInsightCount > 0 && (
+                      <span className="text-xs px-2 py-1 rounded-full border bg-gray-50 text-gray-700">
+                        +{hiddenInsightCount} more
+                      </span>
                     )}
                   </div>
+                )}
+
+                {kitSuggestions.length > 0 && (
+                  <p className="text-xs text-gray-700 mb-2">
+                    <span className="font-semibold">Suggested:</span>{" "}
+                    {kitSuggestions.join(", ")}
+                  </p>
+                )}
+
+                  <div className="mb-2 flex flex-wrap items-center gap-3">
+  <span
+    className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded border ${
+      logs.count > 0
+        ? "bg-gray-100 text-gray-800 border-gray-200"
+        : "bg-gray-50 text-gray-400 border-gray-100"
+    }`}
+    title={`${logs.count} linked logbook entr${logs.count === 1 ? "y" : "ies"}`}
+  >
+    {logs.count} log{logs.count === 1 ? "" : "s"}
+  </span>
+
+  <span
+    className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded border ${
+      tasks.count > 0
+        ? "bg-blue-50 text-blue-800 border-blue-200"
+        : "bg-gray-50 text-gray-400 border-gray-100"
+    }`}
+    title={`${tasks.count} linked task${tasks.count === 1 ? "" : "s"}`}
+  >
+    {tasks.count} task{tasks.count === 1 ? "" : "s"}
+  </span>
+
+  {logs.count > 0 && (
+    <Link
+      to={buildLogbookLink(insp.id, logs.recent[0]?.id)}
+      className="text-blue-600 hover:underline text-sm"
+      aria-label="View related logbook entries"
+    >
+      View logs →
+    </Link>
+  )}
+
+    {tasks.count > 0 && (
+    <Link
+      to={`/todos?inspection_id=${encodeURIComponent(insp.id)}&highlight=${encodeURIComponent(
+        tasks.recent[0]?.id || ""
+      )}&type=TODO&return_page=${encodeURIComponent(pageFromUrl)}`}
+      className="text-blue-600 hover:underline text-sm"
+      aria-label="View related tasks"
+    >
+      View tasks →
+    </Link>
+  )}
+</div>
 
                   {hiveForCard?.nfc_uid && (
                     <div className="mb-2">
@@ -835,7 +954,7 @@ useEffect(() => {
 
                   {insp.signs_disease && !diseaseInfo?.notifiable && diseaseInfo?.hasVarroa && (
                     <div className="mb-3 p-2 text-sm rounded border bg-amber-50 border-amber-200 text-amber-900">
-                      Varroa present — reporting required per national rules.
+                      Varroa recorded — consider monitoring levels and keeping treatment records.
                     </div>
                   )}
 
@@ -859,8 +978,25 @@ useEffect(() => {
                     </div>
                   )}
 
-                  <div className="mt-auto pt-2">
+                  <div className="mt-auto pt-2 flex flex-wrap gap-2">
                     <button
+                      type="button"
+                      onClick={() =>
+                        isPremium
+                          ? navigate(`/inspections/${insp.id}`)
+                          : navigate("/premium-required?from=inspection-insights")
+                      }
+                      className={`inline-block text-white text-sm px-3 py-2 rounded ${
+                        isPremium
+                          ? "bg-blue-600 hover:bg-blue-700"
+                          : "bg-amber-600 hover:bg-amber-700"
+                      }`}
+                    >
+                      {isPremium ? "View Insights" : "🔒 View Insights"}
+                    </button>
+
+                    <button
+                      type="button"
                       onClick={() => navigate(`/inspections/${insp.id}/edit`)}
                       className="inline-block bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
                     >

@@ -7,6 +7,10 @@ const PremiumRequired = () => {
 
   const params = new URLSearchParams(location.search);
   const from = params.get("from") || "";
+  const contextMessage =
+  from === "inspection-insights"
+    ? "This action was triggered from your inspection insights. Upgrade to Premium to take action directly from your inspection."
+    : "";
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -19,10 +23,16 @@ const PremiumRequired = () => {
           🔒 This feature is included with HiveTag Premium
         </h1>
 
-        <p className="text-gray-700 mb-4">
+        <p className="text-gray-700 mb-2">
           Upgrade to Premium to unlock advanced tools such as reports, exports,
           inventory, sales, expenses, NFC hive tags, the Year in the Apiary seasonal guide and premium beekeeping tools.
         </p>
+
+        {contextMessage && (
+          <p className="text-sm text-amber-800 bg-amber-100 border border-amber-200 rounded p-3 mb-4">
+            {contextMessage}
+          </p>
+        )}
 
         <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1 mb-6">
           <li>Unlimited apiaries and hives</li>

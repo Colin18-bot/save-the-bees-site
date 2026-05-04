@@ -317,13 +317,14 @@ export default function Pricing() {
         <PlanCard
           title="Premium"
           price={PREMIUM_PRICE_TEXT}
-          description="Unlock unlimited apiaries and hives, premium guides, reporting, exports, finance tools, map markers and HiveTag NFC features."
+          description="Unlock unlimited apiaries and hives, Inspection Insights, premium guides, reporting, exports, finance tools, map markers and HiveTag NFC features."
           features={[
           "Unlimited apiaries",
           "Unlimited hives",
           "Colony Health Check",
           "Apiary and Hive Siting Guides",
           "Step-by-step Inspection Guide",
+          "Inspection Insights with smart follow-up task and logbook actions",
           "Year in the Apiary seasonal guide with monthly actions",
           "Map markers for apiaries",
           "Reports, exports and combined CSV downloads",

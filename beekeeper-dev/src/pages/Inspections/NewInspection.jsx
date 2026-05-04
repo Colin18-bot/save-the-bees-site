@@ -74,6 +74,7 @@ const NewInspection = () => {
   const [formData, setFormData] = useState({
     apiary_id: "",
     hive_id: "",
+    inspection_type: "full_inspection",
     date: dayjs().format("YYYY-MM-DD"),
     weather: "",
     weather_code: "",
@@ -85,6 +86,10 @@ const NewInspection = () => {
     hive_population: "",
     brood_pattern: "",
     food_stores: "",
+    frames_of_bees: "",
+    queen_cells: "",
+    varroa_seen: "no",
+    brood_box_congestion: "",
     queen_status: [],
     queen_status_other: "",
     signs_disease: "no",
@@ -465,10 +470,11 @@ const NewInspection = () => {
 
     // normalize booleans + empty strings/arrays
     const base = {
-      ...formData,
-      signs_disease: formData.signs_disease === "yes",
-      signs_pests: formData.signs_pests === "yes",
-    };
+    ...formData,
+    signs_disease: formData.signs_disease === "yes",
+    signs_pests: formData.signs_pests === "yes",
+    varroa_seen: formData.varroa_seen === "yes",
+  };
 
     // ✅ Ensure DB stores canonical JSON derived weather if available
     if (derivedWeatherJson) {
@@ -786,8 +792,24 @@ const NewInspection = () => {
           </select>
         </div>
 
-        {/* Date + Weather */}
+              {/* Date + Weather */}
         <div>
+          <label className="block font-semibold">Inspection Type</label>
+          <select
+            name="inspection_type"
+            value={formData.inspection_type}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          >
+            <option value="full_inspection">Full inspection - hive opened</option>
+            <option value="external_check">External check - hive not opened</option>
+            <option value="observation_only">Observation only</option>
+          </select>
+
+          <p className="text-xs text-gray-600 mt-1 mb-4">
+            Use External check for winter hefting, entrance checks, roof/strap checks, or visits where no brood frames are lifted.
+          </p>
+
           <label className="block font-semibold">Inspection Date</label>
           <input
             type="date"
@@ -890,6 +912,24 @@ const NewInspection = () => {
           </select>
         </div>
 
+        {/* Frames of Bees */}
+        <div>
+          <label className="block font-semibold">Frames Covered by Bees</label>
+          <select
+            name="frames_of_bees"
+            value={formData.frames_of_bees}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          >
+            <option value="">Select</option>
+            <option value="1-2">1–2</option>
+            <option value="3-4">3–4</option>
+            <option value="5-6">5–6</option>
+            <option value="7-8">7–8</option>
+            <option value="9+">9+</option>
+          </select>
+        </div>
+
         {/* Brood Pattern */}
         <div>
           <label className="block font-semibold">Brood Pattern</label>
@@ -902,6 +942,25 @@ const NewInspection = () => {
             <option value="">Select</option>
             <option value="Spotty">Spotty</option>
             <option value="Solid">Solid</option>
+          </select>
+        </div>
+
+        {/* Brood Box Congestion */}
+        <div>
+          <label className="block font-semibold">Brood Box Congestion</label>
+          <p className="text-xs text-gray-600 mb-1">
+            Based on brood box space, not supers.
+          </p>
+          <select
+            name="brood_box_congestion"
+            value={formData.brood_box_congestion}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          >
+            <option value="">Select</option>
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
           </select>
         </div>
 
@@ -918,6 +977,24 @@ const NewInspection = () => {
             <option value="Low">Low</option>
             <option value="Moderate">Moderate</option>
             <option value="Full">Full</option>
+          </select>
+        </div>
+
+        {/* Queen Cells */}
+        <div>
+          <label className="block font-semibold">Queen Cells</label>
+          <select
+            name="queen_cells"
+            value={formData.queen_cells}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          >
+            <option value="">Select</option>
+            <option value="None">None</option>
+            <option value="Cups">Cups</option>
+            <option value="Charged">Charged</option>
+            <option value="Sealed">Sealed</option>
+            <option value="Supersedure">Supersedure</option>
           </select>
         </div>
 
@@ -947,6 +1024,20 @@ const NewInspection = () => {
               className="w-full border px-3 py-2 rounded mt-2"
             />
           )}
+        </div>
+
+        {/* Varroa Seen */}
+        <div>
+          <label className="block font-semibold">Varroa Seen</label>
+          <select
+            name="varroa_seen"
+            value={formData.varroa_seen}
+            onChange={handleChange}
+            className="w-full border px-3 py-2 rounded"
+          >
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
         </div>
 
         {/* Disease */}
