@@ -362,6 +362,11 @@ window.searchData = [
     keywords: "queenless or supersedure, queenless colony vs supersedure, how to tell if bees are replacing queen, supersedure signs UK"
   },
   {
+    title: "Queenless Colony: What To Do",
+    url: "/queenless-colony-what-to-do",
+    description: "Learn the signs of a queenless colony, how to confirm queen status, and what action to take next in a UK hive."
+ },
+  {
     title: "Report a Swarm – What To Do If You See a Swarm of Bees | BeezKnees",
     url: "/report-a-swarm",
     description: "Seen a swarm of bees? Learn what information helps, what not to do, and how to report a swarm so it can be collected safely where possible.",
