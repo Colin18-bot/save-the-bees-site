@@ -1180,9 +1180,9 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
 
           return (
             <div key={r.key} className={`p-5 rounded border ${severityStyle.card} print-card`}>
-              <div className="flex items-start justify-between gap-4">
-                <h3 className="text-lg font-bold">{r.title}</h3>
-                <div className="flex flex-col items-end gap-1 text-xs">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+              <h3 className="text-lg font-bold break-words">{r.title}</h3>
+              <div className="flex flex-wrap items-center gap-2 text-xs sm:flex-col sm:items-end sm:gap-1">
                 <span className={`rounded-full border px-2 py-1 font-semibold ${severityStyle.badge}`}>
                   {severityStyle.label}
                 </span>
