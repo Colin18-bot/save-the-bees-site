@@ -15,9 +15,14 @@
     <lastmod>2026-05-01</lastmod>
     <priority>0.5</priority>
   </url>
-  <url>/
+  <url>
       <loc>https://beezknees.co.uk/after-split</loc>
       <lastmod>2026-03-22</lastmod>
+      <priority>0.5</priority>
+  </url>
+   <url>
+      <loc>https://beezknees.co.uk/american-foulbrood-uk</loc>
+      <lastmod>2026-05-06</lastmod>
       <priority>0.5</priority>
   </url>
   <url>
@@ -57,7 +62,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/bee-diseases</loc>
-    <lastmod>2025-12-10</lastmod>
+    <lastmod>2026-05-06</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -67,7 +72,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/bee-health-checker</loc>
-    <lastmod>2026-05-14</lastmod>
+    <lastmod>2026-05-06</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -125,9 +130,19 @@
     <lastmod>2026-03-22</lastmod>
     <priority>0.5</priority>
   </url>
+   <url>
+    <loc>https://beezknees.co.uk/chalkbrood-uk</loc>
+    <lastmod>2026-05-06</lastmod>
+    <priority>0.5</priority>
+  </url>
   <url>
     <loc>https://beezknees.co.uk/charged-queen-cells</loc>
     <lastmod>2026-03-22</lastmod>
+    <priority>0.5</priority>
+  </url>
+   <url>
+    <loc>https://beezknees.co.uk/chilled-brood-uk</loc>
+    <lastmod>2026-05-06</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -150,6 +165,11 @@
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
   </url>
+   <url>
+    <loc>https://beezknees.co.uk/deformed-wing-virus-uk</loc>
+    <lastmod>2026-05-06</lastmod>
+    <priority>0.5</priority>
+  </url>
   <url>
     <loc>https://beezknees.co.uk/donate</loc>
     <lastmod>2025-12-10</lastmod>
@@ -170,6 +190,11 @@
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
   </url>
+     <url>
+    <loc>https://beezknees.co.uk/european-foulbrood-uk</loc>
+    <lastmod>2026-05-06</lastmod>
+    <priority>0.5</priority>
+  </url>
   <url>
     <loc>https://beezknees.co.uk/february</loc>
     <lastmod>2025-12-10</lastmod>
@@ -177,7 +202,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/feeding-bees-for-winter-uk</loc>
-    <lastmod>2026-05-10</lastmod>
+    <lastmod>2026-05-06</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -291,6 +316,11 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://beezknees.co.uk/nosema-uk</loc>
+    <lastmod>2026-05-06</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://beezknees.co.uk/november</loc>
     <lastmod>2025-12-10</lastmod>
     <priority>0.5</priority>
@@ -352,17 +382,17 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/queenless-or-supersedure</loc>
-    <lastmod>2026-05-04</lastmod>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://beezknees.co.uk/queenless-or-supersedure</loc>
     <lastmod>2026-03-22</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://beezknees.co.uk/report-a-swarm</loc>
     <lastmod>2025-12-10</lastmod>
+    <priority>0.5</priority>
+  </url>
+     <url>
+    <loc>https://beezknees.co.uk/sacbrood-uk</loc>
+    <lastmod>2026-05-06</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -372,7 +402,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/site-map</loc>
-    <lastmod>2026-03-22</lastmod>
+    <lastmod>2026-05-06</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
