@@ -9,6 +9,7 @@
     <meta name="description" content="Step-by-step artificial swarm guide for UK beekeepers. Learn how to prevent swarming, split colonies safely and manage queen cells with confidence.">
     <meta name="keywords" content="artificial swarm UK, swarm control beginners, how to split hive UK, beekeeper swarm control method, artificial swarm step by step UK">
     <meta name="author" content="Colin Chorley">
+    <meta name="robots" content="index,follow">
     <meta property="og:type" content="article">
     <meta property="og:title" content="Artificial Swarm UK | Step-by-Step Swarm Control Guide">
     <meta property="og:description" content="Step-by-step artificial swarm guide for UK beekeepers. Learn how to prevent swarming and manage strong colonies safely.">
@@ -83,16 +84,24 @@
             "@type": "WebPage",
             "@id": "https://beezknees.co.uk/artificial-swarm#webpage",
             "url": "https://beezknees.co.uk/artificial-swarm",
-         "name": "Artificial Swarm UK | Step-by-Step Swarm Control Guide",
+            "name": "Artificial Swarm UK | Step-by-Step Swarm Control Guide",
             "description": "Step-by-step artificial swarm guide for UK beekeepers. Learn how to prevent swarming, split colonies safely and manage queen cells with confidence.",
             "inLanguage": "en-GB",
             "datePublished": "2026-03-22",
-            "dateModified": "2026-05-01",
-            "isPartOf": {
-              "@id": "https://beezknees.co.uk/#website"
+              "dateModified": "2026-05-14",
+            "isPartOf": [
+              {
+                "@id": "https://beezknees.co.uk/#website"
+              },
+              {
+                "@id": "https://beezknees.co.uk/swarm-queen#webpage"
+              }
+            ],
+            "author": {
+              "@id": "https://beezknees.co.uk/#colin-chorley"
             },
-            "about": {
-              "@id": "https://beezknees.co.uk/artificial-swarm#article"
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
             },
             "image": {
               "@id": "https://beezknees.co.uk/artificial-swarm#primaryimage"
@@ -103,9 +112,14 @@
             "breadcrumb": {
               "@id": "https://beezknees.co.uk/artificial-swarm#breadcrumb"
             },
-            "publisher": {
-              "@id": "https://beezknees.co.uk/#organization"
-            }
+            "mainEntity": [
+              {
+                "@id": "https://beezknees.co.uk/artificial-swarm#article"
+              },
+              {
+                "@id": "https://beezknees.co.uk/artificial-swarm#faq"
+              }
+            ]
           },
           {
             "@type": "Article",
@@ -127,7 +141,10 @@
             },
             "inLanguage": "en-GB",
             "datePublished": "2026-03-22",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/swarm-queen#webpage"
+            },
             "articleSection": [
               "Artificial swarm method",
               "Swarm control UK",
@@ -144,46 +161,47 @@
             ]
           },
           {
-      "@type": "FAQPage",
-      "@id": "https://beezknees.co.uk/artificial-swarm#faq",
-      "isPartOf": {
-      "@id": "https://beezknees.co.uk/artificial-swarm#webpage"
-      },
-      "mainEntity": [
-      {
-      "@type": "Question",
-      "name": "Do I have to find the queen?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes, for this method you need to locate and move the queen. Other methods exist, but this is the most reliable beginner approach."
-      }
-      },
-      {
-      "@type": "Question",
-      "name": "Will this stop swarming completely?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "It greatly reduces the risk, but poor execution or missed queen cells can still result in swarming."
-      }
-      },
-      {
-      "@type": "Question",
-      "name": "How long before the new queen starts laying?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "It can take 2–3 weeks depending on weather, mating success and colony strength."
-      }
-      },
-      {
-      "@type": "Question",
-      "name": "Can I do this without spare equipment?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Not easily. Artificial swarming requires at least one additional brood box and frames."
-      }
-      }
-      ]
-      },
+            "@type": "FAQPage",
+            "@id": "https://beezknees.co.uk/artificial-swarm#faq",
+            "url": "https://beezknees.co.uk/artificial-swarm#artificial-swarm-faq",
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/artificial-swarm#webpage"
+            },
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Do I have to find the queen?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes, for this method you need to locate and move the queen. Other methods exist, but this is the most reliable beginner approach."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Will this stop swarming completely?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "It greatly reduces the risk, but poor execution or missed queen cells can still result in swarming."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How long before the new queen starts laying?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "It can take 2–3 weeks depending on weather, mating success and colony strength."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I do this without spare equipment?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Not easily. Artificial swarming requires at least one additional brood box and frames."
+                }
+              }
+            ]
+          },
           {
             "@type": "BreadcrumbList",
             "@id": "https://beezknees.co.uk/artificial-swarm#breadcrumb",
@@ -197,7 +215,7 @@
               {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Swarm & Queen",
+                "name": "Swarm & Queen Guides",
                 "item": "https://beezknees.co.uk/swarm-queen"
               },
               {
@@ -215,7 +233,6 @@
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
-      <!-- Top Tier: Logo + Search/Mobile Menu -->
       <div class="topbar">
         <a href="/" class="brand" aria-label="BeezKnees home">
         <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
@@ -230,15 +247,15 @@
           </button>
         </div>
       </div>
-      <!-- Top Navigation -->
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <nav class="navbar" aria-label="Main navigation">
         <ul class="nav-menu" aria-label="Main Navigation Links">
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
           <li><a href="/hivetag-app">HiveTag</a></li>
           <li>
@@ -255,8 +272,8 @@
       </div>
       <div class="hero-inner">
         <div class="hero-card hero-card--compact">
-          <span class="hero-kicker">Swarm &amp; Queen</span>
-          <h2 class="hero-title">Artificial Swarm for Beginners</h2>
+          <span class="hero-kicker">Swarm &amp; Queen Guides</span>
+          <h1 class="hero-title">Artificial Swarm for Beginners</h1>
           <p class="hero-intro">
             Step-by-step guide to managing swarm pressure and splitting colonies safely
           </p>
@@ -271,57 +288,76 @@
     </section>
     <main id="main-content" class="page-wrap">
       <button class="section-mobile-toggle" id="sectionNavToggle" aria-expanded="true" aria-controls="sectionNavMobile">
-      Swarm &amp; Queen Menu ▲
+      Swarm &amp; Queen Guides Menu ▲
       </button>
-      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Swarm and Queen section navigation" data-active-group="Swarm Queen">
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Start Here</summary>
+      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Swarm and Queen Guides section navigation" data-active-group="Splits &amp; Artificial Swarms">
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Swarm Basics</summary>
           <ul>
-            <li><a href="/queen-cell-guide">Queen Cells Guide</a></li>
-            <li><a href="/queen-cells-action">What To Do If You Find Queen Cells</a></li>
-            <li><a href="/queen-timeline">Queen Cell Timeline</a></li>
+            <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
+            <li><a href="/swarm-season-uk">Swarm Season UK</a></li>
+            <li><a href="/swarm-prevention">Swarm Prevention</a></li>
             <li><a href="/queen-cells-swarm-control">Queen Cells &amp; Swarm Control</a></li>
-            <li><a href="/report-a-swarm">Report a Swarm</a></li>
           </ul>
         </details>
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Queen Cell Types</summary>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Queen Cells</summary>
           <ul>
+            <li><a href="/queen-cell-guide">Queen Cell Guide</a></li>
+            <li><a href="/queen-cells-action">Queen Cells – What Action to Take</a></li>
             <li><a href="/queen-cups">Queen Cups</a></li>
             <li><a href="/charged-queen-cells">Charged Queen Cells</a></li>
             <li><a href="/capped-queen-cells">Capped Queen Cells</a></li>
             <li><a href="/emergency-queen-cells">Emergency Queen Cells</a></li>
             <li><a href="/supersedure-queen-cells">Supersedure Queen Cells</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Supersedure</summary>
+          <ul>
+            <li><a href="/supersedure-explained">Supersedure Explained</a></li>
             <li><a href="/supersedure-action">Supersedure Action</a></li>
+            <li><a href="/queenless-or-supersedure">Queenless or Supersedure?</a></li>
           </ul>
         </details>
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Swarm Control Methods</summary>
-          <ul>
-            <li><a href="/swarm-prevention">Swarm Prevention</a></li>
-            <li><span aria-current="page">Artificial Swarm</span></li>
-            <li><a href="/split-hive">Split a Hive</a></li>
-            <li><a href="/split-methods">Split Methods</a></li>
-            <li><a href="/swarm-responsibilities">Swarm Responsibilities (UK)</a></li>
-          </ul>
-        </details>
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">After Swarm / Split</summary>
-          <ul>
-            <li><a href="/swarm-eggs">After Swarm – Eggs</a></li>
-            <li><a href="/after-split">After a Split</a></li>
-            <li><a href="/virgin-queen-timeline">Virgin Queen Timeline</a></li>
-          </ul>
-        </details>
-        <details class="section-mobile-group" open>
+        <details class="section-mobile-group">
           <summary class="section-mobile-summary">Queen Problems</summary>
           <ul>
-            <li><a href="/cant-find-queen">Can't Find Queen</a></li>
-            <li><a href="/queenless-or-supersedure">Queenless or Supersedure</a></li>
-            <li><a href="/missed-swarm">Missed a Swarm</a></li>
+            <li><a href="/cant-find-queen">Can't Find the Queen</a></li>
+            <li><a href="/missing-queen-what-to-check">Missing Queen – What To Check</a></li>
+            <li><a href="/queenless-colony-what-to-do">Queenless Colony – What To Do</a></li>
+            <li><a href="/queen-failing-signs">Queen Failing Signs</a></li>
+            <li><a href="/laying-workers-uk">Laying Workers</a></li>
+            <li><a href="/drone-laying-queen">Drone-Laying Queen</a></li>
+            <li><a href="/missed-swarm">Missed Swarm</a></li>
           </ul>
         </details>
-        <!-- On this page mobile view -->
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Queen Timelines</summary>
+          <ul>
+            <li><a href="/queen-timeline">Queen Timeline</a></li>
+            <li><a href="/virgin-queen-timeline">Virgin Queen Timeline</a></li>
+            <li><a href="/swarm-eggs">Swarm Eggs</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group" open>
+          <summary class="section-mobile-summary">Splits &amp; Artificial Swarms</summary>
+          <ul>
+            <li><span aria-current="page">Artificial Swarm</span></li>
+            <li><a href="/split-hive">Split Hive</a></li>
+            <li><a href="/split-methods">Split Methods</a></li>
+            <li><a href="/after-split">After a Split</a></li>
+            <li><a href="/missed-swarm">Missed Swarm</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Swarm Help &amp; Responsibility</summary>
+          <ul>
+            <li><a href="/report-a-swarm">Report a Swarm</a></li>
+            <li><a href="/swarm-responsibilities">Swarm Responsibilities</a></li>
+            <li><a href="/beekeepers-rule-calculator">Beekeeper's Rule Calculator</a></li>
+          </ul>
+        </details>
         <details class="section-mobile-group">
           <summary class="section-mobile-summary">On this page</summary>
           <ul>
@@ -341,67 +377,80 @@
           <span class="hero-kicker">BeezKnees App</span>
           <h3>Stay on Top of Every Hive, Every Inspection</h3>
           <p>Track inspections, feeding, treatments and seasonal notes — all in one place.</p>
-          <a class="btn btn-primary" href="/hivetag-app">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          Explore HiveTag
-          </a>
-          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          Open Members Area
-          </a>
+          <a class="btn btn-primary" href="/hivetag-app"><i class="fa-solid fa-mobile-screen-button"></i> Explore HiveTag</a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login"><i class="fa-solid fa-right-to-bracket"></i> Open Members Area</a>
         </div>
       </nav>
       <div class="hub-layout">
-        <aside class="hub-sidebar" aria-label="Swarm and Queen section navigation" data-active-group="Swarm Queen">
-          <h2 class="hub-sidebar-title">Swarm &amp; Queen</h2>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Start Here</summary>
+        <aside class="hub-sidebar" aria-label="Swarm and Queen Guides section navigation" data-active-group="Splits &amp; Artificial Swarms">
+          <h2 class="hub-sidebar-title">Swarm &amp; Queen Guides</h2>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Swarm Basics</summary>
             <ul class="hub-nav-links">
-              <li><a href="/queen-cell-guide">Queen Cells Guide</a></li>
-              <li><a href="/queen-cells-action">What To Do If You Find Queen Cells</a></li>
-              <li><a href="/queen-timeline">Queen Cell Timeline</a></li>
+              <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
+              <li><a href="/swarm-season-uk">Swarm Season UK</a></li>
+              <li><a href="/swarm-prevention">Swarm Prevention</a></li>
               <li><a href="/queen-cells-swarm-control">Queen Cells &amp; Swarm Control</a></li>
-              <li><a href="/report-a-swarm">Report a Swarm</a></li>
             </ul>
           </details>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Queen Cell Types</summary>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Queen Cells</summary>
             <ul class="hub-nav-links">
+              <li><a href="/queen-cell-guide">Queen Cell Guide</a></li>
+              <li><a href="/queen-cells-action">Queen Cells – What Action to Take</a></li>
               <li><a href="/queen-cups">Queen Cups</a></li>
               <li><a href="/charged-queen-cells">Charged Queen Cells</a></li>
               <li><a href="/capped-queen-cells">Capped Queen Cells</a></li>
               <li><a href="/emergency-queen-cells">Emergency Queen Cells</a></li>
               <li><a href="/supersedure-queen-cells">Supersedure Queen Cells</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Supersedure</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/supersedure-explained">Supersedure Explained</a></li>
               <li><a href="/supersedure-action">Supersedure Action</a></li>
+              <li><a href="/queenless-or-supersedure">Queenless or Supersedure?</a></li>
             </ul>
           </details>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Swarm Control Methods</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/swarm-prevention">Swarm Prevention</a></li>
-              <li><span aria-current="page">Artificial Swarm</span></li>
-              <li><a href="/split-hive">Split a Hive</a></li>
-              <li><a href="/split-methods">Split Methods</a></li>
-              <li><a href="/swarm-responsibilities">Swarm Responsibilities (UK)</a></li>
-            </ul>
-          </details>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">After Swarm / Split</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/swarm-eggs">After Swarm – Eggs</a></li>
-              <li><a href="/after-split">After a Split</a></li>
-              <li><a href="/virgin-queen-timeline">Virgin Queen Timeline</a></li>
-            </ul>
-          </details>
-          <details class="hub-nav-group" open>
+          <details class="hub-nav-group">
             <summary class="hub-nav-summary">Queen Problems</summary>
             <ul class="hub-nav-links">
-              <li><a href="/cant-find-queen">Can't Find Queen</a></li>
-              <li><a href="/queenless-or-supersedure">Queenless or Supersedure</a></li>
-              <li><a href="/missed-swarm">Missed a Swarm</a></li>
+              <li><a href="/cant-find-queen">Can't Find the Queen</a></li>
+              <li><a href="/missing-queen-what-to-check">Missing Queen – What To Check</a></li>
+              <li><a href="/queenless-colony-what-to-do">Queenless Colony – What To Do</a></li>
+              <li><a href="/queen-failing-signs">Queen Failing Signs</a></li>
+              <li><a href="/laying-workers-uk">Laying Workers</a></li>
+              <li><a href="/drone-laying-queen">Drone-Laying Queen</a></li>
+              <li><a href="/missed-swarm">Missed Swarm</a></li>
             </ul>
           </details>
-          <!-- On this page under side nav -->
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Queen Timelines</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/queen-timeline">Queen Timeline</a></li>
+              <li><a href="/virgin-queen-timeline">Virgin Queen Timeline</a></li>
+              <li><a href="/swarm-eggs">Swarm Eggs</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group" open>
+            <summary class="hub-nav-summary">Splits &amp; Artificial Swarms</summary>
+            <ul class="hub-nav-links">
+              <li><span aria-current="page">Artificial Swarm</span></li>
+              <li><a href="/split-hive">Split Hive</a></li>
+              <li><a href="/split-methods">Split Methods</a></li>
+              <li><a href="/after-split">After a Split</a></li>
+              <li><a href="/missed-swarm">Missed Swarm</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Swarm Help &amp; Responsibility</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/report-a-swarm">Report a Swarm</a></li>
+              <li><a href="/swarm-responsibilities">Swarm Responsibilities</a></li>
+              <li><a href="/beekeepers-rule-calculator">Beekeeper's Rule Calculator</a></li>
+            </ul>
+          </details>
           <div class="article-sidebar-card">
             <h3>On this page</h3>
             <ul class="toc-list">
@@ -433,7 +482,7 @@
         </aside>
         <section class="hub-main-content">
           <div class="content-card" id="overview">
-            <h1>Artificial Swarm for Beginners (UK)</h1>
+            <h2>Artificial Swarm for Beginners (UK)</h2>
             <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
             <p>An artificial swarm is one of the most useful and reliable swarm control methods in UK beekeeping. It helps you prevent swarming, keep your bees in the apiary and manage queen cells in a controlled, practical way.</p>
             <p>If you have found queen cells and suspect a colony is preparing to swarm, this method helps you take control of the situation. It may sound complicated at first, but once you understand the logic behind it, it becomes a practical and repeatable part of hive management.</p>
@@ -547,37 +596,45 @@
               <h2 id="artificial-swarm-faq">Artificial Swarm FAQ</h2>
               <div class="faq-list">
                 <div class="faq-item open">
-                  <button class="faq-question" type="button">
-                  <span>Do I have to find the queen?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="true">
+                    <span>Do I have to find the queen?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Yes, for this method you need to locate and move the queen. Other methods exist, but this is the most reliable beginner approach.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>Will this stop swarming completely?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Will this stop swarming completely?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>It greatly reduces the risk, but poor execution or missed queen cells can still result in swarming.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>How long before the new queen starts laying?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>How long before the new queen starts laying?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>It can take 2–3 weeks depending on weather, mating success and colony strength.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>Can I do this without spare equipment?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Can I do this without spare equipment?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Not easily. Artificial swarming requires at least one additional brood box and frames.</p>
                   </div>
@@ -662,9 +719,10 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about-us">About Us</a></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
             <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
             <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             <li><a href="/hivetag-app">HiveTag</a></li>
           </ul>
@@ -708,27 +766,26 @@
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
         </ul>
-       <div class="mobile-menu-cta">
-        <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+        <div class="mobile-menu-cta">
+          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
           <i class="fa-solid fa-mobile-screen-button"></i>
           Try HiveTag Free
-        </a>
-
-        <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
           <i class="fa-solid fa-right-to-bracket"></i>
           Login
-        </a>
-
-        <a class="btn btn-secondary" href="/hivetag-app">
+          </a>
+          <a class="btn btn-secondary" href="/hivetag-app">
           <i class="fa-solid fa-circle-info"></i>
           More Information
-        </a>
-      </div>
+          </a>
+        </div>
       </div>
     </aside>
     <div class="search-overlay" id="searchOverlay"></div>

@@ -535,23 +535,37 @@ document.addEventListener("DOMContentLoaded", function () {
   // FAQ ACCORDION
   // =========================
   faqButtons.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      const item = this.parentElement;
-      const icon = this.querySelector("span:last-child");
-      const isOpen = item.classList.contains("open");
+  btn.addEventListener("click", function () {
+    const item = this.closest(".faq-item");
+    const icon = this.querySelector("span:last-child");
+    const isOpen = item?.classList.contains("open");
 
-      document.querySelectorAll(".faq-item").forEach((faq) => {
-        faq.classList.remove("open");
-        const faqIcon = faq.querySelector(".faq-question span:last-child");
-        if (faqIcon) faqIcon.textContent = "+";
-      });
+    document.querySelectorAll(".faq-item").forEach((faq) => {
+      faq.classList.remove("open");
 
-      if (!isOpen) {
-        item.classList.add("open");
-        if (icon) icon.textContent = "−";
+      const faqButton = faq.querySelector(".faq-question");
+      const faqIcon = faq.querySelector(".faq-question span:last-child");
+
+      if (faqButton) {
+        faqButton.setAttribute("aria-expanded", "false");
+      }
+
+      if (faqIcon) {
+        faqIcon.textContent = "+";
       }
     });
+
+    if (!isOpen && item) {
+      item.classList.add("open");
+
+      this.setAttribute("aria-expanded", "true");
+
+      if (icon) {
+        icon.textContent = "−";
+      }
+    }
   });
+});
 
   // =========================
   // SECTION NAV (HUB PAGES)

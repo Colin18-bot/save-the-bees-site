@@ -20,7 +20,7 @@ export default function GettingStarted() {
         Back to Dashboard
       </Link>
 
-      <h1 className="text-2xl font-bold mb-2">Getting Started</h1>
+      <h2 className="text-2xl font-bold mb-2">Getting Started</h2>
       <p className="text-sm text-gray-600 mb-6">
         A quick overview of how BeezKnees is structured, and how most beekeepers
         use it day-to-day.

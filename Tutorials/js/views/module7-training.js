@@ -10,7 +10,7 @@ export function renderModule7Training(container) {
       <header class="tk-content-header">
         <div class="tk-content-heading">
           <div class="tk-content-eyebrow">Module 7</div>
-          <h1 class="tk-content-title">Selection &amp; Breeding of Honey Bees – Training</h1>
+          <h2 class="tk-content-title">Selection &amp; Breeding of Honey Bees – Training</h2>
           <p class="tk-content-subtitle">
             This module covers why and how beekeepers select and breed bees: desired traits, basic
             genetics, mating biology and practical queen rearing and record keeping.

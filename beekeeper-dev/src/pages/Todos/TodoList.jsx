@@ -383,7 +383,7 @@ const TodoList = () => {
     <div className="p-6 space-y-4">
       {/* Header: heading on its own line, controls underneath */}
       <div className="mb-2">
-        <h1 className="text-2xl font-bold mb-3">Tasks</h1>
+        <h2 className="text-2xl font-bold mb-3">Tasks</h2>
 
         {/* Controls wrapper – same style as InspectionList / LogEntryList */}
         <div className="flex flex-col gap-3 w-full sm:flex-row sm:flex-wrap sm:items-end sm:justify-start">

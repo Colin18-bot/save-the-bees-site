@@ -9,10 +9,12 @@
     <meta name="description" content="Learn about BeezKnees, a UK beekeeping website by Colin Chorley offering beginner-friendly guides, seasonal advice, and HiveTag hive record tools.">
     <meta name="keywords" content="about BeezKnees, Colin Chorley, UK beekeeping, beekeeping guides UK, beginner beekeeping UK, honeybee conservation, hive health, pollinators, HiveTag records, apiary inspections">
     <meta name="author" content="Colin Chorley">
+    <meta name="robots" content="index,follow">
     <meta property="og:title" content="About BeezKnees – UK Beekeeping Guides, Conservation &amp; Hive Records">
     <meta property="og:description" content="BeezKnees is a UK-focused beekeeping website by hobbyist beekeeper Colin Chorley. Practical guides, seasonal tasks and HiveTag records — built to be clear, supportive and beginner-friendly.">
     <meta property="og:url" content="https://beezknees.co.uk/about-us">
     <meta property="og:site_name" content="BeezKnees">
+    <meta property="og:type" content="website">
     <meta property="og:locale" content="en_GB">
     <meta property="og:image" content="https://beezknees.co.uk/images/honey-bees-on-a-flower.webp">
     <meta property="og:image:alt" content="Honey bees on a flower">
@@ -37,21 +39,6 @@
         "@context": "https://schema.org",
         "@graph": [
           {
-            "@type": "WebSite",
-            "@id": "https://beezknees.co.uk/#website",
-            "name": "BeezKnees",
-            "url": "https://beezknees.co.uk/",
-            "inLanguage": "en-GB",
-            "publisher": {
-              "@id": "https://beezknees.co.uk/#organization"
-            },
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": "https://beezknees.co.uk/search?q={search_term_string}",
-              "query-input": "required name=search_term_string"
-            }
-          },
-          {
             "@type": "Organization",
             "@id": "https://beezknees.co.uk/#organization",
             "name": "BeezKnees",
@@ -64,8 +51,12 @@
               "height": 1024
             },
             "sameAs": [
+              "https://www.facebook.com/beezkneesbeekeeping",
               "https://www.tiktok.com/@colinchorley"
             ],
+            "founder": {
+              "@id": "https://beezknees.co.uk/#colin-chorley"
+            },
             "contactPoint": {
               "@type": "ContactPoint",
               "contactType": "customer service",
@@ -74,13 +65,34 @@
           },
           {
             "@type": "Person",
-            "@id": "https://beezknees.co.uk/about-us#colin-chorley",
+            "@id": "https://beezknees.co.uk/#colin-chorley",
             "name": "Colin Chorley",
             "url": "https://beezknees.co.uk/about-us",
+            "affiliation": {
+              "@id": "https://beezknees.co.uk/#organization"
+            },
             "sameAs": [
               "https://www.tiktok.com/@colinchorley"
             ],
             "description": "Hobbyist UK beekeeper and creator of BeezKnees, a practical beekeeping and pollinator-support website."
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://beezknees.co.uk/#website",
+            "name": "BeezKnees",
+            "url": "https://beezknees.co.uk/",
+            "inLanguage": "en-GB",
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://beezknees.co.uk/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
           },
           {
             "@type": "ImageObject",
@@ -91,57 +103,8 @@
             "caption": "Honey bees on a flower"
           },
           {
-            "@type": "WebPage",
-            "@id": "https://beezknees.co.uk/about-us#webpage",
-            "url": "https://beezknees.co.uk/about-us",
-            "name": "About BeezKnees | UK Beekeeping Guides & HiveTag",
-            "description": "Learn about BeezKnees, a UK beekeeping website by Colin Chorley offering beginner-friendly guides, seasonal advice, and HiveTag hive record tools.",
-            "inLanguage": "en-GB",
-            "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
-            "isPartOf": {
-              "@id": "https://beezknees.co.uk/#website"
-            },
-            "about": {
-              "@id": "https://beezknees.co.uk/about-us#colin-chorley"
-            },
-            "publisher": {
-              "@id": "https://beezknees.co.uk/#organization"
-            },
-            "image": {
-              "@id": "https://beezknees.co.uk/about-us#primaryimage"
-            },
-            "primaryImageOfPage": {
-              "@id": "https://beezknees.co.uk/about-us#primaryimage"
-            },
-            "breadcrumb": {
-              "@id": "https://beezknees.co.uk/about-us#breadcrumb"
-            }
-          },
-          {
-            "@type": "Article",
-            "@id": "https://beezknees.co.uk/about-us#article",
-            "headline": "About BeezKnees | UK Beekeeping Guides & HiveTag App",
-            "description": "Meet BeezKnees: a UK-focused beekeeping website by hobbyist beekeeper Colin Chorley. Learn why the site exists, what it covers, and how HiveTag helps you record apiaries, hives and inspections.",
-            "image": {
-              "@id": "https://beezknees.co.uk/about-us#primaryimage"
-            },
-            "author": {
-              "@id": "https://beezknees.co.uk/about-us#colin-chorley"
-            },
-            "publisher": {
-              "@id": "https://beezknees.co.uk/#organization"
-            },
-            "mainEntityOfPage": {
-              "@id": "https://beezknees.co.uk/about-us#webpage"
-            },
-            "inLanguage": "en-GB",
-            "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01"
-          },
-          {
             "@type": "BreadcrumbList",
-            "@id": "https://beezknees.co.uk/about-us#breadcrumb",
+            "@id": "https://beezknees.co.uk/about-us#breadcrumbs",
             "itemListElement": [
               {
                 "@type": "ListItem",
@@ -158,8 +121,59 @@
             ]
           },
           {
+            "@type": [
+              "WebPage",
+              "AboutPage"
+            ],
+            "@id": "https://beezknees.co.uk/about-us#webpage",
+            "url": "https://beezknees.co.uk/about-us",
+            "name": "About BeezKnees | UK Beekeeping Guides & HiveTag",
+            "description": "Learn about BeezKnees, a UK beekeeping website by Colin Chorley offering beginner-friendly guides, seasonal advice, and HiveTag hive record tools.",
+            "inLanguage": "en-GB",
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/#website"
+            },
+            "about": [
+              {
+                "@id": "https://beezknees.co.uk/#organization"
+              },
+              {
+                "@id": "https://beezknees.co.uk/#colin-chorley"
+              }
+            ],
+            "author": {
+              "@id": "https://beezknees.co.uk/#colin-chorley"
+            },
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            },
+            "primaryImageOfPage": {
+              "@id": "https://beezknees.co.uk/about-us#primaryimage"
+            },
+            "image": {
+              "@id": "https://beezknees.co.uk/about-us#primaryimage"
+            },
+            "breadcrumb": {
+              "@id": "https://beezknees.co.uk/about-us#breadcrumbs"
+            },
+            "datePublished": "2025-12-10",
+              "dateModified": "2026-05-14",
+            "mainEntity": [
+              {
+                "@id": "https://beezknees.co.uk/#organization"
+              },
+              {
+                "@id": "https://beezknees.co.uk/#colin-chorley"
+              },
+              {
+                "@id": "https://beezknees.co.uk/about-us#faq"
+              }
+            ]
+          },
+          {
             "@type": "FAQPage",
             "@id": "https://beezknees.co.uk/about-us#faq",
+            "url": "https://beezknees.co.uk/about-us#about-faq",
             "isPartOf": {
               "@id": "https://beezknees.co.uk/about-us#webpage"
             },
@@ -229,14 +243,15 @@
         </div>
       </div>
       <!-- Top Navigation -->
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <nav class="navbar" aria-label="Main navigation">
         <ul class="nav-menu" aria-label="Main Navigation Links">
           <li><a href="/">Home</a></li>
           <li><span aria-current="page">About Us</span></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
           <li><a href="/hivetag-app">HiveTag</a></li>
           <li>
@@ -254,7 +269,7 @@
       <div class="hero-inner">
         <div class="hero-card hero-card--compact">
           <span class="hero-kicker">About BeezKnees</span>
-          <h2 class="hero-title">About BeezKnees</h2>
+          <h1 class="hero-title">About BeezKnees</h1>
           <p class="hero-intro">
             UK Beekeeping Support, Education and Pollinator Protection
           </p>
@@ -271,7 +286,7 @@
       <section class="article-hero">
         <div class="article-hero-card" id="introduction">
           <span class="article-kicker">About BeezKnees</span>
-          <h1>UK Beekeeping Support, Education and Pollinator Protection</h1>
+          <h2>UK Beekeeping Support, Education and Pollinator Protection</h2>
           <p class="article-intro">
             BeezKnees is a UK-focused beekeeping website created to make beekeeping easier to understand, especially when you're just starting out.
           </p>
@@ -405,46 +420,56 @@
           <h2>About BeezKnees FAQ</h2>
           <div class="faq-list">
             <div class="faq-item open">
-              <button class="faq-question" type="button">
-              <span>What is BeezKnees?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="true">
+                <span>What is BeezKnees?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>BeezKnees is a UK-focused beekeeping website offering practical guidance, seasonal advice and beginner-friendly resources for caring for honeybees and supporting pollinators.</p>
               </div>
             </div>
             <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>Who created BeezKnees?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="false">
+                <span>Who created BeezKnees?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>BeezKnees was created by hobbyist beekeeper Colin Chorley to make beekeeping clearer and more accessible for UK beginners and enthusiasts.</p>
               </div>
             </div>
             <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>Is BeezKnees suitable for beginners?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="false">
+                <span>Is BeezKnees suitable for beginners?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>Yes. BeezKnees is written specifically with beginners and early-stage UK beekeepers in mind, focusing on clear explanations and practical advice.</p>
               </div>
             </div>
             <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>Is BeezKnees UK-focused?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="false">
+                <span>Is BeezKnees UK-focused?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>Yes. All guidance is written for UK seasons, forage patterns, common pests and diseases, and links to trusted UK resources where appropriate.</p>
               </div>
             </div>
             <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>Do I need to keep bees to use BeezKnees?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="false">
+                <span>Do I need to keep bees to use BeezKnees?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>No. BeezKnees also provides guidance for people who want to help pollinators through gardening, awareness and conservation.</p>
               </div>
@@ -502,9 +527,10 @@
             <li><a href="/">Home</a></li>
             <li><span aria-current="page">About Us</span></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
             <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
             <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             <li><a href="/hivetag-app">HiveTag</a></li>
           </ul>
@@ -548,27 +574,26 @@
           <li><a href="/">Home</a></li>
           <li><span aria-current="page">About Us</span></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
         </ul>
         <div class="mobile-menu-cta">
-        <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
           <i class="fa-solid fa-mobile-screen-button"></i>
           Try HiveTag Free
-        </a>
-
-        <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
           <i class="fa-solid fa-right-to-bracket"></i>
           Login
-        </a>
-
-        <a class="btn btn-secondary" href="/hivetag-app">
+          </a>
+          <a class="btn btn-secondary" href="/hivetag-app">
           <i class="fa-solid fa-circle-info"></i>
           More Information
-        </a>
-      </div>
+          </a>
+        </div>
       </div>
     </aside>
     <div class="search-overlay" id="searchOverlay"></div>

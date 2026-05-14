@@ -2070,6 +2070,30 @@ CONTENT IMAGES - IMPROVED SIZING & STYLING
   border-radius: 16px;
   box-shadow: var(--shadow-md);
 }
+.float-right-figure {
+  float: right;
+  width: 30%;
+  max-width: 260px;
+  margin: 0 0 1rem 1.25rem;
+}
+
+.float-right-figure img {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+}
+
+.float-right-figure figcaption {
+  margin-top: 0.45rem;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--text-soft);
+  font-style: italic;
+  text-align: center;
+}
+
 
 /* Inline images (full width but smaller than before) */
 .article-shell img:not(.float-left-img):not(.float-right-img),
@@ -2124,13 +2148,13 @@ figcaption {
 /* Mobile adjustments */
 @media (max-width: 768px) {
   .float-left-img,
-  .float-right-img {
+  .float-right-img,
+  .float-right-figure {
     float: none;
     width: 100%;
     max-width: 100%;
     margin: 1.5rem 0;
   }
-
 .article-shell img:not(.float-left-img):not(.float-right-img),
 .hub-main-content img:not(.float-left-img):not(.float-right-img),
 .content-card img:not(.float-left-img):not(.float-right-img) {

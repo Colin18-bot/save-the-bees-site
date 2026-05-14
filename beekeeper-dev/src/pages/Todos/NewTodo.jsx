@@ -336,7 +336,7 @@ useEffect(() => {
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-lg max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold mb-2 text-center text-black">New Task</h1>
+      <h2 className="text-2xl font-bold mb-2 text-center text-black">New Task</h2>
       {isPremium && returnTo && (
       <div className="mb-4 text-center">
         <Link

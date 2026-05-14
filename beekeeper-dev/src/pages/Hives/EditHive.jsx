@@ -365,7 +365,7 @@ const EditHive = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">Edit Hive</h1>
+      <h2 className="text-2xl font-bold mb-4">Edit Hive</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           name="name"

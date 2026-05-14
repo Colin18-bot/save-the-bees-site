@@ -9,6 +9,8 @@
     <meta name="description" content="UK guide to other honey bee conditions, including Nosema, chalkbrood, stonebrood, malnutrition, starvation and colony losses.">
     <meta name="keywords" content="nosema, chalkbrood, stonebrood, amoeba disease, malnutrition in bees, baldbrood, wax moth, colony collapse, other bee diseases, honeybee health UK">
     <meta name="author" content="Colin Chorley">
+    <meta name="robots" content="index,follow">
+    <meta property="og:locale" content="en_GB">
     <meta property="og:type" content="article">
     <meta property="og:title" content="Other Honey Bee Conditions UK | BeezKnees">
     <meta property="og:description" content="Practical UK guide to Nosema, chalkbrood, stonebrood, malnutrition, starvation and other honey bee health conditions.">
@@ -18,7 +20,6 @@
     <meta property="og:image:width" content="1600">
     <meta property="og:image:height" content="900">
     <meta property="og:site_name" content="BeezKnees">
-    <meta property="og:locale" content="en_GB">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Other Honey Bee Conditions UK | BeezKnees">
     <meta name="twitter:description" content="Recognise Nosema, chalkbrood, stonebrood, malnutrition and other honey bee conditions in UK hives.">
@@ -38,6 +39,16 @@
         "@context": "https://schema.org",
         "@graph": [
           {
+            "@type": "WebSite",
+            "@id": "https://beezknees.co.uk/#website",
+            "name": "BeezKnees",
+            "url": "https://beezknees.co.uk/",
+            "inLanguage": "en-GB",
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            }
+          },
+          {
             "@type": "Organization",
             "@id": "https://beezknees.co.uk/#organization",
             "name": "BeezKnees",
@@ -51,24 +62,36 @@
             }
           },
           {
+            "@type": "Person",
+            "@id": "https://beezknees.co.uk/#colin-chorley",
+            "name": "Colin Chorley",
+            "url": "https://beezknees.co.uk/about-us"
+          },
+          {
             "@type": "ImageObject",
             "@id": "https://beezknees.co.uk/other-conditions#primaryimage",
             "url": "https://beezknees.co.uk/images/beehives_7.webp",
-             "width": 1600,
-         "height": 900
+            "width": 1600,
+            "height": 900,
+            "caption": "Beehives ready for inspection to check for diseases"
           },
           {
             "@type": "WebPage",
             "@id": "https://beezknees.co.uk/other-conditions#webpage",
             "url": "https://beezknees.co.uk/other-conditions",
-          "name": "Other Honey Bee Conditions UK | BeezKnees",
-      "description": "UK guide to other honey bee conditions, including Nosema, chalkbrood, stonebrood, malnutrition, starvation and colony losses.",
+            "name": "Other Honey Bee Conditions UK | BeezKnees",
+            "description": "UK guide to other honey bee conditions, including Nosema, chalkbrood, stonebrood, malnutrition, starvation and colony losses.",
             "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
-            "about": {
-              "@id": "https://beezknees.co.uk/other-conditions#article"
-            },
+            "isPartOf": [
+              {
+                "@id": "https://beezknees.co.uk/#website"
+              },
+              {
+                "@id": "https://beezknees.co.uk/bee-diseases#webpage"
+              }
+            ],
             "primaryImageOfPage": {
               "@id": "https://beezknees.co.uk/other-conditions#primaryimage"
             },
@@ -77,19 +100,21 @@
             },
             "publisher": {
               "@id": "https://beezknees.co.uk/#organization"
+            },
+            "mainEntity": {
+              "@id": "https://beezknees.co.uk/other-conditions#article"
             }
           },
           {
             "@type": "Article",
             "@id": "https://beezknees.co.uk/other-conditions#article",
-         "headline": "Other Honey Bee Conditions UK",
-      "description": "Practical UK guide to Nosema, chalkbrood, stonebrood, amoeba disease, baldbrood, malnutrition, starvation and colony collapse-type losses.",
+            "headline": "Other Honey Bee Conditions UK",
+            "description": "Practical UK guide to Nosema, chalkbrood, stonebrood, amoeba disease, baldbrood, malnutrition, starvation and colony collapse-type losses.",
             "image": {
               "@id": "https://beezknees.co.uk/other-conditions#primaryimage"
             },
             "author": {
-              "@type": "Person",
-              "name": "Colin Chorley"
+              "@id": "https://beezknees.co.uk/#colin-chorley"
             },
             "publisher": {
               "@id": "https://beezknees.co.uk/#organization"
@@ -98,7 +123,7 @@
               "@id": "https://beezknees.co.uk/other-conditions#webpage"
             },
             "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "articleSection": [
               "Nosema disease",
@@ -119,7 +144,10 @@
               "wax moth",
               "colony collapse",
               "other bee diseases"
-            ]
+            ],
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/bee-diseases#webpage"
+            }
           },
           {
             "@type": "BreadcrumbList",
@@ -134,7 +162,7 @@
               {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Bee Health",
+                "name": "Bee Diseases",
                 "item": "https://beezknees.co.uk/bee-diseases"
               },
               {
@@ -152,7 +180,6 @@
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
-      <!-- Top Tier: Logo + Search/Mobile Menu -->
       <div class="topbar">
         <a href="/" class="brand" aria-label="BeezKnees home">
         <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
@@ -167,15 +194,15 @@
           </button>
         </div>
       </div>
-      <!-- Top Navigation -->
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <nav class="navbar" aria-label="Main navigation">
         <ul class="nav-menu" aria-label="Main Navigation Links">
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
           <li><a href="/hivetag-app">HiveTag</a></li>
           <li>
@@ -188,19 +215,23 @@
     </header>
     <section class="hero hero--article hero--month" aria-label="Other bee conditions banner">
       <div class="hero-image">
-        <img src="images/hives-in-a-UK-apiary.webp" alt="Beekeeping banner showing hives in a rural apiary" width="1600" height="721" loading="eager" fetchpriority="high" decoding="async">
+        <img src="images/beehives_7.webp" alt="Beehives ready for inspection to check for diseases" width="1600" height="900" loading="eager" fetchpriority="high" decoding="async">
       </div>
       <div class="hero-inner">
         <div class="hero-card hero-card--compact">
           <span class="hero-kicker">Bee Health</span>
-          <h2 class="hero-title">Other Honey Bee Conditions</h2>
+          <h1 class="hero-title">Other Honey Bee Conditions</h1>
           <p class="hero-intro">
-            Nosema, chalkbrood, stonebrood, malnutrition and more – recognition and management for UK beekeepers
+            Nosema, chalkbrood, stonebrood, malnutrition and collapse-type losses explained for UK beekeepers.
           </p>
           <div class="hero-actions">
             <a href="#main-content" class="btn btn-primary">
             <i class="fa-solid fa-book-open"></i>
             Read the Guide
+            </a>
+            <a href="/bee-health-checker" class="btn btn-secondary">
+            <i class="fa-solid fa-stethoscope"></i>
+            Bee Health Checker
             </a>
           </div>
         </div>
@@ -210,44 +241,63 @@
       <button class="section-mobile-toggle" id="sectionNavToggle" aria-expanded="true" aria-controls="sectionNavMobile">
       Bee Health Menu ▲
       </button>
-      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Bee diseases section navigation" data-active-group="Bee Health">
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Start Here</summary>
-          <ul>
-            <li><a href="/behaviour">Bee Behaviour</a></li>
-            <li><a href="/colony-health-triage">Colony Health Triage Tool</a></li>
-            <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-            <li><a href="/anatomy">Bee Anatomy</a></li>
-            <li><span aria-current="page">Other Conditions</span></li>
-          </ul>
-        </details>
+      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Bee Diseases section navigation" data-active-group="Other Conditions">
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Common Problems</summary>
+          <summary class="section-mobile-summary">Bee Health Overview</summary>
           <ul>
-            <li><a href="/dead-bees-outside-hive">Dead Bees Outside the Hive</a></li>
-            <li><a href="/brood-problems-uk">Brood Problems</a></li>
-            <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
-            <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
+            <li><a href="/bee-diseases">Bee Diseases</a></li>
+            <li><a href="/bee-health-checker">Bee Health Checker</a></li>
+            <li><a href="/colony-health-triage">Colony Health Triage</a></li>
             <li><a href="/when-to-call-bee-inspector-uk">When to Call a Bee Inspector</a></li>
           </ul>
         </details>
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Disease &amp; Pest Guides</summary>
+          <summary class="section-mobile-summary">Bacterial Diseases</summary>
           <ul>
             <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
-            <li><a href="/viral-diseases">Viral Diseases</a></li>
-            <li><a href="/bee-pests">Bee Pests</a></li>
-            <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+            <li><a href="/american-foulbrood-uk">American Foulbrood</a></li>
+            <li><a href="/european-foulbrood-uk">European Foulbrood</a></li>
+            <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
           </ul>
         </details>
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Prevention &amp; Planning</summary>
+          <summary class="section-mobile-summary">Viral Diseases</summary>
           <ul>
-            <li><a href="/hygiene">Hive Hygiene</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/viral-diseases">Viral Diseases</a></li>
+            <li><a href="/deformed-wing-virus-uk">Deformed Wing Virus</a></li>
+            <li><a href="/sacbrood-uk">Sacbrood</a></li>
           </ul>
         </details>
-        <!-- On this page mobile view -->
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Brood Problems</summary>
+          <ul>
+            <li><a href="/brood-problems-uk">Brood Problems</a></li>
+            <li><a href="/chalkbrood-uk">Chalkbrood</a></li>
+            <li><a href="/chilled-brood-uk">Chilled Brood</a></li>
+            <li><a href="/brood-pattern-guide">Brood Pattern Guide</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group" open>
+          <summary class="section-mobile-summary">Other Conditions</summary>
+          <ul>
+            <li><span aria-current="page">Other Conditions</span></li>
+            <li><a href="/nosema-uk">Nosema</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Pests &amp; Predators</summary>
+          <ul>
+            <li><a href="/bee-pests">Bee Pests</a></li>
+            <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+            <li><a href="/robbing-behaviour-bees">Robbing Behaviour</a></li>
+            <li><a href="/wasps-beehives-uk">Wasps &amp; Beehives</a></li>
+            <li><a href="/wax-moth-uk">Wax Moth</a></li>
+            <li><a href="/ants-in-beehives">Ants in Beehives</a></li>
+            <li><a href="/mice-in-beehives">Mice in Beehives</a></li>
+            <li><a href="/asian-hornet-uk">Asian Hornet</a></li>
+            <li><a href="/small-hive-beetle-uk">Small Hive Beetle</a></li>
+          </ul>
+        </details>
         <details class="section-mobile-group">
           <summary class="section-mobile-summary">On this page</summary>
           <ul>
@@ -259,7 +309,7 @@
             <li><a href="#baldbrood">Baldbrood and wax moth</a></li>
             <li><a href="#malnutrition">Malnutrition and starvation</a></li>
             <li><a href="#collapse">Colony collapse-type losses</a></li>
-            <li><a href="#pulling-together">Pulling it all together</a></li>
+            <li><a href="#pulling-together">Pulling it together</a></li>
             <li><a href="#related-other-conditions">Related guides</a></li>
           </ul>
         </details>
@@ -267,56 +317,69 @@
           <span class="hero-kicker">BeezKnees App</span>
           <h3>Stay on Top of Every Hive, Every Inspection</h3>
           <p>Track inspections, feeding, treatments and seasonal notes — all in one place.</p>
-          <a class="btn btn-primary" href="/hivetag-app">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          Explore HiveTag
-          </a>
-          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          Open Members Area
-          </a>
+          <a class="btn btn-primary" href="/hivetag-app"><i class="fa-solid fa-mobile-screen-button"></i> Explore HiveTag</a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login"><i class="fa-solid fa-right-to-bracket"></i> Open Members Area</a>
         </div>
       </nav>
       <div class="hub-layout">
-        <aside class="hub-sidebar" aria-label="Bee diseases section navigation" data-active-group="Bee Health">
-          <h2 class="hub-sidebar-title">Bee Health</h2>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Start Here</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/behaviour">Bee Behaviour</a></li>
-              <li><a href="/colony-health-triage">Colony Health Triage Tool</a></li>
-              <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-              <li><a href="/anatomy">Bee Anatomy</a></li>
-              <li><span aria-current="page">Other Conditions</span></li>
-            </ul>
-          </details>
+        <aside class="hub-sidebar" aria-label="Bee Diseases section navigation" data-active-group="Other Conditions">
+          <h2 class="hub-sidebar-title">Bee Diseases</h2>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Common Problems</summary>
+            <summary class="hub-nav-summary">Bee Health Overview</summary>
             <ul class="hub-nav-links">
-              <li><a href="/dead-bees-outside-hive">Dead Bees Outside the Hive</a></li>
-              <li><a href="/brood-problems-uk">Brood Problems</a></li>
-              <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
-              <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
+              <li><a href="/bee-diseases">Bee Diseases</a></li>
+              <li><a href="/bee-health-checker">Bee Health Checker</a></li>
+              <li><a href="/colony-health-triage">Colony Health Triage</a></li>
               <li><a href="/when-to-call-bee-inspector-uk">When to Call a Bee Inspector</a></li>
             </ul>
           </details>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Disease &amp; Pest Guides</summary>
+            <summary class="hub-nav-summary">Bacterial Diseases</summary>
             <ul class="hub-nav-links">
               <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
-              <li><a href="/viral-diseases">Viral Diseases</a></li>
-              <li><a href="/bee-pests">Bee Pests</a></li>
-              <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+              <li><a href="/american-foulbrood-uk">American Foulbrood</a></li>
+              <li><a href="/european-foulbrood-uk">European Foulbrood</a></li>
+              <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
             </ul>
           </details>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Prevention &amp; Planning</summary>
+            <summary class="hub-nav-summary">Viral Diseases</summary>
             <ul class="hub-nav-links">
-              <li><a href="/hygiene">Hive Hygiene</a></li>
-              <li><a href="/varroa-management">Varroa Management</a></li>
+              <li><a href="/viral-diseases">Viral Diseases</a></li>
+              <li><a href="/deformed-wing-virus-uk">Deformed Wing Virus</a></li>
+              <li><a href="/sacbrood-uk">Sacbrood</a></li>
             </ul>
           </details>
-          <!-- On this page under side nav -->
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Brood Problems</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/brood-problems-uk">Brood Problems</a></li>
+              <li><a href="/chalkbrood-uk">Chalkbrood</a></li>
+              <li><a href="/chilled-brood-uk">Chilled Brood</a></li>
+              <li><a href="/brood-pattern-guide">Brood Pattern Guide</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group" open>
+            <summary class="hub-nav-summary">Other Conditions</summary>
+            <ul class="hub-nav-links">
+              <li><span aria-current="page">Other Conditions</span></li>
+              <li><a href="/nosema-uk">Nosema</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Pests &amp; Predators</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/bee-pests">Bee Pests</a></li>
+              <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+              <li><a href="/robbing-behaviour-bees">Robbing Behaviour</a></li>
+              <li><a href="/wasps-beehives-uk">Wasps &amp; Beehives</a></li>
+              <li><a href="/wax-moth-uk">Wax Moth</a></li>
+              <li><a href="/ants-in-beehives">Ants in Beehives</a></li>
+              <li><a href="/mice-in-beehives">Mice in Beehives</a></li>
+              <li><a href="/asian-hornet-uk">Asian Hornet</a></li>
+              <li><a href="/small-hive-beetle-uk">Small Hive Beetle</a></li>
+            </ul>
+          </details>
           <div class="article-sidebar-card">
             <h3>On this page</h3>
             <ul class="toc-list">
@@ -328,7 +391,7 @@
               <li><a href="#baldbrood">Baldbrood and wax moth</a></li>
               <li><a href="#malnutrition">Malnutrition and starvation</a></li>
               <li><a href="#collapse">Colony collapse-type losses</a></li>
-              <li><a href="#pulling-together">Pulling it all together</a></li>
+              <li><a href="#pulling-together">Pulling it together</a></li>
               <li><a href="#related-other-conditions">Related guides</a></li>
             </ul>
           </div>
@@ -348,144 +411,140 @@
         </aside>
         <section class="hub-main-content">
           <div class="content-card" id="overview">
-            <h1>Other Honey Bee Conditions – Nosema, Chalkbrood, Stonebrood & More</h1>
+            <h2>Other Honey Bee Conditions – Nosema, Chalkbrood, Stonebrood &amp; More</h2>
             <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
             <img src="images/inspecting-frames.webp" alt="Beekeeper inspecting brood frames for signs of disease and other conditions" class="float-right-img" width="353" height="400" loading="lazy" decoding="async">
-            <p>Not every health problem in a hive is caused by foulbrood, varroa or obvious pests. Honeybee colonies can also be affected by a range of <strong>other conditions</strong> – some caused by fungi or micro-organisms, others by nutritional stress, age of comb or environmental factors. These are often the cases where something looks "wrong" but does not immediately fit a classic disease picture. If you are starting from symptoms and are not sure which direction to investigate first, try the <a href="/colony-health-triage" title="Use the interactive colony health triage tool for UK beekeepers">interactive colony health triage tool</a> or the <a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a>.</p>
-            <p>This page covers <strong>Nosema disease, chalkbrood, stonebrood, amoeba disease, baldbrood and wax moth damage, malnutrition and starvation, plus "colony collapse-type" losses</strong>. It is designed to sit alongside the main <a href="/bee-diseases" title="Overview of bee diseases and pests in the UK">bee diseases overview</a> and detailed pages on <a href="/bacterial-diseases" title="Bacterial brood diseases including foulbrood">bacterial diseases</a>, <a href="/viral-diseases" title="Viral diseases in honeybees">viral diseases</a> and <a href="/parasitic-mites" title="Varroa and other parasitic mites">parasitic mites</a>. If brood looks uneven or "off", it is also worth checking the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a> and reviewing your normal <a href="/hive-management" title="Manage your hive effectively">hive inspections and management</a>.</p>
+            <p>
+              Not every health problem in a hive is caused by foulbrood, varroa or obvious pests. Honey bee colonies can also be affected by a range of other conditions: some caused by fungi or micro-organisms, others by nutritional stress, age of comb, poor weather, damp or environmental pressure. These are often the cases where something looks wrong but does not immediately fit a classic disease picture.
+            </p>
+            <p>
+              This page covers Nosema disease, chalkbrood, stonebrood, amoeba disease, baldbrood and wax moth damage, malnutrition and starvation, plus colony collapse-type losses. It is designed to sit alongside the main <a href="/bee-diseases" title="Overview of bee diseases and pests in the UK">bee diseases overview</a> and detailed pages on <a href="/bacterial-diseases" title="Bacterial brood diseases including foulbrood">bacterial diseases</a>, <a href="/viral-diseases" title="Viral diseases in honeybees">viral diseases</a> and <a href="/parasitic-mites" title="Varroa and other parasitic mites">parasitic mites</a>.
+            </p>
+            <p>
+              If brood looks uneven or off, it is also worth checking the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a> and reviewing your normal <a href="/hive-management" title="Manage your hive effectively">hive inspections and management</a>. If you are starting from symptoms and are not sure which direction to investigate first, use the <a href="/colony-health-triage" title="Use the interactive colony health triage tool for UK beekeepers">interactive colony health triage tool</a> or the <a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a>.
+            </p>
           </div>
-          <div class="content-card" id="nosema">
-            <h2>Nosema Disease</h2>
-            <p><strong>Nosema</strong> refers to infection by microsporidian parasites that invade the <strong>mid-gut of adult bees</strong>. Two species are typically discussed in beekeeping texts. They can shorten lifespan and reduce colony performance, especially when combined with other stresses.</p>
-            <h3>Possible signs of Nosema problems</h3>
-            <ul class="indented-list">
-              <li>Slow spring build-up despite apparently adequate stores and a laying queen.</li>
-              <li>Increased numbers of <strong>crawling or drifting bees</strong> with shortened lifespan.</li>
-              <li>In some cases, <strong>spotty staining of faeces</strong> on the front of the hive or nearby surfaces – though this can also be caused by simple confinement during poor weather.</li>
-            </ul>
-            <p>Field signs are not always clear-cut. Definite diagnosis usually requires <strong>microscopic examination of bee gut samples</strong>. Many modern colonies may carry low levels of Nosema without obvious signs; problems tend to appear when nutritional or other stresses are high. If you are working from vague signs such as dwindling bees, poor build-up or staining, compare the <a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a> and <a href="/colony-health-triage" title="Use the interactive colony health triage tool for UK beekeepers">colony health triage tool</a> before jumping to one conclusion.</p>
-            <h3>Management ideas for Nosema</h3>
-            <ul class="indented-list">
-              <li>Maintain strong, well-fed colonies with good <a href="/bee-gardening" title="Planting and gardening for bees">forage and nutrition</a>.</li>
-              <li>Avoid prolonged confinement where possible – ensure hives are in locations where bees can fly on milder winter days.</li>
-              <li>Renew old or heavily soiled combs as part of your <a href="/hygiene" title="Hive hygiene and comb renewal">hive hygiene plan</a>.</li>
-              <li>Where Nosema is strongly suspected, seek current guidance from BeeBase, your Bee Inspector or association disease officer before considering any treatments.</li>
-            </ul>
-          </div>
-          <div class="content-card" id="chalkbrood">
+          <section class="content-card" id="nosema">
+            <h2>Nosema disease</h2>
+            <p>
+              Nosema refers to infection by microsporidian parasites that invade the mid-gut of adult bees. It can shorten adult bee lifespan and reduce colony performance, especially when combined with other stresses such as poor nutrition, long confinement, damp conditions or varroa pressure.
+            </p>
+            <p>
+              Possible signs include slow spring build-up, increased numbers of crawling or drifting bees, weak adult bee numbers and, in some cases, spotty faecal staining on the hive front or nearby surfaces. The staining is not proof on its own because confinement and poor feed can also cause dysentery.
+            </p>
+            <p>
+              Definite diagnosis usually requires microscopic examination of bee gut samples. From a practical management point of view, support colony strength, renew old or heavily soiled comb, improve nutrition and seek current advice if Nosema is strongly suspected. For more detail, see the dedicated <a href="/nosema-uk">Nosema guide</a>.
+            </p>
+          </section>
+          <section class="content-card" id="chalkbrood">
             <h2>Chalkbrood</h2>
-            <p><strong>Chalkbrood</strong> is a fungal disease of brood. It is common in many areas and is often more of a <strong>management indicator</strong> than a catastrophe, although severe cases can weaken colonies significantly.</p>
-            <h3>Typical chalkbrood appearance</h3>
-            <ul class="indented-list">
-              <li>Dead larvae that have turned into <strong>white, grey or black "mummies"</strong> in the cells.</li>
-              <li>The mummies are <strong>hard and chalky</strong>, often shaped like the cell and sometimes visible on the hive floor.</li>
-              <li>Brood patterns may become patchy where infected larvae have been removed.</li>
-            </ul>
-            <p>Chalkbrood tends to be worse in <strong>cool, damp conditions</strong> or where colonies are stressed or under-strength. It is often seen in the early part of the season when brood rearing outstrips available nurse bees. Because it often shows up as a patchy brood nest, it is useful to compare suspicious frames with the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a>.</p>
-            <h3>Managing chalkbrood</h3>
-            <ul class="indented-list">
-              <li>Improve ventilation and avoid excessive damp inside the hive.</li>
-              <li>Strengthen weak colonies by ensuring they have enough bees to cover brood (but avoid transferring brood from suspect hives).</li>
-              <li>Replace badly affected comb over time, in line with your usual comb replacement schedule.</li>
-              <li>Consider re-queening if chalkbrood is persistent and other causes have been ruled out – some bloodlines appear more tolerant than others.</li>
-            </ul>
-            <div class="callout callout-tip" role="note">
-              <strong>Printable reference:</strong>
-              If you want a guided route, start with the <a href="/colony-health-triage" title="Interactive bee colony health triage tool for UK beekeepers">colony health triage tool</a>.
-              If you prefer a symptoms → cause → action table, the <a href="/bee-health-checker" title="Bee Health Checker (UK)">Bee Health Checker</a> includes
-              Chalkbrood (<em>caused by Ascosphaera apis</em>) and Nosema in that format.
-              <br>
-              <a class="hero-cta" href="/downloads#bee-health-checker-download" title="Download the Bee Health Checker (Word/PDF)">Download it (Word/PDF)</a>
+            <p>
+              Chalkbrood is a fungal disease of brood. It is common in many areas and is often more of a management indicator than a catastrophe, although severe cases can weaken colonies significantly. The most recognisable sign is dead larvae turning into white, grey or black hard mummies inside cells or on the hive floor.
+            </p>
+            <p>
+              Chalkbrood tends to be worse in cool, damp conditions or where colonies are stressed or under-strength. It is often seen in the early part of the season when brood rearing outstrips the number of nurse bees available to cover and warm the brood nest.
+            </p>
+            <p>
+              Management usually focuses on improving ventilation, reducing damp, strengthening the colony and replacing badly affected comb over time. If chalkbrood is persistent and other causes have been ruled out, re-queening may be worth considering because some bloodlines appear more tolerant than others. Compare suspicious frames with the <a href="/chalkbrood-uk">chalkbrood guide</a> and the <a href="/brood-pattern-guide">brood pattern guide</a>.
+            </p>
+          </section>
+          <section class="content-card" id="stonebrood">
+            <h2>Stonebrood and beekeeper safety</h2>
+            <p>
+              Stonebrood is caused by fungi in the genus <em>Aspergillus</em>. It is relatively uncommon, but it matters because some <em>Aspergillus</em> species can also affect humans. Affected brood can harden into stone-like masses, sometimes with a granular interior.
+            </p>
+            <p>
+              Suspected stonebrood should be handled with extra caution. Avoid inhaling dust or spores, minimise disturbance, and seek advice from a Bee Inspector or experienced disease officer. Depending on the advice given, affected comb may need to be destroyed and equipment cleaned or scorched.
+            </p>
+            <p>
+              Because stonebrood can be confused with other brood problems, do not rely on guesswork if you see unusual hardened brood that does not resemble normal chalkbrood mummies.
+            </p>
+          </section>
+          <section class="content-card" id="amoeba">
+            <h2>Amoeba disease</h2>
+            <p>
+              Amoeba disease is caused by the protozoan <em>Malpighamoeba mellificae</em>, which infects the Malpighian tubules in adult bees. It is usually considered a relatively minor disease, but it may weaken colonies that are already under other pressures.
+            </p>
+            <p>
+              The signs are non-specific and may include reduced adult bee longevity or poor spring build-up. As with Nosema, diagnosis generally requires laboratory examination rather than visual inspection alone.
+            </p>
+            <p>
+              For most practical beekeepers, the response is to support overall colony strength and address more obvious stress factors first. Improve nutrition, reduce damp, maintain good hive hygiene and check whether varroa, queen problems or poor stores are also involved.
+            </p>
+          </section>
+          <section class="content-card" id="baldbrood">
+            <h2>Baldbrood and wax moth damage</h2>
+            <p>
+              Baldbrood describes a brood pattern where patches of comb show uncapped pupae with their heads and thoraxes exposed. It is often associated with tunnelling by wax moth larvae beneath the cappings, especially in older or neglected comb.
+            </p>
+            <p>
+              You may see rows or clusters of brood with cappings removed, tunnels or debris in the comb, and evidence of wax moth larvae or cocoons in stored comb or unused equipment. Strong colonies usually control small numbers of wax moths themselves, so repeated or heavy damage should prompt you to check colony strength and comb condition.
+            </p>
+            <p>
+              Replace badly damaged comb, avoid keeping very old dark comb for too long, and store spare frames and supers properly. If the problem is in stored equipment, see the <a href="/wax-moth-uk">wax moth guide</a> for specific storage and prevention advice.
+            </p>
+          </section>
+          <section class="content-card" id="malnutrition">
+            <h2>Malnutrition and starvation</h2>
+            <p>
+              Bees need a balance of nectar or syrup and pollen to fuel brood rearing and maintain adult bee health. When forage is poor or weather traps bees indoors, colonies can experience malnutrition or outright starvation even with a competent beekeeper.
+            </p>
+            <p>
+              Warning signs include patchy brood with little pollen nearby, light hives when lifted, poor spring build-up and bees dying on the comb with their heads in cells. That last sign is often associated with starvation, especially when stores are absent or just out of reach of the winter cluster.
+            </p>
+            <p>
+              Prevention is far better than rescue. Check stores throughout the season, feed syrup or fondant when needed according to season and local advice, choose suitable apiary sites, and encourage forage through <a href="/bee-gardening">bee-friendly planting</a>. For more detail, see <a href="/starvation-in-bees-signs">starvation in bees</a> and your seasonal pages in the <a href="/year-in-the-apiary">Year in the Apiary</a> guide.
+            </p>
+          </section>
+          <section class="content-card" id="collapse">
+            <h2>Colony collapse-type losses</h2>
+            <p>
+              Many beekeepers experience occasional colonies that dwindle or disappear without an obvious single cause. These may be described as colony collapse in conversation, but in practice they often reflect a combination of pressures rather than one simple event.
+            </p>
+            <p>
+              Common contributors include high varroa and associated viral damage, poor nutrition, late or insufficient feeding, queen problems, too few young bees, Nosema, chronic stress, robbing, wasp pressure or environmental factors. By the time the colony is found dead or almost empty, the clearest evidence may already be gone.
+            </p>
+            <p>
+              Clear records are extremely useful. If you administer veterinary medicines while investigating losses, including varroa treatments, keep a hive treatment log and retain it for at least five years. See <a href="/veterinary-medicine-records" title="UK hive treatment record keeping (keep for 5 years)">Veterinary medicine records</a> for record-keeping guidance.
+            </p>
+          </section>
+          <section class="content-card" id="pulling-together">
+            <h2>Pulling it all together</h2>
+            <p>
+              These other conditions may sound like a long list, but many of the practical management actions are the same. Keep colonies well-fed and appropriately sized for their site, inspect regularly, use the brood pattern guide when brood looks uneven, and follow a sensible hive hygiene and comb replacement plan.
+            </p>
+            <p>
+              Monitor and manage varroa and viral disease pressure, because weakened adult bees and poor brood patterns rarely happen in isolation. Local teaching apiaries, association disease officers, BeeBase resources and Bee Inspectors are all useful partners when symptoms do not fit neatly into one category.
+            </p>
+            <p>
+              Taken together with the rest of the BeezKnees bee-health cluster, this page should help you understand where these other conditions fit in and when to ask for help. The <a href="/colony-health-triage">colony health triage tool</a> and <a href="/bee-health-checker">Bee Health Checker</a> are good starting points when signs overlap.
+            </p>
+          </section>
+          <section class="content-card" id="related-other-conditions">
+            <h2>Related bee health guides</h2>
+            <div class="related-grid">
+              <div class="related-card">
+                <h3><a href="/colony-health-triage">Colony Health Triage Tool</a></h3>
+                <p>Work through unclear symptoms step by step.</p>
+              </div>
+              <div class="related-card">
+                <h3><a href="/bee-health-checker">Bee Health Checker</a></h3>
+                <p>Match visible signs with likely causes and safe next actions.</p>
+              </div>
+              <div class="related-card">
+                <h3><a href="/brood-pattern-guide">Brood Pattern Guide</a></h3>
+                <p>Compare patchy, uneven or unhealthy brood patterns.</p>
+              </div>
+              <div class="related-card">
+                <h3><a href="/hive-management">Hive Management</a></h3>
+                <p>Review inspection habits and practical colony management.</p>
+              </div>
+              <div class="related-card">
+                <h3><a href="/bee-diseases">Bee Diseases and Pests Overview</a></h3>
+                <p>Place these problems in the wider bee-health picture.</p>
+              </div>
             </div>
-          </div>
-          <div class="content-card" id="stonebrood">
-            <h2>Stonebrood and Beekeeper Safety</h2>
-            <p><strong>Stonebrood</strong> is caused by fungi in the genus <em>Aspergillus</em>. It is relatively uncommon but important because some <em>Aspergillus</em> species can also affect humans.</p>
-            <h3>Key points about stonebrood</h3>
-            <ul class="indented-list">
-              <li>Affected brood can harden into <strong>stone-like masses</strong>, often with a granular interior.</li>
-              <li>The fungus can produce spores that may be hazardous to inhale, especially for people with respiratory conditions.</li>
-              <li>Suspected stonebrood should be handled with <strong>extra caution</strong>.</li>
-            </ul>
-            <p>If you suspect stonebrood, follow up-to-date official guidance. In general, that will include:</p>
-            <ul class="indented-list">
-              <li>Minimising disturbance and avoiding inhaling dust or spores.</li>
-              <li>Seeking advice from a Bee Inspector or experienced advisor.</li>
-              <li>Destroying affected comb and thoroughly cleaning or scorching equipment where recommended.</li>
-            </ul>
-          </div>
-          <div class="content-card" id="amoeba">
-            <h2>Amoeba Disease</h2>
-            <p><strong>Amoeba disease</strong> is caused by the protozoan <em>Malpighamoeba mellificae</em>, which infects the Malpighian tubules (part of the excretory system) in adult bees. It is usually considered a relatively minor disease but may weaken colonies already under other pressures.</p>
-            <p>Signs are non-specific and may include reduced longevity and poor spring build-up. As with Nosema, diagnosis generally requires laboratory examination. For most practical beekeepers, the response is the same: <strong>support overall colony strength</strong> and address more obvious stress factors such as poor nutrition or heavy varroa.</p>
-          </div>
-          <div class="content-card" id="baldbrood">
-            <h2>Baldbrood and Wax Moth Damage</h2>
-            <p><strong>Baldbrood</strong> describes a brood pattern where patches of comb show <strong>uncapped pupae</strong> with their heads and thoraxes exposed. It is often associated with tunnelling by <strong>wax moth larvae</strong> beneath the cappings.</p>
-            <h3>What to look for</h3>
-            <ul class="indented-list">
-              <li>Rows or clusters of brood with their cappings removed, especially in older or neglected comb.</li>
-              <li>Tunnels or debris in the comb where wax moth larvae have been moving.</li>
-              <li>Presence of wax moth larvae or cocoons in stored comb or unused equipment.</li>
-            </ul>
-            <p>Strong colonies usually control small numbers of wax moths themselves. The bigger risk is in <strong>stored comb and weak colonies</strong>. Good <a href="/hive-management" title="Manage your hive effectively">hive management</a> and timely inspections make these problems much easier to spot before damage becomes extensive.</p>
-            <h3>Managing baldbrood and wax moth</h3>
-            <ul class="indented-list">
-              <li>Replace badly damaged comb and avoid keeping very old, dark comb for many seasons.</li>
-              <li>Store spare frames and supers in a way that discourages wax moth – for example, cool, well-ventilated storage, stacked boxes with light and airflow, or other recommended methods.</li>
-              <li>Strengthen weak colonies or combine them where appropriate so they can police their own comb more effectively.</li>
-            </ul>
-          </div>
-          <div class="content-card" id="malnutrition">
-            <h2>Malnutrition and Starvation</h2>
-            <p>Bees need a balance of <strong>nectar (or syrup) and pollen</strong> to fuel brood rearing and maintain their own bodies. When forage is poor or weather traps bees indoors, colonies can experience malnutrition or outright starvation, even with a competent beekeeper. These cases are often searched as "my bees have died but I can't see disease", which is why this page is an important companion to the <a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a> and <a href="/colony-health-triage" title="Use the interactive colony health triage tool for UK beekeepers">colony health triage tool</a>.</p>
-            <h3>Warning signs</h3>
-            <ul class="indented-list">
-              <li>Frames with <strong>patchy brood and limited pollen</strong> nearby.</li>
-              <li>Light hives when lifted, especially in late winter or early spring.</li>
-              <li>Bees dying on the comb with their heads still in cells, a classic sign of starvation.</li>
-            </ul>
-            <p>Prevention is far better than cure. Key steps include:</p>
-            <ul class="indented-list">
-              <li>Regularly checking stores throughout the season, not just in winter.</li>
-              <li>Feeding syrup or fondant when needed, according to season and local advice.</li>
-              <li>Using suitable apiary sites and encouraging forage through <a href="/bee-gardening" title="Planting for bees">bee-friendly planting</a>.</li>
-              <li>Keeping on top of routine <a href="/hive-management" title="Manage your hive effectively">hive inspections and management</a> so you notice declining stores, poor brood coverage or weak colonies before they crash.</li>
-            </ul>
-          </div>
-          <div class="content-card" id="collapse">
-            <h2>Colony Collapse-Type Losses</h2>
-            <p>Many beekeepers experience occasional colonies that simply <strong>dwindle or disappear</strong> without an obvious single cause. These may be labelled as "colony collapse" in conversation, but in reality they often reflect a combination of issues:</p>
-            <ul class="indented-list">
-              <li>High varroa and associated <a href="/viral-diseases">viral damage</a>.</li>
-              <li>Poor nutrition or late/insufficient feeding.</li>
-              <li>Queen problems and a prolonged period without enough young bees.</li>
-              <li>Other conditions such as Nosema, chronic stress or environmental factors.</li>
-            </ul>
-            <p><strong>Record keeping note:</strong> If you administer any veterinary medicines while investigating losses (for example, treatments used as part of varroa control), keep a clear hive treatment log and retain it for <strong>at least five years</strong>. See <a href="/veterinary-medicine-records" title="UK hive treatment record keeping (keep for 5 years)">Veterinary medicine records</a>.</p>
-            <p>The most useful thing the beekeeper can do is to keep <strong>clear, honest records</strong> and a small number of comb samples where appropriate, so patterns become easier to spot over time. If you are trying to work back from unclear symptoms or a collapse-type loss, the <a href="/colony-health-triage" title="Work through colony symptoms step by step">colony health triage tool</a>, <a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a> and <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a> can help narrow down likely causes. It is rarely "just bad luck".</p>
-          </div>
-          <div class="content-card" id="pulling-together">
-            <h2>Pulling It All Together</h2>
-            <p>These "other conditions" may sound like a long list, but many of the day-to-day management actions are the same:</p>
-            <ul class="indented-list">
-              <li>Keep colonies <strong>well-fed and appropriately sized</strong> for their sites.</li>
-              <li>Maintain regular <a href="/hive-management" title="Hive management and inspections">inspections and hive management</a> through the season.</li>
-              <li>Use the <a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">brood pattern guide</a> when brood looks uneven, patchy or hard to interpret.</li>
-              <li>Follow a consistent <a href="/hygiene" title="Hive hygiene and comb replacement">hive hygiene and comb replacement</a> plan.</li>
-              <li>Monitor and manage <a href="/parasitic-mites" title="Varroa and other mites">parasitic mites</a> and <a href="/viral-diseases" title="Viral diseases">viral diseases</a> sensibly.</li>
-              <li>Use local teaching apiaries, BeeBase resources and Bee Inspectors as practical partners in maintaining bee health.</li>
-            </ul>
-            <p>Taken together with the rest of the <strong>BeezKnees bee-health cluster</strong>, this page should help you understand where these "other conditions" fit in and give you confidence to recognise when something looks unusual – and when to ask for help. The <a href="/colony-health-triage" title="Use the colony health triage tool to narrow down likely hive problems">colony health triage tool</a> and <a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a> are useful starting points when the signs do not fit neatly into one category, while the <a href="/bee-diseases" title="Overview of bee diseases and pests in the UK">bee diseases overview</a> helps you place these problems in the wider bee-health picture.</p>
-          </div>
-          <div class="content-card">
-            <h2 id="related-other-conditions">Related bee health guides</h2>
-            <p><a href="/colony-health-triage" title="Use the colony health triage tool to narrow down likely hive problems">Colony Health Triage Tool</a> – work through unclear symptoms step by step</p>
-            <p><a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a> – symptoms, likely causes and next actions</p>
-            <p><a href="/brood-pattern-guide" title="How to read brood pattern health and what common issues look like (UK)">Brood Pattern Guide</a> – compare patchy, uneven or unhealthy brood/</p>
-            <p><a href="/hive-management" title="Manage your hive effectively">Hive Management</a> – inspection habits and practical colony management</p>
-            <p><a href="/bee-diseases" title="Overview of bee diseases and pests in the UK">Bee Diseases and Pests Overview</a> – the wider picture across brood disease, viruses, mites and pests</p>
-          </div>
+          </section>
         </section>
       </div>
     </main>
@@ -509,9 +568,10 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about-us">About Us</a></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
             <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
             <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             <li><a href="/hivetag-app">HiveTag</a></li>
           </ul>
@@ -555,27 +615,26 @@
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
         </ul>
-       <div class="mobile-menu-cta">
-        <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+        <div class="mobile-menu-cta">
+          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
           <i class="fa-solid fa-mobile-screen-button"></i>
           Try HiveTag Free
-        </a>
-
-        <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
           <i class="fa-solid fa-right-to-bracket"></i>
           Login
-        </a>
-
-        <a class="btn btn-secondary" href="/hivetag-app">
+          </a>
+          <a class="btn btn-secondary" href="/hivetag-app">
           <i class="fa-solid fa-circle-info"></i>
           More Information
-        </a>
-      </div>
+          </a>
+        </div>
       </div>
     </aside>
     <div class="search-overlay" id="searchOverlay"></div>

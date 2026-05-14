@@ -652,7 +652,7 @@ const Dashboard = () => {
     <div className="p-6 space-y-6">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h2 className="text-2xl font-bold">Dashboard</h2>
 
           <Link
             to="/help/getting-started"

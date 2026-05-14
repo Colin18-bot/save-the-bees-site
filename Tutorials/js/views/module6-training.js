@@ -10,7 +10,7 @@ export function renderModule6Training(container) {
       <header class="tk-content-header">
         <div class="tk-content-heading">
           <div class="tk-content-eyebrow">Module 6</div>
-          <h1 class="tk-content-title">Honey Bee Behaviour – Training</h1>
+          <h2 class="tk-content-title">Honey Bee Behaviour – Training</h2>
           <p class="tk-content-subtitle">
             This module focuses on how bees behave as individuals and as a colony: foraging, swarming,
             communication, defence and seasonal patterns. Behaviour is where biology turns into

@@ -9,6 +9,7 @@
     <meta name="description" content="UK guide to bacterial bee diseases including American foulbrood (AFB) and European foulbrood (EFB), with signs, spread and what to do.">
     <meta name="keywords" content="bacterial diseases honey bees UK, American foulbrood AFB UK, European foulbrood EFB UK, foulbrood symptoms, foulbrood inspection, foulbrood treatment UK, bee disease notifiable UK">
     <meta name="author" content="Colin Chorley">
+    <meta name="robots" content="index,follow">
     <meta property="og:type" content="article">
     <meta property="og:title" content="Bacterial Bee Diseases UK | AFB & EFB Guide">
     <meta property="og:description" content="Learn to recognise American foulbrood (AFB) and European foulbrood (EFB) in UK hives and understand spread, risks and actions.">
@@ -84,16 +85,26 @@
             "@id": "https://beezknees.co.uk/bacterial-diseases#webpage",
             "url": "https://beezknees.co.uk/bacterial-diseases",
             "name": "Bacterial Bee Diseases UK | AFB & EFB Guide | BeezKnees",
-      "description": "UK guide to bacterial bee diseases including American foulbrood (AFB) and European foulbrood (EFB), with signs, spread and what to do.",
+            "description": "UK guide to bacterial bee diseases including American foulbrood (AFB) and European foulbrood (EFB), with signs, spread and what to do.",
             "inLanguage": "en-GB",
             "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
-            "isPartOf": {
-              "@id": "https://beezknees.co.uk/#website"
-            },
-            "about": {
+              "dateModified": "2026-05-14",
+            "isPartOf": [
+              {
+                "@id": "https://beezknees.co.uk/#website"
+              },
+              {
+                "@id": "https://beezknees.co.uk/bee-diseases#webpage"
+              }
+            ],
+            "mainEntity": [
+            {
               "@id": "https://beezknees.co.uk/bacterial-diseases#article"
             },
+            {
+              "@id": "https://beezknees.co.uk/bacterial-diseases#faq"
+            }
+          ],
             "image": {
               "@id": "https://beezknees.co.uk/bacterial-diseases#primaryimage"
             },
@@ -111,8 +122,8 @@
             "@type": "Article",
             "@id": "https://beezknees.co.uk/bacterial-diseases#article",
             "url": "https://beezknees.co.uk/bacterial-diseases",
-           "headline": "Bacterial Bee Diseases UK | AFB & EFB Guide",
-      "description": "UK guide to bacterial bee diseases including American foulbrood (AFB) and European foulbrood (EFB), with signs, spread and what to do.",
+            "headline": "Bacterial Bee Diseases UK | AFB & EFB Guide",
+            "description": "UK guide to bacterial bee diseases including American foulbrood (AFB) and European foulbrood (EFB), with signs, spread and what to do.",
             "image": {
               "@id": "https://beezknees.co.uk/bacterial-diseases#primaryimage"
             },
@@ -127,7 +138,7 @@
             },
             "inLanguage": "en-GB",
             "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "articleSection": [
               "What are bacterial diseases of honey bees?",
               "American foulbrood (AFB)",
@@ -144,7 +155,10 @@
               "foulbrood symptoms",
               "foulbrood inspection",
               "bee disease notifiable UK"
-            ]
+            ],
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/bee-diseases#webpage"
+            }
           },
           {
             "@type": "FAQPage",
@@ -216,7 +230,7 @@
               {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Bee Health",
+                "name": "Bee Diseases",
                 "item": "https://beezknees.co.uk/bee-diseases"
               },
               {
@@ -234,7 +248,6 @@
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
-      <!-- Top Tier: Logo + Search/Mobile Menu -->
       <div class="topbar">
         <a href="/" class="brand" aria-label="BeezKnees home">
         <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
@@ -249,15 +262,15 @@
           </button>
         </div>
       </div>
-      <!-- Top Navigation -->
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <nav class="navbar" aria-label="Main navigation">
         <ul class="nav-menu" aria-label="Main Navigation Links">
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
           <li><a href="/hivetag-app">HiveTag</a></li>
           <li>
@@ -275,7 +288,7 @@
       <div class="hero-inner">
         <div class="hero-card hero-card--compact">
           <span class="hero-kicker">Bee Health</span>
-          <h2 class="hero-title">Bacterial Diseases</h2>
+          <h1 class="hero-title">Bacterial Diseases</h1>
           <p class="hero-intro">
             Understanding American and European foulbrood (AFB/EFB) – recognition, spread, prevention and working with UK authorities
           </p>
@@ -292,44 +305,65 @@
       <button class="section-mobile-toggle" id="sectionNavToggle" aria-expanded="true" aria-controls="sectionNavMobile">
       Bee Health Menu ▲
       </button>
-      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Bee diseases section navigation" data-active-group="Bee Health">
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Start Here</summary>
-          <ul>
-            <li><a href="/behaviour">Bee Behaviour</a></li>
-            <li><a href="/colony-health-triage">Colony Health Triage Tool</a></li>
-            <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-            <li><a href="/anatomy">Bee Anatomy</a></li>
-            <li><a href="/other-conditions">Other Conditions</a></li>
-          </ul>
-        </details>
+      <!-- Mobile Page Navigation -->
+      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Bee Diseases section navigation" data-active-group="Bacterial Diseases">
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Common Problems</summary>
+          <summary class="section-mobile-summary">Bee Health Overview</summary>
           <ul>
-            <li><a href="/dead-bees-outside-hive">Dead Bees Outside the Hive</a></li>
-            <li><a href="/brood-problems-uk">Brood Problems</a></li>
-            <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
-            <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
+            <li><a href="/bee-diseases">Bee Diseases</a></li>
+            <li><a href="/bee-health-checker">Bee Health Checker</a></li>
+            <li><a href="/colony-health-triage">Colony Health Triage</a></li>
             <li><a href="/when-to-call-bee-inspector-uk">When to Call a Bee Inspector</a></li>
           </ul>
         </details>
         <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Disease &amp; Pest Guides</summary>
+          <summary class="section-mobile-summary">Bacterial Diseases</summary>
           <ul>
             <li><span aria-current="page">Bacterial Diseases</span></li>
-            <li><a href="/viral-diseases">Viral Diseases</a></li>
-            <li><a href="/bee-pests">Bee Pests</a></li>
-            <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+            <li><a href="/american-foulbrood-uk">American Foulbrood</a></li>
+            <li><a href="/european-foulbrood-uk">European Foulbrood</a></li>
+            <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
           </ul>
         </details>
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Prevention &amp; Planning</summary>
+          <summary class="section-mobile-summary">Viral Diseases</summary>
           <ul>
-            <li><a href="/hygiene">Hive Hygiene</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/viral-diseases">Viral Diseases</a></li>
+            <li><a href="/deformed-wing-virus-uk">Deformed Wing Virus</a></li>
+            <li><a href="/sacbrood-uk">Sacbrood</a></li>
           </ul>
         </details>
-        <!-- On this page mobile view -->
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Brood Problems</summary>
+          <ul>
+            <li><a href="/brood-problems-uk">Brood Problems</a></li>
+            <li><a href="/chalkbrood-uk">Chalkbrood</a></li>
+            <li><a href="/chilled-brood-uk">Chilled Brood</a></li>
+            <li><a href="/brood-pattern-guide">Brood Pattern Guide</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Other Conditions</summary>
+          <ul>
+            <li><a href="/other-conditions">Other Conditions</a></li>
+            <li><a href="/nosema-uk">Nosema</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Pests &amp; Predators</summary>
+          <ul>
+            <li><a href="/bee-pests">Bee Pests</a></li>
+            <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+            <li><a href="/robbing-behaviour-bees">Robbing Behaviour</a></li>
+            <li><a href="/wasps-beehives-uk">Wasps &amp; Beehives</a></li>
+            <li><a href="/wax-moth-uk">Wax Moth</a></li>
+            <li><a href="/ants-in-beehives">Ants in Beehives</a></li>
+            <li><a href="/mice-in-beehives">Mice in Beehives</a></li>
+            <li><a href="/asian-hornet-uk">Asian Hornet</a></li>
+            <li><a href="/small-hive-beetle-uk">Small Hive Beetle</a></li>
+          </ul>
+        </details>
+        <!-- Mobile On This Page -->
         <details class="section-mobile-group">
           <summary class="section-mobile-summary">On this page</summary>
           <ul>
@@ -349,56 +383,71 @@
           <span class="hero-kicker">BeezKnees App</span>
           <h3>Stay on Top of Every Hive, Every Inspection</h3>
           <p>Track inspections, feeding, treatments and seasonal notes — all in one place.</p>
-          <a class="btn btn-primary" href="/hivetag-app">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          Explore HiveTag
-          </a>
-          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          Open Members Area
-          </a>
+          <a class="btn btn-primary" href="/hivetag-app"><i class="fa-solid fa-mobile-screen-button"></i> Explore HiveTag</a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login"><i class="fa-solid fa-right-to-bracket"></i> Open Members Area</a>
         </div>
       </nav>
       <div class="hub-layout">
-        <aside class="hub-sidebar" aria-label="Bee diseases section navigation" data-active-group="Bee Health">
-          <h2 class="hub-sidebar-title">Bee Health</h2>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Start Here</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/behaviour">Bee Behaviour</a></li>
-              <li><a href="/colony-health-triage">Colony Health Triage Tool</a></li>
-              <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-              <li><a href="/anatomy">Bee Anatomy</a></li>
-              <li><a href="/other-conditions">Other Conditions</a></li>
-            </ul>
-          </details>
+        <!-- Side Navigation -->
+        <aside class="hub-sidebar" aria-label="Bee Diseases section navigation" data-active-group="Bacterial Diseases">
+          <h2 class="hub-sidebar-title">Bee Diseases</h2>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Common Problems</summary>
+            <summary class="hub-nav-summary">Bee Health Overview</summary>
             <ul class="hub-nav-links">
-              <li><a href="/dead-bees-outside-hive">Dead Bees Outside the Hive</a></li>
-              <li><a href="/brood-problems-uk">Brood Problems</a></li>
-              <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
-              <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
+              <li><a href="/bee-diseases">Bee Diseases</a></li>
+              <li><a href="/bee-health-checker">Bee Health Checker</a></li>
+              <li><a href="/colony-health-triage">Colony Health Triage</a></li>
               <li><a href="/when-to-call-bee-inspector-uk">When to Call a Bee Inspector</a></li>
             </ul>
           </details>
           <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Disease &amp; Pest Guides</summary>
+            <summary class="hub-nav-summary">Bacterial Diseases</summary>
             <ul class="hub-nav-links">
               <li><span aria-current="page">Bacterial Diseases</span></li>
-              <li><a href="/viral-diseases">Viral Diseases</a></li>
-              <li><a href="/bee-pests">Bee Pests</a></li>
-              <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+              <li><a href="/american-foulbrood-uk">American Foulbrood</a></li>
+              <li><a href="/european-foulbrood-uk">European Foulbrood</a></li>
+              <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
             </ul>
           </details>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Prevention &amp; Planning</summary>
+            <summary class="hub-nav-summary">Viral Diseases</summary>
             <ul class="hub-nav-links">
-              <li><a href="/hygiene">Hive Hygiene</a></li>
-              <li><a href="/varroa-management">Varroa Management</a></li>
+              <li><a href="/viral-diseases">Viral Diseases</a></li>
+              <li><a href="/deformed-wing-virus-uk">Deformed Wing Virus</a></li>
+              <li><a href="/sacbrood-uk">Sacbrood</a></li>
             </ul>
           </details>
-          <!-- On this page under side nav -->
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Brood Problems</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/brood-problems-uk">Brood Problems</a></li>
+              <li><a href="/chalkbrood-uk">Chalkbrood</a></li>
+              <li><a href="/chilled-brood-uk">Chilled Brood</a></li>
+              <li><a href="/brood-pattern-guide">Brood Pattern Guide</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Other Conditions</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/other-conditions">Other Conditions</a></li>
+              <li><a href="/nosema-uk">Nosema</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Pests &amp; Predators</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/bee-pests">Bee Pests</a></li>
+              <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+              <li><a href="/robbing-behaviour-bees">Robbing Behaviour</a></li>
+              <li><a href="/wasps-beehives-uk">Wasps &amp; Beehives</a></li>
+              <li><a href="/wax-moth-uk">Wax Moth</a></li>
+              <li><a href="/ants-in-beehives">Ants in Beehives</a></li>
+              <li><a href="/mice-in-beehives">Mice in Beehives</a></li>
+              <li><a href="/asian-hornet-uk">Asian Hornet</a></li>
+              <li><a href="/small-hive-beetle-uk">Small Hive Beetle</a></li>
+            </ul>
+          </details>
+          <!-- Side Navigation On This Page -->
           <div class="article-sidebar-card">
             <h3>On this page</h3>
             <ul class="toc-list">
@@ -430,11 +479,11 @@
         </aside>
         <section class="hub-main-content">
           <div class="content-card" id="overview">
-            <h1>Bacterial Diseases of Honey Bees – AFB & EFB in the UK</h1>
+            <h2>Bacterial Diseases of Honey Bees – AFB & EFB in the UK</h2>
             <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
             <img src="images/bee-inspector_2.webp" alt="Brood frame being checked carefully for signs of bacterial disease" class="float-left-img" width="800" height="600" loading="lazy" decoding="async">
             <p>Bacterial diseases are among the most serious threats to honey bee colonies. In the UK, the two main bacterial brood diseases are <strong>American foulbrood (AFB)</strong> and <strong>European foulbrood (EFB)</strong>. Both are <strong>notifiable diseases</strong>, which means that if you suspect them you must follow current UK guidance and involve a bee inspector.</p>
-            <p>This page is designed to be a practical reference for UK beekeepers. It does not replace official advice, but it should help you understand what foulbrood looks like, why it is taken so seriously, and how everyday management and good hygiene can reduce the risk of an outbreak in your apiary. If you are comparing suspicious brood signs, see <a href="/foulbrood-vs-chalkbrood" title="Compare foulbrood and chalkbrood symptoms">Foulbrood vs Chalkbrood</a>. If you are unsure whether the issue needs official advice, see <a href="/when-to-call-bee-inspector-uk" title="When to call a bee inspector in the UK">When to Call a Bee Inspector</a>.For the wider context, start with the <a href="/bee-diseases" title="Overview of bee diseases and pests in the UK">bee diseases and pests overview</a>. If you are starting from suspicious brood symptoms and are not yet sure whether foulbrood is the issue, try the <a href="/colony-health-triage" title="Use the interactive colony health triage tool for UK beekeepers">interactive colony health triage tool</a> and the <a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a>.</p>
+            <p>This page is designed to be a practical reference for UK beekeepers. It does not replace official advice, but it should help you understand what foulbrood looks like, why it is taken so seriously, and how everyday management and good hygiene can reduce the risk of an outbreak in your apiary. If you are comparing suspicious brood signs, see <a href="/foulbrood-vs-chalkbrood" title="Compare foulbrood and chalkbrood symptoms">Foulbrood vs Chalkbrood</a>. If you are unsure whether the issue needs official advice, see <a href="/when-to-call-bee-inspector-uk" title="When to call a bee inspector in the UK">When to Call a Bee Inspector</a>. For the wider context, start with the <a href="/bee-diseases" title="Overview of bee diseases and pests in the UK">bee diseases and pests overview</a>. If you are starting from suspicious brood symptoms and are not yet sure whether foulbrood is the issue, try the <a href="/colony-health-triage" title="Use the interactive colony health triage tool for UK beekeepers">interactive colony health triage tool</a> and the <a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a>.</p>
             <div class="callout callout-warning" role="alert">
               <strong>Fast symptom check:</strong> If you're seeing sunken/perforated cappings, odd larval remains or a foul smell, start with the <a href="/colony-health-triage" title="Interactive bee colony health triage tool for UK beekeepers">colony health triage tool</a>, then use the <a href="/bee-health-checker" title="Identify bee problems by symptoms and choose safe next actions">Bee Health Checker</a> and its <a href="/bee-health-checker#red-flags" title="Red flags and notifiable disease">red flags</a>, then isolate and seek official advice if foulbrood is possible.
             </div>
@@ -522,7 +571,7 @@
           </div>
           <div class="content-card" id="inspectors">
             <h2>Working with Bee Inspectors and BeeBase</h2>
-            <p>UK foulbrood control is a partnership between beekeepers and government agencies. Registering your apiaries on <em><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title="BeeBase registration and disease alerts">BeeBase</a></em> helps inspectors contact you if there is disease in your area and provides access to up-to-date guidance.</p>
+            <p>UK foulbrood control is a partnership between beekeepers and government agencies. Registering your apiaries on <em><a href="https://www.nationalbeeunit.com/" target="_blank" rel="noopener noreferrer" title="BeeBase registration and disease alerts">BeeBase</a></em> helps inspectors contact you if there is disease in your area and provides access to up-to-date guidance. If you are unsure whether your symptoms need official advice, read <a href="/when-to-call-bee-inspector-uk" title="When to call a bee inspector in the UK">When to Call a Bee Inspector</a>.</p>
             <p>If a bee inspector visits your apiary, it is an opportunity to learn. They can also help you improve the brood checks that matter most in <a href="/april" title="April beekeeping tasks">April</a> and <a href="/june" title="June beekeeping tasks">June</a>. They can:</p>
             <ul class="indented-list">
               <li>Show you the difference between healthy and suspect brood.</li>
@@ -547,55 +596,67 @@
               <h2 id="bacterial-faq">Bacterial Diseases – Frequently Asked Questions</h2>
               <div class="faq-list">
                 <div class="faq-item open">
-                  <button class="faq-question" type="button">
-                  <span>Are American foulbrood (AFB) and European foulbrood (EFB) notifiable in the UK?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="true">
+                    <span>Are American foulbrood (AFB) and European foulbrood (EFB) notifiable in the UK?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Yes. Both American foulbrood (AFB) and European foulbrood (EFB) are notifiable diseases in the UK. If you suspect either, you should follow current guidance and contact your local bee inspector or the National Bee Unit through BeeBase. Do not move bees, comb or equipment until you have clear advice.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>What are the main signs of American foulbrood (AFB)?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>What are the main signs of American foulbrood (AFB)?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Typical signs of AFB include irregular, patchy brood with sunken, dark or greasy-looking cappings; a strong gluey or fishy smell; and larval remains that may rope out when tested with a matchstick. Confirmed diagnosis and control must follow current UK guidance and usually involve destruction of infected comb and equipment.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>What are the main signs of European foulbrood (EFB)?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>What are the main signs of European foulbrood (EFB)?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>EFB often shows as twisted or discoloured larvae lying in their cells, sometimes yellowish or grey rather than pearly white. The brood pattern becomes patchy, with empty cells where larvae have died or been removed. EFB is managed under official guidance and may involve shook-swarm operations or destruction of heavily infected colonies.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>Can I treat foulbrood myself with antibiotics?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Can I treat foulbrood myself with antibiotics?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>No. In the UK, you must not self-treat suspected foulbrood with antibiotics. Control is carried out under official direction, usually by or in consultation with a bee inspector. This protects wider bee populations and helps prevent resistant bacterial strains from developing.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>Do I need to keep records of hive treatments and veterinary medicines?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Do I need to keep records of hive treatments and veterinary medicines?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Yes. If you use authorised veterinary medicines in your hives, keep a clear log of the product used, the dates of treatment and which colonies were treated. In the UK, it is good practice to retain these records for at least 5 years.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>How can I reduce the risk of bacterial diseases in my apiary?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>How can I reduce the risk of bacterial diseases in my apiary?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Good hive hygiene, regular inspections and sensible handling of comb and equipment are key. Avoid feeding unknown honey to bees, minimise robbing, keep clear records of hive movements, and clean or scorch second-hand or suspect equipment. Work alongside local associations, bee inspectors and official resources such as BeeBase.</p>
                   </div>
@@ -655,9 +716,10 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about-us">About Us</a></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
             <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
             <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             <li><a href="/hivetag-app">HiveTag</a></li>
           </ul>
@@ -701,27 +763,26 @@
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
         </ul>
-      <div class="mobile-menu-cta">
-        <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+        <div class="mobile-menu-cta">
+          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
           <i class="fa-solid fa-mobile-screen-button"></i>
           Try HiveTag Free
-        </a>
-
-        <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
           <i class="fa-solid fa-right-to-bracket"></i>
           Login
-        </a>
-
-        <a class="btn btn-secondary" href="/hivetag-app">
+          </a>
+          <a class="btn btn-secondary" href="/hivetag-app">
           <i class="fa-solid fa-circle-info"></i>
           More Information
-        </a>
-      </div>
+          </a>
+        </div>
       </div>
     </aside>
     <div class="search-overlay" id="searchOverlay"></div>

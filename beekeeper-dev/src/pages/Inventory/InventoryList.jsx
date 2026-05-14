@@ -66,7 +66,7 @@ export default function InventoryList() {
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <h1 className="text-2xl font-bold">Inventory</h1>
+        <h2 className="text-2xl font-bold">Inventory</h2>
         <Link
   to="/inventory/new"
   className="inline-flex items-center justify-center rounded-2xl border bg-black text-white px-3 py-1.5 text-sm self-start sm:self-auto"

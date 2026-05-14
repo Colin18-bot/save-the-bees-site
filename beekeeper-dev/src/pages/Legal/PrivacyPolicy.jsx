@@ -3,7 +3,7 @@ import React from "react";
 export default function PrivacyPolicy() {
   return (
     <div id="top" className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-bold">Privacy Policy</h1>
+      <h2 className="text-2xl font-bold">Privacy Policy</h2>
       <p className="text-gray-600">
         <strong>Effective date:</strong> 14 June 2025
       </p>

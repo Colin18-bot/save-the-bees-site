@@ -97,7 +97,7 @@ export default function NewExpense() {
 
   return (
     <div className="max-w-xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">New Expense</h1>
+      <h2 className="text-2xl font-bold mb-4">New Expense</h2>
       {err && <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-3 rounded">{err}</div>}
 
       <form onSubmit={onSubmit} className="space-y-4">

@@ -1,604 +1,866 @@
 window.searchData = [
   {
-    title: "About BeezKnees – UK Beekeeping Guides, Conservation & Hive Records",
-    url: "/about-us",
-    description: "Meet BeezKnees: a UK-focused beekeeping website by hobbyist beekeeper Colin Chorley. Learn why the site exists, what it covers, and how HiveTag helps you record apiaries, hives and inspections.",
-    keywords: "about BeezKnees, Colin Chorley, UK beekeeping, beekeeping guides UK, beginner beekeeping UK, honeybee conservation, hive health, pollinators, HiveTag records, apiary inspections"
+    "title": "BeezKnees | UK Beekeeping Guides & HiveTag Records",
+    "url": "/",
+    "description": "Practical UK beekeeping guides for beginners, covering seasonal tasks, hive health, bee diseases, equipment, swarm control and HiveTag records.",
+    "keywords": "beekeeping UK, UK beekeeping guide, beekeeping for beginners UK, seasonal beekeeping tasks, hive care, bee diseases UK, pollinator protection, apiary tips, swarm control, beekeeping equipment"
   },
   {
-    title: "What to Check After a Hive Split (UK) – Eggs, Queen Cells, Timing and Signs of Success | BeezKnees",
-    url: "/after-split",
-    description: "What should you check after a hive split? Learn when to inspect, what to expect from queen cells, when eggs should appear, and the signs your split is progressing normally in the UK.",
-    keywords: "what to check after a hive split, hive split aftercare UK, post split beekeeping guide, checking split hive queen cells, when to check split colony"
+    "title": "About BeezKnees | UK Beekeeping Guides & HiveTag",
+    "url": "/about-us",
+    "description": "Learn about BeezKnees, a UK beekeeping website by Colin Chorley offering beginner-friendly guides, seasonal advice, and HiveTag hive record tools.",
+    "keywords": "about BeezKnees, Colin Chorley, UK beekeeping, beekeeping guides UK, beginner beekeeping UK, honeybee conservation, hive health, pollinators, HiveTag records, apiary inspections"
   },
   {
-    title: "Honeybee Anatomy (UK) – Workers, Drones, Queens, Brood & Life Cycle | BeezKnees",
-    url: "/anatomy",
-    description: "A detailed UK guide to honeybee anatomy, including workers, drones, queens, brood patterns, queen cells, life cycle timing, swarming clues and how anatomy links to practical beekeeping.",
-    keywords: "honeybee anatomy UK, worker vs drone vs queen, how to identify a queen, drone eyes bigger, drone brood domed cappings, queen cell peanut shape, worker brood cappings, bee head thorax abdomen, proboscis, compound eyes, ocelli, antennae, pollen baskets corbiculae, wax glands, bee stinger, apis mellifera UK, bee life cycle 16 21 24 days, queen hatches 16 days"
+    "title": "Adding Supers UK | When to Add Honey Supers | BeezKnees",
+    "url": "/adding-supers-uk",
+    "description": "When to add supers in the UK, including signs a colony needs space, spring and summer timing, drawn comb, queen excluders and common supering mistakes.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Adding Supers UK | When to Add Honey Supers"
   },
   {
-    title: "Apiary Risk Assessment (UK) – Beekeeping Safety Checklist & Template | BeezKnees",
-    url: "/apiary-risk-assessment",
-    description: "Plain-English apiary risk assessment guide for UK beekeepers. Identify common hazards (stings, public access, livestock, tools, treatments) and download a simple template to use for landowners or your own records.",
-    keywords: "apiary risk assessment UK, beekeeping risk assessment template, beekeeping safety UK, apiary safety checklist, beekeeper responsibilities UK, stings allergy risk beekeeping, public access apiary"
+    "title": "After a Hive Split UK: Checks & Timing | BeezKnees",
+    "url": "/after-split",
+    "description": "UK guide to what to check after a hive split, when to inspect, queen cell timing, when eggs should appear and signs your split is progressing.",
+    "keywords": "what to check after a hive split, hive split aftercare UK, post split beekeeping guide, checking split hive queen cells, when to check split colony"
   },
   {
-    title: "April Beekeeping Tasks UK | Inspections, Feeding, Swarm Control & Supers | BeezKnees",
-    url: "/april",
-    description: "April beekeeping tasks in the UK: when to inspect, check food stores, feed if needed, watch for queen cells, prevent swarming and add supers as colonies build up in spring.",
-    keywords: "April beekeeping tasks UK, spring hive inspections, swarm control UK, adding supers, bees in April, queen assessment, brood inspection, monthly beekeeping calendar"
+    "title": "American Foulbrood UK | Symptoms, Ropiness Test & What To Do",
+    "url": "/american-foulbrood-uk",
+    "description": "Learn how to identify American foulbrood (AFB) in the UK, including symptoms, the ropiness test, and when to contact a bee inspector.",
+    "keywords": "american foulbrood UK, AFB symptoms bees, ropiness test foulbrood, foulbrood signs UK, bee inspector foulbrood, infected brood signs"
   },
   {
-    title: "Artificial Swarm for Beginners (UK) | BeezKnees",
-    url: "/artificial-swarm",
-    description: "Step-by-step artificial swarm guide for UK beekeepers. Learn how to prevent swarming, split colonies safely and manage queen cells with confidence.",
-    keywords: "artificial swarm UK, swarm control beginners, how to split hive UK, beekeeper swarm control method, artificial swarm step by step UK"
+    "title": "Honeybee Anatomy UK | Bee Types | BeezKnees",
+    "url": "/anatomy",
+    "description": "UK honeybee anatomy guide covering workers, drones, queens, brood types, queen cells and the 16/21/24-day bee life cycle.",
+    "keywords": "honeybee anatomy UK, worker vs drone vs queen, how to identify a queen, drone eyes bigger, drone brood domed cappings, queen cell peanut shape, worker brood cappings, bee head thorax abdomen, proboscis, compound eyes, ocelli, antennae, pollen baskets corbiculae, wax glands, bee stinger, apis mellifera UK, bee life cycle 16 21 24 days, queen hatches 16 days"
   },
   {
-    title: "August Beekeeping Tasks UK | Varroa Treatment, Honey Harvest & Winter Prep | BeezKnees",
-    url: "/august",
-    description: "What to do with your bees in August in the UK: key beekeeping tasks, varroa treatment timing, honey harvesting, feeding, uniting weak colonies, wasp control and preparing hives for winter.",
-    keywords: "August beekeeping tasks UK, what to do with bees in August, varroa treatment August UK, honey harvest August, feeding bees in August, preparing hives for winter UK, unite weak colonies, wasps in the apiary, wax moth prevention"
+    "title": "Ants in Beehives UK | Signs, Causes & Safe Control",
+    "url": "/ants-in-beehives",
+    "description": "UK guide to ants in beehives, including why ants are attracted to hives, when they become a problem, and how to control them safely without harming bees.",
+    "keywords": "ants in beehives UK, ants around hive stand, ants in bee feeder, ants in apiary, control ants near bees, ants hive problem"
   },
   {
-    title: "Bacterial Diseases of Honey Bees – American & European Foulbrood (AFB/EFB) | BeezKnees",
-    url: "/bacterial-diseases",
-    description: "Practical UK guide to bacterial diseases of honey bees, especially American foulbrood (AFB) and European foulbrood (EFB). Learn how to recognise signs, understand how they spread and follow official UK guidance to protect your bees.",
-    keywords: "bacterial diseases honey bees UK, American foulbrood AFB UK, European foulbrood EFB UK, foulbrood symptoms, foulbrood inspection, foulbrood treatment UK, bee disease notifiable UK"
+    "title": "Apiary Risk Assessment UK Template | BeezKnees",
+    "url": "/apiary-risk-assessment",
+    "description": "UK apiary risk assessment guide with common beekeeping hazards, sensible controls, site checks and a simple downloadable template.",
+    "keywords": "apiary risk assessment UK, beekeeping risk assessment template, beekeeping safety UK, apiary safety checklist, beekeeper responsibilities UK, stings allergy risk beekeeping, public access apiary"
   },
   {
-    title: "Honey Bee Diseases and Pests in the UK – Identification, Prevention & Hygiene | BeezKnees",
-    url: "/bee-diseases",
-    description: "A practical UK guide to honey bee diseases and pests – how to recognise common problems, reduce risks with good hygiene and find trusted guidance through BeeBase and local inspectors.",
-    keywords: "honey bee diseases UK, bee diseases UK symptoms, common bee diseases and pests, foulbrood UK, varroa mites UK, beekeeping hygiene, BeeBase"
+    "title": "April Beekeeping UK | Inspections, Swarm Control & Supers | BeezKnees",
+    "url": "/april",
+    "description": "April beekeeping in the UK: inspections, swarm control, queen cells, feeding and adding supers as colonies build rapidly in spring.",
+    "keywords": "April beekeeping tasks UK, spring hive inspections, swarm control UK, adding supers, bees in April, queen assessment, brood inspection, monthly beekeeping calendar"
   },
   {
-    title: "How to Help Bees in the Garden – Bee Friendly Plants & Garden Ideas UK | BeezKnees",
-    url: "/bee-gardening",
-    description: "Learn how to help bees in the garden with bee friendly plants, practical planting plans and UK gardening advice that supports pollination, nectar flow and bee activity through the seasons.",
-    keywords: "how to help bees in the garden, bee friendly garden UK, plants for bees UK, gardening for pollinators, bee friendly planting plans, nectar rich plants UK"
+    "title": "Artificial Swarm UK | Step-by-Step Swarm Control Guide",
+    "url": "/artificial-swarm",
+    "description": "Step-by-step artificial swarm guide for UK beekeepers. Learn how to prevent swarming, split colonies safely and manage queen cells with confidence.",
+    "keywords": "artificial swarm UK, swarm control beginners, how to split hive UK, beekeeper swarm control method, artificial swarm step by step UK"
   },
   {
-    title: "Bee Health Checker (UK) – Symptoms, Likely Causes and What to Do | BeezKnees",
-    url: "/bee-health-checker",
-    description: "A practical UK-focused bee health checker. Match hive symptoms to likely causes and safe actions, including foulbrood, viruses, Nosema, chalkbrood, varroa and common pests.",
-    keywords: "bee health checker UK, bee disease symptoms, foulbrood symptoms, EFB AFB UK, Nosema symptoms, chalkbrood Ascosphaera apis, varroa symptoms, bee paralysis virus, wax moth, bee louse"
+    "title": "Asian Hornet UK | Identification, Reporting & Bee Risk",
+    "url": "/asian-hornet-uk",
+    "description": "UK guide to Asian hornet, also called yellow-legged hornet, including identification, how to report sightings, risks to honey bees and what beekeepers should do.",
+    "keywords": "Asian hornet UK, yellow-legged hornet UK, Vespa velutina UK, report Asian hornet, Asian Hornet Watch app, hornet attacking bees UK"
   },
   {
-    title: "Bee Pests in the UK – Identification, Prevention and Control | BeezKnees",
-    url: "/bee-pests",
-    description: "A practical UK guide to bee pests – how to recognise wax moth, small hive beetle, mice, wasps, ants and other hive pests, and how to prevent damage with good apiary practice.",
-    keywords: "bee pests UK, honey bee pests identification, hive pests and prevention, wax moth UK, small hive beetle UK, Asian hornet UK, hive mice, wasps at hive, ants in beehive"
+    "title": "August Beekeeping UK | Varroa, Honey & Winter Prep | BeezKnees",
+    "url": "/august",
+    "description": "August beekeeping tasks in the UK: varroa treatment, honey harvest, feeding, colony checks, wasp control and winter preparation.",
+    "keywords": "August beekeeping tasks UK, what to do with bees in August, varroa treatment August UK, honey harvest August, feeding bees in August, preparing hives for winter UK, unite weak colonies, wasps in the apiary, wax moth prevention"
   },
   {
-    title: "Bee Stings – Treatment, Reactions and Safety for UK Beekeepers | BeezKnees",
-    url: "/bee-stings",
-    description: "Understand bee stings, reactions and first aid for UK beekeepers. Learn how to treat stings, recognise allergic reactions, reduce risk during inspections and stay safe around your hives.",
-    keywords: "bee sting treatment UK, first aid for bee stings, allergic reaction bee sting, bee stings beekeepers, beekeeping safety UK, EpiPen bee sting, anaphylaxis signs, hive inspection safety, how to avoid bee stings, beekeeping protective clothing"
+    "title": "Autumn Beekeeping UK | September, October & November Tasks | BeezKnees",
+    "url": "/autumn-beekeeping-uk",
+    "description": "Autumn beekeeping tasks in the UK, covering September, October and November feeding, varroa treatment, hive checks, mouseguards and winter preparation.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Autumn Beekeeping UK | September, October & November Tasks"
   },
   {
-    title: "Beekeeper’s Rule Calculator – Queen Development, Swarm Timing & Honey Flow Planner | BeezKnees",
-    url: "/beekeepers-rule-calculator",
-    description: "Free Beekeeper’s Rule calculator and apiary planning tool for queen development, swarm timing, honey flow planning, breeding dates, inspections and seasonal beekeeping decisions.",
-    keywords: "Beekeeper’s Rule, beekeeper calculator, queen development calculator, swarm timing calculator, honey flow planner, bee development timeline, queen breeding planner"
+    "title": "Bacterial Bee Diseases UK | AFB & EFB Guide | BeezKnees",
+    "url": "/bacterial-diseases",
+    "description": "UK guide to bacterial bee diseases including American foulbrood (AFB) and European foulbrood (EFB), with signs, spread and what to do.",
+    "keywords": "bacterial diseases honey bees UK, American foulbrood AFB UK, European foulbrood EFB UK, foulbrood symptoms, foulbrood inspection, foulbrood treatment UK, bee disease notifiable UK"
   },
   {
-    title: "Beekeeping Guides in the UK – Getting Started, Hive Management, Varroa & Honey | BeezKnees",
-    url: "/beekeeping-guides",
-    description: "A practical UK beekeeping guides hub for beginners and hobbyists: getting started, equipment, inspections, hive management, swarm control, varroa monitoring, hygiene, honey extraction and a month-by-month apiary calendar.",
-    keywords: "beekeeping UK, beekeeping guides UK, beginner beekeeping UK, apiculture UK, beehive inspections, hive management, swarm control, varroa management, hive hygiene, beekeeping equipment, honey extraction, BeezKnees"
+    "title": "Bearding Bees UK | Why Bees Cluster Outside the Hive",
+    "url": "/bearding-bees-uk",
+    "description": "UK guide to bearding bees, including why bees cluster outside the hive, when bearding is normal, and how to tell it apart from swarming or overheating.",
+    "keywords": "bearding bees UK, bees outside hive cluster, bees hanging on hive, bees on front of hive, hot weather bees hive, why bees beard"
   },
   {
-    title: "Beekeeping Insurance (UK) – Public Liability, Apiary Cover & What to Check | BeezKnees",
-    url: "/beekeeping-insurance-uk",
-    description: "Practical UK beekeeping insurance guide: what public liability usually means, how association cover typically works, what to check for apiaries on other people's land, and how to avoid common policy gaps (plain English, not legal advice).",
-    keywords: "beekeeping insurance UK, beekeeping public liability insurance, apiary insurance UK, beekeeper insurance, landowner beekeeper agreement, beekeeping responsibilities UK, swarm liability, risk assessment apiary"
+    "title": "Honey Bee Diseases, Pests & Colony Problems UK | BeezKnees",
+    "url": "/bee-diseases",
+    "description": "UK bee health hub covering honey bee diseases, pests, dead bees, brood problems, varroa, starvation, colony loss, hive hygiene and when to seek inspector advice.",
+    "keywords": "honey bee diseases UK, bee diseases UK symptoms, common bee diseases and pests, foulbrood UK, varroa mites UK, beekeeping hygiene, BeeBase"
   },
   {
-    title: "Beekeeping Responsibilities (UK) – Safety, Records & Good Practice | BeezKnees",
-    url: "/beekeeping-responsibilities-uk",
-    description: "Practical UK beekeeping responsibilities guide: safety and risk awareness, veterinary medicine records, using varroa treatments responsibly, landowner agreements, insurance basics, swarms, and links to official guidance.",
-    keywords: "beekeeping responsibilities UK, beekeeper duty of care, apiary risk assessment, beekeeping safety UK, veterinary medicine records bees, varroa treatment safety, landowner beekeeper agreement, beekeeping insurance UK, swarm responsibility"
+    "title": "Bee Friendly Garden UK | Plants to Help Bees | BeezKnees",
+    "url": "/bee-gardening",
+    "description": "Create a bee friendly garden in the UK with nectar rich plants, simple planting ideas, water, shelter and practical ways to help bees.",
+    "keywords": "how to help bees in the garden, bee friendly garden UK, plants for bees UK, gardening for pollinators, bee friendly planting plans, nectar rich plants UK"
   },
   {
-    title: "Honeybee Behaviour (UK) – Communication, Foraging, Swarming, Roles & Hive Defence | BeezKnees",
-    url: "/behaviour",
-    description: "A practical UK guide to honeybee behaviour: communication, pheromones, the waggle dance, foraging, brood care, swarming, robbing, orientation flights, seasonal temperament and how behaviour affects inspections.",
-    keywords: "honeybee behaviour UK, waggle dance, bee communication, foraging bees, swarming behaviour, robbing bees, orientation flights, brood care, queen pheromones, bee temperament, colony behaviour, practical beekeeping UK"
+    "title": "Bee Health Checker UK | Symptoms & What to Do | BeezKnees",
+    "url": "/bee-health-checker",
+    "description": "Use this UK bee health checker to match hive symptoms to likely causes and safe actions, including varroa, foulbrood, viruses and pests.",
+    "keywords": "bee health checker UK, bee disease symptoms, foulbrood symptoms, EFB AFB UK, Nosema symptoms, chalkbrood Ascosphaera apis, varroa symptoms, bee paralysis virus, wax moth, bee louse"
   },
   {
-    title: "Brood Pattern Guide (UK) – Healthy vs Patchy Brood and What It Means | BeezKnees",
-    url: "/brood-pattern-guide",
-    description: "A practical UK brood pattern guide. Learn what a healthy brood pattern looks like, how to spot patchy brood, common causes and when to investigate further.",
-    keywords: "brood pattern guide UK, healthy brood pattern, patchy brood causes, spotty brood, queen problems brood pattern, brood disease signs"
+    "title": "Bee Orientation Flights UK | What They Look Like & When To Worry",
+    "url": "/bee-orientation-flights",
+    "description": "UK guide to bee orientation flights, including what they look like, when they happen, and how to tell them apart from robbing, swarming or absconding.",
+    "keywords": "bee orientation flights UK, bees flying in front of hive, young bees learning to fly, orientation flights bees, bees circling hive entrance"
   },
   {
-    title: "Can’t Find the Queen? 10 Things to Check Before You Panic | BeezKnees",
-    url: "/cant-find-queen",
-    description: "Can’t find the queen? Learn practical checks and calm next steps before assuming the hive is queenless.",
-    keywords: "can't find the queen, queen not seen, how to find the queen, hive inspection queen missing, queenless or just not spotted"
+    "title": "Bee Pests UK | Identification & Prevention | BeezKnees",
+    "url": "/bee-pests",
+    "description": "UK guide to bee pests including wax moth, mice, wasps, ants, small hive beetle and Asian hornet, with signs, prevention and safe next steps.",
+    "keywords": "bee pests UK, honey bee pests identification, hive pests and prevention, wax moth UK, small hive beetle UK, Asian hornet UK, hive mice, wasps at hive, ants in beehive"
   },
   {
-    title: "Capped Queen Cells (UK) – What They Mean and What To Do Next | BeezKnees",
-    url: "/capped-queen-cells",
-    description: "Found capped queen cells? Learn what they mean, what stage the colony is at, and the practical options open to UK beekeepers.",
-    keywords: "capped queen cells UK, what do capped queen cells mean, queen cells sealed, swarm cells capped, what to do when queen cells are capped"
-  }
-  ,
+    "title": "Bee Stings UK | Treatment, Reactions and Safety",
+    "url": "/bee-stings",
+    "description": "Bee sting treatment and safety advice for UK beekeepers, including first aid, allergic reactions, emergency signs and reducing sting risk.",
+    "keywords": "bee sting treatment UK, first aid for bee stings, allergic reaction bee sting, bee stings beekeepers, beekeeping safety UK, EpiPen bee sting, anaphylaxis signs, hive inspection safety, how to avoid bee stings, beekeeping protective clothing"
+  },
+  {
+    "title": "Beekeeper’s Rule Calculator | Queen & Swarm Tool | BeezKnees",
+    "url": "/beekeepers-rule-calculator",
+    "description": "Free Beekeeper’s Rule calculator for queen development, swarm timing, honey flow planning, breeding dates and seasonal apiary decisions.",
+    "keywords": "Beekeeper’s Rule, beekeeper calculator, queen development calculator, swarm timing calculator, honey flow planner, bee development timeline, queen breeding planner"
+  },
+  {
+    "title": "Beekeeping Guides UK | Beginners, Hives & Varroa",
+    "url": "/beekeeping-guides",
+    "description": "UK beekeeping guides covering getting started, equipment, hive inspections, swarm control, varroa, hygiene, honey extraction and the beekeeping year.",
+    "keywords": "beekeeping UK, beekeeping guides UK, beginner beekeeping UK, apiculture UK, beehive inspections, hive management, swarm control, varroa management, hive hygiene, beekeeping equipment, honey extraction, BeezKnees"
+  },
+  {
+    "title": "Beekeeping Insurance UK | Liability & Cover | BeezKnees",
+    "url": "/beekeeping-insurance-uk",
+    "description": "UK beekeeping insurance guide covering public liability, association cover, landowner apiaries, policy checks and common gaps to watch for.",
+    "keywords": "beekeeping insurance UK, beekeeping public liability insurance, apiary insurance UK, beekeeper insurance, landowner beekeeper agreement, beekeeping responsibilities UK, swarm liability, risk assessment apiary"
+  },
+  {
+    "title": "Beekeeping Responsibilities UK | Safety & Care | BeezKnees",
+    "url": "/beekeeping-responsibilities-uk",
+    "description": "UK beekeeping responsibilities guide covering safety, records, varroa treatment use, landowner agreements, insurance basics, swarms and official guidance.",
+    "keywords": "beekeeping responsibilities UK, beekeeper duty of care, apiary risk assessment, beekeeping safety UK, veterinary medicine records bees, varroa treatment safety, landowner beekeeper agreement, beekeeping insurance UK, swarm responsibility"
+  },
+  {
+    "title": "Bees Fanning at the Entrance UK | What It Means",
+    "url": "/bees-fanning-entrance",
+    "description": "UK guide to bees fanning at the hive entrance, including ventilation, scent fanning, heat control, nectar processing, orientation and when to worry.",
+    "keywords": "bees fanning entrance UK, bees fanning wings hive, bees at entrance fanning, honey bees scent fanning, bees ventilating hive"
+  },
+  {
+    "title": "Honeybee Behaviour UK | Foraging & Swarming | BeezKnees",
+    "url": "/behaviour",
+    "description": "UK guide to honeybee behaviour covering communication, foraging, swarming, hive defence, temperature control, hygienic behaviour and colony roles.",
+    "keywords": "honeybee behaviour UK, bee communication waggle dance, pheromones honeybees, worker bee roles, division of labour honeybees, age polyethism, honeybee foraging UK, nectar flow UK, bee swarming behaviour UK, swarm control basics, hive defence behaviour, alarm pheromone, honeybee temperature regulation, fanning bees, clustering bees, hygienic behaviour bees, varroa and bee behaviour, apis mellifera behaviour"
+  },
+  {
+    "title": "Brood Pattern Guide UK | Healthy & Patchy Brood | BeezKnees",
+    "url": "/brood-pattern-guide",
+    "description": "UK brood pattern guide covering eggs, larvae, capped brood, healthy patterns, patchy brood, cappings clues and when to seek advice.",
+    "keywords": "brood pattern guide UK, patchy brood causes, brood stages eggs larvae capped, healthy brood pattern, sunken cappings, perforated cappings, brood disease signs, chalkbrood, sacbrood, AFB EFB warning signs"
+  },
+  {
+    "title": "Brood Problems in Bees UK | Patchy Brood & Causes | BeezKnees",
+    "url": "/brood-problems-uk",
+    "description": "UK guide to brood problems in honey bees, including patchy brood, chilled brood, queen issues, varroa, foulbrood warning signs and what to check next.",
+    "keywords": "Brood Problems in Bees UK | Patchy Brood & Causes | BeezKnees Brood problems in bees Brood Problems in Bees – Patchy Brood and What It Means (UK Guide) What does patchy brood mean? Common causes of brood problems Queen problems Varroa and viruses Chilled brood Bacterial disease warning signs Nutrition and stores What to check next"
+  },
+  {
+    "title": "Can't Find the Queen? What To Do Next (UK)",
+    "url": "/cant-find-queen",
+    "description": "Can't find the queen in your hive? Learn how to check eggs, larvae, queen cells and colony behaviour before deciding what to do next.",
+    "keywords": "can't find the queen, what to do if you cant find the queen, find queen in hive UK, queen not seen inspection, how to tell queen is present without seeing her"
+  },
+  {
+    "title": "Capped Queen Cells UK | What To Do Next | BeezKnees",
+    "url": "/capped-queen-cells",
+    "description": "Found capped queen cells? Learn what they mean, how close your colony may be to swarming, and what action to take next in UK hives.",
+    "keywords": "capped queen cells what to do, capped queen cells UK, swarm cells capped, queen cell capped meaning, what do capped queen cells mean, beekeeping queen cells UK"
+  },
+  {
+    "title": "Chalkbrood in Bees UK | Signs, Causes & What To Do",
+    "url": "/chalkbrood-uk",
+    "description": "UK guide to chalkbrood in honey bees, including white mummified larvae, causes, when it appears and how to manage it.",
+    "keywords": "chalkbrood UK bees, white larvae mummies bees, chalkbrood symptoms, brood disease chalkbrood, weak colony chalkbrood"
+  },
+  {
+    "title": "Charged Queen Cells UK | What To Do | BeezKnees",
+    "url": "/charged-queen-cells",
+    "description": "UK guide to charged queen cells, what they mean, how urgent they are, and whether to act for swarm control, supersedure or emergency queen replacement.",
+    "keywords": "charged queen cells what to do, charged queen cells UK, queen cell charged meaning, swarm cells charged, what do charged queen cells mean, beekeeping queen cells UK"
+  },
+  {
+    "title": "Chilled Brood in Bees UK | Signs, Causes & What To Do",
+    "url": "/chilled-brood-uk",
+    "description": "UK guide to chilled brood in honey bees, including signs, causes, cold weather checks, weak colonies and how to prevent brood chilling.",
+    "keywords": "chilled brood UK bees, chilled brood symptoms, dead larvae after cold weather, bee brood chilled, weak colony brood problems"
+  },
+  {
+    "title": "Cleansing Flights in Bees UK | Normal Winter Behaviour",
+    "url": "/cleansing-flights",
+    "description": "UK guide to cleansing flights in honey bees, including why bees fly on mild winter days, what normal cleansing flights look like and when to worry.",
+    "keywords": "cleansing flights bees UK, bees flying in winter, bees pooping outside hive, winter bee flights, honey bee winter behaviour"
+  },
+  {
+    "title": "Dead Cluster of Bees UK | Why Bees Die in One Place",
+    "url": "/cluster-died-in-place",
+    "description": "UK guide to dead clusters of bees inside the hive, including starvation, isolation starvation, cold stress, varroa, weak colonies and winter colony loss.",
+    "keywords": "dead cluster bees UK, bees died in one place hive, cluster died winter bees, dead bees in hive cluster, why bees die in cluster"
+  },
+  {
+    "title": "Colony Collapse: Varroa vs Starvation UK | Hive Loss Clues",
+    "url": "/colony-collapse-varroa-vs-starvation",
+    "description": "UK beekeeper guide to telling the difference between varroa collapse and starvation, including dead clusters, empty hives, stores, deformed wings and post-mortem clues.",
+    "keywords": "varroa collapse vs starvation, colony collapse bees UK, bees died starvation or varroa, dead hive diagnosis UK, why did my hive die"
+  },
+  {
+    "title": "Colony Health Triage Tool UK | BeezKnees",
+    "url": "/colony-health-triage",
+    "description": "Use this UK colony health triage tool to narrow down bee colony problems, including brood issues, robbing, varroa, starvation and queen problems.",
+    "keywords": "colony health triage, bee health checker UK, honey bee disease symptoms UK, queen problems bees, varroa symptoms, brood disease signs, robbing bees, colony health tool"
+  },
+  {
+    "title": "Cross Comb in Beehives UK | How To Fix & Prevent It",
+    "url": "/cross-comb-how-to-fix",
+    "description": "UK guide to cross comb in beehives, including why bees build across frames, how to fix it safely, when to save comb and how to prevent it happening again.",
+    "keywords": "cross comb bees UK, bees building comb across frames, messy comb hive, fix cross comb bees, foundation problems bees"
+  },
+  {
+    "title": "Dead Bees Outside Hive UK | Causes, Checks & What To Do",
+    "url": "/dead-bees-outside-hive",
+    "description": "Seeing dead bees outside your hive? UK guide to common causes including natural turnover, starvation, varroa, poisoning, robbing, weather stress and what to check next.",
+    "keywords": "dead bees outside hive UK, dead bees at hive entrance, bees dying outside hive, crawling bees outside hive, bee poisoning signs, varroa dead bees"
+  },
+  {
+    "title": "December Beekeeping UK | Fondant, Oxalic Acid & Winter Care | BeezKnees",
+    "url": "/december",
+    "description": "December beekeeping tasks in the UK: check winter stores, add fondant, time oxalic acid treatment, manage condensation and protect hives from winter weather.",
+    "keywords": "December beekeeping tasks UK, winter hive care, oxalic acid varroa treatment, fondant feeding, condensation control, hive insulation, winter storms, mouse guards, woodpecker protection, beekeeping calendar UK"
+  },
+  {
+    "title": "Deformed Wing Virus (DWV) UK | Signs, Varroa Link & What To Do",
+    "url": "/deformed-wing-virus-uk",
+    "description": "UK guide to deformed wing virus (DWV) in honey bees, including crippled wings, crawling bees, varroa link and what action to take.",
+    "keywords": "deformed wing virus UK, DWV bees, bees with deformed wings, varroa virus symptoms, crawling bees DWV"
+  },
+  {
+    "title": "Donate to Help Bees UK | Support BeezKnees",
+    "url": "/donate",
+    "description": "Donate to help bees in the UK and support BeezKnees with practical beekeeping guidance, pollinator resources and hive-care tools.",
+    "keywords": "donate to help bees UK, donate to save the bees UK, bee conservation donation UK, support pollinators UK, beekeeping education UK, support local beekeepers UK, pollinator friendly garden, BeezKnees donate"
+  },
+  {
+    "title": "Free Beekeeping Downloads UK | Templates",
+    "url": "/downloads",
+    "description": "Free UK beekeeping downloads, including bee health checkers, varroa guides, PPE notes, apiary risk templates and seasonal planning PDFs.",
+    "keywords": "free beekeeping downloads UK, bee health checker UK, bee disease symptoms checklist, varroa treatment guide, varroa non chemical methods, varroa chemical treatments, PPE varroa treatments, veterinary medicine administration record bees, year in the apiary calendar, apiary risk assessment template, landowner beekeeper agreement template, beekeeping responsibilities UK, beekeeping insurance UK, honey regulations, swarm responsibilities"
+  },
+  {
+    "title": "Drone-Laying Queen UK | Signs, Causes & What To Do",
+    "url": "/drone-laying-queen",
+    "description": "UK beekeeper guide to drone-laying queens, including drone brood in worker cells, poor mating, failing queens, laying workers and what to do next.",
+    "keywords": "drone laying queen UK, drone brood in worker cells, failing queen drone brood, poorly mated queen bees, queen laying drones only"
+  },
+  {
+    "title": "Emergency Queen Cells UK | What They Mean | BeezKnees",
+    "url": "/emergency-queen-cells",
+    "description": "Emergency queen cells explained for UK beekeepers. Learn why they appear, how to recognise them and what actions to take to support your colony.",
+    "keywords": "emergency queen cells UK, queenless colony queen cells, emergency queen cells what to do, bees raising emergency queen, swarm vs emergency queen cells"
+  },
+  {
+    "title": "Empty Hive No Bees UK | Why Bees Disappear From the Hive",
+    "url": "/empty-hive-no-bees",
+    "description": "UK guide to empty hives with no bees, including absconding, varroa collapse, robbing, queen failure, starvation clues and how to diagnose what happened.",
+    "keywords": "empty hive no bees UK, bees disappeared from hive, hive empty why, colony vanished bees, absconding bees UK"
+  },
+  {
+    "title": "Beekeeping Equipment UK | Beginner Kit List | BeezKnees",
+    "url": "/equipment",
+    "description": "Beginner UK beekeeping equipment guide covering bee suits, hive tools, smokers, feeders, hives, honey extraction kit and useful starter supplies.",
+    "keywords": "what equipment do I need to start beekeeping uk, beekeeping equipment UK, beginner beekeeping equipment list, hive tools UK, bee suit UK, beekeeping starter kit UK"
+  },
+  {
+    "title": "European Foulbrood UK | Symptoms, Signs & What To Do",
+    "url": "/european-foulbrood-uk",
+    "description": "UK guide to European foulbrood in honey bees, including EFB symptoms, patchy brood, twisted larvae, what to do and when to call a bee inspector.",
+    "keywords": "European foulbrood UK, EFB symptoms bees, foulbrood signs UK, twisted larvae bees, patchy brood disease, bee inspector EFB"
+  },
+  {
+    "title": "February Beekeeping UK | Late Winter Checks, Fondant & Spring Prep | BeezKnees",
+    "url": "/february",
+    "description": "February beekeeping tasks for UK beekeepers, including late-winter hive checks, feeding, food stores, mould, moisture and spring preparation.",
+    "keywords": "February beekeeping tasks, winter beekeeping UK, bees in February, late winter hive checks, monitor food stores, spring preparation, UK beekeeping guide"
+  },
+  {
+    "title": "Feeding Bees UK | Syrup & Fondant",
+    "url": "/feeding-bees",
+    "description": "UK guide to feeding bees, including when to use syrup or fondant, seasonal feeding, feeders, ekes, nucs, swarms and robbing prevention.",
+    "keywords": "feeding bees UK, what to feed bees, when to feed bees UK, fondant feeding bees, sugar syrup recipe bees, 1:1 syrup bees, 2:1 syrup bees, bee feeders UK, eke for fondant, robbing bees feeding, feeding nucs, autumn feeding bees, winter feeding bees"
+  },
+  {
+    "title": "Feeding Bees for Winter UK | Autumn Stores & Syrup | BeezKnees",
+    "url": "/feeding-bees-for-winter-uk",
+    "description": "Feeding bees for winter in the UK, covering autumn syrup, checking stores, hive weight, timing, avoiding robbing and preparing colonies for winter.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Feeding Bees for Winter UK | Autumn Stores & Syrup"
+  },
+  {
+    "title": "Feeding Bees in Spring UK | Syrup, Fondant & Stores | BeezKnees",
+    "url": "/feeding-bees-in-spring-uk",
+    "description": "Guide to feeding bees in spring in the UK, including when to use fondant or syrup, checking stores, avoiding overfeeding and supporting spring build-up.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Feeding Bees in Spring UK | Syrup, Fondant & Stores"
+  },
+  {
+    "title": "Feeding Mistakes Beekeepers Make UK | Syrup, Fondant & Robbing",
+    "url": "/feeding-mistakes-beekeepers",
+    "description": "UK guide to common bee feeding mistakes, including feeding syrup too late, using the wrong feed, causing robbing, overfeeding, underfeeding and weak colony checks.",
+    "keywords": "bee feeding mistakes UK, feeding bees wrong, syrup feeding mistakes bees, fondant bees winter, robbing caused by feeding"
+  },
+  {
+    "title": "First Spring Inspection UK | What to Check in the Hive | BeezKnees",
+    "url": "/first-spring-inspection",
+    "description": "First spring inspection guide for UK beekeepers, covering when to open the hive, what to check, brood, stores, queen signs and common mistakes.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, First Spring Inspection UK | What to Check in the Hive"
+  },
   {
-    title: "Charged Queen Cells (UK) – What They Mean, How to Spot Them and What To Do | BeezKnees",
-    url: "/charged-queen-cells",
-    description: "Learn what charged queen cells look like, how to tell them from cups, and what they usually mean for swarming or queen replacement in UK hives.",
-    keywords: "charged queen cells UK, queen cup with egg, queen cup with larva and royal jelly, charged queen cell what to do, swarm queen cells early signs"
+    "title": "Foulbrood vs Chalkbrood UK | Key Differences | BeezKnees",
+    "url": "/foulbrood-vs-chalkbrood",
+    "description": "UK beekeeper guide comparing foulbrood and chalkbrood, including brood signs, seriousness, what to avoid and when to seek bee inspector advice.",
+    "keywords": "Foulbrood vs Chalkbrood UK | Key Differences | BeezKnees Foulbrood vs chalkbrood Foulbrood vs Chalkbrood – Key Differences for UK Beekeepers Quick comparison Signs that need urgent caution Signs more consistent with chalkbrood What to do next You might also need Contact & Social Quick Links Useful Pages"
   },
   {
-    title: "Colony Health Triage (UK) – A Fast Practical Guide to What Your Hive Might Be Telling You | BeezKnees",
-    url: "/colony-health-triage",
-    description: "A practical UK triage guide to help you interpret common colony warning signs such as patchy brood, dwindling bees, dysentery, crawling bees, unusual noise and failed queen issues before deciding what to do next.",
-    keywords: "colony health triage UK, hive symptoms guide, patchy brood causes, dwindling colony, crawling bees, dysentery bees, queenless colony signs, unhealthy hive checklist, beekeeping problem solver"
+    "title": "Getting Started with Beekeeping UK | BeezKnees",
+    "url": "/getting-started",
+    "description": "Beginner UK beekeeping guide covering hive location, equipment, costs, first bees, local support, first-season checks and responsible hive care.",
+    "keywords": "getting started beekeeping, beginner beekeeping UK, how to keep bees, start an apiary, cost of starting beekeeping UK, beekeeping equipment, beekeeping guide UK, hive setup, join beekeeping association, beekeeping course"
   },
   {
-    title: "Contact Us – BeezKnees",
-    url: "/contact",
-    description: "Contact BeezKnees for questions about beekeeping, hive management, or our HiveTag records app. Send a message and we’ll get back to you.",
-    keywords: "Contact BeezKnees, beekeeping help UK, apiary support, HiveTag app support, beekeeping questions, get in touch, contact beekeeper, beekeeping records app contact, bee advice UK"
+    "title": "How to Help Bees in the UK | BeezKnees",
+    "url": "/help-the-bees",
+    "description": "Practical ways to help bees in the UK, from bee friendly gardens and water sources to safer pest control, local honey and pollinator projects.",
+    "keywords": "help the bees UK, how to help bees, save the bees UK, pollinator conservation UK, support bees in your garden, bee friendly actions"
   },
   {
-    title: "December Beekeeping Tasks UK | Winter Colony Care, Oxalic Prep & Planning Ahead | BeezKnees",
-    url: "/december",
-    description: "December beekeeping tasks in the UK: winter colony care, checking heft and fondant, planning oxalic treatment when broodless, equipment jobs and how to disturb colonies as little as possible.",
-    keywords: "December beekeeping tasks UK, winter colony care, fondant bees UK, broodless oxalic treatment, winter hive checks, beekeeping in December, apiary planning winter"
+    "title": "Hive Management & Inspections UK | BeezKnees",
+    "url": "/hive-management",
+    "description": "Practical UK guide to hive management, inspections, brood checks, stores, space, queen signs and seasonal beekeeping tasks.",
+    "keywords": "beekeeping inspections UK, hive management, how to inspect a hive, hive inspection checklist, seasonal hive management UK, beekeeping for beginners"
   },
   {
-    title: "Support Local Beekeeping & Pollinator Conservation | Donate to BeezKnees",
-    url: "/donate",
-    description: "Support BeezKnees and help fund free UK beekeeping guides, pollinator education, and practical hive management resources for beginners and hobbyist beekeepers.",
-    keywords: "donate to BeezKnees, support beekeeping UK, support pollinator conservation, fund beekeeping education, donate to beekeeping website, help bee conservation"
+    "title": "Hive Problems UK | Diagnose Common Beekeeping Problems | BeezKnees",
+    "url": "/hive-problems",
+    "description": "UK guide to common hive problems, including dead bees, colony loss, starvation, crawling bees, queen failure, brood issues, comb problems, robbing, wasps and pests.",
+    "keywords": "hive problems UK, beekeeping problems, dead bees outside hive, why did my hive die, queenless colony, weak colony bees, robbing behaviour bees, wasps beehives UK"
   },
   {
-    title: "Beekeeping Downloads & Printables | BeezKnees UK",
-    url: "/downloads",
-    description: "Download practical beekeeping checklists, inspection sheets, seasonal guides and printable resources to help manage your hives and apiary throughout the year.",
-    keywords: "beekeeping downloads UK, printable hive inspection sheet, beekeeping checklist PDF, apiary records printable, beekeeping resources download, beginner beekeeping printables"
+    "title": "Beekeeping App UK | HiveTag Records App | BeezKnees",
+    "url": "/hivetag-app",
+    "description": "HiveTag is a UK beekeeping records app for inspections, apiaries, hives, tasks and logbook records, with Premium tools for seasonal guides, health checks, reports, finance and NFC tags.",
+    "keywords": "beekeeping records app, beekeeping app UK, hive inspection app, hive inspection log, digital hive records, apiary management, beekeeping logbook, bee disease symptoms, colony health check, bee disease helper, varroa symptoms, foulbrood signs, chalkbrood, nosema, NFC hive tags, Cardiff beekeeping, Vale of Glamorgan beekeeper, South Wales beekeeping, HiveTag"
   },
   {
-    title: "Emergency Queen Cells (UK) – How to Recognise Them and What They Mean | BeezKnees",
-    url: "/emergency-queen-cells",
-    description: "Learn how to identify emergency queen cells, why bees build them and what they usually mean for queen failure or sudden queen loss in UK hives.",
-    keywords: "emergency queen cells UK, how to identify emergency queen cells, queenless colony queen cells, emergency cells vs swarm cells, bees making emergency queen cells"
+    "title": "Honey Extraction UK | Harvest & Bottle Honey | BeezKnees",
+    "url": "/honey-extraction",
+    "description": "Step-by-step UK honey extraction guide covering ripe honey, removing supers, uncapping, extracting, filtering, settling and bottling safely.",
+    "keywords": "honey extraction, how to extract honey, honey harvesting, uncapping frames, honey extractor, bottling honey, when to remove supers, beekeeping UK, capped honey, honey moisture content"
   },
   {
-    title: "Essential Beekeeping Equipment for Beginners in the UK | BeezKnees",
-    url: "/equipment",
-    description: "A practical UK guide to essential beekeeping equipment for beginners. Learn what you need to get started, what can wait, and how to avoid buying the wrong kit.",
-    keywords: "beekeeping equipment for beginners UK, essential beekeeping kit, what equipment do I need to keep bees, beginner beekeeping tools UK, beekeeping starter checklist"
+    "title": "Honey Regulations UK | Labelling & Food Safety | BeezKnees",
+    "url": "/honey-regulations-uk",
+    "description": "Plain-English guide to UK honey regulations, including labelling rules, food safety, selling honey, hygiene and official guidance links.",
+    "keywords": "honey regulations UK, selling honey UK, honey labelling rules, food safety beekeeping UK, honey hygiene, honey regulations Wales"
   },
   {
-    title: "February Beekeeping Tasks UK | Food Checks, Fondant and Early Signs of Brood | BeezKnees",
-    url: "/february",
-    description: "What to do with your bees in February in the UK: check food stores, use fondant correctly, watch for early brood rearing, plan spring equipment and avoid disturbing colonies in cold weather.",
-    keywords: "February beekeeping tasks UK, what to do with bees in February, feeding fondant in February, early brood signs UK, winter beekeeping UK, spring beekeeping preparation, hive food stores February"
+    "title": "Honeybee Facts UK | Queen, Worker & Drone Bees | BeezKnees",
+    "url": "/honeybee-facts",
+    "description": "UK honeybee facts covering queen, worker and drone bees, lifecycle timings, hive roles, communication, swarming and seasonal colony behaviour.",
+    "keywords": "honeybee facts UK, queen bee vs worker bee vs drone bee, drone bee eyes bigger, honeybee lifecycle days, queen development 16 days, worker bee 21 days, drone bee 24 days, honeybee roles, waggle dance, honeybee communication, swarming behaviour UK, beekeeping UK facts, apis mellifera facts"
   },
   {
-    title: "Feeding Bees in the UK – Syrup, Fondant, Timing and Common Mistakes | BeezKnees",
-    url: "/feeding-bees",
-    description: "Learn how and when to feed bees in the UK, including syrup ratios, fondant use, spring feeding, autumn feeding, and common mistakes to avoid.",
-    keywords: "feeding bees UK, when to feed bees UK, sugar syrup for bees, fondant for bees, spring feeding bees, autumn feeding bees, how much to feed bees"
+    "title": "How Bees Make Honey | Nectar to Honey Guide | BeezKnees",
+    "url": "/how-bees-make-honey",
+    "description": "Learn how bees make honey, from collecting nectar and adding enzymes to evaporating water, capping honey and storing it in the hive.",
+    "keywords": "how do bees make honey, how bees make honey step by step, honey production process, how honey is made in a beehive, nectar to honey process, honeybee nectar collection, honey stomach, trophallaxis bees, honeycomb honey storage, capped honey cells"
   },
   {
-    title: "Getting Started with Beekeeping in the UK – Beginner Guide | BeezKnees",
-    url: "/getting-started",
-    description: "A practical beginner’s guide to getting started with beekeeping in the UK. Learn how to begin, what to expect, and where to get help before buying your first hive.",
-    keywords: "getting started with beekeeping UK, beginner beekeeper guide UK, how to start beekeeping, first hive UK, new beekeeper advice, beekeeping basics UK"
+    "title": "Hive Hygiene UK | Clean Beehive & Disease Prevention",
+    "url": "/hygiene",
+    "description": "Practical UK hive hygiene guide covering clean beekeeping habits, comb rotation, cross-contamination, disease prevention and safer apiary routines.",
+    "keywords": "hive hygiene, beehive cleaning, beekeeping UK, disease prevention bees, clean beekeeping practices, hive maintenance, apiary hygiene, chalkbrood prevention, foulbrood control, comb replacement"
   },
   {
-    title: "How to Help the Bees in the UK – Practical Actions That Really Matter | BeezKnees",
-    url: "/help-the-bees",
-    description: "Learn how to help the bees in the UK with practical, realistic steps that support honey bees, bumblebees and other pollinators through planting, habitat, water and careful choices.",
-    keywords: "how to help bees UK, help pollinators UK, bee friendly planting, support honey bees, help bumblebees, pollinator garden UK, practical bee conservation"
+    "title": "Isolation Starvation in Bees UK | Why Bees Die With Honey Nearby",
+    "url": "/isolation-starvation-bees",
+    "description": "UK guide to isolation starvation in bees, including why colonies die with honey nearby, key signs, winter cluster movement, prevention and when to add fondant.",
+    "keywords": "isolation starvation bees UK, bees died with honey left, winter bee starvation UK, dead cluster bees, why bees starve with food"
   },
   {
-    title: "Hive Management in the UK – Inspections, Swarm Control, Feeding & Seasonal Care | BeezKnees",
-    url: "/hive-management",
-    description: "Learn practical hive management for UK beekeepers, including inspections, swarm control, feeding, supering, winter prep and how management changes through the seasons.",
-    keywords: "hive management UK, beehive management, how to manage a hive, colony management UK, inspections, swarm control, supering, feeding bees, winter preparation"
+    "title": "January Beekeeping UK | Winter Checks, Fondant & Spring Prep | BeezKnees",
+    "url": "/january",
+    "description": "January beekeeping tasks for UK beekeepers, including winter hive checks, fondant feeding, varroa planning, weather protection and spring preparation.",
+    "keywords": "January beekeeping, monthly beekeeping calendar UK, hive maintenance, feeding bees in winter UK, varroa mite treatment January, apiary calendar, winter hive checks, cold weather beekeeping, preparing hives for spring"
   },
   {
-    title: "HiveTag – Digital Hive Records App for UK Beekeepers | BeezKnees",
-    url: "/hivetag-app",
-    description: "Discover HiveTag, the digital hive records app from BeezKnees designed to help UK beekeepers record inspections, track apiaries and manage hives more easily.",
-    keywords: "HiveTag app, hive records app UK, beekeeping app UK, apiary records app, hive inspection tracker, digital beekeeper notes, BeezKnees HiveTag"
+    "title": "July Beekeeping Tasks UK | Honey Flow, Harvest & Varroa",
+    "url": "/july",
+    "description": "July beekeeping tasks in the UK: manage honey supers, plan harvests, continue swarm checks, monitor varroa and keep clear hive records.",
+    "keywords": "July beekeeping tasks UK, honey harvest UK, super management, summer swarm checks, July varroa monitoring, beekeeping calendar July, mid-summer bee management"
   },
   {
-    title: "Honey Extraction for Beginners in the UK – When, How and What You Need | BeezKnees",
-    url: "/honey-extraction",
-    description: "Learn when and how to extract honey in the UK, what equipment you need, how to tell when honey is ready, and how to keep the process clean and straightforward.",
-    keywords: "honey extraction UK, how to extract honey, when to extract honey, extracting honey beginners, honey extractor UK, uncapping frames, harvesting honey UK"
+    "title": "June Beekeeping UK | Honey Flow, Supers & Swarm Checks",
+    "url": "/june",
+    "description": "June beekeeping tasks in the UK, including honey flow, swarm checks, super management, comb replacement, bee health and hive records.",
+    "keywords": "June beekeeping tasks UK, honey flow UK, swarm checks June, super management, weekly hive inspections, comb replacement, beekeeping calendar June, honey bee health"
   },
   {
-    title: "Selling Honey in the UK – Rules, Labelling and Food Hygiene Basics | BeezKnees",
-    url: "/honey-regulations-uk",
-    description: "A practical guide to selling honey in the UK, covering labelling rules, weights, traceability, food hygiene basics and what small-scale beekeepers should know before selling jars of honey.",
-    keywords: "selling honey UK, honey labelling rules UK, food hygiene honey UK, can I sell honey from home UK, honey jar labels UK, traceability honey sales, UK honey regulations"
+    "title": "June Gap Beekeeping UK | Nectar Shortage & Feeding | BeezKnees",
+    "url": "/june-gap-beekeeping",
+    "description": "June gap beekeeping guide for the UK, explaining nectar shortages, signs of food stress, feeding decisions, swarm pressure and colony management.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, June Gap Beekeeping UK | Nectar Shortage & Feeding"
   },
   {
-    title: "Honeybee Facts – 50 Fascinating Facts About Honey Bees | BeezKnees",
-    url: "/honeybee-facts",
-    description: "Discover fascinating honeybee facts about queens, workers, drones, pollination, foraging, honey production and colony life in this practical guide for UK beekeepers and bee lovers.",
-    keywords: "honeybee facts, interesting facts about bees, facts about honey bees for kids and adults, queen bee facts, worker bee facts, drone bee facts, bee pollination facts"
+    "title": "Landowner Beekeeper Agreement UK | BeezKnees",
+    "url": "/landowner-beekeeper-agreement",
+    "description": "UK landowner beekeeper agreement guide covering apiary permission, access, responsibilities, notice, insurance and a ready-to-fill template.",
+    "keywords": "landowner beekeeper agreement UK, apiary permission agreement, beekeeping on private land UK, beekeeping agreement template, apiary access agreement, beekeeping responsibilities landowner, public liability beekeeping"
   },
   {
-    title: "How Bees Make Honey – Step by Step from Nectar to Jar | BeezKnees",
-    url: "/how-bees-make-honey",
-    description: "Learn how bees make honey step by step, from collecting nectar to ripening and storing honey in the hive. Clear, practical guide for beginners in the UK.",
-    keywords: "how bees make honey, how honey is made, nectar to honey, bees making honey process, honey production explained, beginner beekeeping honey guide"
+    "title": "Late Summer Varroa UK | Protecting Winter Bees | BeezKnees",
+    "url": "/late-summer-varroa",
+    "description": "Late summer varroa guide for UK beekeepers, covering August and September mite pressure, monitoring, treatment timing and protecting winter bees.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Late Summer Varroa UK | Protecting Winter Bees"
   },
   {
-    title: "Hive Hygiene for Beekeepers – Cleaning, Disease Prevention and Good Apiary Practice | BeezKnees",
-    url: "/hygiene",
-    description: "Learn practical hive hygiene for UK beekeepers, including cleaning equipment, reducing disease spread, scorch-and-scrape basics, glove use and good apiary habits.",
-    keywords: "hive hygiene UK, beekeeping hygiene, cleaning beekeeping equipment, disease prevention bees, apiary hygiene, scorch hive equipment, gloves disease spread"
+    "title": "Laying Workers in Bees UK | Signs, Causes & What To Do",
+    "url": "/laying-workers-uk",
+    "description": "UK guide to laying workers in honey bee colonies, including multiple eggs, drone brood, queenless colonies and what to do if workers start laying.",
+    "keywords": "laying workers bees UK, multiple eggs in cell bees, drone brood only hive, queenless laying workers, worker bees laying eggs"
   },
   {
-    title: "BeezKnees – Beekeeping Made Practical",
-    url: "/",
-    description: "BeezKnees provides clear, practical beekeeping guides for UK beekeepers, plus HiveTag tools to help record hives, inspections and apiary tasks.",
-    keywords: "beekeeping UK, practical beekeeping, HiveTag, hive records, inspections, apiary management, honey bees"
+    "title": "March Beekeeping UK | Spring Hive Checks, Brood & Feeding | BeezKnees",
+    "url": "/march",
+    "description": "March beekeeping tasks for UK beekeepers, including first spring hive checks, food stores, brood assessment, feeding and apiary preparation.",
+    "keywords": "March beekeeping tasks UK, spring hive inspection, bees in March, first hive inspection, checking brood, adding supers, spring beekeeping calendar, apiary preparation"
   },
   {
-    title: "January Beekeeping Tasks UK | Winter Hive Care, Fondant & Minimal Disturbance | BeezKnees",
-    url: "/january",
-    description: "What to do with your bees in January in the UK: check food stores by hefting, add fondant if needed, watch entrances, avoid unnecessary disturbance and plan for the season ahead.",
-    keywords: "January beekeeping tasks UK, what to do with bees in January, winter hive care UK, fondant for bees, hefting hives, beekeeping in winter, apiary jobs January"
+    "title": "May Beekeeping UK | Swarm Control, Supers & Queen Cells | BeezKnees",
+    "url": "/may",
+    "description": "May beekeeping tasks in the UK: weekly inspections, swarm control, adding supers, queen checks and managing fast spring growth.",
+    "keywords": "May beekeeping tasks UK, swarm control, spring honey flow, queen management, weekly hive inspections, adding supers, replacing frames, nectar flow UK, beekeeping calendar May"
   },
   {
-    title: "July Beekeeping Tasks UK | Honey Harvest, Swarm Watch, Queen Checks & Summer Management | BeezKnees",
-    url: "/july",
-    description: "What to do with your bees in July in the UK: monitor honey flow, prepare for extraction, keep watching for late swarms, assess queens and manage colonies through summer heat.",
-    keywords: "July beekeeping tasks UK, what to do with bees in July, honey harvest UK, extracting honey July, late swarms, queen checks summer, apiary management July"
+    "title": "Mice in Beehives UK | Signs, Damage & Prevention",
+    "url": "/mice-in-beehives",
+    "description": "UK guide to mice in beehives, including signs of mouse damage, winter risks, mouse guards, prevention, cleaning damaged frames and what to do if mice get inside.",
+    "keywords": "mice in beehives UK, mouse damage hive, mouse guard beehive, bees mice winter, rodents hive UK"
   },
   {
-    title: "June Beekeeping Tasks UK | Swarm Control, Supers, Splits & Summer Honey Flow | BeezKnees",
-    url: "/june",
-    description: "What to do with your bees in June in the UK: keep up with swarm control, add supers, manage splits, watch the honey flow and stay ahead of fast-growing colonies.",
-    keywords: "June beekeeping tasks UK, what to do with bees in June, swarm control June, supers and honey flow, hive splits UK, apiary management June"
-  }
-  ,
+    "title": "Missed a Swarm UK | What To Do Next | BeezKnees",
+    "url": "/missed-swarm",
+    "description": "Missed a swarm? Learn how to assess queen cells, avoid common mistakes, manage the hive calmly and help your UK honey bee colony recover safely.",
+    "keywords": "missed a swarm what to do next, hive has swarmed what now, post swarm colony management UK, missed swarm beekeeping, queen cells after swarm, swarm recovery UK"
+  },
+  {
+    "title": "Missing Queen in Hive UK | Eggs, Brood & What To Check",
+    "url": "/missing-queen-what-to-check",
+    "description": "Cannot find the queen in your hive? UK guide to checking eggs, brood, queen cells, virgin queen timing, queenless signs and what to do next.",
+    "keywords": "missing queen hive UK, cannot find queen bee, queen missing what to check, no queen seen bees, queenless signs UK"
+  },
+  {
+    "title": "Nosema in Bees UK | Dysentery, Signs & What To Do",
+    "url": "/nosema-uk",
+    "description": "UK guide to Nosema in honey bees, including dysentery, spotting signs, causes, weak colonies and how to manage Nosema infections.",
+    "keywords": "nosema bees UK, dysentery bees, brown streaks hive, bee gut disease nosema, weak colony bees disease"
+  },
+  {
+    "title": "November Beekeeping UK | Winter Care, Fondant & Monitoring | BeezKnees",
+    "url": "/november",
+    "description": "November beekeeping tasks for UK beekeepers, including winter store checks, fondant feeding, hive protection, pest checks and planning ahead.",
+    "keywords": "November beekeeping tasks UK, what to do with bees in November, feed bees fondant, winter hive protection UK, hive insulation, entrance reducers, mouse guards, woodpecker protection, beekeeping calendar UK, plan next beekeeping season"
+  },
+  {
+    "title": "October Beekeeping UK | Fondant, Insulation & Winter Prep | BeezKnees",
+    "url": "/october",
+    "description": "October beekeeping tasks for UK beekeepers, including fondant feeding, hive insulation, condensation control, mouse guards and winter checks.",
+    "keywords": "October beekeeping tasks UK, what to do with bees in October, fondant feeding, hive insulation UK, condensation control, mouse guards, woodpecker protection, winter hive preparation, beekeeping equipment cleaning, plant spring bulbs for bees"
+  },
+  {
+    "title": "Other Honey Bee Conditions UK | BeezKnees",
+    "url": "/other-conditions",
+    "description": "UK guide to other honey bee conditions, including Nosema, chalkbrood, stonebrood, malnutrition, starvation and colony losses.",
+    "keywords": "nosema, chalkbrood, stonebrood, amoeba disease, malnutrition in bees, baldbrood, wax moth, colony collapse, other bee diseases, honeybee health UK"
+  },
   {
-    title: "Landowner–Beekeeper Agreement (UK) – Template, Key Clauses & Best Practice | BeezKnees",
-    url: "/landowner-beekeeper-agreement",
-    description: "Practical UK guide to landowner–beekeeper agreements, including key clauses to think about, site access, responsibilities, insurance, swarm issues and a simple agreement template.",
-    keywords: "landowner beekeeper agreement UK, apiary permission agreement, beehives on someone else's land, apiary access agreement, beekeeper insurance landowner, swarm responsibility agreement"
+    "title": "Parasitic Mites in Honeybees UK | BeezKnees",
+    "url": "/parasitic-mites",
+    "description": "UK guide to parasitic mites in honeybees, including varroa, tracheal mites, Tropilaelaps, mite damage, monitoring and biosecurity.",
+    "keywords": "parasitic mites, Varroa destructor, tracheal mites, Tropilaelaps, bee mites, honeybee parasites, varroa overview, mite monitoring, bee health UK"
   },
   {
-    title: "March Beekeeping Tasks UK | First Inspections, Feeding, Space and Early Swarm Preparation | BeezKnees",
-    url: "/march",
-    description: "What to do with your bees in March in the UK: assess winter survival, choose the right days for first inspections, feed if needed, monitor brood build-up and prepare for spring expansion.",
-    keywords: "March beekeeping tasks UK, what to do with bees in March, first hive inspection spring, feeding bees in March, brood build up, spring beekeeping UK"
+    "title": "Pesticide Poisoning in Bees UK | Signs, Dead Bees & What To Do",
+    "url": "/pesticide-poisoning-bees",
+    "description": "UK guide to suspected pesticide poisoning in bees, including dead bees outside the hive, crawling bees, tongues out, what to record and when to contact a bee inspector.",
+    "keywords": "pesticide poisoning bees UK, dead bees outside hive tongues out, bees crawling ground, honey bee poisoning signs, suspected bee poisoning"
   },
   {
-    title: "May Beekeeping Tasks UK | Swarm Control, Queen Cells, Splits & Supering | BeezKnees",
-    url: "/may",
-    description: "What to do with your bees in May in the UK: stay on top of swarm control, inspect regularly, watch queen cells, consider splits and keep colonies well managed as spring peaks.",
-    keywords: "May beekeeping tasks UK, what to do with bees in May, swarm control May, queen cells May, hive splits UK, supering colonies, beekeeping in spring"
+    "title": "Pollination Explained (UK) | Why Bees Matter | BeezKnees",
+    "url": "/pollination",
+    "description": "Learn how pollination works in the UK, why bees matter for crops and wildflowers, and how gardeners and beekeepers can support pollinators.",
+    "keywords": "pollination explained UK, why bees are important UK, honeybee pollination, pollinators UK, bee pollination crops UK, wildflower pollination, biodiversity UK, food security pollination, how to help pollinators, bee friendly garden UK, beekeeping and pollination"
   },
   {
-    title: "Missed a Swarm? What to Check Next and How to Recover the Colony | BeezKnees",
-    url: "/missed-swarm",
-    description: "Missed a swarm? Learn what to check next, how to assess queen cells, what the remaining colony may do, and how to recover without making matters worse.",
-    keywords: "missed a swarm, colony has swarmed what now, missed swarm queen cells, what happens after a swarm, recovering a colony after swarming"
+    "title": "Hive Post-Mortem Analysis UK | Why Did My Bees Die?",
+    "url": "/post-mortem-hive-analysis",
+    "description": "UK beekeeper guide to hive post-mortem analysis, including how to inspect a dead colony, check stores, brood, varroa signs and likely causes of colony loss.",
+    "keywords": "hive post mortem UK, dead colony analysis bees, why did my bees die, beekeeping post mortem hive, colony loss analysis, dead hive inspection UK"
   },
   {
-    title: "November Beekeeping Tasks UK | Minimal Disturbance, Food Checks and Winter Readiness | BeezKnees",
-    url: "/november",
-    description: "What to do with your bees in November in the UK: keep disturbance low, check food by hefting, secure equipment and make sure colonies are ready for winter weather.",
-    keywords: "November beekeeping tasks UK, what to do with bees in November, winter readiness bees, food checks by hefting, minimal disturbance apiary, beekeeping in November"
+    "title": "PPE for Varroa Treatments UK | BeezKnees",
+    "url": "/ppe-varroa-treatments",
+    "description": "UK guide to PPE for varroa treatments, including gloves, eye protection, respiratory protection, safe handling and a printable checklist.",
+    "keywords": "PPE for varroa treatments UK, beekeeping PPE, varroa treatment safety, oxalic acid PPE, formic acid PPE, thymol PPE, amitraz PPE, beekeeping safety checklist"
   },
   {
-    title: "October Beekeeping Tasks UK | Winter Prep, Feeding Checks and Colony Security | BeezKnees",
-    url: "/october",
-    description: "What to do with your bees in October in the UK: finish winter preparation, confirm feeding is complete, reduce risks from weather and pests, and leave colonies secure for the colder months.",
-    keywords: "October beekeeping tasks UK, what to do with bees in October, winter prep bees UK, feeding checks autumn, wasp and mouse protection, apiary jobs October"
+    "title": "Queen Cell Guide UK | Cups, Swarm & Supersedure | BeezKnees",
+    "url": "/queen-cell-guide",
+    "description": "Complete guide to queen cells in UK hives. Learn to identify swarm, supersedure and emergency cells and understand what actions to take.",
+    "keywords": "queen cell guide UK, queen cups vs queen cells, charged queen cell, capped queen cell, swarm cells, supersedure cells, emergency queen cells, where to find queen cells, swarm prevention UK"
   },
   {
-    title: "Other Conditions in Honey Bee Colonies – Bald Brood, Chilled Brood, Drone Layers & More | BeezKnees",
-    url: "/other-conditions",
-    description: "Practical UK guide to other colony conditions that can worry beekeepers, including bald brood, chilled brood, laying workers, drone-laying queens, starvation signs and more.",
-    keywords: "other bee colony conditions, bald brood, chilled brood, laying workers UK, drone laying queen, starvation signs bees, unusual hive problems"
+    "title": "What To Do With Queen Cells UK | BeezKnees",
+    "url": "/queen-cells-action",
+    "description": "Found queen cells in a UK hive? Learn what they mean, how urgent they are and what action to take for swarm, supersedure or emergency cells.",
+    "keywords": "what to do if you find queen cells UK, swarm cells what to do, supersedure queen cells action, emergency queen cells beekeeper, queen cells capped what next, UK beekeeping swarm control"
   },
   {
-    title: "Parasitic Mites of Honey Bees – Varroa and Other Mites (UK) | BeezKnees",
-    url: "/parasitic-mites",
-    description: "Learn about parasitic mites affecting honey bees, especially varroa, along with other mites of concern and how they affect colony health in the UK.",
-    keywords: "parasitic mites honey bees UK, varroa mites UK, bee mites guide, tracheal mites bees, mite problems in hives"
+    "title": "Queen Cells & Swarm Control UK | BeezKnees",
+    "url": "/queen-cells-swarm-control",
+    "description": "UK guide to queen cells and swarm control, including how to read swarm risk, assess colony signs and choose the right response.",
+    "keywords": "queen cells and swarm control, swarm control UK beekeeping, what to do with queen cells, queen cells swarming, swarm cells guide UK, beekeeping queen cells"
   },
   {
-    title: "Pollination and Honey Bees – How Bees Help Gardens, Crops and Wildlife | BeezKnees",
-    url: "/pollination",
-    description: "Learn how honey bees contribute to pollination in gardens, orchards and crops, what pollination actually means, and why a range of pollinators matters.",
-    keywords: "pollination and bees, how bees pollinate, honey bees pollination UK, pollinators in gardens, bees and crops, why pollination matters"
+    "title": "Empty Queen Cups UK | BeezKnees",
+    "url": "/queen-cups",
+    "description": "UK guide to empty queen cups in honey bee colonies, what they mean, when they matter, and how to respond during hive inspections.",
+    "keywords": "empty queen cups what they mean, queen cups UK, do queen cups mean swarming, empty queen cups in hive, queen cups vs queen cells, beekeeping queen cups UK"
   },
   {
-    title: "PPE for Varroa Treatments (UK) – Gloves, Eye Protection, Respirators and Safe Handling | BeezKnees",
-    url: "/ppe-varroa-treatments",
-    description: "UK guide to PPE for varroa treatments: when gloves, eye protection, aprons and respiratory protection may be needed, plus practical handling tips and label-first safety advice.",
-    keywords: "PPE for varroa treatments UK, oxalic acid PPE, formic acid PPE, thymol PPE beekeeping, gloves eye protection varroa, safe handling varroa treatments"
+    "title": "Queen Excluder Problems UK | Bees Not Going Through Supers",
+    "url": "/queen-excluder-problems",
+    "description": "UK guide to queen excluder problems, including bees not going through, ignored supers, honey stored below the excluder, burr comb and queen access issues.",
+    "keywords": "queen excluder problems UK, bees not going through queen excluder, bees ignoring supers, queen excluder honey super, queen excluder issues, bees not going into super"
   },
   {
-    title: "Queen Cell Guide (UK) – Types, Timing, What They Mean and What To Do | BeezKnees",
-    url: "/queen-cell-guide",
-    description: "A practical UK guide to queen cells: cups, charged cells, capped cells, supersedure and emergency cells, with clear explanations of what they mean and what action to take.",
-    keywords: "queen cell guide UK, types of queen cells, charged queen cells, capped queen cells, supersedure cells, emergency queen cells, what to do with queen cells"
+    "title": "Queen Failing Signs UK | Poor Queen, Patchy Brood & What To Do",
+    "url": "/queen-failing-signs",
+    "description": "UK beekeeper guide to failing queen signs, including patchy brood, poor laying, drone brood, supersedure cells, queenlessness and when to requeen or combine.",
+    "keywords": "failing queen bees UK, poor queen laying, patchy brood queen, queen failing signs, bee queen problems, poor queen brood pattern"
   },
   {
-    title: "Queen Cells: What To Do When You Find Them in a Hive | BeezKnees",
-    url: "/queen-cells-action",
-    description: "Found queen cells in a hive? Learn what they may mean, how to assess the colony calmly, and the practical options for UK beekeepers before making changes.",
-    keywords: "queen cells what to do, found queen cells in hive, swarm cells action, what do queen cells mean, queen cell management UK"
+    "title": "Queen Cell Timeline UK | BeezKnees",
+    "url": "/queen-timeline",
+    "description": "UK queen cell timeline from egg to emergence, including capping, virgin queen timing, swarm risk and key beekeeper decision points.",
+    "keywords": "queen cell timeline UK, queen development days bees, when queen cell capped swarm timing, bee queen lifecycle UK, day by day queen development beekeeper"
   },
   {
-    title: "Queen Cells and Swarm Control (UK) – A Practical Guide | BeezKnees",
-    url: "/queen-cells-swarm-control",
-    description: "Learn how queen cells fit into swarm control decisions, when to act, when not to act, and how to read what the colony may be trying to do.",
-    keywords: "queen cells and swarm control UK, swarm control queen cells, swarm cells what to do, beekeeping swarm control decisions"
+    "title": "Queenless Colony UK | Signs & What To Do | BeezKnees",
+    "url": "/queenless-colony-what-to-do",
+    "description": "UK beekeeper guide to queenless colonies, including signs of queenlessness, how to confirm it, common causes and what to do next.",
+    "keywords": "queenless colony UK, queenless hive signs, what to do queenless colony, no eggs in hive, test frame bees, laying workers UK"
   },
   {
-    title: "Queen Cups (UK) – What They Are, When They Matter and When They Don’t | BeezKnees",
-    url: "/queen-cups",
-    description: "Learn what queen cups are, how to tell them from real queen cells, and when they are just a normal part of colony life in UK hives.",
-    keywords: "queen cups UK, queen cups vs queen cells, empty queen cups, do queen cups mean swarming, beekeeping queen cups"
+    "title": "Queenless or Supersedure? UK Signs & Actions | BeezKnees",
+    "url": "/queenless-or-supersedure",
+    "description": "Is your hive queenless or undergoing supersedure? Learn how to tell the difference and what action to take in UK beekeeping conditions.",
+    "keywords": "queenless colony or supersedure, queenless hive signs UK, supersedure vs queenless colony, no eggs in hive what does it mean, beekeeping queenless colony UK"
   },
   {
-    title: "Queen Timeline (UK) – Eggs, Queen Cells, Emergence, Mating and Laying | BeezKnees",
-    url: "/queen-timeline",
-    description: "A practical queen timeline for UK beekeepers showing how long queens take to develop, emerge, mate and begin laying, with real-world delays explained.",
-    keywords: "queen timeline UK, queen development timeline, how long queen to hatch, virgin queen mating timeline, when will queen start laying"
+    "title": "Report a Bee Swarm UK | Safe Swarm Help | BeezKnees",
+    "url": "/report-a-swarm",
+    "description": "Found a bee swarm in the UK? Learn what to do, how to stay safe, identify honeybees vs wasps, and contact a local swarm collector.",
+    "keywords": "report a swarm UK, swarm of bees in garden UK, what to do if you find a swarm, honeybee swarm removal, swarm collector near me, BBKA swarm map, bee swarm in tree, bees clustering on wall, are swarms dangerous, honeybee identification UK, bees or wasps, how to remove a bee swarm safely"
   },
   {
-    title: "Queenless or Supersedure? How to Tell What Your Colony Is Doing | BeezKnees",
-    url: "/queenless-or-supersedure",
-    description: "Not sure whether your colony is queenless or quietly replacing its queen? Learn the signs that help UK beekeepers tell the difference before intervening.",
-    keywords: "queenless or supersedure, queenless colony vs supersedure, how to tell if bees are replacing queen, supersedure signs UK"
+    "title": "Robbing Behaviour in Bees UK | Signs, Causes & How To Stop It",
+    "url": "/robbing-behaviour-bees",
+    "description": "UK guide to robbing behaviour in honey bees, including signs of robbing, wasp attacks, causes, how to stop robbing and how to protect weak colonies.",
+    "keywords": "robbing bees UK, bees attacking hive entrance, wasps robbing hive, robbing behaviour signs bees, stop robbing bees, bee fighting entrance"
   },
   {
-    title: "Queenless Colony: What To Do",
-    url: "/queenless-colony-what-to-do",
-    description: "Learn the signs of a queenless colony, how to confirm queen status, and what action to take next in a UK hive."
- },
+    "title": "Sacbrood in Bees UK | Signs, Symptoms & What To Do",
+    "url": "/sacbrood-uk",
+    "description": "UK guide to sacbrood in honey bees, including fluid-filled larvae, sac-like appearance, causes and how to manage it.",
+    "keywords": "sacbrood UK bees, sacbrood symptoms, fluid larvae bees, brood disease sacbrood, bee larvae sac appearance"
+  },
+  {
+    "title": "September Beekeeping UK | Feeding, Varroa & Winter Prep | BeezKnees",
+    "url": "/september",
+    "description": "September beekeeping tasks for UK beekeepers, including autumn feeding, varroa checks, weak colonies, mouse guards and winter preparation.",
+    "keywords": "September beekeeping tasks UK, what to do with bees in September, feeding bees September UK, varroa treatment September, prepare hives for winter UK, weak colony management, mouse guards, wasp traps, beekeeping autumn checklist"
+  },
+  {
+    "title": "BeezKnees Site Map | UK Beekeeping Pages & Guides",
+    "url": "/site-map",
+    "description": "Browse the BeezKnees site map for UK beekeeping guides, varroa resources, apiary calendar pages, bee health, swarm control and HiveTag pages.",
+    "keywords": "beekeeping site map, BeezKnees site map, UK beekeeping guides, swarm and queen pages, varroa pages, apiary calendar, honeybee facts, downloads"
+  },
+  {
+    "title": "Small Hive Beetle UK | Identification, Signs & What To Do",
+    "url": "/small-hive-beetle-uk",
+    "description": "UK guide to small hive beetle (SHB), including identification, larvae, signs of infestation, UK notifiable pest status and what to do if suspected.",
+    "keywords": "small hive beetle UK, SHB bees UK, hive beetle identification, beetle larvae hive, notifiable pests bees UK, Aethina tumida UK"
+  },
+  {
+    "title": "How to Split a Hive to Prevent Swarming (UK) | BeezKnees",
+    "url": "/split-hive",
+    "description": "Learn how to split a hive to prevent swarming with this UK guide covering timing, equipment, queen cells, follow-up checks and common mistakes.",
+    "keywords": "how to split a hive to prevent swarming, hive split UK, beginner hive split, split hive swarm control, beekeeping splits UK, how to split a colony"
+  },
   {
-    title: "Report a Swarm – What To Do If You See a Swarm of Bees | BeezKnees",
-    url: "/report-a-swarm",
-    description: "Seen a swarm of bees? Learn what information helps, what not to do, and how to report a swarm so it can be collected safely where possible.",
-    keywords: "report a swarm UK, who to call for a bee swarm, swarm of bees in garden, what to do with swarm of bees, swarm collection"
+    "title": "Horizontal vs Vertical Hive Splits UK | BeezKnees",
+    "url": "/split-methods",
+    "description": "Compare horizontal and vertical hive splits for UK beekeepers, including swarm control, bee movement, space limits and when to use each method.",
+    "keywords": "horizontal vs vertical splits, hive split methods UK, vertical split beekeeping, horizontal split hive, swarm control split methods, beekeeping splits UK"
   },
   {
-    title: "September Beekeeping Tasks UK | Feeding, Varroa Follow-Up and Winter Preparation | BeezKnees",
-    url: "/september",
-    description: "What to do with your bees in September in the UK: complete feeding, review varroa treatment outcomes, reduce colony stress and prepare hives properly for winter.",
-    keywords: "September beekeeping tasks UK, what to do with bees in September, feeding bees autumn, varroa follow up, winter preparation bees UK, apiary management September"
+    "title": "Spring Beekeeping UK | March, April & May Hive Tasks | BeezKnees",
+    "url": "/spring-beekeeping-uk",
+    "description": "Spring beekeeping tasks in the UK, covering March, April and May hive inspections, spring build-up, feeding, swarm preparation and adding space.",
+    "keywords": "monthly beekeeping calendar UK, year in the apiary, beekeeping tasks by month, seasonal beekeeping UK, what to do in the apiary each month, UK beekeeping seasons, beekeeping calendar, apiary management, seasonal beekeeping tasks"
   },
   {
-    title: "How to Split a Hive in the UK – Method, Timing and What to Expect | BeezKnees",
-    url: "/split-hive",
-    description: "Learn how to split a hive in the UK, when it makes sense, what equipment you need, and how to manage queen cells, flying bees and follow-up inspections.",
-    keywords: "how to split a hive UK, hive split method, hive split timing, split colony bees, beekeeping splits UK, split hive queen cells, flying bees after split"
+    "title": "Spring Build-Up Bees UK | Colony Growth & Hive Space | BeezKnees",
+    "url": "/spring-build-up-bees",
+    "description": "Spring build-up in honey bee colonies, including brood expansion, food demand, hive space, weather, forage and signs of strong colony growth.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Spring Build-Up Bees UK | Colony Growth & Hive Space"
   },
   {
-    title: "Hive Split Methods (UK) – Artificial Swarm, Walk-Away Splits and More | BeezKnees",
-    url: "/split-methods",
-    description: "Compare common hive split methods used by UK beekeepers, including artificial swarms, walk-away splits and other practical options depending on your aim.",
-    keywords: "hive split methods UK, artificial swarm vs walk away split, how to split bees, colony split methods, swarm control splits"
+    "title": "Starvation in Bees UK | Signs, Causes & What To Do",
+    "url": "/starvation-in-bees-signs",
+    "description": "UK guide to starvation in honey bees, including bees with heads in cells, low stores, isolation starvation, emergency feeding and what to check.",
+    "keywords": "starvation in bees, bees head in cells, honey bee starvation signs UK, starving bees, emergency feeding bees, isolation starvation bees"
   },
   {
-    title: "Step-by-Step Hive Inspections (UK) – What to Check and Why | BeezKnees",
-    url: "/step-by-step-inspections",
-    description: "A practical UK guide to hive inspections with a clear step-by-step process, what to look for on each frame, and how to build confidence as a beekeeper.",
-    keywords: "step by step hive inspection UK, what to check in a hive, beginner hive inspection guide, inspection checklist bees, practical beekeeping inspections"
+    "title": "Step-by-Step Hive Inspections UK | Beekeeper Checklist",
+    "url": "/step-by-step-inspections",
+    "description": "Step-by-step UK hive inspection guide covering entrance checks, brood, stores, queen cells, pests, disease signs and inspection records.",
+    "keywords": "hive inspection checklist UK, step by step hive inspection, how to inspect a beehive, beekeeping inspections UK, brood pattern check, queen cells, swarm check, varroa signs, bee health check, apiary inspection guide, inspection records"
   },
   {
-    title: "Should You Leave Supersedure Cells? When to Intervene in UK Hives | BeezKnees",
-    url: "/supersedure-action",
-    description: "Should you leave supersedure cells alone? Learn when to let bees replace their queen naturally, when to be cautious, and when intervention may be needed in UK hives.",
-    keywords: "supersedure cells should you leave them, supersedure cells UK, should I remove supersedure cells, supersedure queen cells what to do, beekeeping supersedure guide UK"
+    "title": "Sudden Colony Death UK | Why Has My Hive Died?",
+    "url": "/sudden-colony-death-uk",
+    "description": "UK beekeeper guide to sudden colony death, including starvation, varroa collapse, poisoning, robbing, queen failure, disease and post-mortem checks.",
+    "keywords": "sudden colony death UK, why has my hive died, dead colony bees, hive died suddenly, colony collapse bees UK, dead bees in hive"
   },
   {
-    title: "Supersedure Queen Cells: What They Mean, How to Identify Them and What To Do (UK) | BeezKnees",
-    url: "/supersedure-queen-cells",
-    description: "Supersedure queen cells explained. Learn how to identify them, what they mean and how to manage queen replacement in UK hives.",
-    keywords: "supersedure queen cells UK, bees replacing queen, how to identify supersedure cells, queen cells middle of frame, beekeeper supersedure what to do"
+    "title": "Summer Beekeeping UK | June, July & August Hive Tasks | BeezKnees",
+    "url": "/summer-beekeeping-uk",
+    "description": "Summer beekeeping tasks in the UK, covering June, July and August hive inspections, honey supers, swarm checks, honey removal and late-summer varroa control.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Summer Beekeeping UK | June, July & August Hive Tasks"
   },
   {
-    title: "How Long After Swarming Before Eggs Appear? (UK) – Timeline, Delays and When to Check | BeezKnees",
-    url: "/swarm-eggs",
-    description: "How long after swarming before eggs appear? Understand the UK queen mating timeline, delays and when to check for a successfully laying queen.",
-    keywords: "how long after swarming before eggs appear, post swarm no eggs, virgin queen laying timeline UK, when will eggs appear after swarm, beekeeping swarm timeline UK"
+    "title": "Supersedure Cells UK | Leave or Intervene? | BeezKnees",
+    "url": "/supersedure-action",
+    "description": "Should you leave supersedure cells? Learn when to let bees replace their queen naturally, when to monitor, and when UK hives may need intervention.",
+    "keywords": "supersedure cells should you leave them, supersedure cells UK, should I remove supersedure cells, supersedure queen cells what to do, beekeeping supersedure guide UK"
   },
   {
-    title: "Swarm Prevention UK – How to Stop Bees Swarming | BeezKnees",
-    url: "/swarm-prevention",
-    description: "Learn practical swarm prevention for UK beekeepers. Understand why colonies swarm, how to reduce the risk, and what management choices help keep bees productive.",
-    keywords: "swarm prevention UK, how to stop bees swarming, prevent swarming, swarm control for beginners, why bees swarm, swarm management UK"
+    "title": "Supersedure in Bees UK | Signs, Queen Cells & What To Do",
+    "url": "/supersedure-explained",
+    "description": "UK beekeeper guide to supersedure in honey bees, including supersedure queen cells, signs of queen replacement, how it differs from swarming and what to do.",
+    "keywords": "supersedure bees UK, supersedure queen cell, queen replacement bees, supersedure vs swarm cells, bee queen failure signs"
   },
   {
-    title: "Swarm & Queen Management (UK) – Queen Cells, Virgin Queens, Queenless Signs and What To Do | BeezKnees",
-    url: "/swarm-queen",
-    description: "Practical UK guide to swarm and queen management covering queen cells, queen cups, virgin queen timelines, queenless signs, supersedure and decisions after swarming or splitting.",
-    keywords: "swarm and queen management UK, queen cells UK, queenless signs, virgin queen timeline, supersedure, emergency queen cells, split follow up, swarm prevention"
+    "title": "Supersedure Queen Cells UK | BeezKnees",
+    "url": "/supersedure-queen-cells",
+    "description": "UK guide to supersedure queen cells: how to identify them, what they mean, how they differ from swarm cells and when to leave them alone.",
+    "keywords": "supersedure queen cells UK, bees replacing queen, how to identify supersedure cells, queen cells middle of frame, beekeeper supersedure what to do"
   },
   {
-    title: "Bee Swarm Responsibilities (UK) – Who Is Responsible and What to Do | BeezKnees",
-    url: "/swarm-responsibilities",
-    description: "Understand swarm responsibilities in the UK, including practical considerations for beekeepers, landowners, neighbours and what to do if a swarm appears nearby.",
-    keywords: "swarm responsibilities UK, who is responsible for a swarm of bees, beekeeper responsibility swarm, swarm on neighbour property, legal responsibility swarm bees UK"
+    "title": "After Swarming: When Do Eggs Appear? | BeezKnees",
+    "url": "/swarm-eggs",
+    "description": "How long after swarming before eggs appear? Understand the UK queen mating timeline, delays and when to check for a successfully laying queen.",
+    "keywords": "how long after swarming before eggs appear, post swarm no eggs, virgin queen laying timeline UK, when will eggs appear after swarm, beekeeping swarm timeline UK"
   },
   {
-    title: "Varroa Chemical Treatments (UK) – Types, Timing & Safe Use | BeezKnees",
-    url: "/varroa-chemical-treatments",
-    description: "UK guide to chemical varroa treatments: treatment types (organic acids, thymol, synthetic), seasonal timing, temperature considerations, resistance awareness, and safe use with PPE.",
-    keywords: "varroa chemical treatments UK, varroa treatment types, oxalic acid varroa UK, thymol varroa UK, amitraz varroa UK, pyrethroid varroa UK, varroa treatment timing UK, varroa resistance, safe varroa treatments PPE"
+    "title": "Swarm Prevention UK – How to Stop Bees Swarming | BeezKnees",
+    "url": "/swarm-prevention",
+    "description": "Swarm prevention tips for UK beekeepers, including early warning signs, space management, inspections and practical swarm control methods.",
+    "keywords": "swarm prevention UK, how to stop bees swarming, swarm control methods UK, artificial swarm guide UK, bees swarming what to do"
   },
   {
-    title: "Varroa Mite Management in the UK – How to Treat Varroa Mites Safely | BeezKnees",
-    url: "/varroa-management",
-    description: "Practical UK guide to varroa mite management – how to treat varroa mites safely, monitor infestations, plan seasonal treatments and protect your honey bee colonies.",
-    keywords: "how to treat varroa mites UK, varroa management UK, varroa mite treatment UK, varroa monitoring, varroa mite symptoms, integrated pest management varroa"
+    "title": "Swarm & Queen Management UK | BeezKnees",
+    "url": "/swarm-queen",
+    "description": "UK swarm and queen management guide covering queen cells, swarm control, hive splits, queen timing, queenless colonies and inspection decisions.",
+    "keywords": "swarm and queen management UK, queen cells guide UK, swarm control beekeeping UK, hive split guide UK, virgin queen timeline UK, queenless colony UK"
   },
   {
-    title: "Varroa Monitoring Methods (UK) – Sugar Roll, Alcohol Wash, Mite Drop and Drone Brood Checks | BeezKnees",
-    url: "/varroa-monitoring-methods",
-    description: "Learn practical varroa monitoring methods used in the UK, including sugar roll, alcohol wash, natural mite drop and drone brood checks, with plain-English pros and cons.",
-    keywords: "varroa monitoring methods UK, sugar roll varroa, alcohol wash varroa, natural mite drop, drone brood check varroa, monitor varroa levels"
+    "title": "Bee Swarm Responsibilities UK | BeezKnees",
+    "url": "/swarm-responsibilities",
+    "description": "UK guide to bee swarm responsibilities, including who to contact, what the public should do, beekeeper duties and safe swarm reporting.",
+    "keywords": "bee swarm responsibilities UK, who is responsible for a bee swarm, swarm of bees what to do UK, report a swarm, beekeeper swarm responsibility"
   },
   {
-    title: "Non-Chemical Varroa Control (UK) – Brood Breaks, Drone Brood Removal and IPM | BeezKnees",
-    url: "/varroa-non-chemical-methods",
-    description: "A practical UK guide to non-chemical varroa control including brood breaks, drone brood removal, comb renewal and integrated pest management approaches.",
-    keywords: "non chemical varroa control UK, brood break varroa, drone brood removal, varroa IPM, integrated pest management bees, natural varroa control"
+    "title": "Swarm Season UK | When Bees Swarm & What to Do | BeezKnees",
+    "url": "/swarm-season-uk",
+    "description": "UK swarm season guide covering when bees swarm, queen cells, swarm signs, inspection timing, prevention and what beekeepers should do.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Swarm Season UK | When Bees Swarm & What to Do"
   },
   {
-    title: "Varroa in 5 Minutes (UK) – Quick Overview for Beekeepers | BeezKnees",
-    url: "/varroa-overview",
-    description: "A fast beginner-friendly overview of varroa in the UK: what it is, why it matters, how to monitor it and where to go next for treatment planning.",
-    keywords: "varroa overview UK, what is varroa, beginner varroa guide, varroa mites explained, quick varroa guide"
+    "title": "Varroa Chemical Treatments UK: Types & Timing | BeezKnees",
+    "url": "/varroa-chemical-treatments",
+    "description": "UK guide to varroa chemical treatments covering types, seasonal timing, temperature limits, resistance management and safe use with PPE and record keeping.",
+    "keywords": "varroa chemical treatments UK, varroa treatment types, oxalic acid varroa UK, thymol varroa UK, amitraz varroa UK, pyrethroid varroa UK, varroa treatment timing UK, varroa resistance, safe varroa treatments PPE"
   },
   {
-    title: "Varroa Treatment Calendar UK – Month-by-Month Treatment Planning | BeezKnees",
-    url: "/varroa-treatment-calendar-uk",
-    description: "Plan varroa monitoring and treatment through the UK beekeeping year with this practical month-by-month varroa treatment calendar.",
-    keywords: "varroa treatment calendar UK, when to treat varroa UK, varroa month by month, seasonal varroa plan, varroa treatment timing"
+    "title": "Varroa Collapse Signs UK | Symptoms, DWV & Colony Loss",
+    "url": "/varroa-collapse-signs",
+    "description": "UK guide to varroa collapse signs in honey bees, including deformed wings, crawling bees, patchy brood, sudden colony decline and prevention.",
+    "keywords": "varroa collapse UK, varroa mite symptoms bees, colony collapse varroa, deformed wing virus UK, varroa damage hive"
   },
   {
-    title: "Beekeeping Medicine Records (UK) – What to Record and Why It Matters | BeezKnees",
-    url: "/veterinary-medicine-records",
-    description: "Learn what UK beekeepers should record when using veterinary medicines, why records matter and what details are useful for safe, responsible hive management.",
-    keywords: "beekeeping medicine records UK, veterinary medicine records bees, treatment record beekeeping, varroa treatment records, medicine log hives"
+    "title": "Varroa Mite Management UK | BeezKnees",
+    "url": "/varroa-management",
+    "description": "Practical UK guide to varroa mite management, including monitoring, treatment timing, safe varroa control and seasonal planning for honey bee colonies.",
+    "keywords": "how to treat varroa mites UK, varroa management UK, varroa mite treatment UK, varroa monitoring, varroa mite symptoms, integrated pest management varroa"
   },
   {
-    title: "Viral Diseases of Honeybees in the UK – DWV, Paralysis and Other Viruses | BeezKnees",
-    url: "/viral-diseases",
-    description: "A practical guide to viral diseases of honeybees in the UK, including deformed wing virus, paralysis and how viruses often link back to varroa pressure.",
-    keywords: "viral diseases honeybees UK, deformed wing virus, chronic bee paralysis, acute bee paralysis, varroa and viruses, bee virus symptoms"
+    "title": "Varroa Monitoring Methods UK | Mite Checks | BeezKnees",
+    "url": "/varroa-monitoring-methods",
+    "description": "UK guide to varroa monitoring methods: sugar roll, alcohol wash, sticky boards, drone brood checks and how to interpret results to plan safe treatments.",
+    "keywords": "varroa monitoring methods UK, sugar roll varroa, alcohol wash varroa, mite drop count, sticky board varroa, drone brood uncapping varroa"
   },
   {
-    title: "When Will a Virgin Queen Start Laying? (UK) – Timeline, Delays and What to Watch For | BeezKnees",
-    url: "/virgin-queen-timeline",
-    description: "Learn when a virgin queen is likely to start laying in the UK, what weather and mating conditions can delay things, and when to worry.",
-    keywords: "when will a virgin queen start laying UK, virgin queen timeline, queen mating delay, no eggs after split, no eggs after swarm"
+    "title": "Non-Chemical Varroa Control UK | IPM Methods | BeezKnees",
+    "url": "/varroa-non-chemical-methods",
+    "description": "UK guide to non-chemical varroa control, including drone brood removal, brood breaks, shook swarm, comb renewal and IPM methods.",
+    "keywords": "non chemical varroa control UK, varroa IPM methods, drone brood removal, brood break varroa, shook swarm varroa, comb renewal beekeeping, biotechnical varroa methods"
   },
   {
-    title: "Beekeeping Calendar UK – Year in the Apiary Month by Month | BeezKnees",
-    url: "/year-in-the-apiary",
-    description: "A month-by-month UK beekeeping calendar covering what to do in the apiary through the seasons, from winter checks to swarm control and honey harvest.",
-    keywords: "beekeeping calendar UK, year in the apiary, month by month beekeeping, seasonal beekeeping UK, apiary calendar"
-  }
-  ,
+    "title": "Varroa in 5 Minutes UK | Monitor & Treat Safely | BeezKnees",
+    "url": "/varroa-overview",
+    "description": "Quick UK varroa guide covering mite risk, monitoring, seasonal treatment timing, IPM methods and safe control decisions for beekeepers.",
+    "keywords": "varroa overview UK, varroa in 5 minutes, how to treat varroa mites UK, varroa monitoring UK, varroa thresholds UK, integrated pest management varroa"
+  },
+  {
+    "title": "Varroa Symptoms UK | Signs of Infestation in Bees | BeezKnees",
+    "url": "/varroa-symptoms-uk",
+    "description": "Learn the signs of varroa mite infestation in UK honey bee colonies, including deformed wings, crawling bees, patchy brood and when to monitor or treat.",
+    "keywords": "Varroa Symptoms UK | Signs of Infestation in Bees | BeezKnees Varroa symptoms in bees Varroa Symptoms in Bees – Signs of Infestation in UK Colonies Common signs of varroa infestation Why symptoms can appear late What to do if you suspect varroa You might also need Contact & Social Quick Links Useful Pages Beekeeping Resources"
+  },
   {
-    title: "Adding Supers UK | When to Add Honey Supers | BeezKnees",
-    url: "/adding-supers-uk",
-    description: "When to add supers in the UK, including signs a colony needs space, spring and summer timing, drawn comb, queen excluders and common supering mistakes.",
-    keywords: "adding supers UK, when to add supers, honey supers, supering bees, drawn comb, queen excluder, spring beekeeping UK, summer beekeeping UK"
+    "title": "Varroa Treatment Calendar UK | Seasonal Timing Guide",
+    "url": "/varroa-treatment-calendar-uk",
+    "description": "UK varroa treatment calendar and planning guide: what to monitor in spring, main late-summer treatment window, winter considerations, and record-keeping tips.",
+    "keywords": "varroa treatment calendar UK, varroa treatment timing, varroa seasonal plan UK, when to treat varroa UK, varroa late summer treatment"
   },
   {
-    title: "Autumn Beekeeping UK | September, October & November Tasks | BeezKnees",
-    url: "/autumn-beekeeping-uk",
-    description: "Autumn beekeeping tasks in the UK, covering September, October and November feeding, varroa treatment, hive checks, mouseguards and winter preparation.",
-    keywords: "autumn beekeeping UK, September beekeeping, October beekeeping, November beekeeping, feeding bees autumn, varroa treatment autumn, winter preparation bees"
+    "title": "Bee Medicine Records UK | Hive Treatment Records | BeezKnees",
+    "url": "/veterinary-medicine-records",
+    "description": "UK guide to bee medicine records, hive treatment logs, varroa treatment records, what to record and how long to keep records.",
+    "keywords": "beekeeping record keeping UK, veterinary medicine records bees, hive treatment records, VMD record keeping requirements, varroa treatment records, apiary medication log, veterinary medicine administration record, honey withdrawal period bees UK, medicines compliance beekeeping"
   },
   {
-    title: "Dead Bees Outside Hive UK | Causes & What To Do | BeezKnees",
-    url: "/dead-bees-outside-hive",
-    description: "Seeing dead bees outside your hive? Learn common UK causes including natural turnover, pesticides, varroa, starvation and disease, plus what to check next.",
-    keywords: "dead bees outside hive UK, dead bees at entrance, bees dying outside hive, pesticide poisoning bees, varroa symptoms, starvation bees, hive health warning signs"
+    "title": "Viral Diseases in Bees UK: Symptoms & Control | BeezKnees",
+    "url": "/viral-diseases",
+    "description": "UK guide to viral diseases in bees: symptoms, varroa links, deformed wing virus, paralysis and sacbrood, plus how to manage colonies.",
+    "keywords": "viral bee diseases, deformed wing virus, DWV, chronic bee paralysis, CBPV, sacbrood virus, ABPV, honey bee health UK, varroa and viruses"
   },
   {
-    title: "Feeding Bees for Winter UK | Autumn Stores & Syrup | BeezKnees",
-    url: "/feeding-bees-for-winter-uk",
-    description: "Feeding bees for winter in the UK, covering autumn syrup, checking stores, hive weight, timing, avoiding robbing and preparing colonies for winter.",
-    keywords: "feeding bees for winter UK, autumn feeding bees, winter stores bees, 2:1 syrup bees, feeding syrup autumn, preparing bees for winter, hive weight winter"
+    "title": "Virgin Queen Timeline UK | When Eggs Appear | BeezKnees",
+    "url": "/virgin-queen-timeline",
+    "description": "UK guide to when a virgin queen starts laying, covering mating flights, weather delays, no eggs after a split or swarm, and when to worry.",
+    "keywords": "when will a virgin queen start laying UK, virgin queen laying timeline, how long after queen emerges before eggs, queen mating timeline UK, no eggs after swarm, no eggs after split beekeeper"
   },
   {
-    title: "Feeding Bees in Spring UK | Syrup, Fondant & Stores | BeezKnees",
-    url: "/feeding-bees-in-spring-uk",
-    description: "Guide to feeding bees in spring in the UK, including when to use fondant or syrup, checking stores, avoiding overfeeding and supporting spring build-up.",
-    keywords: "feeding bees in spring UK, spring feeding bees, fondant in spring, syrup for bees spring, checking stores bees, spring build up bees, feeding weak colonies"
+    "title": "Wasps Attacking Beehives UK | Signs, Prevention & What To Do",
+    "url": "/wasps-attacking-beehives-uk",
+    "description": "UK beekeeper guide to wasps attacking beehives, including signs, prevention, entrance reduction, robbing risk, weak colonies and what to do during an attack.",
+    "keywords": "wasps attacking beehives UK, wasps killing bees, wasp robbing hive, bees fighting wasps, protect hive from wasps UK"
   },
   {
-    title: "First Spring Inspection UK | What to Check in the Hive | BeezKnees",
-    url: "/first-spring-inspection",
-    description: "First spring inspection guide for UK beekeepers, covering when to open the hive, what to check, brood, stores, queen signs and common mistakes.",
-    keywords: "first spring inspection UK, spring hive inspection, what to check in spring, brood check bees, queen signs, food stores, beginner beekeeper spring"
+    "title": "Wax Moth in Beehives UK | Signs, Damage & Prevention",
+    "url": "/wax-moth-uk",
+    "description": "UK guide to wax moth in beehives, including signs of wax moth larvae, webbing, comb damage, stored frame protection and how to prevent wax moth.",
+    "keywords": "wax moth UK, wax moth damage hive, wax moth larvae bees, webbing comb bees, protect frames wax moth, wax moth beehive signs"
   },
   {
-    title: "Foulbrood vs Chalkbrood UK | Key Differences | BeezKnees",
-    url: "/foulbrood-vs-chalkbrood",
-    description: "UK beekeeper guide comparing foulbrood and chalkbrood, including brood signs, seriousness, what to avoid and when to seek bee inspector advice.",
-    keywords: "foulbrood vs chalkbrood UK, chalkbrood symptoms, foulbrood symptoms, AFB EFB signs, bee inspector advice, brood disease UK, beekeeping disease guide"
+    "title": "Weak Bee Colony UK | Signs, Causes & What To Do",
+    "url": "/weak-colony-bees",
+    "description": "UK beekeeper guide to weak bee colonies, including signs, queen problems, varroa, starvation, robbing risk, wasps, poor build-up and what to do next.",
+    "keywords": "weak bee colony UK, weak hive bees, colony not building up, weak honey bee colony, small bee colony problems, weak colony bees"
   },
   {
-    title: "June Gap Beekeeping UK | Nectar Shortage & Feeding | BeezKnees",
-    url: "/june-gap-beekeeping",
-    description: "June gap beekeeping guide for the UK, explaining nectar shortages, signs of food stress, feeding decisions, swarm pressure and colony management.",
-    keywords: "June gap beekeeping UK, nectar shortage bees, feeding bees June, food stress bees, summer dearth UK, swarm pressure, colony management June"
+    "title": "When to Call a Bee Inspector UK | BeezKnees",
+    "url": "/when-to-call-bee-inspector-uk",
+    "description": "Know when to contact a bee inspector in the UK, especially for suspected foulbrood, serious brood disease, unusual colony losses or notifiable pest concerns.",
+    "keywords": "When to Call a Bee Inspector UK | BeezKnees Dead bees outside the hive When to Call a Bee Inspector in the UK Call or seek advice urgently if you suspect foulbrood Other reasons to seek bee inspector advice What to do before moving equipment What to read next You might also need Contact & Social Quick Links Useful Pages"
   },
   {
-    title: "Late Summer Varroa UK | Protecting Winter Bees | BeezKnees",
-    url: "/late-summer-varroa",
-    description: "Late summer varroa guide for UK beekeepers, covering August and September mite pressure, monitoring, treatment timing and protecting winter bees.",
-    keywords: "late summer varroa UK, varroa August, varroa September, winter bees, varroa treatment timing, mite monitoring, protect winter bees"
+    "title": "When to Feed Fondant to Bees UK | Winter & Spring Guide | BeezKnees",
+    "url": "/when-to-feed-fondant-to-bees",
+    "description": "When to feed fondant to bees in the UK, including winter feeding, late-winter starvation risk, spring emergencies and when syrup is more suitable.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, When to Feed Fondant to Bees UK | Winter & Spring Guide"
   },
   {
-    title: "Spring Beekeeping UK | March, April & May Hive Tasks | BeezKnees",
-    url: "/spring-beekeeping-uk",
-    description: "Spring beekeeping tasks in the UK, covering March, April and May hive inspections, spring build-up, feeding, swarm preparation and adding space.",
-    keywords: "spring beekeeping UK, March beekeeping, April beekeeping, May beekeeping, spring hive inspections, spring build up, swarm preparation, adding supers"
+    "title": "When to Inspect Bees UK | Weather, Timing & Hive Checks | BeezKnees",
+    "url": "/when-to-inspect-bees-uk",
+    "description": "When to inspect bees in the UK, including weather, temperature, seasonal timing, inspection frequency and when not to open a hive.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, When to Inspect Bees UK | Weather, Timing & Hive Checks"
   },
   {
-    title: "Spring Build-Up Bees UK | Colony Growth & Hive Space | BeezKnees",
-    url: "/spring-build-up-bees",
-    description: "Spring build-up in honey bee colonies, including brood expansion, food demand, hive space, weather, forage and signs of strong colony growth.",
-    keywords: "spring build up bees UK, colony growth, brood expansion, spring forage, hive space, food demand bees, strong colony signs"
+    "title": "Why Are Bees Crawling on the Ground? | UK Beekeeper Guide",
+    "url": "/why-bees-crawling-ground",
+    "description": "UK beekeeper guide to bees crawling on the ground, including varroa, deformed wing virus, poisoning, starvation, chilling, weak bees and normal losses.",
+    "keywords": "bees crawling on ground, bees unable to fly, crawling bees UK, deformed wing virus bees, bee poisoning signs, sick bees outside hive"
   },
   {
-    title: "Summer Beekeeping UK | June, July & August Hive Tasks | BeezKnees",
-    url: "/summer-beekeeping-uk",
-    description: "Summer beekeeping tasks in the UK, covering June, July and August hive inspections, honey supers, swarm checks, honey removal and late-summer varroa control.",
-    keywords: "summer beekeeping UK, June beekeeping, July beekeeping, August beekeeping, honey supers, swarm checks, honey harvest, late summer varroa"
+    "title": "Why Bees Are Not Drawing Comb UK | Causes & What To Do",
+    "url": "/why-bees-not-drawing-comb",
+    "description": "UK guide to why bees are not drawing comb, including nectar flow, feeding, temperature, colony strength, foundation, queen issues and common mistakes.",
+    "keywords": "bees not drawing comb UK, bees not building comb, foundation not drawn bees, why bees ignore frames, comb building problems bees"
   },
   {
-    title: "Swarm Season UK | When Bees Swarm & What to Do | BeezKnees",
-    url: "/swarm-season-uk",
-    description: "UK swarm season guide covering when bees swarm, queen cells, swarm signs, inspection timing, prevention and what beekeepers should do.",
-    keywords: "swarm season UK, when do bees swarm, swarm signs, queen cells, swarm prevention, swarm control, beekeeping inspections"
+    "title": "Why Did My Hive Die? UK Beekeeper Colony Loss Guide",
+    "url": "/why-did-my-hive-die",
+    "description": "Why did my hive die? UK beekeeper guide to colony loss, including starvation, varroa collapse, poisoning, robbing, queen failure, disease and winter losses.",
+    "keywords": "why did my hive die, why did my bees die, dead hive UK, colony loss bees, dead bee colony, hive post mortem"
   },
   {
-    title: "When to Call a Bee Inspector UK | BeezKnees",
-    url: "/when-to-call-bee-inspector-uk",
-    description: "Know when to contact a bee inspector in the UK, especially for suspected foulbrood, serious brood disease, unusual colony losses or notifiable pest concerns.",
-    keywords: "when to call bee inspector UK, bee inspector UK, suspected foulbrood, AFB EFB, notifiable bee disease, colony losses, brood disease"
+    "title": "Why Are There So Many Drones? UK Beekeeping Guide",
+    "url": "/why-so-many-drones",
+    "description": "UK beekeeper guide to why a hive has lots of drones, including normal seasonal behaviour, swarm season, drone-laying queens, laying workers and when to act.",
+    "keywords": "why so many drones hive UK, drone bees lots of drones, drone brood problem, laying workers drones, drone laying queen signs"
   },
   {
-    title: "When to Feed Fondant to Bees UK | Winter & Spring Guide | BeezKnees",
-    url: "/when-to-feed-fondant-to-bees",
-    description: "When to feed fondant to bees in the UK, including winter feeding, late-winter starvation risk, spring emergencies and when syrup is more suitable.",
-    keywords: "when to feed fondant to bees UK, fondant feeding bees, winter fondant, spring fondant, starvation risk bees, emergency feeding bees"
+    "title": "Winter Bee Checks UK | What to Check Without Opening | BeezKnees",
+    "url": "/winter-bee-checks-uk",
+    "description": "Winter bee checks in the UK, including what to check without opening the hive, food stores, entrances, storm damage, mouseguards and emergency feeding.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Winter Bee Checks UK | What to Check Without Opening"
   },
   {
-    title: "When to Inspect Bees UK | Weather, Timing & Hive Checks | BeezKnees",
-    url: "/when-to-inspect-bees-uk",
-    description: "When to inspect bees in the UK, including weather, temperature, seasonal timing, inspection frequency and when not to open a hive.",
-    keywords: "when to inspect bees UK, hive inspection weather, inspection temperature bees, when not to inspect bees, seasonal hive checks, inspection frequency"
+    "title": "Winter Beekeeping UK | December, January & February Tasks | BeezKnees",
+    "url": "/winter-beekeeping-uk",
+    "description": "Winter beekeeping tasks in the UK, covering December, January and February hive checks, fondant feeding, storm damage, stores and late-winter preparation.",
+    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Winter Beekeeping UK | December, January & February Tasks"
   },
   {
-    title: "Winter Bee Checks UK | What to Check Without Opening | BeezKnees",
-    url: "/winter-bee-checks-uk",
-    description: "Winter bee checks in the UK, including what to check without opening the hive, food stores, entrances, storm damage, mouseguards and emergency feeding.",
-    keywords: "winter bee checks UK, winter hive checks, check bees without opening, food stores bees, mouseguards, storm damage hives, emergency feeding bees"
+    "title": "Winter Colony Loss UK | Why Bees Die in Winter & How To Prevent It",
+    "url": "/winter-colony-loss-uk",
+    "description": "UK guide to winter colony loss in bees, including starvation, isolation starvation, varroa, damp, queen failure, weak colonies and how to prevent winter losses.",
+    "keywords": "winter colony loss UK, bees dying winter UK, why bees die in winter, winter hive loss, bee starvation winter, varroa winter loss"
   },
   {
-    title: "Winter Beekeeping UK | December, January & February Tasks | BeezKnees",
-    url: "/winter-beekeeping-uk",
-    description: "Winter beekeeping tasks in the UK, covering December, January and February hive checks, fondant feeding, storm damage, stores and late-winter preparation.",
-    keywords: "winter beekeeping UK, December beekeeping, January beekeeping, February beekeeping, fondant feeding, winter hive checks, late winter preparation"
+    "title": "UK Beekeeping Calendar | Year in the Apiary | BeezKnees",
+    "url": "/year-in-the-apiary",
+    "description": "UK beekeeping calendar with month-by-month apiary tasks, inspections, feeding, swarm control, varroa checks and winter preparation.",
+    "keywords": "monthly beekeeping calendar UK, year in the apiary, beekeeping tasks by month, seasonal beekeeping UK, what to do in the apiary each month, UK beekeeping seasons, beekeeping calendar, apiary management, seasonal beekeeping tasks"
   }
 ];

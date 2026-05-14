@@ -10,7 +10,7 @@ export function renderModule3Training(container) {
       <header class="tk-content-header">
         <div class="tk-content-heading">
           <div class="tk-content-eyebrow">Module 3</div>
-          <h1 class="tk-content-title">Honey Bee Pests, Diseases &amp; Poisoning – Training</h1>
+          <h2 class="tk-content-title">Honey Bee Pests, Diseases &amp; Poisoning – Training</h2>
           <p class="tk-content-subtitle">
             Work through these 10 sections to build confidence in recognising, preventing and
             managing pests, diseases and poisoning in honey bee colonies. This training supports

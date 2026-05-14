@@ -53,7 +53,7 @@ export default function Help() {
     <main id="top" className="p-6">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8">
-          <h1 className="text-3xl font-bold">HiveTag Help &amp; How-To</h1>
+          <h2 className="text-3xl font-bold">HiveTag Help &amp; How-To</h2>
           <p className="mt-2 text-gray-600">
             Clear, practical guidance for every part of HiveTag—from your first
             apiary to NFC tag setup and inspections.

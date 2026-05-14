@@ -262,7 +262,7 @@ export default function ProfitLoss() {
 </style>
 </head>
 <body>
-  <h1>Profit &amp; Loss</h1>
+  <h2>Profit &amp; Loss</h2>
   <div class="range">Range: ${fmtDateUK(fromDate)} – ${fmtDateUK(toDate)} • Currency: ${escapeHtml(currency)}</div>
   <div class="cards">
     <div class="card"><div class="label">Revenue</div><div class="value">${money(totals.revenue, currency)}</div></div>
@@ -375,7 +375,7 @@ export default function ProfitLoss() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold mb-1">Profit &amp; Loss</h1>
+      <h2 className="text-2xl font-bold mb-1">Profit &amp; Loss</h2>
       {/* Visible UK range hint on page (helps users and matches print) */}
       <p className="text-sm text-gray-600 mb-4">
         Range: <strong>{fmtDateUK(fromDate)} to {fmtDateUK(toDate)}</strong>

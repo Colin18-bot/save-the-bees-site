@@ -467,7 +467,7 @@ export default function NFCScan() {
     <main className="p-6">
       <div className="max-w-3xl mx-auto space-y-6">
         <header>
-          <h1 className="text-2xl font-bold mb-1">Set Up NFC Tags</h1>
+          <h2 className="text-2xl font-bold mb-1">Set Up NFC Tags</h2>
           <p className="text-gray-600 text-sm">
             Set up and use HiveTag NFC labels for both Android and iPhone / iPad.
             Android can scan blank tags directly in the app. iPhone / iPad uses

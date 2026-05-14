@@ -16,7 +16,7 @@ export default function Contact() {
 
   return (
     <div className="max-w-lg mx-auto p-6 bg-white rounded-2xl shadow">
-      <h1 className="text-2xl font-bold text-green-800 mb-4">Contact BeezKnees</h1>
+      <h2 className="text-2xl font-bold text-green-800 mb-4">Contact BeezKnees</h2>
       <p className="text-sm text-gray-600 mb-6">
         Questions, feedback, or a quick hello—drop us a note below and we’ll get back to you.
       </p>

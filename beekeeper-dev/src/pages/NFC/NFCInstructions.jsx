@@ -15,7 +15,7 @@ export default function NFCInstructions() {
     <main className="p-6">
       <div className="max-w-3xl mx-auto bg-white rounded-lg shadow p-6 print:shadow-none print:p-0">
         <header className="mb-4 border-b pb-3">
-          <h1 className="text-2xl font-bold">HiveTag NFC — Quick Start</h1>
+          <h2 className="text-2xl font-bold">HiveTag NFC — Quick Start</h2>
           <p className="text-gray-600 mt-1">
             Use this page as a simple quick-start guide for setting up and using
             HiveTag NFC labels with both Android and iPhone.

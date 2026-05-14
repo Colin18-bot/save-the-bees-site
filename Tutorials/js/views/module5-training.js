@@ -10,7 +10,7 @@ export function renderModule5Training(container) {
       <header class="tk-content-header">
         <div class="tk-content-heading">
           <div class="tk-content-eyebrow">Module 5</div>
-          <h1 class="tk-content-title">Honey Bee Biology – Training</h1>
+          <h2 class="tk-content-title">Honey Bee Biology – Training</h2>
           <p class="tk-content-subtitle">
             This module brings together the key biological topics you need for the written exams:
             development, anatomy, body systems, senses, communication and how the colony functions

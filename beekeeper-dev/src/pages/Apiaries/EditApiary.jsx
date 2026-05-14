@@ -437,7 +437,7 @@ const EditApiary = () => {
 
   return (
     <div className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Edit Apiary</h1>
+      <h2 className="text-2xl font-bold mb-4">Edit Apiary</h2>
 
       {loading ? (
         <div className="flex justify-center py-10">

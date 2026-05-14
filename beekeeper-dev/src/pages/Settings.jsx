@@ -545,7 +545,7 @@ const Settings = () => {
 
   return (
     <div className="p-6 w-full max-w-2xl">
-      <h1 className="text-2xl font-bold mb-6">Settings</h1>
+      <h2 className="text-2xl font-bold mb-6">Settings</h2>
 
       {/* ===== Profile ===== */}
       <section className="mb-10 border rounded-xl p-4 bg-white shadow-sm" aria-labelledby="profile-settings">

@@ -10,7 +10,7 @@ export function renderModule1Training(container) {
       <header class="tk-content-header">
         <div class="tk-content-heading">
           <div class="tk-content-eyebrow">Module 1</div>
-          <h1 class="tk-content-title">Honey Bee Management – Training</h1>
+          <h2 class="tk-content-title">Honey Bee Management – Training</h2>
           <p class="tk-content-subtitle">
             Work through these 10 short sections to build the knowledge needed for the Module 1
             questions and final exam. Tick each section off as you go and use your notes / glossary

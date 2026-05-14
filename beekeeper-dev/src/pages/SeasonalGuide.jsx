@@ -30,9 +30,9 @@ export default function SeasonalGuide() {
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-yellow-300">
                 Premium seasonal guidance
               </p>
-              <h1 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
+              <h2 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
                 Year in the Apiary
-              </h1>
+              </h2>
               <p className="mt-4 max-w-2xl text-base leading-7 text-green-50 sm:text-lg">
                 A clean monthly guide for UK beekeepers. Check the current month, view the full infographic, and turn seasonal advice into practical hive actions.
               </p>

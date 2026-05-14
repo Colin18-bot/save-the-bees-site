@@ -366,7 +366,7 @@ useEffect(() => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto bg-white rounded-xl shadow-lg">
-      <h1 className="text-2xl font-bold mb-4">New Hive Logbook Entry</h1>
+      <h2 className="text-2xl font-bold mb-4">New Hive Logbook Entry</h2>
       {isPremium && returnTo && (
   <div className="mb-4">
     <Link

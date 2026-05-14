@@ -9,6 +9,7 @@
     <meta name="description" content="Found a bee swarm in the UK? Learn what to do, how to stay safe, identify honeybees vs wasps, and contact a local swarm collector.">
     <meta name="keywords" content="report a swarm UK, swarm of bees in garden UK, what to do if you find a swarm, honeybee swarm removal, swarm collector near me, BBKA swarm map, bee swarm in tree, bees clustering on wall, are swarms dangerous, honeybee identification UK, bees or wasps, how to remove a bee swarm safely">
     <meta name="author" content="Colin Chorley">
+    <meta name="robots" content="index,follow">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="BeezKnees">
     <meta property="og:locale" content="en_GB">
@@ -38,6 +39,16 @@
         "@context": "https://schema.org",
         "@graph": [
           {
+            "@type": "WebSite",
+            "@id": "https://beezknees.co.uk/#website",
+            "name": "BeezKnees",
+            "url": "https://beezknees.co.uk/",
+            "inLanguage": "en-GB",
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            }
+          },
+          {
             "@type": "Organization",
             "@id": "https://beezknees.co.uk/#organization",
             "name": "BeezKnees",
@@ -47,24 +58,24 @@
               "@id": "https://beezknees.co.uk/#logo",
               "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png",
               "width": 1024,
-                 "height": 1024
+              "height": 1024
             }
           },
           {
             "@type": "ImageObject",
             "@id": "https://beezknees.co.uk/report-a-swarm#primaryimage",
             "url": "https://beezknees.co.uk/images/swarm-in-a-tree.webp",
-             "width": 1600,
+            "width": 1600,
             "height": 2400
           },
           {
             "@type": "WebPage",
             "@id": "https://beezknees.co.uk/report-a-swarm#webpage",
             "url": "https://beezknees.co.uk/report-a-swarm",
-        "name": "Report a Bee Swarm UK | Safe Swarm Help | BeezKnees",
-         "description": "Found a bee swarm in the UK? Learn what to do, how to stay safe, identify honeybees vs wasps, and contact a local swarm collector.",
+            "name": "Report a Bee Swarm UK | Safe Swarm Help | BeezKnees",
+            "description": "Found a bee swarm in the UK? Learn what to do, how to stay safe, identify honeybees vs wasps, and contact a local swarm collector.",
             "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "about": {
               "@id": "https://beezknees.co.uk/report-a-swarm#article"
@@ -77,12 +88,15 @@
             },
             "publisher": {
               "@id": "https://beezknees.co.uk/#organization"
+            },
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/swarm-queen#webpage"
             }
           },
           {
             "@type": "Article",
             "@id": "https://beezknees.co.uk/report-a-swarm#article",
-          "headline": "Report a Bee Swarm UK | Safe Swarm Help",
+            "headline": "Report a Bee Swarm UK | Safe Swarm Help",
             "description": "A practical UK guide explaining what to do if you find a swarm of honeybees, how to stay safe, how to identify honeybees vs wasps, and how to contact a local swarm collector.",
             "image": {
               "@id": "https://beezknees.co.uk/report-a-swarm#primaryimage"
@@ -98,7 +112,7 @@
               "@id": "https://beezknees.co.uk/report-a-swarm#webpage"
             },
             "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "keywords": [
               "report a swarm",
@@ -107,7 +121,10 @@
               "swarm collector",
               "bees or wasps",
               "bee safety"
-            ]
+            ],
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/swarm-queen#webpage"
+            }
           },
           {
             "@type": "FAQPage",
@@ -118,82 +135,42 @@
             "mainEntity": [
               {
                 "@type": "Question",
-                "name": "Are honeybee swarms dangerous?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Most honeybee swarms are relatively calm because the bees are focused on protecting the queen and finding a new home. However, you should still keep your distance and avoid disturbing them, especially if anyone nearby is allergic to stings."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What should I do if I find a swarm of bees in my garden in the UK?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Keep people and pets away, do not spray or disturb the bees, and contact a local swarm collector (often via the BBKA swarm map). If the swarm is in a dangerous location, seek urgent advice."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How can I tell if it is honeybees or wasps?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Honeybees are typically fuzzier and browner-gold, and a swarm usually forms a dense hanging cluster. Wasps are smoother, brighter yellow/black and are more likely to be flying in and out of a nest site rather than forming a single clustered ball."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Should I spray a swarm with insect killer or water?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "No. Spraying a swarm can provoke defensive behaviour and may harm pollinators. Leave the swarm alone and contact a swarm collector for safe removal advice."
-                }
-              },
-              {
-                "@type": "Question",
                 "name": "How long will a swarm stay in one place?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "It varies. Some swarms move on within a few hours, while others may stay for a day or two as scout bees search for a suitable new home."
+                  "text": "Sometimes only a few hours, sometimes a day or two. The cluster is usually temporary while scout bees search for a permanent site."
                 }
               },
               {
                 "@type": "Question",
-                "name": "What information should I give a swarm collector?",
+                "name": "Should I feed the swarm sugar water?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Share the location, height (e.g., ground level or high in a tree), how accessible it is, how long it has been there, and whether it is on public land or near a hazard (roads, schools, hospitals). A photo from a safe distance is helpful."
+                  "text": "No. It can attract other insects, encourage robbing, and complicate collection. The best action is to leave them alone and contact a collector."
                 }
               },
               {
                 "@type": "Question",
-                "name": "Do swarm collectors charge in the UK?",
+                "name": "What if the bees are inside a wall, roof or chimney?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Many collectors are volunteers, but some may charge depending on travel distance, access difficulty or specialist work (e.g., building removals). Always ask upfront."
+                  "text": "That may be a colony that has moved in rather than a temporary swarm cluster. This often needs specialist advice and is not always suitable for standard swarm collection. Seek guidance before any work is started."
                 }
               },
               {
                 "@type": "Question",
-                "name": "What if the swarm is inside a chimney, wall or roof?",
+                "name": "Can a swarm sting?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "A cluster inside a structure may not be a swarm resting temporarily. It could be a colony that has moved in. This often needs specialist removal and is not always suitable for a standard swarm collection. Get advice before any work is started."
+                  "text": "Yes — they are still bees — but swarms are often calmer than a defensive colony because they are focused on protecting the queen and relocating. Keep a safe distance and do not disturb them."
                 }
               },
               {
                 "@type": "Question",
-                "name": "Can I remove a swarm myself if I have a beekeeping suit?",
+                "name": "What if someone is allergic or has been stung?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "It is not recommended unless you are trained and experienced. Handling swarms involves more than protective clothing, and improper removal can risk stings, injury and property damage."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Why do honeybees swarm?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Swarming is the colony's natural reproduction process. A large group leaves with the old queen to form a new colony elsewhere, while the original colony raises a new queen."
+                  "text": "Treat serious allergic reactions as an emergency. If there is breathing difficulty, facial swelling, collapse or widespread hives, seek urgent medical help immediately."
                 }
               }
             ]
@@ -211,7 +188,7 @@
               {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Swarm &amp; Queen",
+                "name": "Swarm & Queen Guides",
                 "item": "https://beezknees.co.uk/swarm-queen"
               },
               {
@@ -229,7 +206,6 @@
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
-      <!-- Top Tier: Logo + Search/Mobile Menu -->
       <div class="topbar">
         <a href="/" class="brand" aria-label="BeezKnees home">
         <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
@@ -244,15 +220,15 @@
           </button>
         </div>
       </div>
-      <!-- Top Navigation -->
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <nav class="navbar" aria-label="Main navigation">
         <ul class="nav-menu" aria-label="Main Navigation Links">
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
           <li><a href="/hivetag-app">HiveTag</a></li>
           <li>
@@ -269,8 +245,8 @@
       </div>
       <div class="hero-inner">
         <div class="hero-card hero-card--compact">
-          <span class="hero-kicker">Swarm &amp; Queen</span>
-          <h2 class="hero-title">Report a Swarm</h2>
+          <span class="hero-kicker">Swarm &amp; Queen Guides</span>
+          <h1 class="hero-title">Report a Swarm</h1>
           <p class="hero-intro">
             What to do if you find a swarm of honeybees, how to stay safe, and how to contact a local swarm collector
           </p>
@@ -285,64 +261,82 @@
     </section>
     <main id="main-content" class="page-wrap">
       <button class="section-mobile-toggle" id="sectionNavToggle" aria-expanded="true" aria-controls="sectionNavMobile">
-      Swarm &amp; Queen Menu ▲
+      Swarm &amp; Queen Guides Menu ▲
       </button>
-      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Swarm and Queen section navigation" data-active-group="Swarm Queen">
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Start Here</summary>
+      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Swarm and Queen Guides section navigation" data-active-group="Swarm Help &amp; Responsibility">
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Swarm Basics</summary>
           <ul>
-            <li><a href="/queen-cell-guide">Queen Cells Guide</a></li>
-            <li><a href="/queen-cells-action">What To Do If You Find Queen Cells</a></li>
-            <li><a href="/queen-timeline">Queen Cell Timeline</a></li>
+            <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
+            <li><a href="/swarm-season-uk">Swarm Season UK</a></li>
+            <li><a href="/swarm-prevention">Swarm Prevention</a></li>
             <li><a href="/queen-cells-swarm-control">Queen Cells &amp; Swarm Control</a></li>
-            <li><span aria-current="page">Report a Swarm</span></li>
           </ul>
         </details>
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Queen Cell Types</summary>
+          <summary class="section-mobile-summary">Queen Cells</summary>
           <ul>
+            <li><a href="/queen-cell-guide">Queen Cell Guide</a></li>
+            <li><a href="/queen-cells-action">Queen Cells – What Action to Take</a></li>
             <li><a href="/queen-cups">Queen Cups</a></li>
             <li><a href="/charged-queen-cells">Charged Queen Cells</a></li>
             <li><a href="/capped-queen-cells">Capped Queen Cells</a></li>
             <li><a href="/emergency-queen-cells">Emergency Queen Cells</a></li>
             <li><a href="/supersedure-queen-cells">Supersedure Queen Cells</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Supersedure</summary>
+          <ul>
+            <li><a href="/supersedure-explained">Supersedure Explained</a></li>
             <li><a href="/supersedure-action">Supersedure Action</a></li>
-          </ul>
-        </details>
-        <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Swarm Control Methods</summary>
-          <ul>
-            <li><a href="/swarm-prevention">Swarm Prevention</a></li>
-            <li><a href="/artificial-swarm">Artificial Swarm</a></li>
-            <li><a href="/split-hive">Split a Hive</a></li>
-            <li><a href="/split-methods">Split Methods</a></li>
-            <li><a href="/swarm-responsibilities">Swarm Responsibilities (UK)</a></li>
-          </ul>
-        </details>
-        <details class="section-mobile-group">
-          <summary class="section-mobile-summary">After Swarm / Split</summary>
-          <ul>
-            <li><a href="/swarm-eggs">After Swarm – Eggs</a></li>
-            <li><a href="/after-split">After a Split</a></li>
-            <li><a href="/virgin-queen-timeline">Virgin Queen Timeline</a></li>
+            <li><a href="/queenless-or-supersedure">Queenless or Supersedure?</a></li>
           </ul>
         </details>
         <details class="section-mobile-group">
           <summary class="section-mobile-summary">Queen Problems</summary>
           <ul>
-            <li><a href="/cant-find-queen">Can't Find Queen</a></li>
-            <li><a href="/queenless-or-supersedure">Queenless or Supersedure</a></li>
-            <li><a href="/missed-swarm">Missed a Swarm</a></li>
+            <li><a href="/cant-find-queen">Can't Find the Queen</a></li>
+            <li><a href="/missing-queen-what-to-check">Missing Queen – What To Check</a></li>
+            <li><a href="/queenless-colony-what-to-do">Queenless Colony – What To Do</a></li>
+            <li><a href="/queen-failing-signs">Queen Failing Signs</a></li>
+            <li><a href="/laying-workers-uk">Laying Workers</a></li>
+            <li><a href="/drone-laying-queen">Drone-Laying Queen</a></li>
           </ul>
         </details>
-        <!-- On this page mobile view -->
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Queen Timelines</summary>
+          <ul>
+            <li><a href="/queen-timeline">Queen Timeline</a></li>
+            <li><a href="/virgin-queen-timeline">Virgin Queen Timeline</a></li>
+            <li><a href="/swarm-eggs">Swarm Eggs</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Splits &amp; Artificial Swarms</summary>
+          <ul>
+            <li><a href="/artificial-swarm">Artificial Swarm</a></li>
+            <li><a href="/split-hive">Split Hive</a></li>
+            <li><a href="/split-methods">Split Methods</a></li>
+            <li><a href="/after-split">After a Split</a></li>
+            <li><a href="/missed-swarm">Missed Swarm</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group" open>
+          <summary class="section-mobile-summary">Swarm Help &amp; Responsibility</summary>
+          <ul>
+            <li><span aria-current="page">Report a Swarm</span></li>
+            <li><a href="/swarm-responsibilities">Swarm Responsibilities</a></li>
+            <li><a href="/beekeepers-rule-calculator">Beekeeper's Rule Calculator</a></li>
+          </ul>
+        </details>
         <details class="section-mobile-group">
           <summary class="section-mobile-summary">On this page</summary>
           <ul>
             <li><a href="#overview">Overview</a></li>
             <li><a href="#what-to-do-now">What to do right now</a></li>
             <li><a href="#do-not-remove">Do not attempt removal</a></li>
-            <li><a href="#definitely-honeybees">Is it honeybees</a></li>
+            <li><a href="#definitely-honeybees">Is it honeybees?</a></li>
             <li><a href="#contact-collector">Contact a collector</a></li>
             <li><a href="#what-information">What information to share</a></li>
             <li><a href="#what-happens-next">What happens next</a></li>
@@ -366,63 +360,81 @@
         </div>
       </nav>
       <div class="hub-layout">
-        <aside class="hub-sidebar" aria-label="Swarm and Queen section navigation" data-active-group="Swarm Queen">
-          <h2 class="hub-sidebar-title">Swarm &amp; Queen</h2>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Start Here</summary>
+        <aside class="hub-sidebar" aria-label="Swarm and Queen Guides section navigation" data-active-group="Swarm Help &amp; Responsibility">
+          <h2 class="hub-sidebar-title">Swarm &amp; Queen Guides</h2>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Swarm Basics</summary>
             <ul class="hub-nav-links">
-              <li><a href="/queen-cell-guide">Queen Cells Guide</a></li>
-              <li><a href="/queen-cells-action">What To Do If You Find Queen Cells</a></li>
-              <li><a href="/queen-timeline">Queen Cell Timeline</a></li>
+              <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
+              <li><a href="/swarm-season-uk">Swarm Season UK</a></li>
+              <li><a href="/swarm-prevention">Swarm Prevention</a></li>
               <li><a href="/queen-cells-swarm-control">Queen Cells &amp; Swarm Control</a></li>
-              <li><span aria-current="page">Report a Swarm</span></li>
             </ul>
           </details>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Queen Cell Types</summary>
+            <summary class="hub-nav-summary">Queen Cells</summary>
             <ul class="hub-nav-links">
+              <li><a href="/queen-cell-guide">Queen Cell Guide</a></li>
+              <li><a href="/queen-cells-action">Queen Cells – What Action to Take</a></li>
               <li><a href="/queen-cups">Queen Cups</a></li>
               <li><a href="/charged-queen-cells">Charged Queen Cells</a></li>
               <li><a href="/capped-queen-cells">Capped Queen Cells</a></li>
               <li><a href="/emergency-queen-cells">Emergency Queen Cells</a></li>
               <li><a href="/supersedure-queen-cells">Supersedure Queen Cells</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Supersedure</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/supersedure-explained">Supersedure Explained</a></li>
               <li><a href="/supersedure-action">Supersedure Action</a></li>
-            </ul>
-          </details>
-          <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Swarm Control Methods</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/swarm-prevention">Swarm Prevention</a></li>
-              <li><a href="/artificial-swarm">Artificial Swarm</a></li>
-              <li><a href="/split-hive">Split a Hive</a></li>
-              <li><a href="/split-methods">Split Methods</a></li>
-              <li><a href="/swarm-responsibilities">Swarm Responsibilities (UK)</a></li>
-            </ul>
-          </details>
-          <details class="hub-nav-group">
-            <summary class="hub-nav-summary">After Swarm / Split</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/swarm-eggs">After Swarm – Eggs</a></li>
-              <li><a href="/after-split">After a Split</a></li>
-              <li><a href="/virgin-queen-timeline">Virgin Queen Timeline</a></li>
+              <li><a href="/queenless-or-supersedure">Queenless or Supersedure?</a></li>
             </ul>
           </details>
           <details class="hub-nav-group">
             <summary class="hub-nav-summary">Queen Problems</summary>
             <ul class="hub-nav-links">
-              <li><a href="/cant-find-queen">Can't Find Queen</a></li>
-              <li><a href="/queenless-or-supersedure">Queenless or Supersedure</a></li>
-              <li><a href="/missed-swarm">Missed a Swarm</a></li>
+              <li><a href="/cant-find-queen">Can't Find the Queen</a></li>
+              <li><a href="/missing-queen-what-to-check">Missing Queen – What To Check</a></li>
+              <li><a href="/queenless-colony-what-to-do">Queenless Colony – What To Do</a></li>
+              <li><a href="/queen-failing-signs">Queen Failing Signs</a></li>
+              <li><a href="/laying-workers-uk">Laying Workers</a></li>
+              <li><a href="/drone-laying-queen">Drone-Laying Queen</a></li>
             </ul>
           </details>
-          <!-- On this page under side nav -->
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Queen Timelines</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/queen-timeline">Queen Timeline</a></li>
+              <li><a href="/virgin-queen-timeline">Virgin Queen Timeline</a></li>
+              <li><a href="/swarm-eggs">Swarm Eggs</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Splits &amp; Artificial Swarms</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/artificial-swarm">Artificial Swarm</a></li>
+              <li><a href="/split-hive">Split Hive</a></li>
+              <li><a href="/split-methods">Split Methods</a></li>
+              <li><a href="/after-split">After a Split</a></li>
+              <li><a href="/missed-swarm">Missed Swarm</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group" open>
+            <summary class="hub-nav-summary">Swarm Help &amp; Responsibility</summary>
+            <ul class="hub-nav-links">
+              <li><span aria-current="page">Report a Swarm</span></li>
+              <li><a href="/swarm-responsibilities">Swarm Responsibilities</a></li>
+              <li><a href="/beekeepers-rule-calculator">Beekeeper's Rule Calculator</a></li>
+            </ul>
+          </details>
           <div class="article-sidebar-card">
             <h3>On this page</h3>
             <ul class="toc-list">
               <li><a href="#overview">Overview</a></li>
               <li><a href="#what-to-do-now">What to do right now</a></li>
               <li><a href="#do-not-remove">Do not attempt removal</a></li>
-              <li><a href="#definitely-honeybees">Is it honeybees</a></li>
+              <li><a href="#definitely-honeybees">Is it honeybees?</a></li>
               <li><a href="#contact-collector">Contact a collector</a></li>
               <li><a href="#what-information">What information to share</a></li>
               <li><a href="#what-happens-next">What happens next</a></li>
@@ -447,7 +459,7 @@
         </aside>
         <section class="hub-main-content">
           <div class="content-card" id="overview">
-            <h1>Report a Swarm (UK): What to Do If You Find a Swarm of Honeybees</h1>
+            <h2>Report a Swarm (UK): What to Do If You Find a Swarm of Honeybees</h2>
             <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
             <p>Found a "ball" of bees on a tree branch, fence, wall, or garden shed? It's often a <strong>honeybee swarm</strong> — a natural event where thousands of bees temporarily cluster together while they look for a new home.</p>
             <div class="callout">
@@ -556,52 +568,61 @@
             <h2>Why Do Honeybees Swarm?</h2>
             <p>Swarming is a natural part of honeybee reproduction. The old queen leaves with a large group of workers to form a new colony, while the original colony raises a new queen. If you want a deeper explanation of swarm behaviour and seasonal triggers, see <em><a href="/behaviour" title="Learn about honeybee behaviour">Honeybee Behaviour</a></em> and <em><a href="/year-in-the-apiary" title="Monthly tasks in the apiary">Year in the Apiary</a></em>.</p>
           </div>
-          <!-- FAQ section -->
           <section class="section">
             <div class="card">
               <h2 id="faq">Report a Swarm FAQs</h2>
               <div class="faq-list">
                 <div class="faq-item open">
-                  <button class="faq-question" type="button">
-                  <span>How long will a swarm stay in one place?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="true">
+                    <span>How long will a swarm stay in one place?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Sometimes only a few hours, sometimes a day or two. The cluster is usually temporary while scout bees search for a permanent site.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>Should I feed the swarm sugar water?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Should I feed the swarm sugar water?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>No. It can attract other insects, encourage robbing, and complicate collection. The best action is to leave them alone and contact a collector.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>What if the bees are inside a wall, roof or chimney?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>What if the bees are inside a wall, roof or chimney?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>That may be a colony that has moved in rather than a temporary swarm cluster. This often needs specialist advice and is not always suitable for standard swarm collection. Seek guidance before any work is started.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>Can a swarm sting?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Can a swarm sting?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Yes — they are still bees — but swarms are often calmer than a defensive colony because they are focused on protecting the queen and relocating. Keep a safe distance and do not disturb them.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>What if someone is allergic or has been stung?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>What if someone is allergic or has been stung?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Treat serious allergic reactions as an emergency. If there is breathing difficulty, facial swelling, collapse or widespread hives, seek urgent medical help immediately.</p>
                   </div>
@@ -640,9 +661,10 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about-us">About Us</a></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
             <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
             <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             <li><a href="/hivetag-app">HiveTag</a></li>
           </ul>
@@ -686,27 +708,26 @@
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
         </ul>
-       <div class="mobile-menu-cta">
-        <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+        <div class="mobile-menu-cta">
+          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
           <i class="fa-solid fa-mobile-screen-button"></i>
           Try HiveTag Free
-        </a>
-
-        <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
           <i class="fa-solid fa-right-to-bracket"></i>
           Login
-        </a>
-
-        <a class="btn btn-secondary" href="/hivetag-app">
+          </a>
+          <a class="btn btn-secondary" href="/hivetag-app">
           <i class="fa-solid fa-circle-info"></i>
           More Information
-        </a>
-      </div>
+          </a>
+        </div>
       </div>
     </aside>
     <div class="search-overlay" id="searchOverlay"></div>

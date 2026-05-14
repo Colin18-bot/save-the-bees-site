@@ -9,6 +9,7 @@
     <meta name="description" content="UK guide to parasitic mites in honeybees, including varroa, tracheal mites, Tropilaelaps, mite damage, monitoring and biosecurity.">
     <meta name="keywords" content="parasitic mites, Varroa destructor, tracheal mites, Tropilaelaps, bee mites, honeybee parasites, varroa overview, mite monitoring, bee health UK">
     <meta name="author" content="Colin Chorley">
+    <meta name="robots" content="index,follow">
     <meta property="og:type" content="article">
     <meta property="og:title" content="Parasitic Mites in Honeybees UK | BeezKnees">
     <meta property="og:description" content="Overview of varroa, tracheal mites and Tropilaelaps, with UK guidance on mite damage, monitoring, biosecurity and long-term control.">
@@ -38,6 +39,16 @@
         "@context": "https://schema.org",
         "@graph": [
           {
+            "@type": "WebSite",
+            "@id": "https://beezknees.co.uk/#website",
+            "name": "BeezKnees",
+            "url": "https://beezknees.co.uk/",
+            "inLanguage": "en-GB",
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            }
+          },
+          {
             "@type": "Organization",
             "@id": "https://beezknees.co.uk/#organization",
             "name": "BeezKnees",
@@ -54,17 +65,17 @@
             "@type": "ImageObject",
             "@id": "https://beezknees.co.uk/parasitic-mites#primaryimage",
             "url": "https://beezknees.co.uk/images/beehives_6.webp",
-             "width": 1600,
-         "height": 900
+            "width": 1600,
+            "height": 900
           },
           {
             "@type": "WebPage",
             "@id": "https://beezknees.co.uk/parasitic-mites#webpage",
             "url": "https://beezknees.co.uk/parasitic-mites",
-          "name": "Parasitic Mites in Honeybees UK | BeezKnees",
-      "description": "UK guide to parasitic mites in honeybees, including varroa, tracheal mites, Tropilaelaps, mite damage, monitoring and biosecurity.",
+            "name": "Parasitic Mites in Honeybees UK | BeezKnees",
+            "description": "UK guide to parasitic mites in honeybees, including varroa, tracheal mites, Tropilaelaps, mite damage, monitoring and biosecurity.",
             "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "about": {
               "@id": "https://beezknees.co.uk/parasitic-mites#article"
@@ -77,13 +88,21 @@
             },
             "publisher": {
               "@id": "https://beezknees.co.uk/#organization"
-            }
+            },
+            "isPartOf": [
+              {
+                "@id": "https://beezknees.co.uk/#website"
+              },
+              {
+                "@id": "https://beezknees.co.uk/bee-diseases#webpage"
+              }
+            ]
           },
           {
             "@type": "Article",
             "@id": "https://beezknees.co.uk/parasitic-mites#article",
-           "headline": "Parasitic Mites in Honeybees UK",
-      "description": "Overview of parasitic mites affecting honeybee colonies, including varroa, tracheal mites and Tropilaelaps, with UK guidance on monitoring, biosecurity and long-term control.",
+            "headline": "Parasitic Mites in Honeybees UK",
+            "description": "Overview of parasitic mites affecting honeybee colonies, including varroa, tracheal mites and Tropilaelaps, with UK guidance on monitoring, biosecurity and long-term control.",
             "image": {
               "@id": "https://beezknees.co.uk/parasitic-mites#primaryimage"
             },
@@ -98,7 +117,7 @@
               "@id": "https://beezknees.co.uk/parasitic-mites#webpage"
             },
             "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "articleSection": [
               "Varroa and other parasitic mites",
@@ -117,7 +136,10 @@
               "honeybee parasites",
               "varroa overview",
               "mite monitoring"
-            ]
+            ],
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/bee-diseases#webpage"
+            }
           },
           {
             "@type": "BreadcrumbList",
@@ -132,7 +154,7 @@
               {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Bee Health",
+                "name": "Bee Diseases",
                 "item": "https://beezknees.co.uk/bee-diseases"
               },
               {
@@ -150,7 +172,6 @@
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
-      <!-- Top Tier: Logo + Search/Mobile Menu -->
       <div class="topbar">
         <a href="/" class="brand" aria-label="BeezKnees home">
         <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
@@ -165,15 +186,15 @@
           </button>
         </div>
       </div>
-      <!-- Top Navigation -->
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <nav class="navbar" aria-label="Main navigation">
         <ul class="nav-menu" aria-label="Main Navigation Links">
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
           <li><a href="/hivetag-app">HiveTag</a></li>
           <li>
@@ -191,7 +212,7 @@
       <div class="hero-inner">
         <div class="hero-card hero-card--compact">
           <span class="hero-kicker">Bee Health</span>
-          <h2 class="hero-title">Parasitic Mites</h2>
+          <h1 class="hero-title">Parasitic Mites</h1>
           <p class="hero-intro">
             Overview of Varroa, tracheal mites, Tropilaelaps and how to build a long-term monitoring and control strategy
           </p>
@@ -208,44 +229,63 @@
       <button class="section-mobile-toggle" id="sectionNavToggle" aria-expanded="true" aria-controls="sectionNavMobile">
       Bee Health Menu ▲
       </button>
-      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Bee diseases section navigation" data-active-group="Bee Health">
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Start Here</summary>
-          <ul>
-            <li><a href="/behaviour">Bee Behaviour</a></li>
-            <li><a href="/colony-health-triage">Colony Health Triage Tool</a></li>
-            <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-            <li><a href="/anatomy">Bee Anatomy</a></li>
-            <li><a href="/other-conditions">Other Conditions</a></li>
-          </ul>
-        </details>
+      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Bee Diseases section navigation" data-active-group="Pests & Predators">
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Common Problems</summary>
+          <summary class="section-mobile-summary">Bee Health Overview</summary>
           <ul>
-            <li><a href="/dead-bees-outside-hive">Dead Bees Outside the Hive</a></li>
-            <li><a href="/brood-problems-uk">Brood Problems</a></li>
-            <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
-            <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
+            <li><a href="/bee-diseases">Bee Diseases</a></li>
+            <li><a href="/bee-health-checker">Bee Health Checker</a></li>
+            <li><a href="/colony-health-triage">Colony Health Triage</a></li>
             <li><a href="/when-to-call-bee-inspector-uk">When to Call a Bee Inspector</a></li>
           </ul>
         </details>
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Disease &amp; Pest Guides</summary>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Bacterial Diseases</summary>
           <ul>
             <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
-            <li><a href="/viral-diseases">Viral Diseases</a></li>
-            <li><a href="/bee-pests">Bee Pests</a></li>
-            <li><span aria-current="page">Parasitic Mites</span></li>
+            <li><a href="/american-foulbrood-uk">American Foulbrood</a></li>
+            <li><a href="/european-foulbrood-uk">European Foulbrood</a></li>
+            <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
           </ul>
         </details>
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Prevention &amp; Planning</summary>
+          <summary class="section-mobile-summary">Viral Diseases</summary>
           <ul>
-            <li><a href="/hygiene">Hive Hygiene</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/viral-diseases">Viral Diseases</a></li>
+            <li><a href="/deformed-wing-virus-uk">Deformed Wing Virus</a></li>
+            <li><a href="/sacbrood-uk">Sacbrood</a></li>
           </ul>
         </details>
-        <!-- On this page mobile view -->
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Brood Problems</summary>
+          <ul>
+            <li><a href="/brood-problems-uk">Brood Problems</a></li>
+            <li><a href="/chalkbrood-uk">Chalkbrood</a></li>
+            <li><a href="/chilled-brood-uk">Chilled Brood</a></li>
+            <li><a href="/brood-pattern-guide">Brood Pattern Guide</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Other Conditions</summary>
+          <ul>
+            <li><a href="/other-conditions">Other Conditions</a></li>
+            <li><a href="/nosema-uk">Nosema</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group" open>
+          <summary class="section-mobile-summary">Pests &amp; Predators</summary>
+          <ul>
+            <li><a href="/bee-pests">Bee Pests</a></li>
+            <li><span aria-current="page">Parasitic Mites</span></li>
+            <li><a href="/robbing-behaviour-bees">Robbing Behaviour</a></li>
+            <li><a href="/wasps-beehives-uk">Wasps &amp; Beehives</a></li>
+            <li><a href="/wax-moth-uk">Wax Moth</a></li>
+            <li><a href="/ants-in-beehives">Ants in Beehives</a></li>
+            <li><a href="/mice-in-beehives">Mice in Beehives</a></li>
+            <li><a href="/asian-hornet-uk">Asian Hornet</a></li>
+            <li><a href="/small-hive-beetle-uk">Small Hive Beetle</a></li>
+          </ul>
+        </details>
         <details class="section-mobile-group">
           <summary class="section-mobile-summary">On this page</summary>
           <ul>
@@ -265,56 +305,69 @@
           <span class="hero-kicker">BeezKnees App</span>
           <h3>Stay on Top of Every Hive, Every Inspection</h3>
           <p>Track inspections, feeding, treatments and seasonal notes — all in one place.</p>
-          <a class="btn btn-primary" href="/hivetag-app">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          Explore HiveTag
-          </a>
-          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          Open Members Area
-          </a>
+          <a class="btn btn-primary" href="/hivetag-app"><i class="fa-solid fa-mobile-screen-button"></i> Explore HiveTag</a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login"><i class="fa-solid fa-right-to-bracket"></i> Open Members Area</a>
         </div>
       </nav>
       <div class="hub-layout">
-        <aside class="hub-sidebar" aria-label="Bee diseases section navigation" data-active-group="Bee Health">
-          <h2 class="hub-sidebar-title">Bee Health</h2>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Start Here</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/behaviour">Bee Behaviour</a></li>
-              <li><a href="/colony-health-triage">Colony Health Triage Tool</a></li>
-              <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-              <li><a href="/anatomy">Bee Anatomy</a></li>
-              <li><a href="/other-conditions">Other Conditions</a></li>
-            </ul>
-          </details>
+        <aside class="hub-sidebar" aria-label="Bee Diseases section navigation" data-active-group="Pests & Predators">
+          <h2 class="hub-sidebar-title">Bee Diseases</h2>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Common Problems</summary>
+            <summary class="hub-nav-summary">Bee Health Overview</summary>
             <ul class="hub-nav-links">
-              <li><a href="/dead-bees-outside-hive">Dead Bees Outside the Hive</a></li>
-              <li><a href="/brood-problems-uk">Brood Problems</a></li>
-              <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
-              <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
+              <li><a href="/bee-diseases">Bee Diseases</a></li>
+              <li><a href="/bee-health-checker">Bee Health Checker</a></li>
+              <li><a href="/colony-health-triage">Colony Health Triage</a></li>
               <li><a href="/when-to-call-bee-inspector-uk">When to Call a Bee Inspector</a></li>
             </ul>
           </details>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Disease &amp; Pest Guides</summary>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Bacterial Diseases</summary>
             <ul class="hub-nav-links">
               <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
-              <li><a href="/viral-diseases">Viral Diseases</a></li>
-              <li><a href="/bee-pests">Bee Pests</a></li>
-              <li><span aria-current="page">Parasitic Mites</span></li>
+              <li><a href="/american-foulbrood-uk">American Foulbrood</a></li>
+              <li><a href="/european-foulbrood-uk">European Foulbrood</a></li>
+              <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
             </ul>
           </details>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Prevention &amp; Planning</summary>
+            <summary class="hub-nav-summary">Viral Diseases</summary>
             <ul class="hub-nav-links">
-              <li><a href="/hygiene">Hive Hygiene</a></li>
-              <li><a href="/varroa-management">Varroa Management</a></li>
+              <li><a href="/viral-diseases">Viral Diseases</a></li>
+              <li><a href="/deformed-wing-virus-uk">Deformed Wing Virus</a></li>
+              <li><a href="/sacbrood-uk">Sacbrood</a></li>
             </ul>
           </details>
-          <!-- On this page under side nav -->
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Brood Problems</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/brood-problems-uk">Brood Problems</a></li>
+              <li><a href="/chalkbrood-uk">Chalkbrood</a></li>
+              <li><a href="/chilled-brood-uk">Chilled Brood</a></li>
+              <li><a href="/brood-pattern-guide">Brood Pattern Guide</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Other Conditions</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/other-conditions">Other Conditions</a></li>
+              <li><a href="/nosema-uk">Nosema</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group" open>
+            <summary class="hub-nav-summary">Pests &amp; Predators</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/bee-pests">Bee Pests</a></li>
+              <li><span aria-current="page">Parasitic Mites</span></li>
+              <li><a href="/robbing-behaviour-bees">Robbing Behaviour</a></li>
+              <li><a href="/wasps-beehives-uk">Wasps &amp; Beehives</a></li>
+              <li><a href="/wax-moth-uk">Wax Moth</a></li>
+              <li><a href="/ants-in-beehives">Ants in Beehives</a></li>
+              <li><a href="/mice-in-beehives">Mice in Beehives</a></li>
+              <li><a href="/asian-hornet-uk">Asian Hornet</a></li>
+              <li><a href="/small-hive-beetle-uk">Small Hive Beetle</a></li>
+            </ul>
+          </details>
           <div class="article-sidebar-card">
             <h3>On this page</h3>
             <ul class="toc-list">
@@ -346,7 +399,7 @@
         </aside>
         <section class="hub-main-content">
           <div class="content-card" id="overview">
-            <h1>Parasitic Mites in Honeybees - Varroa, Tracheal Mites and Tropilaelaps</h1>
+            <h2>Parasitic Mites in Honeybees - Varroa, Tracheal Mites and Tropilaelaps</h2>
             <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
             <img src="images/varroa.webp" alt="Close-up image of a varroa mite attached to a honeybee" class="float-right-img" width="800" height="1067" loading="lazy" decoding="async">
             <p>Parasitic mites are some of the most important <strong>modern threats to honeybee colonies</strong>. The best-known species is <strong>Varroa destructor</strong>, now widespread in the UK and many other countries. Other mites, such as tracheal mites and <strong>Tropilaelaps</strong> species, are also significant in some regions and are treated as serious <strong>exotic pests</strong>.</p>
@@ -499,9 +552,10 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about-us">About Us</a></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
             <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
             <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             <li><a href="/hivetag-app">HiveTag</a></li>
           </ul>
@@ -545,27 +599,26 @@
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
         </ul>
-       <div class="mobile-menu-cta">
-        <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+        <div class="mobile-menu-cta">
+          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
           <i class="fa-solid fa-mobile-screen-button"></i>
           Try HiveTag Free
-        </a>
-
-        <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
           <i class="fa-solid fa-right-to-bracket"></i>
           Login
-        </a>
-
-        <a class="btn btn-secondary" href="/hivetag-app">
+          </a>
+          <a class="btn btn-secondary" href="/hivetag-app">
           <i class="fa-solid fa-circle-info"></i>
           More Information
-        </a>
-      </div>
+          </a>
+        </div>
       </div>
     </aside>
     <div class="search-overlay" id="searchOverlay"></div>

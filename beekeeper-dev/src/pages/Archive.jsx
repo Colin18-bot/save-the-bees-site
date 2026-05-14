@@ -580,7 +580,7 @@ const Archive = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Archived Items</h1>
+      <h2 className="text-2xl font-bold mb-6">Archived Items</h2>
 
       {/* Type tabs */}
       <div className="flex flex-wrap gap-2 mb-4">

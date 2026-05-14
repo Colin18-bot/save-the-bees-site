@@ -19,9 +19,9 @@ const PremiumRequired = () => {
           Premium feature
         </p>
 
-        <h1 className="text-2xl font-bold text-[#1a3329] mb-3">
+        <h2 className="text-2xl font-bold text-[#1a3329] mb-3">
           🔒 This feature is included with HiveTag Premium
-        </h1>
+        </h2>
 
         <p className="text-gray-700 mb-2">
           Upgrade to Premium to unlock advanced tools such as reports, exports,

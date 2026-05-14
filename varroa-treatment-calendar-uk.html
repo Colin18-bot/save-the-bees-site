@@ -39,6 +39,16 @@
         "@context": "https://schema.org",
         "@graph": [
           {
+            "@type": "WebSite",
+            "@id": "https://beezknees.co.uk/#website",
+            "name": "BeezKnees",
+            "url": "https://beezknees.co.uk/",
+            "inLanguage": "en-GB",
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            }
+          },
+          {
             "@type": "Organization",
             "@id": "https://beezknees.co.uk/#organization",
             "name": "BeezKnees",
@@ -48,14 +58,14 @@
               "@id": "https://beezknees.co.uk/#logo",
               "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png",
               "width": 1024,
-                 "height": 1024
+              "height": 1024
             }
           },
           {
             "@type": "ImageObject",
             "@id": "https://beezknees.co.uk/varroa-treatment-calendar-uk#primaryimage",
             "url": "https://beezknees.co.uk/images/beehive_11.webp",
-             "width": 1600,
+            "width": 1600,
             "height": 900,
             "caption": "Beehive in a UK apiary"
           },
@@ -66,7 +76,7 @@
             "name": "Varroa Treatment Calendar UK | Seasonal Timing Guide",
             "description": "UK varroa treatment calendar and planning guide: what to monitor in spring, main late-summer treatment window, winter considerations, and record-keeping tips.",
             "datePublished": "2025-12-17",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "about": {
               "@id": "https://beezknees.co.uk/varroa-treatment-calendar-uk#article"
@@ -79,6 +89,9 @@
             },
             "publisher": {
               "@id": "https://beezknees.co.uk/#organization"
+            },
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/varroa-management#webpage"
             }
           },
           {
@@ -100,7 +113,7 @@
               "@id": "https://beezknees.co.uk/varroa-treatment-calendar-uk#webpage"
             },
             "datePublished": "2025-12-17",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "articleSection": [
               "Calendar principles",
@@ -115,7 +128,10 @@
               "varroa monitoring",
               "seasonal treatment plan",
               "UK beekeeping"
-            ]
+            ],
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/varroa-management#webpage"
+            }
           },
           {
             "@type": "FAQPage",
@@ -129,7 +145,7 @@
                 "name": "When is the most important time to treat varroa in the UK?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "Often late summer / early autumn after supers are removed, because varroa levels then can heavily affect the winter bee generation. Monitoring helps confirm what your colonies need."
+                  "text": "Often late summer or early autumn after supers are removed, because varroa levels then can heavily affect the winter bee generation. Monitoring helps confirm what your colonies need."
                 }
               },
               {
@@ -193,7 +209,7 @@
               {
                 "@type": "ListItem",
                 "position": 3,
-                "name": "Varroa Treatment Calendar (UK)",
+                "name": "Varroa Treatment Calendar",
                 "item": "https://beezknees.co.uk/varroa-treatment-calendar-uk"
               }
             ]
@@ -205,7 +221,6 @@
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
-      <!-- Top Tier: Logo + Search/Mobile Menu -->
       <div class="topbar">
         <a href="/" class="brand" aria-label="BeezKnees home">
         <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
@@ -220,15 +235,15 @@
           </button>
         </div>
       </div>
-      <!-- Top Navigation -->
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <nav class="navbar" aria-label="Main navigation">
         <ul class="nav-menu" aria-label="Main Navigation Links">
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
           <li><a href="/hivetag-app">HiveTag</a></li>
           <li>
@@ -246,7 +261,7 @@
       <div class="hero-inner">
         <div class="hero-card hero-card--compact">
           <span class="hero-kicker">Varroa Management</span>
-          <h2 class="hero-title">Varroa Treatment Calendar (UK)</h2>
+          <h1 class="hero-title">Varroa Treatment Calendar (UK)</h1>
           <p class="hero-intro">
             Seasonal plan & timing guide for monitoring and treatment
           </p>
@@ -263,38 +278,43 @@
       <button class="section-mobile-toggle" id="sectionNavToggle" aria-expanded="true" aria-controls="sectionNavMobile">
       Varroa Management Menu ▲
       </button>
-      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Varroa management section navigation" data-active-group="Start Here">
-        <details class="section-mobile-group" open>
+      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Varroa Management section navigation" data-active-group="Seasonal Varroa Control">
+        <details class="section-mobile-group">
           <summary class="section-mobile-summary">Start Here</summary>
           <ul>
-            <li><a href="/varroa-management">Varroa Management Hub</a></li>
-            <li><a href="/varroa-overview">Varroa Quick-Start Guide</a></li>
-            <li><a href="/varroa-monitoring-methods">Monitoring Methods</a></li>
-            <li><span aria-current="page">Treatment Calendar (UK)</span></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/varroa-overview">Varroa Overview</a></li>
           </ul>
         </details>
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Treatment Approaches</summary>
+          <summary class="section-mobile-summary">Monitoring</summary>
+          <ul>
+            <li><a href="/varroa-monitoring-methods">Varroa Monitoring Methods</a></li>
+            <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Treatment Options</summary>
           <ul>
             <li><a href="/varroa-chemical-treatments">Chemical Treatments</a></li>
-            <li><a href="/varroa-non-chemical-methods">Non-chemical Methods</a></li>
-            <li><a href="/ppe-varroa-treatments">PPE for Treatments</a></li>
+            <li><a href="/varroa-non-chemical-methods">Non-Chemical Methods</a></li>
+            <li><a href="/ppe-varroa-treatments">PPE for Varroa Treatments</a></li>
+            <li><a href="/veterinary-medicine-records">Veterinary Medicine Records</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group" open>
+          <summary class="section-mobile-summary">Seasonal Varroa Control</summary>
+          <ul>
+            <li><span aria-current="page">Varroa Treatment Calendar</span></li>
+            <li><a href="/late-summer-varroa">Late Summer Varroa</a></li>
           </ul>
         </details>
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Related Bee Health</summary>
+          <summary class="section-mobile-summary">Varroa Collapse</summary>
           <ul>
-            <li><a href="/parasitic-mites">Parasitic Mites</a></li>
-            <li><a href="/viral-diseases">Viral Diseases</a></li>
-            <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
-            <li><a href="/other-conditions">Other Conditions</a></li>
-            <li><a href="/bee-pests">Bee Pests</a></li>
-            <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-            <li><a href="/colony-health-triage">Colony Health Triage</a></li>
-            <li><a href="/veterinary-medicine-records">Medicine Records</a></li>
+            <li><a href="/varroa-collapse-signs">Varroa Collapse Signs</a></li>
           </ul>
         </details>
-        <!-- On this page mobile view -->
         <details class="section-mobile-group">
           <summary class="section-mobile-summary">On this page</summary>
           <ul>
@@ -310,50 +330,49 @@
           <span class="hero-kicker">BeezKnees App</span>
           <h3>Stay on Top of Every Hive, Every Inspection</h3>
           <p>Track inspections, feeding, treatments and seasonal notes — all in one place.</p>
-          <a class="btn btn-primary" href="/hivetag-app">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          Explore HiveTag
-          </a>
-          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          Open Members Area
-          </a>
+          <a class="btn btn-primary" href="/hivetag-app"><i class="fa-solid fa-mobile-screen-button"></i> Explore HiveTag</a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login"><i class="fa-solid fa-right-to-bracket"></i> Open Members Area</a>
         </div>
       </nav>
       <div class="hub-layout">
-        <aside class="hub-sidebar" aria-label="Varroa management section navigation" data-active-group="Start Here">
+        <aside class="hub-sidebar" aria-label="Varroa Management section navigation" data-active-group="Seasonal Varroa Control">
           <h2 class="hub-sidebar-title">Varroa Management</h2>
-          <details class="hub-nav-group" open>
+          <details class="hub-nav-group">
             <summary class="hub-nav-summary">Start Here</summary>
             <ul class="hub-nav-links">
-              <li><a href="/varroa-management">Varroa Management Hub</a></li>
-              <li><a href="/varroa-overview">Varroa Quick-Start Guide</a></li>
-              <li><a href="/varroa-monitoring-methods">Monitoring Methods</a></li>
-              <li><span aria-current="page">Treatment Calendar (UK)</span></li>
+              <li><a href="/varroa-management">Varroa Management</a></li>
+              <li><a href="/varroa-overview">Varroa Overview</a></li>
             </ul>
           </details>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Treatment Approaches</summary>
+            <summary class="hub-nav-summary">Monitoring</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/varroa-monitoring-methods">Varroa Monitoring Methods</a></li>
+              <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Treatment Options</summary>
             <ul class="hub-nav-links">
               <li><a href="/varroa-chemical-treatments">Chemical Treatments</a></li>
-              <li><a href="/varroa-non-chemical-methods">Non-chemical Methods</a></li>
-              <li><a href="/ppe-varroa-treatments">PPE for Treatments</a></li>
+              <li><a href="/varroa-non-chemical-methods">Non-Chemical Methods</a></li>
+              <li><a href="/ppe-varroa-treatments">PPE for Varroa Treatments</a></li>
+              <li><a href="/veterinary-medicine-records">Veterinary Medicine Records</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group" open>
+            <summary class="hub-nav-summary">Seasonal Varroa Control</summary>
+            <ul class="hub-nav-links">
+              <li><span aria-current="page">Varroa Treatment Calendar</span></li>
+              <li><a href="/late-summer-varroa">Late Summer Varroa</a></li>
             </ul>
           </details>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Related Bee Health</summary>
+            <summary class="hub-nav-summary">Varroa Collapse</summary>
             <ul class="hub-nav-links">
-              <li><a href="/parasitic-mites">Parasitic Mites</a></li>
-              <li><a href="/viral-diseases">Viral Diseases</a></li>
-              <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
-              <li><a href="/other-conditions">Other Conditions</a></li>
-              <li><a href="/bee-pests">Bee Pests</a></li>
-              <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-              <li><a href="/colony-health-triage">Colony Health Triage</a></li>
-              <li><a href="/veterinary-medicine-records">Medicine Records</a></li>
+              <li><a href="/varroa-collapse-signs">Varroa Collapse Signs</a></li>
             </ul>
           </details>
-          <!-- On this page under side nav -->
           <div class="article-sidebar-card">
             <h3>On this page</h3>
             <ul class="toc-list">
@@ -381,7 +400,7 @@
         </aside>
         <section class="hub-main-content">
           <div class="content-card" id="overview">
-            <h1>Varroa Treatment Calendar (UK) – Seasonal Plan & Timing Guide</h1>
+            <h2>Varroa Treatment Calendar (UK) – Seasonal Plan & Timing Guide</h2>
             <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
             <p>This page gives a practical way to plan <strong>when</strong> to monitor and treat varroa across a UK beekeeping season, without repeating every detail from the specialist pages. It works best alongside the wider <a href="/year-in-the-apiary" title="Year in the apiary month-by-month guide">year in the apiary</a> so you can link mite control to the rest of your colony management.</p>
             <p>If you haven't already, start with <a href="/varroa-monitoring-methods" title="Varroa monitoring methods">monitoring methods</a>, then use this calendar to decide what to do <em>next</em>, especially around <a href="/july" title="July beekeeping tasks including varroa monitoring">July varroa monitoring</a> and the <a href="/august" title="August beekeeping tasks including varroa treatment timing">August treatment period</a>.</p>
@@ -487,61 +506,72 @@
               <strong>Printable PDFs:</strong> grab the checklists and summaries on <a href="/downloads" title="Free downloads">Free Downloads</a>, and keep your <a href="/veterinary-medicine-records" title="Veterinary medicine records">veterinary medicine records</a> up to date so you are recording treatments properly alongside your monitoring notes.
             </div>
           </div>
-          <!-- FAQ section -->
           <section class="section">
             <div class="card">
               <h2 id="faq">Frequently Asked Questions</h2>
               <div class="faq-list">
                 <div class="faq-item open">
-                  <button class="faq-question" type="button">
-                  <span>When is the most important time to treat varroa in the UK?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="true">
+                    <span>When is the most important time to treat varroa in the UK?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Often late summer / early autumn after supers are removed, because varroa levels then can heavily affect the winter bee generation. In practice, many beekeepers focus on the <a href="/august" title="August beekeeping tasks including varroa treatment timing">August treatment period</a> and <a href="/september" title="September beekeeping tasks including varroa follow-up">September follow-up</a>. Monitoring helps confirm what your colonies need.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>Do I have to treat every year?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Do I have to treat every year?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Most UK beekeepers plan some form of varroa control each year, but the exact approach depends on monitoring, colony conditions and local guidance.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>Can I treat while honey supers are on?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Can I treat while honey supers are on?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>It depends on the product and label instructions. Many treatments have restrictions around honey supers, so always follow the label and current UK guidance.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>Why do broodless periods matter?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Why do broodless periods matter?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>When there is little or no sealed brood, more mites are on adult bees and easier to reach. Some strategies are designed around these windows.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>How do I avoid treatment resistance?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>How do I avoid treatment resistance?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Avoid under-dosing, follow label instructions, and use a sensible rotation of treatment types where guidance recommends it. Monitoring and good timing reduce unnecessary treatments.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>Where should I keep my records?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Where should I keep my records?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Any clear system works: notebook, spreadsheet, or an app. Keep records of monitoring and treatments, and retain <a href="/veterinary-medicine-records" title="Veterinary medicine records">veterinary medicine records</a> where applicable so you are recording treatments properly.</p>
                   </div>
@@ -586,9 +616,10 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about-us">About Us</a></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
             <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
             <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             <li><a href="/hivetag-app">HiveTag</a></li>
           </ul>
@@ -632,27 +663,26 @@
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
         </ul>
-       <div class="mobile-menu-cta">
-        <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+        <div class="mobile-menu-cta">
+          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
           <i class="fa-solid fa-mobile-screen-button"></i>
           Try HiveTag Free
-        </a>
-
-        <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
           <i class="fa-solid fa-right-to-bracket"></i>
           Login
-        </a>
-
-        <a class="btn btn-secondary" href="/hivetag-app">
+          </a>
+          <a class="btn btn-secondary" href="/hivetag-app">
           <i class="fa-solid fa-circle-info"></i>
           More Information
-        </a>
-      </div>
+          </a>
+        </div>
       </div>
     </aside>
     <div class="search-overlay" id="searchOverlay"></div>

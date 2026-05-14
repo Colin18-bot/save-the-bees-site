@@ -10,7 +10,7 @@ export function renderModule8Training(container) {
       <header class="tk-content-header">
         <div class="tk-content-heading">
           <div class="tk-content-eyebrow">Module 8</div>
-          <h1 class="tk-content-title">Management, Health &amp; History – Training</h1>
+          <h2 class="tk-content-title">Management, Health &amp; History – Training</h2>
           <p class="tk-content-subtitle">
             This module brings together practical management, bee health awareness and the historical
             background of beekeeping. It helps you see today's practices in context.

@@ -8,6 +8,7 @@
     <meta name="description" content="Practical UK beekeeping guides for beginners, covering seasonal tasks, hive health, bee diseases, equipment, swarm control and HiveTag records.">
     <meta name="keywords" content="beekeeping UK, UK beekeeping guide, beekeeping for beginners UK, seasonal beekeeping tasks, hive care, bee diseases UK, pollinator protection, apiary tips, swarm control, beekeeping equipment">
     <meta name="author" content="Colin Chorley">
+    <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://beezknees.co.uk/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="BeezKnees">
@@ -41,31 +42,43 @@
             "@type": "Organization",
             "@id": "https://beezknees.co.uk/#organization",
             "name": "BeezKnees",
-            "description": "Practical UK beekeeping guides for beginners and hobbyists: seasonal tasks, hive health, bee diseases, equipment checklists, plus HiveTag for recording apiaries, inspections and notes.",
             "url": "https://beezknees.co.uk/",
             "logo": {
               "@type": "ImageObject",
+              "@id": "https://beezknees.co.uk/#logo",
               "url": "https://beezknees.co.uk/images/BeezKnees-Logo.png",
               "width": 1024,
-                     "height": 1024
+              "height": 1024
             },
             "sameAs": [
-              "https://www.facebook.com/beezkneesbeekeeping"
+              "https://www.facebook.com/beezkneesbeekeeping",
+              "https://www.tiktok.com/@colinchorley"
             ],
             "founder": {
-              "@type": "Person",
-              "name": "Colin Chorley"
+              "@id": "https://beezknees.co.uk/#colin-chorley"
             }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://beezknees.co.uk/#colin-chorley",
+            "name": "Colin Chorley",
+            "url": "https://beezknees.co.uk/about-us",
+            "affiliation": {
+              "@id": "https://beezknees.co.uk/#organization"
+            },
+            "sameAs": [
+              "https://www.tiktok.com/@colinchorley"
+            ]
           },
           {
             "@type": "WebSite",
             "@id": "https://beezknees.co.uk/#website",
             "name": "BeezKnees",
             "url": "https://beezknees.co.uk/",
+            "inLanguage": "en-GB",
             "publisher": {
               "@id": "https://beezknees.co.uk/#organization"
             },
-            "inLanguage": "en-GB",
             "potentialAction": {
               "@type": "SearchAction",
               "target": {
@@ -76,26 +89,12 @@
             }
           },
           {
-            "@type": "WebPage",
-            "@id": "https://beezknees.co.uk/#webpage",
-            "url": "https://beezknees.co.uk/",
-         "name": "BeezKnees | UK Beekeeping Guides & HiveTag Records",
-      "description": "Practical UK beekeeping guides for beginners, covering seasonal tasks, hive health, bee diseases, equipment, swarm control and HiveTag records.",
-            "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
-            "isPartOf": {
-              "@id": "https://beezknees.co.uk/#website"
-            },
-            "about": {
-              "@id": "https://beezknees.co.uk/#organization"
-            },
-            "primaryImageOfPage": {
-              "@type": "ImageObject",
-              "url": "https://beezknees.co.uk/images/honeybee-on-orange-flower.webp",
-               "width": 1600,
-                "height": 874
-            },
-            "inLanguage": "en-GB"
+            "@type": "ImageObject",
+            "@id": "https://beezknees.co.uk/#primaryimage",
+            "url": "https://beezknees.co.uk/images/honeybee-on-orange-flower.webp",
+            "width": 1600,
+            "height": 874,
+            "caption": "Honeybee foraging on an orange flower in spring"
           },
           {
             "@type": "BreadcrumbList",
@@ -110,8 +109,42 @@
             ]
           },
           {
+            "@type": "WebPage",
+            "@id": "https://beezknees.co.uk/#webpage",
+            "url": "https://beezknees.co.uk/",
+            "name": "BeezKnees | UK Beekeeping Guides & HiveTag Records",
+            "description": "Practical UK beekeeping guides for beginners, covering seasonal tasks, hive health, bee diseases, equipment, swarm control and HiveTag records.",
+            "inLanguage": "en-GB",
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/#website"
+            },
+            "author": {
+              "@id": "https://beezknees.co.uk/#colin-chorley"
+            },
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            },
+            "about": {
+              "@id": "https://beezknees.co.uk/#organization"
+            },
+            "primaryImageOfPage": {
+              "@id": "https://beezknees.co.uk/#primaryimage"
+            },
+            "breadcrumb": {
+              "@id": "https://beezknees.co.uk/#breadcrumbs"
+            },
+            "datePublished": "2025-12-10",
+              "dateModified": "2026-05-14",
+            "mainEntity": {
+              "@id": "https://beezknees.co.uk/#faq"
+            }
+          },
+          {
             "@type": "FAQPage",
             "@id": "https://beezknees.co.uk/#faq",
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/#webpage"
+            },
             "mainEntity": [
               {
                 "@type": "Question",
@@ -123,58 +156,10 @@
               },
               {
                 "@type": "Question",
-                "name": "When is the best time to start beekeeping in the UK?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Most beginners start planning in winter and spring. The best time to get bees is usually spring to early summer, once temperatures and forage improve."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "Do I need a garden to keep bees?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "No. Many beekeepers keep hives in apiaries, farmland margins or shared sites. You do need permission, suitable forage nearby and a safe, sensible placement."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What equipment do I need to begin?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "At minimum you'll need a hive, suit or veil, gloves, smoker, hive tool and a way to feed if needed. Our equipment guide breaks this down into essential versus optional."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How often should I inspect my hive?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "In spring and summer, inspections are often weekly, weather permitting. In colder months, inspections reduce — the monthly calendar explains what's normal."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What should I do if I see a swarm?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Don't panic. Keep people and pets away, and contact a local swarm collector. Our swarm page explains what to do and what not to do."
-                }
-              },
-              {
-                "@type": "Question",
                 "name": "What is HiveTag?",
                 "acceptedAnswer": {
                   "@type": "Answer",
                   "text": "HiveTag is the BeezKnees beekeeping app for recording apiaries, hives, inspections, tasks and notes. There is a free tier, with Premium for unlimited use and NFC hive tags."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "How can I help bees if I don't keep hives?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Plant bee-friendly flowers, avoid pesticides where possible, provide water, and support local conservation. Our Help the Bees page has practical UK ideas."
                 }
               }
             ]
@@ -200,14 +185,16 @@
           </button>
         </div>
       </div>
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <!-- Top Navigation -->
+      <nav class="navbar" aria-label="Main navigation">
         <ul class="nav-menu" aria-label="Main Navigation Links">
-          <li><span aria-current="page">Home</span></li>
+          <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
           <li><a href="/hivetag-app">HiveTag</a></li>
           <li>
@@ -225,7 +212,7 @@
       <div class="hero-inner">
         <div class="hero-card">
           <span class="hero-kicker">Practical UK beekeeping guidance and digital hive records</span>
-          <h2 class="hero-title">Learn beekeeping, follow the season and manage your hives with HiveTag</h2>
+          <h1 class="hero-title">Learn beekeeping, follow the season and manage your hives with HiveTag</h1>
           <p>
             Clear UK-focused guidance for beginners and hobbyists, covering inspections, bee health, swarm control, seasonal tasks and practical hive management.
           </p>
@@ -260,7 +247,7 @@
     <main id="main-content" class="page-wrap">
       <section class="section">
         <div class="card">
-          <h1>Learn, manage and stay organised</h1>
+          <h2>Learn, manage and stay organised</h2>
           <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
           <p>
             BeezKnees combines practical UK beekeeping guidance with HiveTag, a simple app for recording apiaries, hives, inspections, tasks and notes.
@@ -376,73 +363,89 @@
           <h2>Frequently Asked Questions about UK Beekeeping</h2>
           <div class="faq-list">
             <div class="faq-item open">
-              <button class="faq-question" type="button">
-              <span>Is BeezKnees UK-focused?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="true">
+                <span>Is BeezKnees UK-focused?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>Yes — the guides are written for UK seasons, forage patterns and common beginner questions, with links to trusted UK resources where appropriate.</p>
               </div>
             </div>
             <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>When is the best time to start beekeeping in the UK?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="false">
+                <span>When is the best time to start beekeeping in the UK?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>Most beginners start planning in winter and spring. The best time to get bees is usually spring to early summer, once temperatures and forage improve.</p>
               </div>
             </div>
             <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>Do I need a garden to keep bees?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="false">
+                <span>Do I need a garden to keep bees?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>No. Many beekeepers keep hives in apiaries, farmland margins or shared sites. You do need permission, suitable forage nearby and a safe, sensible placement.</p>
               </div>
             </div>
             <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>What equipment do I need to begin?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="false">
+                <span>What equipment do I need to begin?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>At minimum you'll need a hive, suit or veil, gloves, smoker, hive tool and a way to feed if needed. Our equipment guide breaks this down into essential versus optional.</p>
               </div>
             </div>
             <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>How often should I inspect my hive?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="false">
+                <span>How often should I inspect my hive?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>In spring and summer, inspections are often weekly, weather permitting. In colder months, inspections reduce — the monthly calendar explains what's normal.</p>
               </div>
             </div>
             <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>What should I do if I see a swarm?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="false">
+                <span>What should I do if I see a swarm?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>Don't panic. Keep people and pets away, and contact a local swarm collector. Our swarm page explains what to do and what not to do.</p>
               </div>
             </div>
             <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>What is HiveTag?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="false">
+                <span>What is HiveTag?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>HiveTag is the BeezKnees beekeeping app for recording apiaries, hives, inspections, tasks and notes. There is a free tier, with Premium for unlimited use and NFC hive tags.</p>
               </div>
             </div>
             <div class="faq-item">
-              <button class="faq-question" type="button">
-              <span>How can I help bees if I don't keep hives?</span>
-              <span>+</span>
-              </button>
+              <h3>
+                <button class="faq-question" type="button" aria-expanded="false">
+                <span>How can I help bees if I don't keep hives?</span>
+                <span aria-hidden="true">+</span>
+                </button>
+              </h3>
               <div class="faq-answer">
                 <p>Plant bee-friendly flowers, avoid pesticides where possible, provide water, and support local conservation. Our Help the Bees page has practical UK ideas.</p>
               </div>
@@ -468,12 +471,13 @@
         <div>
           <h3>Quick Links</h3>
           <ul class="footer-links">
-            <li><span aria-current="page">Home</span></li>
+            <li><a href="/">Home</a></li>
             <li><a href="/about-us">About Us</a></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
             <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
             <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             <li><a href="/hivetag-app">HiveTag</a></li>
           </ul>
@@ -517,32 +521,31 @@
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
         </ul>
         <div class="mobile-menu-cta">
-        <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
           <i class="fa-solid fa-mobile-screen-button"></i>
           Try HiveTag Free
-        </a>
-
-        <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
           <i class="fa-solid fa-right-to-bracket"></i>
           Login
-        </a>
-
-        <a class="btn btn-secondary" href="/hivetag-app">
+          </a>
+          <a class="btn btn-secondary" href="/hivetag-app">
           <i class="fa-solid fa-circle-info"></i>
           More Information
-        </a>
-      </div>
+          </a>
+        </div>
       </div>
     </aside>
     <div class="search-overlay" id="searchOverlay"></div>
     <div class="search-panel" id="searchPanel" aria-label="Search panel">
-        <form class="search-form" role="search" onsubmit="return false;">
+      <form class="search-form" role="search" onsubmit="return false;">
         <input type="search" name="q" placeholder="Search all pages... e.g. spring build-up, swarm control, feeding" aria-label="Search all pages">
         <button type="submit">Search</button>
       </form>

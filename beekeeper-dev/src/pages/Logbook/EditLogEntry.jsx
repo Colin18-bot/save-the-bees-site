@@ -383,7 +383,7 @@ const EditLogEntry = () => {
 
   return (
     <div className="p-6 max-w-3xl mx-auto bg-white rounded-xl shadow">
-      <h1 className="text-2xl font-bold mb-6">Edit Log Entry</h1>
+      <h2 className="text-2xl font-bold mb-6">Edit Log Entry</h2>
 
       <form onSubmit={saveChanges} className="space-y-6">
         {/* Log Entry (type) */}

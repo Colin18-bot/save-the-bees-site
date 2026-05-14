@@ -290,7 +290,7 @@ const EditTodo = () => {
 
   return (
     <div className="p-6 max-w-xl mx-auto bg-white rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">Edit Task</h1>
+      <h2 className="text-2xl font-bold mb-4">Edit Task</h2>
 
       {error && (
         <div className="mb-3 text-red-700 bg-red-50 border border-red-200 p-3 rounded">

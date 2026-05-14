@@ -671,7 +671,7 @@ const NewInspection = () => {
   return (
     <div className="p-4 max-w-3xl mx-auto rounded-x1 shadow-lg">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
-        <h1 className="text-2xl font-bold">New Inspection</h1>
+        <h2 className="text-2xl font-bold">New Inspection</h2>
 
 {subscriptionLevel === "premium" ? (
         <Link

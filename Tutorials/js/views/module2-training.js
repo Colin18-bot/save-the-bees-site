@@ -10,7 +10,7 @@ export function renderModule2Training(container) {
       <header class="tk-content-header">
         <div class="tk-content-heading">
           <div class="tk-content-eyebrow">Module 2</div>
-          <h1 class="tk-content-title">Products &amp; Forage – Training</h1>
+          <h2 class="tk-content-title">Products &amp; Forage – Training</h2>
           <p class="tk-content-subtitle">
             This module explores honey bee forage, nectar and pollen production, hive products, wax,
             honey processing, food hygiene and relevant UK regulations. Work through these 10

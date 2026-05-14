@@ -261,9 +261,9 @@ export default function InspectionDetail() {
     )}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-5">
         <div>
-          <h1 className="text-2xl font-bold">
+          <h2 className="text-2xl font-bold">
             {hive?.name || "Inspection Detail"}
-          </h1>
+          </h2>
           <p className="text-sm text-gray-600 mt-1">
             {apiary?.name || "Unknown Apiary"} • Inspection date: {formatDate(inspection.date)}
           </p>

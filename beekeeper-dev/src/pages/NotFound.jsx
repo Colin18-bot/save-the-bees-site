@@ -12,7 +12,7 @@ const NotFound = () => {
         &times;
       </a>
 
-      <h1 className="text-4xl font-bold text-green-700">404 - Page Not Found</h1>
+      <h2 className="text-4xl font-bold text-green-700">404 - Page Not Found</h2>
       <p className="text-gray-700">
         Sorry, the page you are looking for does not exist.
       </p>

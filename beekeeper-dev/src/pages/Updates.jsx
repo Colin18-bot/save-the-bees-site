@@ -852,7 +852,7 @@ export default function Updates() {
         Back to Dashboard
       </Link>
 
-      <h1 className="text-2xl font-bold mb-2">Release Notes</h1>
+      <h2 className="text-2xl font-bold mb-2">Release Notes</h2>
       <p className="text-sm text-gray-600 mb-6">
         See what’s new, what changed, and what was fixed across releases.
       </p>

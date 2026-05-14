@@ -598,7 +598,7 @@ return;
       <header className="mb-5 no-print">
         <div className="flex flex-col items-start gap-3 md:flex-row md:items-start md:justify-between md:gap-4">
           <div className="w-full">
-            <h1 className="text-3xl font-bold">Colony Health Check</h1>
+            <h2 className="text-3xl font-bold">Colony Health Check</h2>
             <p className="text-sm text-gray-600 mt-1">
               One question at a time. Expand all if you prefer.
             </p>
@@ -1004,7 +1004,7 @@ function OutcomeImages({ images }) {
     <div className="mt-4 grid gap-3 sm:grid-cols-2">
       {images.map((img, i) => {
         const src = img.fileName
-  ? `/images/bee-health/outcomes/${img.fileName}`
+  ? `/images/outcomes/${img.fileName}`
   : img.src || "";
 
         if (!src) return null;

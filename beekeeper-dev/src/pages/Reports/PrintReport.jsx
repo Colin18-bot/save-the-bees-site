@@ -792,7 +792,7 @@ useEffect(() => {
         </Link>
       </div>
 
-      <h1 className="text-2xl font-bold mt-4">Reports &amp; Exports</h1>
+      <h2 className="text-2xl font-bold mt-4">Reports &amp; Exports</h2>
       <p className="text-sm text-gray-600 mb-4">
         Date range: <strong>{fmtUK(fromDate)}–{fmtUK(toDate)}</strong>
       </p>

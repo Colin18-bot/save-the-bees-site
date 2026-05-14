@@ -544,7 +544,7 @@ export default function StepByStepInspections() {
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl md:text-3xl font-extrabold text-slate-900">Step-by-Step Hive Inspections</h1>
+                <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900">Step-by-Step Hive Inspections</h2>
                 <Badge tone="emerald">{mandatoryCount} mandatory steps</Badge>
                 <Badge tone="amber">Optional steps included</Badge>
               </div>

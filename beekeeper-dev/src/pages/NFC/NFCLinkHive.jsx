@@ -182,7 +182,7 @@ export default function NFCLinkHive() {
       <div className="max-w-3xl mx-auto space-y-6">
         <header className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold">Link Android NFC Tag to Hive</h1>
+            <h2 className="text-2xl font-bold">Link Android NFC Tag to Hive</h2>
             <p className="mt-1 text-sm text-gray-600">
               Choose an existing hive or create a new one for this scanned
               Android NFC tag.

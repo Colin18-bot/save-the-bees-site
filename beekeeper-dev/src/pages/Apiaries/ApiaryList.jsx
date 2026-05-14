@@ -333,7 +333,7 @@ const ApiaryList = () => {
   return (
     <div className="p-6">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-  <h1 className="text-2xl font-bold">Your Apiaries</h1>
+  <h2 className="text-2xl font-bold">Your Apiaries</h2>
 
   <div className="flex flex-col sm:flex-row gap-2">
     <Link

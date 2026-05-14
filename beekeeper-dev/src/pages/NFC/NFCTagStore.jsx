@@ -145,9 +145,9 @@ export default function NFCTagStore() {
       <div className="max-w-4xl mx-auto space-y-8">
         <header className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-extrabold text-green-800">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-green-800">
               HiveTag NFC Labels
-            </h1>
+            </h2>
             <p className="mt-2 text-sm text-gray-700">
               Commercial-grade NFC tags for your hives. Use them with HiveTag to
               open the correct hive quickly in the field.

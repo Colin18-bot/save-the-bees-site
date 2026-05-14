@@ -573,7 +573,7 @@ const insightClass = (level) => {
   return (
     <div className="p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-2">
-        <h1 className="text-2xl font-bold">Your Inspection Records</h1>
+        <h2 className="text-2xl font-bold">Your Inspection Records</h2>
 
         <div className="flex flex-col sm:flex-row gap-2">
           <Link

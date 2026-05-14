@@ -19,7 +19,7 @@ export default function CookieSettings() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <header>
-        <h1 className="text-2xl font-bold">Cookie settings</h1>
+        <h2 className="text-2xl font-bold">Cookie settings</h2>
         <p className="text-gray-600">Necessary cookies are always on.</p>
       </header>
 

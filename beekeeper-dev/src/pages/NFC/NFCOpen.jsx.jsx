@@ -22,7 +22,7 @@ export default function NFCOpen() {
   return (
     <div className="max-w-xl mx-auto p-6">
       <div className="rounded-xl border bg-white p-5 shadow-sm">
-        <h1 className="text-xl font-semibold text-gray-900">Opening hive…</h1>
+        <h2 className="text-xl font-semibold text-gray-900">Opening hive…</h2>
         <p className="mt-2 text-sm text-gray-600">
           Please wait while HiveTag opens the linked inspection screen.
         </p>

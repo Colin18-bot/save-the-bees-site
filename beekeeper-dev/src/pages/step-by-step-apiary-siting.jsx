@@ -149,7 +149,7 @@ export default function StepByStepApiarySiting() {
       {/* Header */}
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Apiary Siting Guide</h1>
+          <h2 className="text-2xl font-bold text-slate-900">Apiary Siting Guide</h2>
           <p className="mt-1 text-sm text-slate-600">
             A practical step-by-step guide to choosing a safe, workable apiary location.
           </p>

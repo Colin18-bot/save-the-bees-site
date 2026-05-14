@@ -9,6 +9,7 @@
     <meta name="description" content="UK guide to viral diseases in bees: symptoms, varroa links, deformed wing virus, paralysis and sacbrood, plus how to manage colonies.">
     <meta name="keywords" content="viral bee diseases, deformed wing virus, DWV, chronic bee paralysis, CBPV, sacbrood virus, ABPV, honey bee health UK, varroa and viruses">
     <meta name="author" content="Colin Chorley">
+    <meta name="robots" content="index,follow">
     <meta property="og:type" content="article">
     <meta property="og:title" content="Viral Diseases in Bees UK: Symptoms & Control">
     <meta property="og:description" content="UK guide to viral diseases in bees, including symptoms, varroa links and practical colony management.">
@@ -38,6 +39,16 @@
         "@context": "https://schema.org",
         "@graph": [
           {
+            "@type": "WebSite",
+            "@id": "https://beezknees.co.uk/#website",
+            "name": "BeezKnees",
+            "url": "https://beezknees.co.uk/",
+            "inLanguage": "en-GB",
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            }
+          },
+          {
             "@type": "Organization",
             "@id": "https://beezknees.co.uk/#organization",
             "name": "BeezKnees",
@@ -53,9 +64,9 @@
           {
             "@type": "ImageObject",
             "@id": "https://beezknees.co.uk/viral-diseases#primaryimage",
-        "url": "https://beezknees.co.uk/images/hives-in-winter.webp",
-             "width": 1536,
-         "height": 1024
+            "url": "https://beezknees.co.uk/images/hives-in-winter.webp",
+            "width": 1600,
+            "height": 1091
           },
           {
             "@type": "WebPage",
@@ -64,7 +75,7 @@
             "name": "Viral Diseases in Bees UK: Symptoms & Control | BeezKnees",
             "description": "A practical UK guide to viral diseases of honeybees – including deformed wing virus, acute and chronic bee paralysis and sacbrood.",
             "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "about": {
               "@id": "https://beezknees.co.uk/viral-diseases#article"
@@ -77,12 +88,20 @@
             },
             "publisher": {
               "@id": "https://beezknees.co.uk/#organization"
-            }
+            },
+            "isPartOf": [
+              {
+                "@id": "https://beezknees.co.uk/#website"
+              },
+              {
+                "@id": "https://beezknees.co.uk/bee-diseases#webpage"
+              }
+            ]
           },
           {
             "@type": "Article",
             "@id": "https://beezknees.co.uk/viral-diseases#article",
-          "headline": "Viral Diseases in Bees UK: Symptoms & Control",
+            "headline": "Viral Diseases in Bees UK: Symptoms & Control",
             "description": "Detailed but beginner-friendly overview of the main viral diseases of honeybees in the UK, including deformed wing virus, sacbrood and paralysis viruses, with practical guidance on signs, prevention and links to varroa mites.",
             "image": {
               "@id": "https://beezknees.co.uk/viral-diseases#primaryimage"
@@ -98,7 +117,7 @@
               "@id": "https://beezknees.co.uk/viral-diseases#webpage"
             },
             "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "articleSection": [
               "Overview of viral diseases in honeybees",
@@ -118,7 +137,10 @@
               "sacbrood",
               "varroa and viruses",
               "honey bee health UK"
-            ]
+            ],
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/bee-diseases#webpage"
+            }
           },
           {
             "@type": "BreadcrumbList",
@@ -133,7 +155,7 @@
               {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Bee Health",
+                "name": "Bee Diseases",
                 "item": "https://beezknees.co.uk/bee-diseases"
               },
               {
@@ -151,7 +173,6 @@
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
-      <!-- Top Tier: Logo + Search/Mobile Menu -->
       <div class="topbar">
         <a href="/" class="brand" aria-label="BeezKnees home">
         <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
@@ -166,15 +187,15 @@
           </button>
         </div>
       </div>
-      <!-- Top Navigation -->
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <nav class="navbar" aria-label="Main navigation">
         <ul class="nav-menu" aria-label="Main Navigation Links">
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
           <li><a href="/hivetag-app">HiveTag</a></li>
           <li>
@@ -192,7 +213,7 @@
       <div class="hero-inner">
         <div class="hero-card hero-card--compact">
           <span class="hero-kicker">Bee Health</span>
-          <h2 class="hero-title">Viral Diseases</h2>
+          <h1 class="hero-title">Viral Diseases</h1>
           <p class="hero-intro">
             Deformed wing virus, bee paralysis, sacbrood and other viruses – signs, varroa connections and what beekeepers can do
           </p>
@@ -209,57 +230,69 @@
       <button class="section-mobile-toggle" id="sectionNavToggle" aria-expanded="true" aria-controls="sectionNavMobile">
       Bee Health Menu ▲
       </button>
-      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Bee diseases section navigation" data-active-group="Bee Health">
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Start Here</summary>
+      <!-- Mobile Page Navigation -->
+      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Bee Diseases section navigation" data-active-group="Viral Diseases">
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Bee Health Overview</summary>
           <ul>
-            <li><a href="/behaviour">Bee Behaviour</a></li>
-            <li><a href="/colony-health-triage">Colony Health Triage Tool</a></li>
+            <li><a href="/bee-diseases">Bee Diseases</a></li>
             <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-            <li><a href="/anatomy">Bee Anatomy</a></li>
-            <li><a href="/other-conditions">Other Conditions</a></li>
-          </ul>
-        </details>
-        <details class="hub-nav-group">
-          <summary class="hub-nav-summary">Common Problems</summary>
-          <ul class="hub-nav-links">
-            <li><a href="/dead-bees-outside-hive">Dead Bees Outside the Hive</a></li>
-            <li><a href="/brood-problems-uk">Brood Problems</a></li>
-            <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
-            <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
+            <li><a href="/colony-health-triage">Colony Health Triage</a></li>
             <li><a href="/when-to-call-bee-inspector-uk">When to Call a Bee Inspector</a></li>
           </ul>
         </details>
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Common Problems</summary>
-          <ul>
-            <li><a href="/dead-bees-outside-hive">Dead Bees Outside the Hive</a></li>
-            <li><a href="/brood-problems-uk">Brood Problems</a></li>
-            <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
-            <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
-            <li><a href="/when-to-call-bee-inspector-uk">When to Call a Bee Inspector</a></li>
-          </ul>
-        </details>
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Disease &amp; Pest Guides</summary>
+          <summary class="section-mobile-summary">Bacterial Diseases</summary>
           <ul>
             <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
+            <li><a href="/american-foulbrood-uk">American Foulbrood</a></li>
+            <li><a href="/european-foulbrood-uk">European Foulbrood</a></li>
+            <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group" open>
+          <summary class="section-mobile-summary">Viral Diseases</summary>
+          <ul>
             <li><span aria-current="page">Viral Diseases</span></li>
-            <li><a href="/bee-pests">Bee Pests</a></li>
-            <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+            <li><a href="/deformed-wing-virus-uk">Deformed Wing Virus</a></li>
+            <li><a href="/sacbrood-uk">Sacbrood</a></li>
           </ul>
         </details>
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Prevention &amp; Planning</summary>
+          <summary class="section-mobile-summary">Brood Problems</summary>
           <ul>
-            <li><a href="/hygiene">Hive Hygiene</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/brood-problems-uk">Brood Problems</a></li>
+            <li><a href="/chalkbrood-uk">Chalkbrood</a></li>
+            <li><a href="/chilled-brood-uk">Chilled Brood</a></li>
+            <li><a href="/brood-pattern-guide">Brood Pattern Guide</a></li>
           </ul>
         </details>
-        <!-- On this page mobile view -->
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Other Conditions</summary>
+          <ul>
+            <li><a href="/other-conditions">Other Conditions</a></li>
+            <li><a href="/nosema-uk">Nosema</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Pests &amp; Predators</summary>
+          <ul>
+            <li><a href="/bee-pests">Bee Pests</a></li>
+            <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+            <li><a href="/robbing-behaviour-bees">Robbing Behaviour</a></li>
+            <li><a href="/wasps-beehives-uk">Wasps &amp; Beehives</a></li>
+            <li><a href="/wax-moth-uk">Wax Moth</a></li>
+            <li><a href="/ants-in-beehives">Ants in Beehives</a></li>
+            <li><a href="/mice-in-beehives">Mice in Beehives</a></li>
+            <li><a href="/asian-hornet-uk">Asian Hornet</a></li>
+            <li><a href="/small-hive-beetle-uk">Small Hive Beetle</a></li>
+          </ul>
+        </details>
+        <!-- Mobile On This Page -->
         <details class="section-mobile-group">
           <summary class="section-mobile-summary">On this page</summary>
           <ul>
+            <li><a href="#overview">Overview</a></li>
             <li><a href="#how-viruses-work">How viral diseases fit in</a></li>
             <li><a href="#deformed-wing-virus">Deformed wing virus</a></li>
             <li><a href="#acute-bee-paralysis">Acute bee paralysis</a></li>
@@ -268,55 +301,82 @@
             <li><a href="#other-viral-threats">Other viral threats</a></li>
             <li><a href="#inspection-checklist">Inspection checklist</a></li>
             <li><a href="#when-to-seek-help">When to seek help</a></li>
+            <li><a href="#related-guides">Related guides</a></li>
           </ul>
         </details>
         <div class="hivetag-side-cta pulse-once">
           <span class="hero-kicker">BeezKnees App</span>
           <h3>Stay on Top of Every Hive, Every Inspection</h3>
           <p>Track inspections, feeding, treatments and seasonal notes — all in one place.</p>
-          <a class="btn btn-primary" href="/hivetag-app">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          Explore HiveTag
-          </a>
-          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          Open Members Area
-          </a>
+          <a class="btn btn-primary" href="/hivetag-app"><i class="fa-solid fa-mobile-screen-button"></i> Explore HiveTag</a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login"><i class="fa-solid fa-right-to-bracket"></i> Open Members Area</a>
         </div>
       </nav>
       <div class="hub-layout">
-        <aside class="hub-sidebar" aria-label="Bee diseases section navigation" data-active-group="Bee Health">
-          <h2 class="hub-sidebar-title">Bee Health</h2>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Start Here</summary>
+        <!-- Side Navigation -->
+        <aside class="hub-sidebar" aria-label="Bee Diseases section navigation" data-active-group="Viral Diseases">
+          <h2 class="hub-sidebar-title">Bee Diseases</h2>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Bee Health Overview</summary>
             <ul class="hub-nav-links">
-              <li><a href="/behaviour">Bee Behaviour</a></li>
-              <li><a href="/colony-health-triage">Colony Health Triage Tool</a></li>
+              <li><a href="/bee-diseases">Bee Diseases</a></li>
               <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-              <li><a href="/anatomy">Bee Anatomy</a></li>
-              <li><a href="/other-conditions">Other Conditions</a></li>
-            </ul>
-          </details>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Disease &amp; Pest Guides</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
-              <li><span aria-current="page">Viral Diseases</span></li>
-              <li><a href="/bee-pests">Bee Pests</a></li>
-              <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+              <li><a href="/colony-health-triage">Colony Health Triage</a></li>
+              <li><a href="/when-to-call-bee-inspector-uk">When to Call a Bee Inspector</a></li>
             </ul>
           </details>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Prevention &amp; Planning</summary>
+            <summary class="hub-nav-summary">Bacterial Diseases</summary>
             <ul class="hub-nav-links">
-              <li><a href="/hygiene">Hive Hygiene</a></li>
-              <li><a href="/varroa-management">Varroa Management</a></li>
+              <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
+              <li><a href="/american-foulbrood-uk">American Foulbrood</a></li>
+              <li><a href="/european-foulbrood-uk">European Foulbrood</a></li>
+              <li><a href="/foulbrood-vs-chalkbrood">Foulbrood vs Chalkbrood</a></li>
             </ul>
           </details>
-          <!-- On this page under side nav -->
+          <details class="hub-nav-group" open>
+            <summary class="hub-nav-summary">Viral Diseases</summary>
+            <ul class="hub-nav-links">
+              <li><span aria-current="page">Viral Diseases</span></li>
+              <li><a href="/deformed-wing-virus-uk">Deformed Wing Virus</a></li>
+              <li><a href="/sacbrood-uk">Sacbrood</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Brood Problems</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/brood-problems-uk">Brood Problems</a></li>
+              <li><a href="/chalkbrood-uk">Chalkbrood</a></li>
+              <li><a href="/chilled-brood-uk">Chilled Brood</a></li>
+              <li><a href="/brood-pattern-guide">Brood Pattern Guide</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Other Conditions</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/other-conditions">Other Conditions</a></li>
+              <li><a href="/nosema-uk">Nosema</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Pests &amp; Predators</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/bee-pests">Bee Pests</a></li>
+              <li><a href="/parasitic-mites">Parasitic Mites</a></li>
+              <li><a href="/robbing-behaviour-bees">Robbing Behaviour</a></li>
+              <li><a href="/wasps-beehives-uk">Wasps &amp; Beehives</a></li>
+              <li><a href="/wax-moth-uk">Wax Moth</a></li>
+              <li><a href="/ants-in-beehives">Ants in Beehives</a></li>
+              <li><a href="/mice-in-beehives">Mice in Beehives</a></li>
+              <li><a href="/asian-hornet-uk">Asian Hornet</a></li>
+              <li><a href="/small-hive-beetle-uk">Small Hive Beetle</a></li>
+            </ul>
+          </details>
+          <!-- Side Navigation On This Page -->
           <div class="article-sidebar-card">
             <h3>On this page</h3>
             <ul class="toc-list">
+              <li><a href="#overview">Overview</a></li>
               <li><a href="#how-viruses-work">How viral diseases fit in</a></li>
               <li><a href="#deformed-wing-virus">Deformed wing virus</a></li>
               <li><a href="#acute-bee-paralysis">Acute bee paralysis</a></li>
@@ -325,6 +385,7 @@
               <li><a href="#other-viral-threats">Other viral threats</a></li>
               <li><a href="#inspection-checklist">Inspection checklist</a></li>
               <li><a href="#when-to-seek-help">When to seek help</a></li>
+              <li><a href="#related-guides">Related guides</a></li>
             </ul>
           </div>
           <div class="hivetag-side-cta">
@@ -343,7 +404,7 @@
         </aside>
         <section class="hub-main-content">
           <div class="content-card" id="overview">
-            <h1>Viral Diseases of Honeybees in the UK – Signs, Varroa Links and What Beekeepers Can Do</h1>
+            <h2>Viral Diseases of Honeybees in the UK – Signs, Varroa Links and What Beekeepers Can Do</h2>
             <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
             <p>Viral diseases are an important part of the honey bee health picture, but they can feel mysterious because we rarely see the viruses themselves – only the effects on bees. Many UK colonies carry several viruses at low levels without obvious damage. Problems usually appear when bees are under stress, especially from <em><a href="/parasitic-mites" title="Parasitic mites including varroa destructor">parasitic mites such as varroa</a></em>, poor nutrition or other diseases. If you want the short version before diving deeper, start with the <a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">varroa overview</a>.</p>
             <p>This page focuses on the main viral diseases that beekeepers are likely to hear about: <strong>deformed wing virus</strong>, <strong>acute and chronic bee paralysis</strong> and <strong>sacbrood</strong>, with brief notes on some of the less common viruses. If you are mainly seeing crawling bees, deformed wings or dead bees outside the hive, also see <a href="/varroa-symptoms-uk" title="Signs of varroa infestation in bees">Varroa Symptoms</a> and <a href="/dead-bees-outside-hive" title="Dead bees outside the hive causes and checks">Dead Bees Outside the Hive</a>. It is designed to be <strong>beginner friendly</strong> but detailed enough to be useful if you are working towards BBKA-style exams or simply want a deeper understanding. If you are starting from symptoms and are not yet sure whether you are dealing with a virus, varroa pressure or another colony problem, try the <a href="/colony-health-triage" title="Use the interactive colony health triage tool for UK beekeepers">interactive colony health triage tool</a>.</p>
@@ -554,9 +615,10 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about-us">About Us</a></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
             <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
             <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             <li><a href="/hivetag-app">HiveTag</a></li>
           </ul>
@@ -600,27 +662,26 @@
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
         </ul>
-       <div class="mobile-menu-cta">
-        <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+        <div class="mobile-menu-cta">
+          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
           <i class="fa-solid fa-mobile-screen-button"></i>
           Try HiveTag Free
-        </a>
-
-        <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
           <i class="fa-solid fa-right-to-bracket"></i>
           Login
-        </a>
-
-        <a class="btn btn-secondary" href="/hivetag-app">
+          </a>
+          <a class="btn btn-secondary" href="/hivetag-app">
           <i class="fa-solid fa-circle-info"></i>
           More Information
-        </a>
-      </div>
+          </a>
+        </div>
       </div>
     </aside>
     <div class="search-overlay" id="searchOverlay"></div>

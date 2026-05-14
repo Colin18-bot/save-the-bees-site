@@ -897,7 +897,7 @@ const handleDelete = async () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Edit Inspection</h1>
+      <h2 className="text-2xl font-bold mb-4">Edit Inspection</h2>
 
       {subscriptionLevel === "premium" && nfcSupported && (
         <div className="mb-4 p-3 border rounded bg-blue-50 text-blue-900 flex items-center justify-between">

@@ -9,6 +9,7 @@
     <meta name="description" content="UK beekeeper guide to queenless colonies, including signs of queenlessness, how to confirm it, common causes and what to do next.">
     <meta name="keywords" content="queenless colony UK, queenless hive signs, what to do queenless colony, no eggs in hive, test frame bees, laying workers UK">
     <meta name="author" content="Colin Chorley">
+    <meta name="robots" content="index,follow">
     <meta property="og:type" content="article">
     <meta property="og:title" content="Queenless Colony UK | Signs & What To Do | BeezKnees">
     <meta property="og:description" content="Learn how to recognise a queenless colony, confirm whether the queen is missing and decide what to do next.">
@@ -35,6 +36,16 @@
       {
         "@context": "https://schema.org",
         "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://beezknees.co.uk/#website",
+            "name": "BeezKnees",
+            "url": "https://beezknees.co.uk/",
+            "inLanguage": "en-GB",
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            }
+          },
           {
             "@type": "Organization",
             "@id": "https://beezknees.co.uk/#organization",
@@ -64,7 +75,7 @@
             "name": "Queenless Colony UK | Signs & What To Do | BeezKnees",
             "description": "UK beekeeper guide to queenless colonies, including signs of queenlessness, how to confirm it, common causes and what to do next.",
             "datePublished": "2026-05-05",
-            "dateModified": "2026-05-04",
+              "dateModified": "2026-05-14","2026-05-04",
             "inLanguage": "en-GB",
             "primaryImageOfPage": {
               "@id": "https://beezknees.co.uk/queenless-colony-what-to-do#primaryimage"
@@ -77,6 +88,9 @@
             },
             "mainEntity": {
               "@id": "https://beezknees.co.uk/queenless-colony-what-to-do#article"
+            },
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/swarm-queen#webpage"
             }
           },
           {
@@ -98,7 +112,7 @@
               "@id": "https://beezknees.co.uk/queenless-colony-what-to-do#webpage"
             },
             "datePublished": "2026-05-05",
-            "dateModified": "2026-05-04",
+              "dateModified": "2026-05-14","2026-05-04",
             "inLanguage": "en-GB",
             "articleSection": [
               "Queenless colony signs",
@@ -114,7 +128,10 @@
               "no eggs in hive",
               "test frame bees",
               "laying workers UK"
-            ]
+            ],
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/swarm-queen#webpage"
+            }
           },
           {
             "@type": "BreadcrumbList",
@@ -129,13 +146,13 @@
               {
                 "@type": "ListItem",
                 "position": 2,
-                "name": "Swarm & Queen",
+                "name": "Swarm & Queen Guides",
                 "item": "https://beezknees.co.uk/swarm-queen"
               },
               {
                 "@type": "ListItem",
                 "position": 3,
-                "name": "Queenless Colony",
+                "name": "Queenless Colony – What to Do",
                 "item": "https://beezknees.co.uk/queenless-colony-what-to-do"
               }
             ]
@@ -147,7 +164,6 @@
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
-      <!-- Top Tier: Logo + Search/Mobile Menu -->
       <div class="topbar">
         <a href="/" class="brand" aria-label="BeezKnees home">
         <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
@@ -162,15 +178,15 @@
           </button>
         </div>
       </div>
-      <!-- Top Navigation -->
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <nav class="navbar" aria-label="Main navigation">
         <ul class="nav-menu" aria-label="Main Navigation Links">
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
           <li><a href="/hivetag-app">HiveTag</a></li>
           <li>
@@ -187,8 +203,8 @@
       </div>
       <div class="hero-inner">
         <div class="hero-card hero-card--compact">
-          <span class="hero-kicker">Swarm &amp; Queen</span>
-          <h2 class="hero-title">Queenless Colony</h2>
+          <span class="hero-kicker">Swarm &amp; Queen Guides</span>
+          <h1 class="hero-title">Queenless Colony</h1>
           <p class="hero-intro">
             How to recognise a queenless hive and what to do next in the UK
           </p>
@@ -203,70 +219,87 @@
     </section>
     <main id="main-content" class="page-wrap">
       <button class="section-mobile-toggle" id="sectionNavToggle" aria-expanded="true" aria-controls="sectionNavMobile">
-      Swarm &amp; Queen Menu ▲
+      Swarm &amp; Queen Guides Menu ▲
       </button>
-      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Swarm and Queen section navigation" data-active-group="Swarm Queen">
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Start Here</summary>
+      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Swarm and Queen Guides section navigation" data-active-group="Queen Problems">
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Swarm Basics</summary>
           <ul>
-            <li><a href="/queen-cell-guide">Queen Cells Guide</a></li>
-            <li><a href="/queen-cells-action">What To Do If You Find Queen Cells</a></li>
-            <li><a href="/queen-timeline">Queen Cell Timeline</a></li>
+            <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
+            <li><a href="/swarm-season-uk">Swarm Season UK</a></li>
+            <li><a href="/swarm-prevention">Swarm Prevention</a></li>
             <li><a href="/queen-cells-swarm-control">Queen Cells &amp; Swarm Control</a></li>
-            <li><a href="/report-a-swarm">Report a Swarm</a></li>
           </ul>
         </details>
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Queen Cell Types</summary>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Queen Cells</summary>
           <ul>
+            <li><a href="/queen-cell-guide">Queen Cell Guide</a></li>
+            <li><a href="/queen-cells-action">Queen Cells – What Action to Take</a></li>
             <li><a href="/queen-cups">Queen Cups</a></li>
             <li><a href="/charged-queen-cells">Charged Queen Cells</a></li>
             <li><a href="/capped-queen-cells">Capped Queen Cells</a></li>
             <li><a href="/emergency-queen-cells">Emergency Queen Cells</a></li>
             <li><a href="/supersedure-queen-cells">Supersedure Queen Cells</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Supersedure</summary>
+          <ul>
+            <li><a href="/supersedure-explained">Supersedure Explained</a></li>
             <li><a href="/supersedure-action">Supersedure Action</a></li>
-          </ul>
-        </details>
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Swarm Control Methods</summary>
-          <ul>
-            <li><a href="/swarm-prevention">Swarm Prevention</a></li>
-            <li><a href="/artificial-swarm">Artificial Swarm</a></li>
-            <li><a href="/split-hive">Split a Hive</a></li>
-            <li><a href="/split-methods">Split Methods</a></li>
-            <li><a href="/swarm-responsibilities">Swarm Responsibilities (UK)</a></li>
-          </ul>
-        </details>
-        <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">After Swarm / Split</summary>
-          <ul>
-            <li><a href="/swarm-eggs">After Swarm – Eggs</a></li>
-            <li><a href="/after-split">After a Split</a></li>
-            <li><a href="/virgin-queen-timeline">Virgin Queen Timeline</a></li>
+            <li><a href="/queenless-or-supersedure">Queenless or Supersedure?</a></li>
           </ul>
         </details>
         <details class="section-mobile-group" open>
           <summary class="section-mobile-summary">Queen Problems</summary>
           <ul>
-            <li><a href="/cant-find-queen">Can't Find Queen</a></li>
-            <li><span aria-current="page">Queenless Colony</span></li>
-            <li><a href="/queenless-or-supersedure">Queenless or Supersedure</a></li>
-            <li><a href="/missed-swarm">Missed a Swarm</a></li>
+            <li><a href="/queenless-colony-what-to-do">Queenless Colony – What to Do</a></li>
+            <li><a href="/queen-failing-signs">Queen Failing Signs</a></li>
+            <li><a href="/missing-queen-what-to-check">Missing Queen – What to Check</a></li>
+            <li><a href="/cant-find-queen">Can't Find the Queen</a></li>
+            <li><span aria-current="page">Queenless Colony – What to Do</span></li>
+            <li><a href="/missed-swarm">Missed Swarm</a></li>
           </ul>
         </details>
-        <!-- On this page mobile view -->
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Queen Timelines</summary>
+          <ul>
+            <li><a href="/queen-timeline">Queen Timeline</a></li>
+            <li><a href="/virgin-queen-timeline">Virgin Queen Timeline</a></li>
+            <li><a href="/swarm-eggs">Swarm Eggs</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Splits &amp; Artificial Swarms</summary>
+          <ul>
+            <li><a href="/artificial-swarm">Artificial Swarm</a></li>
+            <li><a href="/split-hive">Split Hive</a></li>
+            <li><a href="/split-methods">Split Methods</a></li>
+            <li><a href="/after-split">After a Split</a></li>
+            <li><a href="/missed-swarm">Missed Swarm</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Swarm Help &amp; Responsibility</summary>
+          <ul>
+            <li><a href="/report-a-swarm">Report a Swarm</a></li>
+            <li><a href="/swarm-responsibilities">Swarm Responsibilities</a></li>
+            <li><a href="/beekeepers-rule-calculator">Beekeeper's Rule Calculator</a></li>
+          </ul>
+        </details>
         <details class="section-mobile-group">
           <summary class="section-mobile-summary">On this page</summary>
-            <ul>
-              <li><a href="#overview">Overview</a></li>
-              <li><a href="#signs">Signs</a></li>
-              <li><a href="#confirm">How to confirm</a></li>
-              <li><a href="#causes">Causes</a></li>
-              <li><a href="#actions">What to do</a></li>
-              <li><a href="#mistakes">Mistakes to avoid</a></li>
-              <li><a href="#checker">Checker link</a></li>
-              <li><a href="#related">Related guides</a></li>
-            </ul>
+          <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#signs">Signs</a></li>
+            <li><a href="#confirm">How to confirm</a></li>
+            <li><a href="#causes">Causes</a></li>
+            <li><a href="#actions">What to do</a></li>
+            <li><a href="#mistakes">Mistakes to avoid</a></li>
+            <li><a href="#checker">Checker link</a></li>
+            <li><a href="#related">Related guides</a></li>
+          </ul>
         </details>
         <div class="hivetag-side-cta pulse-once">
           <span class="hero-kicker">BeezKnees App</span>
@@ -283,69 +316,86 @@
         </div>
       </nav>
       <div class="hub-layout">
-        <aside class="hub-sidebar" aria-label="Swarm and Queen section navigation" data-active-group="Swarm Queen">
-          <h2 class="hub-sidebar-title">Swarm &amp; Queen</h2>
-          <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Start Here</summary>
+        <aside class="hub-sidebar" aria-label="Swarm and Queen Guides section navigation" data-active-group="Queen Problems">
+          <h2 class="hub-sidebar-title">Swarm &amp; Queen Guides</h2>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Swarm Basics</summary>
             <ul class="hub-nav-links">
-              <li><a href="/queen-cell-guide">Queen Cells Guide</a></li>
-              <li><a href="/queen-cells-action">What To Do If You Find Queen Cells</a></li>
-              <li><a href="/queen-timeline">Queen Cell Timeline</a></li>
+              <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
+              <li><a href="/swarm-season-uk">Swarm Season UK</a></li>
+              <li><a href="/swarm-prevention">Swarm Prevention</a></li>
               <li><a href="/queen-cells-swarm-control">Queen Cells &amp; Swarm Control</a></li>
-              <li><a href="/report-a-swarm">Report a Swarm</a></li>
             </ul>
           </details>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Queen Cell Types</summary>
+            <summary class="hub-nav-summary">Queen Cells</summary>
             <ul class="hub-nav-links">
+              <li><a href="/queen-cell-guide">Queen Cell Guide</a></li>
+              <li><a href="/queen-cells-action">Queen Cells – What Action to Take</a></li>
               <li><a href="/queen-cups">Queen Cups</a></li>
               <li><a href="/charged-queen-cells">Charged Queen Cells</a></li>
               <li><a href="/capped-queen-cells">Capped Queen Cells</a></li>
               <li><a href="/emergency-queen-cells">Emergency Queen Cells</a></li>
               <li><a href="/supersedure-queen-cells">Supersedure Queen Cells</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Supersedure</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/supersedure-explained">Supersedure Explained</a></li>
               <li><a href="/supersedure-action">Supersedure Action</a></li>
-            </ul>
-          </details>
-          <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Swarm Control Methods</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/swarm-prevention">Swarm Prevention</a></li>
-              <li><a href="/artificial-swarm">Artificial Swarm</a></li>
-              <li><a href="/split-hive">Split a Hive</a></li>
-              <li><a href="/split-methods">Split Methods</a></li>
-              <li><a href="/swarm-responsibilities">Swarm Responsibilities (UK)</a></li>
-            </ul>
-          </details>
-          <details class="hub-nav-group">
-            <summary class="hub-nav-summary">After Swarm / Split</summary>
-            <ul class="hub-nav-links">
-              <li><a href="/swarm-eggs">After Swarm – Eggs</a></li>
-              <li><a href="/after-split">After a Split</a></li>
-              <li><a href="/virgin-queen-timeline">Virgin Queen Timeline</a></li>
+              <li><a href="/queenless-or-supersedure">Queenless or Supersedure?</a></li>
             </ul>
           </details>
           <details class="hub-nav-group" open>
             <summary class="hub-nav-summary">Queen Problems</summary>
             <ul class="hub-nav-links">
-              <li><a href="/cant-find-queen">Can't Find Queen</a></li>
-              <li><span aria-current="page">Queenless Colony</span></li>
-              <li><a href="/queenless-or-supersedure">Queenless or Supersedure</a></li>
-              <li><a href="/missed-swarm">Missed a Swarm</a></li>
+              <li><span aria-current="page">Queenless Colony – What to Do</span></li>
+              <li><a href="/queen-failing-signs">Queen Failing Signs</a></li>
+              <li><a href="/missing-queen-what-to-check">Missing Queen – What to Check</a></li>
+              <li><a href="/cant-find-queen">Can't Find the Queen</a></li>
+              <li><a href="/queenless-or-supersedure">Queenless or Supersedure?</a></li>
+              <li><a href="/missed-swarm">Missed Swarm</a></li>
             </ul>
           </details>
-          <!-- On this page under side nav -->
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Queen Timelines</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/queen-timeline">Queen Timeline</a></li>
+              <li><a href="/virgin-queen-timeline">Virgin Queen Timeline</a></li>
+              <li><a href="/swarm-eggs">Swarm Eggs</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Splits &amp; Artificial Swarms</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/artificial-swarm">Artificial Swarm</a></li>
+              <li><a href="/split-hive">Split Hive</a></li>
+              <li><a href="/split-methods">Split Methods</a></li>
+              <li><a href="/after-split">After a Split</a></li>
+              <li><a href="/missed-swarm">Missed Swarm</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Swarm Help &amp; Responsibility</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/report-a-swarm">Report a Swarm</a></li>
+              <li><a href="/swarm-responsibilities">Swarm Responsibilities</a></li>
+              <li><a href="/beekeepers-rule-calculator">Beekeeper's Rule Calculator</a></li>
+            </ul>
+          </details>
           <div class="article-sidebar-card">
             <h3>On this page</h3>
             <ul class="toc-list">
-                <li><a href="#overview">Overview</a></li>
-                <li><a href="#signs">Signs</a></li>
-                <li><a href="#confirm">How to confirm</a></li>
-                <li><a href="#causes">Causes</a></li>
-                <li><a href="#actions">What to do</a></li>
-                <li><a href="#mistakes">Mistakes to avoid</a></li>
-                <li><a href="#checker">Checker link</a></li>
-                <li><a href="#related">Related guides</a></li>
-              </ul>
+              <li><a href="#overview">Overview</a></li>
+              <li><a href="#signs">Signs</a></li>
+              <li><a href="#confirm">How to confirm</a></li>
+              <li><a href="#causes">Causes</a></li>
+              <li><a href="#actions">What to do</a></li>
+              <li><a href="#mistakes">Mistakes to avoid</a></li>
+              <li><a href="#checker">Checker link</a></li>
+              <li><a href="#related">Related guides</a></li>
+            </ul>
           </div>
           <div class="hivetag-side-cta">
             <span class="hero-kicker">BeezKnees App</span>
@@ -363,7 +413,7 @@
         </aside>
         <section class="hub-main-content">
           <div class="content-card" id="overview">
-            <h1>Queenless Colony – Signs and What To Do (UK Guide)</h1>
+            <h2>Queenless Colony – Signs and What To Do (UK Guide)</h2>
             <p class="article-updated"><strong>Last updated:</strong> 4 May 2026</p>
             <p>A queenless colony is a hive that has lost its queen or no longer has a laying queen. Sometimes this is obvious, but often it is not. Before taking action, check for eggs, young larvae, queen cells and the general behaviour of the colony.</p>
           </div>
@@ -464,9 +514,10 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about-us">About Us</a></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
             <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
             <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             <li><a href="/hivetag-app">HiveTag</a></li>
           </ul>
@@ -510,9 +561,10 @@
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
         </ul>
         <div class="mobile-menu-cta">

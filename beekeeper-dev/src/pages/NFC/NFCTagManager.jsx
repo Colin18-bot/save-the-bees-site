@@ -111,7 +111,7 @@ export default function NFCTagManager() {
       <div className="max-w-5xl mx-auto space-y-6">
         <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl font-bold">NFC Tag Manager</h1>
+            <h2 className="text-2xl font-bold">NFC Tag Manager</h2>
             <p className="mt-1 text-sm text-gray-600">
               Manage Android NFC tags that are linked to hives by tag ID. Search
               by hive name or tag ID, and clear Android tag links when you want

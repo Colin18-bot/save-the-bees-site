@@ -513,7 +513,7 @@ const Calendar = () => {
   return (
     <div className="p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-xl sm:text-2xl font-bold">
+        <h2 className="text-xl sm:text-2xl font-bold">
           {/* Mobile: short month (Nov 2025) */}
           <span className="sm:hidden">
             Calendar — {eventsTitleShort(year, month)}
@@ -522,7 +522,7 @@ const Calendar = () => {
           <span className="hidden sm:inline">
             Calendar — {eventsTitle(year, month)}
           </span>
-        </h1>
+        </h2>
 
         {/* FILTERS – Row 1 */}
         <div className="flex flex-wrap items-start gap-3 w-full">

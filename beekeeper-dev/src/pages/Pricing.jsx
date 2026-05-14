@@ -262,9 +262,9 @@ export default function Pricing() {
 
       {/* Hero */}
       <header className="text-center mb-10">
-        <h1 className="text-3xl md:text-4xl font-extrabold text-green-800 tracking-tight">
+        <h2 className="text-3xl md:text-4xl font-extrabold text-green-800 tracking-tight">
           Keep your bees organised, healthy, and happy
-        </h1>
+        </h2>
         <p className="mt-3 text-gray-600">
           BeezKnees helps you track inspections, plan tasks, and spot issues early — wherever you are.
         </p>

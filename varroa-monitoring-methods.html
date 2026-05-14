@@ -39,6 +39,16 @@
         "@context": "https://schema.org",
         "@graph": [
           {
+            "@type": "WebSite",
+            "@id": "https://beezknees.co.uk/#website",
+            "name": "BeezKnees",
+            "url": "https://beezknees.co.uk/",
+            "inLanguage": "en-GB",
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            }
+          },
+          {
             "@type": "Organization",
             "@id": "https://beezknees.co.uk/#organization",
             "name": "BeezKnees",
@@ -55,17 +65,17 @@
             "@type": "ImageObject",
             "@id": "https://beezknees.co.uk/varroa-monitoring-methods#primaryimage",
             "url": "https://beezknees.co.uk/images/beehive_11.webp",
-             "width": 1600,
-         "height": 900
+            "width": 1600,
+            "height": 900
           },
           {
             "@type": "WebPage",
             "@id": "https://beezknees.co.uk/varroa-monitoring-methods#webpage",
             "url": "https://beezknees.co.uk/varroa-monitoring-methods",
-           "name": "Varroa Monitoring Methods UK | Mite Checks | BeezKnees",
-      "description": "UK guide to varroa monitoring methods: sugar roll, alcohol wash, sticky boards, drone brood checks and how to interpret results to plan safe treatments.",
+            "name": "Varroa Monitoring Methods UK | Mite Checks | BeezKnees",
+            "description": "UK guide to varroa monitoring methods: sugar roll, alcohol wash, sticky boards, drone brood checks and how to interpret results to plan safe treatments.",
             "datePublished": "2025-12-17",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "about": {
               "@id": "https://beezknees.co.uk/varroa-monitoring-methods#article"
@@ -78,6 +88,9 @@
             },
             "publisher": {
               "@id": "https://beezknees.co.uk/#organization"
+            },
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/varroa-management#webpage"
             }
           },
           {
@@ -87,7 +100,7 @@
             "description": "UK guide to varroa monitoring methods: sugar roll, alcohol wash, sticky boards, drone brood checks and how to interpret results to plan safe treatments.",
             "image": {
               "@id": "https://beezknees.co.uk/varroa-monitoring-methods#primaryimage"
-          },
+            },
             "author": {
               "@type": "Person",
               "name": "Colin Chorley"
@@ -99,7 +112,7 @@
               "@id": "https://beezknees.co.uk/varroa-monitoring-methods#webpage"
             },
             "datePublished": "2025-12-17",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "articleSection": [
               "Why monitoring matters",
@@ -115,7 +128,10 @@
               "sticky board",
               "mite drop count",
               "drone brood"
-            ]
+            ],
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/varroa-management#webpage"
+            }
           },
           {
             "@type": "FAQPage",
@@ -161,7 +177,7 @@
                 "name": "Do thresholds stay the same all year?",
                 "acceptedAnswer": {
                   "@type": "Answer",
-                  "text": "No. Threshold guidance varies by season and local advice. Use trend + season + brood context, and check current UK guidance."
+                  "text": "No. Threshold guidance varies by season and local advice. Use trend plus season plus brood context, and check current UK guidance."
                 }
               },
               {
@@ -205,7 +221,6 @@
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
-      <!-- Top Tier: Logo + Search/Mobile Menu -->
       <div class="topbar">
         <a href="/" class="brand" aria-label="BeezKnees home">
         <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
@@ -220,15 +235,15 @@
           </button>
         </div>
       </div>
-      <!-- Top Navigation -->
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <nav class="navbar" aria-label="Main navigation">
         <ul class="nav-menu" aria-label="Main Navigation Links">
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
           <li><a href="/hivetag-app">HiveTag</a></li>
           <li>
@@ -246,7 +261,7 @@
       <div class="hero-inner">
         <div class="hero-card hero-card--compact">
           <span class="hero-kicker">Varroa Management</span>
-          <h2 class="hero-title">Varroa Monitoring Methods</h2>
+          <h1 class="hero-title">Varroa Monitoring Methods</h1>
           <p class="hero-intro">
             Sugar roll, alcohol wash, sticky boards – which method and how to use results to plan safe treatments
           </p>
@@ -263,38 +278,43 @@
       <button class="section-mobile-toggle" id="sectionNavToggle" aria-expanded="true" aria-controls="sectionNavMobile">
       Varroa Management Menu ▲
       </button>
-      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Varroa management section navigation" data-active-group="Start Here">
-        <details class="section-mobile-group" open>
+      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Varroa Management section navigation" data-active-group="Monitoring">
+        <details class="section-mobile-group">
           <summary class="section-mobile-summary">Start Here</summary>
           <ul>
-            <li><a href="/varroa-management">Varroa Management Hub</a></li>
-            <li><a href="/varroa-overview">Varroa Quick-Start Guide</a></li>
-            <li><span aria-current="page">Monitoring Methods</span></li>
-            <li><a href="/varroa-treatment-calendar-uk">Treatment Calendar (UK)</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/varroa-overview">Varroa Overview</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group" open>
+          <summary class="section-mobile-summary">Monitoring</summary>
+          <ul>
+            <li><span aria-current="page">Varroa Monitoring Methods</span></li>
+            <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
           </ul>
         </details>
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Treatment Approaches</summary>
+          <summary class="section-mobile-summary">Treatment Options</summary>
           <ul>
             <li><a href="/varroa-chemical-treatments">Chemical Treatments</a></li>
-            <li><a href="/varroa-non-chemical-methods">Non-chemical Methods</a></li>
-            <li><a href="/ppe-varroa-treatments">PPE for Treatments</a></li>
+            <li><a href="/varroa-non-chemical-methods">Non-Chemical Methods</a></li>
+            <li><a href="/ppe-varroa-treatments">PPE for Varroa Treatments</a></li>
+            <li><a href="/veterinary-medicine-records">Veterinary Medicine Records</a></li>
           </ul>
         </details>
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Related Bee Health</summary>
+          <summary class="section-mobile-summary">Seasonal Varroa Control</summary>
           <ul>
-            <li><a href="/parasitic-mites">Parasitic Mites</a></li>
-            <li><a href="/viral-diseases">Viral Diseases</a></li>
-            <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
-            <li><a href="/other-conditions">Other Conditions</a></li>
-            <li><a href="/bee-pests">Bee Pests</a></li>
-            <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-            <li><a href="/colony-health-triage">Colony Health Triage</a></li>
-            <li><a href="/veterinary-medicine-records">Medicine Records</a></li>
+            <li><a href="/varroa-treatment-calendar-uk">Varroa Treatment Calendar</a></li>
+            <li><a href="/late-summer-varroa">Late Summer Varroa</a></li>
           </ul>
         </details>
-        <!-- On this page mobile view -->
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Varroa Collapse</summary>
+          <ul>
+            <li><a href="/varroa-collapse-signs">Varroa Collapse Signs</a></li>
+          </ul>
+        </details>
         <details class="section-mobile-group">
           <summary class="section-mobile-summary">On this page</summary>
           <ul>
@@ -310,50 +330,49 @@
           <span class="hero-kicker">BeezKnees App</span>
           <h3>Stay on Top of Every Hive, Every Inspection</h3>
           <p>Track inspections, feeding, treatments and seasonal notes — all in one place.</p>
-          <a class="btn btn-primary" href="/hivetag-app">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          Explore HiveTag
-          </a>
-          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          Open Members Area
-          </a>
+          <a class="btn btn-primary" href="/hivetag-app"><i class="fa-solid fa-mobile-screen-button"></i> Explore HiveTag</a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login"><i class="fa-solid fa-right-to-bracket"></i> Open Members Area</a>
         </div>
       </nav>
       <div class="hub-layout">
-        <aside class="hub-sidebar" aria-label="Varroa management section navigation" data-active-group="Start Here">
+        <aside class="hub-sidebar" aria-label="Varroa Management section navigation" data-active-group="Monitoring">
           <h2 class="hub-sidebar-title">Varroa Management</h2>
-          <details class="hub-nav-group" open>
+          <details class="hub-nav-group">
             <summary class="hub-nav-summary">Start Here</summary>
             <ul class="hub-nav-links">
-              <li><a href="/varroa-management">Varroa Management Hub</a></li>
-              <li><a href="/varroa-overview">Varroa Quick-Start Guide</a></li>
-              <li><span aria-current="page">Monitoring Methods</span></li>
-              <li><a href="/varroa-treatment-calendar-uk">Treatment Calendar (UK)</a></li>
+              <li><a href="/varroa-management">Varroa Management</a></li>
+              <li><a href="/varroa-overview">Varroa Overview</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group" open>
+            <summary class="hub-nav-summary">Monitoring</summary>
+            <ul class="hub-nav-links">
+              <li><span aria-current="page">Varroa Monitoring Methods</span></li>
+              <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
             </ul>
           </details>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Treatment Approaches</summary>
+            <summary class="hub-nav-summary">Treatment Options</summary>
             <ul class="hub-nav-links">
               <li><a href="/varroa-chemical-treatments">Chemical Treatments</a></li>
-              <li><a href="/varroa-non-chemical-methods">Non-chemical Methods</a></li>
-              <li><a href="/ppe-varroa-treatments">PPE for Treatments</a></li>
+              <li><a href="/varroa-non-chemical-methods">Non-Chemical Methods</a></li>
+              <li><a href="/ppe-varroa-treatments">PPE for Varroa Treatments</a></li>
+              <li><a href="/veterinary-medicine-records">Veterinary Medicine Records</a></li>
             </ul>
           </details>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Related Bee Health</summary>
+            <summary class="hub-nav-summary">Seasonal Varroa Control</summary>
             <ul class="hub-nav-links">
-              <li><a href="/parasitic-mites">Parasitic Mites</a></li>
-              <li><a href="/viral-diseases">Viral Diseases</a></li>
-              <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
-              <li><a href="/other-conditions">Other Conditions</a></li>
-              <li><a href="/bee-pests">Bee Pests</a></li>
-              <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-              <li><a href="/colony-health-triage">Colony Health Triage</a></li>
-              <li><a href="/veterinary-medicine-records">Medicine Records</a></li>
+              <li><a href="/varroa-treatment-calendar-uk">Varroa Treatment Calendar</a></li>
+              <li><a href="/late-summer-varroa">Late Summer Varroa</a></li>
             </ul>
           </details>
-          <!-- On this page under side nav -->
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Varroa Collapse</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/varroa-collapse-signs">Varroa Collapse Signs</a></li>
+            </ul>
+          </details>
           <div class="article-sidebar-card">
             <h3>On this page</h3>
             <ul class="toc-list">
@@ -380,218 +399,230 @@
           </div>
         </aside>
         <section class="hub-main-content">
-        <div class="content-card" id="overview">
-          <h1>Varroa Monitoring Methods (UK) – How to Measure Mite Levels</h1>
-          <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
-          <p>Monitoring varroa is the foundation of sensible <a href="/varroa-management" title="Varroa management hub">varroa management</a>. It tells you whether your mite level is low, rising, or already high enough to threaten the colony. If you want the shorter big-picture version first, start with the <a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">varroa overview</a>.</p>
-          <p>This page explains the main monitoring options used by UK beekeepers and how to use them without turning beekeeping into a science project. If you arrived here because of symptoms such as deformed wings, patchy brood or colony decline, but are not yet sure varroa is the main issue, try the <a href="/colony-health-triage" title="Use the interactive colony health triage tool for UK beekeepers">interactive colony health triage tool</a> or the <a href="/bee-health-checker" title="Use the Bee Health Checker to compare symptoms and likely next steps">bee health checker</a> first.</p>
-          <div class="callout callout-tip">
-            <strong>Quick links:</strong> start with <a href="/varroa-management" title="Varroa management hub">Varroa Management</a>, then use the specialist pages:
-            <a href="/varroa-chemical-treatments" title="Chemical varroa treatments in the UK">chemical treatments</a>,
-            <a href="/varroa-non-chemical-methods" title="Non-chemical varroa methods and IPM">non-chemical methods</a>,
-            <a href="/varroa-treatment-calendar-uk" title="Varroa treatment calendar UK">varroa treatment calendar</a> and
-            <a href="/ppe-varroa-treatments" title="PPE for varroa treatments">PPE &amp; safety</a>. Printable PDFs are on <a href="/downloads" title="Free downloads">Free Downloads</a>.
+          <div class="content-card" id="overview">
+            <h2>Varroa Monitoring Methods (UK) – How to Measure Mite Levels</h2>
+            <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
+            <p>Monitoring varroa is the foundation of sensible <a href="/varroa-management" title="Varroa management hub">varroa management</a>. It tells you whether your mite level is low, rising, or already high enough to threaten the colony. If you want the shorter big-picture version first, start with the <a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">varroa overview</a>.</p>
+            <p>This page explains the main monitoring options used by UK beekeepers and how to use them without turning beekeeping into a science project. If you arrived here because of symptoms such as deformed wings, patchy brood or colony decline, but are not yet sure varroa is the main issue, try the <a href="/colony-health-triage" title="Use the interactive colony health triage tool for UK beekeepers">interactive colony health triage tool</a> or the <a href="/bee-health-checker" title="Use the Bee Health Checker to compare symptoms and likely next steps">bee health checker</a> first.</p>
+            <div class="callout callout-tip">
+              <strong>Quick links:</strong> start with <a href="/varroa-management" title="Varroa management hub">Varroa Management</a>, then use the specialist pages:
+              <a href="/varroa-chemical-treatments" title="Chemical varroa treatments in the UK">chemical treatments</a>,
+              <a href="/varroa-non-chemical-methods" title="Non-chemical varroa methods and IPM">non-chemical methods</a>,
+              <a href="/varroa-treatment-calendar-uk" title="Varroa treatment calendar UK">varroa treatment calendar</a> and
+              <a href="/ppe-varroa-treatments" title="PPE for varroa treatments">PPE &amp; safety</a>. Printable PDFs are on <a href="/downloads" title="Free downloads">Free Downloads</a>.
+            </div>
+            <div class="callout callout-tip">
+              <strong>Seasonal focus:</strong> for many UK beekeepers, the most useful checkpoints are <a href="/july" title="July beekeeping tasks including mid-season monitoring">mid-season monitoring in July</a> and <a href="/august" title="August beekeeping tasks including late-summer mite checks">late-summer mite checks in August</a>, because they help you decide whether treatment timing is on track before winter bees are raised.
+            </div>
           </div>
-          <div class="callout callout-tip">
-            <strong>Seasonal focus:</strong> for many UK beekeepers, the most useful checkpoints are <a href="/july" title="July beekeeping tasks including mid-season monitoring">mid-season monitoring in July</a> and <a href="/august" title="August beekeeping tasks including late-summer mite checks">late-summer mite checks in August</a>, because they help you decide whether treatment timing is on track before winter bees are raised.
+          <div class="content-card" id="why-monitor">
+            <h2>Why monitoring matters</h2>
+            <p>In the UK, most colonies will have <strong>some</strong> varroa. Monitoring answers the real question: <strong>how many mites are there right now</strong>, and is the level rising or falling?</p>
+            <p>Monitoring helps you:</p>
+            <ul class="indented-list">
+              <li>Decide <em>if</em> treatment is needed (rather than treating "just in case").</li>
+              <li>Pick the best timing (especially <a href="/july" title="July beekeeping tasks including mid-season monitoring">mid-season monitoring in July</a> and <a href="/august" title="August beekeeping tasks including late-summer mite checks">late-summer mite checks in August</a> when winter bee planning is approaching).</li>
+              <li>Check whether a treatment worked, and record results for next year.</li>
+            </ul>
+            <div class="callout callout-warning">
+              <strong>Reminder:</strong> thresholds vary by season and local guidance. Use monitoring trends, not just a single number, and always check current UK advice (BeeBase / National Bee Unit).
+            </div>
           </div>
-        </div>
-        <div class="content-card" id="why-monitor">
-          <h2>Why monitoring matters</h2>
-          <p>In the UK, most colonies will have <strong>some</strong> varroa. Monitoring answers the real question: <strong>how many mites are there right now</strong>, and is the level rising or falling?</p>
-          <p>Monitoring helps you:</p>
-          <ul class="indented-list">
-            <li>Decide <em>if</em> treatment is needed (rather than treating "just in case").</li>
-            <li>Pick the best timing (especially <a href="/july" title="July beekeeping tasks including mid-season monitoring">mid-season monitoring in July</a> and <a href="/august" title="August beekeeping tasks including late-summer mite checks">late-summer mite checks in August</a> when winter bee planning is approaching).</li>
-            <li>Check whether a treatment worked, and record results for next year.</li>
-          </ul>
-          <div class="callout callout-warning">
-            <strong>Reminder:</strong> thresholds vary by season and local guidance. Use monitoring trends, not just a single number, and always check current UK advice (BeeBase / National Bee Unit).
+          <div class="content-card" id="best-methods">
+            <h2>Common monitoring methods used in the UK</h2>
+            <p>Most beekeepers choose one or two methods and use them consistently. The table below compares the main options. If you are still not sure whether the colony signs really point to varroa, use the <a href="/bee-health-checker" title="Use the Bee Health Checker to compare symptoms and likely next steps">bee health checker</a> or <a href="/colony-health-triage" title="Use the colony health triage tool to narrow down likely hive problems">colony health triage</a> alongside your monitoring results.</p>
+            <div class="table-wrapper">
+              <table class="site-table" aria-label="Varroa monitoring methods comparison">
+                <caption>Varroa monitoring methods (overview)</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Method</th>
+                    <th scope="col">What it measures</th>
+                    <th scope="col">Strengths</th>
+                    <th scope="col">Limitations</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Sticky board (mite drop)</strong></td>
+                    <td>Natural mite fall over a set period</td>
+                    <td>Non-invasive; useful before/after treatment</td>
+                    <td>Varies with brood level and colony behaviour</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Sugar roll</strong></td>
+                    <td>Approx. % mites on adult bees</td>
+                    <td>Non-lethal; good repeatable trend data</td>
+                    <td>Needs careful technique and a bee sample</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Alcohol wash</strong></td>
+                    <td>% mites on adult bees</td>
+                    <td>Very reliable estimate</td>
+                    <td>Bee sample is sacrificed</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Drone brood uncapping</strong></td>
+                    <td>Mites reproducing in drone cells</td>
+                    <td>Quick "is it bad?" check in spring/summer</td>
+                    <td>Not a numeric colony-wide count</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Visual checks</strong></td>
+                    <td>Obvious mites / symptoms</td>
+                    <td>Fast during inspections</td>
+                    <td>Can miss serious infestations</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-        <div class="content-card" id="best-methods">
-          <h2>Common monitoring methods used in the UK</h2>
-          <p>Most beekeepers choose one or two methods and use them consistently. The table below compares the main options. If you are still not sure whether the colony signs really point to varroa, use the <a href="/bee-health-checker" title="Use the Bee Health Checker to compare symptoms and likely next steps">bee health checker</a> or <a href="/colony-health-triage" title="Use the colony health triage tool to narrow down likely hive problems">colony health triage</a> alongside your monitoring results.</p>
-          <div class="table-wrapper">
-            <table class="site-table" aria-label="Varroa monitoring methods comparison">
-              <caption>Varroa monitoring methods (overview)</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Method</th>
-                  <th scope="col">What it measures</th>
-                  <th scope="col">Strengths</th>
-                  <th scope="col">Limitations</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Sticky board (mite drop)</strong></td>
-                  <td>Natural mite fall over a set period</td>
-                  <td>Non-invasive; useful before/after treatment</td>
-                  <td>Varies with brood level and colony behaviour</td>
-                </tr>
-                <tr>
-                  <td><strong>Sugar roll</strong></td>
-                  <td>Approx. % mites on adult bees</td>
-                  <td>Non-lethal; good repeatable trend data</td>
-                  <td>Needs careful technique and a bee sample</td>
-                </tr>
-                <tr>
-                  <td><strong>Alcohol wash</strong></td>
-                  <td>% mites on adult bees</td>
-                  <td>Very reliable estimate</td>
-                  <td>Bee sample is sacrificed</td>
-                </tr>
-                <tr>
-                  <td><strong>Drone brood uncapping</strong></td>
-                  <td>Mites reproducing in drone cells</td>
-                  <td>Quick "is it bad?" check in spring/summer</td>
-                  <td>Not a numeric colony-wide count</td>
-                </tr>
-                <tr>
-                  <td><strong>Visual checks</strong></td>
-                  <td>Obvious mites / symptoms</td>
-                  <td>Fast during inspections</td>
-                  <td>Can miss serious infestations</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="content-card" id="how-to">
+            <h2>How to build a simple monitoring routine</h2>
+            <p>A practical routine for UK hobby beekeepers looks like this:</p>
+            <ul class="indented-list">
+              <li><strong>Spring:</strong> quick checks (drone brood uncapping and/or sticky board) to spot early spikes.</li>
+              <li><strong>Summer:</strong> keep an eye on trends without disrupting supers, especially during <a href="/july" title="July beekeeping tasks including mid-season monitoring">mid-season monitoring in July</a>.</li>
+              <li><strong>Late summer / early autumn:</strong> do a proper count (sugar roll or alcohol wash) before and after your main treatment window, with particular focus on <a href="/august" title="August beekeeping tasks including late-summer mite checks">late-summer mite checks in August</a>.</li>
+              <li><strong>Winter (where appropriate):</strong> note broodless periods and link records to your winter plan.</li>
+            </ul>
+            <div class="callout callout-tip">
+              <strong>Record it:</strong> a simple note like "Method • date • result • action taken" becomes incredibly useful over time. If you use any veterinary medicines, tie it into <a href="/veterinary-medicine-records" title="Veterinary medicine record keeping">your medicine records</a>.
+            </div>
           </div>
-        </div>
-        <div class="content-card" id="how-to">
-          <h2>How to build a simple monitoring routine</h2>
-          <p>A practical routine for UK hobby beekeepers looks like this:</p>
-          <ul class="indented-list">
-            <li><strong>Spring:</strong> quick checks (drone brood uncapping and/or sticky board) to spot early spikes.</li>
-            <li><strong>Summer:</strong> keep an eye on trends without disrupting supers, especially during <a href="/july" title="July beekeeping tasks including mid-season monitoring">mid-season monitoring in July</a>.</li>
-            <li><strong>Late summer / early autumn:</strong> do a proper count (sugar roll or alcohol wash) before and after your main treatment window, with particular focus on <a href="/august" title="August beekeeping tasks including late-summer mite checks">late-summer mite checks in August</a>.</li>
-            <li><strong>Winter (where appropriate):</strong> note broodless periods and link records to your winter plan.</li>
-          </ul>
-          <div class="callout callout-tip">
-            <strong>Record it:</strong> a simple note like "Method • date • result • action taken" becomes incredibly useful over time. If you use any veterinary medicines, tie it into <a href="/veterinary-medicine-records" title="Veterinary medicine record keeping">your medicine records</a>.
+          <div class="content-card" id="interpreting">
+            <h2>Interpreting results without overthinking it</h2>
+            <p>Don't get stuck chasing perfect numbers. Focus on:</p>
+            <ul class="indented-list">
+              <li><strong>Trend:</strong> are mite levels rising quickly?</li>
+              <li><strong>Season:</strong> late summer matters most for protecting winter bees.</li>
+              <li><strong>Brood:</strong> high brood can "hide" mites in capped cells, so results need context.</li>
+              <li><strong>Effectiveness:</strong> did the count drop after treatment?</li>
+            </ul>
+            <p>If results suggest a heavy infestation, use the treatment planning pages to choose an approach that fits your conditions: <a href="/varroa-chemical-treatments" title="Chemical treatments">chemical treatments</a>, <a href="/varroa-non-chemical-methods" title="Non-chemical IPM">non-chemical IPM</a>, <a href="/varroa-treatment-calendar-uk" title="Varroa treatment calendar UK">varroa treatment calendar</a> and <a href="/ppe-varroa-treatments" title="PPE and safety">PPE &amp; safety</a>. If your symptoms still do not clearly point to varroa alone, the <a href="/colony-health-triage" title="Use the colony health triage tool to narrow down likely hive problems">colony health triage tool</a> or <a href="/bee-health-checker" title="Use the Bee Health Checker to compare symptoms and likely next steps">bee health checker</a> can help narrow things down.</p>
           </div>
-        </div>
-        <div class="content-card" id="interpreting">
-          <h2>Interpreting results without overthinking it</h2>
-          <p>Don't get stuck chasing perfect numbers. Focus on:</p>
-          <ul class="indented-list">
-            <li><strong>Trend:</strong> are mite levels rising quickly?</li>
-            <li><strong>Season:</strong> late summer matters most for protecting winter bees.</li>
-            <li><strong>Brood:</strong> high brood can "hide" mites in capped cells, so results need context.</li>
-            <li><strong>Effectiveness:</strong> did the count drop after treatment?</li>
-          </ul>
-          <p>If results suggest a heavy infestation, use the treatment planning pages to choose an approach that fits your conditions: <a href="/varroa-chemical-treatments" title="Chemical treatments">chemical treatments</a>, <a href="/varroa-non-chemical-methods" title="Non-chemical IPM">non-chemical IPM</a>, <a href="/varroa-treatment-calendar-uk" title="Varroa treatment calendar UK">varroa treatment calendar</a> and <a href="/ppe-varroa-treatments" title="PPE and safety">PPE &amp; safety</a>. If your symptoms still do not clearly point to varroa alone, the <a href="/colony-health-triage" title="Use the colony health triage tool to narrow down likely hive problems">colony health triage tool</a> or <a href="/bee-health-checker" title="Use the Bee Health Checker to compare symptoms and likely next steps">bee health checker</a> can help narrow things down.</p>
-        </div>
-        <!-- FAQ section -->
-        <section class="section">
-          <div class="card">
-            <h2 id="faq">Frequently Asked Questions</h2>
-            <div class="faq-list">
-              <div class="faq-item open">
-                <button class="faq-question" type="button">
-                <span>What is the most accurate way to measure varroa?</span>
-                <span>+</span>
-                </button>
-                <div class="faq-answer">
-                  <p>Alcohol washes generally give a strong estimate of mites on adult bees, while sugar rolls are a good non-lethal alternative for trend monitoring. Choose a method you can do consistently and safely.</p>
+          <section class="section">
+            <div class="card">
+              <h2 id="faq">Frequently Asked Questions</h2>
+              <div class="faq-list">
+                <div class="faq-item open">
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="true">
+                    <span>What is the most accurate way to measure varroa?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
+                  <div class="faq-answer">
+                    <p>Alcohol washes generally give a strong estimate of mites on adult bees, while sugar rolls are a good non-lethal alternative for trend monitoring. Choose a method you can do consistently and safely.</p>
+                  </div>
+                </div>
+                <div class="faq-item">
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>How often should I monitor varroa in the UK?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
+                  <div class="faq-answer">
+                    <p>Several times per season is sensible, with extra focus in late summer/early autumn. Monitor before and after treatments so you know what actually worked.</p>
+                  </div>
+                </div>
+                <div class="faq-item">
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Are sticky boards enough on their own?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
+                  <div class="faq-answer">
+                    <p>They are useful for trend and treatment checks, but results vary with brood and colony conditions. Many beekeepers pair a drop count with a sugar roll or alcohol wash at key points.</p>
+                  </div>
+                </div>
+                <div class="faq-item">
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Can I rely on visual checks for mites?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
+                  <div class="faq-answer">
+                    <p>No. Visible mites or deformed wings often mean levels are already high. Visual checks are helpful, but they're not a substitute for a monitoring method. If you are still trying to work out whether the signs point to varroa, virus pressure or another colony problem, use the <a href="/colony-health-triage" title="Work through colony symptoms step by step">colony health triage tool</a>.</p>
+                  </div>
+                </div>
+                <div class="faq-item">
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Do thresholds stay the same all year?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
+                  <div class="faq-answer">
+                    <p>No. Threshold guidance varies by season and local advice. Use trend + season + brood context, and check current UK guidance.</p>
+                  </div>
+                </div>
+                <div class="faq-item">
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Should I record monitoring results?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
+                  <div class="faq-answer">
+                    <p>Yes. Recording method, date and result helps you spot patterns and supports better decisions next year, especially alongside veterinary medicine records when treatments are used.</p>
+                  </div>
                 </div>
               </div>
-              <div class="faq-item">
-                <button class="faq-question" type="button">
-                <span>How often should I monitor varroa in the UK?</span>
-                <span>+</span>
-                </button>
-                <div class="faq-answer">
-                  <p>Several times per season is sensible, with extra focus in late summer/early autumn. Monitor before and after treatments so you know what actually worked.</p>
-                </div>
+            </div>
+          </section>
+          <section id="related" class="related-guides" aria-label="Related guides">
+            <h2>Related Pages</h2>
+            <div class="related-grid">
+              <div class="related-card">
+                <h3><a href="/varroa-management" title="Varroa management overview">Varroa Management (hub)</a></h3>
+                <p>The main overview for monitoring, thresholds and treatment planning</p>
               </div>
-              <div class="faq-item">
-                <button class="faq-question" type="button">
-                <span>Are sticky boards enough on their own?</span>
-                <span>+</span>
-                </button>
-                <div class="faq-answer">
-                  <p>They are useful for trend and treatment checks, but results vary with brood and colony conditions. Many beekeepers pair a drop count with a sugar roll or alcohol wash at key points.</p>
-                </div>
+              <div class="related-card">
+                <h3><a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">Varroa overview</a></h3>
+                <p>Quick-start summary before diving into the detail</p>
               </div>
-              <div class="faq-item">
-                <button class="faq-question" type="button">
-                <span>Can I rely on visual checks for mites?</span>
-                <span>+</span>
-                </button>
-                <div class="faq-answer">
-                  <p>No. Visible mites or deformed wings often mean levels are already high. Visual checks are helpful, but they're not a substitute for a monitoring method. If you are still trying to work out whether the signs point to varroa, virus pressure or another colony problem, use the <a href="/colony-health-triage" title="Work through colony symptoms step by step">colony health triage tool</a>.</p>
-                </div>
+              <div class="related-card">
+                <h3><a href="/varroa-treatment-calendar-uk" title="Varroa treatment calendar UK">Varroa treatment calendar</a></h3>
+                <p>Month-by-month timing for monitoring and action</p>
               </div>
-              <div class="faq-item">
-                <button class="faq-question" type="button">
-                <span>Do thresholds stay the same all year?</span>
-                <span>+</span>
-                </button>
-                <div class="faq-answer">
-                  <p>No. Threshold guidance varies by season and local advice. Use trend + season + brood context, and check current UK guidance.</p>
-                </div>
+              <div class="related-card">
+                <h3><a href="/july" title="July beekeeping tasks including mid-season monitoring">Mid-season monitoring</a></h3>
+                <p>Use July checks to spot rising pressure before the main treatment window</p>
               </div>
-              <div class="faq-item">
-                <button class="faq-question" type="button">
-                <span>Should I record monitoring results?</span>
-                <span>+</span>
-                </button>
-                <div class="faq-answer">
-                  <p>Yes. Recording method, date and result helps you spot patterns and supports better decisions next year, especially alongside veterinary medicine records when treatments are used.</p>
-                </div>
+              <div class="related-card">
+                <h3><a href="/august" title="August beekeeping tasks including late-summer mite checks">Late-summer mite checks</a></h3>
+                <p>One of the key points for deciding treatment timing</p>
+              </div>
+              <div class="related-card">
+                <h3><a href="/varroa-chemical-treatments" title="Chemical varroa treatments in the UK">Varroa chemical treatments</a></h3>
+                <p>Treatment types and seasonal fit</p>
+              </div>
+              <div class="related-card">
+                <h3><a href="/varroa-non-chemical-methods" title="Non-chemical varroa methods and IPM">Varroa non-chemical methods</a></h3>
+                <p>IPM and brood-based control options</p>
+              </div>
+              <div class="related-card">
+                <h3><a href="/bee-health-checker" title="Use the Bee Health Checker to compare symptoms and likely next steps">Bee health checker</a></h3>
+                <p>Symptom-based support if you are unsure what you are seeing</p>
+              </div>
+              <div class="related-card">
+                <h3><a href="/colony-health-triage" title="Use the colony health triage tool to narrow down likely hive problems">Colony health triage</a></h3>
+                <p>Work through likely causes step by step</p>
+              </div>
+              <div class="related-card">
+                <h3><a href="/veterinary-medicine-records" title="Veterinary medicine records">Veterinary medicine records</a></h3>
+                <p>Tie counts and treatment actions together properly</p>
+              </div>
+              <div class="related-card">
+                <h3><a href="/downloads" title="Free beekeeping downloads">Free Downloads</a></h3>
+                <p>Printable PDFs and templates</p>
               </div>
             </div>
-          </div>
-        </section>
-        <section id="related" class="related-guides" aria-label="Related guides">
-          <h2>Related Pages</h2>
-          <div class="related-grid">
-            <div class="related-card">
-              <h3><a href="/varroa-management" title="Varroa management overview">Varroa Management (hub)</a></h3>
-              <p>The main overview for monitoring, thresholds and treatment planning</p>
-            </div>
-            <div class="related-card">
-              <h3><a href="/varroa-overview" title="Varroa overview in 5 minutes for UK beekeepers">Varroa overview</a></h3>
-              <p>Quick-start summary before diving into the detail</p>
-            </div>
-            <div class="related-card">
-              <h3><a href="/varroa-treatment-calendar-uk" title="Varroa treatment calendar UK">Varroa treatment calendar</a></h3>
-              <p>Month-by-month timing for monitoring and action</p>
-            </div>
-            <div class="related-card">
-              <h3><a href="/july" title="July beekeeping tasks including mid-season monitoring">Mid-season monitoring</a></h3>
-              <p>Use July checks to spot rising pressure before the main treatment window</p>
-            </div>
-            <div class="related-card">
-              <h3><a href="/august" title="August beekeeping tasks including late-summer mite checks">Late-summer mite checks</a></h3>
-              <p>One of the key points for deciding treatment timing</p>
-            </div>
-            <div class="related-card">
-              <h3><a href="/varroa-chemical-treatments" title="Chemical varroa treatments in the UK">Varroa chemical treatments</a></h3>
-              <p>Treatment types and seasonal fit</p>
-            </div>
-            <div class="related-card">
-              <h3><a href="/varroa-non-chemical-methods" title="Non-chemical varroa methods and IPM">Varroa non-chemical methods</a></h3>
-              <p>IPM and brood-based control options</p>
-            </div>
-            <div class="related-card">
-              <h3><a href="/bee-health-checker" title="Use the Bee Health Checker to compare symptoms and likely next steps">Bee health checker</a></h3>
-              <p>Symptom-based support if you are unsure what you are seeing</p>
-            </div>
-            <div class="related-card">
-              <h3><a href="/colony-health-triage" title="Use the colony health triage tool to narrow down likely hive problems">Colony health triage</a></h3>
-              <p>Work through likely causes step by step</p>
-            </div>
-            <div class="related-card">
-              <h3><a href="/veterinary-medicine-records" title="Veterinary medicine records">Veterinary medicine records</a></h3>
-              <p>Tie counts and treatment actions together properly</p>
-            </div>
-            <div class="related-card">
-              <h3><a href="/downloads" title="Free beekeeping downloads">Free Downloads</a></h3>
-              <p>Printable PDFs and templates</p>
-            </div>
-          </div>
+          </section>
         </section>
       </div>
     </main>
@@ -615,9 +646,10 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about-us">About Us</a></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
             <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
             <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             <li><a href="/hivetag-app">HiveTag</a></li>
           </ul>
@@ -661,27 +693,26 @@
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
         </ul>
-      <div class="mobile-menu-cta">
-        <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+        <div class="mobile-menu-cta">
+          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
           <i class="fa-solid fa-mobile-screen-button"></i>
           Try HiveTag Free
-        </a>
-
-        <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
           <i class="fa-solid fa-right-to-bracket"></i>
           Login
-        </a>
-
-        <a class="btn btn-secondary" href="/hivetag-app">
+          </a>
+          <a class="btn btn-secondary" href="/hivetag-app">
           <i class="fa-solid fa-circle-info"></i>
           More Information
-        </a>
-      </div>
+          </a>
+        </div>
       </div>
     </aside>
     <div class="search-overlay" id="searchOverlay"></div>

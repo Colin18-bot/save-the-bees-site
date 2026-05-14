@@ -39,6 +39,16 @@
         "@context": "https://schema.org",
         "@graph": [
           {
+            "@type": "WebSite",
+            "@id": "https://beezknees.co.uk/#website",
+            "name": "BeezKnees",
+            "url": "https://beezknees.co.uk/",
+            "inLanguage": "en-GB",
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            }
+          },
+          {
             "@type": "Organization",
             "@id": "https://beezknees.co.uk/#organization",
             "name": "BeezKnees",
@@ -55,17 +65,17 @@
             "@type": "ImageObject",
             "@id": "https://beezknees.co.uk/veterinary-medicine-records#primaryimage",
             "url": "https://beezknees.co.uk/images/beekeeper_2.webp",
-             "width": 800,
-         "height": 533
+            "width": 800,
+            "height": 533
           },
           {
             "@type": "WebPage",
             "@id": "https://beezknees.co.uk/veterinary-medicine-records#webpage",
             "url": "https://beezknees.co.uk/veterinary-medicine-records",
-           "name": "Bee Medicine Records UK | Hive Treatment Records | BeezKnees",
-      "description": "UK guide to bee medicine records, hive treatment logs, varroa treatment records, what to record and how long to keep records.",
+            "name": "Bee Medicine Records UK | Hive Treatment Records | BeezKnees",
+            "description": "UK guide to bee medicine records, hive treatment logs, varroa treatment records, what to record and how long to keep records.",
             "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "about": {
               "@id": "https://beezknees.co.uk/veterinary-medicine-records#article"
@@ -78,13 +88,16 @@
             },
             "publisher": {
               "@id": "https://beezknees.co.uk/#organization"
+            },
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/varroa-management#webpage"
             }
           },
           {
             "@type": "Article",
             "@id": "https://beezknees.co.uk/veterinary-medicine-records#article",
             "headline": "Bee Medicine Records UK",
-      "description": "UK guide to bee medicine records, hive treatment logs, varroa treatment records, what to record and how long to keep records.",
+            "description": "UK guide to bee medicine records, hive treatment logs, varroa treatment records, what to record and how long to keep records.",
             "image": {
               "@id": "https://beezknees.co.uk/veterinary-medicine-records#primaryimage"
             },
@@ -99,7 +112,7 @@
               "@id": "https://beezknees.co.uk/veterinary-medicine-records#webpage"
             },
             "datePublished": "2025-12-10",
-            "dateModified": "2026-05-01",
+              "dateModified": "2026-05-14",
             "inLanguage": "en-GB",
             "keywords": [
               "beekeeping record keeping",
@@ -107,49 +120,52 @@
               "hive treatment records",
               "varroa treatment records",
               "medicines compliance"
-            ]
+            ],
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/varroa-management#webpage"
+            }
           },
           {
-      "@type": "FAQPage",
-      "@id": "https://beezknees.co.uk/veterinary-medicine-records#faq",
-      "isPartOf": {
-      "@id": "https://beezknees.co.uk/veterinary-medicine-records#webpage"
-      },
-      "mainEntity": [
-      {
-      "@type": "Question",
-      "name": "How long do I need to keep treatment records in the UK?",
-      "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Official guidance requires medicines records for food-producing animals to be kept for at least five years. For official wording, see GOV.UK guidance."
-      }
-      },
-      {
-      "@type": "Question",
-      "name": "Do I need to keep records if the colony dies or I no longer own the hive?",
-      "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "As a practical rule, yes. Keep records for the same retention period regardless. It keeps your compliance tidy and avoids gaps if you are ever reviewing historic treatments."
-      }
-      },
-      {
-      "@type": "Question",
-      "name": "Does this apply across England, Wales, Scotland and Northern Ireland?",
-      "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "The record-keeping requirement applies across the UK under veterinary medicines rules. If you want the most current wording for your situation, check the official guidance linked on the page."
-      }
-      },
-      {
-      "@type": "Question",
-      "name": "What should I write under \"reason for treatment\"?",
-      "acceptedAnswer": {
-      "@type": "Answer",
-      "text": "Keep it short and factual, for example: routine late-summer varroa treatment, high mite drop count, or advice from mentor or association. Specific notes help you compare seasons later."
-      }
-      }
-      ]
-      },
+            "@type": "FAQPage",
+            "@id": "https://beezknees.co.uk/veterinary-medicine-records#faq",
+            "isPartOf": {
+              "@id": "https://beezknees.co.uk/veterinary-medicine-records#webpage"
+            },
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "How long do I need to keep treatment records in the UK?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Official guidance requires medicines records for food-producing animals to be kept for at least five years. For official wording, see GOV.UK guidance."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Do I need to keep records if the colony dies or I no longer own the hive?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "As a practical rule, yes. Keep records for the same retention period regardless. It keeps your compliance tidy and avoids gaps if you are ever reviewing historic treatments."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does this apply across England, Wales, Scotland and Northern Ireland?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The record-keeping requirement applies across the UK under veterinary medicines rules. If you want the most current wording for your situation, check the official guidance linked on the page."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "What should I write under \"reason for treatment\"?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Keep it short and factual, for example: routine late-summer varroa treatment, high mite drop count, or advice from mentor or association. Specific notes help you compare seasons later."
+                }
+              }
+            ]
+          },
           {
             "@type": "BreadcrumbList",
             "@id": "https://beezknees.co.uk/veterinary-medicine-records#breadcrumb",
@@ -181,7 +197,6 @@
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <header class="site-header">
-      <!-- Top Tier: Logo + Search/Mobile Menu -->
       <div class="topbar">
         <a href="/" class="brand" aria-label="BeezKnees home">
         <img src="images/BeezKnees-Logo.png" alt="BeezKnees logo" class="brand-logo" width="1024" height="1024" decoding="async">
@@ -196,15 +211,15 @@
           </button>
         </div>
       </div>
-      <!-- Top Navigation -->
-      <nav class="navbar" role="navigation" aria-label="Main navigation">
+      <nav class="navbar" aria-label="Main navigation">
         <ul class="nav-menu" aria-label="Main Navigation Links">
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
           <li><a href="/hivetag-app">HiveTag</a></li>
           <li>
@@ -222,7 +237,7 @@
       <div class="hero-inner">
         <div class="hero-card hero-card--compact">
           <span class="hero-kicker">Varroa Management</span>
-          <h2 class="hero-title">Veterinary Medicine Records</h2>
+          <h1 class="hero-title">Veterinary Medicine Records</h1>
           <p class="hero-intro">
             What to record when treating bees, how long to keep records, and where to find the official form
           </p>
@@ -239,38 +254,43 @@
       <button class="section-mobile-toggle" id="sectionNavToggle" aria-expanded="true" aria-controls="sectionNavMobile">
       Varroa Management Menu ▲
       </button>
-      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Varroa management section navigation" data-active-group="Related Bee Health">
+      <nav class="section-mobile-nav open" id="sectionNavMobile" aria-label="Varroa Management section navigation" data-active-group="Treatment Options">
         <details class="section-mobile-group">
           <summary class="section-mobile-summary">Start Here</summary>
           <ul>
-            <li><a href="/varroa-management">Varroa Management Hub</a></li>
-            <li><a href="/varroa-overview">Varroa Quick-Start Guide</a></li>
-            <li><a href="/varroa-monitoring-methods">Monitoring Methods</a></li>
-            <li><a href="/varroa-treatment-calendar-uk">Treatment Calendar (UK)</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/varroa-overview">Varroa Overview</a></li>
           </ul>
         </details>
         <details class="section-mobile-group">
-          <summary class="section-mobile-summary">Treatment Approaches</summary>
+          <summary class="section-mobile-summary">Monitoring</summary>
           <ul>
-            <li><a href="/varroa-chemical-treatments">Chemical Treatments</a></li>
-            <li><a href="/varroa-non-chemical-methods">Non-chemical Methods</a></li>
-            <li><a href="/ppe-varroa-treatments">PPE for Treatments</a></li>
+            <li><a href="/varroa-monitoring-methods">Varroa Monitoring Methods</a></li>
+            <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
           </ul>
         </details>
         <details class="section-mobile-group" open>
-          <summary class="section-mobile-summary">Related Bee Health</summary>
+          <summary class="section-mobile-summary">Treatment Options</summary>
           <ul>
-            <li><a href="/parasitic-mites">Parasitic Mites</a></li>
-            <li><a href="/viral-diseases">Viral Diseases</a></li>
-            <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
-            <li><a href="/other-conditions">Other Conditions</a></li>
-            <li><a href="/bee-pests">Bee Pests</a></li>
-            <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-            <li><a href="/colony-health-triage">Colony Health Triage</a></li>
-            <li><span aria-current="page">Medicine Records</span></li>
+            <li><a href="/varroa-chemical-treatments">Chemical Treatments</a></li>
+            <li><a href="/varroa-non-chemical-methods">Non-Chemical Methods</a></li>
+            <li><a href="/ppe-varroa-treatments">PPE for Varroa Treatments</a></li>
+            <li><span aria-current="page">Veterinary Medicine Records</span></li>
           </ul>
         </details>
-        <!-- On this page mobile view -->
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Seasonal Varroa Control</summary>
+          <ul>
+            <li><a href="/varroa-treatment-calendar-uk">Varroa Treatment Calendar</a></li>
+            <li><a href="/late-summer-varroa">Late Summer Varroa</a></li>
+          </ul>
+        </details>
+        <details class="section-mobile-group">
+          <summary class="section-mobile-summary">Varroa Collapse</summary>
+          <ul>
+            <li><a href="/varroa-collapse-signs">Varroa Collapse Signs</a></li>
+          </ul>
+        </details>
         <details class="section-mobile-group">
           <summary class="section-mobile-summary">On this page</summary>
           <ul>
@@ -287,50 +307,49 @@
           <span class="hero-kicker">BeezKnees App</span>
           <h3>Stay on Top of Every Hive, Every Inspection</h3>
           <p>Track inspections, feeding, treatments and seasonal notes — all in one place.</p>
-          <a class="btn btn-primary" href="/hivetag-app">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          Explore HiveTag
-          </a>
-          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
-          <i class="fa-solid fa-right-to-bracket"></i>
-          Open Members Area
-          </a>
+          <a class="btn btn-primary" href="/hivetag-app"><i class="fa-solid fa-mobile-screen-button"></i> Explore HiveTag</a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login"><i class="fa-solid fa-right-to-bracket"></i> Open Members Area</a>
         </div>
       </nav>
       <div class="hub-layout">
-        <aside class="hub-sidebar" aria-label="Varroa management section navigation" data-active-group="Related Bee Health">
+        <aside class="hub-sidebar" aria-label="Varroa Management section navigation" data-active-group="Treatment Options">
           <h2 class="hub-sidebar-title">Varroa Management</h2>
           <details class="hub-nav-group">
             <summary class="hub-nav-summary">Start Here</summary>
             <ul class="hub-nav-links">
-              <li><a href="/varroa-management">Varroa Management Hub</a></li>
-              <li><a href="/varroa-overview">Varroa Quick-Start Guide</a></li>
-              <li><a href="/varroa-monitoring-methods">Monitoring Methods</a></li>
-              <li><a href="/varroa-treatment-calendar-uk">Treatment Calendar (UK)</a></li>
+              <li><a href="/varroa-management">Varroa Management</a></li>
+              <li><a href="/varroa-overview">Varroa Overview</a></li>
             </ul>
           </details>
           <details class="hub-nav-group">
-            <summary class="hub-nav-summary">Treatment Approaches</summary>
+            <summary class="hub-nav-summary">Monitoring</summary>
             <ul class="hub-nav-links">
-              <li><a href="/varroa-chemical-treatments">Chemical Treatments</a></li>
-              <li><a href="/varroa-non-chemical-methods">Non-chemical Methods</a></li>
-              <li><a href="/ppe-varroa-treatments">PPE for Treatments</a></li>
+              <li><a href="/varroa-monitoring-methods">Varroa Monitoring Methods</a></li>
+              <li><a href="/varroa-symptoms-uk">Varroa Symptoms</a></li>
             </ul>
           </details>
           <details class="hub-nav-group" open>
-            <summary class="hub-nav-summary">Related Bee Health</summary>
+            <summary class="hub-nav-summary">Treatment Options</summary>
             <ul class="hub-nav-links">
-              <li><a href="/parasitic-mites">Parasitic Mites</a></li>
-              <li><a href="/viral-diseases">Viral Diseases</a></li>
-              <li><a href="/bacterial-diseases">Bacterial Diseases</a></li>
-              <li><a href="/other-conditions">Other Conditions</a></li>
-              <li><a href="/bee-pests">Bee Pests</a></li>
-              <li><a href="/bee-health-checker">Bee Health Checker</a></li>
-              <li><a href="/colony-health-triage">Colony Health Triage</a></li>
-              <li><span aria-current="page">Medicine Records</span></li>
+              <li><a href="/varroa-chemical-treatments">Chemical Treatments</a></li>
+              <li><a href="/varroa-non-chemical-methods">Non-Chemical Methods</a></li>
+              <li><a href="/ppe-varroa-treatments">PPE for Varroa Treatments</a></li>
+              <li><span aria-current="page">Veterinary Medicine Records</span></li>
             </ul>
           </details>
-          <!-- On this page under side nav -->
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Seasonal Varroa Control</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/varroa-treatment-calendar-uk">Varroa Treatment Calendar</a></li>
+              <li><a href="/late-summer-varroa">Late Summer Varroa</a></li>
+            </ul>
+          </details>
+          <details class="hub-nav-group">
+            <summary class="hub-nav-summary">Varroa Collapse</summary>
+            <ul class="hub-nav-links">
+              <li><a href="/varroa-collapse-signs">Varroa Collapse Signs</a></li>
+            </ul>
+          </details>
           <div class="article-sidebar-card">
             <h3>On this page</h3>
             <ul class="toc-list">
@@ -359,7 +378,7 @@
         </aside>
         <section class="hub-main-content">
           <div class="content-card" id="overview">
-            <h1>Beekeeping Medicine Records (UK): Treatment Record Keeping &amp; Compliance</h1>
+            <h2>Beekeeping Medicine Records (UK): Treatment Record Keeping &amp; Compliance</h2>
             <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
             <p>Keeping a clear record of any <strong>veterinary medicines</strong> used in your hives is one of those habits that quietly improves everything: it helps you make better treatment decisions, shows what has (and hasn't) worked over time, and supports good compliance when you're managing bees as a food-producing animal species. In practice, these records are most often linked to <a href="/varroa-chemical-treatments" title="Chemical varroa treatments and safe seasonal use in the UK">varroa chemical treatments</a>, treatment safety decisions, and the wider <a href="/bee-diseases" title="Bee diseases and pests overview">bee diseases and pests overview</a>.</p>
             <div class="callout">
@@ -463,43 +482,50 @@
               <li><a href="/bee-diseases" title="Bee diseases and pests overview">Bee diseases and pests overview</a> – useful if your medicine records sit alongside wider colony-health concerns.</li>
             </ul>
           </div>
-          <!-- FAQ section -->
           <section class="section">
             <div class="card">
               <h2 id="faqs">Frequently Asked Questions</h2>
               <div class="faq-list">
                 <div class="faq-item open">
-                  <button class="faq-question" type="button">
-                  <span>How long do I need to keep treatment records in the UK?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="true">
+                    <span>How long do I need to keep treatment records in the UK?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Official guidance requires medicines records for food-producing animals to be kept for at least <strong>five years</strong>. For official wording, see <a href="https://www.gov.uk/guidance/record-keeping-requirements-for-veterinary-medicines" target="_blank" rel="noopener noreferrer" title="GOV.UK: Record keeping requirements for veterinary medicines">GOV.UK guidance</a>.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>Do I need to keep records if the colony dies or I no longer own the hive?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Do I need to keep records if the colony dies or I no longer own the hive?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>As a practical rule, yes — keep records for the same retention period regardless. It keeps your compliance tidy and avoids gaps if you're ever reviewing historic treatments.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>Does this apply across England, Wales, Scotland and Northern Ireland?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Does this apply across England, Wales, Scotland and Northern Ireland?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>The record-keeping requirement applies across the UK under veterinary medicines rules. If you want the most current wording for your situation, check the official guidance linked above.</p>
                   </div>
                 </div>
                 <div class="faq-item">
-                  <button class="faq-question" type="button">
-                  <span>What should I write under "reason for treatment"?</span>
-                  <span>+</span>
-                  </button>
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>What should I write under "reason for treatment"?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
                   <div class="faq-answer">
                     <p>Keep it short and factual, e.g. "routine late-summer varroa treatment", "high mite drop count", or "advice from mentor/association". Specific notes help you compare seasons later.</p>
                   </div>
@@ -530,9 +556,10 @@
             <li><a href="/">Home</a></li>
             <li><a href="/about-us">About Us</a></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-            <li><a href="/varroa-management">Varroa Management</a></li>
+            <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
             <li><a href="/bee-diseases">Bee Health</a></li>
+            <li><a href="/varroa-management">Varroa Management</a></li>
             <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
             <li><a href="/hivetag-app">HiveTag</a></li>
           </ul>
@@ -576,27 +603,26 @@
           <li><a href="/">Home</a></li>
           <li><a href="/about-us">About Us</a></li>
           <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
-          <li><a href="/varroa-management">Varroa Management</a></li>
+          <li><a href="/hive-problems">Hive Problems</a></li>
           <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>
           <li><a href="/bee-diseases">Bee Health</a></li>
+          <li><a href="/varroa-management">Varroa Management</a></li>
           <li><a href="/swarm-queen">Swarm &amp; Queen Guides</a></li>
         </ul>
-    <div class="mobile-menu-cta">
-        <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
+        <div class="mobile-menu-cta">
+          <a class="btn btn-primary" href="https://beezknees-members.netlify.app/register">
           <i class="fa-solid fa-mobile-screen-button"></i>
           Try HiveTag Free
-        </a>
-
-        <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
+          </a>
+          <a class="btn btn-secondary" href="https://beezknees-members.netlify.app/login">
           <i class="fa-solid fa-right-to-bracket"></i>
           Login
-        </a>
-
-        <a class="btn btn-secondary" href="/hivetag-app">
+          </a>
+          <a class="btn btn-secondary" href="/hivetag-app">
           <i class="fa-solid fa-circle-info"></i>
           More Information
-        </a>
-      </div>
+          </a>
+        </div>
       </div>
     </aside>
     <div class="search-overlay" id="searchOverlay"></div>
