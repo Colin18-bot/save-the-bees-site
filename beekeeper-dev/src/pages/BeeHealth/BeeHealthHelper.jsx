@@ -1039,9 +1039,9 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
       <div className="font-semibold">Safety / inspector-safe notes</div>
       <ul className="list-disc pl-5 text-sm mt-2 space-y-1 text-gray-800">
         <li>This is educational guidance only — it does not diagnose disease, confirm infection, or replace advice from a bee inspector or qualified professional.</li>
-        <li>
-          If notifiable disease/pest is suspected: <b>do not move</b> colonies, frames, bees, or equipment off site.
-        </li>
+       <li>
+        Follow official UK guidance and reporting procedures where notifiable disease or pests are suspected.
+      </li>
         <li>Avoid combining colonies or swapping frames until you understand what’s happening.</li>
         <li>If severe or uncertain, get help from your association, mentor, or official routes.</li>
       </ul>
