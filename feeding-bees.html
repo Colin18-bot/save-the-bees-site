@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en-GB">
   <head>
@@ -38,6 +39,18 @@
       {
         "@context": "https://schema.org",
         "@graph": [
+
+          {
+            "@type": "WebSite",
+            "@id": "https://beezknees.co.uk/#website",
+            "name": "BeezKnees",
+            "url": "https://beezknees.co.uk/",
+            "inLanguage": "en-GB",
+            "publisher": {
+              "@id": "https://beezknees.co.uk/#organization"
+            }
+          },
+
           {
             "@type": "Organization",
             "@id": "https://beezknees.co.uk/#organization",
@@ -100,7 +113,7 @@
             "name": "Feeding Bees UK | Syrup & Fondant",
             "description": "UK guide to feeding bees, including when to use syrup or fondant, seasonal feeding, feeders, ekes, nucs, swarms and robbing prevention.",
             "datePublished": "2026-05-01",
-              "dateModified": "2026-05-14",
+              "dateModified": "2026-05-23",
             "inLanguage": "en-GB",
             "isPartOf": {
               "@id": "https://beezknees.co.uk/beekeeping-guides#webpage"
@@ -140,7 +153,7 @@
               "@id": "https://beezknees.co.uk/feeding-bees#webpage"
             },
             "datePublished": "2026-05-01",
-              "dateModified": "2026-05-14",
+              "dateModified": "2026-05-23",
             "inLanguage": "en-GB",
             "articleSection": [
               "What to feed bees",
@@ -215,6 +228,16 @@
                   "text": "Feed in the evening, avoid spills, keep entrances manageable, use internal feeders where possible and avoid leaving exposed syrup in the apiary. Weak colonies and slow trickle feeding can increase robbing risk, especially during forage shortages."
                 }
               },
+
+              {
+                "@type": "Question",
+                "name": "Can I feed supermarket honey back to bees?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. Imported or unknown honey products may carry serious bee disease risks. UK beekeepers should avoid feeding supermarket honey back to colonies and instead use suitable bee feed products, fondant or properly prepared sugar syrup."
+                }
+              },
+
               {
                 "@type": "Question",
                 "name": "Can feeding solve every colony problem?",
@@ -560,6 +583,10 @@
             <h2>Feeding Bees in the UK – What to Feed, When to Feed and How to Feed Safely</h2>
             <p class="article-updated"><strong>Last updated:</strong> 1 May 2026</p>
             <p>Feeding bees in the UK is not just about putting syrup on a hive whenever you think they might be hungry. Good feeding decisions depend on <strong>season, temperature, colony size, brood levels, forage availability and the reason for feeding</strong>. A strong colony in a nectar flow may need nothing at all, while a small nuc, a recent swarm or a colony entering winter short of stores may need prompt support.</p>
+            <div class="callout callout-warning">
+              <strong>Important:</strong> Feeding can support colonies short of stores, but it will not solve queen failure, serious disease, heavy varroa loads or poor overall colony health. Always identify the underlying problem before assuming feed is the answer.
+            </div>
+
           </div>
           <div class="content-card" id="at-a-glance">
             <h2>Feeding at a Glance – The Key Principles</h2>
@@ -632,6 +659,10 @@
             <p>Fondant is one of the most useful feeds in UK beekeeping because it works well as an emergency or top-up feed during colder periods. It contains very little free water compared with syrup, so bees can use it without the same need to process and evaporate moisture.</p>
             <p>Place fondant <strong>above the cluster</strong>, ideally over the feed hole or directly above the brood nest. Cut a slit in the packaging or remove a small section so bees can access it. Use an <strong>eke</strong>, empty super or other spacer if extra headroom is needed under the roof.</p>
             <p>Fondant is especially useful when colonies feel light but the weather is too cold for syrup. It is also valuable in late winter and early spring when brood is increasing but flying weather remains unreliable.</p>
+            <div class="callout callout-warning">
+              <strong>Never feed supermarket or imported honey to bees.</strong> Imported honey products can carry serious bee disease risks. Use appropriate bee feed products or properly prepared sugar feed instead.
+            </div>
+
           </div>
           <div class="content-card" id="feeders">
             <h2>Different Feeders and When to Use Them</h2>
@@ -769,6 +800,19 @@
                     <p>Feed in the evening, avoid spills, keep entrances manageable, use internal feeders where possible and avoid leaving exposed syrup in the apiary. Weak colonies and slow trickle feeding can increase robbing risk, especially during forage shortages.</p>
                   </div>
                 </div>
+
+                <div class="faq-item">
+                  <h3>
+                    <button class="faq-question" type="button" aria-expanded="false">
+                    <span>Can I feed supermarket honey back to bees?</span>
+                    <span aria-hidden="true">+</span>
+                    </button>
+                  </h3>
+                  <div class="faq-answer">
+                    <p>No. Imported or unknown honey products may carry serious bee disease risks. UK beekeepers should avoid feeding supermarket honey back to colonies and instead use suitable bee feed products, fondant or properly prepared sugar syrup.</p>
+                  </div>
+                </div>
+
                 <div class="faq-item">
                   <h3>
                     <button class="faq-question" type="button" aria-expanded="false">
@@ -863,6 +907,7 @@
           <ul class="footer-links">
             <li><a href="/downloads">Free Downloads</a></li>
             <li><a href="/privacy">Privacy Policy</a></li>
+<li><a href="/disclaimer">Educational Disclaimer</a></li>
             <li><a href="#" data-open-cookie-settings>Cookie Settings</a></li>
             <li><a href="/site-map">Site Map</a></li>
             <li><a href="/donate">Donate</a></li>
