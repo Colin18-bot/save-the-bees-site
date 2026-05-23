@@ -605,6 +605,15 @@ const HiveList = () => {
                     <p className="text-sm text-gray-600">Status: {hive.status}</p>
                   )}
 
+                  {hive.notes && (
+                    <div className="mt-2 rounded bg-gray-50 border border-gray-200 p-2">
+                      <p className="text-xs font-semibold text-gray-700 mb-1">Notes</p>
+                      <p className="text-sm text-gray-600 whitespace-pre-wrap">
+                        {hive.notes}
+                      </p>
+                    </div>
+                  )}
+
                   <div className="mt-3 flex flex-col gap-2">
                     <Link
                       to={`/hives/${hive.id}/edit`}
