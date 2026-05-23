@@ -115,22 +115,44 @@ export default function Terms() {
         </p>
       </section>
 
-      {/* 6. Use of the Service (no professional advice) */}
+      {/* 6. Educational & Inspection-Support Guidance Only */}
       <section className="space-y-3 mt-6">
         <h2 className="text-lg font-semibold">
-          6. Use of the Service (no professional advice)
+          6. Educational & Inspection-Support Guidance Only
         </h2>
         <p>
-          The Service is intended as a tool to help you record, organise and
-          manage your beekeeping activities. It does not provide veterinary,
-          legal, or professional beekeeping advice.
+          The Service is intended as an educational, record-keeping and inspection-support tool to help you organise and manage your beekeeping activities. It does not provide veterinary, scientific, legal, regulatory, diagnostic or professional beekeeping advice.
         </p>
         <p>
-          You remain responsible for your own beekeeping decisions, compliance
-          with local laws and regulations, and for seeking professional advice
-          where necessary. BeezKnees is not responsible for any loss or damage
-          arising from how you choose to act on information stored in or presented
-          by the Service.
+          You remain fully responsible for your own inspections, beekeeping decisions, treatment decisions, disease reporting obligations, biosecurity measures, legal compliance, and for seeking advice from qualified professionals or official authorities where appropriate. BeezKnees does not diagnose disease, confirm colony health, guarantee outcomes, or replace direct hive inspections, beekeeper judgement, laboratory testing, bee inspectors, or official guidance. Any actions you take based on information, prompts, insights, seasonal suggestions, health-check flows, or stored records within the Service are entirely at your own risk.
+        </p>
+            </section>
+
+      {/* 6A. Bee health, disease and seasonal guidance disclaimer */}
+      <section className="space-y-3 mt-6">
+        <h2 className="text-lg font-semibold">
+          6A. Bee health, disease and seasonal guidance disclaimer
+        </h2>
+
+        <p>
+          HiveTag features such as Colony Health Check, Inspection Insights,
+          seasonal guidance, weather guidance, risk badges, inspection prompts,
+          suggested actions, swarm indicators, treatment reminders, forage notes,
+          or other automated outputs are provided for general educational and
+          inspection-support purposes only.
+        </p>
+
+        <p>
+          These features do not confirm disease, pests, colony condition,
+          treatment suitability, legal compliance, or hive safety, and may be
+          incomplete, inaccurate, outdated, location-sensitive, seasonally
+          inappropriate, or dependent on incomplete user-entered information.
+        </p>
+
+        <p>
+          Users must always verify observations independently and follow official
+          UK bee health guidance, including reporting requirements for notifiable
+          pests and diseases where applicable.
         </p>
       </section>
 
@@ -267,9 +289,7 @@ export default function Terms() {
             opportunities.
           </li>
           <li>
-            BeezKnees is not liable for any loss or damage resulting from your
-            reliance on data stored in the Service, including inspection records,
-            hive data or reminders.
+            BeezKnees is not liable for any loss, damage, disease spread, colony loss, treatment outcome, missed reporting obligation, business interruption, or other consequence resulting from reliance on data, reminders, inspection records, health-check outputs, seasonal guidance, weather information, NFC functionality, hive data, alerts, or automated suggestions presented within the Service.
           </li>
           <li>
             If we are found liable for any claim arising out of or in connection

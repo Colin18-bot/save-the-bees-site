@@ -552,9 +552,9 @@ return;
         <div className="font-semibold">Important</div>
         <ul className="list-disc pl-5 mt-1 space-y-1">
           {(safety?.topBanner || [
-            "This tool is not a diagnosis — it’s a triage helper to guide what to check next.",
+            "This tool provides educational inspection-support guidance only. It does not diagnose disease, confirm colony health, or replace direct hive inspection.",
             "Use Not sure whenever you haven’t opened the hive or can’t observe something reliably.",
-            "If you suspect a notifiable disease/pest, avoid moving colonies/equipment and follow official guidance.",
+            "If you suspect a notifiable disease or pest, do not move bees, colonies, frames, comb, honey or equipment, and follow official UK reporting guidance.",
           ]).map((item, index) => (
             <li key={index}>{item}</li>
           ))}
@@ -568,7 +568,7 @@ return;
 
           <div className="mt-3 space-y-3 text-gray-700">
             <p>
-              This tool is a <b>triage helper</b>. It doesn’t diagnose — it helps you narrow down what to check next.
+              This tool is an educational <b>inspection-support helper</b>. It does not diagnose disease or confirm colony conditions — it helps you consider possible explanations and decide what to check next.
             </p>
 
             <ul className="list-disc pl-5 space-y-1">
@@ -1038,7 +1038,7 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
     <div className="p-4 rounded border bg-white print-card">
       <div className="font-semibold">Safety / inspector-safe notes</div>
       <ul className="list-disc pl-5 text-sm mt-2 space-y-1 text-gray-800">
-        <li>This is guidance only — it does not diagnose disease.</li>
+        <li>This is educational guidance only — it does not diagnose disease, confirm infection, or replace advice from a bee inspector or qualified professional.</li>
         <li>
           If notifiable disease/pest is suspected: <b>do not move</b> colonies, frames, bees, or equipment off site.
         </li>
@@ -1120,7 +1120,7 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="font-semibold">Results</div>
-            <p className="text-sm text-gray-600 mt-1">These are guidance suggestions based on your answers.</p>
+            <p className="text-sm text-gray-600 mt-1">These are possible guidance suggestions based on your answers, not confirmed diagnoses.</p>
           </div>
 
           <button type="button" onClick={onPrint} className="px-4 py-2 rounded border bg-white hover:bg-gray-50 text-sm">

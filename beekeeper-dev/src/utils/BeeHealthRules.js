@@ -84,7 +84,7 @@ const OUTCOME_IMAGES = {
     {
       fileName: "dead-bees-poisoning-suspected.webp",
       alt: "Dead bees outside a hive entrance",
-      caption: "Sudden piles of dead bees may need urgent investigation and documentation."
+      caption: "Sudden piles of dead bees can have multiple possible causes and may require urgent investigation and documentation."
     }
   ],
 
@@ -988,14 +988,15 @@ export const BEE_HEALTH_RULES = {
   // ---------------------------
   safety: {
     topBanner: [
-      "This is not a diagnosis — it’s a triage helper to guide what to check next.",
+      "This tool provides educational inspection-support guidance only. It does not diagnose disease, confirm colony health, or replace direct hive inspection.",
       "Use “Not sure” any time you haven’t opened the hive or can’t observe something reliably.",
-      "If you suspect a notifiable disease/pest: do not move colonies/equipment and follow official UK guidance.",
-      "If the colony is being robbed, starving, or collapsing rapidly — act immediately and seek local support if needed.",
+      "If you suspect a notifiable disease or pest: do not move bees, colonies, frames, comb, honey or equipment, and follow official UK reporting guidance.",
+      "Outputs are guidance suggestions based on observed signs and may have multiple possible causes.",
+      "If a colony is collapsing rapidly, starving, being robbed, or showing serious brood disease signs, seek appropriate professional or official support promptly.",
     ],
     printFooter: [
-      "BeezKnees Colony Health Check (triage). Not a diagnosis.",
-      "For suspected notifiable disease/pest: isolate, don’t move kit, and contact official channels.",
+      "BeezKnees Colony Health Check provides educational inspection-support guidance only and is not a diagnosis.",
+      "For suspected notifiable disease or pests: avoid moving bees, colonies, frames, comb, honey or equipment and follow official UK reporting guidance.",
       "Always follow product labels and local regulations for treatments.",
     ],
   },
@@ -1052,7 +1053,7 @@ export const BEE_HEALTH_RULES = {
     {
       id: "route_brood_disease",
       label: "Brood looks diseased / brood symptoms",
-      description: "Chalkbrood, sacbrood, chilled brood, EFB/AFB red flags, etc.",
+      description: "Possible brood disease warning signs including chalkbrood, sacbrood, chilled brood, and foulbrood red flags requiring caution.",
     },
     {
       id: "route_temperament",
@@ -1088,7 +1089,7 @@ export const BEE_HEALTH_RULES = {
           { value: "route_temperament", label: "Temperament / aggression changed" },
           { value: "route_unsure", label: "Not sure (help me narrow it down)" },
         ],
-        help: "This doesn’t diagnose — it chooses the best question path to start with.",
+        help: "This does not diagnose disease or confirm colony health — it helps guide the most relevant inspection-support questions.",
       },
       {
         id: "inspection_level",
@@ -1350,7 +1351,7 @@ export const BEE_HEALTH_RULES = {
         label: "Can you see small red/brown mites on adult bees?",
         kind: "tri",
         showIf: { any: ["route_dead_dying", "route_unsure"] },
-        help: "Visible mites on adult bees are a strong clue for significant Varroa pressure.",
+        help: "Visible mites on adult bees may indicate significant Varroa pressure and should be investigated alongside other colony signs.",
       },
       {
         id: "dd_stores_very_light",

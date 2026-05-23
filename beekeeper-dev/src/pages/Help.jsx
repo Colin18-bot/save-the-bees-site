@@ -87,6 +87,22 @@ export default function Help() {
 
           {/* Content */}
           <article className="lg:col-span-3 space-y-12">
+                        <section id="disclaimer">
+              <h2 className="text-2xl font-bold mb-3">
+                Educational &amp; Inspection-Support Disclaimer
+              </h2>
+              <div className="rounded border border-yellow-200 bg-yellow-50 p-4 text-sm text-gray-800">
+                <p>
+                  HiveTag provides educational, record-keeping and inspection-support guidance only.
+                  It should not be treated as veterinary, scientific, legal or official bee health advice.
+                </p>
+                <p className="mt-2">
+                  HiveTag does not diagnose disease, confirm colony health, guarantee outcomes,
+                  or replace direct hive inspections, beekeeper judgement, official reporting routes
+                  or advice from a bee inspector or qualified professional.
+                </p>
+              </div>
+            </section>
             {/* Key Concepts */}
             <section id="concepts">
               <h2 className="text-2xl font-bold mb-3">
@@ -852,16 +868,14 @@ export default function Help() {
                 <div className="font-semibold">Important</div>
                 <ul className="list-disc pl-5 mt-1 space-y-1">
                   <li>
-                    The Bee Health Helper is <strong>not a diagnosis</strong>. It’s a
-                    triage tool to guide what to check next.
+                    The Bee Health Helper provides <strong>educational inspection-support guidance only</strong>. It does not diagnose disease, confirm colony health, or replace direct hive inspection.
                   </li>
                   <li>
                     Use <strong>Not sure</strong> whenever you haven’t opened the hive,
                     the weather is poor, or you simply can’t observe that detail.
                   </li>
                   <li>
-                    If you suspect a <strong>notifiable disease/pest</strong>, avoid
-                    moving colonies/equipment and follow official guidance.
+                    If you suspect a <strong>notifiable disease or pest</strong>, do not move bees, colonies, frames, comb, honey or equipment, and follow official UK reporting guidance.
                   </li>
                 </ul>
               </div>
@@ -894,8 +908,7 @@ export default function Help() {
                       <strong>Expand all</strong> if you prefer).
                     </li>
                     <li>
-                      Press <strong>Get results</strong> to see the most likely patterns
-                      and what to check next.
+                      Press <strong>Get results</strong> to see possible patterns and suggested next checks.
                     </li>
                   </ol>
                 </div>
@@ -926,7 +939,7 @@ export default function Help() {
                     </li>
                     <li>
                       They can also nudge suggestions, but they are{" "}
-                      <strong>not a diagnosis</strong> on their own.
+                      <strong>not confirmed findings or diagnoses</strong> on their own.
                     </li>
                     <li>
                       If you’re unsure, choose the closest match — or use “Not sure”
@@ -1561,8 +1574,7 @@ per apiary.
                     Is the Colony Health Check a diagnosis? <Badge tone="blue">Premium</Badge>
                   </p>
                   <p className="text-gray-700">
-                    No. It’s a triage helper that suggests what to check next. If a UK action/reporting panel appears,
-                    follow official guidance.
+                    No. It provides educational inspection-support guidance only and suggests possible next checks. It does not confirm disease, colony health, or treatment decisions. If a UK action/reporting panel appears, follow official guidance.
                   </p>
                 </div>
 
