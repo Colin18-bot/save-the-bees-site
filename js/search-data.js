@@ -781,7 +781,7 @@ window.searchData = [
   },
   {
     "title": "Wasps Attacking Beehives UK | Signs, Prevention & What To Do",
-    "url": "/wasps-attacking-beehives-uk",
+    "url": "/wasps-beehives-uk",
     "description": "UK beekeeper guide to wasps attacking beehives, including signs, prevention, entrance reduction, robbing risk, weak colonies and what to do during an attack.",
     "keywords": "wasps attacking beehives UK, wasps killing bees, wasp robbing hive, bees fighting wasps, protect hive from wasps UK"
   },
