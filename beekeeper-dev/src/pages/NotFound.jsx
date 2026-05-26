@@ -5,7 +5,7 @@ const NotFound = () => {
     <div className="flex flex-col items-center justify-center h-full text-center space-y-4 relative">
       {/* Close Button */}
       <a
-        href="https://www.beezknees.co.uk/"
+        href="https://www.beezknees.co.uk"
         className="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-xl font-bold"
         aria-label="Close and return to main site"
       >

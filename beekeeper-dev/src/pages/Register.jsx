@@ -101,7 +101,7 @@ const Register = () => {
     <div className="relative max-w-md mx-auto mt-20 bg-white p-8 rounded-lg shadow-lg border border-gray-100">
       <button
         className="absolute top-3 right-4 text-gray-400 hover:text-gray-700 text-xl font-bold"
-        onClick={() => (window.location.href = "https://www.beezknees.co.uk/")}
+        onClick={() => (window.location.href = "https://www.beezknees.co.uk")}
         aria-label="Close"
       >
         ×
