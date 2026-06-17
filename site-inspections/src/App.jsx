@@ -194,6 +194,12 @@ export default function App() {
   }
 
   async function exportWord() {
+    alert(
+  "Inspector 1: " +
+    inspection.inspectorOne +
+    "\nInspector 2: " +
+    inspection.inspectorTwo
+);
     const inspectorText = getInspectorText(inspection);
 
     const siteFaultsHtml =
