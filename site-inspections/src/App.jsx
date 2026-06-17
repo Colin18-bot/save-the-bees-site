@@ -21,6 +21,30 @@ function getArchiveLabel(item) {
   return `${site}${area}`;
 }
 
+function getInspectorText(inspection) {
+  const inspectorOne = inspection.inspectorOne?.trim();
+  const inspectorTwo = inspection.inspectorTwo?.trim();
+
+  if (inspectorOne && inspectorTwo) return `${inspectorOne} and ${inspectorTwo}`;
+  if (inspectorOne) return inspectorOne;
+  if (inspectorTwo) return inspectorTwo;
+
+  return "________";
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function getPhotoSrc(snag) {
+  return snag.photo || snag.photoPreview || snag.image || snag.imageUrl || "";
+}
+
 const navItems = [
   { id: "details", label: "Details", icon: "⌂" },
   { id: "site", label: "Site", icon: "✓" },
@@ -150,31 +174,40 @@ export default function App() {
     const siteFaultsHtml =
       selectedSiteFaults.length > 0
         ? `<ul>${selectedSiteFaults
-            .map((fault) => `<li>${fault}</li>`)
+            .map((fault) => `<li>${escapeHtml(fault)}</li>`)
             .join("")}</ul>`
         : "<p>No site-wide issues recorded.</p>";
 
     const snagRowsHtml =
       snags.length > 0
         ? snags
-            .map(
-              (snag) => `
-              <tr>
-                <td>${snag.street || ""}</td>
-                <td>${snag.assetType || ""}<br><strong>${
-                snag.reference || ""
-              }</strong></td>
-                <td>
-                  <ul>
-                    ${snag.faults.map((fault) => `<li>${fault}</li>`).join("")}
-                  </ul>
-                </td>
-                <td>${
-                  snag.photo ? `<img src="${snag.photo}" width="120" />` : ""
-                }</td>
-              </tr>
-            `
-            )
+            .map((snag) => {
+              const photoSrc = getPhotoSrc(snag);
+
+              return `
+                <tr>
+                  <td>${escapeHtml(snag.street)}</td>
+                  <td>
+                    ${escapeHtml(snag.assetType)}<br>
+                    <strong>${escapeHtml(snag.reference)}</strong>
+                  </td>
+                  <td>
+                    <ul>
+                      ${(snag.faults || [])
+                        .map((fault) => `<li>${escapeHtml(fault)}</li>`)
+                        .join("")}
+                    </ul>
+                  </td>
+                  <td>
+                    ${
+                      photoSrc
+                        ? `<img src="${photoSrc}" width="180" style="max-width:180px;height:auto;" />`
+                        : ""
+                    }
+                  </td>
+                </tr>
+              `;
+            })
             .join("")
         : `<tr><td colspan="4">No asset defects recorded.</td></tr>`;
 
@@ -187,20 +220,23 @@ export default function App() {
             table { width: 100%; border-collapse: collapse; }
             th, td { border: 1px solid #000; padding: 8px; vertical-align: top; }
             th { background: #eee; }
+            img { max-width: 180px; height: auto; }
           </style>
         </head>
         <body>
           <h1>Street Lighting Inspection Report</h1>
 
-       <p>
-          The development at <strong>${inspection.siteName || "________"}</strong>
-          was inspected on <strong>${formatDateUK(inspection.inspectionDate)}</strong>
-          by <strong>${inspection.inspectorOne || "________"}${
-            inspection.inspectorTwo ? ` and ${inspection.inspectorTwo}` : ""
-          }</strong>
-          and I can confirm that it was not up to the required standard of adoption
-          for the following reasons:
-        </p>
+          <p>
+            The development at <strong>${escapeHtml(
+              inspection.siteName || "________"
+            )}</strong>
+            was inspected on <strong>${escapeHtml(
+              formatDateUK(inspection.inspectionDate)
+            )}</strong>
+            by <strong>${escapeHtml(getInspectorText(inspection))}</strong>
+            and I can confirm that it was not up to the required standard of adoption
+            for the following reasons:
+          </p>
 
           <h2>Site-Wide Issues</h2>
           ${siteFaultsHtml}
@@ -273,9 +309,10 @@ export default function App() {
             <p>
               The development at{" "}
               <strong>{inspection.siteName || "________"}</strong> was inspected
-              on <strong>{formatDateUK(inspection.inspectionDate)}</strong> and I
-              can confirm that it was not up to the required standard of adoption
-              for the following reasons:
+              on <strong>{formatDateUK(inspection.inspectionDate)}</strong> by{" "}
+              <strong>{getInspectorText(inspection)}</strong> and I can confirm
+              that it was not up to the required standard of adoption for the
+              following reasons:
             </p>
           </div>
 
