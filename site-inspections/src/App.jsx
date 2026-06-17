@@ -171,6 +171,13 @@ export default function App() {
   }
 
   function exportWord() {
+
+        const inspectorText =
+      [inspection.inspectorOne, inspection.inspectorTwo]
+        .map((name) => (name || "").trim())
+        .filter(Boolean)
+        .join(" and ") || "________";
+
     const siteFaultsHtml =
       selectedSiteFaults.length > 0
         ? `<ul>${selectedSiteFaults
@@ -233,12 +240,19 @@ export default function App() {
             was inspected on <strong>${escapeHtml(
               formatDateUK(inspection.inspectionDate)
             )}</strong>
-            by <strong>${escapeHtml(getInspectorText(inspection))}</strong>
+            by <strong>${escapeHtml(inspectorText)}</strong>
             and I can confirm that it was not up to the required standard of adoption
             for the following reasons:
-          </p>
+         </p>
 
-          <h2>Site-Wide Issues</h2>
+<table>
+  <tr>
+    <th>Inspector(s)</th>
+    <td>${escapeHtml(inspectorText)}</td>
+  </tr>
+</table>
+
+<h2>Site-Wide Issues</h2>
           ${siteFaultsHtml}
 
           <h2>Asset Defect Schedule</h2>
