@@ -21,28 +21,15 @@ function getArchiveLabel(item) {
   return `${site}${area}`;
 }
 
-function getInspectorText(inspection) {
-  const inspectorOne = inspection.inspectorOne?.trim();
-  const inspectorTwo = inspection.inspectorTwo?.trim();
+function getInspectorNames(inspection) {
+  const inspectorOne = (inspection.inspectorOne || "").trim();
+  const inspectorTwo = (inspection.inspectorTwo || "").trim();
 
   if (inspectorOne && inspectorTwo) return `${inspectorOne} and ${inspectorTwo}`;
   if (inspectorOne) return inspectorOne;
   if (inspectorTwo) return inspectorTwo;
 
   return "________";
-}
-
-function escapeHtml(value) {
-  return String(value || "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function getPhotoSrc(snag) {
-  return snag.photo || snag.photoPreview || snag.image || snag.imageUrl || "";
 }
 
 const navItems = [
@@ -171,17 +158,12 @@ export default function App() {
   }
 
   function exportWord() {
-
-        const inspectorText =
-      [inspection.inspectorOne, inspection.inspectorTwo]
-        .map((name) => (name || "").trim())
-        .filter(Boolean)
-        .join(" and ") || "________";
+    const inspectorNames = getInspectorNames(inspection);
 
     const siteFaultsHtml =
       selectedSiteFaults.length > 0
         ? `<ul>${selectedSiteFaults
-            .map((fault) => `<li>${escapeHtml(fault)}</li>`)
+            .map((fault) => `<li>${fault}</li>`)
             .join("")}</ul>`
         : "<p>No site-wide issues recorded.</p>";
 
@@ -189,29 +171,22 @@ export default function App() {
       snags.length > 0
         ? snags
             .map((snag) => {
-              const photoSrc = getPhotoSrc(snag);
+              const photo = snag.photo || snag.photoPreview || snag.image || "";
 
               return `
                 <tr>
-                  <td>${escapeHtml(snag.street)}</td>
-                  <td>
-                    ${escapeHtml(snag.assetType)}<br>
-                    <strong>${escapeHtml(snag.reference)}</strong>
-                  </td>
+                  <td>${snag.street || ""}</td>
+                  <td>${snag.assetType || ""}<br><strong>${
+                snag.reference || ""
+              }</strong></td>
                   <td>
                     <ul>
                       ${(snag.faults || [])
-                        .map((fault) => `<li>${escapeHtml(fault)}</li>`)
+                        .map((fault) => `<li>${fault}</li>`)
                         .join("")}
                     </ul>
                   </td>
-                  <td>
-                    ${
-                      photoSrc
-                        ? `<img src="${photoSrc}" width="180" style="max-width:180px;height:auto;" />`
-                        : ""
-                    }
-                  </td>
+                  <td>${photo ? `<img src="${photo}" width="180" />` : ""}</td>
                 </tr>
               `;
             })
@@ -234,25 +209,18 @@ export default function App() {
           <h1>Street Lighting Inspection Report</h1>
 
           <p>
-            The development at <strong>${escapeHtml(
-              inspection.siteName || "________"
+            The development at <strong>${inspection.siteName || "________"}</strong>
+            was inspected on <strong>${formatDateUK(
+              inspection.inspectionDate
             )}</strong>
-            was inspected on <strong>${escapeHtml(
-              formatDateUK(inspection.inspectionDate)
-            )}</strong>
-            by <strong>${escapeHtml(inspectorText)}</strong>
+            by <strong>${inspectorNames}</strong>
             and I can confirm that it was not up to the required standard of adoption
             for the following reasons:
-         </p>
+          </p>
 
-<table>
-  <tr>
-    <th>Inspector(s)</th>
-    <td>${escapeHtml(inspectorText)}</td>
-  </tr>
-</table>
+          <p><strong>Inspector(s):</strong> ${inspectorNames}</p>
 
-<h2>Site-Wide Issues</h2>
+          <h2>Site-Wide Issues</h2>
           ${siteFaultsHtml}
 
           <h2>Asset Defect Schedule</h2>
@@ -324,7 +292,7 @@ export default function App() {
               The development at{" "}
               <strong>{inspection.siteName || "________"}</strong> was inspected
               on <strong>{formatDateUK(inspection.inspectionDate)}</strong> by{" "}
-              <strong>{getInspectorText(inspection)}</strong> and I can confirm
+              <strong>{getInspectorNames(inspection)}</strong> and I can confirm
               that it was not up to the required standard of adoption for the
               following reasons:
             </p>
@@ -355,7 +323,11 @@ export default function App() {
                 <h2>Archive</h2>
               </div>
 
-              <button type="button" className="primary-action" onClick={archiveInspection}>
+              <button
+                type="button"
+                className="primary-action"
+                onClick={archiveInspection}
+              >
                 Archive Current Inspection
               </button>
 
@@ -369,14 +341,19 @@ export default function App() {
                     <div className="archive-item" key={item.id}>
                       <strong>{getArchiveLabel(item)}</strong>
                       <span>Inspection date: {formatDateUK(item.date)}</span>
-                      <span>Developer: {item.inspection?.developer || "Not entered"}</span>
+                      <span>
+                        Developer: {item.inspection?.developer || "Not entered"}
+                      </span>
                       <span>
                         {item.selectedSiteFaults?.length || 0} site issue(s) /{" "}
                         {item.snags?.length || 0} asset snag(s)
                       </span>
 
                       <div className="mini-actions">
-                        <button type="button" onClick={() => retrieveInspection(item)}>
+                        <button
+                          type="button"
+                          onClick={() => retrieveInspection(item)}
+                        >
                           Retrieve
                         </button>
 
@@ -403,7 +380,11 @@ export default function App() {
               </div>
 
               <div className="action-stack">
-                <button type="button" className="primary-action" onClick={exportWord}>
+                <button
+                  type="button"
+                  className="primary-action"
+                  onClick={exportWord}
+                >
                   Export Word Report
                 </button>
 
@@ -415,7 +396,10 @@ export default function App() {
                   Export Reusable Data File
                 </button>
 
-                <button type="button" onClick={() => fileInputRef.current.click()}>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current.click()}
+                >
                   Import Reusable Data File
                 </button>
               </div>
