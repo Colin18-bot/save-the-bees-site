@@ -21,15 +21,51 @@ function getArchiveLabel(item) {
   return `${site}${area}`;
 }
 
-function getInspectorNames(inspection) {
-  const inspectorOne = (inspection.inspectorOne || "").trim();
-  const inspectorTwo = (inspection.inspectorTwo || "").trim();
+function escapeHtml(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
-  if (inspectorOne && inspectorTwo) return `${inspectorOne} and ${inspectorTwo}`;
-  if (inspectorOne) return inspectorOne;
-  if (inspectorTwo) return inspectorTwo;
+function getInspectorText(inspection) {
+  const names = [
+    inspection.inspectorOne,
+    inspection.inspectorTwo,
+    inspection.inspector1,
+    inspection.inspector2,
+    inspection.inspector,
+    inspection.inspectorName,
+  ]
+    .map((name) => String(name || "").trim())
+    .filter(Boolean);
 
-  return "________";
+  return names.length > 0 ? names.join(" and ") : "________";
+}
+
+function getPhotoSrc(snag) {
+  return snag.photo || snag.photoPreview || snag.image || snag.imageUrl || "";
+}
+
+async function imageToDataUrl(src) {
+  if (!src) return "";
+  if (src.startsWith("data:")) return src;
+
+  try {
+    const response = await fetch(src);
+    const blob = await response.blob();
+
+    return await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = () => resolve("");
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    return src;
+  }
 }
 
 const navItems = [
@@ -157,40 +193,50 @@ export default function App() {
     localStorage.setItem("archivedInspections", JSON.stringify(updatedArchive));
   }
 
-  function exportWord() {
-    const inspectorNames = getInspectorNames(inspection);
+  async function exportWord() {
+    const inspectorText = getInspectorText(inspection);
 
     const siteFaultsHtml =
       selectedSiteFaults.length > 0
         ? `<ul>${selectedSiteFaults
-            .map((fault) => `<li>${fault}</li>`)
+            .map((fault) => `<li>${escapeHtml(fault)}</li>`)
             .join("")}</ul>`
         : "<p>No site-wide issues recorded.</p>";
 
     const snagRowsHtml =
       snags.length > 0
-        ? snags
-            .map((snag) => {
-              const photo = snag.photo || snag.photoPreview || snag.image || "";
+        ? (
+            await Promise.all(
+              snags.map(async (snag) => {
+                const originalPhoto = getPhotoSrc(snag);
+                const photoSrc = await imageToDataUrl(originalPhoto);
 
-              return `
-                <tr>
-                  <td>${snag.street || ""}</td>
-                  <td>${snag.assetType || ""}<br><strong>${
-                snag.reference || ""
-              }</strong></td>
-                  <td>
-                    <ul>
-                      ${(snag.faults || [])
-                        .map((fault) => `<li>${fault}</li>`)
-                        .join("")}
-                    </ul>
-                  </td>
-                  <td>${photo ? `<img src="${photo}" width="180" />` : ""}</td>
-                </tr>
-              `;
-            })
-            .join("")
+                return `
+                  <tr>
+                    <td>${escapeHtml(snag.street)}</td>
+                    <td>
+                      ${escapeHtml(snag.assetType)}<br>
+                      <strong>${escapeHtml(snag.reference)}</strong>
+                    </td>
+                    <td>
+                      <ul>
+                        ${(snag.faults || [])
+                          .map((fault) => `<li>${escapeHtml(fault)}</li>`)
+                          .join("")}
+                      </ul>
+                    </td>
+                    <td>
+                      ${
+                        photoSrc
+                          ? `<img src="${photoSrc}" width="180" style="width:180px;height:auto;" />`
+                          : ""
+                      }
+                    </td>
+                  </tr>
+                `;
+              })
+            )
+          ).join("")
         : `<tr><td colspan="4">No asset defects recorded.</td></tr>`;
 
     const html = `
@@ -198,8 +244,8 @@ export default function App() {
         <head>
           <meta charset="UTF-8">
           <style>
-            body { font-family: Arial, sans-serif; }
-            table { width: 100%; border-collapse: collapse; }
+            body { font-family: Arial, sans-serif; font-size: 11pt; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
             th, td { border: 1px solid #000; padding: 8px; vertical-align: top; }
             th { background: #eee; }
             img { max-width: 180px; height: auto; }
@@ -208,17 +254,44 @@ export default function App() {
         <body>
           <h1>Street Lighting Inspection Report</h1>
 
+          <table>
+            <tr>
+              <th>Site Name</th>
+              <td>${escapeHtml(inspection.siteName || "________")}</td>
+            </tr>
+            <tr>
+              <th>Developer</th>
+              <td>${escapeHtml(inspection.developer || "________")}</td>
+            </tr>
+            <tr>
+              <th>Area / Phase</th>
+              <td>${escapeHtml(inspection.area || "________")}</td>
+            </tr>
+            <tr>
+              <th>Section Type</th>
+              <td>${escapeHtml(inspection.sectionType || "________")}</td>
+            </tr>
+            <tr>
+              <th>Inspection Date</th>
+              <td>${escapeHtml(formatDateUK(inspection.inspectionDate))}</td>
+            </tr>
+            <tr>
+              <th>Inspector(s)</th>
+              <td>${escapeHtml(inspectorText)}</td>
+            </tr>
+          </table>
+
           <p>
-            The development at <strong>${inspection.siteName || "________"}</strong>
-            was inspected on <strong>${formatDateUK(
-              inspection.inspectionDate
+            The development at <strong>${escapeHtml(
+              inspection.siteName || "________"
             )}</strong>
-            by <strong>${inspectorNames}</strong>
+            was inspected on <strong>${escapeHtml(
+              formatDateUK(inspection.inspectionDate)
+            )}</strong>
+            by <strong>${escapeHtml(inspectorText)}</strong>
             and I can confirm that it was not up to the required standard of adoption
             for the following reasons:
           </p>
-
-          <p><strong>Inspector(s):</strong> ${inspectorNames}</p>
 
           <h2>Site-Wide Issues</h2>
           ${siteFaultsHtml}
@@ -249,6 +322,7 @@ export default function App() {
     link.href = URL.createObjectURL(blob);
     link.download = `${inspection.siteName || "site-inspection"}-report.doc`;
     link.click();
+    URL.revokeObjectURL(link.href);
   }
 
   return (
@@ -292,7 +366,7 @@ export default function App() {
               The development at{" "}
               <strong>{inspection.siteName || "________"}</strong> was inspected
               on <strong>{formatDateUK(inspection.inspectionDate)}</strong> by{" "}
-              <strong>{getInspectorNames(inspection)}</strong> and I can confirm
+              <strong>{getInspectorText(inspection)}</strong> and I can confirm
               that it was not up to the required standard of adoption for the
               following reasons:
             </p>
@@ -323,11 +397,7 @@ export default function App() {
                 <h2>Archive</h2>
               </div>
 
-              <button
-                type="button"
-                className="primary-action"
-                onClick={archiveInspection}
-              >
+              <button type="button" className="primary-action" onClick={archiveInspection}>
                 Archive Current Inspection
               </button>
 
@@ -350,10 +420,7 @@ export default function App() {
                       </span>
 
                       <div className="mini-actions">
-                        <button
-                          type="button"
-                          onClick={() => retrieveInspection(item)}
-                        >
+                        <button type="button" onClick={() => retrieveInspection(item)}>
                           Retrieve
                         </button>
 
@@ -380,11 +447,7 @@ export default function App() {
               </div>
 
               <div className="action-stack">
-                <button
-                  type="button"
-                  className="primary-action"
-                  onClick={exportWord}
-                >
+                <button type="button" className="primary-action" onClick={exportWord}>
                   Export Word Report
                 </button>
 
@@ -396,10 +459,7 @@ export default function App() {
                   Export Reusable Data File
                 </button>
 
-                <button
-                  type="button"
-                  onClick={() => fileInputRef.current.click()}
-                >
+                <button type="button" onClick={() => fileInputRef.current.click()}>
                   Import Reusable Data File
                 </button>
               </div>
