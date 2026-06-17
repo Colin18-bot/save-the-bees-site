@@ -192,12 +192,15 @@ export default function App() {
         <body>
           <h1>Street Lighting Inspection Report</h1>
 
-          <p>
-            The development at <strong>${inspection.siteName || "________"}</strong>
-            was inspected on <strong>${formatDateUK(inspection.inspectionDate)}</strong>
-            and I can confirm that it was not up to the required standard of adoption
-            for the following reasons:
-          </p>
+       <p>
+          The development at <strong>${inspection.siteName || "________"}</strong>
+          was inspected on <strong>${formatDateUK(inspection.inspectionDate)}</strong>
+          by <strong>${inspection.inspectorOne || "________"}${
+            inspection.inspectorTwo ? ` and ${inspection.inspectorTwo}` : ""
+          }</strong>
+          and I can confirm that it was not up to the required standard of adoption
+          for the following reasons:
+        </p>
 
           <h2>Site-Wide Issues</h2>
           ${siteFaultsHtml}
