@@ -30,17 +30,21 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function readDomValue(id) {
+  const element = document.getElementById(id);
+  return element?.value || "";
+}
+
 function getInspectorText(inspection) {
-  const names = [
-    inspection.inspectorOne,
-    inspection.inspectorTwo,
-    inspection.inspector1,
-    inspection.inspector2,
-    inspection.inspector,
-    inspection.inspectorName,
-  ]
-    .map((name) => String(name || "").trim())
-    .filter(Boolean);
+  const inspectorOne =
+    String(inspection.inspectorOne || "").trim() ||
+    String(readDomValue("inspectorOne") || "").trim();
+
+  const inspectorTwo =
+    String(inspection.inspectorTwo || "").trim() ||
+    String(readDomValue("inspectorTwo") || "").trim();
+
+  const names = [inspectorOne, inspectorTwo].filter(Boolean);
 
   return names.length > 0 ? names.join(" and ") : "________";
 }
@@ -64,7 +68,7 @@ async function imageToDataUrl(src) {
       reader.readAsDataURL(blob);
     });
   } catch {
-    return src;
+    return "";
   }
 }
 
@@ -120,6 +124,7 @@ export default function App() {
     link.href = URL.createObjectURL(blob);
     link.download = `${inspection.siteName || "site-inspection"}.json`;
     link.click();
+    URL.revokeObjectURL(link.href);
   }
 
   function importInspection(event) {
@@ -194,12 +199,6 @@ export default function App() {
   }
 
   async function exportWord() {
-    alert(
-  "Inspector 1: " +
-    inspection.inspectorOne +
-    "\nInspector 2: " +
-    inspection.inspectorTwo
-);
     const inspectorText = getInspectorText(inspection);
 
     const siteFaultsHtml =
@@ -246,6 +245,7 @@ export default function App() {
         : `<tr><td colspan="4">No asset defects recorded.</td></tr>`;
 
     const html = `
+      <!DOCTYPE html>
       <html>
         <head>
           <meta charset="UTF-8">
@@ -261,30 +261,40 @@ export default function App() {
           <h1>Street Lighting Inspection Report</h1>
 
           <table>
-            <tr>
-              <th>Site Name</th>
-              <td>${escapeHtml(inspection.siteName || "________")}</td>
-            </tr>
-            <tr>
-              <th>Developer</th>
-              <td>${escapeHtml(inspection.developer || "________")}</td>
-            </tr>
-            <tr>
-              <th>Area / Phase</th>
-              <td>${escapeHtml(inspection.area || "________")}</td>
-            </tr>
-            <tr>
-              <th>Section Type</th>
-              <td>${escapeHtml(inspection.sectionType || "________")}</td>
-            </tr>
-            <tr>
-              <th>Inspection Date</th>
-              <td>${escapeHtml(formatDateUK(inspection.inspectionDate))}</td>
-            </tr>
-            <tr>
-              <th>Inspector(s)</th>
-              <td>${escapeHtml(inspectorText)}</td>
-            </tr>
+            <tbody>
+              <tr>
+                <th>Site Name</th>
+                <td>${escapeHtml(inspection.siteName || "________")}</td>
+              </tr>
+              <tr>
+                <th>Developer</th>
+                <td>${escapeHtml(inspection.developer || "________")}</td>
+              </tr>
+              <tr>
+                <th>Area / Phase</th>
+                <td>${escapeHtml(inspection.area || "________")}</td>
+              </tr>
+              <tr>
+                <th>Section Type</th>
+                <td>${escapeHtml(inspection.sectionType || "________")}</td>
+              </tr>
+              <tr>
+                <th>Inspection Date</th>
+                <td>${escapeHtml(formatDateUK(inspection.inspectionDate))}</td>
+              </tr>
+              <tr>
+                <th>Inspector 1</th>
+                <td>${escapeHtml(String(inspection.inspectorOne || readDomValue("inspectorOne") || "________").trim())}</td>
+              </tr>
+              <tr>
+                <th>Inspector 2</th>
+                <td>${escapeHtml(String(inspection.inspectorTwo || readDomValue("inspectorTwo") || "________").trim())}</td>
+              </tr>
+              <tr>
+                <th>Inspector(s)</th>
+                <td>${escapeHtml(inspectorText)}</td>
+              </tr>
+            </tbody>
           </table>
 
           <p>
@@ -321,13 +331,15 @@ export default function App() {
     `;
 
     const blob = new Blob(["\ufeff", html], {
-      type: "application/msword",
+      type: "application/msword;charset=utf-8",
     });
 
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = `${inspection.siteName || "site-inspection"}-report.doc`;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
     URL.revokeObjectURL(link.href);
   }
 

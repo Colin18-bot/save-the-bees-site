@@ -48,16 +48,20 @@ export default function InspectionDetails({ inspection, setInspection }) {
         />
 
         <input
+          id="inspectorOne"
+          name="inspectorOne"
           type="text"
           placeholder="Inspector 1"
-          value={inspection.inspectorOne}
+          value={inspection.inspectorOne || ""}
           onChange={(e) => updateField("inspectorOne", e.target.value)}
         />
 
         <input
+          id="inspectorTwo"
+          name="inspectorTwo"
           type="text"
           placeholder="Inspector 2"
-          value={inspection.inspectorTwo}
+          value={inspection.inspectorTwo || ""}
           onChange={(e) => updateField("inspectorTwo", e.target.value)}
         />
       </div>
