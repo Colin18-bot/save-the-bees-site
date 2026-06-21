@@ -1,0 +1,46 @@
+window.beezKneesBlogPosts = [
+  {
+    title: "From Fear to Fascination: My Unexpected Journey into Beekeeping",
+    slug: "why-i-started-beekeeping",
+    category: "My Beekeeping Journey",
+    date: "18 June 2026",
+    isoDate: "2026-06-18",
+    isoModified: "2026-06-18",
+    image: "assets/images/honeybee-on-orange-flower.webp",
+    alt: "Honeybee on orange flower",
+    excerpt: "The personal story behind how one unexpected swarm changed fear into fascination and started my beekeeping journey."
+  },
+  {
+    title: "How Beekeeping Helps the Environment",
+    slug: "how-beekeeping-helps-the-environment",
+    category: "Environment",
+    date: "18 June 2026",
+    isoDate: "2026-06-18",
+    isoModified: "2026-06-18",
+    image: "assets/images/bee-on-pink-flower.webp",
+    alt: "Bee on pink flower",
+    excerpt: "A personal look at pollination, biodiversity, local ecosystems and why keeping bees changed how I see nature."
+  },
+  {
+    title: "Starting Your Own Beehive: Lessons From My Personal Journey",
+    slug: "starting-your-own-beehive",
+    category: "Beginner Beekeeping",
+    date: "18 June 2026",
+    isoDate: "2026-06-18",
+    isoModified: "2026-06-18",
+    image: "assets/images/apiary.webp",
+    alt: "Beehive in an apiary",
+    excerpt: "Practical beginner lessons from my own path into beekeeping, from choosing a hive to regular inspections."
+  },
+  {
+    title: "Garden Beekeeping: Embracing the Buzz in Your Garden",
+    slug: "garden-beekeeping-uk",
+    category: "Garden Beekeeping",
+    date: "18 June 2026",
+    isoDate: "2026-06-18",
+    isoModified: "2026-06-18",
+    image: "assets/images/garden-apiary-with-beehives.webp",
+    alt: "Garden apiary with beehives",
+    excerpt: "How garden beekeeping can work in the UK, based on my own experience of keeping bees close to home."
+  }
+];

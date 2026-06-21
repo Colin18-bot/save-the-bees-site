@@ -117,6 +117,31 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://beezknees.co.uk/blog</loc>
+    <lastmod>2026-06-18</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/blog/posts/why-i-started-beekeeping</loc>
+    <lastmod>2026-06-18</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/blog/posts/how-beekeeping-helps-the-environment</loc>
+    <lastmod>2026-06-18</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/blog/posts/starting-your-own-beehive</loc>
+    <lastmod>2026-06-18</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/blog/posts/garden-beekeeping-uk</loc>
+    <lastmod>2026-06-18</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://beezknees.co.uk/beekeeping-insurance-uk</loc>
     <lastmod>2026-05-23</lastmod>
     <priority>0.5</priority>
