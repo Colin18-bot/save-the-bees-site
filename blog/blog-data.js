@@ -42,5 +42,16 @@ window.beezKneesBlogPosts = [
     image: "assets/images/garden-apiary-with-beehives.webp",
     alt: "Garden apiary with beehives",
     excerpt: "How garden beekeeping can work in the UK, based on my own experience of keeping bees close to home."
+  },
+  {
+    title: "What I Wish I Knew Before Buying My First Bees",
+    slug: "what-i-wish-i-knew-before-buying-my-first-bees",
+    category: "Beginner Beekeeping",
+    date: "21 June 2026",
+    isoDate: "2026-06-21",
+    isoModified: "2026-06-21",
+    image: "assets/images/my-first-swarm.webp",
+    alt: "The first swarm of honey bees that arrived in my garden and started my beekeeping journey",
+    excerpt: "The lessons I wish I had known before buying my first bees, including equipment costs, honey extraction kit, time commitments and the value of joining a beekeeping association."
   }
 ];
