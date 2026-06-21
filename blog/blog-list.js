@@ -40,23 +40,25 @@
     `;
   }
 
-  function getFilteredPosts() {
-    const query = currentQuery.toLowerCase().trim();
+ function getFilteredPosts() {
+  const query = currentQuery.toLowerCase().trim();
 
-    if (!query) return sortedPosts;
+  const latestPosts = sortedPosts.slice(1);
 
-    return sortedPosts.filter(function (post) {
-      const searchText = [
-        post.title,
-        post.category,
-        post.date,
-        post.excerpt,
-        post.slug
-      ].join(" ").toLowerCase();
+  if (!query) return latestPosts;
 
-      return searchText.includes(query);
-    });
-  }
+  return latestPosts.filter(function (post) {
+    const searchText = [
+      post.title,
+      post.category,
+      post.date,
+      post.excerpt,
+      post.slug
+    ].join(" ").toLowerCase();
+
+    return searchText.includes(query);
+  });
+}
 
   function renderPosts() {
     if (!grid) return;

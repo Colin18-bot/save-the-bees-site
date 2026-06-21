@@ -1,70 +1,4 @@
-
-/* BeezKnees Blog additions - simple version */
-.blog-hero .hero-card { max-width: 850px; }
-.blog-search-box { margin-top: 1.2rem; display:flex; gap:.6rem; flex-wrap:wrap; }
-.blog-search-box input { flex:1 1 280px; padding:.85rem 1rem; border:1px solid rgba(38,59,32,.25); border-radius:999px; font-size:1rem; }
-.blog-search-box button { border:0; cursor:pointer; }
-.blog-topic-row { display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1rem; }
-.blog-topic-row a, .blog-pill { display:inline-flex; align-items:center; gap:.35rem; padding:.45rem .75rem; border-radius:999px; background:#f5edc6; color:#263b20; font-weight:700; text-decoration:none; }
-.blog-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1.25rem; }
-.blog-card { background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,.08); border:1px solid rgba(38,59,32,.08); display:flex; flex-direction:column; }
-.blog-card img { width:100%; height:220px; object-fit:cover; display:block; }
-.blog-card-content { padding:1.25rem; display:flex; flex-direction:column; gap:.55rem; flex:1; }
-.blog-card .blog-meta { margin:0; color:#5d6a57; font-size:.92rem; font-weight:700; }
-.blog-card h2, .blog-card h3 { margin:.1rem 0; color:#263b20; }
-.blog-card p { margin:0; }
-.blog-card .btn { margin-top:auto; align-self:flex-start; }
-.featured-blog-card { display:grid; grid-template-columns:1.05fr .95fr; gap:0; align-items:stretch; }
-.featured-blog-card img { height:100%; min-height:360px; object-fit:cover; }
-.featured-blog-content { padding:2rem; }
-.blog-layout { display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:1.5rem; align-items:start; }
-.blog-article-card { background:#fff; border-radius:18px; box-shadow:0 8px 24px rgba(0,0,0,.08); padding:2rem; border:1px solid rgba(38,59,32,.08); }
-.blog-article-card h1 { margin-top:.2rem; color:#263b20; }
-.blog-article-card h2 { margin-top:2rem; color:#263b20; }
-.article-meta, .article-updated { color:#5d6a57; font-size:.96rem; }
-.blog-main-image { width:100%; border-radius:18px; margin:1.4rem 0; display:block; max-height:520px; object-fit:cover; }
-.blog-article-card p { line-height:1.75; }
-.blog-sidebar-card { background:#fff; border-radius:18px; box-shadow:0 8px 24px rgba(0,0,0,.08); padding:1.5rem; border:1px solid rgba(38,59,32,.08); }
-.blog-sidebar-card + .blog-sidebar-card { margin-top:1rem; }
-.blog-sidebar-card h2, .blog-sidebar-card h3 { color:#263b20; margin-top:0; }
-.blog-sidebar-card ul { padding-left:1.2rem; }
-.blog-sidebar-card li { margin:.45rem 0; }
-.blog-follow, .related-resources, .blog-tags { margin-top:2rem; padding:1.35rem; border-radius:16px; background:#f8faf5; border:1px solid #e1e8d8; }
-.blog-follow a, .related-resources a, .blog-sidebar-card a { color:#2f6b2f; font-weight:700; }
-.blog-tags span { display:inline-block; background:#eef5e8; color:#2f5c2f; padding:.4rem .7rem; border-radius:999px; margin:.25rem; font-size:.9rem; font-weight:700; }
-.back-to-blog { display:inline-block; color:#2f6b2f; font-weight:700; text-decoration:none; margin-bottom:.8rem; }
-.blog-note { background:#f7f4e8; border-left:5px solid #d6a21d; padding:1.15rem; border-radius:12px; margin:1.5rem 0; }
-.nav-menu > li > a.active, .mobile-links a.active, .footer-links a.active { background:rgba(255,255,255,.12); color:#fff; }
-.footer-links a.active { background:transparent; color:inherit; font-weight:700; }
-@media (max-width: 900px) { .blog-grid { grid-template-columns:1fr; } .featured-blog-card, .blog-layout { grid-template-columns:1fr; } .featured-blog-card img { min-height:240px; } .blog-article-card { padding:1.25rem; } }
-.blog-pagination {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 2rem;
-  flex-wrap: wrap;
-}
-
-.blog-page-btn {
-  border: 1px solid #d6d3d1;
-  background: #ffffff;
-  padding: 0.55rem 0.85rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.blog-page-btn:hover,
-.blog-page-btn.active {
-  background: #facc15;
-  border-color: #ca8a04;
-}
-
-/* Make Featured Post and Latest Articles pills visible */
-.featured-blog-content .hero-kicker,
-#latest-posts .hero-kicker {
-  background: #f5edc6;
-  border: 1px solid #e6c96b;/* =========================================================
+/* =========================================================
    BEEZKNEES BLOG STYLES
 ========================================================= */
 
@@ -187,6 +121,14 @@
   padding: 2rem;
 }
 
+/* Make Featured Post and Latest Articles pills visible */
+.featured-blog-content .hero-kicker,
+#latest-posts .hero-kicker {
+  background: #f5edc6;
+  border: 1px solid #e6c96b;
+  color: #263b20;
+}
+
 /* Blog article layout */
 .blog-layout {
   display: grid;
@@ -215,6 +157,30 @@
 
 .blog-article-card p {
   line-height: 1.75;
+}
+
+/* Blog article main content links - match main website orange underline */
+.blog-article-card a:not(.btn),
+.blog-follow a:not(.btn),
+.related-resources a:not(.btn),
+.blog-sidebar-card a:not(.btn) {
+  color: var(--green-900);
+  border-bottom: 2px solid rgba(242, 183, 5, 0.6);
+  padding-bottom: 1px;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.blog-article-card a:not(.btn):hover,
+.blog-article-card a:not(.btn):focus,
+.blog-follow a:not(.btn):hover,
+.blog-follow a:not(.btn):focus,
+.related-resources a:not(.btn):hover,
+.related-resources a:not(.btn):focus,
+.blog-sidebar-card a:not(.btn):hover,
+.blog-sidebar-card a:not(.btn):focus {
+  border-bottom-color: var(--yellow-500);
+  outline: none;
 }
 
 .article-meta,
@@ -268,13 +234,6 @@
   border-radius: 16px;
   background: #f8faf5;
   border: 1px solid #e1e8d8;
-}
-
-.blog-follow a,
-.related-resources a,
-.blog-sidebar-card a {
-  color: #2f6b2f;
-  font-weight: 700;
 }
 
 .blog-tags span {
@@ -342,14 +301,6 @@
   border-color: #ca8a04;
 }
 
-/* Make Featured Post and Latest Articles pills visible */
-.featured-blog-content .hero-kicker,
-#latest-posts .hero-kicker {
-  background: #f5edc6;
-  border: 1px solid #e6c96b;
-  color: #263b20;
-}
-
 /* Related posts */
 .related-posts {
   margin-top: 2rem;
@@ -357,6 +308,19 @@
 
 .related-posts h2 {
   margin-bottom: 1rem;
+}
+
+/* Facebook links in Join the Conversation section */
+
+.blog-follow a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.blog-follow .fa-facebook-f {
+  color: inherit;
+  font-size: 0.95rem;
 }
 
 /* =========================================================
@@ -380,15 +344,4 @@
   .blog-article-card {
     padding: 1.25rem;
   }
-}
-  color: #263b20;
-}
-
-/* Related Posts */
-.related-posts {
-  margin-top: 2rem;
-}
-
-.related-posts h2 {
-  margin-bottom: 1rem;
 }
