@@ -1,4 +1,15 @@
 window.beezKneesBlogPosts = [
+    {
+    title: "I Found a Spotty Brood Pattern During an Inspection — It Turned Out to Be European Foulbrood",
+    slug: "spotty-brood-pattern-european-foulbrood",
+    category: "Bee Health",
+    date: "22 June 2026",
+    isoDate: "2026-06-22",
+    isoModified: "2026-06-22",
+    image: "assets/images/spotty-brood-pattern-efb.webp",
+    alt: "Spotty brood pattern in a honey bee frame later confirmed as European Foulbrood",
+    excerpt: "A real UK beekeeping inspection where low hive activity, a spotty brood pattern and abnormal larvae led to a confirmed case of European Foulbrood."
+  },
   {
     title: "From Fear to Fascination: My Unexpected Journey into Beekeeping",
     slug: "why-i-started-beekeeping",
