@@ -14,7 +14,7 @@ const toc = [
   { id: "seasonal-guide", title: "Year in the Apiary Seasonal Guide" },
   { id: "business-inventory", title: "Inventory, Sales & Expenses" },
   { id: "currency-defaults", title: "Default Currency (How It Works)" },
-  { id: "reports", title: "Reports" },
+  { id: "reports", title: "Reports Centre" },
   { id: "workflows", title: "Typical Workflows" },
   { id: "nfc", title: "NFC (Premium): How It Works" },
   { id: "weather-maps-photos", title: "Weather, Maps & Photos" },
@@ -1205,55 +1205,49 @@ export default function Help() {
             {/* Reports */}
             <section id="reports">
               <h2 className="text-2xl font-bold mb-3">
-                Reports <Badge tone="blue">Premium</Badge>
+                Reports Centre <Badge tone="blue">Premium</Badge>
               </h2>
+
               <ul className="list-disc pl-6 space-y-1">
                 <li>
-                  Open <strong>Reports</strong> from the Sidebar to access the main{" "}
-                  <strong>Reports &amp; Exports</strong> page.
+                  Open <strong>Reports Centre</strong> from the Sidebar to access professional reports and exports.
                 </li>
                 <li>
-                  On <strong>Reports &amp; Exports</strong> you can:
-                  <ul className="list-disc pl-6 mt-1 space-y-1">
-                    <li>
-                      Filter by <strong>apiary</strong> and <strong>hive</strong>.
-                    </li>
-                    <li>
-                      Choose a date range and select which sections to include:
-                      <strong> Inspections</strong>, <strong>Tasks</strong>,{" "}
-                      <strong>Logbook</strong>, and <strong>NFC tagged hives</strong>.
-                    </li>
-                    <li>Print the page for a clean, multi-section report.</li>
-                    <li>
-                      Download CSV:
-                      <ul className="list-disc pl-6 mt-1">
-                        <li>
-                          <strong>Combined CSV</strong> with a <code>type</code>{" "}
-                          column.
-                        </li>
-                        <li>
-                          Separate CSVs for Inspections, Tasks, Logbook, and NFC tags.
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
+                  Filter reports by <strong>apiary</strong>, <strong>hive</strong> and <strong>date range</strong>.
                 </li>
                 <li>
-                  Use the dedicated <strong>Profit &amp; Loss</strong> view to see
-                  a simple summary of income versus expenses, formatted with your
-                  default currency.
+                  Reports include an <strong>Executive Summary</strong>, <strong>Hive Intelligence</strong>, an <strong>Inspection Timeline</strong>, detailed records, tasks, logbook entries and photographs.
                 </li>
                 <li>
-                  You can also use the{" "}
-                  <strong>Dashboard → Reports &amp; Export</strong> card to jump
-                  straight into a filtered print/export view.
+                  Inspection findings are grouped by date so each inspection is easier to review.
                 </li>
                 <li>
-                  For raw data, go to <strong>Settings → Export</strong> to
-                  download CSVs of your tables (plus <code>photos.csv</code> with
-                  image URLs).
+                  Use <strong>View Full Gallery</strong> to open inspection photographs in a larger viewer.
+                </li>
+                <li>
+                  Photographs can be downloaded from the gallery.
+                </li>
+                <li>
+                  Inspection summaries can be shared using your device’s native sharing feature where supported.
+                </li>
+                <li>
+                  Your selected filters are automatically remembered when you return to the Reports Centre.
+                </li>
+                <li>
+                  Download CSV exports, including combined exports and separate files for inspections, tasks, logbook entries and NFC tags.
                 </li>
               </ul>
+
+              <div className="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
+                <h3 className="font-semibold text-blue-900">Tips for better reports</h3>
+                <ul className="list-disc pl-6 mt-2 space-y-1 text-blue-900">
+                  <li>Complete as many inspection fields as possible.</li>
+                  <li>Add photographs during inspections.</li>
+                  <li>Use date filters for seasonal or annual reports.</li>
+                  <li>Review the Hive Intelligence summary for each inspection.</li>
+                  <li>Share inspection summaries with mentors or fellow beekeepers when seeking advice.</li>
+                </ul>
+              </div>
             </section>
 
             {/* Workflows */}
@@ -1773,6 +1767,15 @@ per apiary.
                 <li>
                   <strong>Back button on siting guides doesn’t return:</strong> the Back button relies on browser history. If you open a
                   guide in a new tab, there may be no history to go back to—open the guide in the same tab from New Apiary / New Hive.
+                </li>
+                <li>
+                  <strong>Why doesn’t the Share button always work?</strong> HiveTag uses your device’s built-in sharing features. On supported mobile devices, you can share inspection summaries using apps such as WhatsApp, Messages or Email. Some desktop browsers and localhost development environments do not support native sharing, so HiveTag will offer a copy-to-clipboard fallback instead.
+                </li>
+                <li>
+                  <strong>Why did my report filters stay the same?</strong> HiveTag remembers your last selected apiary, hive and date range so you can continue where you left off.
+                </li>
+                <li>
+                  <strong>Can I download inspection photographs?</strong> Yes. Open the inspection gallery using <strong>View Full Gallery</strong>, then use the <strong>Download</strong> button.
                 </li>
               </ul>
             </section>

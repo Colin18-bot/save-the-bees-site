@@ -9,6 +9,70 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 
+  {
+  version: "1.2.0",
+  released_at: "2026-06-25T18:00:00Z",
+
+  summary:
+  "Completely redesigned the Reports Centre into a professional reporting suite with executive summaries, grouped inspection intelligence, photo galleries, persistent report filters, enhanced sharing and significantly improved printable reports.",
+
+  added: [
+  "Added a completely redesigned **Professional Print Report** layout with a modern document-style presentation.",
+  "Added **Executive Summary** section providing an overview of the selected report.",
+  "Added **Inspection Timeline** showing inspections in chronological order.",
+  "Added grouped **Inspection Intelligence** so insights are organised by inspection date rather than individual alert cards.",
+  "Added **Colony Health Score** calculations to provide a quick assessment of inspection results.",
+  "Added automated **Recommendations** generated from inspection data.",
+  "Added **Photo Timeline** displaying inspection photographs alongside their inspection dates.",
+  "Added full-screen **Photo Gallery** with swipe-friendly viewing for inspection photographs.",
+  "Added image **Download** support from the gallery.",
+  "Added **Share Inspection** support using the browser's native sharing capabilities where available.",
+  "Added automatic report filter persistence so selected apiaries, hives and date ranges are restored after refreshing or returning to the page.",
+  "Added automatic regeneration of previously viewed reports after page reload."
+  ],
+
+  changed: [
+  "Completely redesigned the report layout to provide a cleaner, more professional printable document.",
+  "Inspection insights are now grouped into a single intelligence section for each inspection, making reports significantly easier to read.",
+  "Reorganised inspection records into collapsible sections to reduce excessive scrolling.",
+  "Improved photo presentation with dedicated gallery viewing while retaining inline thumbnails within reports.",
+  "Improved report navigation and readability across desktop and mobile devices.",
+  "Updated report sharing to provide graceful fallbacks when native browser sharing is unavailable.",
+  "Improved report generation workflow by preserving user selections between sessions."
+  ],
+
+  fixed: [
+  "Fixed report filters resetting after refreshing the page or returning from another browser tab.",
+  "Fixed image downloads previously opening a new browser tab instead of downloading directly.",
+  "Fixed duplicate gallery controls appearing within expanded inspection records.",
+  "Fixed inconsistent sharing behaviour by providing clipboard fallbacks when native sharing is unavailable.",
+  "Improved report stability when returning from gallery or download actions.",
+  "Improved desktop report layout consistency and overall presentation."
+  ],
+
+  removed: [
+  "Removed duplicate gallery controls from detailed inspection records.",
+  "Removed unnecessary repeated inspection insight cards in favour of grouped intelligence summaries."
+  ],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+  { label: "Reports Centre", to: "/reports/print" },
+  { label: "Inspections", to: "/inspections" },
+  { label: "Dashboard", to: "/dashboard" },
+  { label: "Pricing", to: "/pricing" }
+  ],
+
+  known_issues: [
+  "Native browser sharing depends on browser and operating system support. When unavailable, HiveTag automatically provides a copy-to-clipboard fallback.",
+  "Large inspection reports containing many photographs may take slightly longer to generate on older mobile devices.",
+  "Hive Intelligence analysis is currently based on recorded inspection data only. Future releases will introduce trend analysis across multiple inspections and enhanced colony intelligence."
+  ]
+  },
+
  {
   version: "1.1.6",
   released_at: "2026-05-03T22:00:00Z",

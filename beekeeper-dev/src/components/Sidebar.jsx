@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
 // APP_VERSION=1.2.3
-const APP_VERSION = "1.1.6";
+const APP_VERSION = "1.2.0";
 
 const Sidebar = ({ setIsMobileMenuOpen }) => {
   const [quickCreateOpen, setQuickCreateOpen] = useState(true);
@@ -140,7 +140,7 @@ const businessListLinks = userIsPremium
       { to: "/sales", label: "Sales" },
       { to: "/finance/expenses", label: "Expenses" },
       { to: "/reports/pnl", label: "Profit & Loss" },
-      { to: "/reports/print", label: "Reports" },
+      { to: "/reports/print", label: "Reports Centre" },
     ]
   : [
       { to: "/premium-required", label: "🔒 Inventory", lockedPremium: true },
