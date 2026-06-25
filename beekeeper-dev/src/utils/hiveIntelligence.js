@@ -324,6 +324,58 @@ export const compareInspections = (current = {}, previous = {}) => {
   return changes.length ? changes : ["No major changes detected compared with the previous inspection."];
 };
 
+export const analyzeInspectionSet = (inspections = []) => {
+  const orderedInspections = [...inspections].sort(
+    (a, b) =>
+      new Date(b.date || b.created_at || 0) -
+      new Date(a.date || a.created_at || 0)
+  );
+
+  const analysesById = new Map();
+  let totalHealthScore = 0;
+  let analysedCount = 0;
+
+  orderedInspections.forEach((inspection, index) => {
+    const previousInspection = orderedInspections[index + 1] || null;
+    const analysis = analyzeInspection(inspection);
+
+    const rawChanges = previousInspection
+      ? compareInspections(inspection, previousInspection)
+      : ["This is the first inspection available for comparison."];
+
+    const changesSincePrevious = rawChanges.map((change) => {
+      if (typeof change === "string") {
+        return {
+          title: "Change",
+          summary: change,
+        };
+      }
+
+      return change;
+    });
+
+    analysesById.set(inspection.id, {
+      ...analysis,
+      previousInspection,
+      changesSincePrevious,
+    });
+
+    totalHealthScore += analysis.healthScore || 0;
+    analysedCount += 1;
+  });
+
+  const averageHealthScore = analysedCount
+    ? Math.round(totalHealthScore / analysedCount)
+    : 0;
+
+  return {
+    orderedInspections,
+    analysesById,
+    averageHealthScore,
+    averageHealthBand: getHealthBand(averageHealthScore),
+  };
+};
+
 export const buildShareableInspectionSummary = (inspection = {}) => {
   const analysis = analyzeInspection(inspection);
 
