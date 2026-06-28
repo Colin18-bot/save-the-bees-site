@@ -724,7 +724,7 @@ const Settings = () => {
       <hr className="my-10" />
 
       {/* Export */}
-      <ExportSection includeImages={includeImages} setIncludeImages={setIncludeImages} showStatus={showStatus} />
+      <ExportSection showStatus={showStatus} />
 
       {/* Danger Zone */}
       <DangerZone
@@ -839,7 +839,7 @@ function BillingSection({ plan, subscriptionStatus, currentPeriodEnd, setPlan, s
   );
 }
 
-function ExportSection({ includeImages, setIncludeImages, showStatus }) {
+function ExportSection({ showStatus }) {
   const TABLES = ["profiles", "apiaries", "hives", "inspections", "todos", "logbook", "inventory_items", "expenses", "sales_lines"];
 
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -931,47 +931,6 @@ function ExportSection({ includeImages, setIncludeImages, showStatus }) {
         dataFolder.file(`${t}.csv`, jsonToCsv(rows));
       }
 
-      const assetsFolder = zip.folder("assets");
-      const photosFolder = assetsFolder.folder("photos");
-
-      let photosManifest = [];
-      try {
-        showStatus("Scanning photos bucket…", "info", 0);
-        const paths = await listBucketRecursively(AVATAR_BUCKET);
-        photosManifest = paths.map((p) => ({
-          path: p,
-          public_url: publicUrlFor(AVATAR_BUCKET, p),
-        }));
-
-        if (includeImages && paths.length) {
-          showStatus(`Downloading ${paths.length} photo(s)…`, "info", 0);
-          for (let i = 0; i < paths.length; i++) {
-            const p = paths[i];
-            const url = publicUrlFor(AVATAR_BUCKET, p);
-            try {
-              const res = await fetch(url);
-              if (!res.ok) throw new Error(`HTTP ${res.status}`);
-              const buf = await res.arrayBuffer();
-              photosFolder.file(p, buf);
-            } catch (e) {
-              photosFolder.file(`${p}.download_error.txt`, String(e));
-            }
-            if ((i + 1) % 20 === 0) {
-              showStatus(`Downloaded ${i + 1}/${paths.length} photos…`, "info", 0);
-            }
-          }
-        }
-      } catch {
-        // intentionally ignore: listing bucket may fail in some configs
-      }
-
-      const photosCsv =
-        "path,public_url\n" +
-        photosManifest.map(({ path, public_url }) => `${csvEscape(path)},${csvEscape(public_url)}`).join("\n") +
-        (photosManifest.length ? "\n" : "");
-
-      dataFolder.file("photos.csv", photosCsv);
-
       const meta = {
         app: "BeezKnees",
         generatedAt: new Date().toISOString(),
@@ -979,12 +938,12 @@ function ExportSection({ includeImages, setIncludeImages, showStatus }) {
         tables: TABLES,
         counts: {
           ...counts,
-          photos_listed: photosManifest.length,
-          photos_embedded: includeImages ? photosManifest.length : 0,
+          photos_listed: 0,
+photos_embedded: 0,
         },
         notes: [
           "CSV files are under /data/",
-          includeImages ? "Images saved under /assets/photos/ (structure mirrors bucket)." : "Images are NOT embedded. Use photos.csv to fetch as needed.",
+          "Images are not included in this export for privacy protection.",
           "Excluded tables: location_types, site_settings.",
         ],
       };
@@ -1014,10 +973,7 @@ function ExportSection({ includeImages, setIncludeImages, showStatus }) {
         <code>expenses</code>, <code>sales</code>. You can optionally embed photos from the <code>photos</code> bucket into the ZIP.
       </p>
 
-      <label className="flex items-center gap-2 text-sm mb-3">
-        <input type="checkbox" checked={includeImages} onChange={(evt) => setIncludeImages(evt.target.checked)} />
-        Include photos in ZIP (can be large; slower)
-      </label>
+      
 
       <button onClick={handleExportZip} className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-black">
         Export my data (ZIP)
