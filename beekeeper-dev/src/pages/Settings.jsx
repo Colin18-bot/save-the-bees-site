@@ -967,12 +967,11 @@ photos_embedded: 0,
   return (
     <section className="mb-10">
       <h2 className="text-xl font-semibold">Export</h2>
-      <p className="text-sm text-gray-600 mb-3">
-        Download a ZIP containing CSVs for: <code>profiles</code>, <code>apiaries</code>, <code>hives</code>,{" "}
-        <code>inspections</code>, <code>tasks</code>, <code>logbook</code>, <code>inventory items</code>,{" "}
-        <code>expenses</code>, <code>sales</code>. You can optionally embed photos from the <code>photos</code> bucket into the ZIP.
-      </p>
-
+    <p className="text-sm text-gray-600 mb-3">
+      Download a ZIP containing your data in CSV format, including <code>profiles</code>, <code>apiaries</code>, <code>hives</code>,{" "}
+      <code>inspections</code>, <code>tasks</code>, <code>logbook</code>, <code>inventory items</code>,{" "}
+      <code>expenses</code> and <code>sales</code>. Images are not included in the export.
+    </p>
       
 
       <button onClick={handleExportZip} className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-black">
