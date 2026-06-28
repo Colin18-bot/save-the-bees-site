@@ -161,10 +161,7 @@ const Settings = () => {
   const [apiaries, setApiaries] = useState([]);
   const TIMEZONES = useMemo(() => getAllTimezones(), []);
 
-  // Export option
-  const [includeImages, setIncludeImages] = useState(false);
-
-  // Toast
+   // Toast
   const [status, setStatus] = useState(null);
   const statusTimerRef = useRef(null);
 
@@ -879,27 +876,6 @@ function ExportSection({ showStatus }) {
       await sleep(25);
     }
     return all;
-  };
-
-  const listBucketRecursively = async (bucket, prefix = "") => {
-    const out = [];
-    const stack = [prefix];
-    while (stack.length) {
-      const cur = stack.pop() || "";
-      const { data, error } = await supabase.storage.from(bucket).list(cur, { limit: 1000 });
-      if (error) throw error;
-      for (const entry of data || []) {
-        const full = cur ? `${cur}/${entry.name}` : entry.name;
-        if (entry?.metadata && typeof entry.metadata.size === "number") out.push(full);
-        else stack.push(full);
-      }
-    }
-    return out;
-  };
-
-  const publicUrlFor = (bucket, path) => {
-    const { data } = supabase.storage.from(bucket).getPublicUrl(path);
-    return data?.publicUrl || "";
   };
 
   const handleExportZip = async () => {
