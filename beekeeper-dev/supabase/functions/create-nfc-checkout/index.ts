@@ -3,13 +3,14 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@13.11.0?target=deno";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY");
-const shippingRateId = Deno.env.get("STRIPE_NFC_SHIPPING_RATE_ID"); // 👈 NEW
+const shippingRateId = Deno.env.get("STRIPE_NFC_SHIPPING_RATE_ID");
+const nfcPriceId = Deno.env.get("STRIPE_NFC_PRICE_ID");
 
-if (!stripeSecretKey) {
-  console.error("Missing STRIPE_SECRET_KEY environment variable");
-}
+const supabaseUrl = Deno.env.get("SUPABASE_URL");
+const serviceRole = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 const stripe = new Stripe(stripeSecretKey ?? "", {
   apiVersion: "2023-10-16",
@@ -29,14 +30,12 @@ function jsonResponse(body: unknown, status = 200, extraHeaders = {}) {
 }
 
 serve(async (req: Request): Promise<Response> => {
-  // CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, {
       status: 204,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers":
-          "authorization, apikey, content-type",
+        "Access-Control-Allow-Headers": "authorization, apikey, content-type",
         "Access-Control-Allow-Methods": "POST, OPTIONS",
       },
     });
@@ -47,11 +46,33 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   if (!stripeSecretKey) {
-    return jsonResponse(
-      { error: "Stripe is not configured on the server." },
-      500,
-    );
+    return jsonResponse({ error: "Stripe is not configured on the server." }, 500);
   }
+
+  if (!nfcPriceId) {
+    return jsonResponse({ error: "NFC price is not configured on the server." }, 500);
+  }
+
+  if (!supabaseUrl || !serviceRole) {
+    return jsonResponse({ error: "Supabase is not configured on the server." }, 500);
+  }
+
+  const auth = req.headers.get("Authorization") ?? "";
+  const token = auth.startsWith("Bearer ") ? auth.slice(7).trim() : "";
+
+  if (!token) {
+    return jsonResponse({ error: "Unauthorized" }, 401);
+  }
+
+  const supabaseAdmin = createClient(supabaseUrl, serviceRole);
+
+  const { data, error } = await supabaseAdmin.auth.getUser(token);
+
+  if (error || !data?.user?.id) {
+    return jsonResponse({ error: "Unauthorized" }, 401);
+  }
+
+  const user_id = data.user.id;
 
   let payload;
 
@@ -63,17 +84,12 @@ serve(async (req: Request): Promise<Response> => {
 
   const {
     quantity,
-    price_id,
-    user_id,
     success_path = "/nfc?tags_purchased=1",
     cancel_path = "/nfc/tags?canceled=1",
   } = payload ?? {};
 
-  if (!price_id || typeof price_id !== "string") {
-    return jsonResponse({ error: "Missing or invalid price_id" }, 400);
-  }
-
   const qty = Number(quantity);
+
   if (!Number.isFinite(qty) || qty < 1 || qty > 200) {
     return jsonResponse(
       { error: "Quantity must be a number between 1 and 200" },
@@ -81,11 +97,6 @@ serve(async (req: Request): Promise<Response> => {
     );
   }
 
-  if (!user_id || typeof user_id !== "string") {
-    return jsonResponse({ error: "Missing or invalid user_id" }, 400);
-  }
-
-  // Build URLs
   const originHeader = req.headers.get("origin") ?? "";
   const frontendEnv = Deno.env.get("FRONTEND_URL") ?? "";
   const base = originHeader || frontendEnv;
@@ -105,20 +116,24 @@ serve(async (req: Request): Promise<Response> => {
       mode: "payment",
       line_items: [
         {
-          price: price_id,
+          price: nfcPriceId,
           quantity: qty,
         },
       ],
 
-      // 👇 NEW: Enable UK shipping + shipping rate
       shipping_address_collection: {
         allowed_countries: ["GB"],
       },
-      shipping_options: [
-        {
-          shipping_rate: shippingRateId,
-        },
-      ],
+
+      ...(shippingRateId
+        ? {
+            shipping_options: [
+              {
+                shipping_rate: shippingRateId,
+              },
+            ],
+          }
+        : {}),
 
       success_url: successUrl,
       cancel_url: cancelUrl,

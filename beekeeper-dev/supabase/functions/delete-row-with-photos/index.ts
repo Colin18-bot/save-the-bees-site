@@ -162,9 +162,22 @@ serve(async (req: Request) => {
         const fromUrl = removeOne.url ? parsePublicUrl(removeOne.url) : null;
         const onePath = removeOne.path || (fromUrl?.bucket === bucket ? fromUrl.path : null);
 
-        if (!onePath) return json(400, { error: "removeOne provided but no valid {path|url} resolved" });
+      if (!onePath) return json(400, { error: "removeOne provided but no valid {path|url} resolved" });
 
-        const { error: delErr } = await admin.storage.from(bucket).remove([onePath]);
+const allowedPaths = new Set(storedPaths);
+
+for (const u of storedUrls) {
+  const parsed = parsePublicUrl(u);
+  if (parsed?.bucket === bucket) {
+    allowedPaths.add(parsed.path);
+  }
+}
+
+if (!allowedPaths.has(onePath)) {
+  return json(403, { error: "Forbidden: photo does not belong to this inspection" });
+}
+
+const { error: delErr } = await admin.storage.from(bucket).remove([onePath]);
         if (delErr) return json(500, { error: `Storage delete failed: ${delErr.message}` });
 
         const newPaths = storedPaths.filter((p) => p !== onePath);
@@ -177,7 +190,7 @@ serve(async (req: Request) => {
         patch[urlsKey] = newUrls;
         if (pathsKey in row) patch[pathsKey] = newPaths;
 
-        const { error: updErr } = await admin.from(table).update(patch).eq("id", id);
+        const { error: updErr } = await admin.from(table).update(patch).eq("id", id).eq("user_id", uid);
         if (updErr) return json(500, { error: `DB update failed: ${updErr.message}` });
 
         return json(200, { ok: true, mode: "remove_one", deleted: [onePath] });
@@ -239,7 +252,7 @@ serve(async (req: Request) => {
       return json(200, { ok: true, mode, deleted: pathsToDelete });
     }
 
-    const { error: delRowErr } = await admin.from(table).delete().eq("id", id);
+    const { error: delRowErr } = await admin.from(table).delete().eq("id", id).eq("user_id", uid);
     if (delRowErr) return json(500, { error: `Row delete failed: ${delRowErr.message}` });
 
     return json(200, { ok: true, mode, deleted: pathsToDelete });

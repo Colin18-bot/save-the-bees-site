@@ -75,13 +75,12 @@ Deno.serve(async (req: Request) => {
         ? (bodyUnknown as Record<string, unknown>)
         : ({} as Record<string, unknown>);
 
-    const price_id = (body["price_id"] as string | undefined) ?? undefined;
     const success_path = (body["success_path"] as string | undefined) ?? undefined;
     const cancel_path = (body["cancel_path"] as string | undefined) ?? undefined;
     const plan = ((body["plan"] as string | undefined) ?? "premium").trim();
     const user_id = (body["user_id"] as string | undefined) ?? userId;
 
-    const chosenPrice = price_id || DEFAULT_PRICE_ID;
+    const chosenPrice = DEFAULT_PRICE_ID;
     if (!chosenPrice) return bad(req, "Missing price_id", 400);
     if (!user_id || !plan) return bad(req, "Missing user_id or plan", 400);
 

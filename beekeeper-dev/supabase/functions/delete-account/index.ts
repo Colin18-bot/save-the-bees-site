@@ -170,21 +170,20 @@ serve(async (req: Request) => {
 
     const supaSrv = createClient(SUPABASE_URL, SERVICE_ROLE);
 
-    // resolve uid
-    const explicitUid = url.searchParams.get("uid") ?? "";
-    let uid = explicitUid;
-    if (!uid) {
+    // resolve uid securely — never trust uid from URL
       const auth = req.headers.get("Authorization") ?? "";
       const token = auth.replace("Bearer ", "");
+
       const { data, error } = await supaSrv.auth.getUser(token);
+
       if (error || !data?.user?.id) {
-        return new Response(
-          JSON.stringify({ error: "Unauthorized (no uid and no valid token)" }),
-          { status: 401, headers: jsonHeaders },
-        );
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
+          status: 401,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        });
       }
-      uid = data.user.id;
-    }
+
+      const uid = data.user.id;
 
     // Step A — Stripe cancel (skip if no key or dry-run)
     let stripeResult: StripeResult = { skipped: true, note: "No STRIPE_SECRET_KEY set" };
