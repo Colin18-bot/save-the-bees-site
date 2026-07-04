@@ -1,5 +1,16 @@
 window.beezKneesBlogPosts = [
-    {
+  {
+    title: "Inspection Diary #1: Nine Colonies, Nine Different Stories",
+    slug: "inspection-diary-1-nine-colonies-nine-different-stories",
+    category: "Inspection Diary",
+    date: "4 July 2026",
+    isoDate: "2026-07-04",
+    isoModified: "2026-07-04",
+    image: "assets/images/july-apiary-inspection-brood-frame.webp",
+    alt: "Healthy brood frame during a July inspection of one of my honey bee colonies at Peterston Apiary",
+    excerpt: "A real July inspection from my Peterston Apiary, covering nine colonies, honey supers, queen status, defensive bees and the decisions needed after finding a queenless colony."
+  },  
+  {
     title: "I Found a Spotty Brood Pattern During an Inspection — It Turned Out to Be European Foulbrood",
     slug: "spotty-brood-pattern-european-foulbrood",
     category: "Bee Health",
