@@ -1003,8 +1003,8 @@ function OutcomeImages({ images }) {
   return (
     <div className="mt-4 grid gap-3 sm:grid-cols-2">
       {images.map((img, i) => {
-        const src = img.fileName
-  ? `/images/outcomes/${img.fileName}`
+       const src = img.fileName
+  ? `${import.meta.env.BASE_URL}images/beehealth/outcomes/${img.fileName}`
   : img.src || "";
 
         if (!src) return null;
