@@ -1,175 +1,175 @@
 # Force HTTPS and remove www
-http://beezknees.co.uk/*        https://beezknees.co.uk/:splat    301
-https://www.beezknees.co.uk/*   https://beezknees.co.uk/:splat    301
-http://www.beezknees.co.uk/*    https://beezknees.co.uk/:splat    301
+http://beezknees.co.uk/*                         https://beezknees.co.uk/:splat                   301
+https://www.beezknees.co.uk/*                    https://beezknees.co.uk/:splat                   301
+http://www.beezknees.co.uk/*                     https://beezknees.co.uk/:splat                   301
 
 # Home
-/index.html                    /                                301
+/index.html                                      /                                                301!
 
 # Beekeeping guide hubs and core skills
-/about-us.html                  /about-us                           301
-/adding-supers-uk.html          /adding-supers-uk                   301
-/beekeeping-guides.html         /beekeeping-guides                  301
-/brood-pattern-guide.html       /brood-pattern-guide                301
-/cross-comb-how-to-fix.html     /cross-comb-how-to-fix              301
-/equipment.html                 /equipment                          301
-/first-spring-inspection.html   /first-spring-inspection            301
-/getting-started.html           /getting-started                    301
-/hive-management.html           /hive-management                    301
-/hivetag-app.html               /hivetag-app                        301
-/honey-extraction.html          /honey-extraction                   301
-/hygiene.html                   /hygiene                            301
-/queen-excluder-problems.html   /queen-excluder-problems            301
-/step-by-step-inspections.html  /step-by-step-inspections           301
-/when-to-inspect-bees-uk.html   /when-to-inspect-bees-uk            301
-/why-bees-not-drawing-comb.html /why-bees-not-drawing-comb          301
+/about-us.html                                   /about-us                                        301!
+/adding-supers-uk.html                           /adding-supers-uk                                301!
+/beekeeping-guides.html                          /beekeeping-guides                               301!
+/brood-pattern-guide.html                        /brood-pattern-guide                             301!
+/cross-comb-how-to-fix.html                      /cross-comb-how-to-fix                           301!
+/equipment.html                                  /equipment                                       301!
+/first-spring-inspection.html                    /first-spring-inspection                         301!
+/getting-started.html                            /getting-started                                 301!
+/hive-management.html                            /hive-management                                 301!
+/hivetag-app.html                                /hivetag-app                                     301!
+/honey-extraction.html                           /honey-extraction                                301!
+/hygiene.html                                    /hygiene                                         301!
+/queen-excluder-problems.html                    /queen-excluder-problems                         301!
+/step-by-step-inspections.html                   /step-by-step-inspections                        301!
+/when-to-inspect-bees-uk.html                    /when-to-inspect-bees-uk                         301!
+/why-bees-not-drawing-comb.html                  /why-bees-not-drawing-comb                       301!
 
 # Apiary year and seasonal pages
-/april.html                     /april                              301
-/august.html                    /august                             301
-/autumn-beekeeping-uk.html      /autumn-beekeeping-uk               301
-/december.html                  /december                           301
-/february.html                  /february                           301
-/january.html                   /january                            301
-/july.html                      /july                               301
-/june.html                      /june                               301
-/june-gap-beekeeping.html       /june-gap-beekeeping                301
-/march.html                     /march                              301
-/may.html                       /may                                301!
-/november.html                  /november                           301
-/october.html                   /october                            301
-/september.html                 /september                          301
-/spring-beekeeping-uk.html      /spring-beekeeping-uk               301
-/spring-build-up-bees.html      /spring-build-up-bees               301
-/summer-beekeeping-uk.html      /summer-beekeeping-uk               301
-/winter-bee-checks-uk.html      /winter-bee-checks-uk               301
-/winter-beekeeping-uk.html      /winter-beekeeping-uk               301
-/winter-colony-loss-uk.html     /winter-colony-loss-uk              301
-/year-in-the-apiary.html        /year-in-the-apiary                 301
+/april.html                                      /april                                           301!
+/august.html                                     /august                                          301!
+/autumn-beekeeping-uk.html                       /autumn-beekeeping-uk                            301!
+/december.html                                   /december                                        301!
+/february.html                                   /february                                        301!
+/january.html                                    /january                                         301!
+/july.html                                       /july                                            301!
+/june.html                                       /june                                            301!
+/june-gap-beekeeping.html                        /june-gap-beekeeping                             301!
+/march.html                                      /march                                           301!
+/may.html                                        /may                                             301!
+/november.html                                   /november                                        301!
+/october.html                                    /october                                         301!
+/september.html                                  /september                                       301!
+/spring-beekeeping-uk.html                       /spring-beekeeping-uk                            301!
+/spring-build-up-bees.html                       /spring-build-up-bees                            301!
+/summer-beekeeping-uk.html                       /summer-beekeeping-uk                            301!
+/winter-bee-checks-uk.html                       /winter-bee-checks-uk                            301!
+/winter-beekeeping-uk.html                       /winter-beekeeping-uk                            301!
+/winter-colony-loss-uk.html                      /winter-colony-loss-uk                           301!
+/year-in-the-apiary.html                         /year-in-the-apiary                              301!
 
 # Bee health, disease and diagnostic pages
-/american-foulbrood-uk.html     /american-foulbrood-uk              301
-/bacterial-diseases.html        /bacterial-diseases                 301
-/bee-diseases.html              /bee-diseases                       301
-/bee-health-checker.html        /bee-health-checker                 301
-/brood-problems-uk.html         /brood-problems-uk                  301
-/chalkbrood-uk.html             /chalkbrood-uk                      301
-/chilled-brood-uk.html          /chilled-brood-uk                   301
-/colony-health-triage.html      /colony-health-triage               301
-/deformed-wing-virus-uk.html    /deformed-wing-virus-uk             301
-/european-foulbrood-uk.html     /european-foulbrood-uk              301
-/foulbrood-vs-chalkbrood.html   /foulbrood-vs-chalkbrood            301
-/nosema-uk.html                 /nosema-uk                          301
-/other-conditions.html          /other-conditions                   301
-/parasitic-mites.html           /parasitic-mites                    301
-/sacbrood-uk.html               /sacbrood-uk                        301
-/viral-diseases.html            /viral-diseases                     301
-/when-to-call-bee-inspector-uk.html/when-to-call-bee-inspector-uk      301
+/american-foulbrood-uk.html                      /american-foulbrood-uk                           301!
+/bacterial-diseases.html                         /bacterial-diseases                              301!
+/bee-diseases.html                               /bee-diseases                                    301!
+/bee-health-checker.html                         /bee-health-checker                              301!
+/brood-problems-uk.html                          /brood-problems-uk                               301!
+/chalkbrood-uk.html                              /chalkbrood-uk                                   301!
+/chilled-brood-uk.html                           /chilled-brood-uk                                301!
+/colony-health-triage.html                       /colony-health-triage                            301!
+/deformed-wing-virus-uk.html                     /deformed-wing-virus-uk                          301!
+/european-foulbrood-uk.html                      /european-foulbrood-uk                           301!
+/foulbrood-vs-chalkbrood.html                    /foulbrood-vs-chalkbrood                         301!
+/nosema-uk.html                                  /nosema-uk                                       301!
+/other-conditions.html                           /other-conditions                                301!
+/parasitic-mites.html                            /parasitic-mites                                 301!
+/sacbrood-uk.html                                /sacbrood-uk                                     301!
+/viral-diseases.html                             /viral-diseases                                  301!
+/when-to-call-bee-inspector-uk.html              /when-to-call-bee-inspector-uk                   301!
 
 # Hive problems, pests and predators
-/ants-in-beehives.html          /ants-in-beehives                   301
-/asian-hornet-uk.html           /asian-hornet-uk                    301
-/bee-pests.html                 /bee-pests                          301
-/cluster-died-in-place.html     /cluster-died-in-place              301
-/colony-collapse-varroa-vs-starvation.html/colony-collapse-varroa-vs-starvation301
-/dead-bees-outside-hive.html    /dead-bees-outside-hive             301
-/empty-hive-no-bees.html        /empty-hive-no-bees                 301
-/hive-problems.html             /hive-problems                      301
-/mice-in-beehives.html          /mice-in-beehives                   301
-/pesticide-poisoning-bees.html  /pesticide-poisoning-bees           301
-/post-mortem-hive-analysis.html /post-mortem-hive-analysis          301
-/robbing-behaviour-bees.html    /robbing-behaviour-bees             301
-/small-hive-beetle-uk.html      /small-hive-beetle-uk               301
-/sudden-colony-death-uk.html    /sudden-colony-death-uk             301
-/wasps-beehives-uk.html         /wasps-beehives-uk                  301
-/wax-moth-uk.html               /wax-moth-uk                        301
-/weak-colony-bees.html          /weak-colony-bees                   301
-/why-bees-crawling-ground.html  /why-bees-crawling-ground           301
-/why-did-my-hive-die.html       /why-did-my-hive-die                301
+/ants-in-beehives.html                           /ants-in-beehives                                301!
+/asian-hornet-uk.html                            /asian-hornet-uk                                 301!
+/bee-pests.html                                  /bee-pests                                       301!
+/cluster-died-in-place.html                      /cluster-died-in-place                           301!
+/colony-collapse-varroa-vs-starvation.html       /colony-collapse-varroa-vs-starvation            301!
+/dead-bees-outside-hive.html                     /dead-bees-outside-hive                          301!
+/empty-hive-no-bees.html                         /empty-hive-no-bees                              301!
+/hive-problems.html                              /hive-problems                                   301!
+/mice-in-beehives.html                           /mice-in-beehives                                301!
+/pesticide-poisoning-bees.html                   /pesticide-poisoning-bees                        301!
+/post-mortem-hive-analysis.html                  /post-mortem-hive-analysis                       301!
+/robbing-behaviour-bees.html                     /robbing-behaviour-bees                          301!
+/small-hive-beetle-uk.html                       /small-hive-beetle-uk                            301!
+/sudden-colony-death-uk.html                     /sudden-colony-death-uk                          301!
+/wasps-beehives-uk.html                          /wasps-beehives-uk                               301!
+/wax-moth-uk.html                                /wax-moth-uk                                     301!
+/weak-colony-bees.html                           /weak-colony-bees                                301!
+/why-bees-crawling-ground.html                   /why-bees-crawling-ground                        301!
+/why-did-my-hive-die.html                        /why-did-my-hive-die                             301!
 
 # Swarm and queen management
-/after-split.html               /after-split                        301
-/artificial-swarm.html          /artificial-swarm                   301
-/cant-find-queen.html           /cant-find-queen                    301
-/capped-queen-cells.html        /capped-queen-cells                 301
-/charged-queen-cells.html       /charged-queen-cells                301
-/drone-laying-queen.html        /drone-laying-queen                 301
-/emergency-queen-cells.html     /emergency-queen-cells              301
-/laying-workers-uk.html         /laying-workers-uk                  301
-/missed-swarm.html              /missed-swarm                       301
-/missing-queen-what-to-check.html/missing-queen-what-to-check        301
-/queen-cell-guide.html          /queen-cell-guide                   301
-/queen-cells-action.html        /queen-cells-action                 301
-/queen-cells-swarm-control.html /queen-cells-swarm-control          301
-/queen-cups.html                /queen-cups                         301
-/queen-failing-signs.html       /queen-failing-signs                301
-/queen-timeline.html            /queen-timeline                     301
-/queenless-colony-what-to-do.html/queenless-colony-what-to-do        301
-/queenless-or-supersedure.html  /queenless-or-supersedure           301
-/report-a-swarm.html            /report-a-swarm                     301
-/split-hive.html                /split-hive                         301
-/split-methods.html             /split-methods                      301
-/supersedure-action.html        /supersedure-action                 301
-/supersedure-explained.html     /supersedure-explained              301
-/supersedure-queen-cells.html   /supersedure-queen-cells            301
-/swarm-eggs.html                /swarm-eggs                         301
-/swarm-prevention.html          /swarm-prevention                   301
-/swarm-queen.html               /swarm-queen                        301
-/swarm-responsibilities.html    /swarm-responsibilities             301
-/swarm-season-uk.html           /swarm-season-uk                    301
-/virgin-queen-timeline.html     /virgin-queen-timeline              301
+/after-split.html                                /after-split                                     301!
+/artificial-swarm.html                           /artificial-swarm                                301!
+/cant-find-queen.html                            /cant-find-queen                                 301!
+/capped-queen-cells.html                         /capped-queen-cells                              301!
+/charged-queen-cells.html                        /charged-queen-cells                             301!
+/drone-laying-queen.html                         /drone-laying-queen                              301!
+/emergency-queen-cells.html                      /emergency-queen-cells                           301!
+/laying-workers-uk.html                          /laying-workers-uk                               301!
+/missed-swarm.html                               /missed-swarm                                    301!
+/missing-queen-what-to-check.html                /missing-queen-what-to-check                     301!
+/queen-cell-guide.html                           /queen-cell-guide                                301!
+/queen-cells-action.html                         /queen-cells-action                              301!
+/queen-cells-swarm-control.html                  /queen-cells-swarm-control                       301!
+/queen-cups.html                                 /queen-cups                                      301!
+/queen-failing-signs.html                        /queen-failing-signs                             301!
+/queen-timeline.html                             /queen-timeline                                  301!
+/queenless-colony-what-to-do.html                /queenless-colony-what-to-do                     301!
+/queenless-or-supersedure.html                   /queenless-or-supersedure                        301!
+/report-a-swarm.html                             /report-a-swarm                                  301!
+/split-hive.html                                 /split-hive                                      301!
+/split-methods.html                              /split-methods                                   301!
+/supersedure-action.html                         /supersedure-action                              301!
+/supersedure-explained.html                      /supersedure-explained                           301!
+/supersedure-queen-cells.html                    /supersedure-queen-cells                         301!
+/swarm-eggs.html                                 /swarm-eggs                                      301!
+/swarm-prevention.html                           /swarm-prevention                                301!
+/swarm-queen.html                                /swarm-queen                                     301!
+/swarm-responsibilities.html                     /swarm-responsibilities                          301!
+/swarm-season-uk.html                            /swarm-season-uk                                 301!
+/virgin-queen-timeline.html                      /virgin-queen-timeline                           301!
 
 # Varroa management
-/late-summer-varroa.html        /late-summer-varroa                 301
-/ppe-varroa-treatments.html     /ppe-varroa-treatments              301
-/varroa-chemical-treatments.html/varroa-chemical-treatments         301
-/varroa-collapse-signs.html     /varroa-collapse-signs              301
-/varroa-management.html         /varroa-management                  301
-/varroa-monitoring-methods.html /varroa-monitoring-methods          301
-/varroa-non-chemical-methods.html/varroa-non-chemical-methods        301
-/varroa-overview.html           /varroa-overview                    301
-/varroa-symptoms-uk.html        /varroa-symptoms-uk                 301
-/varroa-treatment-calendar-uk.html/varroa-treatment-calendar-uk       301
-/veterinary-medicine-records.html/veterinary-medicine-records        301
+/late-summer-varroa.html                         /late-summer-varroa                              301!
+/ppe-varroa-treatments.html                      /ppe-varroa-treatments                           301!
+/varroa-chemical-treatments.html                 /varroa-chemical-treatments                      301!
+/varroa-collapse-signs.html                      /varroa-collapse-signs                           301!
+/varroa-management.html                          /varroa-management                               301!
+/varroa-monitoring-methods.html                  /varroa-monitoring-methods                       301!
+/varroa-non-chemical-methods.html                /varroa-non-chemical-methods                     301!
+/varroa-overview.html                            /varroa-overview                                 301!
+/varroa-symptoms-uk.html                         /varroa-symptoms-uk                              301!
+/varroa-treatment-calendar-uk.html               /varroa-treatment-calendar-uk                    301!
+/veterinary-medicine-records.html                /veterinary-medicine-records                     301!
 
 # Feeding, stores and starvation
-/feeding-bees.html              /feeding-bees                       301
-/feeding-bees-for-winter-uk.html/feeding-bees-for-winter-uk         301
-/feeding-bees-in-spring-uk.html /feeding-bees-in-spring-uk          301
-/feeding-mistakes-beekeepers.html/feeding-mistakes-beekeepers        301
-/isolation-starvation-bees.html /isolation-starvation-bees          301
-/starvation-in-bees-signs.html  /starvation-in-bees-signs           301
-/when-to-feed-fondant-to-bees.html/when-to-feed-fondant-to-bees       301
+/feeding-bees.html                               /feeding-bees                                    301!
+/feeding-bees-for-winter-uk.html                 /feeding-bees-for-winter-uk                      301!
+/feeding-bees-in-spring-uk.html                  /feeding-bees-in-spring-uk                       301!
+/feeding-mistakes-beekeepers.html                /feeding-mistakes-beekeepers                     301!
+/isolation-starvation-bees.html                  /isolation-starvation-bees                       301!
+/starvation-in-bees-signs.html                   /starvation-in-bees-signs                        301!
+/when-to-feed-fondant-to-bees.html               /when-to-feed-fondant-to-bees                    301!
 
 # Honeybee facts, behaviour and pollination
-/anatomy.html                   /anatomy                            301
-/bearding-bees-uk.html          /bearding-bees-uk                   301
-/bee-gardening.html             /bee-gardening                      301
-/bee-orientation-flights.html   /bee-orientation-flights            301
-/bee-stings.html                /bee-stings                         301
-/bees-fanning-entrance.html     /bees-fanning-entrance              301
-/behaviour.html                 /behaviour                          301
-/cleansing-flights.html         /cleansing-flights                  301
-/help-the-bees.html             /help-the-bees                      301
-/honeybee-facts.html            /honeybee-facts                     301
-/how-bees-make-honey.html       /how-bees-make-honey                301
-/pollination.html               /pollination                        301
-/why-so-many-drones.html        /why-so-many-drones                 301
+/anatomy.html                                    /anatomy                                         301!
+/bearding-bees-uk.html                           /bearding-bees-uk                                301!
+/bee-gardening.html                              /bee-gardening                                   301!
+/bee-orientation-flights.html                    /bee-orientation-flights                         301!
+/bee-stings.html                                 /bee-stings                                      301!
+/bees-fanning-entrance.html                      /bees-fanning-entrance                           301!
+/behaviour.html                                  /behaviour                                       301!
+/cleansing-flights.html                          /cleansing-flights                               301!
+/help-the-bees.html                              /help-the-bees                                   301!
+/honeybee-facts.html                             /honeybee-facts                                  301!
+/how-bees-make-honey.html                        /how-bees-make-honey                             301!
+/pollination.html                                /pollination                                     301!
+/why-so-many-drones.html                         /why-so-many-drones                              301!
 
 # Legal, responsibilities and downloads
-/apiary-risk-assessment.html    /apiary-risk-assessment             301
-/beekeepers-rule-calculator.html/beekeepers-rule-calculator         301
-/beekeeping-insurance-uk.html   /beekeeping-insurance-uk            301
-/beekeeping-responsibilities-uk.html/beekeeping-responsibilities-uk     301
-/contact.html                   /contact                            301
-/disclaimer.html                /disclaimer                         301
-/donate.html                    /donate                             301
-/downloads.html                 /downloads                          301
-/honey-regulations-uk.html      /honey-regulations-uk               301
-/landowner-beekeeper-agreement.html/landowner-beekeeper-agreement      301
-/privacy.html                   /privacy                            301
-/site-map.html                  /site-map                           301
+/apiary-risk-assessment.html                     /apiary-risk-assessment                          301!
+/beekeepers-rule-calculator.html                 /beekeepers-rule-calculator                      301!
+/beekeeping-insurance-uk.html                    /beekeeping-insurance-uk                         301!
+/beekeeping-responsibilities-uk.html             /beekeeping-responsibilities-uk                  301!
+/contact.html                                    /contact                                         301!
+/disclaimer.html                                 /disclaimer                                      301!
+/donate.html                                     /donate                                          301!
+/downloads.html                                  /downloads                                       301!
+/honey-regulations-uk.html                       /honey-regulations-uk                            301!
+/landowner-beekeeper-agreement.html              /landowner-beekeeper-agreement                   301!
+/privacy.html                                    /privacy                                         301!
+/site-map.html                                   /site-map                                        301!
 
 # Legacy / corrected old URLs
-/wasps-attacking-beehives-uk.html/wasps-beehives-uk                  301
-/wasps-attacking-beehives-uk    /wasps-beehives-uk                  301
+/wasps-attacking-beehives-uk.html                /wasps-beehives-uk                               301!
+/wasps-attacking-beehives-uk                     /wasps-beehives-uk                               301
