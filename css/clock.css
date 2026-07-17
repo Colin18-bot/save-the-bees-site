@@ -296,6 +296,10 @@
   margin-top: 28px;
 }
 
+.clock-page .calculator-intro-card {
+  margin-bottom: 24px;
+}
+
 .clock-page .top-grid > .card,
 .clock-page .plans-grid > .card,
 .clock-page .dashboard-grid > .card,
