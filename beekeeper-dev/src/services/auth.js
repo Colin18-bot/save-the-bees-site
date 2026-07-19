@@ -26,6 +26,7 @@ export async function registerUser(email, password) {
 
 // Send password reset email
 export async function resetPassword(email) {
-  const { error } = await supabase.auth.resetPasswordForEmail(email);
-  if (error) throw error;
+  return await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/reset-password`,
+  });
 }

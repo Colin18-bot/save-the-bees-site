@@ -7,10 +7,22 @@ const CookieBanner = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const c = getConsent();
-    // Show banner only if user hasn’t decided yet
-    const undecided = !c.date && !c.analytics && !c.marketing;
-    setVisible(undecided);
+    const refreshVisibility = (consent = getConsent()) => {
+      const undecided = !consent.date;
+      setVisible(undecided);
+    };
+
+    refreshVisibility();
+
+    const onConsentUpdated = (event) => {
+      refreshVisibility(event.detail);
+    };
+
+    window.addEventListener("cookie-consent:updated", onConsentUpdated);
+
+    return () => {
+      window.removeEventListener("cookie-consent:updated", onConsentUpdated);
+    };
   }, []);
 
   if (!visible) return null;
@@ -32,12 +44,12 @@ const CookieBanner = () => {
           <div className="space-y-1">
             <h2 className="text-base font-semibold">We use cookies</h2>
             <p className="text-sm text-gray-600">
-              We use necessary cookies to make our site work. With your
-              permission, we’d also like to set analytics and marketing cookies.
-              Read our{" "}
+              We use necessary cookies to make our site work. With your permission, we’d also like
+              to set analytics and marketing cookies. Read our{" "}
               <Link to="/legal/privacy" className="underline text-amber-700">
                 Privacy Policy
-              </Link>.
+              </Link>
+              .
             </p>
           </div>
           <div className="flex gap-2 mt-3 md:mt-0">
@@ -47,16 +59,10 @@ const CookieBanner = () => {
             >
               Reject non-essential
             </button>
-            <Link
-              to="/legal/cookies"
-              className="px-3 py-2 rounded-xl border border-gray-300"
-            >
+            <Link to="/legal/cookies" className="px-3 py-2 rounded-xl border border-gray-300">
               Manage
             </Link>
-            <button
-              onClick={acceptAll}
-              className="px-3 py-2 rounded-xl bg-amber-500 text-white"
-            >
+            <button onClick={acceptAll} className="px-3 py-2 rounded-xl bg-amber-500 text-white">
               Accept all
             </button>
           </div>

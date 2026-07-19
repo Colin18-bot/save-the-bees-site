@@ -33,7 +33,6 @@ const BROOD_BOX_CONGESTION_OPTS = ["Low", "Medium", "High"];
 const QUEEN_OPTIONS = ["Seen", "Eggs", "Capped brood", "Uncapped brood", "Other"];
 const PEST_TYPES = ["Mice", "Ants", "Beetles", "Wax Moths", "Wasps", "Other"];
 const DISEASE_TYPES = [
-  "Varroa",
   "Chalkbrood",
   "Sacbrood",
   "EFB",
@@ -326,6 +325,12 @@ const EditInspection = () => {
         setDerivedWeatherDisplay("");
       }
 
+      const loadedDiseaseTypes = toArray(data.disease_types);
+      const legacyVarroaSelected = loadedDiseaseTypes.includes("Varroa");
+      const cleanedDiseaseTypes = loadedDiseaseTypes.filter(
+        (type) => type !== "Varroa"
+      );
+
       setFormData({
         apiary_id: data.apiary_id || "",
         hive_id: data.hive_id || "",
@@ -344,12 +349,12 @@ const EditInspection = () => {
         food_stores: data.food_stores || "",
         frames_of_bees: data.frames_of_bees || "",
         queen_cells: data.queen_cells || "",
-        varroa_seen: Boolean(data.varroa_seen),
+        varroa_seen: Boolean(data.varroa_seen) || legacyVarroaSelected,
         brood_box_congestion: data.brood_box_congestion || "",
         queen_status: toArray(data.queen_status),
         queen_status_other: data.queen_status_other || "",
         signs_disease: Boolean(data.signs_disease),
-        disease_types: toArray(data.disease_types),
+        disease_types: cleanedDiseaseTypes,
         disease_other: data.disease_other || "",
         signs_pests: Boolean(data.signs_pests),
         pest_types: toArray(data.pest_types),

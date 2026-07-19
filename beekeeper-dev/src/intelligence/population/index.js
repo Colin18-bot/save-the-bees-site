@@ -1,0 +1,1 @@
+export { analysePopulation } from "./populationInterpreter";

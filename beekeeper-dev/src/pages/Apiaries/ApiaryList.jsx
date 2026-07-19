@@ -15,25 +15,25 @@ const ApiaryList = () => {
   const navigate = useNavigate();
   const [isPremium, setIsPremium] = useState(false);
 
-    useEffect(() => {
-      const checkPlan = async () => {
-        const {
-          data: { user },
-        } = await supabase.auth.getUser();
+  useEffect(() => {
+    const checkPlan = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-        if (!user) return;
+      if (!user) return;
 
-       const { data } = await supabase
-  .from("profiles")
-  .select("subscription_level")
-  .eq("user_id", user.id)
-  .maybeSingle();
+      const { data } = await supabase
+        .from("profiles")
+        .select("subscription_level")
+        .eq("user_id", user.id)
+        .maybeSingle();
 
-        setIsPremium(data?.subscription_level === "premium");
-      };
+      setIsPremium(data?.subscription_level === "premium");
+    };
 
-      checkPlan();
-    }, []);
+    checkPlan();
+  }, []);
 
   const [apiaries, setApiaries] = useState([]);
   const [filteredApiaries, setFilteredApiaries] = useState([]);
@@ -61,15 +61,13 @@ const ApiaryList = () => {
     urls: [],
     index: 0,
   });
-  const closeLightbox = () =>
-    setLightbox((s) => ({ ...s, isOpen: false, urls: [], index: 0 }));
+  const closeLightbox = () => setLightbox((s) => ({ ...s, isOpen: false, urls: [], index: 0 }));
   const showPrev = () =>
     setLightbox((s) => ({
       ...s,
       index: (s.index + s.urls.length - 1) % s.urls.length,
     }));
-  const showNext = () =>
-    setLightbox((s) => ({ ...s, index: (s.index + 1) % s.urls.length }));
+  const showNext = () => setLightbox((s) => ({ ...s, index: (s.index + 1) % s.urls.length }));
 
   useEffect(() => {
     if (!lightbox.isOpen) return;
@@ -208,7 +206,6 @@ const ApiaryList = () => {
     };
 
     fetchApiaries();
-     
   }, [selectedApiary]);
 
   // Filter by dropdown selection (client-side)
@@ -333,36 +330,36 @@ const ApiaryList = () => {
   return (
     <div className="p-6">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-  <h2 className="text-2xl font-bold">Your Apiaries</h2>
+        <h2 className="text-2xl font-bold">Your Apiaries</h2>
 
-  <div className="flex flex-col sm:flex-row gap-2">
-    <Link
-      to="/apiaries/new"
-      className="inline-flex items-center justify-center bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Link
+            to="/apiaries/new"
+            className="inline-flex items-center justify-center bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded
       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-green-500"
-    >
-      New Apiary
-    </Link>
+          >
+            New Apiary
+          </Link>
 
-   {isPremium ? (
-    <Link
-      to="/apiaries/step-by-step"
-      className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50
+          {isPremium ? (
+            <Link
+              to="/apiaries/step-by-step"
+              className="inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50
       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-slate-400"
-    >
-      Apiary Siting Guide
-    </Link>
-  ) : (
-    <Link
-     to="/premium-required"
-      className="inline-flex items-center justify-center rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100
+            >
+              Apiary Siting Guide
+            </Link>
+          ) : (
+            <Link
+              to="/premium-required"
+              className="inline-flex items-center justify-center rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900 hover:bg-amber-100
       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-amber-400"
-    >
-      🔒 Apiary Siting Guide
-    </Link>
-  )}
-  </div>
-</div>
+            >
+              🔒 Apiary Siting Guide
+            </Link>
+          )}
+        </div>
+      </div>
       <div className="flex flex-wrap gap-4 items-center mb-4">
         <div>
           <label className="mr-2 font-medium">Filter:</label>
@@ -423,8 +420,8 @@ const ApiaryList = () => {
                     <MapContainer
                       center={[lat, lon]}
                       zoom={13}
-                      scrollWheelZoom={true}   // zoom stays enabled
-                      dragging={false}         // prevents accidental map movement
+                      scrollWheelZoom={true} // zoom stays enabled
+                      dragging={false} // prevents accidental map movement
                       className="h-32 w-full mb-2 rounded"
                     >
                       <TileLayer
@@ -434,8 +431,7 @@ const ApiaryList = () => {
                       <Marker
                         position={[lat, lon]}
                         icon={L.icon({
-                          iconUrl:
-                            "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
+                          iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
                           iconSize: [25, 41],
                           iconAnchor: [12, 41],
                         })}
@@ -492,6 +488,15 @@ const ApiaryList = () => {
                     </p>
                   )}
 
+                  {a.notes && (
+                    <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                        Notes
+                      </p>
+                      <p className="mt-1 whitespace-pre-wrap text-sm text-slate-700">{a.notes}</p>
+                    </div>
+                  )}
+
                   <div className="mt-3 flex flex-col gap-2">
                     <Link
                       to={`/apiaries/${a.id}/edit`}
@@ -510,22 +515,22 @@ const ApiaryList = () => {
                     </Link>
 
                     {isPremium ? (
-                    <Link
-                      to={`/apiaries/${a.id}/map`}
-                      className="text-sm px-3 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded text-center
+                      <Link
+                        to={`/apiaries/${a.id}/map`}
+                        className="text-sm px-3 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded text-center
                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-slate-500"
-                    >
-                      Map markers
-                    </Link>
-                  ) : (
-                    <Link
-                      to="/premium-required"
-                      className="text-sm px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded text-center
+                      >
+                        Map markers
+                      </Link>
+                    ) : (
+                      <Link
+                        to="/premium-required"
+                        className="text-sm px-3 py-2 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 rounded text-center
                       focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-amber-400"
-                    >
-                      🔒 Map markers
-                    </Link>
-                  )}
+                      >
+                        🔒 Map markers
+                      </Link>
+                    )}
 
                     <Link
                       to={`/hives/new?apiary_id=${a.id}`}
@@ -540,7 +545,7 @@ const ApiaryList = () => {
             })}
           </ul>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
             <div className="text-sm text-gray-600">
               Showing {total === 0 ? 0 : startIdx + 1}–{endIdx} of {total}
             </div>
@@ -573,7 +578,6 @@ const ApiaryList = () => {
               </button>
             </div>
           </div>
-
         </>
       )}
 

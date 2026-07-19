@@ -23,11 +23,11 @@ import ApiaryMapMarkers from "../pages/Apiaries/ApiaryMapMarkers.jsx";
 import HiveList from "../pages/Hives/HiveList.jsx";
 import NewHive from "../pages/Hives/NewHive.jsx";
 import EditHive from "../pages/Hives/EditHive.jsx";
+import HiveHealth from "../pages/Hives/HiveHealth.jsx";
 
 import InspectionList from "../pages/Inspections/InspectionList.jsx";
 import NewInspection from "../pages/Inspections/NewInspection.jsx";
 import EditInspection from "../pages/Inspections/EditInspection.jsx";
-import InspectionDetail from "../pages/Inspections/InspectionDetail.jsx";
 
 import Logbook from "../pages/Logbook/LogEntryList.jsx";
 import NewLogEntry from "../pages/Logbook/NewLogEntry.jsx";
@@ -147,9 +147,7 @@ function AppRoutes() {
           </Layout>
         }
       />
-      <Route
-        path="/legal/cookies"
-        element={
+      <Route path="/legal/cookies" element={
           <Layout>
             <Suspense fallback={<div className="p-6">Loading…</div>}>
               <CookieSettings />
@@ -157,45 +155,34 @@ function AppRoutes() {
           </Layout>
         }
       />
-
       {/* Protected */}
       <Route path="/dashboard" element={<Guarded><Dashboard /></Guarded>} />
-
       <Route path="/apiaries" element={<Guarded><ApiaryList /></Guarded>} />
       <Route path="/apiaries/new" element={<Guarded><NewApiary /></Guarded>} />
       <Route path="/apiaries/:id/edit" element={<Guarded><EditApiary /></Guarded>} />
       <Route path="/apiaries/:apiaryId/map" element={<ApiaryMapMarkers />} />
-
       <Route path="/hives" element={<Guarded><HiveList /></Guarded>} />
       <Route path="/hives/new" element={<Guarded><NewHive /></Guarded>} />
+      <Route path="/hives/:id" element={<PremiumGuarded><HiveHealth /></PremiumGuarded>} />
       <Route path="/hives/:id/edit" element={<Guarded><EditHive /></Guarded>} />
-
       <Route path="/inspections" element={<Guarded><InspectionList /></Guarded>} />
       <Route path="/inspections/new" element={<Guarded><NewInspection /></Guarded>} />
-      <Route path="/inspections/:id" element={<PremiumGuarded><InspectionDetail /></PremiumGuarded>} />
       <Route path="/inspections/:id/edit" element={<Guarded><EditInspection /></Guarded>} />
-
       <Route path="/inspections/step-by-step" element={<Guarded><StepByStepInspections /></Guarded>} />
-
       <Route path="/apiaries/step-by-step" element={<PremiumGuarded><StepByStepApiarySiting /></PremiumGuarded>} />
       <Route path="/hives/step-by-step" element={<Guarded><StepByStepHiveSiting /></Guarded>} />
-
       <Route path="/logbook" element={<Guarded><Logbook /></Guarded>} />
       <Route path="/logbook/new" element={<Guarded><NewLogEntry /></Guarded>} />
       <Route path="/logbook/:id/edit" element={<Guarded><EditLogEntry /></Guarded>} />
-
       <Route path="/todos" element={<Guarded><TodoList /></Guarded>} />
       <Route path="/todos/new" element={<Guarded><NewTodo /></Guarded>} />
       <Route path="/todos/:id/edit" element={<Guarded><EditTodo /></Guarded>} />
-
       <Route path="/calendar" element={<Guarded><Calendar /></Guarded>} />
       <Route path="/weather" element={<Guarded><Weather /></Guarded>} />
       <Route path="/settings" element={<Guarded><Settings /></Guarded>} />
       <Route path="/archive" element={<Guarded><Archive /></Guarded>} />
       <Route path="/help" element={<Guarded><Help /></Guarded>} />
-
       <Route path="/help/getting-started" element={<Guarded><GettingStarted /></Guarded>} />
-
       <Route path="/bee-health" element={<Guarded><BeeHealthHelper /></Guarded>} />
       <Route path="/seasonal-guide" element={<PremiumGuarded><SeasonalGuide /></PremiumGuarded>} />
 
@@ -232,9 +219,11 @@ function AppRoutes() {
       {/* Contact */}
       <Route path="/contact" element={<Guarded><Contact /></Guarded>} />
       <Route path="/contact/sent" element={<Guarded><ContactSent /></Guarded>} />
-
+      
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
+
+
     </Routes>
   );
 }

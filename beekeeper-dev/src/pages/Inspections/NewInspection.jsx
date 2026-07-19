@@ -12,6 +12,7 @@ import {
   getTempUnit,
 } from "../../utils/formatDerivedWeather.js";
 
+
 // WMO → text
 const weatherCodeMap = {
   0: "Clear sky",
@@ -611,9 +612,8 @@ const NewInspection = () => {
 
     const hasAFB = formData.disease_types.includes("AFB");
     const hasEFB = formData.disease_types.includes("EFB");
-    const hasVarroa = formData.disease_types.includes("Varroa");
-
-    if (!hasAFB && !hasEFB && !hasVarroa) return null;
+ 
+    if (!hasAFB && !hasEFB) return null;
 
     const auth = COUNTRY_AUTH[reportCountry] || COUNTRY_AUTH["England & Wales"];
 
@@ -650,18 +650,7 @@ const NewInspection = () => {
           </p>
         )}
 
-        {hasVarroa && (
-          <p className="mt-1">
-            <strong>Varroa (monitoring):</strong> Varroa is <strong>not a notifiable disease</strong>{" "}
-            in the UK. Beekeepers are encouraged to monitor infestation levels, keep treatment
-            records, and share concerns (e.g., unusually high counts or suspected treatment
-            resistance) with{" "}
-            <a href={auth.url} target="_blank" rel="noreferrer" className="underline">
-              {auth.name}
-            </a>{" "}
-            where appropriate.
-          </p>
-        )}
+        
       </div>
     );
   };
@@ -839,7 +828,6 @@ const NewInspection = () => {
             placeholder="What did you actually observe at the hive? (e.g. sunny, warm, light breeze)"
           />
         </div>
-
         {/* Colony Behaviour */}
         <div>
           <label className="block font-semibold">Colony Behaviour</label>
@@ -1055,7 +1043,7 @@ const NewInspection = () => {
 
           {formData.signs_disease === "yes" && (
             <>
-              {["Varroa", "Chalkbrood", "Sacbrood", "EFB", "AFB", "Nosema", "Dead bees", "Other"].map(
+             {["Chalkbrood", "Sacbrood", "EFB", "AFB", "Nosema", "Dead bees", "Other"].map(
                 (opt) => (
                   <label key={opt} className="block">
                     <input

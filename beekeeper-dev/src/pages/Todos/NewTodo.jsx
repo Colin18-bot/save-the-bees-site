@@ -118,7 +118,7 @@ useEffect(() => {
     other_title: prefillTitle || p.other_title,
     inspection_id: inspectionId || p.inspection_id,
     notes: inspectionId
-  ? "Follow-up task created from the inspection insights page."
+  ? "Follow-up task created from Hive Health."
   : p.notes,
   }));
 }, [prefillTitle, prefillApiaryId, prefillHiveId, inspectionId]);
@@ -343,7 +343,7 @@ useEffect(() => {
           to={returnTo}
           className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100"
         >
-          ← Back to inspection insights
+          ← Back to Hive Health
         </Link>
       </div>
     )}

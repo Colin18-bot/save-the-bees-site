@@ -6,7 +6,98 @@ import {
   formatDerivedWeather,
   getTempUnit,
 } from "../../utils/formatDerivedWeather";
-import { buildInspectionInsights, buildKitSuggestions } from "./inspectionInsights";
+
+  const buildInspectionStatusPills = (inspection = {}) => {
+  const pills = [];
+
+  const queenStatus = Array.isArray(inspection.queen_status)
+    ? inspection.queen_status
+    : [];
+
+  const rawDiseaseTypes = Array.isArray(inspection.disease_types)
+  ? inspection.disease_types
+  : [];
+
+  const legacyVarroaSelected = rawDiseaseTypes.includes("Varroa");
+
+  const diseaseTypes = rawDiseaseTypes.filter(
+    (type) => type !== "Varroa"
+  );
+
+  const pestTypes = Array.isArray(inspection.pest_types)
+    ? inspection.pest_types
+    : [];
+
+  if (queenStatus.includes("Seen")) {
+    pills.push({
+      level: "good",
+      title: "Queen seen",
+    });
+  } else if (queenStatus.includes("Eggs")) {
+    pills.push({
+      level: "good",
+      title: "Eggs recorded",
+    });
+  }
+
+  if (String(inspection.food_stores || "").toLowerCase() === "low") {
+    pills.push({
+      level: "warning",
+      title: "Low stores recorded",
+    });
+  }
+
+  if (inspection.varroa_seen || legacyVarroaSelected) {
+    pills.push({
+      level: "warning",
+      title: "Varroa observed",
+    });
+  }
+
+  if (inspection.signs_disease && diseaseTypes.length > 0) {
+    pills.push({
+      level: "danger",
+      title: `Disease: ${diseaseTypes.join(", ")}`,
+    });
+  }
+
+  if (inspection.signs_pests) {
+    pills.push({
+      level: "warning",
+      title:
+        pestTypes.length > 0
+          ? `Pests: ${pestTypes.join(", ")}`
+          : "Pest signs recorded",
+    });
+  }
+
+  if (String(inspection.brood_pattern || "").toLowerCase() === "spotty") {
+    pills.push({
+      level: "warning",
+      title: "Spotty brood recorded",
+    });
+  }
+
+  if (
+    ["charged", "sealed"].includes(
+      String(inspection.queen_cells || "").toLowerCase()
+    )
+  ) {
+    pills.push({
+      level: "danger",
+      title: "Queen cells recorded",
+    });
+  }
+
+  if (String(inspection.hive_population || "").toLowerCase() === "low") {
+    pills.push({
+      level: "warning",
+      title: "Low population recorded",
+    });
+  }
+
+  return pills;
+};
 
 const PAGE_SIZE = 9;
 
@@ -547,21 +638,37 @@ if (ids.length > 0) {
     return out;
   };
 
-const insightClass = (level) => {
-    if (level === "high") return "bg-red-50 border-red-200 text-red-800";
-    if (level === "medium") return "bg-amber-50 border-amber-200 text-amber-900";
-    return "bg-green-50 border-green-200 text-green-800";
-  };
+    const statusPillClass = (level) => {
+      if (level === "danger") {
+        return "bg-red-50 border-red-200 text-red-800";
+      }
+
+      if (level === "warning") {
+        return "bg-amber-50 border-amber-200 text-amber-900";
+      }
+
+      return "bg-green-50 border-green-200 text-green-800";
+    };
 
     const getDiseaseInfo = (insp) => {
-    const types = Array.isArray(insp?.disease_types) ? insp.disease_types : [];
+    const rawTypes = Array.isArray(insp?.disease_types)
+      ? insp.disease_types
+      : [];
+
+    const types = rawTypes.filter((type) => type !== "Varroa");
     const other = (insp?.disease_other || "").trim();
+
     const hasAFB = types.includes("AFB");
     const hasEFB = types.includes("EFB");
-    const hasVarroa = types.includes("Varroa");
     const notifiable = hasAFB || hasEFB;
-    const label = [...types, ...(other ? [other] : [])].join(", ") || "—";
-    return { label, notifiable, hasVarroa };
+
+    const label = [...types, ...(other ? [other] : [])].join(", ");
+
+    return {
+      label,
+      notifiable,
+      hasDiseaseDetails: Boolean(label),
+    };
   };
 
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
@@ -760,10 +867,12 @@ const insightClass = (level) => {
               const summary = buildSummary(insp);
               const photos = Array.isArray(insp.photos) ? insp.photos : [];
               const diseaseInfo = insp.signs_disease ? getDiseaseInfo(insp) : null;
-              const insights = buildInspectionInsights(insp);
-              const visibleInsights = insights.slice(0, 3);
-              const hiddenInsightCount = Math.max(0, insights.length - visibleInsights.length);
-              const kitSuggestions = buildKitSuggestions(insp);
+              const statusPills = buildInspectionStatusPills(insp);
+              const visibleStatusPills = statusPills.slice(0, 3);
+              const hiddenStatusCount = Math.max(
+                0,
+                statusPills.length - visibleStatusPills.length
+              );
               const isHighlighted =
                 highlightId &&
                 String(insp.id) === String(highlightId) &&
@@ -816,37 +925,29 @@ const insightClass = (level) => {
                     </span>
                   </div>
 
-                  {visibleInsights.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {visibleInsights.map((insight, idx) => (
+                  {visibleStatusPills.length > 0 && (
+                  <div className="mb-2 flex flex-wrap gap-2">
+                    {visibleStatusPills.map((pill, index) => (
                       <span
-                        key={`${insight.title}-${idx}`}
-                        className={`text-xs px-2 py-1 rounded-full border font-medium ${insightClass(
-                          insight.level
+                        key={`${pill.title}-${index}`}
+                        className={`rounded-full border px-2 py-1 text-xs font-medium ${statusPillClass(
+                          pill.level
                         )}`}
-                        title={insight.reasons?.join(", ")}
                       >
-                        {insight.level === "high" ? "⚠️ " : insight.level === "medium" ? "⚠️ " : "✔ "}
-                       {insight.title}
+                        {pill.level === "good" ? "✔ " : "⚠️ "}
+                        {pill.title}
                       </span>
                     ))}
 
-                    {hiddenInsightCount > 0 && (
-                      <span className="text-xs px-2 py-1 rounded-full border bg-gray-50 text-gray-700">
-                        +{hiddenInsightCount} more
+                    {hiddenStatusCount > 0 && (
+                      <span className="rounded-full border bg-gray-50 px-2 py-1 text-xs text-gray-700">
+                        +{hiddenStatusCount} more
                       </span>
                     )}
                   </div>
                 )}
 
-                {kitSuggestions.length > 0 && (
-                  <p className="text-xs text-gray-700 mb-2">
-                    <span className="font-semibold">Suggested:</span>{" "}
-                    {kitSuggestions.join(", ")}
-                  </p>
-                )}
-
-                  <div className="mb-2 flex flex-wrap items-center gap-3">
+                 <div className="mb-2 flex flex-wrap items-center gap-3">
   <span
     className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded border ${
       logs.count > 0
@@ -927,7 +1028,7 @@ const insightClass = (level) => {
                       </li>
                     ))}
 
-                    {insp.signs_disease && (
+                    {insp.signs_disease && diseaseInfo?.hasDiseaseDetails && (
                       <li>
                         <span className="font-medium">Disease: </span>
                         <span
@@ -935,8 +1036,6 @@ const insightClass = (level) => {
                             "inline-block px-1.5 py-0.5 rounded border",
                             diseaseInfo?.notifiable
                               ? "bg-red-50 border-red-200 text-red-800"
-                              : diseaseInfo?.hasVarroa
-                              ? "bg-amber-50 border-amber-200 text-amber-900"
                               : "bg-gray-50 border-gray-200 text-gray-800",
                           ].join(" ")}
                         >
@@ -949,12 +1048,6 @@ const insightClass = (level) => {
                   {insp.signs_disease && diseaseInfo?.notifiable && (
                     <div className="mb-3 p-2 text-sm rounded border bg-red-50 border-red-200 text-red-800">
                       ⚠️ Notifiable disease suspected (AFB/EFB). Report to the relevant authority.
-                    </div>
-                  )}
-
-                  {insp.signs_disease && !diseaseInfo?.notifiable && diseaseInfo?.hasVarroa && (
-                    <div className="mb-3 p-2 text-sm rounded border bg-amber-50 border-amber-200 text-amber-900">
-                      Varroa recorded — consider monitoring levels and keeping treatment records.
                     </div>
                   )}
 
@@ -983,8 +1076,8 @@ const insightClass = (level) => {
                       type="button"
                       onClick={() =>
                         isPremium
-                          ? navigate(`/inspections/${insp.id}`)
-                          : navigate("/premium-required?from=inspection-insights")
+                          ? navigate(`/hives/${insp.hive_id}`)
+                          : navigate("/premium-required?from=hive-health")
                       }
                       className={`inline-block text-white text-sm px-3 py-2 rounded ${
                         isPremium
@@ -992,7 +1085,7 @@ const insightClass = (level) => {
                           : "bg-amber-600 hover:bg-amber-700"
                       }`}
                     >
-                      {isPremium ? "View Insights" : "🔒 View Insights"}
+                      {isPremium ? "Open Hive Health" : "🔒 Open Hive Health"}
                     </button>
 
                     <button

@@ -1,0 +1,1 @@
+export { analyseBrood } from "./broodInterpreter";

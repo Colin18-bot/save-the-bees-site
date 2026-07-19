@@ -6,7 +6,7 @@ export default function Terms() {
     <div className="max-w-3xl mx-auto p-6">
       <h2 className="text-2xl font-bold">Terms of Use</h2>
       <p className="text-gray-600">
-        <strong>Effective date:</strong> 14 June 2025
+        <strong>Effective date:</strong> 16 July 2026
       </p>
 
       {/* 1. Who we are */}
@@ -14,9 +14,10 @@ export default function Terms() {
         <h2 className="text-lg font-semibold">1. Who we are</h2>
         <p>
           These Terms of Use (&quot;Terms&quot;) govern your access to and use of the
-          BeezKnees Members app (&quot;Service&quot;). References to &quot;BeezKnees&quot;,
+          HiveTag by BeezKnees (&quot;Service&quot;). References to &quot;BeezKnees&quot;,
           &quot;we&quot;, &quot;us&quot; or &quot;our&quot; in these Terms refer to the operator of the
           Service.
+
         </p>
         <p>
           If you have any questions about these Terms, please contact{" "}
@@ -96,7 +97,7 @@ export default function Terms() {
         </p>
         <ul className="list-disc pl-6 space-y-1">
           <li>
-            Payments are processed securely by Stripe. BeezKnees does not store
+            Payments are processed securely by Stripe. HiveTag does not store
             full card details.
           </li>
           <li>
@@ -124,7 +125,7 @@ export default function Terms() {
           The Service is intended as an educational, record-keeping and inspection-support tool to help you organise and manage your beekeeping activities. It does not provide veterinary, scientific, legal, regulatory, diagnostic or professional beekeeping advice.
         </p>
         <p>
-          You remain fully responsible for your own inspections, beekeeping decisions, treatment decisions, disease reporting obligations, biosecurity measures, legal compliance, and for seeking advice from qualified professionals or official authorities where appropriate. BeezKnees does not diagnose disease, confirm colony health, guarantee outcomes, or replace direct hive inspections, beekeeper judgement, laboratory testing, bee inspectors, or official guidance. Any actions you take based on information, prompts, insights, seasonal suggestions, health-check flows, or stored records within the Service are entirely at your own risk.
+          You remain responsible for all inspection findings, hive-management decisions, feeding, treatments, biosecurity measures, disease-reporting obligations and compliance with applicable laws and guidance. HiveTag does not diagnose disease, confirm colony health, guarantee treatment outcomes or replace physical hive inspections, laboratory testing, bee inspectors or other qualified professional advice. Any decisions you make using information provided by the Service remain your responsibility.
         </p>
             </section>
 
@@ -135,7 +136,7 @@ export default function Terms() {
         </h2>
 
         <p>
-          HiveTag features such as Colony Health Check, Inspection Insights,
+          HiveTag features such as Colony Health Check, Hive Health,
           seasonal guidance, weather guidance, risk badges, inspection prompts,
           suggested actions, swarm indicators, treatment reminders, forage notes,
           or other automated outputs are provided for general educational and
@@ -150,9 +151,7 @@ export default function Terms() {
         </p>
 
         <p>
-          Users must always verify observations independently and follow official
-          UK bee health guidance, including reporting requirements for notifiable
-          pests and diseases where applicable.
+          Users should always verify observations through direct hive inspections and, where appropriate, seek advice from a bee inspector or other suitably qualified professional. Where notifiable pests or diseases are suspected, current official UK reporting requirements must always be followed.
         </p>
       </section>
 
@@ -169,7 +168,7 @@ export default function Terms() {
         <ul className="list-disc pl-6 space-y-1">
           <li>You retain ownership of your User Content.</li>
           <li>
-            You grant BeezKnees a limited licence to store and process your User
+            You grant HiveTag a limited licence to store and process your User
             Content solely for the purposes of operating the Service.
           </li>
           <li>
@@ -264,7 +263,7 @@ export default function Terms() {
         <p>
           You are responsible for configuring your devices and software to access
           the Service, including using your own virus protection and security
-          measures. To the fullest extent permitted by law, BeezKnees is not
+          measures. To the fullest extent permitted by law, HiveTag is not
           responsible for any loss or damage caused by viruses, malware, or
           security issues that may affect your equipment, software or data as a
           result of using the Service or downloading content from it.
@@ -284,12 +283,12 @@ export default function Terms() {
         </p>
         <ul className="list-disc pl-6 space-y-1">
           <li>
-            BeezKnees is not liable for any indirect, consequential or special
+            HiveTag is not liable for any indirect, consequential or special
             loss, or for loss of profits, revenue, data, goodwill or business
             opportunities.
           </li>
           <li>
-            BeezKnees is not liable for any loss, damage, disease spread, colony loss, treatment outcome, missed reporting obligation, business interruption, or other consequence resulting from reliance on data, reminders, inspection records, health-check outputs, seasonal guidance, weather information, NFC functionality, hive data, alerts, or automated suggestions presented within the Service.
+            HiveTag is not liable for any loss, damage, disease spread, colony loss, treatment outcome, missed reporting obligation, business interruption, or other consequence resulting from reliance on data, reminders, inspection records, Colony Health Check outputs, seasonal guidance, weather information, NFC functionality, hive data, alerts, or automated suggestions presented within the Service.
           </li>
           <li>
             If we are found liable for any claim arising out of or in connection

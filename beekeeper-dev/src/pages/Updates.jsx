@@ -9,6 +9,82 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 
+
+
+{
+  version: "1.3.0",
+  released_at: "2026-07-16T18:00:00Z",
+
+  summary:
+    "Introduced the new Hive Health intelligence system, simplified the inspection workflow, improved disease and varroa recording, strengthened Premium functionality, refreshed the Help system, and delivered numerous usability, stability and workflow improvements across HiveTag.",
+
+  added: [
+    "Added a completely redesigned **Hive Health** system providing explainable colony health scores, risk assessments, trends, confidence levels and recommended actions.",
+    "Added **Hive Health Overview** and **Hive Health Timeline** panels to the Dashboard for Premium users.",
+    "Added direct **Open Hive Health** access from the Inspection List after every inspection.",
+    "Added explainable intelligence showing why HiveTag has generated particular recommendations.",
+    "Added confidence scoring based on available inspection history.",
+    "Added a comprehensive **Hive Health** section to the Help system.",
+    "Added a new **Which HiveTag feature should I use?** quick-start guide to help new users understand the application."
+  ],
+
+  changed: [
+    "Inspection workflow redesigned so Hive Health is now the primary follow-up after completing an inspection.",
+    "Inspection summary cards now provide a concise overview using coloured status pills before opening Hive Health.",
+    "Improved disease recording by separating Varroa from brood disease recording, reducing duplicate data entry.",
+    "Updated Dashboard so Hive Health Overview and Timeline are available only to Premium users.",
+    "Updated Reports Centre to better integrate Hive Intelligence and recommended actions.",
+    "Updated Premium feature messaging throughout the application for greater consistency.",
+    "Updated Help documentation to accurately reflect the current application and new workflows."
+  ],
+
+  fixed: [
+    "Fixed duplicate Varroa recording between inspection fields and disease selection.",
+    "Fixed legacy Inspection Insights workflow by consolidating intelligence into Hive Health.",
+    "Fixed inconsistent Premium access across Dashboard and Inspection workflows.",
+    "Improved Hive Health recommendations and risk prioritisation.",
+    "Improved intelligence consistency across inspections, reports and dashboard views.",
+    "Improved overall application stability and navigation following the Hive Health redesign."
+  ],
+
+  removed: [
+    "Removed the standalone **Inspection Insights** workflow in favour of the unified Hive Health experience.",
+    "Removed duplicate Varroa entries from disease recording.",
+    "Removed obsolete inspection intelligence components no longer required by the new Hive Health architecture."
+  ],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Hive Health", to: "/hives" },
+    { label: "Inspections", to: "/inspections" },
+    { label: "Reports Centre", to: "/reports/print" },
+    { label: "Help", to: "/help" },
+    { label: "Pricing", to: "/pricing" }
+  ],
+
+  known_issues: [
+    "Hive Health intelligence is based on recorded inspection data and becomes increasingly accurate as additional inspections are completed.",
+    "Health scores are intended to support beekeeper decision-making and should always be considered alongside physical hive inspections.",
+    "Future releases will continue expanding long-term trend analysis and colony intelligence."
+  ]
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
   {
   version: "1.2.0",
   released_at: "2026-06-25T18:00:00Z",

@@ -5,14 +5,14 @@ export default function PrivacyPolicy() {
     <div id="top" className="max-w-3xl mx-auto p-6">
       <h2 className="text-2xl font-bold">Privacy Policy</h2>
       <p className="text-gray-600">
-        <strong>Effective date:</strong> 14 June 2025
+        <strong>Effective date:</strong> 16 July 2026
       </p>
 
       <section className="space-y-3 mt-6">
         <h2 className="text-lg font-semibold">Who we are (Data Controller)</h2>
         <p>
-          BeezKnees (“we”, “us”) is the Data Controller for the BeezKnees Members
-          app. Contact:{" "}
+          BeezKnees (“we”, “us”) is the Data Controller for HiveTag by BeezKnees.
+           Contact:{" "}
           <a
             className="underline text-amber-700"
             href="/contact"
@@ -209,7 +209,7 @@ export default function PrivacyPolicy() {
         <p>
           If you link an NFC tag UID to a hive, the UID is stored with that hive
           record to speed up lookups on supported devices (for example, when you
-          tap a HiveTag and open the relevant hive or start a new inspection). The
+          tap a HiveTag NFC label and open the relevant hive or start a new inspection). The
           tag UID itself is not used for location tracking or behavioural profiling
           and is not shared with third parties. You can remove a tag from a hive
           at any time in the NFC Tag Manager.
@@ -281,8 +281,7 @@ export default function PrivacyPolicy() {
       <section className="space-y-3 mt-6">
         <h2 className="text-lg font-semibold">11. Children’s Data</h2>
         <p>
-          This service is not intended for children under 13 (or under 16 where
-          applicable). We do not knowingly collect data from children.
+          This Service is intended for users aged 16 years or over. We do not knowingly collect personal data from anyone under the age of 16. We do not knowingly collect data from children.
         </p>
       </section>
 

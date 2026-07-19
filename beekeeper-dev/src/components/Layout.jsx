@@ -123,7 +123,7 @@ const Layout = ({ children }) => {
         {/* Main Content */}
         <div className="md:flex-1 flex flex-col min-h-0">
           {/* Banner */}
-          <div className="relative z-0">
+          <div className="relative z-0 no-print">
             <img
               src={bannerImage}
               alt="Banner"
@@ -136,33 +136,7 @@ const Layout = ({ children }) => {
             ref={mainScrollRef}
             className="flex-1 p-4 sm:p-6 overflow-auto bg-white z-10 max-w-full"
           >
-            {children}
-
-            {/* Global Educational Disclaimer */}
-            <div className="mt-8 border border-yellow-200 bg-yellow-50 rounded-xl p-4 text-sm text-gray-700">
-              <p className="font-semibold text-amber-800 mb-2">
-                Educational & Inspection-Support Disclaimer
-              </p>
-
-              <p>
-                HiveTag provides educational, record-keeping and
-                inspection-support guidance only.
-              </p>
-
-              <p className="mt-2">
-                The app does not diagnose disease, confirm colony health,
-                guarantee treatment outcomes, or replace direct hive
-                inspections, beekeeper judgement, laboratory testing,
-                official reporting requirements, bee inspectors or
-                professional advice.
-              </p>
-
-              <p className="mt-2">
-                Users remain fully responsible for all hive management,
-                treatment, feeding, biosecurity and disease-reporting
-                decisions.
-              </p>
-            </div>
+           {children}
           </main>
 
           {/* ✅ Back to top

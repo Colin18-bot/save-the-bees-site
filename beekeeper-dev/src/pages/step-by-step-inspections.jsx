@@ -1,6 +1,7 @@
 // src/pages/step-by-step-inspections.jsx
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import logo from "../assets/logo.svg";
 
 /**
  * Step-by-step hive inspection guidance page (BeezKnees)
@@ -81,7 +82,9 @@ const Badge = ({ children, tone = "slate" }) => {
     sky: "bg-sky-50 text-sky-700 ring-sky-200",
   };
   return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${tones[tone]}`}>
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${tones[tone]}`}
+    >
       {children}
     </span>
   );
@@ -96,7 +99,7 @@ const Callout = ({ title, children, tone = "sky" }) => {
     slate: "border-slate-200 bg-slate-50 text-slate-900",
   };
   return (
-    <div className={`rounded-2xl border p-4 ${tones[tone]}`}>
+    <div className={`rounded-2xl border p-4 print-card ${tones[tone]}`}>
       {title ? <div className="mb-2 font-semibold">{title}</div> : null}
       <div className="text-sm leading-relaxed">{children}</div>
     </div>
@@ -104,7 +107,7 @@ const Callout = ({ title, children, tone = "sky" }) => {
 };
 
 const VisualCard = ({ title, subtitle, svg, children }) => (
-  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+  <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm print-card">
     <div className="flex items-start gap-3">
       <div className="mt-0.5 h-10 w-10 flex-none rounded-xl bg-slate-50 ring-1 ring-slate-200 flex items-center justify-center">
         {svg}
@@ -114,7 +117,9 @@ const VisualCard = ({ title, subtitle, svg, children }) => (
         {subtitle ? <div className="text-xs text-slate-600 mt-0.5">{subtitle}</div> : null}
       </div>
     </div>
-    {children ? <div className="mt-3 text-sm text-slate-700 leading-relaxed">{children}</div> : null}
+    {children ? (
+      <div className="mt-3 text-sm text-slate-700 leading-relaxed">{children}</div>
+    ) : null}
   </div>
 );
 
@@ -177,7 +182,7 @@ const Step = ({
   optionalAddOns = [],
   commonMistakes = [],
 }) => (
-  <section id={`step-${idx}`} className="scroll-mt-28">
+  <section id={`step-${idx}`} className="scroll-mt-28 print-step">
     <div className="rounded-3xl border border-slate-200 bg-white shadow-sm overflow-hidden">
       <div className="p-5 md:p-6">
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
@@ -186,22 +191,31 @@ const Step = ({
               <h2 className="text-lg md:text-xl font-bold text-slate-900">
                 {idx}. {title}
               </h2>
-              {mandatory ? <Badge tone="emerald">Mandatory</Badge> : <Badge tone="amber">Optional</Badge>}
+              {mandatory ? (
+                <Badge tone="emerald">Mandatory</Badge>
+              ) : (
+                <Badge tone="amber">Optional</Badge>
+              )}
               {time ? <Badge tone="slate">{time}</Badge> : null}
             </div>
           </div>
         </div>
 
-        <div className="mt-4 grid gap-4 lg:grid-cols-3">
+        <div className="mt-4 grid gap-4 lg:grid-cols-3 print-columns">
           {/* Visual Support */}
           <div className="lg:col-span-1">
-            <VisualCard title={visualTitle} subtitle="Visual support (quick reference)" svg={FrameSvg}>
+            <VisualCard
+              title={visualTitle}
+              subtitle="Visual support (quick reference)"
+              svg={FrameSvg}
+            >
               <div className="space-y-2">
                 <p className="text-sm text-slate-700">{visualBody}</p>
                 <div className="rounded-xl bg-slate-50 ring-1 ring-slate-200 p-3">
                   <div className="text-xs font-semibold text-slate-700">Tip</div>
                   <div className="text-sm text-slate-700 mt-1">
-                    Use this page like a “field guide” — read at home, then glance quickly in the apiary.
+                    Use this page like a “field guide” — read at home, then glance quickly in the
+                    apiary.
                   </div>
                 </div>
               </div>
@@ -210,7 +224,7 @@ const Step = ({
 
           {/* What to do */}
           <div className="lg:col-span-1">
-            <div className="rounded-2xl border border-slate-200 p-4 h-full">
+            <div className="rounded-2xl border border-slate-200 p-4 h-full print-card">
               <div className="flex items-center justify-between">
                 <div className="font-semibold text-slate-900">What to do</div>
                 <Badge tone="sky">Do this</Badge>
@@ -225,7 +239,7 @@ const Step = ({
 
           {/* What to look for */}
           <div className="lg:col-span-1">
-            <div className="rounded-2xl border border-slate-200 p-4 h-full">
+            <div className="rounded-2xl border border-slate-200 p-4 h-full print-card">
               <div className="flex items-center justify-between">
                 <div className="font-semibold text-slate-900">What to look for</div>
                 <Badge tone="slate">Observe</Badge>
@@ -311,10 +325,10 @@ export default function StepByStepInspections() {
           seasonKey === "winter"
             ? "Winter: stick to external checks unless you have a strong reason to open. Heft the hive and check the entrance is clear."
             : seasonKey === "spring"
-            ? "Spring: entrance activity can ramp up quickly—don’t assume strong activity means everything is fine inside. Still inspect efficiently."
-            : seasonKey === "autumn"
-            ? "Autumn: watch for robbing pressure. Reduce entrances where appropriate and avoid spilling syrup."
-            : "Summer: during a strong flow, flight lines can look intense—focus on whether bees are bringing pollen/nectar and behaving normally.",
+              ? "Spring: entrance activity can ramp up quickly—don’t assume strong activity means everything is fine inside. Still inspect efficiently."
+              : seasonKey === "autumn"
+                ? "Autumn: watch for robbing pressure. Reduce entrances where appropriate and avoid spilling syrup."
+                : "Summer: during a strong flow, flight lines can look intense—focus on whether bees are bringing pollen/nectar and behaving normally.",
         commonMistakes: [
           "Opening the hive without a clear purpose (leads to long, disruptive inspections).",
           "Standing directly in the flight path and getting annoyed bees ‘for free’.",
@@ -343,12 +357,18 @@ export default function StepByStepInspections() {
           seasonKey === "spring"
             ? "Spring: keep the hive open time short to avoid chilling brood on cooler days. Have your kit ready first."
             : seasonKey === "summer"
-            ? "Summer: keep brood frames shaded; avoid exposing them to direct sun for long."
-            : seasonKey === "autumn"
-            ? "Autumn: minimise disturbance—get in, confirm what you need, and close up."
-            : "Winter: avoid opening unless essential and conditions are suitable.",
-        optionalAddOns: ["Use a stand/tray for the roof/crown board to avoid grass and wobble.", "Take a quick photo of the top bars for later review."],
-        commonMistakes: ["Over-smoking (can drive bees and make them harder to handle).", "Leaving the hive open while you ‘think’ — decide the plan first."],
+              ? "Summer: keep brood frames shaded; avoid exposing them to direct sun for long."
+              : seasonKey === "autumn"
+                ? "Autumn: minimise disturbance—get in, confirm what you need, and close up."
+                : "Winter: avoid opening unless essential and conditions are suitable.",
+        optionalAddOns: [
+          "Use a stand/tray for the roof/crown board to avoid grass and wobble.",
+          "Take a quick photo of the top bars for later review.",
+        ],
+        commonMistakes: [
+          "Over-smoking (can drive bees and make them harder to handle).",
+          "Leaving the hive open while you ‘think’ — decide the plan first.",
+        ],
       },
       {
         idx: 3,
@@ -373,11 +393,14 @@ export default function StepByStepInspections() {
           seasonKey === "autumn"
             ? "Autumn: stores are critical—make feeding decisions early enough to matter. Avoid leaving it too late."
             : seasonKey === "spring"
-            ? "Spring: a colony can starve quickly during poor weather. A quick stores check is essential even if your main goal is swarm prevention."
-            : seasonKey === "winter"
-            ? "Winter: do not pull frames—use hefting and external checks unless there’s an urgent issue."
-            : "Summer: ensure the colony has space above during a flow; congestion can trigger swarm impulses even in summer.",
-        optionalAddOns: ["Record approximate frames of stores (e.g., ‘2 heavy stores frames’).", "If you use scales, log hive weight/estimate."],
+              ? "Spring: a colony can starve quickly during poor weather. A quick stores check is essential even if your main goal is swarm prevention."
+              : seasonKey === "winter"
+                ? "Winter: do not pull frames—use hefting and external checks unless there’s an urgent issue."
+                : "Summer: ensure the colony has space above during a flow; congestion can trigger swarm impulses even in summer.",
+        optionalAddOns: [
+          "Record approximate frames of stores (e.g., ‘2 heavy stores frames’).",
+          "If you use scales, log hive weight/estimate.",
+        ],
       },
       {
         idx: 4,
@@ -403,12 +426,18 @@ export default function StepByStepInspections() {
           seasonKey === "spring"
             ? "Spring: brood expansion is rapid. Confirm the colony has enough space and consider early swarm pressure."
             : seasonKey === "summer"
-            ? "Summer: watch for queen slowdown during dearth; brood pattern may shrink—focus on whether it matches forage conditions."
-            : seasonKey === "autumn"
-            ? "Autumn: brood reduces naturally. Your key question becomes: ‘Is this colony strong enough and well-provisioned for winter?’"
-            : "Winter: avoid brood-frame inspections. If you must open, do it fast and only on a suitable day.",
-        optionalAddOns: ["If you mark queens, note the mark colour/visibility.", "Snap a quick photo of brood frames for later comparison."],
-        commonMistakes: ["Spending too long hunting the queen every inspection.", "Holding frames away from the hive where drops are catastrophic."],
+              ? "Summer: watch for queen slowdown during dearth; brood pattern may shrink—focus on whether it matches forage conditions."
+              : seasonKey === "autumn"
+                ? "Autumn: brood reduces naturally. Your key question becomes: ‘Is this colony strong enough and well-provisioned for winter?’"
+                : "Winter: avoid brood-frame inspections. If you must open, do it fast and only on a suitable day.",
+        optionalAddOns: [
+          "If you mark queens, note the mark colour/visibility.",
+          "Snap a quick photo of brood frames for later comparison.",
+        ],
+        commonMistakes: [
+          "Spending too long hunting the queen every inspection.",
+          "Holding frames away from the hive where drops are catastrophic.",
+        ],
       },
       {
         idx: 5,
@@ -432,10 +461,10 @@ export default function StepByStepInspections() {
           seasonKey === "spring"
             ? "Spring: this is your high-priority optional step—often effectively mandatory during swarm season."
             : seasonKey === "summer"
-            ? "Summer: still check if colonies are strong or congested, especially early summer."
-            : seasonKey === "autumn"
-            ? "Autumn: queen cells may be supersedure-related rather than swarming. Context matters."
-            : "Winter: generally not relevant.",
+              ? "Summer: still check if colonies are strong or congested, especially early summer."
+              : seasonKey === "autumn"
+                ? "Autumn: queen cells may be supersedure-related rather than swarming. Context matters."
+                : "Winter: generally not relevant.",
         optionalAddOns: [
           "Add a note like ‘Swarm risk: low/medium/high’ to help you plan next inspection timing.",
           "If you raise queens, record cell type and intended action clearly.",
@@ -464,10 +493,10 @@ export default function StepByStepInspections() {
           seasonKey === "autumn"
             ? "Autumn: ensure varroa management isn’t ‘forgotten’—this is a key time to confirm your plan has been followed through."
             : seasonKey === "summer"
-            ? "Summer: plan ahead for post-honey-flow management so you’re not reacting late."
-            : seasonKey === "spring"
-            ? "Spring: early detection helps prevent escalation as colony populations explode."
-            : "Winter: focus on external signs and dead-outs; avoid opening unless urgent.",
+              ? "Summer: plan ahead for post-honey-flow management so you’re not reacting late."
+              : seasonKey === "spring"
+                ? "Spring: early detection helps prevent escalation as colony populations explode."
+                : "Winter: focus on external signs and dead-outs; avoid opening unless urgent.",
         commonMistakes: [
           "Writing vague notes like ‘seems fine’ (hard to learn from later).",
           "Trying to ‘fix everything’ mid-inspection without a plan (record first, act purposefully).",
@@ -495,8 +524,8 @@ export default function StepByStepInspections() {
           seasonKey === "autumn"
             ? "Autumn: prioritise weather-tightness. Fix issues now, not mid-winter."
             : seasonKey === "winter"
-            ? "Winter: do external checks for damage and water ingress; open only if needed."
-            : "Spring/Summer: plan comb rotation and repairs during calmer periods.",
+              ? "Winter: do external checks for damage and water ingress; open only if needed."
+              : "Spring/Summer: plan comb rotation and repairs during calmer periods.",
       },
       {
         idx: 8,
@@ -521,10 +550,10 @@ export default function StepByStepInspections() {
           seasonKey === "spring"
             ? "Spring: set the next inspection date/goal clearly (swarm season moves fast)."
             : seasonKey === "autumn"
-            ? "Autumn: record stores decisions and any treatment follow-up dates clearly."
-            : seasonKey === "winter"
-            ? "Winter: record external checks (hefting/entrance) even if you didn’t open the hive."
-            : "Summer: record honey-flow observations and super management decisions.",
+              ? "Autumn: record stores decisions and any treatment follow-up dates clearly."
+              : seasonKey === "winter"
+                ? "Winter: record external checks (hefting/entrance) even if you didn’t open the hive."
+                : "Summer: record honey-flow observations and super management decisions.",
         optionalAddOns: [
           "Attach a photo (brood frame, queen cell, stores frame) as evidence for later.",
           "Add a ‘Follow-up’ note: ‘check for queen cells’, ‘confirm stores’, ‘confirm laying pattern’.",
@@ -537,191 +566,343 @@ export default function StepByStepInspections() {
   const mandatoryCount = steps.filter((s) => s.mandatory).length;
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header */}
-      <div className="border-b border-slate-200 bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-6">
-          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+    <>
+      <style>{`
+  @page {
+    size: A4 portrait;
+    margin: 15mm;
+  }
+
+  .print-only {
+    display: none;
+  }
+
+  @media print {
+    html,
+body,
+#root,
+.min-h-screen {
+  background: white !important;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.print-step {
+  background: white !important;
+}
+
+    .no-print {
+      display: none !important;
+    }
+
+    .print-only {
+      display: block !important;
+    }
+
+    .print-content {
+      max-width: none !important;
+      padding: 0 !important;
+    }
+
+    .print-step {
+      break-inside: auto;
+      page-break-inside: auto;
+      margin-bottom: 8mm !important;
+    }
+
+    .print-step > div {
+      overflow: visible !important;
+    }
+
+    .print-card {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .print-columns {
+      display: block !important;
+    }
+
+    .print-columns > div {
+      break-inside: avoid;
+      page-break-inside: avoid;
+      margin-bottom: 4mm;
+    }
+
+    .print-step h2 {
+      break-after: avoid;
+      page-break-after: avoid;
+    }
+
+    .shadow-sm,
+    .shadow {
+      box-shadow: none !important;
+    }
+
+    a {
+      color: inherit !important;
+      text-decoration: none !important;
+    }
+  }
+`}</style>
+
+      <div className="min-h-screen bg-slate-50">
+        <div className="print-only">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "18px",
+              borderBottom: "3px solid #f59e0b",
+              paddingBottom: "16px",
+              marginBottom: "24px",
+            }}
+          >
+            <img
+              src={logo}
+              alt="HiveTag"
+              style={{
+                width: "70px",
+                height: "70px",
+                objectFit: "contain",
+              }}
+            />
+
             <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900">Step-by-Step Hive Inspections</h2>
-                <Badge tone="emerald">{mandatoryCount} mandatory steps</Badge>
-                <Badge tone="amber">Optional steps included</Badge>
+              <h1
+                style={{
+                  margin: 0,
+                  fontSize: "28px",
+                  fontWeight: "700",
+                }}
+              >
+                HiveTag
+              </h1>
+
+              <div style={{ fontSize: "18px", fontWeight: "600" }}>
+                Step-by-Step Hive Inspection Guide
               </div>
-              <p className="mt-2 text-sm md:text-base text-slate-600 max-w-2xl">
-                A practical inspection guide you can read at home and use as a quick field reference. Season-aware hints are
-                tailored for UK-style conditions.
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
+
+              <div
+                style={{
+                  marginTop: "6px",
+                  color: "#555",
+                  fontSize: "13px",
+                }}
+              >
+                Practical UK beekeeping guidance
+              </div>
+
+              <div
+                style={{
+                  color: "#555",
+                  fontSize: "12px",
+                }}
+              >
+                www.beezknees.co.uk
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Header */}
+        <div className="border-b border-slate-200 bg-white">
+          <div className="mx-auto max-w-6xl px-4 py-6">
+            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-2xl md:text-3xl font-extrabold text-slate-900">
+                    Step-by-Step Hive Inspections
+                  </h2>
+                  <Badge tone="emerald">{mandatoryCount} mandatory steps</Badge>
+                  <Badge tone="amber">Optional steps included</Badge>
+                </div>
+                <p className="mt-2 text-sm md:text-base text-slate-600 max-w-2xl">
+                  A practical inspection guide you can read at home and use as a quick field
+                  reference. Season-aware hints are tailored for UK-style conditions.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2 no-print">
+                  <Link
+                    to="/inspections/new"
+                    className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
+                  >
+                    Start a new inspection
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => window.print()}
+                    className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                  >
+                    Print this guide
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setExpanded((v) => !v)}
+                    className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+                  >
+                    {expanded ? "Collapse overview" : "Expand overview"}
+                  </button>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm print-card">
+                <div className="flex items-center gap-2">
+                  <span className="text-slate-900 font-semibold">Season mode:</span>
+                  <Badge tone="sky">{season?.title}</Badge>
+                </div>
+                <div className="mt-3 space-y-2">
+                  <Callout title="Right now" tone="amber">
+                    <ul className="list-disc pl-5 space-y-1">
+                      {season?.bullets
+                        ?.slice(0, expanded ? season.bullets.length : 2)
+                        .map((b, i) => (
+                          <li key={i}>{b}</li>
+                        ))}
+                    </ul>
+                  </Callout>
+                  {expanded ? (
+                    <Callout title="Season caution" tone="rose">
+                      {season?.caution}
+                    </Callout>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="mx-auto max-w-6xl px-4 py-6 print-content">
+          {/* Quick legend */}
+          <div className="grid gap-4 md:grid-cols-3">
+            <VisualCard
+              title="Mandatory vs Optional"
+              subtitle="How to use the labels"
+              svg={ShieldSvg}
+            >
+              <ul className="list-disc pl-5 space-y-1">
+                <li>
+                  <strong>Mandatory</strong> = core checks you should do on most inspections.
+                </li>
+                <li>
+                  <strong>Optional</strong> = do when relevant (season, colony state, your goals).
+                </li>
+                <li>Optional can become “effectively mandatory” during swarm season.</li>
+              </ul>
+            </VisualCard>
+
+            <VisualCard title="Be efficient" subtitle="Reduce stress + chilling" svg={ClockSvg}>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Decide your purpose before opening.</li>
+                <li>Keep brood frames over the box.</li>
+                <li>Short, purposeful inspections beat long “explorations”.</li>
+              </ul>
+            </VisualCard>
+
+            <VisualCard title="Observe first" subtitle="The hive tells you a lot" svg={EyeSvg}>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Entrance behaviour can reveal robbing or weakness.</li>
+                <li>Weather matters — adapt frequency and speed.</li>
+                <li>Record what you saw, not just what you did.</li>
+              </ul>
+            </VisualCard>
+          </div>
+
+          {/* Table of contents */}
+          <div className="no-print mt-6 rounded-3xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <div className="text-lg font-bold text-slate-900">Quick navigation</div>
+                <div className="text-sm text-slate-600 mt-1">
+                  Jump straight to the step you’re on.
+                </div>
+              </div>
+              <div className="hidden md:flex items-center gap-2">
+                <Badge tone="emerald">Mandatory</Badge>
+                <Badge tone="amber">Optional</Badge>
+              </div>
+            </div>
+
+            <div className="mt-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
+              {steps.map((s) => (
+                <a
+                  key={s.idx}
+                  href={`#step-${s.idx}`}
+                  className="group flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 hover:bg-slate-50"
+                >
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-slate-900">
+                        {s.idx}. {s.title}
+                      </span>
+                    </div>
+                    <div className="mt-1 text-xs text-slate-600">{s.time}</div>
+                  </div>
+                  {s.mandatory ? (
+                    <Badge tone="emerald">Mandatory</Badge>
+                  ) : (
+                    <Badge tone="amber">Optional</Badge>
+                  )}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Steps */}
+          <div className="mt-6 space-y-6">
+            {steps.map((s) => (
+              <Step key={s.idx} {...s} />
+            ))}
+          </div>
+
+          {/* Footer / guidance */}
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <Callout title="Good records beat perfect memory" tone="emerald">
+              Focus your notes on evidence and outcomes:
+              <ul className="mt-2 list-disc pl-5 space-y-1">
+                <li>Queen status: “eggs seen” / “queen seen” / “no eggs”</li>
+                <li>Brood: frames and pattern</li>
+                <li>Stores: sufficient / low / feeding needed</li>
+                <li>Actions taken + follow-up date/goal</li>
+              </ul>
+            </Callout>
+
+            <Callout title="When not to inspect" tone="rose">
+              If conditions are poor, consider postponing:
+              <ul className="mt-2 list-disc pl-5 space-y-1">
+                <li>Cold, wet, or very windy weather</li>
+                <li>Short daylight windows (winter)</li>
+                <li>When you don’t have a clear purpose</li>
+              </ul>
+            </Callout>
+          </div>
+
+          <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-slate-50 ring-1 ring-slate-200 flex items-center justify-center">
+                  {MiniHiveSvg}
+                </div>
+                <div>
+                  <div className="font-semibold text-slate-900">Ready to record your findings?</div>
+                  <div className="text-sm text-slate-600">
+                    Use the inspection form for logging — keep this page as your guide.
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 no-print">
                 <Link
                   to="/inspections/new"
                   className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
                 >
-                  Start a new inspection
+                  Go to New Inspection
                 </Link>
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
-                >
-                  Print this guide
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setExpanded((v) => !v)}
-                  className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
-                >
-                  {expanded ? "Collapse overview" : "Expand overview"}
-                </button>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="flex items-center gap-2">
-                <span className="text-slate-900 font-semibold">Season mode:</span>
-                <Badge tone="sky">{season?.title}</Badge>
-              </div>
-              <div className="mt-3 space-y-2">
-                <Callout title="Right now" tone="amber">
-                  <ul className="list-disc pl-5 space-y-1">
-                    {season?.bullets?.slice(0, expanded ? season.bullets.length : 2).map((b, i) => (
-                      <li key={i}>{b}</li>
-                    ))}
-                  </ul>
-                </Callout>
-                {expanded ? (
-                  <Callout title="Season caution" tone="rose">
-                    {season?.caution}
-                  </Callout>
-                ) : null}
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Content */}
-      <div className="mx-auto max-w-6xl px-4 py-6">
-        {/* Quick legend */}
-        <div className="grid gap-4 md:grid-cols-3">
-          <VisualCard title="Mandatory vs Optional" subtitle="How to use the labels" svg={ShieldSvg}>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>
-                <strong>Mandatory</strong> = core checks you should do on most inspections.
-              </li>
-              <li>
-                <strong>Optional</strong> = do when relevant (season, colony state, your goals).
-              </li>
-              <li>Optional can become “effectively mandatory” during swarm season.</li>
-            </ul>
-          </VisualCard>
-
-          <VisualCard title="Be efficient" subtitle="Reduce stress + chilling" svg={ClockSvg}>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Decide your purpose before opening.</li>
-              <li>Keep brood frames over the box.</li>
-              <li>Short, purposeful inspections beat long “explorations”.</li>
-            </ul>
-          </VisualCard>
-
-          <VisualCard title="Observe first" subtitle="The hive tells you a lot" svg={EyeSvg}>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>Entrance behaviour can reveal robbing or weakness.</li>
-              <li>Weather matters — adapt frequency and speed.</li>
-              <li>Record what you saw, not just what you did.</li>
-            </ul>
-          </VisualCard>
-        </div>
-
-        {/* Table of contents */}
-        <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <div className="text-lg font-bold text-slate-900">Quick navigation</div>
-              <div className="text-sm text-slate-600 mt-1">Jump straight to the step you’re on.</div>
-            </div>
-            <div className="hidden md:flex items-center gap-2">
-              <Badge tone="emerald">Mandatory</Badge>
-              <Badge tone="amber">Optional</Badge>
-            </div>
-          </div>
-
-          <div className="mt-4 grid gap-2 md:grid-cols-2 lg:grid-cols-3">
-            {steps.map((s) => (
-              <a
-                key={s.idx}
-                href={`#step-${s.idx}`}
-                className="group flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 hover:bg-slate-50"
-              >
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-slate-900">
-                      {s.idx}. {s.title}
-                    </span>
-                  </div>
-                  <div className="mt-1 text-xs text-slate-600">{s.time}</div>
-                </div>
-                {s.mandatory ? <Badge tone="emerald">Mandatory</Badge> : <Badge tone="amber">Optional</Badge>}
-              </a>
-            ))}
-          </div>
-        </div>
-
-        {/* Steps */}
-        <div className="mt-6 space-y-6">
-          {steps.map((s) => (
-            <Step key={s.idx} {...s} />
-          ))}
-        </div>
-
-        {/* Footer / guidance */}
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
-          <Callout title="Good records beat perfect memory" tone="emerald">
-            Focus your notes on evidence and outcomes:
-            <ul className="mt-2 list-disc pl-5 space-y-1">
-              <li>Queen status: “eggs seen” / “queen seen” / “no eggs”</li>
-              <li>Brood: frames and pattern</li>
-              <li>Stores: sufficient / low / feeding needed</li>
-              <li>Actions taken + follow-up date/goal</li>
-            </ul>
-          </Callout>
-
-          <Callout title="When not to inspect" tone="rose">
-            If conditions are poor, consider postponing:
-            <ul className="mt-2 list-disc pl-5 space-y-1">
-              <li>Cold, wet, or very windy weather</li>
-              <li>Short daylight windows (winter)</li>
-              <li>When you don’t have a clear purpose</li>
-            </ul>
-          </Callout>
-        </div>
-
-        <div className="mt-6 rounded-3xl border border-slate-200 bg-white p-5 md:p-6 shadow-sm">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-slate-50 ring-1 ring-slate-200 flex items-center justify-center">
-                {MiniHiveSvg}
-              </div>
-              <div>
-                <div className="font-semibold text-slate-900">Ready to record your findings?</div>
-                <div className="text-sm text-slate-600">Use the inspection form for logging — keep this page as your guide.</div>
-              </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Link
-                to="/inspections/new"
-                className="inline-flex items-center justify-center rounded-xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800"
-              >
-                Go to New Inspection
-              </Link>
-             
-            </div>
-          </div>
-        </div>
-
-     
-      </div>
-    </div>
+    </>
   );
 }
 

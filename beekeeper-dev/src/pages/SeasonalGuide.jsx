@@ -17,7 +17,8 @@ export default function SeasonalGuide() {
   const selectedIndex = seasonalGuideData.findIndex((item) => item.id === selected.id);
 
   const goToMonth = (offset) => {
-    const nextIndex = (selectedIndex + offset + seasonalGuideData.length) % seasonalGuideData.length;
+    const nextIndex =
+      (selectedIndex + offset + seasonalGuideData.length) % seasonalGuideData.length;
     setSelectedId(seasonalGuideData[nextIndex].id);
   };
 
@@ -34,7 +35,8 @@ export default function SeasonalGuide() {
                 Year in the Apiary
               </h2>
               <p className="mt-4 max-w-2xl text-base leading-7 text-green-50 sm:text-lg">
-                A clean monthly guide for UK beekeepers. Check the current month, view the full infographic, and turn seasonal advice into practical hive actions.
+                A clean monthly guide for UK beekeepers. Check the current month, view the full
+                infographic, and turn seasonal advice into practical hive actions.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <button
@@ -65,9 +67,13 @@ export default function SeasonalGuide() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4 rounded-2xl bg-white/90 p-4 text-[#1a3329] shadow-lg backdrop-blur">
-                <p className="text-xs font-bold uppercase tracking-wider text-green-800">Currently viewing</p>
+                <p className="text-xs font-bold uppercase tracking-wider text-green-800">
+                  Currently viewing
+                </p>
                 <p className="text-xl font-extrabold">{selected.month}</p>
-                <p className="text-sm font-medium text-slate-700">Tap to open the full infographic</p>
+                <p className="text-sm font-medium text-slate-700">
+                  Tap to open the full infographic
+                </p>
               </div>
             </button>
           </div>
@@ -97,7 +103,9 @@ export default function SeasonalGuide() {
                 >
                   <span>{item.month.slice(0, 3)}</span>
                   {isCurrent && (
-                    <span className={`mt-1 block text-[10px] uppercase ${isSelected ? "text-yellow-300" : "text-green-700"}`}>
+                    <span
+                      className={`mt-1 block text-[10px] uppercase ${isSelected ? "text-yellow-300" : "text-green-700"}`}
+                    >
                       Now
                     </span>
                   )}
@@ -109,7 +117,9 @@ export default function SeasonalGuide() {
 
         <section className="grid gap-5 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-            <p className="text-sm font-bold uppercase tracking-wider text-green-700">{selected.season}</p>
+            <p className="text-sm font-bold uppercase tracking-wider text-green-700">
+              {selected.season}
+            </p>
             <h2 className="mt-2 text-2xl font-extrabold text-[#1a3329]">{selected.title}</h2>
             <p className="mt-2 text-base font-semibold text-slate-700">{selected.strapline}</p>
 
@@ -122,33 +132,36 @@ export default function SeasonalGuide() {
           <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-black/5">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <p className="text-sm font-bold uppercase tracking-wider text-green-700">Practical checklist</p>
-                <h2 className="mt-2 text-2xl font-extrabold text-[#1a3329]">Actions for {selected.month}</h2>
+                <p className="text-sm font-bold uppercase tracking-wider text-green-700">
+                  Practical checklist
+                </p>
+                <h2 className="mt-2 text-2xl font-extrabold text-[#1a3329]">
+                  Actions for {selected.month}
+                </h2>
               </div>
-              
             </div>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               {selected.actions.map((action, index) => {
                 const actionTitle = typeof action === "string" ? action : action.title;
-                const actionKey = typeof action === "string" ? `${selected.id}-${index}` : `${selected.id}-${action.id}`;
+                const actionKey =
+                  typeof action === "string"
+                    ? `${selected.id}-${index}`
+                    : `${selected.id}-${action.id}`;
 
                 return (
                   <div
                     key={actionKey}
-                    className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm font-semibold text-slate-800"
+                    className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm font-semibold text-slate-800"
                   >
-                    <input
-                      type="checkbox"
-                      className="mt-1 h-4 w-4 rounded border-slate-300 text-green-700"
-                    />
-
                     <div className="flex flex-1 flex-col gap-3">
                       <span>{actionTitle}</span>
 
                       <Link
                         to={`/todos/new?title=${encodeURIComponent(actionTitle)}&category=${encodeURIComponent(
-                          typeof action === "string" ? "Seasonal guide" : action.category || "Seasonal guide"
+                          typeof action === "string"
+                            ? "Seasonal guide"
+                            : action.category || "Seasonal guide"
                         )}&priority=${encodeURIComponent(
                           typeof action === "string" ? "Medium" : action.priority || "Medium"
                         )}&source=seasonal-guide&month=${encodeURIComponent(selected.month)}`}
@@ -163,46 +176,70 @@ export default function SeasonalGuide() {
             </div>
 
             <div className="mt-6 rounded-2xl bg-yellow-50 p-4 text-sm text-slate-800 ring-1 ring-yellow-200">
-              <strong className="text-[#1a3329]">Tip:</strong> Use the checklist for quick planning, then open the full guide when you want the detailed visual version.
+              <p>
+                <strong className="text-[#1a3329]">Educational Notice:</strong> The Year in the
+                Apiary provides seasonal guidance for UK beekeepers. Weather, forage availability,
+                local conditions and colony development vary considerably, so always use your own
+                judgement when deciding whether a management action is appropriate.
+              </p>
+
+              <p className="mt-3">
+                <strong className="text-[#1a3329]">Tip:</strong> Use the checklist for quick
+                planning, then open the full guide when you want the detailed visual version.
+              </p>
             </div>
           </div>
         </section>
       </div>
 
       {viewerOpen &&
-  createPortal(
-    <div className="fixed inset-0 z-[99999] flex flex-col bg-black/90 p-3 sm:p-6" role="dialog" aria-modal="true">
-          <div className="mb-3 flex items-center justify-between gap-3 text-white">
-            <button type="button" onClick={() => goToMonth(-1)} className="z-[10000] rounded-xl bg-white/10 px-4 py-2 text-sm font-bold hover:bg-white/20">
-              ← Previous
-            </button>
-            <div className="text-center">
-              <p className="text-sm font-bold uppercase tracking-wider text-yellow-300">{selected.month}</p>
-              <p className="text-xs text-white/80">Pinch/scroll to zoom on mobile or desktop</p>
+        createPortal(
+          <div
+            className="fixed inset-0 z-[99999] flex flex-col bg-black/90 p-3 sm:p-6"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="mb-3 flex items-center justify-between gap-3 text-white">
+              <button
+                type="button"
+                onClick={() => goToMonth(-1)}
+                className="z-[10000] rounded-xl bg-white/10 px-4 py-2 text-sm font-bold hover:bg-white/20"
+              >
+                ← Previous
+              </button>
+              <div className="text-center">
+                <p className="text-sm font-bold uppercase tracking-wider text-yellow-300">
+                  {selected.month}
+                </p>
+                <p className="text-xs text-white/80">Pinch/scroll to zoom on mobile or desktop</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => goToMonth(1)}
+                className="z-[10000] rounded-xl bg-white/10 px-4 py-2 text-sm font-bold hover:bg-white/20"
+              >
+                Next →
+              </button>
             </div>
-            <button type="button" onClick={() => goToMonth(1)} className="z-[10000] rounded-xl bg-white/10 px-4 py-2 text-sm font-bold hover:bg-white/20">
-              Next →
-            </button>
-          </div>
 
-          <div className="min-h-0 flex-1 overflow-auto rounded-2xl bg-white p-2">
-           <img
+            <div className="min-h-0 flex-1 overflow-auto rounded-2xl bg-white p-2">
+              <img
                 src={selected.image}
                 alt={`${selected.month} full seasonal beekeeping guide`}
                 className="mx-auto h-auto max-w-full md:max-w-none"
               />
-          </div>
+            </div>
 
-          <button
-                type="button"
-                onClick={() => setViewerOpen(false)}
-                className="mt-3 z-[10000] rounded-xl bg-yellow-400 px-5 py-3 text-sm font-extrabold text-[#1a3329] hover:bg-yellow-300"
-              >
-            Close guide
-          </button>
-            </div>,
-    document.body
-  )}
+            <button
+              type="button"
+              onClick={() => setViewerOpen(false)}
+              className="mt-3 z-[10000] rounded-xl bg-yellow-400 px-5 py-3 text-sm font-extrabold text-[#1a3329] hover:bg-yellow-300"
+            >
+              Close guide
+            </button>
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
@@ -210,12 +247,16 @@ export default function SeasonalGuide() {
 function InfoBlock({ title, items, tone }) {
   const isAmber = tone === "amber";
   return (
-    <div className={`rounded-2xl p-4 ring-1 ${isAmber ? "bg-amber-50 ring-amber-200" : "bg-green-50 ring-green-200"}`}>
+    <div
+      className={`rounded-2xl p-4 ring-1 ${isAmber ? "bg-amber-50 ring-amber-200" : "bg-green-50 ring-green-200"}`}
+    >
       <h3 className="text-base font-extrabold text-[#1a3329]">{title}</h3>
       <ul className="mt-3 space-y-2 text-sm font-medium text-slate-800">
         {items.map((item) => (
           <li key={item} className="flex gap-2">
-            <span className={`mt-1 h-2 w-2 shrink-0 rounded-full ${isAmber ? "bg-amber-500" : "bg-green-700"}`} />
+            <span
+              className={`mt-1 h-2 w-2 shrink-0 rounded-full ${isAmber ? "bg-amber-500" : "bg-green-700"}`}
+            />
             <span>{item}</span>
           </li>
         ))}

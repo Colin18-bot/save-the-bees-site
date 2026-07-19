@@ -266,7 +266,7 @@ export default function Pricing() {
           Keep your bees organised, healthy, and happy
         </h2>
         <p className="mt-3 text-gray-600">
-          BeezKnees helps you track inspections, plan tasks, and spot issues early — wherever you are.
+          BeezKnees helps you record inspections, understand colony health, plan seasonal management and keep complete beekeeping records wherever you are.
         </p>
       </header>
 
@@ -287,6 +287,18 @@ export default function Pricing() {
         </div>
       )}
 
+      <div className="mb-8 rounded-xl border border-green-200 bg-green-50 p-5 text-center">
+        <h3 className="text-lg font-bold text-green-900">
+          Complete beekeeping records with intelligent Hive Health
+        </h3>
+
+        <p className="mt-2 text-sm text-green-800">
+          Record inspections, monitor colony health, identify trends over time,
+          generate professional reports and plan seasonal management—all from a
+          single application.
+        </p>
+      </div>
+
       {/* Plans */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* FREE PLAN */}
@@ -299,7 +311,7 @@ export default function Pricing() {
           "Up to 2 hives",
           "Inspection records",
           "To-Dos & calendar",
-          "Weather overview",
+          "Local weather forecasts",
           "Photo uploads",
           "Logbook & archive",
           "Basic hive, apiary and inspection management",
@@ -317,22 +329,21 @@ export default function Pricing() {
         <PlanCard
           title="Premium"
           price={PREMIUM_PRICE_TEXT}
-          description="Unlock unlimited apiaries and hives, Inspection Insights, premium guides, reporting, exports, finance tools, map markers and HiveTag NFC features."
+         description="Unlock unlimited apiaries and hives, advanced Hive Health, premium beekeeping guides, professional reports, finance tools, NFC hive tags and additional colony management tools."
           features={[
           "Unlimited apiaries",
           "Unlimited hives",
+          "Hive Health with explainable health scores, trends, risks and recommended actions",
+          "Dashboard Hive Health Overview and Timeline",
           "Colony Health Check",
+          "Year in the Apiary seasonal guide with monthly actions",
           "Apiary and Hive Siting Guides",
           "Step-by-step Inspection Guide",
-          "Inspection Insights with smart follow-up task and logbook actions",
-          "Year in the Apiary seasonal guide with monthly actions",
-          "Map markers for apiaries",
-          "Reports, exports and combined CSV downloads",
+          "Professional reports and CSV exports",
           "Inventory, sales, expenses and Profit & Loss",
-          "New Inventory, New Sale and New Expense tools",
+          "Apiary map markers",
           "HiveTag NFC tap-to-log inspections",
-          "NFC dashboard summary and tagged hives list",
-          "Directly supports ongoing development of BeezKnees",
+          "Directly supports the continued development of HiveTag"
         ]}
           disabled={false}
           busy={upgrading || openingBilling}
@@ -360,37 +371,37 @@ export default function Pricing() {
             <span className="text-green-600 mt-0.5">
               <CheckIcon />
             </span>
-            Guided inspections & notes
+            Guided inspections with photographs and notes
           </li>
           <li className="flex items-start gap-2">
             <span className="text-green-600 mt-0.5">
               <CheckIcon />
             </span>
-            Logbook for quick events & findings
+            Inspection history and logbook
           </li>
           <li className="flex items-start gap-2">
             <span className="text-green-600 mt-0.5">
               <CheckIcon />
             </span>
-            To-Dos, reminders & calendar view
+            Tasks, reminders and calendar
           </li>
           <li className="flex items-start gap-2">
             <span className="text-green-600 mt-0.5">
               <CheckIcon />
             </span>
-            Local weather at your apiaries
+            Local weather forecasts for your apiaries
           </li>
           <li className="flex items-start gap-2">
             <span className="text-green-600 mt-0.5">
               <CheckIcon />
             </span>
-            Archive & full history for compliance
+            Complete inspection history and archive
           </li>
           <li className="flex items-start gap-2">
             <span className="text-green-600 mt-0.5">
               <CheckIcon />
             </span>
-            Works great on mobiles & tablets — ideal for use at the apiary
+            Designed for use in the apiary on phones and tablets
           </li>
         </ul>
       </section>

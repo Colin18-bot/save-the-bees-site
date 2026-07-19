@@ -552,9 +552,9 @@ return;
         <div className="font-semibold">Important</div>
         <ul className="list-disc pl-5 mt-1 space-y-1">
           {(safety?.topBanner || [
-            "This tool provides educational inspection-support guidance only. It does not diagnose disease, confirm colony health, or replace direct hive inspection.",
-            "Use Not sure whenever you haven’t opened the hive or can’t observe something reliably.",
-            "If you suspect a notifiable disease or pest, do not move bees, colonies, frames, comb, honey or equipment, and follow official UK reporting guidance.",
+           "This tool provides educational inspection-support guidance only. It does not diagnose disease, confirm colony health or replace a physical hive inspection.",
+          "Use Not sure whenever you have not opened the hive or cannot observe something reliably.",
+          "If you suspect a notifiable disease or pest, do not move bees, colonies, frames, comb, honey or equipment. Follow current official UK bee-health guidance and reporting requirements.",
           ]).map((item, index) => (
             <li key={index}>{item}</li>
           ))}
@@ -646,10 +646,12 @@ return;
       {/* PRINT HEADER */}
       <div className="print-only hidden" id="beehealth-print">
         <div className="mb-3">
-          <div className="text-2xl font-bold">BeezKnees — Colony Health Check</div>
+          <div className="text-2xl font-bold">HiveTag — Colony Health Check</div>
           <div className="text-sm text-gray-700">
-            Printed guidance (triage only — not a diagnosis). If notifiable disease is suspected, do not move
-            bees/equipment and contact official routes.
+            Educational inspection-support guidance only — not a diagnosis. If a
+            notifiable disease or pest is suspected, do not move bees, colonies,
+            frames, comb, honey or equipment. Follow current official UK bee-health
+            guidance and reporting requirements.
           </div>
         </div>
       </div>
@@ -710,11 +712,11 @@ return;
 
             {!currentQuestion ? (
               <div className="mt-4 text-sm text-gray-600">
-                {allAnswered ? (
-                  <CompletionBanner hasResults={!!results} onGetResults={runAssessment} />
-                ) : (
+                {allAnswered && !results ? (
+                  <CompletionBanner hasResults={false} onGetResults={runAssessment} />
+                ) : !allAnswered ? (
                   "Click “Ask next” to start."
-                )}
+                ) : null}
               </div>
             ) : currentQuestion.kind === "select" ? (
               <div className="mt-3">
@@ -788,9 +790,9 @@ return;
               </div>
             ) : null}
 
-            {allAnswered ? (
+            {allAnswered && !results ? (
               <div className="mt-4">
-                <CompletionBanner hasResults={!!results} onGetResults={runAssessment} />
+                <CompletionBanner hasResults={false} onGetResults={runAssessment} />
               </div>
             ) : null}
           </div>
@@ -1035,18 +1037,36 @@ function OutcomeImages({ images }) {
 function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
   
   const InspectorSafeDisclaimer = () => (
-    <div className="p-4 rounded border bg-white print-card">
-      <div className="font-semibold">Safety / inspector-safe notes</div>
-      <ul className="list-disc pl-5 text-sm mt-2 space-y-1 text-gray-800">
-        <li>This is educational guidance only — it does not diagnose disease, confirm infection, or replace advice from a bee inspector or qualified professional.</li>
-       <li>
-        Follow official UK guidance and reporting procedures where notifiable disease or pests are suspected.
+  <div className="p-4 rounded border bg-white print-card">
+    <div className="font-semibold">Important safety guidance</div>
+
+    <ul className="list-disc pl-5 text-sm mt-2 space-y-1 text-gray-800">
+      <li>
+        These results provide educational inspection-support guidance only.
+        They do not diagnose disease, confirm infection or replace a physical
+        hive inspection, laboratory testing, a bee inspector or other
+        qualified professional advice.
       </li>
-        <li>Avoid combining colonies or swapping frames until you understand what’s happening.</li>
-        <li>If severe or uncertain, get help from your association, mentor, or official routes.</li>
-      </ul>
-    </div>
-  );
+
+      <li>
+        If a notifiable disease or pest is suspected, do not move bees,
+        colonies, frames, comb, honey or equipment. Follow current official UK
+        bee-health guidance and reporting requirements.
+      </li>
+
+      <li>
+        Avoid combining colonies or exchanging frames until the cause of the
+        concern is better understood.
+      </li>
+
+      <li>
+        Where signs are severe, uncertain or worsening, seek help from a bee
+        inspector, your beekeeping association, an experienced mentor or
+        another appropriate professional.
+      </li>
+    </ul>
+  </div>
+);
 
   if (!results) {
     return (

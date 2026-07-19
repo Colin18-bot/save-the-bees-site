@@ -1,0 +1,1 @@
+export { analyseFood } from "./foodInterpreter";

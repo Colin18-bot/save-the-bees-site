@@ -987,19 +987,20 @@ export const BEE_HEALTH_RULES = {
   // SAFETY / PRINT DISCLAIMERS
   // ---------------------------
   safety: {
-    topBanner: [
-      "This tool provides educational inspection-support guidance only. It does not diagnose disease, confirm colony health, or replace direct hive inspection.",
-      "Use “Not sure” any time you haven’t opened the hive or can’t observe something reliably.",
-      "If you suspect a notifiable disease or pest: do not move bees, colonies, frames, comb, honey or equipment, and follow official UK reporting guidance.",
-      "Outputs are guidance suggestions based on observed signs and may have multiple possible causes.",
-      "If a colony is collapsing rapidly, starving, being robbed, or showing serious brood disease signs, seek appropriate professional or official support promptly.",
-    ],
-    printFooter: [
-      "BeezKnees Colony Health Check provides educational inspection-support guidance only and is not a diagnosis.",
-      "For suspected notifiable disease or pests: avoid moving bees, colonies, frames, comb, honey or equipment and follow official UK reporting guidance.",
-      "Always follow product labels and local regulations for treatments.",
-    ],
-  },
+  topBanner: [
+    "This tool provides educational inspection-support guidance only. It does not diagnose disease, confirm colony health or replace a physical hive inspection.",
+    "Use “Not sure” whenever you have not opened the hive or cannot observe something reliably.",
+    "If you suspect a notifiable disease or pest, do not move bees, colonies, frames, comb, honey or equipment. Follow current official UK bee-health guidance and reporting requirements.",
+    "Results are guidance suggestions based on the signs you record. Similar signs may have more than one possible cause.",
+    "If a colony is collapsing rapidly, starving, being robbed or showing serious brood-disease signs, seek appropriate professional or official support promptly.",
+  ],
+
+  printFooter: [
+    "HiveTag Colony Health Check provides educational inspection-support guidance only and is not a diagnosis.",
+    "If a notifiable disease or pest is suspected, do not move bees, colonies, frames, comb, honey or equipment. Follow current official UK bee-health guidance and reporting requirements.",
+    "Always follow treatment product labels, withdrawal requirements and applicable regulations.",
+  ],
+},
 
   // ---------------------------
   // CONFIDENCE LABELS (must match BeeHealthHelper.jsx expectations)

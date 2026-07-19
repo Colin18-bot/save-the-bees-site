@@ -153,8 +153,8 @@ useEffect(() => {
     log_type_select: presetMap[preset] || p.log_type_select,
     log_type_custom: customMap[preset] || p.log_type_custom,
     entry: inspectionId
-  ? "Log entry created from the inspection insights page."
-  : p.entry,
+    ? "Log entry created from Hive Health."
+    : p.entry,
   }));
 }, [inspectionId, prefillApiaryId, prefillHiveId, preset]);
 
@@ -337,7 +337,7 @@ useEffect(() => {
   removePhoto();
   setError("");
   setSuccess("");
-  navigate(returnTo || "/logbook"); // ✅ back to insight page if provided
+  navigate(returnTo || "/logbook"); // ✅ back to Hive Health if provided
 };
 
   // ---- build grouped options for "Related Inspection"
@@ -373,7 +373,7 @@ useEffect(() => {
       to={returnTo}
       className="inline-flex items-center justify-center text-sm px-3 py-2 border rounded hover:bg-gray-100"
     >
-      ← Back to inspection insights
+      ← Back to Hive Health
     </Link>
   </div>
 )}

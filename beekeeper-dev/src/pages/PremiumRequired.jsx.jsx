@@ -8,8 +8,8 @@ const PremiumRequired = () => {
   const params = new URLSearchParams(location.search);
   const from = params.get("from") || "";
   const contextMessage =
-  from === "inspection-insights"
-    ? "This action was triggered from your inspection insights. Upgrade to Premium to take action directly from your inspection."
+  from === "hive-health"
+    ? "Hive Health is available with HiveTag Premium. Review explainable health scores, trends, priority actions, recommendations and your colony timeline."
     : "";
 
   return (
@@ -20,12 +20,13 @@ const PremiumRequired = () => {
         </p>
 
         <h2 className="text-2xl font-bold text-[#1a3329] mb-3">
-          🔒 This feature is included with HiveTag Premium
+          🔒 Unlock this feature with HiveTag Premium
         </h2>
 
         <p className="text-gray-700 mb-2">
-          Upgrade to Premium to unlock advanced tools such as reports, exports,
-          inventory, sales, expenses, NFC hive tags, the Year in the Apiary seasonal guide and premium beekeeping tools.
+          Upgrade to HiveTag Premium to unlock intelligent Hive Health,
+          professional reporting, business tools, NFC hive tags, premium
+          beekeeping guides and advanced colony management features.
         </p>
 
         {contextMessage && (
@@ -36,18 +37,25 @@ const PremiumRequired = () => {
 
         <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1 mb-6">
           <li>Unlimited apiaries and hives</li>
-          <li>Reports and filtered CSV exports</li>
+          <li>Advanced Hive Health with explainable health scores, trends and recommendations</li>
+          <li>Dashboard Hive Health overview and timeline</li>
+          <li>Colony Health Check</li>
+          <li>Seasonal Guide and premium beekeeping guides</li>
+          <li>Professional reports and CSV exports</li>
           <li>Inventory, sales, expenses and Profit &amp; Loss</li>
-          <li>NFC hive tags and tagged hive tools</li>
-          <li>Premium guides and advanced record tools</li>
+          <li>HiveTag NFC labels with tap-to-log inspections</li>
         </ul>
+
+        <p className="text-sm text-gray-600 mb-4">
+          Your existing data will be preserved. Upgrading simply unlocks the additional Premium features immediately.
+        </p>
 
         <div className="flex flex-col sm:flex-row gap-3">
           <Link
             to={`/pricing${from ? `?from=${encodeURIComponent(from)}` : ""}`}
             className="inline-flex items-center justify-center rounded bg-green-700 px-4 py-2 text-sm font-semibold text-white hover:bg-green-800"
           >
-            View Premium Plan
+            Upgrade to Premium
           </Link>
 
           <button

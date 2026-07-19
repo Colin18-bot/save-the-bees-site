@@ -2,6 +2,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../services/supabase";
 import { Link, useLocation } from "react-router-dom";
+import DashboardIntelligencePanel from "../components/intelligence/DashboardIntelligencePanel.jsx";
+import DashboardHiveTimelinePanel from "../components/intelligence/DashboardHiveTimelinePanel.jsx";
+import { coordinateHiveIntelligence } from "../intelligence";
 
 import { buildBeekeeperNotes } from "../utils/buildBeekeeperNotes.js";
 
@@ -166,6 +169,14 @@ const Dashboard = () => {
 
   // Recent NFC-tagged hives
   const [recentNfcHives, setRecentNfcHives] = useState([]);
+
+  // Dashboard Intelligence
+  const [dashboardIntelligence, setDashboardIntelligence] = useState({
+    loading: true,
+    error: null,
+    summary: { total: 0, healthy: 0, monitor: 0, attention: 0, critical: 0 },
+    items: [],
+  });
 
   // Loading flags for recent sections
   const [loadingInspections, setLoadingInspections] = useState(true);
@@ -381,6 +392,108 @@ const Dashboard = () => {
     }
   };
 
+  // ---- Dashboard Intelligence (filter-aware) ----
+  const fetchDashboardIntelligence = async (apiaryId = "all") => {
+    setDashboardIntelligence((previous) => ({
+      ...previous,
+      loading: true,
+      error: null,
+    }));
+
+    try {
+      let hivesQuery = supabase
+        .from("hives")
+        .select("id, name, apiary_id, archived_at")
+        .is("archived_at", null)
+        .order("name", { ascending: true });
+
+      if (apiaryId !== "all") hivesQuery = hivesQuery.eq("apiary_id", apiaryId);
+
+      const { data: hives, error: hivesError } = await hivesQuery;
+      if (hivesError) throw hivesError;
+
+      let inspectionsQuery = supabase
+        .from("inspections")
+        .select(
+          "id, date, apiary_id, hive_id, queen_status, queen_cells, brood_pattern, food_stores, hive_population, disease_types, signs_disease, archived_at"
+        )
+        .is("archived_at", null)
+        .order("date", { ascending: true })
+        .limit(500);
+
+      if (apiaryId !== "all") inspectionsQuery = inspectionsQuery.eq("apiary_id", apiaryId);
+
+      const { data: inspections, error: inspectionsError } = await inspectionsQuery;
+      if (inspectionsError) throw inspectionsError;
+
+      const inspectionsByHive = new Map();
+      for (const inspection of inspections || []) {
+        if (!inspection.hive_id) continue;
+        const list = inspectionsByHive.get(inspection.hive_id) || [];
+        list.push(inspection);
+        inspectionsByHive.set(inspection.hive_id, list);
+      }
+
+      const riskRank = {
+        Critical: 5,
+        High: 4,
+        Important: 3,
+        Medium: 3,
+        Monitor: 2,
+        Low: 1,
+        "Very Low": 0,
+        None: 0,
+        Unknown: 0,
+      };
+
+      const items = (hives || []).map((hive) => {
+        const history = inspectionsByHive.get(hive.id) || [];
+        const intelligence = coordinateHiveIntelligence({ history });
+        const healthScore = intelligence?.overall?.healthScore || 0;
+        const riskLevel = intelligence?.overall?.riskLevel || "Unknown";
+
+        return {
+          hive,
+          historyCount: history.length,
+          latestInspection: history[history.length - 1] || null,
+          intelligence,
+          healthScore,
+          riskLevel,
+          riskRank: riskRank[riskLevel] ?? 0,
+          priorityCount: intelligence?.priorityItems?.length || 0,
+        };
+      });
+
+      const sortedItems = [...items].sort((a, b) => {
+        if (b.riskRank !== a.riskRank) return b.riskRank - a.riskRank;
+        if (a.healthScore !== b.healthScore) return a.healthScore - b.healthScore;
+        return b.priorityCount - a.priorityCount;
+      });
+
+      const summary = {
+        total: items.length,
+        healthy: items.filter((item) => item.healthScore >= 85 && item.riskRank <= 1).length,
+        monitor: items.filter((item) => item.riskRank === 2 || (item.healthScore >= 55 && item.healthScore < 85)).length,
+        attention: items.filter((item) => item.riskRank >= 3 || item.healthScore < 55).length,
+        critical: items.filter((item) => item.riskRank >= 4).length,
+      };
+
+      setDashboardIntelligence({
+        loading: false,
+        error: null,
+        summary,
+        items: sortedItems.slice(0, 8),
+      });
+    } catch (error) {
+      console.error("Failed to load dashboard intelligence:", error);
+      setDashboardIntelligence((previous) => ({
+        ...previous,
+        loading: false,
+        error: "Dashboard intelligence could not be loaded.",
+      }));
+    }
+  };
+
   // ---- Recent lists (filter-aware) ----
   const fetchRecentInspections = async (apiaryId = "all") => {
     setLoadingInspections(true);
@@ -525,14 +638,19 @@ const Dashboard = () => {
   };
 
   // Initial + whenever filter changes
-  useEffect(() => {
-    fetchStats(selectedApiaryId);
-    fetchRecentInspections(selectedApiaryId);
-    fetchRecentTodos(selectedApiaryId);
-    fetchRecentLogs(selectedApiaryId);
-    fetchNfcSummary(selectedApiaryId);
-    fetchRecentNfcHives(selectedApiaryId);
-  }, [selectedApiaryId]);
+      useEffect(() => {
+      fetchStats(selectedApiaryId);
+      fetchRecentInspections(selectedApiaryId);
+      fetchRecentTodos(selectedApiaryId);
+      fetchRecentLogs(selectedApiaryId);
+
+      if (subscriptionLevel === "premium") {
+        fetchNfcSummary(selectedApiaryId);
+        fetchRecentNfcHives(selectedApiaryId);
+        fetchDashboardIntelligence(selectedApiaryId);
+      }
+
+    }, [selectedApiaryId, subscriptionLevel]);
 
   // Weather loads once (default apiary)
   useEffect(() => {
@@ -819,6 +937,20 @@ const Dashboard = () => {
           />
         )}
       </div>
+
+      {subscriptionLevel === "premium" && (
+        <>
+          <DashboardIntelligencePanel
+            data={dashboardIntelligence}
+            apiaryNameById={apiaryNameById}
+          />
+
+          <DashboardHiveTimelinePanel
+            data={dashboardIntelligence}
+            apiaryNameById={apiaryNameById}
+          />
+        </>
+      )}
 
       {/* NFC Tagged Hives list (Premium only) */}
       {subscriptionLevel === "premium" && (

@@ -18,12 +18,23 @@ const ForgotPassword = () => {
       return;
     }
 
-    const { error } = await resetPassword(email);
-    if (error) {
-      setError(error.message);
-    } else {
-      setMessage("Password reset link sent. Check your email.");
-    }
+    try {
+  const { error } = await resetPassword(email);
+
+  if (error) {
+    setError(error.message || "The password reset email could not be sent.");
+    return;
+  }
+
+  setMessage(
+    "If an account exists for this email address, a password reset link has been sent."
+  );
+} catch (err) {
+  console.error("Password reset request failed:", err);
+  setError(
+    err?.message || "The password reset request failed. Please try again."
+  );
+}
   };
 
   return (
