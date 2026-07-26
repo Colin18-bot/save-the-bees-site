@@ -6,6 +6,22 @@ import { supabase } from "../services/supabase";
 import googleIcon from "../assets/google-icon.svg";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
+// Only allow redirects to pages within this application
+const getSafeRedirect = (search) => {
+  const params = new URLSearchParams(search);
+  const redirect = params.get("redirect");
+
+  if (
+    !redirect ||
+    !redirect.startsWith("/") ||
+    redirect.startsWith("//")
+  ) {
+    return "/dashboard";
+  }
+
+  return redirect;
+};
+
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,7 +33,7 @@ const Login = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [redirectMessage, setRedirectMessage] = useState("");
 
-  // NEW: show/hide password state
+  // Show/hide password state
   const [showPassword, setShowPassword] = useState(false);
 
   // If already logged in, go where they intended or to /dashboard
@@ -28,53 +44,74 @@ const Login = () => {
       } = await supabase.auth.getSession();
 
       if (session?.user) {
-        const params = new URLSearchParams(location.search);
-        const redirect = params.get("redirect") || "/dashboard";
+        const redirect = getSafeRedirect(location.search);
         navigate(redirect, { replace: true });
       }
     };
+
     checkSession();
   }, [navigate, location.search]);
 
   // Show one-time messages from navigation state
   useEffect(() => {
     const state = location.state || {};
-    if (state.successMessage) setSuccessMessage(state.successMessage);
+
+    if (state.successMessage) {
+      setSuccessMessage(state.successMessage);
+    }
+
     if (state.showLoginRequired) {
       setRedirectMessage("You must be logged in to access that page.");
     }
-    // Clear the state so messages don't persist on back/forward
+
+    // Clear the state so messages do not persist on back/forward
     if (state.successMessage || state.showLoginRequired) {
-      navigate(location.pathname + location.search, { replace: true, state: {} });
+      navigate(location.pathname + location.search, {
+        replace: true,
+        state: {},
+      });
     }
   }, [location, navigate]);
 
-  const isValidEmail = (value) => /[^@\s]+@[^@\s]+\.[^@\s]+/.test(value);
+  const isValidEmail = (value) =>
+    /[^@\s]+@[^@\s]+\.[^@\s]+/.test(value);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+
     try {
       const { user } = await loginUser(email, password);
-      if (!user) throw new Error("No user returned from authentication.");
 
-      // Ensure a profile exists (create if missing)
+      if (!user) {
+        throw new Error("No user returned from authentication.");
+      }
+
+      // Ensure a profile exists and create one if missing
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("subscription_level")
         .eq("user_id", user.id)
         .maybeSingle();
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        throw profileError;
+      }
 
       if (!profile) {
-        const { error: createErr } = await supabase.from("profiles").insert({
-          user_id: user.id,
-          email, // from form state
-          subscription_level: "free",
-          updated_at: new Date().toISOString(),
-        });
-        if (createErr) throw createErr;
+        const { error: createErr } = await supabase
+          .from("profiles")
+          .insert({
+            user_id: user.id,
+            email,
+            subscription_level: "free",
+            updated_at: new Date().toISOString(),
+          });
+
+        if (createErr) {
+          throw createErr;
+        }
+
         localStorage.setItem("subscription_level", "free");
       } else {
         localStorage.setItem(
@@ -83,9 +120,8 @@ const Login = () => {
         );
       }
 
-      // Respect ?redirect=... if present
-      const params = new URLSearchParams(location.search);
-      const redirect = params.get("redirect") || "/dashboard";
+      // Return to the page requested before login
+      const redirect = getSafeRedirect(location.search);
       navigate(redirect, { replace: true });
     } catch (err) {
       setError(err.message || "Login failed. Please try again.");
@@ -93,12 +129,26 @@ const Login = () => {
   };
 
   const handleGoogleLogin = async () => {
+    setError("");
+
+    // Preserve the page the user originally requested
+    const redirect = getSafeRedirect(location.search);
+
+    const callbackUrl =
+      `${window.location.origin}/login?redirect=${encodeURIComponent(
+        redirect
+      )}`;
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      // Ensure we land back on the Login page in this app
-      options: { redirectTo: window.location.origin + "/login" },
+      options: {
+        redirectTo: callbackUrl,
+      },
     });
-    if (error) setError(error.message);
+
+    if (error) {
+      setError(error.message);
+    }
   };
 
   return (
@@ -112,7 +162,9 @@ const Login = () => {
         ×
       </a>
 
-      <h2 className="text-3xl font-bold mb-6 text-center text-green-700">Sign In</h2>
+      <h2 className="text-3xl font-bold mb-6 text-center text-green-700">
+        Sign In
+      </h2>
 
       {redirectMessage && (
         <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
@@ -135,16 +187,20 @@ const Login = () => {
       <form onSubmit={handleLogin} className="space-y-5">
         <div>
           <label className="block font-medium mb-1">Email</label>
+
           <input
             type="email"
             className={`w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-500 ${
-              email && !isValidEmail(email) ? "border-red-500" : "border-gray-300"
+              email && !isValidEmail(email)
+                ? "border-red-500"
+                : "border-gray-300"
             } bg-blue-50`}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             placeholder="e.g. name@example.com"
           />
+
           {email && !isValidEmail(email) && (
             <p className="text-sm text-red-500 mt-1">
               Please enter a valid email address.
@@ -154,6 +210,7 @@ const Login = () => {
 
         <div className="relative">
           <label className="block font-medium mb-1">Password</label>
+
           <input
             type={showPassword ? "text" : "password"}
             className="w-full border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-500 bg-blue-50"
@@ -168,12 +225,14 @@ const Login = () => {
             type="button"
             className="absolute right-3 top-9 text-gray-500"
             onClick={() => setShowPassword((prev) => !prev)}
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
           </button>
 
           <p className="text-sm text-gray-500 mt-1">
-            Must be at least 8 characters with uppercase, lowercase, number, and symbol.
+            Must be at least 8 characters with uppercase, lowercase, number,
+            and symbol.
           </p>
         </div>
 
@@ -207,13 +266,15 @@ const Login = () => {
             Reset it here
           </a>
         </p>
+
         <p>
           Don&apos;t have an account?{" "}
           <a href="/register" className="text-blue-600 hover:underline">
             Create one here
           </a>
         </p>
-        <p className="text-sm text-center mt-6 space-y-2">
+
+        <p>
           Curious what’s included?{" "}
           <a href="/pricing" className="text-blue-600 hover:underline">
             Compare Plans
