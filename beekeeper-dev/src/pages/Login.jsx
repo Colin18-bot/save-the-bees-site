@@ -75,11 +75,13 @@ const Login = () => {
      * The Edge Function prevents the email being sent more than once.
      */
     if (!profile?.welcome_email_sent_at) {
-      try {
-        const emailResult = await sendWelcomeEmail();
-        console.log("Welcome email result:", emailResult);
-      } catch (emailError) {
-        console.error("Welcome email could not be sent:", emailError);
+      if (!profile?.welcome_email_sent_at) {
+        try {
+          const emailResult = await sendWelcomeEmail();
+          console.log("Welcome email result:", emailResult);
+        } catch (emailError) {
+          console.error("Welcome email could not be sent:", emailError);
+        }
       }
     }
   }, []);
