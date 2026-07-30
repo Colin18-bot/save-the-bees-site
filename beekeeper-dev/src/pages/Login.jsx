@@ -2,7 +2,10 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { loginUser } from "../services/auth";
+import {
+  loginUser,
+  resendConfirmationEmail,
+} from "../services/auth";
 import { supabase } from "../services/supabase";
 import { sendWelcomeEmail } from "../services/email.js";
 import googleIcon from "../assets/google-icon.svg";
@@ -31,6 +34,13 @@ const Login = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [redirectMessage, setRedirectMessage] = useState("");
 
+  // Resend confirmation email states
+  const [showResendConfirmation, setShowResendConfirmation] =
+    useState(false);
+  const [isResendingConfirmation, setIsResendingConfirmation] =
+    useState(false);
+  const [resendMessage, setResendMessage] = useState("");
+
   // Show/hide password state
   const [showPassword, setShowPassword] = useState(false);
 
@@ -54,12 +64,14 @@ const Login = () => {
     let subscriptionLevel = profile?.subscription_level ?? "free";
 
     if (!profile) {
-      const { error: createError } = await supabase.from("profiles").insert({
-        user_id: user.id,
-        email: userEmail,
-        subscription_level: "free",
-        updated_at: new Date().toISOString(),
-      });
+      const { error: createError } = await supabase
+        .from("profiles")
+        .insert({
+          user_id: user.id,
+          email: userEmail,
+          subscription_level: "free",
+          updated_at: new Date().toISOString(),
+        });
 
       if (createError) {
         throw createError;
@@ -75,13 +87,11 @@ const Login = () => {
      * The Edge Function prevents the email being sent more than once.
      */
     if (!profile?.welcome_email_sent_at) {
-      if (!profile?.welcome_email_sent_at) {
-        try {
-          const emailResult = await sendWelcomeEmail();
-          console.log("Welcome email result:", emailResult);
-        } catch (emailError) {
-          console.error("Welcome email could not be sent:", emailError);
-        }
+      try {
+        const emailResult = await sendWelcomeEmail();
+        console.log("Welcome email result:", emailResult);
+      } catch (emailError) {
+        console.error("Welcome email could not be sent:", emailError);
       }
     }
   }, []);
@@ -136,14 +146,32 @@ const Login = () => {
 
     if (state.successMessage) {
       setSuccessMessage(state.successMessage);
+
+      if (
+        state.successMessage
+          .toLowerCase()
+          .includes("confirmation email")
+      ) {
+        setShowResendConfirmation(true);
+      }
+    }
+
+    if (state.confirmationEmail) {
+      setEmail(state.confirmationEmail);
     }
 
     if (state.showLoginRequired) {
-      setRedirectMessage("You must be logged in to access that page.");
+      setRedirectMessage(
+        "You must be logged in to access that page."
+      );
     }
 
     // Clear the state so messages do not persist on back/forward
-    if (state.successMessage || state.showLoginRequired) {
+    if (
+      state.successMessage ||
+      state.confirmationEmail ||
+      state.showLoginRequired
+    ) {
       navigate(location.pathname + location.search, {
         replace: true,
         state: {},
@@ -151,17 +179,23 @@ const Login = () => {
     }
   }, [location, navigate]);
 
-  const isValidEmail = (value) => /[^@\s]+@[^@\s]+\.[^@\s]+/.test(value);
+  const isValidEmail = (value) =>
+    /[^@\s]+@[^@\s]+\.[^@\s]+/.test(value);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     setError("");
+    setResendMessage("");
+    setShowResendConfirmation(false);
 
     try {
       const { user } = await loginUser(email, password);
 
       if (!user) {
-        throw new Error("No user returned from authentication.");
+        throw new Error(
+          "No user returned from authentication."
+        );
       }
 
       await completeLoginSetup(user);
@@ -169,7 +203,56 @@ const Login = () => {
       const redirect = getSafeRedirect(location.search);
       navigate(redirect, { replace: true });
     } catch (err) {
-      setError(err.message || "Login failed. Please try again.");
+      const message =
+        err.message || "Login failed. Please try again.";
+
+      setError(message);
+      setResendMessage("");
+
+      if (
+        message
+          .toLowerCase()
+          .includes("hasn't been confirmed") ||
+        message
+          .toLowerCase()
+          .includes("email not confirmed")
+      ) {
+        setShowResendConfirmation(true);
+      }
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    setError("");
+    setResendMessage("");
+
+    if (!email || !isValidEmail(email)) {
+      setError(
+        "Please enter the email address you used to create your account."
+      );
+      return;
+    }
+
+    setIsResendingConfirmation(true);
+
+    try {
+      await resendConfirmationEmail(email);
+
+      setResendMessage(
+        "A new confirmation email has been sent. Please check your inbox and your Junk/Spam folder."
+      );
+    } catch (err) {
+      console.error(
+        "Confirmation email could not be resent:",
+        err
+      );
+
+      setError(
+        err.message ||
+          "The confirmation email could not be resent. Please try again."
+      );
+    } finally {
+      setIsResendingConfirmation(false);
     }
   };
 
@@ -179,14 +262,17 @@ const Login = () => {
     // Preserve the page the user originally requested
     const redirect = getSafeRedirect(location.search);
 
-    const callbackUrl = `${window.location.origin}/login?redirect=${encodeURIComponent(redirect)}`;
+    const callbackUrl =
+      `${window.location.origin}/login?redirect=` +
+      encodeURIComponent(redirect);
 
-    const { error: googleError } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: callbackUrl,
-      },
-    });
+    const { error: googleError } =
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: callbackUrl,
+        },
+      });
 
     if (googleError) {
       setError(googleError.message);
@@ -204,7 +290,9 @@ const Login = () => {
         ×
       </a>
 
-      <h2 className="text-3xl font-bold mb-6 text-center text-green-700">Sign In</h2>
+      <h2 className="text-3xl font-bold mb-6 text-center text-green-700">
+        Sign In
+      </h2>
 
       {redirectMessage && (
         <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
@@ -224,14 +312,39 @@ const Login = () => {
         </div>
       )}
 
+      {resendMessage && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          {resendMessage}
+        </div>
+      )}
+
+      {showResendConfirmation && (
+        <div className="mb-4">
+          <button
+            type="button"
+            onClick={handleResendConfirmation}
+            disabled={isResendingConfirmation}
+            className="w-full border border-green-600 text-green-700 py-2 rounded hover:bg-green-50 transition duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {isResendingConfirmation
+              ? "Sending confirmation email..."
+              : "Resend confirmation email"}
+          </button>
+        </div>
+      )}
+
       <form onSubmit={handleLogin} className="space-y-5">
         <div>
-          <label className="block font-medium mb-1">Email</label>
+          <label className="block font-medium mb-1">
+            Email
+          </label>
 
           <input
             type="email"
             className={`w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-500 ${
-              email && !isValidEmail(email) ? "border-red-500" : "border-gray-300"
+              email && !isValidEmail(email)
+                ? "border-red-500"
+                : "border-gray-300"
             } bg-blue-50`}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -240,12 +353,16 @@ const Login = () => {
           />
 
           {email && !isValidEmail(email) && (
-            <p className="text-sm text-red-500 mt-1">Please enter a valid email address.</p>
+            <p className="text-sm text-red-500 mt-1">
+              Please enter a valid email address.
+            </p>
           )}
         </div>
 
         <div className="relative">
-          <label className="block font-medium mb-1">Password</label>
+          <label className="block font-medium mb-1">
+            Password
+          </label>
 
           <input
             type={showPassword ? "text" : "password"}
@@ -260,14 +377,25 @@ const Login = () => {
           <button
             type="button"
             className="absolute right-3 top-9 text-gray-500"
-            onClick={() => setShowPassword((prev) => !prev)}
-            aria-label={showPassword ? "Hide password" : "Show password"}
+            onClick={() =>
+              setShowPassword((prev) => !prev)
+            }
+            aria-label={
+              showPassword
+                ? "Hide password"
+                : "Show password"
+            }
           >
-            {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+            {showPassword ? (
+              <FiEyeOff size={20} />
+            ) : (
+              <FiEye size={20} />
+            )}
           </button>
 
           <p className="text-sm text-gray-500 mt-1">
-            Must be at least 8 characters with uppercase, lowercase, number, and symbol.
+            Must be at least 8 characters with uppercase,
+            lowercase, number, and symbol.
           </p>
         </div>
 
@@ -285,7 +413,11 @@ const Login = () => {
           onClick={handleGoogleLogin}
           className="w-full bg-[#4285F4] text-white py-2 rounded flex items-center justify-center gap-3 shadow hover:bg-[#357ae8] transition"
         >
-          <img src={googleIcon} alt="Google" className="w-5 h-5 bg-white rounded" />
+          <img
+            src={googleIcon}
+            alt="Google"
+            className="w-5 h-5 bg-white rounded"
+          />
           Sign in with Google
         </button>
       </div>
@@ -293,21 +425,30 @@ const Login = () => {
       <div className="text-sm text-center mt-6 space-y-2">
         <p>
           Forgot your password?{" "}
-          <a href="/forgot-password" className="text-blue-600 hover:underline">
+          <a
+            href="/forgot-password"
+            className="text-blue-600 hover:underline"
+          >
             Reset it here
           </a>
         </p>
 
         <p>
           Don&apos;t have an account?{" "}
-          <a href="/register" className="text-blue-600 hover:underline">
+          <a
+            href="/register"
+            className="text-blue-600 hover:underline"
+          >
             Create one here
           </a>
         </p>
 
         <p>
           Curious what’s included?{" "}
-          <a href="/pricing" className="text-blue-600 hover:underline">
+          <a
+            href="/pricing"
+            className="text-blue-600 hover:underline"
+          >
             Compare Plans
           </a>
         </p>

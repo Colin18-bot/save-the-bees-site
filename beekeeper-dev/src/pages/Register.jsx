@@ -12,7 +12,9 @@ const Register = () => {
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) navigate("/dashboard");
     };
     checkUser();
@@ -42,7 +44,9 @@ const Register = () => {
     const criteria = isPasswordValid(password);
     const allValid = Object.values(criteria).every(Boolean);
     if (!allValid) {
-      setError("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
+      setError(
+        "Password must be at least 8 characters and include uppercase, lowercase, number, and special character."
+      );
       return;
     }
     if (password !== confirm) {
@@ -63,17 +67,17 @@ const Register = () => {
       if (session && !userId) userId = session.user.id;
 
       if (session && userId) {
-        const { error: profileError } = await supabase
-          .from("profiles")
-          .upsert(
-            [{
+        const { error: profileError } = await supabase.from("profiles").upsert(
+          [
+            {
               user_id: userId,
               email,
               subscription_level: "free",
               updated_at: new Date().toISOString(),
-            }],
-            { onConflict: "user_id" }
-          );
+            },
+          ],
+          { onConflict: "user_id" }
+        );
 
         if (profileError) throw profileError;
 
@@ -81,14 +85,25 @@ const Register = () => {
 
         const params = new URLSearchParams(location.search);
         const redirect = params.get("redirect") || "/login";
-        navigate(redirect, { state: { successMessage: "Registration successful. Please log in." } });
+        navigate(redirect, {
+          state: {
+            successMessage:
+              "Account created successfully! We've sent you a confirmation email. Please check your inbox and your Junk/Spam folder, click the confirmation link, then return here to sign in.",
+            confirmationEmail: email,
+          },
+        });
         return;
       }
 
       const params = new URLSearchParams(location.search);
       const redirect = params.get("redirect") || "/login";
-      navigate(redirect, { state: { successMessage: "Registration successful. Please log in." } });
-
+      navigate(redirect, {
+        state: {
+          successMessage:
+            "Account created successfully! We've sent you a confirmation email. Please check your inbox and your Junk/Spam folder, click the confirmation link, then return here to sign in.",
+          confirmationEmail: email,
+        },
+      });
     } catch (err) {
       console.error("Registration error:", err);
       setError(err.message || "Registration failed");
@@ -111,7 +126,6 @@ const Register = () => {
       {error && <p className="text-red-500 mb-2">{error}</p>}
 
       <form onSubmit={handleRegister} className="space-y-4">
-
         {/* EMAIL */}
         <div>
           <label className="block font-medium">Email</label>
@@ -131,7 +145,9 @@ const Register = () => {
           <input
             type={showPassword ? "text" : "password"}
             className={`w-full border px-3 py-2 rounded bg-blue-50 focus:outline-none focus:ring-2 focus:ring-green-500 ${
-              password && !Object.values(criteria).every(Boolean) ? "border-red-500" : "border-gray-300"
+              password && !Object.values(criteria).every(Boolean)
+                ? "border-red-500"
+                : "border-gray-300"
             }`}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -150,23 +166,43 @@ const Register = () => {
 
           <ul className="text-sm mt-2 space-y-1">
             <li className="flex items-center">
-              {criteria.length ? <FaCheckCircle className="text-green-600 mr-2" /> : <FaTimesCircle className="text-gray-400 mr-2" />}
+              {criteria.length ? (
+                <FaCheckCircle className="text-green-600 mr-2" />
+              ) : (
+                <FaTimesCircle className="text-gray-400 mr-2" />
+              )}
               Minimum 8 characters
             </li>
             <li className="flex items-center">
-              {criteria.lowercase ? <FaCheckCircle className="text-green-600 mr-2" /> : <FaTimesCircle className="text-gray-400 mr-2" />}
+              {criteria.lowercase ? (
+                <FaCheckCircle className="text-green-600 mr-2" />
+              ) : (
+                <FaTimesCircle className="text-gray-400 mr-2" />
+              )}
               At least one lowercase letter
             </li>
             <li className="flex items-center">
-              {criteria.uppercase ? <FaCheckCircle className="text-green-600 mr-2" /> : <FaTimesCircle className="text-gray-400 mr-2" />}
+              {criteria.uppercase ? (
+                <FaCheckCircle className="text-green-600 mr-2" />
+              ) : (
+                <FaTimesCircle className="text-gray-400 mr-2" />
+              )}
               At least one uppercase letter
             </li>
             <li className="flex items-center">
-              {criteria.number ? <FaCheckCircle className="text-green-600 mr-2" /> : <FaTimesCircle className="text-gray-400 mr-2" />}
+              {criteria.number ? (
+                <FaCheckCircle className="text-green-600 mr-2" />
+              ) : (
+                <FaTimesCircle className="text-gray-400 mr-2" />
+              )}
               At least one number
             </li>
             <li className="flex items-center">
-              {criteria.special ? <FaCheckCircle className="text-green-600 mr-2" /> : <FaTimesCircle className="text-gray-400 mr-2" />}
+              {criteria.special ? (
+                <FaCheckCircle className="text-green-600 mr-2" />
+              ) : (
+                <FaTimesCircle className="text-gray-400 mr-2" />
+              )}
               At least one special character
             </li>
           </ul>
@@ -194,16 +230,25 @@ const Register = () => {
           </button>
         </div>
 
-        <button type="submit" className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition duration-200 shadow">
+        <button
+          type="submit"
+          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition duration-200 shadow"
+        >
           Register
         </button>
 
         <p className="text-sm text-center mt-2">
-          Already have an account? <a href="/login" className="text-blue-600 hover:underline">Log in</a>
+          Already have an account?{" "}
+          <a href="/login" className="text-blue-600 hover:underline">
+            Log in
+          </a>
         </p>
 
         <p className="text-sm text-center mt-6">
-          Curious what’s included? <a href="/pricing" className="text-blue-600 hover:underline">Compare Plans</a>
+          Curious what’s included?{" "}
+          <a href="/pricing" className="text-blue-600 hover:underline">
+            Compare Plans
+          </a>
         </p>
       </form>
     </div>
