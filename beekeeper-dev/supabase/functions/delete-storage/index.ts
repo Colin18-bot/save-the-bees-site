@@ -1,7 +1,7 @@
 // @ts-nocheck
 // deno-lint-ignore-file
 // supabase/functions/delete-storage/index.ts
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.1";
 import { corsHeaders } from "../_shared/cors.ts";
 
 // Adjust if your bucket name differs
