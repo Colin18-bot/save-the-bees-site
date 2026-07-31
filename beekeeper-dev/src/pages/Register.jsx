@@ -88,7 +88,7 @@ const Register = () => {
         navigate(redirect, {
           state: {
             successMessage:
-              "Account created successfully! We've sent you a confirmation email. Please check your inbox and your Junk/Spam folder, click the confirmation link, then return here to sign in.",
+              "Account created successfully! If this email address is eligible for registration, a confirmation email has been sent. Please check your inbox and your Junk/Spam folder. If you already have an account, simply sign in or reset your password.",
             confirmationEmail: email,
           },
         });
@@ -100,7 +100,7 @@ const Register = () => {
       navigate(redirect, {
         state: {
           successMessage:
-            "Account created successfully! We've sent you a confirmation email. Please check your inbox and your Junk/Spam folder, click the confirmation link, then return here to sign in.",
+            "Account created successfully! If this email address is eligible for registration, a confirmation email has been sent. Please check your inbox and your Junk/Spam folder. If you already have an account, simply sign in or reset your password.",
           confirmationEmail: email,
         },
       });
