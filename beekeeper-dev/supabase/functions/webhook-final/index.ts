@@ -251,9 +251,47 @@ async function getStripeCustomer(customerId: string | null) {
 }
 
 async function claimStripeEvent(event: Stripe.Event) {
+  const eventObject = event.data.object as Record<string, any>;
+
+  let customerId = stripeId(eventObject.customer) ?? stripeId(eventObject.customer_id) ?? null;
+
+  let subscriptionId =
+    stripeId(eventObject.subscription) ??
+    (eventObject.object === "subscription" ? stripeId(eventObject.id) : null);
+
+  let customerEmail = normaliseEmail(
+    eventObject.customer_email,
+    eventObject.customer_details?.email,
+    eventObject.receipt_email
+  );
+
+  /*
+   * Subscription events normally contain the Stripe customer ID but not
+   * the customer email address. Use the matching profile first, then
+   * Stripe itself as a fallback.
+   */
+  if (customerId && !customerEmail) {
+    const profile = await getProfileByCustomerId(customerId);
+
+    customerEmail = normaliseEmail(profile?.email);
+
+    if (!subscriptionId) {
+      subscriptionId = stripeId(profile?.stripe_subscription_id) ?? null;
+    }
+  }
+
+  if (customerId && !customerEmail) {
+    const customer = await getStripeCustomer(customerId);
+
+    customerEmail = normaliseEmail(customer?.email);
+  }
+
   const { error } = await supabase.from("stripe_webhook_events").insert({
     stripe_event_id: event.id,
     event_type: event.type,
+    customer_email: customerEmail || null,
+    stripe_customer_id: customerId,
+    stripe_subscription_id: subscriptionId,
   });
 
   if (!error) {
