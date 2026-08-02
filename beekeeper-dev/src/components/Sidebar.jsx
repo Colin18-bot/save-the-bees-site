@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
 // APP_VERSION=1.2.3
-const APP_VERSION = "1.3.0";
+const APP_VERSION = "1.3.1";
 
 const Sidebar = ({ setIsMobileMenuOpen }) => {
   const [quickCreateOpen, setQuickCreateOpen] = useState(true);
