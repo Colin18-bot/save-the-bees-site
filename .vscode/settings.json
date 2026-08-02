@@ -3,22 +3,14 @@
   "workbench.editor.wrapTabs": true,
   "workbench.editor.enablePreviewFromCodeNavigation": true,
   "workbench.editor.enablePreviewFromQuickOpen": true,
-  "workbench.preferredDarkColorTheme": "Default Dark Modern",
   "workbench.commandPalette.experimental.askChatLocation": "chatView",
   "workbench.commandPalette.experimental.suggestCommands": false,
   "workbench.secondarySideBar.defaultVisibility": "visible",
   "search.useGlobalIgnoreFiles": false,
 
-  // 🚫 Deno completely disabled in this workspace
   "deno.enable": false,
   "deno.lint": false,
-  "deno.unstable": false,
 
-  // TypeScript for your React app
-  "typescript.tsdk": "beekeeper-dev/node_modules/typescript/lib",
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-
-  // Tailwind / CSS
   "css.validate": true,
   "css.lint.unknownAtRules": "ignore",
   "css.lint.unknownPseudoElements": "ignore",
@@ -27,6 +19,7 @@
   "css.lint.vendorPrefix": "ignore",
 
   "extensions.ignoreRecommendations": false,
+
   "files.exclude": {
     "**/.deno": true
   }
