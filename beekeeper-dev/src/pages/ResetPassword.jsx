@@ -37,9 +37,23 @@ const ResetPassword = () => {
 
     if (error) {
       setError(error.message);
-    } else {
-      setMessage("Password reset successful. You can now log in.");
+      return;
     }
+
+    const { error: emailError } = await supabase.functions.invoke("send-password-changed-email");
+
+    if (emailError) {
+      console.error("Password changed email failed:", emailError);
+
+      setMessage(
+        "Password reset successful. You can now log in. The confirmation email could not be sent."
+      );
+      return;
+    }
+
+    setMessage(
+      "Password reset successful. A confirmation email has been sent. You can now log in."
+    );
   };
 
   const handlePasswordChange = (value) => {
@@ -81,11 +95,19 @@ const ResetPassword = () => {
             required
           />
           <ul className="text-sm mt-2 ml-2">
-            <li className={criteria.length ? "text-green-600" : "text-gray-500"}>✔️ At least 8 characters</li>
-            <li className={criteria.upper ? "text-green-600" : "text-gray-500"}>✔️ One uppercase letter</li>
-            <li className={criteria.lower ? "text-green-600" : "text-gray-500"}>✔️ One lowercase letter</li>
+            <li className={criteria.length ? "text-green-600" : "text-gray-500"}>
+              ✔️ At least 8 characters
+            </li>
+            <li className={criteria.upper ? "text-green-600" : "text-gray-500"}>
+              ✔️ One uppercase letter
+            </li>
+            <li className={criteria.lower ? "text-green-600" : "text-gray-500"}>
+              ✔️ One lowercase letter
+            </li>
             <li className={criteria.number ? "text-green-600" : "text-gray-500"}>✔️ One number</li>
-            <li className={criteria.special ? "text-green-600" : "text-gray-500"}>✔️ One special character</li>
+            <li className={criteria.special ? "text-green-600" : "text-gray-500"}>
+              ✔️ One special character
+            </li>
           </ul>
         </div>
         <div>

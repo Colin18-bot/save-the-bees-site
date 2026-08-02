@@ -408,14 +408,25 @@ const Settings = () => {
     }
 
     const { error } = await supabase.auth.updateUser({ password });
+
     if (error) {
-      showStatus("Error updating password.", "error");
+      showStatus(`Error updating password: ${error.message}`, "error");
       return;
     }
 
+    const { error: emailError } = await supabase.functions.invoke("send-password-changed-email");
+
     setPassword("");
     setConfirmPassword("");
-    showStatus("Password updated.", "success");
+
+    if (emailError) {
+      console.error("Password changed email failed:", emailError);
+
+      showStatus("Password updated, but the confirmation email could not be sent.", "error");
+      return;
+    }
+
+    showStatus("Password updated. A confirmation email has been sent.", "success");
   };
 
   const handleAvatarUpload = async () => {
