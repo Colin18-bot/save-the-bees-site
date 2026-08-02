@@ -39,3 +39,6 @@ docker-data/
 
 images/honeybee-kit.png
 kit/
+
+# Production database backups
+beekeeper-dev/production-backup-*/
