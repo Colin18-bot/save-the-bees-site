@@ -740,7 +740,16 @@ const Dashboard = () => {
         }
 
         if (profile?.subscription_level) {
-          setSubscriptionLevel(profile.subscription_level);
+          const level = profile.subscription_level;
+
+          setSubscriptionLevel(level);
+          localStorage.setItem("subscription_level", level);
+
+          window.dispatchEvent(
+            new CustomEvent("subscription:updated", {
+              detail: { level },
+            })
+          );
         }
       } catch (err) {
         console.error("Failed to load subscription level:", err);
