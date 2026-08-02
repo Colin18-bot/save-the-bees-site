@@ -52,7 +52,7 @@ const ResetPassword = () => {
     }
 
     setMessage(
-      "Password reset successful. A confirmation email has been sent. Redirecting you to login..."
+      "Your password has been updated successfully. A confirmation email has been sent. Redirecting to your dashboard..."
     );
 
     setPassword("");
@@ -61,7 +61,7 @@ const ResetPassword = () => {
     window.setTimeout(() => {
       const base = import.meta.env.BASE_URL ?? "/";
       const baseTrimmed = base.endsWith("/") ? base.slice(0, -1) : base;
-      window.location.href = `${baseTrimmed}/login`;
+      window.location.href = `${baseTrimmed}/dashboard`;
     }, 2000);
   };
 
