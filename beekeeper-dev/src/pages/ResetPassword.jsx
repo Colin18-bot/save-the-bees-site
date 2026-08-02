@@ -52,8 +52,17 @@ const ResetPassword = () => {
     }
 
     setMessage(
-      "Password reset successful. A confirmation email has been sent. You can now log in."
+      "Password reset successful. A confirmation email has been sent. Redirecting you to login..."
     );
+
+    setPassword("");
+    setConfirm("");
+
+    window.setTimeout(() => {
+      const base = import.meta.env.BASE_URL ?? "/";
+      const baseTrimmed = base.endsWith("/") ? base.slice(0, -1) : base;
+      window.location.href = `${baseTrimmed}/login`;
+    }, 2000);
   };
 
   const handlePasswordChange = (value) => {
