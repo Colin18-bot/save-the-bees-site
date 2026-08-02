@@ -149,7 +149,9 @@ const Settings = () => {
   const [currentPeriodEnd, setCurrentPeriodEnd] = useState(null);
 
   // Personalisation
-  const [timezone, setTimezone] = useState(localStorage.getItem("prefs.timezone") || "Europe/London");
+  const [timezone, setTimezone] = useState(
+    localStorage.getItem("prefs.timezone") || "Europe/London"
+  );
   const [currency, setCurrency] = useState(localStorage.getItem("prefs.currency") || "GBP");
   const [defaultApiaryId, setDefaultApiaryId] = useState("");
 
@@ -161,7 +163,7 @@ const Settings = () => {
   const [apiaries, setApiaries] = useState([]);
   const TIMEZONES = useMemo(() => getAllTimezones(), []);
 
-   // Toast
+  // Toast
   const [status, setStatus] = useState(null);
   const statusTimerRef = useRef(null);
 
@@ -187,8 +189,8 @@ const Settings = () => {
       status.type === "error"
         ? "bg-red-50 border-red-200 text-red-800"
         : status.type === "info"
-        ? "bg-blue-50 border-blue-200 text-blue-800"
-        : "bg-green-50 border-green-200 text-green-800";
+          ? "bg-blue-50 border-blue-200 text-blue-800"
+          : "bg-green-50 border-green-200 text-green-800";
     const icon = status.type === "error" ? "⚠️" : status.type === "info" ? "ℹ️" : "✅";
     return (
       <div role="status" aria-live="polite" className={`${base} ${styles}`}>
@@ -232,7 +234,9 @@ const Settings = () => {
   const loadProfile = useCallback(async (uid) => {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("display_name, avatar_url, subscription_level, subscription_status, current_period_end, email")
+      .select(
+        "display_name, avatar_url, subscription_level, subscription_status, current_period_end, email"
+      )
       .eq("user_id", uid)
       .maybeSingle();
 
@@ -302,7 +306,7 @@ const Settings = () => {
       for (let i = 0; i < 6 && !cancelled; i++) {
         const prof = await loadProfile(uid);
         if (prof?.subscription_level === "premium") {
-          showStatus("Subscription updated!", "success");
+          showStatus("Welcome to HiveTag Premium! Your subscription is now active.", "success");
           break;
         }
         await new Promise((r) => setTimeout(r, 1500));
@@ -344,7 +348,9 @@ const Settings = () => {
       updated_at: new Date().toISOString(),
     };
 
-    const { error: upsertErr } = await supabase.from("profiles").upsert(updates, { onConflict: "user_id" });
+    const { error: upsertErr } = await supabase
+      .from("profiles")
+      .upsert(updates, { onConflict: "user_id" });
 
     if (upsertErr) {
       console.error("Supabase upsert error:", upsertErr);
@@ -402,14 +408,25 @@ const Settings = () => {
     }
 
     const { error } = await supabase.auth.updateUser({ password });
+
     if (error) {
-      showStatus("Error updating password.", "error");
+      showStatus(`Error updating password: ${error.message}`, "error");
       return;
     }
 
+    const { error: emailError } = await supabase.functions.invoke("send-password-changed-email");
+
     setPassword("");
     setConfirmPassword("");
-    showStatus("Password updated.", "success");
+
+    if (emailError) {
+      console.error("Password changed email failed:", emailError);
+
+      showStatus("Password updated, but the confirmation email could not be sent.", "error");
+      return;
+    }
+
+    showStatus("Password updated. A confirmation email has been sent.", "success");
   };
 
   const handleAvatarUpload = async () => {
@@ -440,9 +457,11 @@ const Settings = () => {
 
     try {
       const nestedPrefix = `avatar/${uid}`;
-      const { data: oldFiles, error: listErr } = await supabase.storage.from(AVATAR_BUCKET).list(nestedPrefix, {
-        limit: 100,
-      });
+      const { data: oldFiles, error: listErr } = await supabase.storage
+        .from(AVATAR_BUCKET)
+        .list(nestedPrefix, {
+          limit: 100,
+        });
 
       if (!listErr && Array.isArray(oldFiles) && oldFiles.length) {
         const toRemove = oldFiles
@@ -490,9 +509,11 @@ const Settings = () => {
 
     try {
       const nestedPrefix = `avatar/${uid}`;
-      const { data: files, error: listErr } = await supabase.storage.from(AVATAR_BUCKET).list(nestedPrefix, {
-        limit: 100,
-      });
+      const { data: files, error: listErr } = await supabase.storage
+        .from(AVATAR_BUCKET)
+        .list(nestedPrefix, {
+          limit: 100,
+        });
 
       if (!listErr && Array.isArray(files) && files.length) {
         const paths = files.map((f) => `${nestedPrefix}/${f.name}`);
@@ -545,7 +566,10 @@ const Settings = () => {
       <h2 className="text-2xl font-bold mb-6">Settings</h2>
 
       {/* ===== Profile ===== */}
-      <section className="mb-10 border rounded-xl p-4 bg-white shadow-sm" aria-labelledby="profile-settings">
+      <section
+        className="mb-10 border rounded-xl p-4 bg-white shadow-sm"
+        aria-labelledby="profile-settings"
+      >
         <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <h2 id="profile-settings" className="text-xl font-semibold">
             Profile (saved together)
@@ -614,7 +638,9 @@ const Settings = () => {
                 </option>
               ))}
             </datalist>
-            <p className="text-xs text-gray-500 mt-1">Used to pre-fill Inventory, Expenses and Sales.</p>
+            <p className="text-xs text-gray-500 mt-1">
+              Used to pre-fill Inventory, Expenses and Sales.
+            </p>
           </div>
 
           <div className="md:col-span-2">
@@ -634,7 +660,9 @@ const Settings = () => {
               ))}
             </select>
             {apiaries.length === 0 && (
-              <p className="text-xs text-gray-500 mt-1">You don’t have any apiaries yet. Create one to set a default.</p>
+              <p className="text-xs text-gray-500 mt-1">
+                You don’t have any apiaries yet. Create one to set a default.
+              </p>
             )}
           </div>
         </div>
@@ -705,13 +733,24 @@ const Settings = () => {
             No photo
           </div>
         )}
-        <input type="file" accept="image/*" onChange={(evt) => setAvatarFile(evt.target.files?.[0] || null)} />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(evt) => setAvatarFile(evt.target.files?.[0] || null)}
+        />
         <div className="flex gap-2">
-          <button onClick={handleAvatarUpload} className="bg-gray-700 text-white px-3 py-2 rounded hover:bg-gray-800">
+          <button
+            onClick={handleAvatarUpload}
+            className="bg-gray-700 text-white px-3 py-2 rounded hover:bg-gray-800"
+          >
             Upload
           </button>
           {photoUrl && (
-            <button type="button" onClick={handleAvatarDelete} className="px-3 py-2 border rounded text-sm">
+            <button
+              type="button"
+              onClick={handleAvatarDelete}
+              className="px-3 py-2 border rounded text-sm"
+            >
               Remove photo
             </button>
           )}
@@ -764,16 +803,43 @@ function BillingSection({ plan, subscriptionStatus, currentPeriodEnd, setPlan, s
         </div>
         {subStatus && (
           <div>
-            <span className="font-medium">Status:</span> {subStatus}
+            <span className="font-medium">Status:</span>{" "}
+            {{
+              active: "Active",
+              trialing: "Trial",
+              cancels_at_period_end: "Cancellation Scheduled",
+              past_due: "Payment Required",
+              unpaid: "Payment Required",
+              canceled: "Cancelled",
+              incomplete: "Payment Pending",
+              incomplete_expired: "Expired",
+            }[subStatus] || subStatus}
           </div>
         )}
         {periodEnd && (
           <div>
-            <span className="font-medium">{subStatus === "cancels_at_period_end" ? "Cancels on" : "Renews on"}:</span>{" "}
+            <span className="font-medium">
+              {subStatus === "cancels_at_period_end" ? "Premium access ends" : "Next renewal"}:
+            </span>{" "}
             {formatDate(periodEnd)}
           </div>
         )}
       </div>
+
+      {subStatus === "cancels_at_period_end" && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+          <p className="font-semibold">⚠ Cancellation Scheduled</p>
+
+          <p className="mt-2">Your Premium subscription has been cancelled.</p>
+
+          <p className="mt-2">
+            Your Premium access will remain active until{" "}
+            <span className="font-semibold">{formatDate(periodEnd)}</span>.
+          </p>
+
+          <p className="mt-2">You can resume your subscription at any time from Manage Billing.</p>
+        </div>
+      )}
 
       <div className="flex gap-3 pt-2 items-center">
         {plan === "premium" ? (
@@ -803,7 +869,10 @@ function BillingSection({ plan, subscriptionStatus, currentPeriodEnd, setPlan, s
             Manage billing
           </button>
         ) : (
-          <button onClick={() => navigate("/pricing")} className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+          <button
+            onClick={() => navigate("/pricing")}
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          >
             Upgrade to Premium
           </button>
         )}
@@ -837,7 +906,17 @@ function BillingSection({ plan, subscriptionStatus, currentPeriodEnd, setPlan, s
 }
 
 function ExportSection({ showStatus }) {
-  const TABLES = ["profiles", "apiaries", "hives", "inspections", "todos", "logbook", "inventory_items", "expenses", "sales_lines"];
+  const TABLES = [
+    "profiles",
+    "apiaries",
+    "hives",
+    "inspections",
+    "todos",
+    "logbook",
+    "inventory_items",
+    "expenses",
+    "sales_lines",
+  ];
 
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -867,7 +946,10 @@ function ExportSection({ showStatus }) {
     let from = 0;
     let all = [];
     while (true) {
-      const { data, error } = await supabase.from(table).select("*").range(from, from + pageSize - 1);
+      const { data, error } = await supabase
+        .from(table)
+        .select("*")
+        .range(from, from + pageSize - 1);
       if (error) throw error;
       const batch = data || [];
       all = all.concat(batch);
@@ -885,7 +967,10 @@ function ExportSection({ showStatus }) {
       const { default: JSZip } = await import(/* @vite-ignore */ "https://esm.sh/jszip@3.10.1");
       const fsMod = await import(/* @vite-ignore */ "https://esm.sh/file-saver@2.0.5");
 
-      const saveAs = fsMod.saveAs || fsMod.default || (typeof window !== "undefined" ? window.saveAs : undefined);
+      const saveAs =
+        fsMod.saveAs ||
+        fsMod.default ||
+        (typeof window !== "undefined" ? window.saveAs : undefined);
       if (typeof saveAs !== "function") {
         throw new Error("FileSaver loaded but saveAs was not found");
       }
@@ -915,7 +1000,7 @@ function ExportSection({ showStatus }) {
         counts: {
           ...counts,
           photos_listed: 0,
-photos_embedded: 0,
+          photos_embedded: 0,
         },
         notes: [
           "CSV files are under /data/",
@@ -943,14 +1028,17 @@ photos_embedded: 0,
   return (
     <section className="mb-10">
       <h2 className="text-xl font-semibold">Export</h2>
-    <p className="text-sm text-gray-600 mb-3">
-      Download a ZIP containing your data in CSV format, including <code>profiles</code>, <code>apiaries</code>, <code>hives</code>,{" "}
-      <code>inspections</code>, <code>tasks</code>, <code>logbook</code>, <code>inventory items</code>,{" "}
-      <code>expenses</code> and <code>sales</code>. Images are not included in the export.
-    </p>
-      
+      <p className="text-sm text-gray-600 mb-3">
+        Download a ZIP containing your data in CSV format, including <code>profiles</code>,{" "}
+        <code>apiaries</code>, <code>hives</code>, <code>inspections</code>, <code>tasks</code>,{" "}
+        <code>logbook</code>, <code>inventory items</code>, <code>expenses</code> and{" "}
+        <code>sales</code>. Images are not included in the export.
+      </p>
 
-      <button onClick={handleExportZip} className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-black">
+      <button
+        onClick={handleExportZip}
+        className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-black"
+      >
         Export my data (ZIP)
       </button>
     </section>
@@ -982,9 +1070,11 @@ function DangerZone({
 
     try {
       showStatus("Cancelling any active subscription…", "info", 0);
-      await supabase.functions.invoke("cancel-subscription", { body: { immediate: true } }).catch(() => {
-        // ignore (optional)
-      });
+      await supabase.functions
+        .invoke("cancel-subscription", { body: { immediate: true } })
+        .catch(() => {
+          // ignore (optional)
+        });
 
       showStatus("Deleting your account and all files…", "info", 0);
       const { data, error } = await supabase.functions.invoke("delete-account", {
@@ -1014,7 +1104,9 @@ function DangerZone({
     <section className="mb-10">
       <h2 className="text-xl font-semibold text-red-700">Danger Zone</h2>
       <div className="mt-3 p-4 border border-red-200 rounded bg-red-50">
-        <p className="text-sm text-red-800 mb-3">Deleting your account is permanent and cannot be undone.</p>
+        <p className="text-sm text-red-800 mb-3">
+          Deleting your account is permanent and cannot be undone.
+        </p>
         <button
           onClick={() => {
             setShowDeleteModal(true);
@@ -1031,7 +1123,8 @@ function DangerZone({
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
             <h3 className="text-lg font-semibold mb-2">Confirm account deletion</h3>
             <p className="text-sm text-gray-600 mb-4">
-              This will cancel your subscription, remove all photos and data, and permanently delete your account.
+              This will cancel your subscription, remove all photos and data, and permanently delete
+              your account.
             </p>
             <p className="text-sm text-gray-700 mb-2">
               Type <span className="font-mono font-semibold">DELETE</span> to confirm:
@@ -1060,7 +1153,9 @@ function DangerZone({
                 onClick={handleDeleteAccount}
                 disabled={!canConfirmDelete || isDeleting}
                 className={`px-4 py-2 rounded text-white ${
-                  canConfirmDelete && !isDeleting ? "bg-red-600 hover:bg-red-700" : "bg-red-300 cursor-not-allowed"
+                  canConfirmDelete && !isDeleting
+                    ? "bg-red-600 hover:bg-red-700"
+                    : "bg-red-300 cursor-not-allowed"
                 }`}
               >
                 {isDeleting ? "Deleting…" : "Confirm Delete"}

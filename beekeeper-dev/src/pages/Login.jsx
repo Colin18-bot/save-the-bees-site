@@ -1,8 +1,10 @@
 // src/pages/Login.jsx
-import React, { useState, useEffect } from "react";
+
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { loginUser } from "../services/auth";
+import { loginUser, resendConfirmationEmail } from "../services/auth";
 import { supabase } from "../services/supabase";
+import { sendWelcomeEmail } from "../services/email.js";
 import googleIcon from "../assets/google-icon.svg";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
@@ -11,11 +13,7 @@ const getSafeRedirect = (search) => {
   const params = new URLSearchParams(search);
   const redirect = params.get("redirect");
 
-  if (
-    !redirect ||
-    !redirect.startsWith("/") ||
-    redirect.startsWith("//")
-  ) {
+  if (!redirect || !redirect.startsWith("/") || redirect.startsWith("//")) {
     return "/dashboard";
   }
 
@@ -33,24 +31,107 @@ const Login = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [redirectMessage, setRedirectMessage] = useState("");
 
+  // Resend confirmation email states
+  const [showResendConfirmation, setShowResendConfirmation] = useState(false);
+  const [isResendingConfirmation, setIsResendingConfirmation] = useState(false);
+  const [resendMessage, setResendMessage] = useState("");
+
   // Show/hide password state
   const [showPassword, setShowPassword] = useState(false);
 
-  // If already logged in, go where they intended or to /dashboard
-  useEffect(() => {
-    const checkSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
+  const completeLoginSetup = useCallback(async (user) => {
+    if (!user?.id) {
+      throw new Error("No authenticated user was found.");
+    }
 
-      if (session?.user) {
-        const redirect = getSafeRedirect(location.search);
-        navigate(redirect, { replace: true });
+    const userEmail = user.email || "";
+
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("subscription_level, welcome_email_sent_at")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (profileError) {
+      throw profileError;
+    }
+
+    let subscriptionLevel = profile?.subscription_level ?? "free";
+
+    if (!profile) {
+      const { error: createError } = await supabase.from("profiles").insert({
+        user_id: user.id,
+        email: userEmail,
+        subscription_level: "free",
+        updated_at: new Date().toISOString(),
+      });
+
+      if (createError) {
+        throw createError;
+      }
+
+      subscriptionLevel = "free";
+    }
+
+    localStorage.setItem("subscription_level", subscriptionLevel);
+
+    /*
+     * A Welcome-email failure must not prevent the user from logging in.
+     * The Edge Function prevents the email being sent more than once.
+     */
+    if (!profile?.welcome_email_sent_at) {
+      try {
+        const emailResult = await sendWelcomeEmail();
+        console.log("Welcome email result:", emailResult);
+      } catch (emailError) {
+        console.error("Welcome email could not be sent:", emailError);
+      }
+    }
+  }, []);
+
+  // Complete account setup after Google OAuth or for an existing session
+  useEffect(() => {
+    let cancelled = false;
+
+    const checkSession = async () => {
+      try {
+        const {
+          data: { session },
+          error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError) {
+          throw sessionError;
+        }
+
+        if (!session?.user || cancelled) {
+          return;
+        }
+
+        await completeLoginSetup(session.user);
+
+        if (!cancelled) {
+          const redirect = getSafeRedirect(location.search);
+          navigate(redirect, { replace: true });
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error("Post-login setup failed:", err);
+
+          setError(
+            err.message ||
+              "Your account was authenticated, but account setup could not be completed."
+          );
+        }
       }
     };
 
     checkSession();
-  }, [navigate, location.search]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [completeLoginSetup, navigate, location.search]);
 
   // Show one-time messages from navigation state
   useEffect(() => {
@@ -58,6 +139,14 @@ const Login = () => {
 
     if (state.successMessage) {
       setSuccessMessage(state.successMessage);
+
+      if (state.successMessage.toLowerCase().includes("confirmation email")) {
+        setShowResendConfirmation(true);
+      }
+    }
+
+    if (state.confirmationEmail) {
+      setEmail(state.confirmationEmail);
     }
 
     if (state.showLoginRequired) {
@@ -65,7 +154,7 @@ const Login = () => {
     }
 
     // Clear the state so messages do not persist on back/forward
-    if (state.successMessage || state.showLoginRequired) {
+    if (state.successMessage || state.confirmationEmail || state.showLoginRequired) {
       navigate(location.pathname + location.search, {
         replace: true,
         state: {},
@@ -73,12 +162,14 @@ const Login = () => {
     }
   }, [location, navigate]);
 
-  const isValidEmail = (value) =>
-    /[^@\s]+@[^@\s]+\.[^@\s]+/.test(value);
+  const isValidEmail = (value) => /[^@\s]+@[^@\s]+\.[^@\s]+/.test(value);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     setError("");
+    setResendMessage("");
+    setShowResendConfirmation(false);
 
     try {
       const { user } = await loginUser(email, password);
@@ -87,44 +178,48 @@ const Login = () => {
         throw new Error("No user returned from authentication.");
       }
 
-      // Ensure a profile exists and create one if missing
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("subscription_level")
-        .eq("user_id", user.id)
-        .maybeSingle();
+      await completeLoginSetup(user);
 
-      if (profileError) {
-        throw profileError;
-      }
-
-      if (!profile) {
-        const { error: createErr } = await supabase
-          .from("profiles")
-          .insert({
-            user_id: user.id,
-            email,
-            subscription_level: "free",
-            updated_at: new Date().toISOString(),
-          });
-
-        if (createErr) {
-          throw createErr;
-        }
-
-        localStorage.setItem("subscription_level", "free");
-      } else {
-        localStorage.setItem(
-          "subscription_level",
-          profile.subscription_level ?? "free"
-        );
-      }
-
-      // Return to the page requested before login
       const redirect = getSafeRedirect(location.search);
       navigate(redirect, { replace: true });
     } catch (err) {
-      setError(err.message || "Login failed. Please try again.");
+      const message = err.message || "Login failed. Please try again.";
+
+      setError(message);
+      setResendMessage("");
+
+      if (
+        message.toLowerCase().includes("hasn't been confirmed") ||
+        message.toLowerCase().includes("email not confirmed")
+      ) {
+        setShowResendConfirmation(true);
+      }
+    }
+  };
+
+  const handleResendConfirmation = async () => {
+    setError("");
+    setResendMessage("");
+
+    if (!email || !isValidEmail(email)) {
+      setError("Please enter the email address you used to create your account.");
+      return;
+    }
+
+    setIsResendingConfirmation(true);
+
+    try {
+      await resendConfirmationEmail(email);
+
+      setResendMessage(
+        "If an unconfirmed account exists for this email address, a new confirmation email has been requested. Please check your inbox and your Junk/Spam folder."
+      );
+    } catch (err) {
+      console.error("Confirmation email could not be resent:", err);
+
+      setError(err.message || "The confirmation email could not be resent. Please try again.");
+    } finally {
+      setIsResendingConfirmation(false);
     }
   };
 
@@ -134,20 +229,17 @@ const Login = () => {
     // Preserve the page the user originally requested
     const redirect = getSafeRedirect(location.search);
 
-    const callbackUrl =
-      `${window.location.origin}/login?redirect=${encodeURIComponent(
-        redirect
-      )}`;
+    const callbackUrl = `${window.location.origin}/login?redirect=` + encodeURIComponent(redirect);
 
-    const { error } = await supabase.auth.signInWithOAuth({
+    const { error: googleError } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: callbackUrl,
       },
     });
 
-    if (error) {
-      setError(error.message);
+    if (googleError) {
+      setError(googleError.message);
     }
   };
 
@@ -162,9 +254,7 @@ const Login = () => {
         ×
       </a>
 
-      <h2 className="text-3xl font-bold mb-6 text-center text-green-700">
-        Sign In
-      </h2>
+      <h2 className="text-3xl font-bold mb-6 text-center text-green-700">Sign In</h2>
 
       {redirectMessage && (
         <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
@@ -184,6 +274,27 @@ const Login = () => {
         </div>
       )}
 
+      {resendMessage && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          {resendMessage}
+        </div>
+      )}
+
+      {showResendConfirmation && (
+        <div className="mb-4">
+          <button
+            type="button"
+            onClick={handleResendConfirmation}
+            disabled={isResendingConfirmation}
+            className="w-full border border-green-600 text-green-700 py-2 rounded hover:bg-green-50 transition duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            {isResendingConfirmation
+              ? "Sending confirmation email..."
+              : "Resend confirmation email"}
+          </button>
+        </div>
+      )}
+
       <form onSubmit={handleLogin} className="space-y-5">
         <div>
           <label className="block font-medium mb-1">Email</label>
@@ -191,9 +302,7 @@ const Login = () => {
           <input
             type="email"
             className={`w-full border px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-green-500 ${
-              email && !isValidEmail(email)
-                ? "border-red-500"
-                : "border-gray-300"
+              email && !isValidEmail(email) ? "border-red-500" : "border-gray-300"
             } bg-blue-50`}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -202,9 +311,7 @@ const Login = () => {
           />
 
           {email && !isValidEmail(email) && (
-            <p className="text-sm text-red-500 mt-1">
-              Please enter a valid email address.
-            </p>
+            <p className="text-sm text-red-500 mt-1">Please enter a valid email address.</p>
           )}
         </div>
 
@@ -231,8 +338,7 @@ const Login = () => {
           </button>
 
           <p className="text-sm text-gray-500 mt-1">
-            Must be at least 8 characters with uppercase, lowercase, number,
-            and symbol.
+            Must be at least 8 characters with uppercase, lowercase, number, and symbol.
           </p>
         </div>
 
@@ -250,11 +356,7 @@ const Login = () => {
           onClick={handleGoogleLogin}
           className="w-full bg-[#4285F4] text-white py-2 rounded flex items-center justify-center gap-3 shadow hover:bg-[#357ae8] transition"
         >
-          <img
-            src={googleIcon}
-            alt="Google"
-            className="w-5 h-5 bg-white rounded"
-          />
+          <img src={googleIcon} alt="Google" className="w-5 h-5 bg-white rounded" />
           Sign in with Google
         </button>
       </div>

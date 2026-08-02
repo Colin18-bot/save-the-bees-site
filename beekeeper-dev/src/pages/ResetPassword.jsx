@@ -37,9 +37,59 @@ const ResetPassword = () => {
 
     if (error) {
       setError(error.message);
-    } else {
-      setMessage("Password reset successful. You can now log in.");
+      return;
     }
+
+    const { error: emailError } = await supabase.functions.invoke("send-password-changed-email");
+
+    if (emailError) {
+      console.error("Password changed email failed:", emailError);
+
+      setMessage(
+        "Password reset successful. You can now log in. The confirmation email could not be sent."
+      );
+      return;
+    }
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user?.id) {
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("subscription_level")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (profileError) {
+        console.error("Unable to refresh subscription after password reset:", profileError);
+      }
+
+      const level = profile?.subscription_level || "free";
+
+      localStorage.setItem("subscription_level", level);
+
+      window.dispatchEvent(
+        new CustomEvent("subscription:updated", {
+          detail: { level },
+        })
+      );
+    }
+
+    setMessage(
+      "Your password has been updated successfully. A confirmation email has been sent. Redirecting to your dashboard..."
+    );
+
+    setPassword("");
+    setConfirm("");
+
+    window.setTimeout(() => {
+      const base = import.meta.env.BASE_URL ?? "/";
+      const baseTrimmed = base.endsWith("/") ? base.slice(0, -1) : base;
+
+      window.location.href = `${baseTrimmed}/dashboard`;
+    }, 2000);
   };
 
   const handlePasswordChange = (value) => {
@@ -81,11 +131,19 @@ const ResetPassword = () => {
             required
           />
           <ul className="text-sm mt-2 ml-2">
-            <li className={criteria.length ? "text-green-600" : "text-gray-500"}>✔️ At least 8 characters</li>
-            <li className={criteria.upper ? "text-green-600" : "text-gray-500"}>✔️ One uppercase letter</li>
-            <li className={criteria.lower ? "text-green-600" : "text-gray-500"}>✔️ One lowercase letter</li>
+            <li className={criteria.length ? "text-green-600" : "text-gray-500"}>
+              ✔️ At least 8 characters
+            </li>
+            <li className={criteria.upper ? "text-green-600" : "text-gray-500"}>
+              ✔️ One uppercase letter
+            </li>
+            <li className={criteria.lower ? "text-green-600" : "text-gray-500"}>
+              ✔️ One lowercase letter
+            </li>
             <li className={criteria.number ? "text-green-600" : "text-gray-500"}>✔️ One number</li>
-            <li className={criteria.special ? "text-green-600" : "text-gray-500"}>✔️ One special character</li>
+            <li className={criteria.special ? "text-green-600" : "text-gray-500"}>
+              ✔️ One special character
+            </li>
           </ul>
         </div>
         <div>

@@ -113,8 +113,7 @@ const StatTile = ({ to, title, value, subtitle, cta = "Open →", variant = "def
   const variants = {
     default:
       "bg-gradient-to-br from-amber-50 to-green-50 border-amber-200/70 hover:from-amber-100 hover:to-green-100 hover:border-amber-300/80 hover:shadow-md focus-visible:ring-amber-400",
-    nfc:
-      "bg-gradient-to-br from-blue-50 to-emerald-50 border-blue-200/70 hover:from-blue-100 hover:to-emerald-100 hover:border-blue-300/80 hover:shadow-md focus-visible:ring-blue-400",
+    nfc: "bg-gradient-to-br from-blue-50 to-emerald-50 border-blue-200/70 hover:from-blue-100 hover:to-emerald-100 hover:border-blue-300/80 hover:shadow-md focus-visible:ring-blue-400",
   };
 
   return (
@@ -269,14 +268,79 @@ const Dashboard = () => {
     }
   }, [location]);
 
-  // Stripe upgrade banner: show after returning from checkout
+  // Stripe upgrade return: wait for the webhook to update the profile,
+  // then unlock Premium features without requiring a page refresh.
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    if (params.get("upgraded") === "1") {
-      setStripeMessage(
-        "Thanks for upgrading to Premium. NFC tap-to-log and unlimited apiaries/hives are now enabled on your account."
-      );
+
+    if (params.get("upgraded") !== "1") {
+      return;
     }
+
+    let cancelled = false;
+
+    const refreshPremiumStatus = async () => {
+      setStripeMessage("Thanks for upgrading to Premium. We are activating your Premium features…");
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user || cancelled) {
+        return;
+      }
+
+      for (let attempt = 0; attempt < 10 && !cancelled; attempt += 1) {
+        const { data: profile, error } = await supabase
+          .from("profiles")
+          .select("subscription_level")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (error) {
+          console.error("Unable to refresh subscription after checkout:", error);
+        }
+
+        const updatedLevel = profile?.subscription_level || "free";
+
+        if (updatedLevel === "premium") {
+          setSubscriptionLevel("premium");
+
+          localStorage.setItem("subscription_level", "premium");
+
+          window.dispatchEvent(
+            new CustomEvent("subscription:updated", {
+              detail: { level: "premium" },
+            })
+          );
+
+          setStripeMessage("Welcome to HiveTag Premium! Your Premium features are now active.");
+
+          // Remove ?upgraded=1 so the message does not repeat on refresh.
+          window.history.replaceState(
+            {},
+            document.title,
+            `${window.location.pathname}${window.location.hash || ""}`
+          );
+
+          return;
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      }
+
+      if (!cancelled) {
+        setStripeMessage(
+          "Your payment was successful. Premium activation is taking a little longer than expected; please use Refresh if the features remain locked."
+        );
+      }
+    };
+
+    refreshPremiumStatus();
+
+    return () => {
+      cancelled = true;
+    };
   }, [location.search]);
 
   // ---- Lookups (names + list for filter) ----
@@ -473,7 +537,9 @@ const Dashboard = () => {
       const summary = {
         total: items.length,
         healthy: items.filter((item) => item.healthScore >= 85 && item.riskRank <= 1).length,
-        monitor: items.filter((item) => item.riskRank === 2 || (item.healthScore >= 55 && item.healthScore < 85)).length,
+        monitor: items.filter(
+          (item) => item.riskRank === 2 || (item.healthScore >= 55 && item.healthScore < 85)
+        ).length,
         attention: items.filter((item) => item.riskRank >= 3 || item.healthScore < 55).length,
         critical: items.filter((item) => item.riskRank >= 4).length,
       };
@@ -570,10 +636,7 @@ const Dashboard = () => {
       setDefaultApiaryLatitude(Number.isFinite(lat) ? lat : null);
 
       const bad =
-        !Number.isFinite(lat) ||
-        !Number.isFinite(lon) ||
-        Math.abs(lat) > 90 ||
-        Math.abs(lon) > 180;
+        !Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180;
 
       if (bad) {
         lat = 51.5074;
@@ -638,19 +701,18 @@ const Dashboard = () => {
   };
 
   // Initial + whenever filter changes
-      useEffect(() => {
-      fetchStats(selectedApiaryId);
-      fetchRecentInspections(selectedApiaryId);
-      fetchRecentTodos(selectedApiaryId);
-      fetchRecentLogs(selectedApiaryId);
+  useEffect(() => {
+    fetchStats(selectedApiaryId);
+    fetchRecentInspections(selectedApiaryId);
+    fetchRecentTodos(selectedApiaryId);
+    fetchRecentLogs(selectedApiaryId);
 
-      if (subscriptionLevel === "premium") {
-        fetchNfcSummary(selectedApiaryId);
-        fetchRecentNfcHives(selectedApiaryId);
-        fetchDashboardIntelligence(selectedApiaryId);
-      }
-
-    }, [selectedApiaryId, subscriptionLevel]);
+    if (subscriptionLevel === "premium") {
+      fetchNfcSummary(selectedApiaryId);
+      fetchRecentNfcHives(selectedApiaryId);
+      fetchDashboardIntelligence(selectedApiaryId);
+    }
+  }, [selectedApiaryId, subscriptionLevel]);
 
   // Weather loads once (default apiary)
   useEffect(() => {
@@ -678,7 +740,16 @@ const Dashboard = () => {
         }
 
         if (profile?.subscription_level) {
-          setSubscriptionLevel(profile.subscription_level);
+          const level = profile.subscription_level;
+
+          setSubscriptionLevel(level);
+          localStorage.setItem("subscription_level", level);
+
+          window.dispatchEvent(
+            new CustomEvent("subscription:updated", {
+              detail: { level },
+            })
+          );
         }
       } catch (err) {
         console.error("Failed to load subscription level:", err);
@@ -861,22 +932,22 @@ const Dashboard = () => {
           </p>
         </div>
         <div className="flex gap-3">
-  {subscriptionLevel === "premium" ? (
-    <Link
-      to={reportHref}
-      className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-    >
-      Open Reports &amp; Export
-    </Link>
-  ) : (
-    <Link
-      to="/pricing"
-      className="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-4 py-2 rounded"
-    >
-      🔒 Reports &amp; Export
-    </Link>
-  )}
-</div>
+          {subscriptionLevel === "premium" ? (
+            <Link
+              to={reportHref}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+            >
+              Open Reports &amp; Export
+            </Link>
+          ) : (
+            <Link
+              to="/pricing"
+              className="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-4 py-2 rounded"
+            >
+              🔒 Reports &amp; Export
+            </Link>
+          )}
+        </div>
       </div>
 
       {/* Stats buttons (centered + nicer theme) */}
@@ -1111,7 +1182,9 @@ const Dashboard = () => {
                       <div className="flex items-center gap-2 flex-wrap">
                         <strong>{t.due_date ? formatUKDate(t.due_date) : "No date"}</strong>
                         <span className={statusPill(t.status)}>{t.status || "Pending"}</span>
-                        {overdue && <span className="text-red-700 text-xs font-semibold">Overdue</span>}
+                        {overdue && (
+                          <span className="text-red-700 text-xs font-semibold">Overdue</span>
+                        )}
                       </div>
                       <div className="truncate">
                         {t.title}
@@ -1183,7 +1256,10 @@ const Dashboard = () => {
                     {!l.archived_at && l.inspection?.date && (
                       <>
                         {" • "}
-                        <Link to={`/inspections/${l.inspection_id}/edit`} className="text-blue-600 underline">
+                        <Link
+                          to={`/inspections/${l.inspection_id}/edit`}
+                          className="text-blue-600 underline"
+                        >
                           Inspection ({formatUKDate(l.inspection.date)})
                         </Link>
                       </>
@@ -1295,9 +1371,9 @@ const Dashboard = () => {
                 not instructions. Weather, forage, pollen and alert data come from third-party
                 services and may be inaccurate or change at short notice. Conditions vary by region,
                 altitude and micro-climate and every colony is different, so always use your own
-                judgement and follow the product label, official guidance and advice from your
-                local beekeeping association, Bee Inspectors, vets and experienced mentors. Do not
-                rely on this panel alone when deciding whether to inspect, feed or treat your bees.
+                judgement and follow the product label, official guidance and advice from your local
+                beekeeping association, Bee Inspectors, vets and experienced mentors. Do not rely on
+                this panel alone when deciding whether to inspect, feed or treat your bees.
               </p>
               {beekeeperNotes.length ? (
                 <>
