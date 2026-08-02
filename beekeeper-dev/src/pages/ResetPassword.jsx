@@ -51,6 +51,32 @@ const ResetPassword = () => {
       return;
     }
 
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user?.id) {
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("subscription_level")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (profileError) {
+        console.error("Unable to refresh subscription after password reset:", profileError);
+      }
+
+      const level = profile?.subscription_level || "free";
+
+      localStorage.setItem("subscription_level", level);
+
+      window.dispatchEvent(
+        new CustomEvent("subscription:updated", {
+          detail: { level },
+        })
+      );
+    }
+
     setMessage(
       "Your password has been updated successfully. A confirmation email has been sent. Redirecting to your dashboard..."
     );
@@ -61,6 +87,7 @@ const ResetPassword = () => {
     window.setTimeout(() => {
       const base = import.meta.env.BASE_URL ?? "/";
       const baseTrimmed = base.endsWith("/") ? base.slice(0, -1) : base;
+
       window.location.href = `${baseTrimmed}/dashboard`;
     }, 2000);
   };
