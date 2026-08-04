@@ -106,6 +106,9 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     { to: "/apiaries", label: "Apiaries" },
     { to: "/hives", label: "Hives" },
     { to: "/inspections", label: "Inspections" },
+    userIsPremium
+      ? { to: "/queens", label: "Queens" }
+      : { to: "/queens", label: "🔒 Queens", lockedPremium: true },
     { to: "/logbook", label: "Hive Logbook" },
     { to: "/todos", label: "Tasks" },
     { to: "/calendar", label: "Calendar" },
