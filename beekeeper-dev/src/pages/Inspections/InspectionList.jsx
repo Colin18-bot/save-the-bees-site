@@ -1,6 +1,7 @@
 // src/pages/Inspections/InspectionList.jsx
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../../services/supabase";
+import { getQueenSnapshotSummary } from "../../services/inspectionQueen";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import {
   formatDerivedWeather,
@@ -402,7 +403,7 @@ useEffect(() => {
       let dataQuery = supabase
         .from("inspections")
         .select(
-          "id, apiary_id, hive_id, inspection_type, date, created_at, weather, weather_observed, weather_code, colony_behavior, colony_behavior_other, environmental_signs, environmental_signs_other, hive_population, brood_pattern, food_stores, frames_of_bees, queen_cells, varroa_seen, brood_box_congestion, queen_status, queen_status_other, signs_disease, disease_types, disease_other, signs_pests, pest_types, pest_other, notes, photos"
+          "id, apiary_id, hive_id, inspection_type, date, created_at, weather, weather_observed, weather_code, colony_behavior, colony_behavior_other, environmental_signs, environmental_signs_other, hive_population, brood_pattern, food_stores, frames_of_bees, queen_cells, varroa_seen, brood_box_congestion, queen_id, queen_snapshot, queen_status, queen_status_other, signs_disease, disease_types, disease_other, signs_pests, pest_types, pest_other, notes, photos"
         )
         .is("archived_at", null)
         .order("date", { ascending: false })
@@ -867,6 +868,7 @@ if (ids.length > 0) {
               const summary = buildSummary(insp);
               const photos = Array.isArray(insp.photos) ? insp.photos : [];
               const diseaseInfo = insp.signs_disease ? getDiseaseInfo(insp) : null;
+              const savedQueen = getQueenSnapshotSummary(insp.queen_snapshot);
               const statusPills = buildInspectionStatusPills(insp);
               const visibleStatusPills = statusPills.slice(0, 3);
               const hiddenStatusCount = Math.max(
@@ -924,6 +926,29 @@ if (ids.length > 0) {
                       {formatInspectionType(insp.inspection_type)}
                     </span>
                   </div>
+
+                  {savedQueen && (
+                    <div className="mb-2 rounded-lg border border-amber-200 bg-amber-50 p-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-amber-800">
+                        Queen at this inspection
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-[#1a3329]">
+                        {savedQueen.reference}
+                      </p>
+                      <p className="mt-1 text-xs text-gray-700">
+                        {savedQueen.year}{" "}
+                        {String(
+                          savedQueen.actualColour || "unmarked"
+                        ).toLowerCase()}
+                        {String(
+                          savedQueen.actualColour || ""
+                        ).toLowerCase() === "unmarked"
+                          ? " queen"
+                          : "-marked queen"}{" "}
+                        • {savedQueen.status}
+                      </p>
+                    </div>
+                  )}
 
                   {visibleStatusPills.length > 0 && (
                   <div className="mb-2 flex flex-wrap gap-2">

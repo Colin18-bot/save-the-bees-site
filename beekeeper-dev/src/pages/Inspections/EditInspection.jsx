@@ -2,6 +2,10 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabase";
+import {
+  formatQueenRecordDate,
+  getQueenSnapshotSummary,
+} from "../../services/inspectionQueen";
 import { reverseGeocode } from "../../utils/geocode";
 import {
   archiveItem,
@@ -153,6 +157,11 @@ const EditInspection = () => {
   const [derivedWeatherDisplay, setDerivedWeatherDisplay] = useState("");
 
   const [originalPhotos, setOriginalPhotos] = useState([]);
+  const [queenSnapshot, setQueenSnapshot] = useState(null);
+  const [originalInspectionContext, setOriginalInspectionContext] = useState({
+    hive_id: "",
+    date: "",
+  });
   const fileInputRef = useRef(null);
 
   const [newFiles, setNewFiles] = useState([]);
@@ -301,6 +310,7 @@ const EditInspection = () => {
 
       const data = inspRes.data || {};
       const loadedPhotos = Array.isArray(data.photos) ? data.photos : [];
+      setQueenSnapshot(data.queen_snapshot || null);
 
       let dateStr = data.date || "";
       if (dateStr) {
@@ -330,6 +340,11 @@ const EditInspection = () => {
       const cleanedDiseaseTypes = loadedDiseaseTypes.filter(
         (type) => type !== "Varroa"
       );
+
+      setOriginalInspectionContext({
+        hive_id: data.hive_id || "",
+        date: dateStr || "",
+      });
 
       setFormData({
         apiary_id: data.apiary_id || "",
@@ -889,6 +904,11 @@ const handleDelete = async () => {
   const totalPhotos = (formData.photos?.length || 0) + (newFiles?.length || 0);
   const canAddMorePhotos = totalPhotos < 3;
 
+  const savedQueen = getQueenSnapshotSummary(queenSnapshot);
+  const queenContextChanged =
+    formData.hive_id !== originalInspectionContext.hive_id ||
+    formData.date !== originalInspectionContext.date;
+
   const selectedHive = hiveById.get(formData.hive_id);
   const selectedHiveNfc = selectedHive?.nfc_uid || "";
 
@@ -1023,6 +1043,71 @@ const handleDelete = async () => {
               placeholder="What did you actually observe? (e.g. sunny, warm, light breeze)"
             />
           </div>
+        </div>
+
+        {/* Queen snapshot saved with this inspection */}
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+          <p className="font-semibold text-blue-950">
+            Queen record saved with this inspection
+          </p>
+
+          {queenContextChanged ? (
+            <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3">
+              <p className="font-semibold text-amber-950">
+                Hive or inspection date changed
+              </p>
+              <p className="mt-1 text-sm text-amber-900">
+                When you save, HiveTag will resolve the Queen that applies to the
+                revised hive and date and create a new historical snapshot.
+              </p>
+            </div>
+          ) : savedQueen ? (
+            <div className="mt-3 rounded-lg border border-blue-200 bg-white p-3">
+              <p className="font-semibold text-[#1a3329]">
+                {savedQueen.reference}
+              </p>
+              <p className="mt-1 text-sm text-gray-700">
+                {savedQueen.year}{" "}
+                {String(savedQueen.actualColour || "unmarked").toLowerCase()}
+                {String(savedQueen.actualColour || "").toLowerCase() ===
+                "unmarked"
+                  ? " queen"
+                  : "-marked queen"}
+              </p>
+              <div className="mt-2 grid gap-1 text-xs text-gray-600 sm:grid-cols-2">
+                <p>Status: {savedQueen.status}</p>
+                <p>
+                  Assigned from:{" "}
+                  {formatQueenRecordDate(
+                    savedQueen.assignmentStartedOn,
+                    "Not recorded"
+                  )}
+                </p>
+                <p>Origin: {savedQueen.origin}</p>
+                <p>
+                  Clipped:{" "}
+                  {savedQueen.clipped === true
+                    ? "Yes"
+                    : savedQueen.clipped === false
+                    ? "No"
+                    : "Not recorded"}
+                </p>
+              </div>
+              <p className="mt-3 text-xs text-blue-900">
+                This is the historical Queen information stored when the
+                inspection was saved. Later edits to the live Queen record do not
+                change it.
+              </p>
+            </div>
+          ) : (
+            <div className="mt-3 rounded-lg border border-gray-200 bg-white p-3">
+              <p className="text-sm text-gray-700">
+                No Queen snapshot is currently attached. Saving this inspection
+                will link the Queen that applies to its hive and date, where one
+                is recorded.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Colony Behaviour */}
