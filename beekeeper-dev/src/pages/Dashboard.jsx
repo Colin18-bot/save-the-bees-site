@@ -1,6 +1,7 @@
 // src/pages/Dashboard.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../services/supabase";
+import { getQueenRecordsOverview } from "../services/queenRecords.js";
 import { Link, useLocation } from "react-router-dom";
 import DashboardIntelligencePanel from "../components/intelligence/DashboardIntelligencePanel.jsx";
 import DashboardHiveTimelinePanel from "../components/intelligence/DashboardHiveTimelinePanel.jsx";
@@ -213,6 +214,19 @@ const Dashboard = () => {
 
   // Subscription level (for NFC visibility etc.)
   const [subscriptionLevel, setSubscriptionLevel] = useState("free");
+
+  // Queen Records summary (filter-aware)
+  const [queenDashboard, setQueenDashboard] = useState({
+    loading: true,
+    error: null,
+    hasQueenData: false,
+    summary: {
+      current: 0,
+      transitions: 0,
+      attention: 0,
+    },
+    items: [],
+  });
 
   // ✅ FIX: handles unix seconds correctly (Open-Meteo daily.time is unixtime seconds)
   // Optional tz: pass weatherTz for weather forecast dates to match apiary-local timezone.
@@ -453,6 +467,86 @@ const Dashboard = () => {
     } catch (err) {
       console.error("Failed to load recent NFC hives:", err);
       setRecentNfcHives([]);
+    }
+  };
+
+  // ---- Queen Records summary (filter-aware) ----
+  const fetchQueenDashboard = async (apiaryId = "all") => {
+    setQueenDashboard((previous) => ({
+      ...previous,
+      loading: true,
+      error: null,
+    }));
+
+    try {
+      const data = await getQueenRecordsOverview();
+      const filteredHives = (data?.hives || []).filter(
+        (hive) => apiaryId === "all" || hive.apiaryId === apiaryId
+      );
+
+      // Do not treat a hive with no Queen history at all as requiring attention.
+      const trackedHives = filteredHives.filter(
+        (hive) =>
+          hive.currentQueen ||
+          hive.transition ||
+          (hive.previousQueens || []).length > 0 ||
+          (hive.events || []).length > 0
+      );
+
+      const attentionHives = trackedHives.filter((hive) => hive.attention);
+
+      const sortedHives = [...trackedHives].sort((left, right) => {
+        if (left.attention !== right.attention) return left.attention ? -1 : 1;
+        if (Boolean(left.transition) !== Boolean(right.transition)) {
+          return left.transition ? -1 : 1;
+        }
+        return String(left.name || "").localeCompare(String(right.name || ""));
+      });
+
+      const items = sortedHives.slice(0, 6).map((hive) => {
+        const queen = hive.currentQueen;
+        const transition = hive.transition;
+
+        let detail = "Queen history recorded";
+        if (queen) {
+          const marking =
+            queen.actualColour && queen.actualColour !== "Not recorded"
+              ? `${String(queen.actualColour).toLowerCase()}-marked`
+              : "marking not recorded";
+          detail = `${queen.reference} • ${queen.year} ${marking}`;
+        } else if (transition) {
+          detail = transition.method || "Queen transition in progress";
+        }
+
+        return {
+          id: hive.id,
+          name: hive.name,
+          apiaryName: hive.apiaryName,
+          status: hive.status,
+          detail,
+          attention: Boolean(hive.attention),
+          nextAction: transition ? hive.nextAction : null,
+        };
+      });
+
+      setQueenDashboard({
+        loading: false,
+        error: null,
+        hasQueenData: Boolean(data?.hasQueenData),
+        summary: {
+          current: trackedHives.filter((hive) => hive.currentQueen).length,
+          transitions: trackedHives.filter((hive) => hive.transition).length,
+          attention: attentionHives.length,
+        },
+        items,
+      });
+    } catch (error) {
+      console.error("Failed to load Queen status summary:", error);
+      setQueenDashboard((previous) => ({
+        ...previous,
+        loading: false,
+        error: "Queen status could not be loaded.",
+      }));
     }
   };
 
@@ -706,6 +800,7 @@ const Dashboard = () => {
     fetchRecentInspections(selectedApiaryId);
     fetchRecentTodos(selectedApiaryId);
     fetchRecentLogs(selectedApiaryId);
+    fetchQueenDashboard(selectedApiaryId);
 
     if (subscriptionLevel === "premium") {
       fetchNfcSummary(selectedApiaryId);
@@ -1008,6 +1103,134 @@ const Dashboard = () => {
           />
         )}
       </div>
+
+      {(subscriptionLevel === "premium" || queenDashboard.hasQueenData) && (
+        <div className="bg-white rounded shadow p-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <span
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-lg"
+                  aria-hidden="true"
+                >
+                  👑
+                </span>
+                <div>
+                  <h2 className="text-lg font-semibold">Queen status</h2>
+                  <p className="text-xs text-gray-600">
+                    Current Queen position for the selected apiary filter.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Link
+              to="/queens"
+              className="text-sm font-semibold text-blue-600 hover:underline whitespace-nowrap"
+            >
+              Open Queen Records →
+            </Link>
+          </div>
+
+          {queenDashboard.loading ? (
+            <p className="mt-4 text-sm text-gray-500">Loading Queen status…</p>
+          ) : queenDashboard.error ? (
+            <p className="mt-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+              {queenDashboard.error}
+            </p>
+          ) : !queenDashboard.hasQueenData ? (
+            <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4">
+              <p className="text-sm font-semibold text-amber-950">No Queen Records added yet</p>
+              <p className="mt-1 text-sm text-amber-900">
+                Open Queen Records to add the first known Queen or start a Queen transition.
+              </p>
+            </div>
+          ) : (
+            <>
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-center">
+                  <div className="text-2xl font-extrabold text-green-900">
+                    {queenDashboard.summary.current}
+                  </div>
+                  <div className="text-xs font-semibold text-green-800">Current queens</div>
+                </div>
+                <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-center">
+                  <div className="text-2xl font-extrabold text-amber-950">
+                    {queenDashboard.summary.transitions}
+                  </div>
+                  <div className="text-xs font-semibold text-amber-900">Queen transitions</div>
+                </div>
+                <div
+                  className={`rounded-lg border p-3 text-center ${
+                    queenDashboard.summary.attention > 0
+                      ? "border-red-200 bg-red-50"
+                      : "border-gray-200 bg-gray-50"
+                  }`}
+                >
+                  <div
+                    className={`text-2xl font-extrabold ${
+                      queenDashboard.summary.attention > 0 ? "text-red-900" : "text-gray-800"
+                    }`}
+                  >
+                    {queenDashboard.summary.attention}
+                  </div>
+                  <div
+                    className={`text-xs font-semibold ${
+                      queenDashboard.summary.attention > 0 ? "text-red-800" : "text-gray-700"
+                    }`}
+                  >
+                    Need attention
+                  </div>
+                </div>
+              </div>
+
+              {queenDashboard.items.length > 0 ? (
+                <ul className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
+                  {queenDashboard.items.map((item) => (
+                    <li
+                      key={item.id}
+                      className={`rounded-lg border p-3 ${
+                        item.attention
+                          ? "border-amber-300 bg-amber-50"
+                          : "border-gray-200 bg-gray-50"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="font-semibold text-[#1a3329] truncate">{item.name}</p>
+                          <p className="text-xs text-gray-500 truncate">{item.apiaryName}</p>
+                        </div>
+                        <span
+                          className={`shrink-0 rounded-full border px-2 py-1 text-[11px] font-semibold ${
+                            item.attention
+                              ? "border-amber-300 bg-white text-amber-900"
+                              : "border-green-200 bg-green-50 text-green-800"
+                          }`}
+                        >
+                          {item.status}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-sm text-gray-700">{item.detail}</p>
+                      {item.nextAction ? (
+                        <p className="mt-2 text-xs text-gray-600">
+                          <strong>Next:</strong> {item.nextAction.title}
+                          {item.nextAction.due && item.nextAction.due !== "Not scheduled"
+                            ? ` • ${item.nextAction.due}`
+                            : ""}
+                        </p>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-4 text-sm text-gray-500">
+                  No Queen Records are included by this apiary filter.
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      )}
 
       {subscriptionLevel === "premium" && (
         <>
