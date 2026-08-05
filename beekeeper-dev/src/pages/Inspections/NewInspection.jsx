@@ -899,12 +899,6 @@ const NewInspection = () => {
                 </p>
               </div>
 
-              <Link
-                to="/queens"
-                className="shrink-0 text-sm font-semibold text-blue-700 hover:underline"
-              >
-                Open Queen Records →
-              </Link>
             </div>
 
             {queenContextLoading ? (
