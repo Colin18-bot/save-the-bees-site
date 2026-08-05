@@ -489,31 +489,41 @@ export const recordQueenSplit = ({
   destinationHiveId,
   eventDate,
   queenLocation,
+  splitReason,
+  queenCellPosition,
   replacementMethod,
+  broodSourceHiveId,
   expectedCheckOn,
   notes,
 }) =>
-  callQueenRpc("queen_record_split", {
+  callQueenRpc("queen_record_split_v2", {
     p_source_hive_id: sourceHiveId,
     p_destination_hive_id: destinationHiveId,
     p_event_date: eventDate || null,
     p_queen_location: queenLocation,
+    p_split_reason: splitReason || null,
+    p_queen_cell_position: queenCellPosition || null,
     p_replacement_method: replacementMethod || null,
+    p_brood_source_hive_id: broodSourceHiveId || null,
     p_expected_check_on: expectedCheckOn || null,
     p_notes: notes || null,
   });
 
-export const startQueenRearing = ({
+export const setQueenlessColonyPlan = ({
   hiveId,
   eventDate,
   method,
+  queenCellPosition,
+  sourceHiveId,
   expectedCheckOn,
   notes,
 }) =>
-  callQueenRpc("queen_start_rearing", {
+  callQueenRpc("queen_set_queenless_plan", {
     p_hive_id: hiveId,
     p_event_date: eventDate || null,
     p_method: method || null,
+    p_queen_cell_position: queenCellPosition || null,
+    p_source_hive_id: sourceHiveId || null,
     p_expected_check_on: expectedCheckOn || null,
     p_notes: notes || null,
   });

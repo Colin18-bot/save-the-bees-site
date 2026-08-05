@@ -29,7 +29,7 @@ import {
   recordQueenProgress,
   recordQueenSplit,
   recordQueenSwarm,
-  startQueenRearing,
+  setQueenlessColonyPlan,
   transferQueen,
   updateQueenDetails,
 } from "../../services/queenRecords.js";
@@ -87,8 +87,9 @@ const EVENT_ACTIONS = [
   },
   {
     id: "rearing",
-    label: "Start Queen Rearing",
-    description: "Record a brood frame, retained cells or another rearing method.",
+    label: "Set Queenless Colony Plan",
+    description:
+      "Record or update how a queenless colony will obtain its next Queen.",
     icon: Egg,
   },
 ];
@@ -99,7 +100,13 @@ const statusClass = (status = "") => {
   if (value.includes("present") || value.includes("laying")) {
     return "bg-green-100 text-green-800 border-green-200";
   }
-  if (value.includes("pending") || value.includes("rearing") || value.includes("expected")) {
+  if (
+    value.includes("pending") ||
+    value.includes("rearing") ||
+    value.includes("expected") ||
+    value.includes("queenless") ||
+    value.includes("cell")
+  ) {
     return "bg-amber-100 text-amber-900 border-amber-200";
   }
   return "bg-gray-100 text-gray-700 border-gray-200";
@@ -546,6 +553,8 @@ const ProgressTab = ({ hive, canEdit, onAction }) => (
       <div className="space-y-3 p-5">
         {[
           "Queen accepted or released",
+          "Emergency, supersedure or swarm Queen cells",
+          "Queen cells charged or sealed",
           "Virgin queen seen",
           "Queen emerged",
           "Mating outcome pending",
@@ -668,9 +677,14 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
     destinationHives[0]?.id || ""
   );
   const [queenLocation, setQueenLocation] = useState("destination");
-  const [replacement, setReplacement] = useState(
-    "Existing queen cells retained"
+  const [splitReason, setSplitReason] = useState("");
+  const [queenCellPosition, setQueenCellPosition] = useState(
+    "Queen-cell position not recorded"
   );
+  const [replacement, setReplacement] = useState(
+    hive.transition?.method || "Not yet decided"
+  );
+  const [broodSourceHiveId, setBroodSourceHiveId] = useState("");
   const [progress, setProgress] = useState("Queen accepted");
   const [expectedCheckOn, setExpectedCheckOn] = useState(dateAfterDays(7));
   const [notes, setNotes] = useState(
@@ -700,6 +714,32 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
   const destinationName =
     destinationHives.find((item) => item.id === destinationId)?.name ||
     "the destination hive";
+
+  const queenlessHiveId =
+    actionId === "split"
+      ? queenLocation === "destination"
+        ? hive.id
+        : queenLocation === "source"
+        ? destinationId
+        : null
+      : hive.id;
+
+  const broodSourceHives = allHives.filter(
+    (item) => !queenlessHiveId || item.id !== queenlessHiveId
+  );
+
+  const queenlessHiveName =
+    actionId === "split"
+      ? queenLocation === "destination"
+        ? hive.name
+        : queenLocation === "source"
+        ? destinationName
+        : "the queenless colony"
+      : hive.name;
+
+  const replacementUsesBroodFrame = replacement
+    .toLowerCase()
+    .includes("frame of eggs");
 
   const submit = async (event) => {
     event.preventDefault();
@@ -765,12 +805,21 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
           notes,
         });
       } else if (actionId === "split") {
+        if (!splitReason) {
+          throw new Error("Select the reason for the split.");
+        }
+
         await recordQueenSplit({
           sourceHiveId: hive.id,
           destinationHiveId: destinationId,
           eventDate,
           queenLocation,
+          splitReason,
+          queenCellPosition,
           replacementMethod: replacement,
+          broodSourceHiveId: replacementUsesBroodFrame
+            ? broodSourceHiveId || null
+            : null,
           expectedCheckOn,
           notes,
         });
@@ -783,10 +832,14 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
           notes,
         });
       } else if (actionId === "rearing") {
-        await startQueenRearing({
+        await setQueenlessColonyPlan({
           hiveId: hive.id,
           eventDate,
           method: replacement,
+          queenCellPosition,
+          sourceHiveId: replacementUsesBroodFrame
+            ? broodSourceHiveId || null
+            : null,
           expectedCheckOn,
           notes,
         });
@@ -1009,23 +1062,107 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
           </div>
         ) : null}
 
+        {actionId === "split" ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="text-sm font-semibold text-gray-700">
+              Reason for split
+              <select
+                value={splitReason}
+                onChange={(event) => setSplitReason(event.target.value)}
+                required
+                className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+              >
+                <option value="">Select the main reason</option>
+                <option>Swarm control — swarm cells present</option>
+                <option>Supersedure management — supersedure cells present</option>
+                <option>Queen lost or failed — emergency cells present</option>
+                <option>Overcrowding or brood-box congestion</option>
+                <option>Increase colony numbers</option>
+                <option>Create a backup nucleus</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <label className="text-sm font-semibold text-gray-700">
+              Queen-cell position at the split
+              <select
+                value={queenCellPosition}
+                onChange={(event) => setQueenCellPosition(event.target.value)}
+                className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+              >
+                <option>Queen-cell position not recorded</option>
+                <option>No Queen cells seen</option>
+                <option>Queen cups only</option>
+                <option>Emergency Queen cells</option>
+                <option>Supersedure Queen cells</option>
+                <option>Swarm Queen cells</option>
+                <option>Queen-cell type uncertain</option>
+              </select>
+            </label>
+          </div>
+        ) : null}
+
+        {actionId === "rearing" ? (
+          <label className="block text-sm font-semibold text-gray-700">
+            Queen-cell position
+            <select
+              value={queenCellPosition}
+              onChange={(event) => setQueenCellPosition(event.target.value)}
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+            >
+              <option>Queen-cell position not recorded</option>
+              <option>No Queen cells seen</option>
+              <option>Queen cups only</option>
+              <option>Emergency Queen cells</option>
+              <option>Supersedure Queen cells</option>
+              <option>Swarm Queen cells</option>
+              <option>Queen-cell type uncertain</option>
+            </select>
+          </label>
+        ) : null}
+
         {(actionId === "split" || actionId === "swarm" || actionId === "rearing") ? (
           <label className="block text-sm font-semibold text-gray-700">
             {actionId === "rearing"
-              ? "Queen-rearing method"
-              : `How will ${hive.name} obtain its next Queen?`}
+              ? `How will ${hive.name} obtain its next Queen?`
+              : `How will ${queenlessHiveName} obtain its next Queen?`}
             <select
               value={replacement}
               onChange={(event) => setReplacement(event.target.value)}
               className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
             >
-              <option>Existing queen cells retained</option>
+              <option>Existing emergency Queen cells retained</option>
+              <option>Existing supersedure Queen cells retained</option>
+              <option>Existing swarm Queen cells retained</option>
+              <option>
+                Allow colony to raise its own Queen from existing eggs or young larvae
+              </option>
               <option>Frame of eggs or young larvae added</option>
-              <option>Purchased mated queen</option>
-              <option>Introduced virgin queen</option>
-              <option>Queen cell added</option>
-              <option>Temporarily queenless</option>
+              <option>Add a frame of eggs or young larvae later</option>
+              <option>Plan to introduce a Queen cell</option>
+              <option>Plan to introduce a virgin Queen</option>
+              <option>Plan to introduce a mated Queen</option>
+              <option>Temporarily Queenless</option>
               <option>Not yet decided</option>
+            </select>
+          </label>
+        ) : null}
+
+        {replacementUsesBroodFrame &&
+        (actionId === "split" || actionId === "rearing") ? (
+          <label className="block text-sm font-semibold text-gray-700">
+            Source hive for the brood frame
+            <select
+              value={broodSourceHiveId}
+              onChange={(event) => setBroodSourceHiveId(event.target.value)}
+              className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+            >
+              <option value="">Not recorded or not yet selected</option>
+              {broodSourceHives.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name} — {item.apiaryName}
+                </option>
+              ))}
             </select>
           </label>
         ) : null}
@@ -1040,6 +1177,11 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
             >
               <option>Queen accepted</option>
               <option>Queen released</option>
+              <option>Emergency Queen cells started</option>
+              <option>Supersedure Queen cells confirmed</option>
+              <option>Swarm Queen cells retained</option>
+              <option>Queen cells charged</option>
+              <option>Queen cells sealed</option>
               <option>Virgin queen seen</option>
               <option>Queen emerged</option>
               <option>Mating outcome pending</option>
@@ -1107,8 +1249,11 @@ const actionDisabled = (actionId, hive, allHives) => {
     (item) => item.id !== hive.id && !item.currentQueen && !item.transition
   );
 
-  if (["add", "introduce"].includes(actionId)) {
+  if (actionId === "add") {
     return Boolean(hive.currentQueen || hive.transition);
+  }
+  if (actionId === "introduce") {
+    return Boolean(hive.currentQueen);
   }
   if (actionId === "edit" || actionId === "swarm") {
     return !hive.currentQueen;
@@ -1120,7 +1265,7 @@ const actionDisabled = (actionId, hive, allHives) => {
     return !hive.currentQueen || !availableDestination;
   }
   if (actionId === "rearing") {
-    return Boolean(hive.transition);
+    return Boolean(hive.currentQueen);
   }
   return false;
 };
