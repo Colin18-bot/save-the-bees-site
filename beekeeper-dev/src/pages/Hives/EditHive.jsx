@@ -3,7 +3,12 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import dayjs from "dayjs";
-import { archiveItem, humaniseSupabaseError } from "../../services/actions";
+import {
+  HIVE_ARCHIVE_REASONS,
+  archiveHiveWithQueenLifecycle,
+  humaniseSupabaseError,
+  serverDeleteRowWithPhotos,
+} from "../../services/actions";
 
 // Extract { bucket, path } from a Supabase public URL (legacy fallback)
 function parseStoragePublicUrl(url) {
@@ -11,31 +16,6 @@ function parseStoragePublicUrl(url) {
   const m = url.match(/\/object\/public\/([^/]+)\/(.+)$/);
   if (!m) return null;
   return { bucket: m[1], path: decodeURIComponent(m[2]) };
-}
-
-// Call the deployed Edge Function for storage-first delete/clear
-async function deleteWithPhotos({ table, id, mode, removeOne }) {
-  const { data: sessionWrap } = await supabase.auth.getSession();
-  const token = sessionWrap?.session?.access_token;
-  if (!token) throw new Error("Not authenticated");
-
-  const res = await fetch(
-    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-row-with-photos`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ table, id, mode, removeOne }),
-    }
-  );
-
-  const json = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    throw new Error(json?.error || "Delete function failed");
-  }
-  return json;
 }
 
 const EditHive = () => {
@@ -64,6 +44,11 @@ const EditHive = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [subscriptionLevel, setSubscriptionLevel] = useState("free");
+  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archiveReason, setArchiveReason] = useState("");
+  const [archiveNotes, setArchiveNotes] = useState("");
+  const [archiveError, setArchiveError] = useState("");
+  const [archiving, setArchiving] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -185,11 +170,15 @@ const EditHive = () => {
   };
 
   const handleRemovePhoto = async () => {
-    try {
-      await deleteWithPhotos({ table: "hives", id, mode: "clear_photo" });
-    } catch (e) {
-      console.error(e);
-      setError(String(e?.message || e));
+    const { error: removeError } = await serverDeleteRowWithPhotos({
+      table: "hives",
+      id,
+      mode: "clear_photo",
+    });
+
+    if (removeError) {
+      console.error(removeError);
+      setError(removeError.message || "Failed to remove the hive photograph.");
       return;
     }
 
@@ -300,58 +289,104 @@ const EditHive = () => {
     }
   };
 
-  const handleArchive = async () => {
-    if (!window.confirm("Archive this hive?")) return;
-    const { error } = await archiveItem("hives", id);
-    if (error) setError("Failed to archive hive. " + (error.message || ""));
-    else {
-      alert("Hive archived.");
-      navigate("/hives");
+  const openArchivePanel = (suggestedNotes = "") => {
+    setError("");
+    setArchiveError("");
+    setArchiveNotes(suggestedNotes);
+    setArchiveOpen(true);
+  };
+
+  const closeArchivePanel = () => {
+    if (archiving) return;
+    setArchiveOpen(false);
+    setArchiveError("");
+  };
+
+  const handleArchive = () => {
+    openArchivePanel();
+  };
+
+  const confirmArchive = async () => {
+    setArchiveError("");
+
+    if (!archiveReason) {
+      setArchiveError("Select a reason for archiving this hive.");
+      return;
     }
+
+    setArchiving(true);
+
+    const { error: archiveRequestError } =
+      await archiveHiveWithQueenLifecycle({
+        hiveId: id,
+        reason: archiveReason,
+        notes: archiveNotes,
+      });
+
+    setArchiving(false);
+
+    if (archiveRequestError) {
+      setArchiveError(
+        humaniseSupabaseError(archiveRequestError, { table: "hives" }) ||
+          "Failed to archive hive."
+      );
+      return;
+    }
+
+    alert(
+      "Hive archived. Its current Queen assignment and active Queen process have been closed, while the historical records have been retained."
+    );
+    navigate("/hives");
   };
 
   const handleDelete = async () => {
-    const { data, error: checkErr } = await supabase.rpc("check_hive_children", {
-      hive_id: id,
-    });
+    const { data, error: checkErr } = await supabase.rpc(
+      "check_hive_children",
+      {
+        hive_id: id,
+      }
+    );
+
     if (checkErr) {
-      alert("Could not delete, check linked items.");
+      alert("Could not delete the hive because its linked records could not be checked.");
       return;
     }
+
     const row = Array.isArray(data) ? data[0] : data;
     const { inspections = 0, todos = 0, logs = 0 } = row || {};
     const hasChildren = inspections + todos + logs > 0;
 
     if (hasChildren) {
-      const ok = window.confirm(
-        `This hive has:\n• ${inspections} inspections\n• ${todos} to-dos\n• ${logs} log entries\n\nArchive instead?`
+      const openArchive = window.confirm(
+        `This hive has:\n• ${inspections} inspections\n• ${todos} to-dos\n• ${logs} log entries\n\nIt cannot be permanently deleted while these records remain. Open the archive options instead?`
       );
-      if (!ok) return;
-      const { error: archErr } = await archiveItem("hives", id);
-      if (archErr) {
-        alert("Failed to archive hive.");
-        return;
-      }
-      alert("Hive archived.");
-      navigate("/hives");
-      return;
-    }
 
-    if (!window.confirm("Delete this hive permanently? This cannot be undone.")) return;
+      if (!openArchive) return;
 
-    try {
-      await deleteWithPhotos({ table: "hives", id, mode: "delete_row" });
-    } catch (e) {
-      alert(
-        humaniseSupabaseError(
-          { message: String(e?.message || e) },
-          { table: "hives" }
-        )
+      openArchivePanel(
+        "Archived instead of permanent deletion because linked records remain."
       );
       return;
     }
 
-    alert("Hive deleted.");
+    const confirmed = window.confirm(
+      "Delete this hive permanently? Its hive-specific Queen history will also be deleted. A Queen that has been transferred to another hive will be preserved. This cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    const { error: deleteError } = await serverDeleteRowWithPhotos({
+      table: "hives",
+      id,
+      mode: "delete_row",
+    });
+
+    if (deleteError) {
+      alert(humaniseSupabaseError(deleteError, { table: "hives" }));
+      return;
+    }
+
+    alert("Hive and its hive-specific Queen history deleted.");
     navigate("/hives");
   };
 
@@ -507,6 +542,74 @@ const EditHive = () => {
 
         {error && <p className="text-red-600 text-sm">{error}</p>}
 
+        {archiveOpen && (
+          <section className="rounded-xl border border-yellow-300 bg-yellow-50 p-4">
+            <h3 className="font-bold text-yellow-950">Archive this hive</h3>
+            <p className="mt-2 text-sm text-yellow-900">
+              Archiving preserves the hive and all historical records. Any current
+              Queen assignment and active Queenless or rearing process will be closed.
+              Restoring the hive later will not reactivate the former Queen.
+            </p>
+
+            <label className="mt-4 block text-sm font-semibold text-gray-800">
+              Reason for archiving
+              <select
+                value={archiveReason}
+                onChange={(event) => {
+                  setArchiveReason(event.target.value);
+                  setArchiveError("");
+                }}
+                disabled={archiving}
+                className="mt-1 w-full rounded border border-gray-300 bg-white px-3 py-2"
+              >
+                <option value="">Select a reason</option>
+                {HIVE_ARCHIVE_REASONS.map((reason) => (
+                  <option key={reason.value} value={reason.value}>
+                    {reason.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="mt-4 block text-sm font-semibold text-gray-800">
+              Archive notes
+              <textarea
+                value={archiveNotes}
+                onChange={(event) => setArchiveNotes(event.target.value)}
+                disabled={archiving}
+                rows="3"
+                placeholder="Optional details, for example the circumstances of a winter loss or where a combined colony was moved."
+                className="mt-1 w-full rounded border border-gray-300 bg-white px-3 py-2"
+              />
+            </label>
+
+            {archiveError && (
+              <p className="mt-3 text-sm font-semibold text-red-700">
+                {archiveError}
+              </p>
+            )}
+
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+              <button
+                type="button"
+                onClick={confirmArchive}
+                disabled={archiving}
+                className="rounded bg-yellow-600 px-4 py-2 text-sm font-bold text-white hover:bg-yellow-700 disabled:cursor-wait disabled:opacity-60"
+              >
+                {archiving ? "Archiving..." : "Confirm Archive"}
+              </button>
+              <button
+                type="button"
+                onClick={closeArchivePanel}
+                disabled={archiving}
+                className="rounded border border-gray-300 bg-white px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-60"
+              >
+                Cancel Archive
+              </button>
+            </div>
+          </section>
+        )}
+
         <div className="mt-4 flex flex-col sm:flex-row sm:flex-wrap gap-2">
           <button
             type="submit"
@@ -519,7 +622,8 @@ const EditHive = () => {
           <button
             type="button"
             onClick={handleArchive}
-            className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-3 py-2 rounded"
+            disabled={archiving}
+            className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-3 py-2 rounded disabled:opacity-60"
           >
             Archive
           </button>
@@ -527,7 +631,8 @@ const EditHive = () => {
           <button
             type="button"
             onClick={handleDelete}
-            className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-2 rounded"
+            disabled={archiving}
+            className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-2 rounded disabled:opacity-60"
           >
             Delete
           </button>

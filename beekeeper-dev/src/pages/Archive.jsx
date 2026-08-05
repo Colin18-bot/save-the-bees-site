@@ -1,7 +1,11 @@
 // src/pages/Archive.jsx
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "../services/supabase";
-import { humaniseSupabaseError } from "../services/actions";
+import {
+  humaniseSupabaseError,
+  restoreHiveAfterArchive,
+  serverDeleteRowWithPhotos,
+} from "../services/actions";
 
 const PAGE_SIZE = 9;
 
@@ -377,16 +381,28 @@ const Archive = () => {
   const restoreItem = async (table, item) => {
     const { ok, reason } = preflightRestore(table, item);
     if (!ok) {
-      setRestoreErrors((prev) => ({ ...prev, [`${table}-${item.id}`]: reason }));
+      setRestoreErrors((prev) => ({
+        ...prev,
+        [`${table}-${item.id}`]: reason,
+      }));
       return;
     }
 
-    const { error } = await supabase.from(table).update({ archived_at: null }).eq("id", item.id);
+    const result =
+      table === "hives"
+        ? await restoreHiveAfterArchive(item.id)
+        : await supabase
+            .from(table)
+            .update({ archived_at: null })
+            .eq("id", item.id);
 
-    if (error) {
+    if (result.error) {
       setRestoreErrors((prev) => ({
         ...prev,
-        [`${table}-${item.id}`]: friendlyRestoreError(table, error.message),
+        [`${table}-${item.id}`]: friendlyRestoreError(
+          table,
+          result.error.message
+        ),
       }));
       return;
     }
@@ -399,7 +415,12 @@ const Archive = () => {
 
     if (table === "apiaries") {
       try {
-        const { data: row } = await supabase.from("apiaries").select("*").eq("id", item.id).single();
+        const { data: row } = await supabase
+          .from("apiaries")
+          .select("*")
+          .eq("id", item.id)
+          .single();
+
         if (row?.is_default && row?.user_id) {
           await enforceSingleDefaultOnRestore(row.id, row.user_id);
         }
@@ -412,21 +433,40 @@ const Archive = () => {
   };
 
   const deleteItem = async (table, item) => {
-    if (!window.confirm("Are you sure you want to permanently delete this item? This cannot be undone.")) return;
+    const warning =
+      table === "hives"
+        ? "Permanently delete this hive? Its hive-specific Queen history will also be deleted. A Queen transferred to another hive will be preserved. This cannot be undone."
+        : "Are you sure you want to permanently delete this item? This cannot be undone.";
+
+    if (!window.confirm(warning)) return;
 
     if (table === "apiaries") {
       try {
-        await clearProfileDefaultIfDeleting(item.id, item.user_id, !!item.is_default);
+        await clearProfileDefaultIfDeleting(
+          item.id,
+          item.user_id,
+          !!item.is_default
+        );
       } catch {
         // ignore (non-blocking)
       }
     }
 
-    const { error } = await supabase.from(table).delete().eq("id", item.id);
-    if (error) {
-      alert(humaniseSupabaseError(error, { table }));
+    const result = ["apiaries", "hives", "inspections", "logbook"].includes(
+      table
+    )
+      ? await serverDeleteRowWithPhotos({
+          table,
+          id: item.id,
+          mode: "delete_row",
+        })
+      : await supabase.from(table).delete().eq("id", item.id);
+
+    if (result.error) {
+      alert(humaniseSupabaseError(result.error, { table }));
       return;
     }
+
     fetchData();
   };
 
@@ -434,7 +474,21 @@ const Archive = () => {
   const restoreSelectedItems = async () => {
     const newErrors = {};
 
-    for (const { table, item } of selectedItems) {
+    const restoreOrder = {
+      apiaries: 1,
+      hives: 2,
+      inspections: 3,
+      todos: 3,
+      logbook: 4,
+    };
+
+    const orderedItems = [...selectedItems].sort(
+      (left, right) =>
+        (restoreOrder[left.table] || 99) -
+        (restoreOrder[right.table] || 99)
+    );
+
+    for (const { table, item } of orderedItems) {
       if (!allData[table]) continue;
 
       const { ok, reason } = preflightRestore(table, item);
@@ -443,15 +497,30 @@ const Archive = () => {
         continue;
       }
 
-      const { error } = await supabase.from(table).update({ archived_at: null }).eq("id", item.id);
-      if (error) {
-        newErrors[`${table}-${item.id}`] = friendlyRestoreError(table, error.message);
+      const result =
+        table === "hives"
+          ? await restoreHiveAfterArchive(item.id)
+          : await supabase
+              .from(table)
+              .update({ archived_at: null })
+              .eq("id", item.id);
+
+      if (result.error) {
+        newErrors[`${table}-${item.id}`] = friendlyRestoreError(
+          table,
+          result.error.message
+        );
         continue;
       }
 
       if (table === "apiaries") {
         try {
-          const { data: row } = await supabase.from("apiaries").select("*").eq("id", item.id).single();
+          const { data: row } = await supabase
+            .from("apiaries")
+            .select("*")
+            .eq("id", item.id)
+            .single();
+
           if (row?.is_default && row?.user_id) {
             await enforceSingleDefaultOnRestore(row.id, row.user_id);
           }
@@ -470,22 +539,55 @@ const Archive = () => {
   };
 
   const deleteSelectedItems = async () => {
-    if (!window.confirm("Are you sure you want to permanently delete all selected items? This cannot be undone.")) return;
+    if (
+      !window.confirm(
+        "Are you sure you want to permanently delete all selected items? Hive-specific Queen history belonging to any selected hive will also be deleted. This cannot be undone."
+      )
+    ) {
+      return;
+    }
 
-    for (const { table, item } of selectedItems) {
+    const deleteOrder = {
+      logbook: 1,
+      inspections: 2,
+      todos: 2,
+      hives: 3,
+      apiaries: 4,
+    };
+
+    const orderedItems = [...selectedItems].sort(
+      (left, right) =>
+        (deleteOrder[left.table] || 99) -
+        (deleteOrder[right.table] || 99)
+    );
+
+    for (const { table, item } of orderedItems) {
       if (!allData[table]) continue;
 
       if (table === "apiaries") {
         try {
-          await clearProfileDefaultIfDeleting(item.id, item.user_id, !!item.is_default);
+          await clearProfileDefaultIfDeleting(
+            item.id,
+            item.user_id,
+            !!item.is_default
+          );
         } catch {
           // ignore (non-blocking)
         }
       }
 
-      const { error: delErr } = await supabase.from(table).delete().eq("id", item.id);
-      if (delErr) {
-        alert(humaniseSupabaseError(delErr, { table }));
+      const result = ["apiaries", "hives", "inspections", "logbook"].includes(
+        table
+      )
+        ? await serverDeleteRowWithPhotos({
+            table,
+            id: item.id,
+            mode: "delete_row",
+          })
+        : await supabase.from(table).delete().eq("id", item.id);
+
+      if (result.error) {
+        alert(humaniseSupabaseError(result.error, { table }));
       }
     }
 

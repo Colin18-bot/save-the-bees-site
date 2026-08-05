@@ -71,7 +71,62 @@ export function parseStoragePublicUrl(url) {
 
 /** Archive a row (sets archived_at = now()) */
 export async function archiveItem(table, id) {
-  return await supabase.from(table).update({ archived_at: new Date().toISOString() }).eq("id", id);
+  return await supabase
+    .from(table)
+    .update({ archived_at: new Date().toISOString() })
+    .eq("id", id);
+}
+
+/** Reasons supported by the hive/Queen archive lifecycle migration */
+export const HIVE_ARCHIVE_REASONS = [
+  { value: "winter_loss", label: "Winter loss" },
+  { value: "colony_died_out", label: "Colony died out" },
+  { value: "colony_combined", label: "Colony combined with another colony" },
+  { value: "colony_moved", label: "Colony moved or removed" },
+  { value: "equipment_removed", label: "Hive equipment removed from use" },
+  { value: "administrative", label: "Administrative archive" },
+  { value: "other", label: "Other" },
+];
+
+/**
+ * Archive a hive and close its current Queen assignment and active Queen
+ * process. Historical assignments, Queen events and inspection snapshots remain.
+ */
+export async function archiveHiveWithQueenLifecycle({
+  hiveId,
+  reason,
+  notes = "",
+}) {
+  if (!hiveId) {
+    return { data: null, error: { message: "Missing hive ID" } };
+  }
+
+  if (!reason) {
+    return {
+      data: null,
+      error: { message: "Select a reason for archiving this hive." },
+    };
+  }
+
+  return await supabase.rpc("archive_hive_with_queen_lifecycle", {
+    p_hive_id: hiveId,
+    p_reason: reason,
+    p_notes: notes?.trim() || null,
+  });
+}
+
+/**
+ * Restore an archived hive without reactivating its former Queen assignment
+ * or Queenless/rearing process.
+ */
+export async function restoreHiveAfterArchive(hiveId) {
+  if (!hiveId) {
+    return { data: null, error: { message: "Missing hive ID" } };
+  }
+
+  return await supabase.rpc("restore_hive_after_archive", {
+    p_hive_id: hiveId,
+  });
 }
 
 /**
@@ -155,14 +210,17 @@ async function fetchEdgeFunction(fnName, body) {
 }
 
 /**
- * Solid server-side delete pipeline (Storage first, then DB).
+ * Solid server-side delete pipeline.
+ *
+ * The Edge Function changes the database first and removes storage objects
+ * afterwards, so a blocked database deletion does not remove the photograph.
  *
  * mode:
- *  - "clear_photo": delete storage objects and clear photo fields
- *  - "delete_row": delete storage objects then delete the row
+ *  - "clear_photo": clear photo fields, then remove storage objects
+ *  - "delete_row": delete the row, then remove storage objects
  *
  * removeOne:
- *  - for inspections (photos array), remove a single photo by {path} or {url}
+ *  - for inspections (photos array), remove one photo by {path} or {url}
  */
 export async function serverDeleteRowWithPhotos({ table, id, mode = "delete_row", removeOne }) {
   const payload = { table, id, mode, ...(removeOne ? { removeOne } : {}) };
@@ -250,7 +308,11 @@ export async function smartDeleteHive(id) {
   }
 
   if (hasChildren) {
-    const { error } = await archiveItem("hives", id);
+    const { error } = await archiveHiveWithQueenLifecycle({
+      hiveId: id,
+      reason: "administrative",
+      notes: "Archived automatically because linked records exist.",
+    });
     return { archived: true, error };
   }
 
