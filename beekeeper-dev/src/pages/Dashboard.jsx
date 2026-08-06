@@ -71,6 +71,49 @@ const WX_ICON = {
   99: "⛈️",
 };
 
+const DASHBOARD_SECTIONS_STORAGE_KEY = "hivetag_dashboard_sections_v1";
+
+const DEFAULT_DASHBOARD_SECTIONS = {
+  quickActions: true,
+  stats: true,
+  queens: true,
+  healthOverview: true,
+  recentTasks: true,
+  recentInspections: true,
+  reports: false,
+  healthTimeline: false,
+  nfcGuide: false,
+  nfcHives: false,
+  recentLogbook: false,
+  weather: false,
+};
+
+const DASHBOARD_SECTION_OPTIONS = [
+  { id: "quickActions", label: "Quick Actions" },
+  { id: "stats", label: "Summary statistics" },
+  { id: "queens", label: "Queen Status" },
+  { id: "healthOverview", label: "Hive Health Overview", premium: true },
+  { id: "recentTasks", label: "Recent Tasks" },
+  { id: "recentInspections", label: "Recent Inspections" },
+  { id: "reports", label: "Reports & Export", premium: true },
+  { id: "healthTimeline", label: "Hive Health Timeline", premium: true },
+  { id: "nfcGuide", label: "NFC guidance", premium: true },
+  { id: "nfcHives", label: "NFC Tagged Hives", premium: true },
+  { id: "recentLogbook", label: "Recent Log Entries" },
+  { id: "weather", label: "Weather & Seasonal Notes" },
+];
+
+const getSavedDashboardSections = () => {
+  if (typeof window === "undefined") return DEFAULT_DASHBOARD_SECTIONS;
+
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(DASHBOARD_SECTIONS_STORAGE_KEY) || "{}");
+    return { ...DEFAULT_DASHBOARD_SECTIONS, ...saved };
+  } catch {
+    return DEFAULT_DASHBOARD_SECTIONS;
+  }
+};
+
 const statusPill = (status = "") => {
   const s = String(status).toLowerCase();
   if (s === "complete" || s === "completed" || s === "done") {
@@ -141,8 +184,13 @@ const Dashboard = () => {
   const location = useLocation();
   const printAnchorRef = useRef(null);
 
-  // Filter
+  // Dashboard location filters
   const [selectedApiaryId, setSelectedApiaryId] = useState("all");
+  const [selectedHiveId, setSelectedHiveId] = useState("all");
+
+  // Dashboard section customisation
+  const [showDashboardSettings, setShowDashboardSettings] = useState(false);
+  const [dashboardSections, setDashboardSections] = useState(getSavedDashboardSections);
 
   // Stripe upgrade banner
   const [stripeMessage, setStripeMessage] = useState("");
@@ -209,6 +257,7 @@ const Dashboard = () => {
 
   // Name lookups / apiary list for filter
   const [apiariesList, setApiariesList] = useState([]); // [{id, name}]
+  const [hivesList, setHivesList] = useState([]); // [{id, name, apiary_id}]
   const [apiaryNameById, setApiaryNameById] = useState({});
   const [hiveNameById, setHiveNameById] = useState({});
 
@@ -267,19 +316,47 @@ const Dashboard = () => {
   const reportHref = useMemo(() => {
     const qs = new URLSearchParams();
     if (selectedApiaryId !== "all") qs.set("apiary_id", selectedApiaryId);
+    if (selectedHiveId !== "all") qs.set("hive_id", selectedHiveId);
     return `/reports/print${qs.toString() ? `?${qs.toString()}` : ""}`;
-  }, [selectedApiaryId]);
+  }, [selectedApiaryId, selectedHiveId]);
 
-  // Smooth scroll to #print if coming back from PrintReport
+  const hivesForSelectedApiary = useMemo(() => {
+    if (selectedApiaryId === "all") return hivesList;
+    return hivesList.filter((hive) => String(hive.apiary_id) === String(selectedApiaryId));
+  }, [hivesList, selectedApiaryId]);
+
   useEffect(() => {
-    if (location.hash === "#print" && printAnchorRef.current) {
-      setTimeout(() => {
-        printAnchorRef.current.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 0);
-    }
+    if (selectedHiveId === "all") return;
+    const hiveStillAvailable = hivesForSelectedApiary.some(
+      (hive) => String(hive.id) === String(selectedHiveId)
+    );
+    if (!hiveStillAvailable) setSelectedHiveId("all");
+  }, [hivesForSelectedApiary, selectedHiveId]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(DASHBOARD_SECTIONS_STORAGE_KEY, JSON.stringify(dashboardSections));
+  }, [dashboardSections]);
+
+  const setDashboardSection = (sectionId, enabled) => {
+    setDashboardSections((current) => ({ ...current, [sectionId]: enabled }));
+  };
+
+  const resetDashboardSections = () => {
+    setDashboardSections({ ...DEFAULT_DASHBOARD_SECTIONS });
+  };
+
+  // Show and scroll to Reports if returning from PrintReport.
+  useEffect(() => {
+    if (location.hash !== "#print") return;
+
+    setDashboardSections((current) => ({ ...current, reports: true }));
+    setTimeout(() => {
+      printAnchorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 50);
   }, [location]);
 
   // Stripe upgrade return: wait for the webhook to update the profile,
@@ -362,7 +439,7 @@ const Dashboard = () => {
     const fetchNameLookups = async () => {
       const [{ data: apiaries }, { data: hives }] = await Promise.all([
         supabase.from("apiaries").select("id, name").is("archived_at", null).order("name"),
-        supabase.from("hives").select("id, name").is("archived_at", null),
+        supabase.from("hives").select("id, name, apiary_id").is("archived_at", null).order("name"),
       ]);
       const aMap = {};
       for (const a of apiaries || []) aMap[a.id] = a.name;
@@ -371,12 +448,13 @@ const Dashboard = () => {
       setApiaryNameById(aMap);
       setHiveNameById(hMap);
       setApiariesList(apiaries || []);
+      setHivesList(hives || []);
     };
     fetchNameLookups();
   }, []);
 
   // ---- Stats (filter-aware) ----
-  const fetchStats = async (apiaryId = "all") => {
+  const fetchStats = async (apiaryId = "all", hiveId = "all") => {
     const { count: apiaries } = await supabase
       .from("apiaries")
       .select("*", { count: "exact", head: true })
@@ -386,25 +464,29 @@ const Dashboard = () => {
       .from("hives")
       .select("*", { count: "exact", head: true })
       .is("archived_at", null);
-    if (apiaryId !== "all") hivesQ = hivesQ.eq("apiary_id", apiaryId);
+    if (hiveId !== "all") hivesQ = hivesQ.eq("id", hiveId);
+    else if (apiaryId !== "all") hivesQ = hivesQ.eq("apiary_id", apiaryId);
     const { count: hives } = await hivesQ;
 
     let inspQ = supabase
       .from("inspections")
       .select("*", { count: "exact", head: true })
       .is("archived_at", null);
-    if (apiaryId !== "all") inspQ = inspQ.eq("apiary_id", apiaryId);
+    if (hiveId !== "all") inspQ = inspQ.eq("hive_id", hiveId);
+    else if (apiaryId !== "all") inspQ = inspQ.eq("apiary_id", apiaryId);
     const { count: inspections } = await inspQ;
 
     let todosQ = supabase.from("todos").select("*", { count: "exact", head: true });
-    if (apiaryId !== "all") todosQ = todosQ.eq("apiary_id", apiaryId);
+    if (hiveId !== "all") todosQ = todosQ.eq("hive_id", hiveId);
+    else if (apiaryId !== "all") todosQ = todosQ.eq("apiary_id", apiaryId);
     const { count: todos } = await todosQ;
 
     let logsQ = supabase
       .from("logbook")
       .select("*", { count: "exact", head: true })
       .is("archived_at", null);
-    if (apiaryId !== "all") logsQ = logsQ.eq("apiary_id", apiaryId);
+    if (hiveId !== "all") logsQ = logsQ.eq("hive_id", hiveId);
+    else if (apiaryId !== "all") logsQ = logsQ.eq("apiary_id", apiaryId);
     const { count: logbook } = await logsQ;
 
     setStats({
@@ -417,13 +499,14 @@ const Dashboard = () => {
   };
 
   // ---- NFC summary counts (filter-aware) ----
-  const fetchNfcSummary = async (apiaryId = "all") => {
+  const fetchNfcSummary = async (apiaryId = "all", hiveId = "all") => {
     try {
       let totalQ = supabase
         .from("hives")
         .select("*", { count: "exact", head: true })
         .is("archived_at", null);
-      if (apiaryId !== "all") totalQ = totalQ.eq("apiary_id", apiaryId);
+      if (hiveId !== "all") totalQ = totalQ.eq("id", hiveId);
+      else if (apiaryId !== "all") totalQ = totalQ.eq("apiary_id", apiaryId);
       const { count: total } = await totalQ;
 
       let taggedQ = supabase
@@ -431,7 +514,8 @@ const Dashboard = () => {
         .select("*", { count: "exact", head: true })
         .is("archived_at", null)
         .not("nfc_uid", "is", null);
-      if (apiaryId !== "all") taggedQ = taggedQ.eq("apiary_id", apiaryId);
+      if (hiveId !== "all") taggedQ = taggedQ.eq("id", hiveId);
+      else if (apiaryId !== "all") taggedQ = taggedQ.eq("apiary_id", apiaryId);
       const { count: tagged } = await taggedQ;
 
       setNfcSummary({
@@ -445,7 +529,7 @@ const Dashboard = () => {
   };
 
   // ---- Recent NFC-tagged hives (filter-aware) ----
-  const fetchRecentNfcHives = async (apiaryId = "all") => {
+  const fetchRecentNfcHives = async (apiaryId = "all", hiveId = "all") => {
     try {
       let q = supabase
         .from("hives")
@@ -455,7 +539,8 @@ const Dashboard = () => {
         .order("created_at", { ascending: false })
         .limit(6);
 
-      if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
+      if (hiveId !== "all") q = q.eq("id", hiveId);
+      else if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
 
       const { data, error } = await q;
       if (error) {
@@ -471,7 +556,7 @@ const Dashboard = () => {
   };
 
   // ---- Queen Records summary (filter-aware) ----
-  const fetchQueenDashboard = async (apiaryId = "all") => {
+  const fetchQueenDashboard = async (apiaryId = "all", hiveId = "all") => {
     setQueenDashboard((previous) => ({
       ...previous,
       loading: true,
@@ -480,9 +565,10 @@ const Dashboard = () => {
 
     try {
       const data = await getQueenRecordsOverview();
-      const filteredHives = (data?.hives || []).filter(
-        (hive) => apiaryId === "all" || hive.apiaryId === apiaryId
-      );
+      const filteredHives = (data?.hives || []).filter((hive) => {
+        if (hiveId !== "all") return String(hive.id) === String(hiveId);
+        return apiaryId === "all" || String(hive.apiaryId) === String(apiaryId);
+      });
 
       // Do not treat a hive with no Queen history at all as requiring attention.
       const trackedHives = filteredHives.filter(
@@ -551,7 +637,7 @@ const Dashboard = () => {
   };
 
   // ---- Dashboard Intelligence (filter-aware) ----
-  const fetchDashboardIntelligence = async (apiaryId = "all") => {
+  const fetchDashboardIntelligence = async (apiaryId = "all", hiveId = "all") => {
     setDashboardIntelligence((previous) => ({
       ...previous,
       loading: true,
@@ -565,7 +651,8 @@ const Dashboard = () => {
         .is("archived_at", null)
         .order("name", { ascending: true });
 
-      if (apiaryId !== "all") hivesQuery = hivesQuery.eq("apiary_id", apiaryId);
+      if (hiveId !== "all") hivesQuery = hivesQuery.eq("id", hiveId);
+      else if (apiaryId !== "all") hivesQuery = hivesQuery.eq("apiary_id", apiaryId);
 
       const { data: hives, error: hivesError } = await hivesQuery;
       if (hivesError) throw hivesError;
@@ -579,7 +666,8 @@ const Dashboard = () => {
         .order("date", { ascending: true })
         .limit(500);
 
-      if (apiaryId !== "all") inspectionsQuery = inspectionsQuery.eq("apiary_id", apiaryId);
+      if (hiveId !== "all") inspectionsQuery = inspectionsQuery.eq("hive_id", hiveId);
+      else if (apiaryId !== "all") inspectionsQuery = inspectionsQuery.eq("apiary_id", apiaryId);
 
       const { data: inspections, error: inspectionsError } = await inspectionsQuery;
       if (inspectionsError) throw inspectionsError;
@@ -655,33 +743,35 @@ const Dashboard = () => {
   };
 
   // ---- Recent lists (filter-aware) ----
-  const fetchRecentInspections = async (apiaryId = "all") => {
+  const fetchRecentInspections = async (apiaryId = "all", hiveId = "all") => {
     setLoadingInspections(true);
     let q = supabase
       .from("inspections")
       .select("id, date, notes, apiary_id, hive_id, archived_at")
       .order("date", { ascending: false })
       .limit(6);
-    if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
+    if (hiveId !== "all") q = q.eq("hive_id", hiveId);
+    else if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
     const { data } = await q;
     setRecentInspections(data || []);
     setLoadingInspections(false);
   };
 
-  const fetchRecentTodos = async (apiaryId = "all") => {
+  const fetchRecentTodos = async (apiaryId = "all", hiveId = "all") => {
     setLoadingTodos(true);
     let q = supabase
       .from("todos")
       .select("id, title, due_date, status, hive_name, apiary_id, archived_at")
       .order("due_date", { ascending: false })
       .limit(6);
-    if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
+    if (hiveId !== "all") q = q.eq("hive_id", hiveId);
+    else if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
     const { data } = await q;
     setRecentTodos(data || []);
     setLoadingTodos(false);
   };
 
-  const fetchRecentLogs = async (apiaryId = "all") => {
+  const fetchRecentLogs = async (apiaryId = "all", hiveId = "all") => {
     setLoadingLogs(true);
     let q = supabase
       .from("logbook")
@@ -701,7 +791,8 @@ const Dashboard = () => {
       )
       .order("date", { ascending: false })
       .limit(6);
-    if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
+    if (hiveId !== "all") q = q.eq("hive_id", hiveId);
+    else if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
     const { data } = await q;
     setRecentLogs(data || []);
     setLoadingLogs(false);
@@ -796,18 +887,18 @@ const Dashboard = () => {
 
   // Initial + whenever filter changes
   useEffect(() => {
-    fetchStats(selectedApiaryId);
-    fetchRecentInspections(selectedApiaryId);
-    fetchRecentTodos(selectedApiaryId);
-    fetchRecentLogs(selectedApiaryId);
-    fetchQueenDashboard(selectedApiaryId);
+    fetchStats(selectedApiaryId, selectedHiveId);
+    fetchRecentInspections(selectedApiaryId, selectedHiveId);
+    fetchRecentTodos(selectedApiaryId, selectedHiveId);
+    fetchRecentLogs(selectedApiaryId, selectedHiveId);
+    fetchQueenDashboard(selectedApiaryId, selectedHiveId);
 
     if (subscriptionLevel === "premium") {
-      fetchNfcSummary(selectedApiaryId);
-      fetchRecentNfcHives(selectedApiaryId);
-      fetchDashboardIntelligence(selectedApiaryId);
+      fetchNfcSummary(selectedApiaryId, selectedHiveId);
+      fetchRecentNfcHives(selectedApiaryId, selectedHiveId);
+      fetchDashboardIntelligence(selectedApiaryId, selectedHiveId);
     }
-  }, [selectedApiaryId, subscriptionLevel]);
+  }, [selectedApiaryId, selectedHiveId, subscriptionLevel]);
 
   // Weather loads once (default apiary)
   useEffect(() => {
@@ -854,52 +945,38 @@ const Dashboard = () => {
     fetchSubscriptionLevel();
   }, []);
 
-  // Helpers for building list links with highlight + filter
+  // Helpers for building links with the active apiary and hive filters.
+  const buildFilteredHref = (path, extraParams = {}) => {
+    const params = new URLSearchParams();
+    if (selectedApiaryId !== "all") params.set("apiary_id", selectedApiaryId);
+    if (selectedHiveId !== "all") params.set("hive_id", selectedHiveId);
+
+    Object.entries(extraParams).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && value !== "") {
+        params.set(key, String(value));
+      }
+    });
+
+    const query = params.toString();
+    return `${path}${query ? `?${query}` : ""}`;
+  };
+
   const toInspectionsList = (id) =>
-    `/inspections?highlight=${encodeURIComponent(id)}&type=INSPECTION${
-      selectedApiaryId !== "all" ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
-    }`;
-  const toTodosList = (id) =>
-    `/todos?highlight=${encodeURIComponent(id)}&type=TODO${
-      selectedApiaryId !== "all" ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
-    }`;
-  const toLogbookList = (id) =>
-    `/logbook?highlight=${encodeURIComponent(id)}&type=LOGBOOK${
-      selectedApiaryId !== "all" ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
-    }`;
+    buildFilteredHref("/inspections", { highlight: id, type: "INSPECTION" });
+  const toTodosList = (id) => buildFilteredHref("/todos", { highlight: id, type: "TODO" });
+  const toLogbookList = (id) => buildFilteredHref("/logbook", { highlight: id, type: "LOGBOOK" });
+  const toHiveInList = (id) => buildFilteredHref("/hives", { highlight: id, type: "HIVE" });
 
-  // NEW: helper to jump into HiveList with highlight on a specific hive
-  const toHiveInList = (id) =>
-    `/hives?highlight=${encodeURIComponent(id)}&type=HIVE${
-      selectedApiaryId !== "all" ? `&apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
-    }`;
+  const seeAllInspectionsHref = buildFilteredHref("/inspections");
+  const seeAllTodosHref = buildFilteredHref("/todos");
+  const seeAllLogbookHref = buildFilteredHref("/logbook");
+  const hivesHref = buildFilteredHref("/hives");
 
-  const seeAllInspectionsHref = `/inspections${
-    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
-  }`;
-  const seeAllTodosHref = `/todos${
-    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
-  }`;
-  const seeAllLogbookHref = `/logbook${
-    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
-  }`;
-
-  // Hives link for NFC "See all tagged hives"
-  const hivesHref = `/hives${
-    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
-  }`;
-
-  // --- Dashboard stat tile links (carry apiary filter where it makes sense) ---
+  // Dashboard stat tile links carry the current location filter where relevant.
   const apiariesHref = "/apiaries";
-  const inspectionsHref = `/inspections${
-    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
-  }`;
-  const todosHref = `/todos${
-    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
-  }`;
-  const logbookHref = `/logbook${
-    selectedApiaryId !== "all" ? `?apiary_id=${encodeURIComponent(selectedApiaryId)}` : ""
-  }`;
+  const inspectionsHref = buildFilteredHref("/inspections");
+  const todosHref = buildFilteredHref("/todos");
+  const logbookHref = buildFilteredHref("/logbook");
 
   // ✅ your confirmed NFC manager route
   const nfcManagerHref = "/nfc/manage";
@@ -934,7 +1011,7 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
         <div>
           <h2 className="text-2xl font-bold">Dashboard</h2>
 
@@ -946,26 +1023,111 @@ const Dashboard = () => {
           </Link>
         </div>
 
-        {/* Filter by Apiary */}
-        <div className="w-full md:w-auto flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
-          <label htmlFor="apiaryFilter" className="font-medium text-sm whitespace-nowrap">
-            Filter by Apiary:
-          </label>
-          <select
-            id="apiaryFilter"
-            className="w-full sm:w-auto border rounded px-3 py-2"
-            value={selectedApiaryId}
-            onChange={(e) => setSelectedApiaryId(e.target.value)}
+        <div className="grid w-full gap-3 sm:grid-cols-2 xl:w-auto xl:grid-cols-[220px_220px_auto] xl:items-end">
+          <div>
+            <label htmlFor="apiaryFilter" className="block text-sm font-medium text-gray-700">
+              Apiary
+            </label>
+            <select
+              id="apiaryFilter"
+              className="mt-1 w-full rounded border px-3 py-2"
+              value={selectedApiaryId}
+              onChange={(event) => {
+                setSelectedApiaryId(event.target.value);
+                setSelectedHiveId("all");
+              }}
+            >
+              <option value="all">All Apiaries</option>
+              {apiariesList.map((apiary) => (
+                <option key={apiary.id} value={apiary.id}>
+                  {apiary.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="hiveFilter" className="block text-sm font-medium text-gray-700">
+              Hive
+            </label>
+            <select
+              id="hiveFilter"
+              className="mt-1 w-full rounded border px-3 py-2"
+              value={selectedHiveId}
+              onChange={(event) => setSelectedHiveId(event.target.value)}
+              disabled={hivesForSelectedApiary.length === 0}
+            >
+              <option value="all">All Hives</option>
+              {hivesForSelectedApiary.map((hive) => (
+                <option key={hive.id} value={hive.id}>
+                  {hive.name}
+                  {selectedApiaryId === "all" && apiaryNameById[hive.apiary_id]
+                    ? ` — ${apiaryNameById[hive.apiary_id]}`
+                    : ""}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowDashboardSettings((current) => !current)}
+            className="rounded border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-50 sm:col-span-2 xl:col-span-1"
+            aria-expanded={showDashboardSettings}
           >
-            <option value="all">All Apiaries</option>
-            {apiariesList.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.name}
-              </option>
-            ))}
-          </select>
+            ⚙ Customise Dashboard
+          </button>
         </div>
       </div>
+
+      {showDashboardSettings && (
+        <div className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h3 className="font-semibold text-gray-900">Choose what appears on your Dashboard</h3>
+              <p className="mt-1 text-sm text-gray-600">
+                Your choices are saved on this device and remain after refreshing or signing in
+                again.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={resetDashboardSections}
+              className="text-sm font-semibold text-blue-600 hover:underline"
+            >
+              Restore recommended layout
+            </button>
+          </div>
+
+          <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {DASHBOARD_SECTION_OPTIONS.map((section) => (
+              <label
+                key={section.id}
+                className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 px-3 py-2 hover:bg-gray-50"
+              >
+                <input
+                  type="checkbox"
+                  checked={Boolean(dashboardSections[section.id])}
+                  onChange={(event) => setDashboardSection(section.id, event.target.checked)}
+                  className="h-4 w-4"
+                />
+                <span className="text-sm text-gray-800">
+                  {section.label}
+                  {section.premium ? (
+                    <span className="ml-1 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
+                      {section.id === "reports" &&
+                      subscriptionLevel !== "premium" &&
+                      queenDashboard.hasQueenData
+                        ? "Read only"
+                        : "Premium"}
+                    </span>
+                  ) : null}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Stripe upgrade banner */}
       {stripeMessage && (
@@ -983,7 +1145,7 @@ const Dashboard = () => {
       )}
 
       {/* NFC instructions + CTA (Premium only) */}
-      {subscriptionLevel === "premium" && (
+      {dashboardSections.nfcGuide && subscriptionLevel === "premium" && (
         <div className="bg-blue-50 border border-blue-200 rounded-md p-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-sm text-blue-900">
             <span className="inline-flex items-center gap-1 font-semibold">
@@ -1015,239 +1177,252 @@ const Dashboard = () => {
       )}
 
       {/* Reports & Export */}
-      <div
-        ref={printAnchorRef}
-        id="print"
-        className="no-print bg-white rounded shadow p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-      >
-        <div>
-          <h2 className="text-lg font-semibold">Reports &amp; Export</h2>
-          <p className="text-gray-600 mt-1">
-            Open Reports or Export Inspections, Tasks, and Logbook by Apiary/Hive and date range.
-          </p>
-        </div>
-        <div className="flex gap-3">
-          {subscriptionLevel === "premium" ? (
-            <Link
-              to={reportHref}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-            >
-              Open Reports &amp; Export
-            </Link>
-          ) : (
-            <Link
-              to="/pricing"
-              className="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-4 py-2 rounded"
-            >
-              🔒 Reports &amp; Export
-            </Link>
-          )}
-        </div>
-      </div>
+      {dashboardSections.reports && (
+        <div
+          ref={printAnchorRef}
+          id="print"
+          className="no-print bg-white rounded shadow p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+        >
+          <div>
+            <h2 className="text-lg font-semibold">Reports &amp; Export</h2>
 
-      {/* Stats buttons (centered + nicer theme) */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-        <StatTile
-          to={apiariesHref}
-          title="Apiaries"
-          value={selectedApiaryId === "all" ? stats.apiaries : `1 / ${stats.apiaries}`}
-          subtitle={selectedApiaryId === "all" ? null : "(this apiary / total)"}
-          cta="Open →"
-          variant="default"
-        />
-
-        <StatTile
-          to={hivesHref}
-          title="Hives"
-          value={stats.hives}
-          subtitle={selectedApiaryId !== "all" ? "(this filter)" : null}
-          cta="Open →"
-          variant="default"
-        />
-
-        <StatTile
-          to={inspectionsHref}
-          title="Inspections"
-          value={stats.inspections}
-          subtitle={selectedApiaryId !== "all" ? "(this filter)" : null}
-          cta="Open →"
-          variant="default"
-        />
-
-        <StatTile
-          to={todosHref}
-          title="Tasks"
-          value={stats.todos}
-          subtitle={selectedApiaryId !== "all" ? "(this filter)" : null}
-          cta="Open →"
-          variant="default"
-        />
-
-        <StatTile
-          to={logbookHref}
-          title="Logbook"
-          value={stats.logbook}
-          subtitle={selectedApiaryId !== "all" ? "(this filter)" : null}
-          cta="Open →"
-          variant="default"
-        />
-
-        {subscriptionLevel === "premium" && (
-          <StatTile
-            to={nfcManagerHref}
-            title="NFC Tagged Hives"
-            value={nfcSummary.tagged}
-            subtitle={`of ${nfcSummary.total} hives${selectedApiaryId !== "all" ? " (this filter)" : ""}`}
-            cta="Manage →"
-            variant="nfc"
-          />
-        )}
-      </div>
-
-      {(subscriptionLevel === "premium" || queenDashboard.hasQueenData) && (
-        <div className="bg-white rounded shadow p-4">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <span
-                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-lg"
-                  aria-hidden="true"
-                >
-                  👑
-                </span>
-                <div>
-                  <h2 className="text-lg font-semibold">Queen status</h2>
-                  <p className="text-xs text-gray-600">
-                    Current Queen position for the selected apiary filter.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <Link
-              to="/queens"
-              className="text-sm font-semibold text-blue-600 hover:underline whitespace-nowrap"
-            >
-              Open Queen Records →
-            </Link>
+            <p className="text-gray-600 mt-1">
+              {subscriptionLevel === "premium"
+                ? "Open Reports or export Inspections, Tasks, Logbook and Queen Records by Apiary, Hive and date range."
+                : queenDashboard.hasQueenData
+                  ? "Review and export your retained Queen Records in read-only mode."
+                  : "Create printable reports and filtered exports with HiveTag Premium."}
+            </p>
           </div>
 
-          {queenDashboard.loading ? (
-            <p className="mt-4 text-sm text-gray-500">Loading Queen status…</p>
-          ) : queenDashboard.error ? (
-            <p className="mt-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-800">
-              {queenDashboard.error}
-            </p>
-          ) : !queenDashboard.hasQueenData ? (
-            <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4">
-              <p className="text-sm font-semibold text-amber-950">No Queen Records added yet</p>
-              <p className="mt-1 text-sm text-amber-900">
-                Open Queen Records to add the first known Queen or start a Queen transition.
-              </p>
-            </div>
-          ) : (
-            <>
-              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-center">
-                  <div className="text-2xl font-extrabold text-green-900">
-                    {queenDashboard.summary.current}
-                  </div>
-                  <div className="text-xs font-semibold text-green-800">Current queens</div>
-                </div>
-                <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-center">
-                  <div className="text-2xl font-extrabold text-amber-950">
-                    {queenDashboard.summary.transitions}
-                  </div>
-                  <div className="text-xs font-semibold text-amber-900">Queen transitions</div>
-                </div>
-                <div
-                  className={`rounded-lg border p-3 text-center ${
-                    queenDashboard.summary.attention > 0
-                      ? "border-red-200 bg-red-50"
-                      : "border-gray-200 bg-gray-50"
-                  }`}
-                >
-                  <div
-                    className={`text-2xl font-extrabold ${
-                      queenDashboard.summary.attention > 0 ? "text-red-900" : "text-gray-800"
-                    }`}
-                  >
-                    {queenDashboard.summary.attention}
-                  </div>
-                  <div
-                    className={`text-xs font-semibold ${
-                      queenDashboard.summary.attention > 0 ? "text-red-800" : "text-gray-700"
-                    }`}
-                  >
-                    Need attention
-                  </div>
-                </div>
-              </div>
+          <div className="flex gap-3">
+            {subscriptionLevel === "premium" || queenDashboard.hasQueenData ? (
+              <Link
+                to={reportHref}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+              >
+                {subscriptionLevel === "premium" ? "Open Reports & Export" : "Open Queen Reports"}
+              </Link>
+            ) : (
+              <Link
+                to="/pricing"
+                className="bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 px-4 py-2 rounded"
+              >
+                🔒 Reports &amp; Export
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
 
-              {queenDashboard.items.length > 0 ? (
-                <ul className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
-                  {queenDashboard.items.map((item) => (
-                    <li
-                      key={item.id}
-                      className={`rounded-lg border p-3 ${
-                        item.attention
-                          ? "border-amber-300 bg-amber-50"
-                          : "border-gray-200 bg-gray-50"
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
-                          <p className="font-semibold text-[#1a3329] truncate">{item.name}</p>
-                          <p className="text-xs text-gray-500 truncate">{item.apiaryName}</p>
-                        </div>
-                        <span
-                          className={`shrink-0 rounded-full border px-2 py-1 text-[11px] font-semibold ${
-                            item.attention
-                              ? "border-amber-300 bg-white text-amber-900"
-                              : "border-green-200 bg-green-50 text-green-800"
-                          }`}
-                        >
-                          {item.status}
-                        </span>
-                      </div>
-                      <p className="mt-2 text-sm text-gray-700">{item.detail}</p>
-                      {item.nextAction ? (
-                        <p className="mt-2 text-xs text-gray-600">
-                          <strong>Next:</strong> {item.nextAction.title}
-                          {item.nextAction.due && item.nextAction.due !== "Not scheduled"
-                            ? ` • ${item.nextAction.due}`
-                            : ""}
-                        </p>
-                      ) : null}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="mt-4 text-sm text-gray-500">
-                  No Queen Records are included by this apiary filter.
-                </p>
-              )}
-            </>
+      {/* Stats buttons (centered + nicer theme) */}
+      {dashboardSections.stats && (
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <StatTile
+            to={apiariesHref}
+            title="Apiaries"
+            value={selectedApiaryId === "all" ? stats.apiaries : `1 / ${stats.apiaries}`}
+            subtitle={selectedApiaryId === "all" ? null : "(this apiary / total)"}
+            cta="Open →"
+            variant="default"
+          />
+
+          <StatTile
+            to={hivesHref}
+            title="Hives"
+            value={stats.hives}
+            subtitle={
+              selectedApiaryId !== "all" || selectedHiveId !== "all" ? "(this filter)" : null
+            }
+            cta="Open →"
+            variant="default"
+          />
+
+          <StatTile
+            to={inspectionsHref}
+            title="Inspections"
+            value={stats.inspections}
+            subtitle={
+              selectedApiaryId !== "all" || selectedHiveId !== "all" ? "(this filter)" : null
+            }
+            cta="Open →"
+            variant="default"
+          />
+
+          <StatTile
+            to={todosHref}
+            title="Tasks"
+            value={stats.todos}
+            subtitle={
+              selectedApiaryId !== "all" || selectedHiveId !== "all" ? "(this filter)" : null
+            }
+            cta="Open →"
+            variant="default"
+          />
+
+          <StatTile
+            to={logbookHref}
+            title="Logbook"
+            value={stats.logbook}
+            subtitle={
+              selectedApiaryId !== "all" || selectedHiveId !== "all" ? "(this filter)" : null
+            }
+            cta="Open →"
+            variant="default"
+          />
+
+          {subscriptionLevel === "premium" && (
+            <StatTile
+              to={nfcManagerHref}
+              title="NFC Tagged Hives"
+              value={nfcSummary.tagged}
+              subtitle={`of ${nfcSummary.total} hives${selectedApiaryId !== "all" || selectedHiveId !== "all" ? " (this filter)" : ""}`}
+              cta="Manage →"
+              variant="nfc"
+            />
           )}
         </div>
       )}
 
-      {subscriptionLevel === "premium" && (
-        <>
-          <DashboardIntelligencePanel
-            data={dashboardIntelligence}
-            apiaryNameById={apiaryNameById}
-          />
+      {dashboardSections.queens &&
+        (subscriptionLevel === "premium" || queenDashboard.hasQueenData) && (
+          <div className="bg-white rounded shadow p-4">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-lg"
+                    aria-hidden="true"
+                  >
+                    👑
+                  </span>
+                  <div>
+                    <h2 className="text-lg font-semibold">Queen status</h2>
+                    <p className="text-xs text-gray-600">
+                      Current Queen position for the selected apiary and hive filters.
+                    </p>
+                  </div>
+                </div>
+              </div>
 
-          <DashboardHiveTimelinePanel
-            data={dashboardIntelligence}
-            apiaryNameById={apiaryNameById}
-          />
-        </>
+              <Link
+                to="/queens"
+                className="text-sm font-semibold text-blue-600 hover:underline whitespace-nowrap"
+              >
+                Open Queen Records →
+              </Link>
+            </div>
+
+            {queenDashboard.loading ? (
+              <p className="mt-4 text-sm text-gray-500">Loading Queen status…</p>
+            ) : queenDashboard.error ? (
+              <p className="mt-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+                {queenDashboard.error}
+              </p>
+            ) : !queenDashboard.hasQueenData ? (
+              <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 p-4">
+                <p className="text-sm font-semibold text-amber-950">No Queen Records added yet</p>
+                <p className="mt-1 text-sm text-amber-900">
+                  Open Queen Records to add the first known Queen or start a Queen transition.
+                </p>
+              </div>
+            ) : (
+              <>
+                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                  <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-center">
+                    <div className="text-2xl font-extrabold text-green-900">
+                      {queenDashboard.summary.current}
+                    </div>
+                    <div className="text-xs font-semibold text-green-800">Current queens</div>
+                  </div>
+                  <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-center">
+                    <div className="text-2xl font-extrabold text-amber-950">
+                      {queenDashboard.summary.transitions}
+                    </div>
+                    <div className="text-xs font-semibold text-amber-900">Queen transitions</div>
+                  </div>
+                  <div
+                    className={`rounded-lg border p-3 text-center ${
+                      queenDashboard.summary.attention > 0
+                        ? "border-red-200 bg-red-50"
+                        : "border-gray-200 bg-gray-50"
+                    }`}
+                  >
+                    <div
+                      className={`text-2xl font-extrabold ${
+                        queenDashboard.summary.attention > 0 ? "text-red-900" : "text-gray-800"
+                      }`}
+                    >
+                      {queenDashboard.summary.attention}
+                    </div>
+                    <div
+                      className={`text-xs font-semibold ${
+                        queenDashboard.summary.attention > 0 ? "text-red-800" : "text-gray-700"
+                      }`}
+                    >
+                      Need attention
+                    </div>
+                  </div>
+                </div>
+
+                {queenDashboard.items.length > 0 ? (
+                  <ul className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
+                    {queenDashboard.items.map((item) => (
+                      <li
+                        key={item.id}
+                        className={`rounded-lg border p-3 ${
+                          item.attention
+                            ? "border-amber-300 bg-amber-50"
+                            : "border-gray-200 bg-gray-50"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="font-semibold text-[#1a3329] truncate">{item.name}</p>
+                            <p className="text-xs text-gray-500 truncate">{item.apiaryName}</p>
+                          </div>
+                          <span
+                            className={`shrink-0 rounded-full border px-2 py-1 text-[11px] font-semibold ${
+                              item.attention
+                                ? "border-amber-300 bg-white text-amber-900"
+                                : "border-green-200 bg-green-50 text-green-800"
+                            }`}
+                          >
+                            {item.status}
+                          </span>
+                        </div>
+                        <p className="mt-2 text-sm text-gray-700">{item.detail}</p>
+                        {item.nextAction ? (
+                          <p className="mt-2 text-xs text-gray-600">
+                            <strong>Next:</strong> {item.nextAction.title}
+                            {item.nextAction.due && item.nextAction.due !== "Not scheduled"
+                              ? ` • ${item.nextAction.due}`
+                              : ""}
+                          </p>
+                        ) : null}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-4 text-sm text-gray-500">
+                    No Queen Records are included by the selected filters.
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+        )}
+
+      {dashboardSections.healthOverview && subscriptionLevel === "premium" && (
+        <DashboardIntelligencePanel data={dashboardIntelligence} apiaryNameById={apiaryNameById} />
+      )}
+
+      {dashboardSections.healthTimeline && subscriptionLevel === "premium" && (
+        <DashboardHiveTimelinePanel data={dashboardIntelligence} apiaryNameById={apiaryNameById} />
       )}
 
       {/* NFC Tagged Hives list (Premium only) */}
-      {subscriptionLevel === "premium" && (
+      {dashboardSections.nfcHives && subscriptionLevel === "premium" && (
         <div className="bg-white rounded shadow p-4">
           <div className="flex items-center justify-between gap-2 mb-2">
             <h2 className="text-lg font-semibold">NFC Tagged Hives</h2>
@@ -1324,115 +1499,48 @@ const Dashboard = () => {
       )}
 
       {/* Recent Inspections */}
-      <div className="bg-white rounded shadow p-4">
-        <h2 className="text-lg font-semibold mb-2">Recent Inspections</h2>
-        {loadingInspections ? (
-          <p className="text-gray-500">Loading…</p>
-        ) : recentInspections.length === 0 ? (
-          <p className="text-gray-500">No recent inspections.</p>
-        ) : (
-          <>
-            <ul className="space-y-2">
-              {recentInspections.map((i) => (
-                <li
-                  key={i.id}
-                  className={`border p-2 rounded text-sm ${i.archived_at ? "opacity-60" : ""}`}
-                  title={i.archived_at ? "Archived inspection" : ""}
-                >
-                  <div className="min-w-0">
-                    <strong className="mr-1">{formatUKDate(i.date)}</strong>
-                    {i.apiary_id && apiaryNameById[i.apiary_id]
-                      ? ` • Apiary: ${apiaryNameById[i.apiary_id]}`
-                      : ""}
-                    {i.hive_id && hiveNameById[i.hive_id]
-                      ? ` • Hive: ${hiveNameById[i.hive_id]}`
-                      : ""}
-                    {i.notes ? ` — ${i.notes.slice(0, 80)}` : ""}
-                  </div>
-
-                  <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
-                    <ArchivedPill at={i.archived_at} />
-                    {!i.archived_at && (
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <Link
-                          to={toInspectionsList(i.id)}
-                          className="text-blue-600 hover:underline whitespace-nowrap"
-                          aria-label={`Open inspection ${formatUKDate(i.date)} in list`}
-                        >
-                          Open →
-                        </Link>
-                        <Link
-                          to={`/inspections/${i.id}/edit`}
-                          className="text-xs text-gray-600 hover:underline whitespace-nowrap"
-                          aria-label={`Edit inspection ${formatUKDate(i.date)}`}
-                        >
-                          ✎ Edit
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-3 text-right">
-              <Link to={seeAllInspectionsHref} className="text-sm text-blue-600 hover:underline">
-                See all inspections →
-              </Link>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Recent Tasks */}
-      <div className="bg-white rounded shadow p-4">
-        <h2 className="text-lg font-semibold mb-2">Recent Tasks</h2>
-        {loadingTodos ? (
-          <p className="text-gray-500">Loading…</p>
-        ) : recentTodos.length === 0 ? (
-          <p className="text-gray-500">No recent tasks.</p>
-        ) : (
-          <>
-            <ul className="space-y-2">
-              {recentTodos.map((t) => {
-                const overdue = isOverdue(t.due_date, t.status);
-                return (
+      {dashboardSections.recentInspections && (
+        <div className="bg-white rounded shadow p-4">
+          <h2 className="text-lg font-semibold mb-2">Recent Inspections</h2>
+          {loadingInspections ? (
+            <p className="text-gray-500">Loading…</p>
+          ) : recentInspections.length === 0 ? (
+            <p className="text-gray-500">No recent inspections.</p>
+          ) : (
+            <>
+              <ul className="space-y-2">
+                {recentInspections.map((i) => (
                   <li
-                    key={t.id}
-                    className={`border p-2 rounded text-sm ${t.archived_at ? "opacity-60" : ""}`}
-                    title={t.archived_at ? "Archived task" : ""}
+                    key={i.id}
+                    className={`border p-2 rounded text-sm ${i.archived_at ? "opacity-60" : ""}`}
+                    title={i.archived_at ? "Archived inspection" : ""}
                   >
                     <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <strong>{t.due_date ? formatUKDate(t.due_date) : "No date"}</strong>
-                        <span className={statusPill(t.status)}>{t.status || "Pending"}</span>
-                        {overdue && (
-                          <span className="text-red-700 text-xs font-semibold">Overdue</span>
-                        )}
-                      </div>
-                      <div className="truncate">
-                        {t.title}
-                        {t.hive_name ? ` • Hive: ${t.hive_name}` : ""}
-                        {t.apiary_id && apiaryNameById[t.apiary_id]
-                          ? ` • Apiary: ${apiaryNameById[t.apiary_id]}`
-                          : ""}
-                      </div>
+                      <strong className="mr-1">{formatUKDate(i.date)}</strong>
+                      {i.apiary_id && apiaryNameById[i.apiary_id]
+                        ? ` • Apiary: ${apiaryNameById[i.apiary_id]}`
+                        : ""}
+                      {i.hive_id && hiveNameById[i.hive_id]
+                        ? ` • Hive: ${hiveNameById[i.hive_id]}`
+                        : ""}
+                      {i.notes ? ` — ${i.notes.slice(0, 80)}` : ""}
                     </div>
 
                     <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
-                      {t.archived_at && <ArchivedPill at={t.archived_at} />}
-                      {!t.archived_at && (
+                      <ArchivedPill at={i.archived_at} />
+                      {!i.archived_at && (
                         <div className="flex items-center gap-3 flex-wrap">
                           <Link
-                            to={toTodosList(t.id)}
+                            to={toInspectionsList(i.id)}
                             className="text-blue-600 hover:underline whitespace-nowrap"
-                            aria-label={`Open task ${t.title} in list`}
+                            aria-label={`Open inspection ${formatUKDate(i.date)} in list`}
                           >
                             Open →
                           </Link>
                           <Link
-                            to={`/todos/${t.id}/edit`}
+                            to={`/inspections/${i.id}/edit`}
                             className="text-xs text-gray-600 hover:underline whitespace-nowrap"
-                            aria-label={`Edit task ${t.title}`}
+                            aria-label={`Edit inspection ${formatUKDate(i.date)}`}
                           >
                             ✎ Edit
                           </Link>
@@ -1440,214 +1548,292 @@ const Dashboard = () => {
                       )}
                     </div>
                   </li>
-                );
-              })}
-            </ul>
-            <div className="mt-3 text-right">
-              <Link to={seeAllTodosHref} className="text-sm text-blue-600 hover:underline">
-                See all tasks →
-              </Link>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Recent Log Entries */}
-      <div className="bg-white rounded shadow p-4">
-        <h2 className="text-lg font-semibold mb-2">Recent Log Entries</h2>
-        {loadingLogs ? (
-          <p className="text-gray-500">Loading…</p>
-        ) : recentLogs.length === 0 ? (
-          <p className="text-gray-500">No recent log entries.</p>
-        ) : (
-          <>
-            <ul className="space-y-2">
-              {recentLogs.map((l) => (
-                <li
-                  key={l.id}
-                  className={`border p-2 rounded text-sm ${l.archived_at ? "opacity-60" : ""}`}
-                  title={l.archived_at ? "Archived log entry" : ""}
-                >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <strong className="mr-1">{formatUKDate(l.date)}</strong>: {l.log_type}
-                    </div>
-                    {l.apiary_id && apiaryNameById[l.apiary_id]
-                      ? ` • Apiary: ${apiaryNameById[l.apiary_id]}`
-                      : ""}
-                    {l.entry ? ` — ${l.entry.slice(0, 80)}` : ""}
-                    {!l.archived_at && l.inspection?.date && (
-                      <>
-                        {" • "}
-                        <Link
-                          to={`/inspections/${l.inspection_id}/edit`}
-                          className="text-blue-600 underline"
-                        >
-                          Inspection ({formatUKDate(l.inspection.date)})
-                        </Link>
-                      </>
-                    )}
-                  </div>
-
-                  <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
-                    {l.archived_at && <ArchivedPill at={l.archived_at} />}
-                    {!l.archived_at && (
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <Link
-                          to={toLogbookList(l.id)}
-                          className="text-blue-600 hover:underline whitespace-nowrap"
-                          aria-label={`Open log entry ${l.id}`}
-                        >
-                          Open →
-                        </Link>
-                        <Link
-                          to={`/logbook/${l.id}/edit`}
-                          className="text-xs text-gray-600 hover:underline whitespace-nowrap"
-                          aria-label={`Edit log entry ${l.id}`}
-                        >
-                          ✎ Edit
-                        </Link>
-                      </div>
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-3 text-right">
-              <Link to={seeAllLogbookHref} className="text-sm text-blue-600 hover:underline">
-                See all log entries →
-              </Link>
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Weather Snapshot + Seasonal Beekeeper Notes teaser */}
-      <div className="bg-white rounded shadow p-4">
-        <h2 className="text-lg font-semibold mb-1">Weather Snapshot</h2>
-        <p className="text-xs text-gray-600 mb-3">
-          📍 Weather is based on your <strong>default apiary</strong>
-          {defaultApiaryName ? `: ${defaultApiaryName}` : ""}.{" "}
-          <Link to="/settings" className="text-blue-600 underline">
-            Change default in Settings
-          </Link>
-          .{" "}
-          <span className="text-gray-500">
-            Local time ({weatherTz})
-            {Number.isFinite(weather?.current?.time)
-              ? ` • updated ${fmtLocalTime(weather.current.time, weatherTz)}`
-              : ""}
-          </span>
-          {usedFallback && (
-            <>
-              {" "}
-              <span className="text-amber-700">
-                (No coordinates set for the default apiary — showing a default location: London.)
-              </span>
+                ))}
+              </ul>
+              <div className="mt-3 text-right">
+                <Link to={seeAllInspectionsHref} className="text-sm text-blue-600 hover:underline">
+                  See all inspections →
+                </Link>
+              </div>
             </>
           )}
-        </p>
-        {weatherError ? (
-          <p className="text-gray-500">{weatherError}</p>
-        ) : !weather ? (
-          <p className="text-gray-500">Loading weather...</p>
-        ) : (
-          <>
-            <div className="text-sm">
-              <p>
-                <strong>Now:</strong> {weather?.current?.temperature_2m ?? "N/A"}°C, (
-                {Number.isFinite(weather?.current?.wind_speed_10m)
-                  ? Math.round(weather.current.wind_speed_10m)
-                  : "N/A"}{" "}
-                km/h)
-              </p>
-              <p className="mt-2">
-                <strong>Next 5 Days:</strong>
-              </p>
-              <ul className="grid grid-cols-1 gap-x-6">
-                {Array.isArray(weather?.forecast?.time) && weather.forecast.time.length ? (
-                  weather.forecast.time.slice(0, 5).map((day, index) => {
-                    const wc = weather?.forecast?.weather_code?.[index];
-                    const icon = WX_ICON[wc] || "⛅";
-                    const label = WX_LABEL[wc] || "";
-                    const tmin = weather?.forecast?.temperature_2m_min?.[index] ?? "N/A";
-                    const tmax = weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
-                    return (
-                      <li key={day ?? index}>
-                        {formatUKDate(day, weatherTz)}: {icon} {label && `${label} — `}
-                        {tmin}°C → {tmax}°C
-                      </li>
-                    );
-                  })
-                ) : (
-                  <li>No forecast.</li>
-                )}
+        </div>
+      )}
+
+      {/* Recent Tasks */}
+      {dashboardSections.recentTasks && (
+        <div className="bg-white rounded shadow p-4">
+          <h2 className="text-lg font-semibold mb-2">Recent Tasks</h2>
+          {loadingTodos ? (
+            <p className="text-gray-500">Loading…</p>
+          ) : recentTodos.length === 0 ? (
+            <p className="text-gray-500">No recent tasks.</p>
+          ) : (
+            <>
+              <ul className="space-y-2">
+                {recentTodos.map((t) => {
+                  const overdue = isOverdue(t.due_date, t.status);
+                  return (
+                    <li
+                      key={t.id}
+                      className={`border p-2 rounded text-sm ${t.archived_at ? "opacity-60" : ""}`}
+                      title={t.archived_at ? "Archived task" : ""}
+                    >
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <strong>{t.due_date ? formatUKDate(t.due_date) : "No date"}</strong>
+                          <span className={statusPill(t.status)}>{t.status || "Pending"}</span>
+                          {overdue && (
+                            <span className="text-red-700 text-xs font-semibold">Overdue</span>
+                          )}
+                        </div>
+                        <div className="truncate">
+                          {t.title}
+                          {t.hive_name ? ` • Hive: ${t.hive_name}` : ""}
+                          {t.apiary_id && apiaryNameById[t.apiary_id]
+                            ? ` • Apiary: ${apiaryNameById[t.apiary_id]}`
+                            : ""}
+                        </div>
+                      </div>
+
+                      <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
+                        {t.archived_at && <ArchivedPill at={t.archived_at} />}
+                        {!t.archived_at && (
+                          <div className="flex items-center gap-3 flex-wrap">
+                            <Link
+                              to={toTodosList(t.id)}
+                              className="text-blue-600 hover:underline whitespace-nowrap"
+                              aria-label={`Open task ${t.title} in list`}
+                            >
+                              Open →
+                            </Link>
+                            <Link
+                              to={`/todos/${t.id}/edit`}
+                              className="text-xs text-gray-600 hover:underline whitespace-nowrap"
+                              aria-label={`Edit task ${t.title}`}
+                            >
+                              ✎ Edit
+                            </Link>
+                          </div>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
-            </div>
-
-            <div className="mt-4 pt-3 border-t border-gray-200">
-              <h3 className="text-sm font-semibold mb-1">Seasonal Beekeeper Notes</h3>
-              <p className="text-[11px] text-gray-500 mb-2">
-                Guide only – this panel gives general beekeeping information based on typical
-                cool–temperate conditions and average colony behaviour. Any comments about
-                inspections, feeding, Varroa control or other treatments are purely advisory and are
-                not instructions. Weather, forage, pollen and alert data come from third-party
-                services and may be inaccurate or change at short notice. Conditions vary by region,
-                altitude and micro-climate and every colony is different, so always use your own
-                judgement and follow the product label, official guidance and advice from your local
-                beekeeping association, Bee Inspectors, vets and experienced mentors. Do not rely on
-                this panel alone when deciding whether to inspect, feed or treat your bees.
-              </p>
-              {beekeeperNotes.length ? (
-                <>
-                  <ul className="space-y-1 text-xs text-gray-800">
-                    {beekeeperNotes.slice(0, 3).map((n, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span>{n.icon}</span>
-                        <span>{n.text}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="mt-2 text-[11px] text-gray-600">
-                    This is just a short preview.{" "}
-                    <Link to="/weather" className="text-blue-600 underline">
-                      View full Seasonal Beekeeper Notes and detailed weather →
-                    </Link>
-                  </p>
-                </>
-              ) : (
-                <p className="text-xs text-gray-500">
-                  No special notes today.{" "}
-                  <Link to="/weather" className="text-blue-600 underline">
-                    Open the Weather page for full Seasonal Beekeeper Notes →
-                  </Link>
-                </p>
-              )}
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Quick Actions */}
-      <div className="bg-white rounded shadow p-4">
-        <h2 className="text-lg font-semibold mb-2">Quick Actions</h2>
-        <div className="space-x-4">
-          <Link to="/apiaries/new" className="text-blue-600 underline">
-            New Apiary
-          </Link>
-          <Link to="/hives/new" className="text-blue-600 underline">
-            New Hive
-          </Link>
-          <Link to="/inspections/new" className="text-blue-600 underline">
-            New Inspection
-          </Link>
-          {subscriptionLevel === "premium" && (
-            <Link to="/nfc" className="text-blue-600 underline">
-              Scan NFC Tag (Premium)
-            </Link>
+              <div className="mt-3 text-right">
+                <Link to={seeAllTodosHref} className="text-sm text-blue-600 hover:underline">
+                  See all tasks →
+                </Link>
+              </div>
+            </>
           )}
         </div>
-      </div>
+      )}
+
+      {/* Recent Log Entries */}
+      {dashboardSections.recentLogbook && (
+        <div className="bg-white rounded shadow p-4">
+          <h2 className="text-lg font-semibold mb-2">Recent Log Entries</h2>
+          {loadingLogs ? (
+            <p className="text-gray-500">Loading…</p>
+          ) : recentLogs.length === 0 ? (
+            <p className="text-gray-500">No recent log entries.</p>
+          ) : (
+            <>
+              <ul className="space-y-2">
+                {recentLogs.map((l) => (
+                  <li
+                    key={l.id}
+                    className={`border p-2 rounded text-sm ${l.archived_at ? "opacity-60" : ""}`}
+                    title={l.archived_at ? "Archived log entry" : ""}
+                  >
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <strong className="mr-1">{formatUKDate(l.date)}</strong>: {l.log_type}
+                      </div>
+                      {l.apiary_id && apiaryNameById[l.apiary_id]
+                        ? ` • Apiary: ${apiaryNameById[l.apiary_id]}`
+                        : ""}
+                      {l.entry ? ` — ${l.entry.slice(0, 80)}` : ""}
+                      {!l.archived_at && l.inspection?.date && (
+                        <>
+                          {" • "}
+                          <Link
+                            to={`/inspections/${l.inspection_id}/edit`}
+                            className="text-blue-600 underline"
+                          >
+                            Inspection ({formatUKDate(l.inspection.date)})
+                          </Link>
+                        </>
+                      )}
+                    </div>
+
+                    <div className="mt-2 flex flex-wrap items-center gap-3 justify-between">
+                      {l.archived_at && <ArchivedPill at={l.archived_at} />}
+                      {!l.archived_at && (
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <Link
+                            to={toLogbookList(l.id)}
+                            className="text-blue-600 hover:underline whitespace-nowrap"
+                            aria-label={`Open log entry ${l.id}`}
+                          >
+                            Open →
+                          </Link>
+                          <Link
+                            to={`/logbook/${l.id}/edit`}
+                            className="text-xs text-gray-600 hover:underline whitespace-nowrap"
+                            aria-label={`Edit log entry ${l.id}`}
+                          >
+                            ✎ Edit
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-3 text-right">
+                <Link to={seeAllLogbookHref} className="text-sm text-blue-600 hover:underline">
+                  See all log entries →
+                </Link>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Weather Snapshot + Seasonal Beekeeper Notes teaser */}
+      {dashboardSections.weather && (
+        <div className="bg-white rounded shadow p-4">
+          <h2 className="text-lg font-semibold mb-1">Weather Snapshot</h2>
+          <p className="text-xs text-gray-600 mb-3">
+            📍 Weather is based on your <strong>default apiary</strong>
+            {defaultApiaryName ? `: ${defaultApiaryName}` : ""}.{" "}
+            <Link to="/settings" className="text-blue-600 underline">
+              Change default in Settings
+            </Link>
+            .{" "}
+            <span className="text-gray-500">
+              Local time ({weatherTz})
+              {Number.isFinite(weather?.current?.time)
+                ? ` • updated ${fmtLocalTime(weather.current.time, weatherTz)}`
+                : ""}
+            </span>
+            {usedFallback && (
+              <>
+                {" "}
+                <span className="text-amber-700">
+                  (No coordinates set for the default apiary — showing a default location: London.)
+                </span>
+              </>
+            )}
+          </p>
+          {weatherError ? (
+            <p className="text-gray-500">{weatherError}</p>
+          ) : !weather ? (
+            <p className="text-gray-500">Loading weather...</p>
+          ) : (
+            <>
+              <div className="text-sm">
+                <p>
+                  <strong>Now:</strong> {weather?.current?.temperature_2m ?? "N/A"}°C, (
+                  {Number.isFinite(weather?.current?.wind_speed_10m)
+                    ? Math.round(weather.current.wind_speed_10m)
+                    : "N/A"}{" "}
+                  km/h)
+                </p>
+                <p className="mt-2">
+                  <strong>Next 5 Days:</strong>
+                </p>
+                <ul className="grid grid-cols-1 gap-x-6">
+                  {Array.isArray(weather?.forecast?.time) && weather.forecast.time.length ? (
+                    weather.forecast.time.slice(0, 5).map((day, index) => {
+                      const wc = weather?.forecast?.weather_code?.[index];
+                      const icon = WX_ICON[wc] || "⛅";
+                      const label = WX_LABEL[wc] || "";
+                      const tmin = weather?.forecast?.temperature_2m_min?.[index] ?? "N/A";
+                      const tmax = weather?.forecast?.temperature_2m_max?.[index] ?? "N/A";
+                      return (
+                        <li key={day ?? index}>
+                          {formatUKDate(day, weatherTz)}: {icon} {label && `${label} — `}
+                          {tmin}°C → {tmax}°C
+                        </li>
+                      );
+                    })
+                  ) : (
+                    <li>No forecast.</li>
+                  )}
+                </ul>
+              </div>
+
+              <div className="mt-4 pt-3 border-t border-gray-200">
+                <h3 className="text-sm font-semibold mb-1">Seasonal Beekeeper Notes</h3>
+                <p className="text-[11px] text-gray-500 mb-2">
+                  Guide only – this panel gives general beekeeping information based on typical
+                  cool–temperate conditions and average colony behaviour. Any comments about
+                  inspections, feeding, Varroa control or other treatments are purely advisory and
+                  are not instructions. Weather, forage, pollen and alert data come from third-party
+                  services and may be inaccurate or change at short notice. Conditions vary by
+                  region, altitude and micro-climate and every colony is different, so always use
+                  your own judgement and follow the product label, official guidance and advice from
+                  your local beekeeping association, Bee Inspectors, vets and experienced mentors.
+                  Do not rely on this panel alone when deciding whether to inspect, feed or treat
+                  your bees.
+                </p>
+                {beekeeperNotes.length ? (
+                  <>
+                    <ul className="space-y-1 text-xs text-gray-800">
+                      {beekeeperNotes.slice(0, 3).map((n, i) => (
+                        <li key={i} className="flex items-start gap-2">
+                          <span>{n.icon}</span>
+                          <span>{n.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="mt-2 text-[11px] text-gray-600">
+                      This is just a short preview.{" "}
+                      <Link to="/weather" className="text-blue-600 underline">
+                        View full Seasonal Beekeeper Notes and detailed weather →
+                      </Link>
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-xs text-gray-500">
+                    No special notes today.{" "}
+                    <Link to="/weather" className="text-blue-600 underline">
+                      Open the Weather page for full Seasonal Beekeeper Notes →
+                    </Link>
+                  </p>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Quick Actions */}
+      {dashboardSections.quickActions && (
+        <div className="bg-white rounded shadow p-4">
+          <h2 className="text-lg font-semibold mb-2">Quick Actions</h2>
+          <div className="space-x-4">
+            <Link to="/apiaries/new" className="text-blue-600 underline">
+              New Apiary
+            </Link>
+            <Link to="/hives/new" className="text-blue-600 underline">
+              New Hive
+            </Link>
+            <Link to="/inspections/new" className="text-blue-600 underline">
+              New Inspection
+            </Link>
+            {subscriptionLevel === "premium" && (
+              <Link to="/nfc" className="text-blue-600 underline">
+                Scan NFC Tag (Premium)
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -16,12 +16,18 @@ import {
   buildApiaryRows,
   buildHiveRows,
   buildInspectionRows,
+  buildQueenRows,
+  buildQueenAssignmentRows,
+  buildQueenEventRows,
+  buildQueenProcessRows,
+  buildQueenSnapshotRows,
   downloadApiariesCSV as exportApiariesCSV,
   downloadHivesCSV as exportHivesCSV,
   downloadInspectionsCSV as exportInspectionsCSV,
   downloadCombinedCSV as exportCombinedCSV,
   downloadTodosCSV as exportTodosCSV,
   downloadLogbookCSV as exportLogbookCSV,
+  downloadQueensCSV as exportQueensCSV,
   downloadNfcCSV as exportNfcCSV,
 } from "./utils/reportExports";
 import { formatDerivedWeather, getTempUnit } from "../../utils/formatDerivedWeather";
@@ -119,6 +125,8 @@ export default function PrintReport() {
   const [apiaries, setApiaries] = useState([]);
   const [hives, setHives] = useState([]);
   const [subscriptionLevel, setSubscriptionLevel] = useState("free");
+  const [hasQueenData, setHasQueenData] = useState(false);
+  const [checkingReportAccess, setCheckingReportAccess] = useState(true);
 
   const savedFiltersRef = useRef(getSavedReportFilters());
   const didAutoRunSavedReportRef = useRef(false);
@@ -139,6 +147,9 @@ export default function PrintReport() {
   const [includeLogbook, setIncludeLogbook] = useState(() =>
     boolFromSaved(savedFiltersRef.current.includeLogbook, true)
   );
+  const [includeQueens, setIncludeQueens] = useState(() =>
+    boolFromSaved(savedFiltersRef.current.includeQueens, true)
+  );
   const [includeNfc, setIncludeNfc] = useState(() =>
     boolFromSaved(savedFiltersRef.current.includeNfc, false)
   );
@@ -154,6 +165,16 @@ export default function PrintReport() {
     logbook: [],
     nfcHives: [],
     inspectionById: new Map(),
+    queenReport: {
+      queens: [],
+      assignments: [],
+      events: [],
+      processes: [],
+      snapshots: [],
+      currentByHive: [],
+      totalRecords: 0,
+      hasData: false,
+    },
   });
 
   const reportApiaries = reportData.apiaries;
@@ -163,10 +184,28 @@ export default function PrintReport() {
   const logbook = reportData.logbook;
   const nfcHives = reportData.nfcHives;
   const inspectionById = reportData.inspectionById;
+  const queenReport = reportData.queenReport || {
+    queens: [],
+    assignments: [],
+    events: [],
+    processes: [],
+    snapshots: [],
+    currentByHive: [],
+    totalRecords: 0,
+    hasData: false,
+  };
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const isPremium = subscriptionLevel === "premium";
+  const canUseQueenReports = isPremium || hasQueenData;
+  const queenOnlyAccess = !isPremium && hasQueenData;
+
+  const effectiveIncludeInspections = isPremium && includeInspections;
+  const effectiveIncludeTodos = isPremium && includeTodos;
+  const effectiveIncludeLogbook = isPremium && includeLogbook;
+  const effectiveIncludeQueens = canUseQueenReports && includeQueens;
+  const effectiveIncludeNfc = isPremium && includeNfc;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -182,6 +221,7 @@ export default function PrintReport() {
           includeInspections,
           includeTodos,
           includeLogbook,
+          includeQueens,
           includeNfc,
           activeTab,
         })
@@ -198,6 +238,7 @@ export default function PrintReport() {
     includeInspections,
     includeTodos,
     includeLogbook,
+    includeQueens,
     includeNfc,
     activeTab,
   ]);
@@ -207,38 +248,100 @@ export default function PrintReport() {
   }, [fromDate, toDate]);
 
   useEffect(() => {
-    (async () => {
-      const { data: userWrap } = await supabase.auth.getUser();
-      const uid = userWrap?.user?.id;
+    let cancelled = false;
 
-      if (!uid) {
-        setSubscriptionLevel("free");
-        return;
-      }
+    const loadReportAccess = async () => {
+      setCheckingReportAccess(true);
 
-      let profile = null;
+      try {
+        const { data: userWrap } = await supabase.auth.getUser();
+        const uid = userWrap?.user?.id;
 
-      const { data: profileById, error: profileByIdError } = await supabase
-        .from("profiles")
-        .select("subscription_level")
-        .eq("id", uid)
-        .maybeSingle();
+        if (!uid) {
+          if (cancelled) return;
 
-      if (!profileByIdError) {
-        profile = profileById;
-      } else {
-        const { data: profileByUserId } = await supabase
+          setSubscriptionLevel("free");
+          setHasQueenData(false);
+          setIncludeInspections(false);
+          setIncludeTodos(false);
+          setIncludeLogbook(false);
+          setIncludeQueens(false);
+          setIncludeNfc(false);
+          setActiveTab("summary");
+          return;
+        }
+
+        let profile = null;
+
+        const { data: profileById, error: profileByIdError } = await supabase
           .from("profiles")
           .select("subscription_level")
-          .eq("user_id", uid)
+          .eq("id", uid)
           .maybeSingle();
-        profile = profileByUserId;
-      }
 
-      const level = profile?.subscription_level || "free";
-      setSubscriptionLevel(level);
-      if (level !== "premium") setIncludeNfc(false);
-    })();
+        if (!profileByIdError && profileById) {
+          profile = profileById;
+        }
+
+        if (!profile) {
+          const { data: profileByUserId } = await supabase
+            .from("profiles")
+            .select("subscription_level")
+            .eq("user_id", uid)
+            .maybeSingle();
+
+          profile = profileByUserId;
+        }
+
+        const level = String(profile?.subscription_level || "free").toLowerCase();
+
+        const queenCounts = await Promise.all([
+          supabase.from("queens").select("id", { count: "exact", head: true }),
+          supabase.from("queen_assignments").select("id", { count: "exact", head: true }),
+          supabase.from("queen_processes").select("id", { count: "exact", head: true }),
+          supabase.from("queen_events").select("id", { count: "exact", head: true }),
+        ]);
+
+        if (cancelled) return;
+
+        const retainedQueenData = queenCounts.some(
+          (result) => !result.error && Number(result.count || 0) > 0
+        );
+
+        setSubscriptionLevel(level);
+        setHasQueenData(retainedQueenData);
+
+        if (level !== "premium") {
+          // Free users entering through retained Queen access must remain Queen-report-only.
+          setIncludeInspections(false);
+          setIncludeTodos(false);
+          setIncludeLogbook(false);
+          setIncludeNfc(false);
+          setIncludeQueens(retainedQueenData);
+          setActiveTab(retainedQueenData ? "queens" : "summary");
+        }
+      } catch (accessError) {
+        if (!cancelled) {
+          console.error("Unable to check report access:", accessError);
+          setSubscriptionLevel("free");
+          setHasQueenData(false);
+          setIncludeInspections(false);
+          setIncludeTodos(false);
+          setIncludeLogbook(false);
+          setIncludeQueens(false);
+          setIncludeNfc(false);
+          setActiveTab("summary");
+        }
+      } finally {
+        if (!cancelled) setCheckingReportAccess(false);
+      }
+    };
+
+    loadReportAccess();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
@@ -315,6 +418,8 @@ export default function PrintReport() {
   }, [apiaryId, hiveId, apiaryName, hives]);
 
   const runQuery = async () => {
+    if (checkingReportAccess) return;
+
     setLoading(true);
     setError("");
 
@@ -322,10 +427,11 @@ export default function PrintReport() {
       const nextReportData = await loadReportData({
         supabase,
         dayjs,
-        includeInspections,
-        includeTodos,
-        includeLogbook,
-        includeNfc,
+        includeInspections: effectiveIncludeInspections,
+        includeTodos: effectiveIncludeTodos,
+        includeLogbook: effectiveIncludeLogbook,
+        includeQueens: effectiveIncludeQueens,
+        includeNfc: effectiveIncludeNfc,
         includeArchived,
         isPremium,
         apiaryId,
@@ -336,7 +442,19 @@ export default function PrintReport() {
 
       setReportData(nextReportData);
       setHasGeneratedReport(true);
-      setActiveTab((current) => current || "summary");
+      setActiveTab((current) => {
+        const validTabs = [
+          ...(isPremium ? ["summary"] : []),
+          ...(effectiveIncludeInspections
+            ? ["insights", "timeline", "details", "photos"]
+            : []),
+          ...(effectiveIncludeTodos || effectiveIncludeLogbook ? ["tasks"] : []),
+          ...(effectiveIncludeQueens ? ["queens"] : []),
+        ];
+
+        const fallbackTab = effectiveIncludeQueens ? "queens" : "summary";
+        return validTabs.includes(current) ? current : fallbackTab;
+      });
     } catch (e) {
       console.error(e);
       setError(e.message || "Failed to load report data.");
@@ -431,7 +549,8 @@ export default function PrintReport() {
     inspections.length +
     todos.length +
     logbook.length +
-    nfcHives.length;
+    nfcHives.length +
+    Number(queenReport.totalRecords || 0);
 
   const galleryItemsForInspection = (inspection) =>
     (Array.isArray(inspection?.photos) ? inspection.photos : [])
@@ -579,30 +698,63 @@ export default function PrintReport() {
     });
   }, [inspections, apiaryName, inspectionById, intelligence]);
 
+  const queenRows = useMemo(
+    () => buildQueenRows({ queenReport, apiaryName, displayHive }),
+    [queenReport, apiaryName, hiveMap]
+  );
+
+  const queenAssignmentRows = useMemo(
+    () => buildQueenAssignmentRows({ queenReport, apiaryName, displayHive }),
+    [queenReport, apiaryName, hiveMap]
+  );
+
+  const queenEventRows = useMemo(
+    () => buildQueenEventRows({ queenReport, apiaryName, displayHive }),
+    [queenReport, apiaryName, hiveMap]
+  );
+
+  const queenProcessRows = useMemo(
+    () => buildQueenProcessRows({ queenReport, apiaryName, displayHive }),
+    [queenReport, apiaryName, hiveMap]
+  );
+
+  const queenSnapshotRows = useMemo(
+    () => buildQueenSnapshotRows({ queenReport, apiaryName, displayHive }),
+    [queenReport, apiaryName, hiveMap]
+  );
+
   const downloadApiariesCSV = () => {
+    if (!isPremium) return;
     exportApiariesCSV({
       apiaryRows,
     });
   };
 
   const downloadHivesCSV = () => {
+    if (!isPremium) return;
     exportHivesCSV({
       hiveRows,
     });
   };
 
   const downloadInspectionsCSV = () => {
+    if (!isPremium) return;
     exportInspectionsCSV({ inspectionRows });
   };
 
   const downloadCombinedCSV = () => {
     exportCombinedCSV({
-      apiaryRows,
-      hiveRows,
-      inspectionRows,
-      todos,
-      logbook,
-      nfcHives,
+      apiaryRows: isPremium ? apiaryRows : [],
+      hiveRows: isPremium ? hiveRows : [],
+      inspectionRows: isPremium ? inspectionRows : [],
+      todos: isPremium ? todos : [],
+      logbook: isPremium ? logbook : [],
+      nfcHives: isPremium ? nfcHives : [],
+      queenRows,
+      queenAssignmentRows,
+      queenEventRows,
+      queenProcessRows,
+      queenSnapshotRows,
       effectiveIds,
       apiaryName,
       displayHive,
@@ -612,6 +764,7 @@ export default function PrintReport() {
   };
 
   const downloadTodosCSV = () => {
+    if (!isPremium) return;
     exportTodosCSV({
       todos,
       effectiveIds,
@@ -623,6 +776,7 @@ export default function PrintReport() {
   };
 
   const downloadLogbookCSV = () => {
+    if (!isPremium) return;
     exportLogbookCSV({
       logbook,
       effectiveIds,
@@ -631,6 +785,11 @@ export default function PrintReport() {
       relatedInspectionLabel,
       fmtUK,
     });
+  };
+
+  const downloadQueensCSV = () => {
+    if (!canUseQueenReports) return;
+    exportQueensCSV({ queenRows });
   };
 
   const downloadNfcCSV = () => {
@@ -648,7 +807,11 @@ export default function PrintReport() {
     <div className="print-report-shell max-w-7xl mx-auto">
       <style>{`
         @media print {
-          @page { size: A4 portrait; margin: 12mm 12mm 15mm 12mm; }
+          @page {
+            size: A4 portrait;
+            margin: 12mm 12mm 15mm 12mm;
+          }
+
           html,
           body {
             background: white !important;
@@ -656,120 +819,167 @@ export default function PrintReport() {
             font-size: 10.5pt;
             line-height: 1.35;
           }
+
           h1,
           h2,
           h3,
-          h4{
-              page-break-after: avoid;
-              break-after: avoid;
-              color:#111827 !important;
-              margin-top:0;
+          h4 {
+            page-break-after: avoid;
+            break-after: avoid;
+            color: #111827 !important;
+            margin-top: 0;
           }
 
-          p{
-              orphans:3;
-              widows:3;
-              margin:0 0 4px 0;
+          p {
+            orphans: 3;
+            widows: 3;
+            margin: 0 0 4px 0;
           }
-          .no-print { display: none !important; }
-          .photo-modal { display: none !important; }
-          .print-report-shell { max-width: none !important; margin: 0 !important; }
+
+          .no-print,
+          .photo-modal {
+            display: none !important;
+          }
+
+          .print-report-shell {
+            max-width: none !important;
+            margin: 0 !important;
+          }
+
+          /*
+           * Keep only the report cover on its own page.
+           * PrintCover is the direct .print-card child of the report shell.
+           */
+          .print-report-shell > .print-card {
+            margin: 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+            border-radius: 0 !important;
+            page-break-after: always !important;
+            break-after: page !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+          }
+
+          /*
+           * Report sections may now use the remaining space on a page and
+           * continue naturally onto the next page instead of being moved
+           * forward as one large block.
+           */
           .print-card {
-            background:white !important;
-            padding:18px !important;
+            background: white !important;
+            padding: 14px !important;
             box-shadow: none !important;
             border: 1px solid #d1d5db !important;
-            border-radius: 12px !important;
-            break-inside: avoid !important;
-            page-break-inside: avoid !important;
-            -webkit-column-break-inside: avoid !important;
-            margin-bottom: 10mm !important;
+            border-radius: 8px !important;
+            page-break-inside: auto !important;
+            break-inside: auto !important;
+            margin: 0 0 5mm 0 !important;
           }
-          details,
-          article,
+
           section,
+          details {
+            page-break-inside: auto !important;
+            break-inside: auto !important;
+          }
+
+          /*
+           * Keep smaller, self-contained records together where practical.
+           * Browsers may still split an item if it is taller than one page.
+           */
+          article,
           figure,
-          .print-summary-card {
-            break-inside: avoid !important;
+          .print-summary-card,
+          .print-field,
+          .break-inside-avoid {
             page-break-inside: avoid !important;
-            -webkit-column-break-inside: avoid !important;
+            break-inside: avoid !important;
           }
 
           img {
-            break-inside: avoid !important;
+            max-width: 100%;
             page-break-inside: avoid !important;
-          }
-          .page-break { page-break-before: always; }
-          .print-brand-bar { background: #14532d !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-          .print-summary-card { break-inside: avoid; }
-          .print-photo{
-              page-break-inside: avoid;
-              break-inside: avoid;
-              display:block;
-              width:100%;
-              height:110px;
-              object-fit:cover;
-              border-radius:8px;
-          }
-                    summary{
-              list-style:none;
-          }
-          .print-page{
-              page-break-before:auto;
+            break-inside: avoid !important;
           }
 
-          @media print{
-              .print-page{
-                  page-break-before:always;
-                  break-before:page;
-              }
-
-              .print-page:first-child{
-                  page-break-before:auto;
-                  break-before:auto;
-              }
-          }
-          summary::-webkit-details-marker{
-              display:none;
-          }
-          details { break-inside: avoid; }
-          summary::-webkit-details-marker { display: none; }
-          table{
-              width:100%;
-              border-collapse:collapse;
-              page-break-inside:auto;
+          /*
+           * Do not force every selected report section onto a fresh page.
+           * A modest gap is retained between consecutive major sections.
+           */
+          .print-page {
+            page-break-before: auto !important;
+            break-before: auto !important;
           }
 
-          thead{
-              display:table-header-group;
+          .print-page + .print-page {
+            margin-top: 6mm !important;
           }
 
-          tfoot{
-              display:table-footer-group;
+          .page-break {
+            page-break-before: always;
+            break-before: page;
           }
 
-          tr{
-              page-break-inside:avoid;
+          .print-brand-bar {
+            background: #14532d !important;
+            color: #fff !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+
+          .print-summary-card {
+            background: white !important;
+          }
+
+          .print-photo {
+            display: block;
+            width: 100%;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 8px;
+            page-break-inside: avoid;
+            break-inside: avoid;
+          }
+
+          summary {
+            list-style: none;
+            page-break-after: avoid;
+            break-after: avoid;
+          }
+
+          summary::-webkit-details-marker {
+            display: none;
+          }
+
+          .overflow-x-auto {
+            overflow: visible !important;
+          }
+
+          table {
+            width: 100%;
+            border-collapse: collapse;
+            page-break-inside: auto;
+            break-inside: auto;
+          }
+
+          thead {
+            display: table-header-group;
+          }
+
+          tfoot {
+            display: table-footer-group;
+          }
+
+          tr {
+            page-break-inside: avoid;
+            break-inside: avoid;
           }
 
           th,
-          td{
-              padding:8px 6px;
-              vertical-align:top;
-              border-bottom:1px solid #e5e7eb;
-          }
-
-                    .print-field{
-              break-inside: avoid;
-              page-break-inside: avoid;
-          }
-
-          .print-summary-card{
-              background:white !important;
-          }
-
-          img{
-              max-width:100%;
+          td {
+            padding: 7px 6px;
+            vertical-align: top;
+            border-bottom: 1px solid #e5e7eb;
           }
         }
       `}</style>
@@ -809,11 +1019,14 @@ export default function PrintReport() {
         setIncludeTodos={setIncludeTodos}
         includeLogbook={includeLogbook}
         setIncludeLogbook={setIncludeLogbook}
+        includeQueens={includeQueens}
+        setIncludeQueens={setIncludeQueens}
         includeNfc={includeNfc}
         setIncludeNfc={setIncludeNfc}
         isPremium={isPremium}
+        hasQueenData={hasQueenData}
         runQuery={runQuery}
-        loading={loading}
+        loading={loading || checkingReportAccess}
         error={error}
       />
 
@@ -836,11 +1049,23 @@ export default function PrintReport() {
             todos={todos}
             logbook={logbook}
             nfcHives={nfcHives}
+            queenCount={queenRows.length}
+            isPremium={isPremium}
+            includeQueens={effectiveIncludeQueens}
+            includeNfc={effectiveIncludeNfc}
             photoCount={summary.photoCount}
             generatedAt={generatedAt}
           />
 
-          <ReportTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+          <ReportTabs
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            isPremium={isPremium}
+            includeInspections={effectiveIncludeInspections}
+            includeTodos={effectiveIncludeTodos}
+            includeLogbook={effectiveIncludeLogbook}
+            includeQueens={effectiveIncludeQueens}
+          />
 
           <PrintCover
             reportScope={reportScope}
@@ -853,6 +1078,10 @@ export default function PrintReport() {
             inspections={inspections}
             todos={todos}
             logbook={logbook}
+            queenCount={queenRows.length}
+            isPremium={isPremium}
+            queenOnlyAccess={queenOnlyAccess}
+            includeQueens={effectiveIncludeQueens}
             photoCount={summary.photoCount}
           />
 
@@ -866,9 +1095,14 @@ export default function PrintReport() {
             inspections={inspections}
             todos={todos}
             logbook={logbook}
+            queenReport={queenReport}
             nfcHives={nfcHives}
             isPremium={isPremium}
-            includeNfc={includeNfc}
+            includeInspections={effectiveIncludeInspections}
+            includeTodos={effectiveIncludeTodos}
+            includeLogbook={effectiveIncludeLogbook}
+            includeQueens={effectiveIncludeQueens}
+            includeNfc={effectiveIncludeNfc}
             apiaryName={apiaryName}
             summary={summary}
             latestInspection={latestInspection}
@@ -892,19 +1126,22 @@ export default function PrintReport() {
           <ExportCentre
             apiaries={reportApiaries}
             hives={reportHives}
-            loading={loading}
+            loading={loading || checkingReportAccess}
             totalRecords={totalRecords}
             inspections={inspections}
             todos={todos}
             logbook={logbook}
             nfcHives={nfcHives}
+            queenRows={queenRows}
             isPremium={isPremium}
-            includeNfc={includeNfc}
+            includeQueens={effectiveIncludeQueens}
+            includeNfc={effectiveIncludeNfc}
             downloadApiariesCSV={downloadApiariesCSV}
             downloadHivesCSV={downloadHivesCSV}
             downloadInspectionsCSV={downloadInspectionsCSV}
             downloadTodosCSV={downloadTodosCSV}
             downloadLogbookCSV={downloadLogbookCSV}
+            downloadQueensCSV={downloadQueensCSV}
             downloadNfcCSV={downloadNfcCSV}
             downloadCombinedCSV={downloadCombinedCSV}
             handlePrint={handlePrint}

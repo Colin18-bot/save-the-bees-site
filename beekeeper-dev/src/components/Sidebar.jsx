@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
 // APP_VERSION=1.2.3
-const APP_VERSION = "1.3.0";
+const APP_VERSION = "1.4.0";
 
 const Sidebar = ({ setIsMobileMenuOpen }) => {
   const [quickCreateOpen, setQuickCreateOpen] = useState(true);
@@ -12,6 +12,7 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
   const [subscriptionLevel, setSubscriptionLevel] = useState(
     () => localStorage.getItem("subscription_level") || "free"
   );
+  const [hasRetainedQueenData, setHasRetainedQueenData] = useState(false);
 
   const navigate = useNavigate();
 
@@ -23,32 +24,58 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    setHasRetainedQueenData(false);
     localStorage.clear();
     alert("You have been logged out successfully.");
     navigate("/login");
   };
 
-  // Fetch fresh plan from Supabase and sync to localStorage
+  // Fetch the current plan and retained Queen-data access from Supabase.
   const refreshPlan = useCallback(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
+
     if (!user) {
       setSubscriptionLevel("free");
+      setHasRetainedQueenData(false);
       localStorage.setItem("subscription_level", "free");
       return;
     }
+
     const { data: profile, error } = await supabase
       .from("profiles")
       .select("subscription_level")
       .eq("user_id", user.id)
       .maybeSingle();
 
-    const next = profile?.subscription_level || "free";
-    if (!error) {
-      setSubscriptionLevel(next);
-      localStorage.setItem("subscription_level", next);
+    if (error) {
+      console.error("Unable to refresh Sidebar access:", error);
+      setHasRetainedQueenData(false);
+      return;
     }
+
+    const next = String(profile?.subscription_level || "free").toLowerCase();
+    setSubscriptionLevel(next);
+    localStorage.setItem("subscription_level", next);
+
+    if (next === "premium") {
+      setHasRetainedQueenData(false);
+      return;
+    }
+
+    const queenCounts = await Promise.all([
+      supabase.from("queens").select("id", { count: "exact", head: true }),
+      supabase.from("queen_assignments").select("id", { count: "exact", head: true }),
+      supabase.from("queen_processes").select("id", { count: "exact", head: true }),
+      supabase.from("queen_events").select("id", { count: "exact", head: true }),
+    ]);
+
+    const retainedDataExists = queenCounts.some(
+      (result) => !result.error && Number(result.count || 0) > 0
+    );
+
+    setHasRetainedQueenData(retainedDataExists);
   }, []);
 
   useEffect(() => {
@@ -60,21 +87,30 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
       refreshPlan();
     });
 
-    // 3) If other tabs/windows update localStorage
+    // 3) If this tab or another tab updates the subscription.
+    const onSubscriptionUpdated = () => {
+      refreshPlan();
+    };
+
     const onStorage = (e) => {
       if (e.key === "subscription_level" && e.newValue) {
         setSubscriptionLevel(e.newValue);
+        refreshPlan();
       }
     };
+
+    window.addEventListener("subscription:updated", onSubscriptionUpdated);
     window.addEventListener("storage", onStorage);
 
     return () => {
       sub?.subscription?.unsubscribe?.();
+      window.removeEventListener("subscription:updated", onSubscriptionUpdated);
       window.removeEventListener("storage", onStorage);
     };
   }, [refreshPlan]);
 
   const userIsPremium = subscriptionLevel === "premium";
+  const canAccessQueenRecords = userIsPremium || hasRetainedQueenData;
 
   // Core (beekeeping) navigation
   const coreTopNavItems = [
@@ -106,8 +142,11 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     { to: "/apiaries", label: "Apiaries" },
     { to: "/hives", label: "Hives" },
     { to: "/inspections", label: "Inspections" },
-    userIsPremium
-      ? { to: "/queens", label: "Queens" }
+    canAccessQueenRecords
+      ? {
+          to: "/queens",
+          label: userIsPremium ? "Queens" : "Queens (Read only)",
+        }
       : { to: "/queens", label: "🔒 Queens", lockedPremium: true },
     { to: "/logbook", label: "Hive Logbook" },
     { to: "/todos", label: "Tasks" },
@@ -137,21 +176,23 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
       : []),
   ];
 
-const businessListLinks = userIsPremium
-  ? [
-      { to: "/inventory", label: "Inventory" },
-      { to: "/sales", label: "Sales" },
-      { to: "/finance/expenses", label: "Expenses" },
-      { to: "/reports/pnl", label: "Profit & Loss" },
-      { to: "/reports/print", label: "Reports Centre" },
-    ]
-  : [
-      { to: "/premium-required", label: "🔒 Inventory", lockedPremium: true },
-      { to: "/premium-required", label: "🔒 Sales", lockedPremium: true },
-      { to: "/premium-required", label: "🔒 Expenses", lockedPremium: true },
-      { to: "/premium-required", label: "🔒 Profit & Loss", lockedPremium: true },
-      { to: "/premium-required", label: "🔒 Reports", lockedPremium: true },
-    ];
+  const businessListLinks = userIsPremium
+    ? [
+        { to: "/inventory", label: "Inventory" },
+        { to: "/sales", label: "Sales" },
+        { to: "/finance/expenses", label: "Expenses" },
+        { to: "/reports/pnl", label: "Profit & Loss" },
+        { to: "/reports/print", label: "Reports Centre" },
+      ]
+    : [
+        { to: "/premium-required", label: "🔒 Inventory", lockedPremium: true },
+        { to: "/premium-required", label: "🔒 Sales", lockedPremium: true },
+        { to: "/premium-required", label: "🔒 Expenses", lockedPremium: true },
+        { to: "/premium-required", label: "🔒 Profit & Loss", lockedPremium: true },
+        hasRetainedQueenData
+          ? { to: "/reports/print", label: "Queen Reports (Read only)" }
+          : { to: "/premium-required", label: "🔒 Reports", lockedPremium: true },
+      ];
 
  const businessQuickCreate = userIsPremium
   ? [

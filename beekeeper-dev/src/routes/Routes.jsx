@@ -112,6 +112,12 @@ const PremiumGuarded = ({ children }) => (
   </ProtectedRoute>
 );
 
+const QueenReportsGuarded = ({ children }) => (
+  <ProtectedRoute minPlan="premium" allowRetainedQueenData>
+    <Layout>{children}</Layout>
+  </ProtectedRoute>
+);
+
 function AppRoutes() {
   const location = useLocation();
 
@@ -214,7 +220,7 @@ function AppRoutes() {
 
       {/* Reports */}
       <Route path="/reports/pnl" element={<PremiumGuarded><ProfitLoss /></PremiumGuarded>} />
-      <Route path="/reports/print" element={<PremiumGuarded><PrintReport /></PremiumGuarded>} />
+      <Route path="/reports/print" element={<QueenReportsGuarded><PrintReport /></QueenReportsGuarded>} />
 
       {/* Release Notes */}
       <Route path="/updates" element={<Guarded><Updates /></Guarded>} />

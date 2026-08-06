@@ -9,6 +9,7 @@ const toc = [
   { id: "getting-started", title: "Getting Started" },
   { id: "siting-guides", title: "Apiary & Hive Siting Guides" },
   { id: "navigation", title: "Navigation Overview" },
+  { id: "queens", title: "Queen Records & Colony Lifecycle" },
   { id: "apiary-map-markers", title: "Apiary Map Markers (Map Notes)" },
   { id: "bee-health-helper", title: "Colony Health Check (Bee Health Helper)" },
   { id: "hive-health", title: "Hive Health" },
@@ -56,12 +57,13 @@ export default function Help() {
         <header className="mb-8">
           <h2 className="text-3xl font-bold">HiveTag Help &amp; How-To</h2>
           <p className="mt-2 text-gray-600">
-            Clear, practical guidance for every part of HiveTag—from your first apiary to NFC tag
-            setup and inspections.
+            Clear, practical guidance for every part of HiveTag—from your first apiary and inspection
+            to Queen lifecycle records, reports and NFC tag setup.
           </p>
           <p className="mt-2 text-sm text-gray-600">
-            Features labeled <Badge tone="blue">Premium</Badge> require a Premium plan. Free plan
-            limits are summarised below.
+            Features labelled <Badge tone="blue">Premium</Badge> require a Premium plan. If you
+            downgrade, existing Queen Records remain available in{" "}
+            <Badge tone="amber">Read only</Badge> mode and can still be reported and exported.
           </p>
         </header>
 
@@ -84,6 +86,17 @@ export default function Help() {
                     <dd className="text-gray-700">
                       Record what you observed during a hive visit, including queen evidence, brood,
                       stores, varroa, disease signs, notes and photos.
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt className="font-medium text-gray-900">
+                      Queen Records <Badge tone="blue">Premium</Badge>
+                    </dt>
+                    <dd className="text-gray-700">
+                      Track current and previous Queens, splits and transfers, introductions,
+                      Queenless periods and requeening history. Retained records remain{" "}
+                      <Badge tone="amber">Read only</Badge> after downgrade.
                     </dd>
                   </div>
 
@@ -128,8 +141,9 @@ export default function Help() {
                       Reports Centre <Badge tone="blue">Premium</Badge>
                     </dt>
                     <dd className="text-gray-700">
-                      Produce printable reports, inspection histories, photographs and filtered CSV
-                      exports.
+                      Build, review, print and export filtered reports. Free members with retained
+                      Queen data can continue using Queen Reports in{" "}
+                      <Badge tone="amber">Read only</Badge> mode.
                     </dd>
                   </div>
 
@@ -216,6 +230,19 @@ export default function Help() {
                   brood, stores, disease/pests, notes, photos).
                 </li>
                 <li>
+                  <strong>Queen Record</strong> — the identity and details of a Queen, including her
+                  reference, year, marking colour, status and notes.
+                </li>
+                <li>
+                  <strong>Queen Assignment</strong> — the period during which a Queen is associated
+                  with a particular hive. Moving a Queen creates a new assignment without rewriting
+                  the earlier history.
+                </li>
+                <li>
+                  <strong>Queen Transition</strong> — a managed process such as introducing a Queen,
+                  recording a split, waiting for mating or managing a Queenless colony.
+                </li>
+                <li>
                   <strong>Tasks</strong> — scheduled actions with a due date and status; can
                   reference an apiary, hive, and related inspection.
                 </li>
@@ -230,8 +257,9 @@ export default function Help() {
                 </li>
               </ul>
               <p className="mt-3 text-gray-700">
-                Relationship: <em>Apiary → Hives → Inspections</em>. Tasks and Logbook entries can
-                also be linked back to a related inspection.
+                Relationship: <em>Apiary → Hives → Inspections</em>. Queen assignments and lifecycle
+                history belong to hives, while Tasks and Logbook entries can also be linked back to a
+                related inspection.
               </p>
             </section>
 
@@ -268,11 +296,19 @@ export default function Help() {
                       <li>
                         <strong>Export my data (CSV)</strong> via <em>Settings → Export</em>
                       </li>
+                      <li>
+                        <strong>Retained Queen Records after downgrade:</strong> existing Queen data
+                        and Queen Reports remain available in <Badge tone="amber">Read only</Badge>{" "}
+                        mode. A Free account with no retained Queen data does not receive the Queen
+                        feature.
+                      </li>
                     </ul>
                     <p className="mt-2 text-sm text-gray-600">
                       If you downgrade from Premium to Free, we keep{" "}
                       <strong>1 active apiary</strong> (preferring your <em>default apiary</em>) and
-                      up to <strong>2 active hives</strong> in it. The rest are auto-archived.
+                      up to <strong>2 active hives</strong> in it. The rest are auto-archived. Queen
+                      lifecycle data is retained, but adding, editing and progressing Queen records is
+                      disabled until Premium is restored.
                     </p>
                   </div>
                   <div className="p-4">
@@ -302,8 +338,13 @@ export default function Help() {
                         and site notes on apiary maps
                       </li>
                       <li>
-                        <strong>Reports &amp; Exports</strong>, including printable reports and
-                        filtered CSV exports
+                        <strong>Queen Records and colony lifecycle management</strong>: current and
+                        previous Queens, assignments, introductions, splits, transfers, Queenless
+                        workflows, events and inspection snapshots
+                      </li>
+                      <li>
+                        <strong>Reports &amp; Exports</strong>, including multi-section printable
+                        reports, Queen reports, filtered CSV files and Excel workbooks
                       </li>
                       <li>
                         <strong>Inventory, Sales, Expenses and Profit &amp; Loss</strong>
@@ -367,6 +408,12 @@ export default function Help() {
                   <strong>Log an Inspection:</strong>{" "}
                   <span className="text-gray-700">Inspections → New Inspection</span>. Weather
                   auto-fills from the apiary’s coordinates for that date. <Badge>Free</Badge>
+                </li>
+                <li>
+                  <strong>Add the current Queen:</strong>{" "}
+                  <span className="text-gray-700">Queens → Add Queen</span>. Record the Queen’s
+                  reference, year, colour and current hive so future splits, transfers and changes have
+                  a clear starting point. <Badge tone="blue">Premium</Badge>
                 </li>
                 <li>
                   <strong>Review Hive Health:</strong>{" "}
@@ -457,8 +504,14 @@ export default function Help() {
                   <h3 className="font-semibold">Dashboard</h3>
                   <ul className="list-disc pl-6">
                     <li>
-                      <strong>Filter by Apiary</strong> to scope stats and recent items;{" "}
-                      <em>Apiaries</em> count stays global.
+                      <strong>Filter by Apiary and Hive</strong> to scope statistics, Queen status,
+                      recent records and report links. The Hive list follows the selected Apiary, while
+                      the <em>Apiaries</em> count remains global.
+                    </li>
+                    <li>
+                      <strong>Customise Dashboard:</strong> choose which sections appear. Your choices
+                      are saved on the current device and remain after refresh or sign-in. Use{" "}
+                      <strong>Restore recommended layout</strong> to return to the default selection.
                     </li>
                     <li>
                       <strong>Recent sections (Inspections, Tasks, Logbook):</strong> “
@@ -505,10 +558,16 @@ export default function Help() {
                       declining trends at a glance.
                     </li>
                     <li>
-                      <strong>Reports &amp; Export card</strong> <Badge tone="blue">Premium</Badge>:
-                      opens the <em>Reports &amp; Exports</em> page, where you can print
-                      multi-section reports and download CSVs using the same Apiary/Hive/date
-                      filters.
+                      <strong>Queen Status:</strong> shows current Queens, transitions and hives that
+                      may need attention for the selected filters. Premium members can manage Queen
+                      Records; downgraded members with retained data can open them in{" "}
+                      <Badge tone="amber">Read only</Badge> mode.
+                    </li>
+                    <li>
+                      <strong>Reports &amp; Export card:</strong> Premium members can open the full
+                      Reports Centre. A Free member with retained Queen data sees{" "}
+                      <strong>Open Queen Reports</strong> and can use Queen reporting only in{" "}
+                      <Badge tone="amber">Read only</Badge> mode.
                     </li>
                     <li>
                       <strong>NFC summary (Premium):</strong> Premium users see an{" "}
@@ -582,6 +641,32 @@ export default function Help() {
                 </div>
 
                 <div>
+                  <h3 className="font-semibold">
+                    Queens <Badge tone="blue">Premium</Badge>
+                  </h3>
+                  <ul className="list-disc pl-6">
+                    <li>
+                      Filter Queen Records by <strong>apiary</strong> and <strong>hive</strong> to
+                      review the current Queen and the full colony lifecycle history.
+                    </li>
+                    <li>
+                      Use the page tabs to review <strong>History</strong>, <strong>Add Queen</strong>,
+                      <strong>Record Split</strong>, <strong>Introduce Queen</strong> and{" "}
+                      <strong>Edit</strong> details where the current record allows it.
+                    </li>
+                    <li>
+                      Recording a split or transfer moves the Queen and her history to the destination
+                      hive, while the source hive becomes Queenless. Earlier records remain unchanged.
+                    </li>
+                    <li>
+                      Downgraded members with retained Queen data see{" "}
+                      <strong>Queens (Read only)</strong>. Records and history remain visible, but add,
+                      edit, transition, archive and delete controls are unavailable.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
                   <h3 className="font-semibold">Inspections</h3>
                   <ul className="list-disc pl-6">
                     <li>
@@ -603,13 +688,18 @@ export default function Help() {
                       inspection.
                     </li>
                     <li>
-                      <strong>Deleting inspections:</strong> if an inspection has linked tasks or
-                      logbook entries, HiveTag will warn you and offer to archive instead so the
-                      related records stay together.
+                      <strong>Queen snapshot:</strong> when Queen information is available, an
+                      inspection keeps a snapshot of the Queen context recorded at that time. Later
+                      Queen changes do not rewrite the historical inspection.
+                    </li>
+                    <li>
+                      <strong>Deleting inspections:</strong> permanent deletion removes the inspection
+                      and its inspection photos. Linked Tasks and Logbook entries are preserved, but
+                      their link to the deleted inspection is cleared.
                     </li>
                     <li>
                       <strong>Archiving inspections:</strong> archiving an inspection also archives
-                      linked tasks and logbook entries.
+                      linked Tasks and Logbook entries, preserving the relationship for later review.
                     </li>
                     <li>
                       <strong>Open Hive Health</strong> <Badge tone="blue">Premium</Badge>: after
@@ -832,6 +922,132 @@ export default function Help() {
                     hives active limits.
                   </p>
                 </div>
+              </div>
+            </section>
+
+            {/* Queen Records */}
+            <section id="queens">
+              <h2 className="text-2xl font-bold mb-3">
+                Queen Records &amp; Colony Lifecycle <Badge tone="blue">Premium</Badge>
+              </h2>
+
+              <p className="text-gray-700">
+                Queen Records provide a dedicated history for each colony rather than relying only on
+                short Queen observations inside inspections. They show who the current Queen is, where
+                she has been assigned, what changed, and which Queen process is still in progress.
+              </p>
+
+              <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">What you can record</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                    <li>Queen reference, year, marking colour, status and notes.</li>
+                    <li>Current and previous Queen assignments for each hive.</li>
+                    <li>Introductions, acceptance checks, mating progress and failed outcomes.</li>
+                    <li>Splits and Queen transfers between hives.</li>
+                    <li>Queenless periods, frames of eggs and requeening activity.</li>
+                    <li>Lifecycle events and actions without altering earlier history.</li>
+                  </ul>
+                </div>
+
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Queen status and colour reference</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                    <li>
+                      Statuses can include mated, virgin, introduced with acceptance pending,
+                      Queenless, failed and requeened.
+                    </li>
+                    <li>
+                      HiveTag shows the standard year-colour cycle: White for years ending 1 or 6,
+                      Yellow for 2 or 7, Red for 3 or 8, Green for 4 or 9, and Blue for 5 or 0.
+                    </li>
+                    <li>
+                      You can record the actual marking colour separately when it differs or is not
+                      known.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">Common Queen workflows</h3>
+                <ol className="mt-2 list-decimal pl-6 space-y-1 text-gray-700">
+                  <li>
+                    <strong>Add a known Queen:</strong> create the Queen and assign her to the current
+                    hive.
+                  </li>
+                  <li>
+                    <strong>Record a split:</strong> choose the source and destination hives. The
+                    selected Queen moves with her history and the source colony becomes Queenless.
+                  </li>
+                  <li>
+                    <strong>Introduce a Queen:</strong> record whether she is purchased, mated or
+                    virgin, then follow the acceptance and mating actions shown by HiveTag.
+                  </li>
+                  <li>
+                    <strong>Manage a Queenless colony:</strong> record the chosen route, such as
+                    introducing a Queen, adding a frame of eggs or allowing a colony-led transition.
+                  </li>
+                  <li>
+                    <strong>Record the outcome:</strong> complete, fail or replace the process without
+                    deleting the history that led to the result.
+                  </li>
+                </ol>
+              </div>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">History and inspection snapshots</h3>
+                <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                  <li>
+                    Queen history includes assignments, lifecycle events and managed processes in
+                    date order.
+                  </li>
+                  <li>
+                    Inspection snapshots preserve the Queen information associated with an inspection
+                    at the time it was recorded.
+                  </li>
+                  <li>
+                    In Queen Reports, the <strong>current Queen position</strong> is shown separately
+                    from historical activity. Date filters apply to assignments, events, processes and
+                    snapshots, but do not pretend that an earlier date range is the current position.
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-4 rounded border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+                <div className="font-semibold">What happens after a downgrade?</div>
+                <p className="mt-1">
+                  Existing Queen data is retained. The Sidebar shows{" "}
+                  <strong>Queens (Read only)</strong> and{" "}
+                  <strong>Queen Reports (Read only)</strong>. You can review history, print it and
+                  export Queen CSV/Excel data, but you cannot add, edit, progress, archive or delete
+                  Queen lifecycle records. Resubscribing restores the management controls.
+                </p>
+              </div>
+
+              <div className="mt-4 rounded border bg-white p-4">
+                <h3 className="font-semibold">Archiving and deletion</h3>
+                <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                  <li>
+                    Archiving an Apiary or Hive coordinates the linked Queen lifecycle records with the
+                    same archive action so active lists remain consistent.
+                  </li>
+                  <li>
+                    Restoring a parent record restores linked lifecycle information where the current
+                    plan allows it.
+                  </li>
+                  <li>
+                    Permanent deletion is different from archiving and removes the linked lifecycle
+                    data covered by that deletion. Use Archive when the history may still be needed.
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-4 text-sm text-gray-600">
+                Quick link:{" "}
+                <Link to="/queens" className="text-blue-700 underline">
+                  Open Queen Records
+                </Link>
               </div>
             </section>
 
@@ -1360,63 +1576,103 @@ export default function Help() {
               </h2>
 
               <p className="mb-4 text-gray-700">
-                The Reports Centre allows Premium users to generate professional, printable reports
-                and exports for individual hives, apiaries or selected date ranges. Reports combine
-                inspection records, Hive Intelligence, photographs, tasks and logbook entries into a
-                single, easy-to-read report for your own records or to share with other beekeepers.
+                The Reports Centre follows a three-step workflow. You first choose what to load, then
+                review the generated report, and finally export or print that same loaded dataset.
+                Exports do not run a separate Supabase query, so the screen, CSV, Excel and print
+                output remain aligned.
               </p>
 
-              <ul className="list-disc pl-6 space-y-1">
-                <li>
-                  Open <strong>Reports Centre</strong> from the Sidebar to access professional
-                  reports and exports.
-                </li>
-                <li>
-                  Filter reports by <strong>apiary</strong>, <strong>hive</strong> and{" "}
-                  <strong>date range</strong>.
-                </li>
-                <li>
-                  Reports include an <strong>Executive Summary</strong>,
-                  <strong> Hive Intelligence</strong>, an <strong>Inspection Timeline</strong>,
-                  detailed inspection records, photographs, tasks, logbook entries, and recommended
-                  actions generated from your recorded inspection history.
-                </li>
-                <li>
-                  Inspection findings are grouped by date so each inspection is easier to review.
-                </li>
-                <li>
-                  Use <strong>View Full Gallery</strong> to open inspection photographs in a larger
-                  viewer.
-                </li>
-                <li>Photographs can be downloaded from the gallery.</li>
-                <li>
-                  Inspection summaries can be shared using your device’s native sharing feature
-                  where supported.
-                </li>
-                <li>
-                  Your selected filters are automatically remembered when you return to the Reports
-                  Centre.
-                </li>
-                <li>
-                  Download CSV exports, including combined exports and separate files for
-                  inspections, tasks, logbook entries and NFC tags.
-                </li>
-              </ul>
+              <div className="space-y-4">
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Step 1 — Build Your Report</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                    <li>
+                      Choose an <strong>Apiary</strong>, <strong>Hive</strong>,{" "}
+                      <strong>From</strong> date and <strong>To</strong> date.
+                    </li>
+                    <li>
+                      Choose whether archived records should be included.
+                    </li>
+                    <li>
+                      Premium members can include Inspections, Tasks, Logbook, Queen Records and NFC
+                      tags.
+                    </li>
+                    <li>
+                      Press <strong>Generate / Refresh Report</strong> to load the selected data once.
+                    </li>
+                    <li>
+                      Saved report filters are remembered when you return to the page.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Step 2 — Review Report</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                    <li>
+                      The screen remains tabbed so large reports are easier to review.
+                    </li>
+                    <li>
+                      Available content can include the Executive Summary, Hive Intelligence,
+                      Inspection Timeline, detailed records, photographs, Tasks, Logbook and Queen
+                      Records.
+                    </li>
+                    <li>
+                      Queen reporting separates the current Queen position from historical
+                      assignments, events, processes and inspection snapshots.
+                    </li>
+                    <li>
+                      Inspection photographs can be opened in the full gallery and downloaded.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Step 3 — Export &amp; Print</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                    <li>Download individual CSV files for the included report sections.</li>
+                    <li>
+                      Download a complete Excel workbook. Queen workbooks can contain{" "}
+                      <strong>Queens</strong>, <strong>Queen Assignments</strong>,{" "}
+                      <strong>Queen Events</strong>, <strong>Queen Processes</strong> and{" "}
+                      <strong>Queen Snapshots</strong> worksheets.
+                    </li>
+                    <li>
+                      Print all selected sections as one report or save the browser print output as a
+                      PDF.
+                    </li>
+                    <li>
+                      The print layout avoids forcing every selected section onto a new page and does
+                      not add automatic page numbering.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+                <div className="font-semibold">Free members with retained Queen data</div>
+                <p className="mt-1">
+                  A downgraded member with existing Queen data can open{" "}
+                  <strong>Queen Reports (Read only)</strong>. Step 1 shows only{" "}
+                  <strong>Include archived</strong> and <strong>Queen Records</strong>. The review,
+                  Queen CSV, Queen-only Excel workbook and print output contain Queen information
+                  only. Inspections, Tasks, Logbook, NFC and other report exports remain Premium.
+                </p>
+              </div>
 
               <div className="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
                 <h3 className="font-semibold text-blue-900">Tips for better reports</h3>
                 <ul className="list-disc pl-6 mt-2 space-y-1 text-blue-900">
-                  <li>Complete as many inspection fields as possible.</li>
+                  <li>Complete as many inspection and Queen fields as possible.</li>
                   <li>Add photographs during inspections.</li>
-                  <li>Use date filters for seasonal or annual reports.</li>
-                  <li>Review the Hive Intelligence summary for each inspection.</li>
+                  <li>Use date filters for seasonal, annual or lifecycle reviews.</li>
                   <li>
-                    Share inspection summaries with mentors or fellow beekeepers when seeking
-                    advice.
+                    Use the Apiary and Hive filters to keep a shared or printed report focused on the
+                    intended colony.
                   </li>
                   <li>
-                    Hive Intelligence becomes more informative as additional inspections are
-                    recorded, allowing long-term colony trends to be identified.
+                    Generate the report again after changing filters or included sections, then export
+                    from the refreshed result.
                   </li>
                 </ul>
               </div>
@@ -1553,6 +1809,30 @@ export default function Help() {
                     <li>Create follow-up tasks where appropriate.</li>
                   </ol>
                 </div>
+
+                <div>
+                  <h3 className="font-semibold">
+                    E) Recording a Queen change <Badge tone="blue">Premium</Badge>
+                  </h3>
+
+                  <ol className="list-decimal pl-6 space-y-1 text-gray-700">
+                    <li>Open <strong>Queens</strong> and select the relevant Apiary and Hive.</li>
+                    <li>
+                      Choose the matching action, such as <strong>Add Queen</strong>,{" "}
+                      <strong>Record Split</strong> or <strong>Introduce Queen</strong>.
+                    </li>
+                    <li>Record the Queen, source/destination hive and date of the change.</li>
+                    <li>
+                      Follow any acceptance, mating or Queenless next action shown by the lifecycle
+                      process.
+                    </li>
+                    <li>
+                      Record the outcome rather than overwriting the earlier history. The Dashboard
+                      and Queen Reports will then reflect the current position and the historical
+                      sequence.
+                    </li>
+                  </ol>
+                </div>
               </div>
             </section>
 
@@ -1682,14 +1962,16 @@ export default function Help() {
               <ul className="list-disc pl-6 space-y-1">
                 <li>
                   <strong>Dashboard counts:</strong> Apiaries = global <em>active</em> apiaries;
-                  Hives/Inspections/Tasks/Logbook respect the selected apiary filter.
+                  Hives/Inspections/Tasks/Logbook and Queen Status respect the selected Apiary and Hive
+                  filters.
                 </li>
                 <li>
                   <strong>Date ranges:</strong> some list and export screens let you set{" "}
                   <strong>From</strong> and <strong>To</strong> dates.
                 </li>
                 <li>
-                  <strong>Exports from Reports:</strong> respect Apiary/Hive and date filters.
+                  <strong>Exports from Reports:</strong> use the same generated dataset shown on
+                  screen and respect the selected Apiary, Hive, date, archive and section filters.
                 </li>
                 <li>
                   <strong>List pages show active items</strong>; archived content lives in the{" "}
@@ -1702,17 +1984,19 @@ export default function Help() {
                 <ul className="list-disc pl-6 space-y-1 text-gray-700">
                   <li>
                     <strong>Archiving an Apiary</strong> also archives all of its Hives and their
-                    Inspections. Tasks and Logbook entries linked to those archived
-                    Hives/Inspections are archived too.
+                    Inspections. Tasks and Logbook entries linked to those archived Hives/Inspections
+                    are archived too. Queen lifecycle records linked to those hives are coordinated
+                    with the same archive action.
                   </li>
                   <li>
                     <strong>Archiving a Hive</strong> also archives all Inspections for that Hive.
-                    Tasks/Logbook entries that reference that Hive or those Inspections are
-                    archived.
+                    Tasks/Logbook entries that reference that Hive or those Inspections are archived,
+                    together with the Hive’s linked Queen lifecycle records.
                   </li>
                   <li>
                     <strong>Archiving a single Inspection</strong> archives any Tasks or Logbook
-                    entries linked to that Inspection. The parent Hive/Apiary remain active.
+                    entries linked to that Inspection. The parent Hive/Apiary remain active, and the
+                    Queen snapshot stays with the archived inspection.
                   </li>
                 </ul>
 
@@ -1726,6 +2010,18 @@ export default function Help() {
                   <li>
                     Unarchiving a parent may prompt you to unarchive its children; if limits are
                     exceeded, only allowable items are reactivated.
+                  </li>
+                </ul>
+
+                <h3 className="font-semibold mt-4 mb-2">Permanent deletion rules</h3>
+                <ul className="list-disc pl-6 space-y-1 text-gray-700">
+                  <li>
+                    Deleting an Inspection removes the Inspection and its photos, but preserves linked
+                    Tasks and Logbook entries by clearing their Inspection link.
+                  </li>
+                  <li>
+                    Coordinated Apiary/Hive deletion removes the linked child and Queen lifecycle data
+                    covered by that deletion. Use Archive when the history may still be needed.
                   </li>
                 </ul>
 
@@ -1750,6 +2046,10 @@ export default function Help() {
               <h2 className="text-2xl font-bold mb-3">Tips for Smooth Record-Keeping</h2>
               <ul className="list-disc pl-6 space-y-1">
                 <li>Use consistent hive names (e.g., “Hive A2”, “Blue Queen 2024”).</li>
+                <li>
+                  Give each Queen a consistent reference and record splits, transfers and outcomes
+                  when they happen so the assignment history remains clear.
+                </li>
                 <li>
                   Capture next-visit actions in <strong>Tasks</strong> and give them clear due
                   dates.
@@ -1795,6 +2095,38 @@ export default function Help() {
                     No. It provides educational inspection-support guidance only and suggests
                     possible next checks. It does not confirm disease, colony health, or treatment
                     decisions. If a UK action/reporting panel appears, follow official guidance.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">
+                    What happens to Queen Records if I downgrade from Premium?
+                  </p>
+                  <p className="text-gray-700">
+                    Existing Queen data is retained. The Queens page and Queen Reports remain
+                    available in <strong>Read only</strong> mode, including printing and Queen
+                    CSV/Excel export. Adding, editing and progressing Queen records is restored when
+                    Premium is reactivated.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">
+                    Why does a Queen Report show the current Queen outside my selected date range?
+                  </p>
+                  <p className="text-gray-700">
+                    The current Queen position describes the colony now, so it is shown separately.
+                    The date range filters the historical assignments, events, processes and
+                    inspection snapshots.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">What happens when I record a split?</p>
+                  <p className="text-gray-700">
+                    The selected Queen and her history move to the destination hive. The source hive
+                    becomes Queenless and can then follow a Queenless or requeening workflow. Earlier
+                    assignments remain unchanged as history.
                   </p>
                 </div>
 
@@ -1937,7 +2269,9 @@ export default function Help() {
                   <p className="font-medium">What exactly do I get on Free?</p>
                   <p className="text-gray-700">
                     1 active apiary, 2 active hives total, unlimited inspections, weather tools,
-                    calendar, tasks, logbook entries, and CSV export from Settings.
+                    calendar, tasks, logbook entries, and CSV export from Settings. Queen Records are
+                    not a standard Free feature, but Queen data created while Premium remains
+                    available read-only after downgrade.
                   </p>
                 </div>
 
@@ -1966,6 +2300,26 @@ export default function Help() {
                   <Badge tone="blue">Premium</Badge>
                   <strong>:</strong> pause before moving equipment, and use the official links shown
                   for guidance/reporting.
+                </li>
+                <li>
+                  <strong>Queens says “Read only”:</strong> the account has retained Queen data from a
+                  previous Premium period. You can review and report it, but Queen management controls
+                  require an active Premium plan.
+                </li>
+                <li>
+                  <strong>Queen Reports only shows Queen Records:</strong> this is the intended
+                  read-only downgrade mode. Inspections, Tasks, Logbook, NFC and full Excel exports
+                  remain Premium.
+                </li>
+                <li>
+                  <strong>The current Queen ignores my report date range:</strong> the current position
+                  is deliberately shown as the colony’s position now. Historical Queen activity and
+                  snapshots are date-filtered.
+                </li>
+                <li>
+                  <strong>My Dashboard layout changed:</strong> open{" "}
+                  <strong>Customise Dashboard</strong> and select the sections you need, or press{" "}
+                  <strong>Restore recommended layout</strong>.
                 </li>
                 <li>
                   <strong>Open Hive Health is locked</strong> <Badge tone="blue">Premium</Badge>
@@ -2115,7 +2469,14 @@ export default function Help() {
                   <code>seasonal_month</code>.
                 </li>
                 <li>
-                  <strong>Reports export:</strong> CSV exports respect the Apiary/Hive filter.
+                  <strong>Queen lifecycle:</strong> assignments, events, processes and inspection
+                  snapshots are separate historical layers. Moving a Queen creates a new assignment
+                  rather than rewriting the previous hive history.
+                </li>
+                <li>
+                  <strong>Reports dataset:</strong> Step 1 loads the report data once. Screen tabs,
+                  CSV, Excel and print reuse that same dataset and respect the Apiary/Hive/date and
+                  archive selections.
                 </li>
                 <li>
                   <strong>CSV export (Settings):</strong> one CSV per table +{" "}
@@ -2142,6 +2503,38 @@ export default function Help() {
                 <div>
                   <dt className="font-medium">Inspection</dt>
                   <dd className="text-gray-700">Structured record of a hive’s status.</dd>
+                </div>
+
+                <div>
+                  <dt className="font-medium">Queen Record</dt>
+                  <dd className="text-gray-700">
+                    Dedicated identity and lifecycle record for a Queen, separate from short Queen
+                    observations recorded during inspections.
+                  </dd>
+                </div>
+
+                <div>
+                  <dt className="font-medium">Queen Assignment</dt>
+                  <dd className="text-gray-700">
+                    The dated relationship between a Queen and a hive. Transfers create a new
+                    assignment while preserving the previous one.
+                  </dd>
+                </div>
+
+                <div>
+                  <dt className="font-medium">Queen Snapshot</dt>
+                  <dd className="text-gray-700">
+                    Queen information preserved with an inspection so later lifecycle changes do not
+                    rewrite what was recorded at the time.
+                  </dd>
+                </div>
+
+                <div>
+                  <dt className="font-medium">Read only</dt>
+                  <dd className="text-gray-700">
+                    Records remain visible and reportable, but cannot be added, edited, progressed,
+                    archived or deleted until the required plan is active.
+                  </dd>
                 </div>
 
                 <div>

@@ -9,7 +9,81 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 
+{
+  version: "1.4.0",
+  released_at: "2026-08-06T18:00:00Z",
 
+  summary:
+    "Introduced comprehensive Queen Records and colony lifecycle management, expanded the Reports Centre with Queen reporting and safer exports, added a customisable filter-aware Dashboard, strengthened archive and deletion integrity, and preserved read-only Queen access for members who downgrade from Premium.",
+
+  added: [
+    "Added a dedicated **Queen Records** area for recording current and previous queens, Queen references, years, marking colours, origins, notes and lifecycle history.",
+    "Added Queen assignments so a Queen can be linked to the correct hive while preserving her earlier hive history.",
+    "Added guided Queen workflows for recording splits, Queen transfers, purchased or introduced queens, virgin queens, frames of eggs, mating outcomes, Queenless colonies and requeening.",
+    "Added Queen transition tracking with current status, next actions and due dates.",
+    "Added Queen information to inspections through saved Queen snapshots, preserving what was known when each inspection was recorded.",
+    "Added Queen status summaries to the Dashboard, including current queens, transitions and colonies requiring attention.",
+    "Added Apiary and Hive filters to the Dashboard so statistics, recent records, Queen information and Premium intelligence can be reviewed for a selected location.",
+    "Added **Customise Dashboard**, allowing members to choose which Dashboard sections are displayed and save those choices on their device.",
+    "Added a redesigned three-step Reports Centre: **Build Your Report**, **Review Report**, and **Export & Print**.",
+    "Added a dedicated **Queen Records** report containing current Queen positions, assignments, lifecycle events, active processes and inspection snapshots.",
+    "Added Queen Records CSV export and Queen-specific Excel worksheets for Queens, assignments, events, processes and snapshots.",
+    "Added read-only Queen Records and Queen-only reporting for Free members who retain Queen data after downgrading from Premium.",
+    "Added coordinated archive and deletion handling across apiaries, hives, inspections, Queen Records, Queen assignments, Queen processes, Queen events, tasks and logbook entries.",
+    "Added updated Help guidance covering Queen Records, Dashboard customisation, lifecycle workflows, archive behaviour and the redesigned Reports Centre."
+  ],
+
+  changed: [
+    "Dashboard reporting links now carry the currently selected Apiary and Hive filters into the Reports Centre.",
+    "Dashboard Queen information remains visible in read-only form to Free members who have retained Queen data.",
+    "Reports, printing, CSV and Excel exports now use the same single dataset loaded during Step 1, ensuring all outputs match the reviewed report.",
+    "Current Queen position is shown independently of the report date range, while historical assignments, events, processes and inspection snapshots follow the selected date filters.",
+    "Free members with retained Queen data are restricted to Queen-only reports and exports; Inspections, Tasks, Logbook, NFC and business reporting remain Premium-only.",
+    "The Sidebar now distinguishes full Premium access from retained read-only Queen access.",
+    "The Dashboard customisation panel now labels retained Queen reporting as **Read only** rather than Premium.",
+    "Archive and permanent-deletion wording has been updated throughout the application to reflect the actual coordinated lifecycle behaviour.",
+    "Help documentation has been refreshed to match the current Queen, Dashboard, Reports, archive and access-control workflows."
+  ],
+
+  fixed: [
+    "Fixed Queen history being lost or becoming misleading when a Queen moves between hives.",
+    "Fixed inspection-linked Queen information changing retrospectively by preserving Queen snapshots with each inspection.",
+    "Fixed linked inspection references being removed when related tasks or logbook entries are permanently deleted.",
+    "Fixed Free members with retained Queen data being incorrectly locked out of their Queen history and Queen reports.",
+    "Fixed Free retained-data users being able to access non-Queen report sections through previously saved Premium report selections.",
+    "Fixed non-Queen CSV and Excel exports appearing for Free retained-data users.",
+    "Fixed excessive blank space between selected sections in printed reports.",
+    "Fixed Dashboard and Sidebar access indicators not refreshing consistently after subscription changes.",
+    "Fixed report access checks failing open when subscription information could not be confirmed."
+  ],
+
+  removed: [
+    "Removed access to non-Queen report sections and exports for Free members using retained Queen reporting.",
+    "Removed forced page breaks between every selected printed report section."
+  ],
+
+  security: [
+    "Strengthened Premium route protection so access is denied when subscription checks fail rather than allowing access by default.",
+    "Added explicit retained-data checks before granting Free members access to Queen reporting.",
+    "Restricted Queen lifecycle creation and editing to Premium members while preserving read-only access to existing data after downgrade.",
+    "Maintained owner-only Supabase access controls across Queen Records, assignments, events and processes."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Queen Records", to: "/queens" },
+    { label: "Reports Centre", to: "/reports/print" },
+    { label: "Archive", to: "/archive" },
+    { label: "Help", to: "/help" }
+  ],
+
+  known_issues: [
+    "The Free-plan path for an account that has never held any Queen Records has been code-reviewed but has not been tested with a dedicated staging account.",
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
 
 {
   version: "1.3.0",
@@ -1000,26 +1074,31 @@ export default function Updates() {
       {notes.length === 0 ? (
         <p className="text-gray-500">No releases yet.</p>
       ) : (
-        <div className="space-y-6">
-          {notes.map((n) => (
-            <article
+        <div className="space-y-4">
+          {notes.map((n, index) => (
+            <details
               key={n.version}
               id={`v-${n.version}`}
-              className="border rounded-lg bg-white"
+              open={index === 0}
+              className="overflow-hidden rounded-lg border bg-white"
             >
-              <header className="px-4 py-3 border-b flex flex-wrap items-center gap-3">
-                <span className="inline-flex items-center text-xs font-semibold uppercase tracking-wide bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-                  v{n.version}
-                </span>
-                <time className="text-sm text-gray-600">
-                  {dayjs(n.released_at).format("DD/MM/YYYY")}
-                </time>
-                {n.summary && (
-                  <p className="text-sm text-gray-800">{n.summary}</p>
-                )}
-              </header>
+              <summary className="cursor-pointer px-4 py-3 hover:bg-gray-50">
+                <span className="ml-2 inline-flex flex-wrap items-center gap-3 align-middle">
+                  <span className="inline-flex items-center rounded bg-yellow-100 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-yellow-800">
+                    v{n.version}
+                  </span>
 
-              <div className="p-4 grid md:grid-cols-2 gap-6">
+                  <time className="text-sm text-gray-600">
+                    {dayjs(n.released_at).format("DD/MM/YYYY")}
+                  </time>
+
+                  {n.summary && (
+                    <span className="text-sm text-gray-800">{n.summary}</span>
+                  )}
+                </span>
+              </summary>
+
+              <div className="grid gap-6 border-t p-4 md:grid-cols-2">
                 <NoteSection title="Added" items={n.added} />
                 <NoteSection title="Changed" items={n.changed} />
                 <NoteSection title="Fixed" items={n.fixed} />
@@ -1045,7 +1124,7 @@ export default function Updates() {
                   muted
                 />
               </div>
-            </article>
+            </details>
           ))}
         </div>
       )}
