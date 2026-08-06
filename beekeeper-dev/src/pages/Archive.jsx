@@ -2,8 +2,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "../services/supabase";
 import {
+  getApiaryDeleteSummary,
+  getInspectionDeleteSummary,
   humaniseSupabaseError,
+  restoreApiaryLifecycle,
   restoreHiveAfterArchive,
+  restoreInspectionLifecycle,
+  restoreLogbookLifecycle,
+  restoreTodoLifecycle,
   serverDeleteRowWithPhotos,
 } from "../services/actions";
 
@@ -377,6 +383,80 @@ const Archive = () => {
   };
   // ====== end preflight helpers ======
 
+  // ----- lifecycle action helpers -----
+  const restoreArchivedItem = async (table, id) => {
+    if (table === "apiaries") return await restoreApiaryLifecycle(id);
+    if (table === "hives") return await restoreHiveAfterArchive(id);
+    if (table === "inspections") return await restoreInspectionLifecycle(id);
+    if (table === "todos") return await restoreTodoLifecycle(id);
+    if (table === "logbook") return await restoreLogbookLifecycle(id);
+
+    return {
+      data: null,
+      error: { message: `Unsupported archive type: ${table}` },
+    };
+  };
+
+  const rowIsAlreadyActive = async (table, id) => {
+    const { data, error } = await supabase
+      .from(table)
+      .select("archived_at")
+      .eq("id", id)
+      .maybeSingle();
+
+    return !error && data && data.archived_at === null;
+  };
+
+  const normaliseSummary = (data) =>
+    Array.isArray(data) ? data[0] || {} : data || {};
+
+  const apiaryDeleteWarning = async (item) => {
+    const { data, error } = await getApiaryDeleteSummary(item.id);
+    if (error) throw error;
+
+    const summary = normaliseSummary(data);
+    const hives = Number(summary.hives || 0);
+    const inspections = Number(summary.inspections || 0);
+    const todos = Number(summary.todos || 0);
+    const logs = Number(summary.logs || 0);
+
+    return [
+      `Permanently delete the apiary “${item.name || "Unnamed Apiary"}”?`,
+      "",
+      "This will permanently delete everything contained in this apiary, including archived records:",
+      `• ${hives} hive${hives === 1 ? "" : "s"}`,
+      `• ${inspections} inspection${inspections === 1 ? "" : "s"}`,
+      `• ${todos} task${todos === 1 ? "" : "s"}`,
+      `• ${logs} logbook entr${logs === 1 ? "y" : "ies"}`,
+      "",
+      "Hive-specific Queen history will be removed. Queens transferred outside this apiary will be preserved.",
+      "",
+      "This cannot be undone.",
+    ].join("\n");
+  };
+
+  const inspectionDeleteWarning = async (item) => {
+    const { data, error } = await getInspectionDeleteSummary(item.id);
+    if (error) throw error;
+
+    const summary = normaliseSummary(data);
+    const todos = Number(summary.todos || 0);
+    const logs = Number(summary.logs || 0);
+    const date = item.date
+      ? new Date(item.date).toLocaleDateString("en-GB")
+      : shortId(item.id);
+
+    return [
+      `Permanently delete the inspection dated ${date}?`,
+      "",
+      `This will also permanently delete ${todos} linked task${todos === 1 ? "" : "s"} and ${logs} linked logbook entr${logs === 1 ? "y" : "ies"}, including archived records.`,
+      "",
+      "The inspection Queen snapshot will be deleted, but the main Queen record and Queen history will not be changed.",
+      "",
+      "This cannot be undone.",
+    ].join("\n");
+  };
+
   // ----- single-item actions -----
   const restoreItem = async (table, item) => {
     const { ok, reason } = preflightRestore(table, item);
@@ -388,13 +468,7 @@ const Archive = () => {
       return;
     }
 
-    const result =
-      table === "hives"
-        ? await restoreHiveAfterArchive(item.id)
-        : await supabase
-            .from(table)
-            .update({ archived_at: null })
-            .eq("id", item.id);
+    const result = await restoreArchivedItem(table, item.id);
 
     if (result.error) {
       setRestoreErrors((prev) => ({
@@ -425,7 +499,7 @@ const Archive = () => {
           await enforceSingleDefaultOnRestore(row.id, row.user_id);
         }
       } catch {
-        // ignore (non-blocking)
+        // Non-blocking: the database lifecycle restore has already succeeded.
       }
     }
 
@@ -433,24 +507,26 @@ const Archive = () => {
   };
 
   const deleteItem = async (table, item) => {
-    const warning =
-      table === "hives"
-        ? "Permanently delete this hive? Its hive-specific Queen history will also be deleted. A Queen transferred to another hive will be preserved. This cannot be undone."
-        : "Are you sure you want to permanently delete this item? This cannot be undone.";
+    let warning;
+
+    try {
+      if (table === "apiaries") {
+        warning = await apiaryDeleteWarning(item);
+      } else if (table === "inspections") {
+        warning = await inspectionDeleteWarning(item);
+      } else if (table === "hives") {
+        warning =
+          "Permanently delete this hive? Its hive-specific Queen history will also be deleted. A Queen transferred to another hive will be preserved. This cannot be undone.";
+      } else {
+        warning =
+          "Are you sure you want to permanently delete this item? This cannot be undone.";
+      }
+    } catch (error) {
+      alert(humaniseSupabaseError(error, { table }));
+      return;
+    }
 
     if (!window.confirm(warning)) return;
-
-    if (table === "apiaries") {
-      try {
-        await clearProfileDefaultIfDeleting(
-          item.id,
-          item.user_id,
-          !!item.is_default
-        );
-      } catch {
-        // ignore (non-blocking)
-      }
-    }
 
     const result = ["apiaries", "hives", "inspections", "logbook"].includes(
       table
@@ -478,7 +554,7 @@ const Archive = () => {
       apiaries: 1,
       hives: 2,
       inspections: 3,
-      todos: 3,
+      todos: 4,
       logbook: 4,
     };
 
@@ -491,21 +567,13 @@ const Archive = () => {
     for (const { table, item } of orderedItems) {
       if (!allData[table]) continue;
 
-      const { ok, reason } = preflightRestore(table, item);
-      if (!ok) {
-        newErrors[`${table}-${item.id}`] = reason;
-        continue;
-      }
-
-      const result =
-        table === "hives"
-          ? await restoreHiveAfterArchive(item.id)
-          : await supabase
-              .from(table)
-              .update({ archived_at: null })
-              .eq("id", item.id);
+      const result = await restoreArchivedItem(table, item.id);
 
       if (result.error) {
+        // A parent restoration may already have restored this selected child.
+        // Confirm its current state before treating that as an error.
+        if (await rowIsAlreadyActive(table, item.id)) continue;
+
         newErrors[`${table}-${item.id}`] = friendlyRestoreError(
           table,
           result.error.message
@@ -525,34 +593,48 @@ const Archive = () => {
             await enforceSingleDefaultOnRestore(row.id, row.user_id);
           }
         } catch {
-          // ignore (non-blocking)
+          // Non-blocking: the database lifecycle restore has already succeeded.
         }
       }
     }
 
-    if (Object.keys(newErrors).length) {
-      setRestoreErrors((prev) => ({ ...prev, ...newErrors }));
-    }
-
+    setRestoreErrors((prev) => ({ ...prev, ...newErrors }));
     setSelectedItems([]);
     fetchData();
   };
 
   const deleteSelectedItems = async () => {
-    if (
-      !window.confirm(
-        "Are you sure you want to permanently delete all selected items? Hive-specific Queen history belonging to any selected hive will also be deleted. This cannot be undone."
-      )
-    ) {
-      return;
-    }
+    const selectedApiaryCount = selectedItems.filter(
+      ({ table }) => table === "apiaries"
+    ).length;
+    const selectedInspectionCount = selectedItems.filter(
+      ({ table }) => table === "inspections"
+    ).length;
+
+    const warnings = [
+      "Permanently delete all selected items?",
+      "",
+      selectedApiaryCount
+        ? `${selectedApiaryCount} selected apiary${selectedApiaryCount === 1 ? "" : "ies"} will be deleted with all contained hives, inspections, tasks, logbook entries and hive-specific Queen history.`
+        : null,
+      selectedInspectionCount
+        ? `${selectedInspectionCount} selected inspection${selectedInspectionCount === 1 ? "" : "s"} will be deleted with all linked tasks and logbook entries.`
+        : null,
+      "Queens transferred outside a deleted hive or apiary will be preserved.",
+      "",
+      "This cannot be undone.",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    if (!window.confirm(warnings)) return;
 
     const deleteOrder = {
       logbook: 1,
-      inspections: 2,
       todos: 2,
-      hives: 3,
-      apiaries: 4,
+      inspections: 3,
+      hives: 4,
+      apiaries: 5,
     };
 
     const orderedItems = [...selectedItems].sort(
@@ -563,18 +645,6 @@ const Archive = () => {
 
     for (const { table, item } of orderedItems) {
       if (!allData[table]) continue;
-
-      if (table === "apiaries") {
-        try {
-          await clearProfileDefaultIfDeleting(
-            item.id,
-            item.user_id,
-            !!item.is_default
-          );
-        } catch {
-          // ignore (non-blocking)
-        }
-      }
 
       const result = ["apiaries", "hives", "inspections", "logbook"].includes(
         table
@@ -587,7 +657,13 @@ const Archive = () => {
         : await supabase.from(table).delete().eq("id", item.id);
 
       if (result.error) {
-        alert(humaniseSupabaseError(result.error, { table }));
+        const alreadyDeleted =
+          result.error?.status === 404 ||
+          /row not found|not found/i.test(result.error?.message || "");
+
+        if (!alreadyDeleted) {
+          alert(humaniseSupabaseError(result.error, { table }));
+        }
       }
     }
 

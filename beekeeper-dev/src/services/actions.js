@@ -69,12 +69,28 @@ export function parseStoragePublicUrl(url) {
   return { bucket: m[1], path: decodeURIComponent(m[2]) };
 }
 
-/** Archive a row (sets archived_at = now()) */
-export async function archiveItem(table, id) {
-  return await supabase
-    .from(table)
-    .update({ archived_at: new Date().toISOString() })
-    .eq("id", id);
+/* ------------------------------------------------------------------ */
+/* Coordinated archive and restore lifecycle                           */
+/* ------------------------------------------------------------------ */
+
+function missingId(message) {
+  return { data: null, error: { message } };
+}
+
+export async function archiveApiaryLifecycle(apiaryId) {
+  if (!apiaryId) return missingId("Missing apiary ID");
+
+  return await supabase.rpc("archive_apiary_lifecycle", {
+    p_apiary_id: apiaryId,
+  });
+}
+
+export async function restoreApiaryLifecycle(apiaryId) {
+  if (!apiaryId) return missingId("Missing apiary ID");
+
+  return await supabase.rpc("restore_apiary_lifecycle", {
+    p_apiary_id: apiaryId,
+  });
 }
 
 /** Reasons supported by the hive/Queen archive lifecycle migration */
@@ -126,6 +142,87 @@ export async function restoreHiveAfterArchive(hiveId) {
 
   return await supabase.rpc("restore_hive_after_archive", {
     p_hive_id: hiveId,
+  });
+}
+
+
+export async function archiveInspectionLifecycle(inspectionId) {
+  if (!inspectionId) return missingId("Missing inspection ID");
+
+  return await supabase.rpc("archive_inspection_lifecycle", {
+    p_inspection_id: inspectionId,
+  });
+}
+
+export async function restoreInspectionLifecycle(inspectionId) {
+  if (!inspectionId) return missingId("Missing inspection ID");
+
+  return await supabase.rpc("restore_inspection_lifecycle", {
+    p_inspection_id: inspectionId,
+  });
+}
+
+export async function archiveTodoLifecycle(todoId) {
+  if (!todoId) return missingId("Missing task ID");
+
+  return await supabase.rpc("archive_todo_lifecycle", {
+    p_todo_id: todoId,
+  });
+}
+
+export async function restoreTodoLifecycle(todoId) {
+  if (!todoId) return missingId("Missing task ID");
+
+  return await supabase.rpc("restore_todo_lifecycle", {
+    p_todo_id: todoId,
+  });
+}
+
+export async function archiveLogbookLifecycle(logbookId) {
+  if (!logbookId) return missingId("Missing logbook entry ID");
+
+  return await supabase.rpc("archive_logbook_lifecycle", {
+    p_logbook_id: logbookId,
+  });
+}
+
+export async function restoreLogbookLifecycle(logbookId) {
+  if (!logbookId) return missingId("Missing logbook entry ID");
+
+  return await supabase.rpc("restore_logbook_lifecycle", {
+    p_logbook_id: logbookId,
+  });
+}
+
+/**
+ * Backwards-compatible archive helper. Lifecycle tables are routed through
+ * their atomic RPCs so linked records are archived as one operation.
+ */
+export async function archiveItem(table, id) {
+  if (table === "apiaries") return await archiveApiaryLifecycle(id);
+  if (table === "inspections") return await archiveInspectionLifecycle(id);
+  if (table === "todos") return await archiveTodoLifecycle(id);
+  if (table === "logbook") return await archiveLogbookLifecycle(id);
+
+  return await supabase
+    .from(table)
+    .update({ archived_at: new Date().toISOString() })
+    .eq("id", id);
+}
+
+export async function getApiaryDeleteSummary(apiaryId) {
+  if (!apiaryId) return missingId("Missing apiary ID");
+
+  return await supabase.rpc("get_apiary_delete_summary", {
+    p_apiary_id: apiaryId,
+  });
+}
+
+export async function getInspectionDeleteSummary(inspectionId) {
+  if (!inspectionId) return missingId("Missing inspection ID");
+
+  return await supabase.rpc("get_inspection_delete_summary", {
+    p_inspection_id: inspectionId,
   });
 }
 
@@ -273,25 +370,36 @@ export async function deleteRowAndRemoveUrls(table, id, urlsCol = "photos") {
 /* ------------------------------------------------------------------ */
 
 export async function smartDeleteApiary(id) {
-  let hasChildren = false;
-  try {
-    const { data, error } = await supabase.rpc("check_apiary_children", { apiary_id: id });
-    if (!error) {
-      const row = Array.isArray(data) ? data[0] : data;
-      const { hives = 0, inspections = 0, todos = 0, logs = 0 } = row || {};
-      hasChildren = hives + inspections + todos + logs > 0;
-    }
-  } catch {
-    // ignore
+  const { data: summaryData, error: summaryError } =
+    await getApiaryDeleteSummary(id);
+
+  if (summaryError) {
+    return { archived: false, error: summaryError };
   }
+
+  const summary = Array.isArray(summaryData)
+    ? summaryData[0]
+    : summaryData || {};
+
+  const hasChildren =
+    Number(summary.hives || 0) +
+      Number(summary.inspections || 0) +
+      Number(summary.todos || 0) +
+      Number(summary.logs || 0) >
+    0;
 
   if (hasChildren) {
-    const { error } = await archiveItem("apiaries", id);
-    return { archived: true, error };
+    const { error } = await archiveApiaryLifecycle(id);
+    return { archived: true, error, summary };
   }
 
-  const { error } = await serverDeleteRowWithPhotos({ table: "apiaries", id, mode: "delete_row" });
-  return { archived: false, error };
+  const { error } = await serverDeleteRowWithPhotos({
+    table: "apiaries",
+    id,
+    mode: "delete_row",
+  });
+
+  return { archived: false, error, summary };
 }
 
 export async function smartDeleteHive(id) {
@@ -321,8 +429,32 @@ export async function smartDeleteHive(id) {
 }
 
 export async function smartDeleteInspection(id) {
-  const { error } = await serverDeleteRowWithPhotos({ table: "inspections", id, mode: "delete_row" });
-  return { archived: false, error };
+  const { data: summaryData, error: summaryError } =
+    await getInspectionDeleteSummary(id);
+
+  if (summaryError) {
+    return { archived: false, error: summaryError };
+  }
+
+  const summary = Array.isArray(summaryData)
+    ? summaryData[0]
+    : summaryData || {};
+
+  const hasChildren =
+    Number(summary.todos || 0) + Number(summary.logs || 0) > 0;
+
+  if (hasChildren) {
+    const { error } = await archiveInspectionLifecycle(id);
+    return { archived: true, error, summary };
+  }
+
+  const { error } = await serverDeleteRowWithPhotos({
+    table: "inspections",
+    id,
+    mode: "delete_row",
+  });
+
+  return { archived: false, error, summary };
 }
 
 export async function removeOneInspectionPhoto(id, { path, url }) {
@@ -349,7 +481,7 @@ export async function smartDeleteTodo(id) {
   }
 
   if (hasChildren) {
-    const { error } = await archiveItem("todos", id);
+    const { error } = await archiveTodoLifecycle(id);
     return { archived: true, error };
   }
 
