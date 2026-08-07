@@ -222,7 +222,7 @@ const Dashboard = () => {
   const [dashboardIntelligence, setDashboardIntelligence] = useState({
     loading: true,
     error: null,
-    summary: { total: 0, healthy: 0, monitor: 0, attention: 0, critical: 0 },
+    summary: { total: 0, healthy: 0, monitor: 0, attention: 0, critical: 0, unassessed: 0 },
     items: [],
   });
 
@@ -690,40 +690,59 @@ const Dashboard = () => {
         "Very Low": 0,
         None: 0,
         Unknown: 0,
+        Unassessed: -1,
       };
 
       const items = (hives || []).map((hive) => {
         const history = inspectionsByHive.get(hive.id) || [];
         const intelligence = coordinateHiveIntelligence({ history });
-        const healthScore = intelligence?.overall?.healthScore || 0;
-        const riskLevel = intelligence?.overall?.riskLevel || "Unknown";
+        const assessed =
+          intelligence?.hasAssessment === true &&
+          typeof intelligence?.overall?.healthScore === "number";
+        const healthScore = assessed ? intelligence.overall.healthScore : null;
+        const riskLevel = assessed
+          ? intelligence?.overall?.riskLevel || "Unknown"
+          : "Unassessed";
 
         return {
           hive,
           historyCount: history.length,
           latestInspection: history[history.length - 1] || null,
           intelligence,
+          assessed,
           healthScore,
           riskLevel,
           riskRank: riskRank[riskLevel] ?? 0,
-          priorityCount: intelligence?.priorityItems?.length || 0,
+          priorityCount: assessed ? intelligence?.priorityItems?.length || 0 : 0,
         };
       });
 
       const sortedItems = [...items].sort((a, b) => {
         if (b.riskRank !== a.riskRank) return b.riskRank - a.riskRank;
-        if (a.healthScore !== b.healthScore) return a.healthScore - b.healthScore;
+
+        if (a.assessed && b.assessed && a.healthScore !== b.healthScore) {
+          return a.healthScore - b.healthScore;
+        }
+
+        if (a.assessed !== b.assessed) return a.assessed ? -1 : 1;
         return b.priorityCount - a.priorityCount;
       });
 
+      const assessedItems = items.filter((item) => item.assessed);
+
       const summary = {
         total: items.length,
-        healthy: items.filter((item) => item.healthScore >= 85 && item.riskRank <= 1).length,
-        monitor: items.filter(
+        healthy: assessedItems.filter(
+          (item) => item.healthScore >= 85 && item.riskRank <= 1
+        ).length,
+        monitor: assessedItems.filter(
           (item) => item.riskRank === 2 || (item.healthScore >= 55 && item.healthScore < 85)
         ).length,
-        attention: items.filter((item) => item.riskRank >= 3 || item.healthScore < 55).length,
-        critical: items.filter((item) => item.riskRank >= 4).length,
+        attention: assessedItems.filter(
+          (item) => item.riskRank >= 3 || item.healthScore < 55
+        ).length,
+        critical: assessedItems.filter((item) => item.riskRank >= 4).length,
+        unassessed: items.filter((item) => !item.assessed).length,
       };
 
       setDashboardIntelligence({

@@ -354,7 +354,13 @@ export async function getQueenRecordsOverview() {
       apiaryName: apiariesById.get(hive.apiary_id)?.name || "Unknown apiary",
       name: hive.name,
       status,
-      attention: needsAttention(currentQueen, transition),
+      attention:
+      currentQueen ||
+      transition ||
+      previousQueens.length > 0 ||
+        normalisedEvents.length > 0
+      ? needsAttention(currentQueen, transition)
+      : false,
       currentQueen,
       previousQueens,
       transition,
