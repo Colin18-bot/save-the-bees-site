@@ -81,13 +81,12 @@ const buildCurrentQueen = ({ queen, assignment, inspections }) => {
     queen.actual_colour || (queen.marked ? expectedColour : "Unmarked");
 
   const lastSeenInspection = inspections
-    .filter(
-      (inspection) =>
-        inspection.hive_id === assignment.hive_id &&
-        inspection.queen_id === queen.id &&
-        queenWasSeen(inspection)
-    )
-    .sort((a, b) => dateSortDescending(a, b, "date"))[0];
+  .filter(
+    (inspection) =>
+      inspection.queen_id === queen.id &&
+      queenWasSeen(inspection)
+  )
+  .sort((a, b) => dateSortDescending(a, b, "date"))[0];
 
   return {
     id: queen.id,
