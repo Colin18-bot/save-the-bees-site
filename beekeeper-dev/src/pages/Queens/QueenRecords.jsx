@@ -685,7 +685,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
     hive.transition?.method || "Not yet decided"
   );
   const [broodSourceHiveId, setBroodSourceHiveId] = useState("");
-  const [progress, setProgress] = useState("Queen accepted");
+  const [progress, setProgress] = useState("");
   const [expectedCheckOn, setExpectedCheckOn] = useState(dateAfterDays(7));
   const [notes, setNotes] = useState(
     actionId === "edit" && currentQueen?.notes !== "No Queen notes recorded."
@@ -1173,8 +1173,12 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
             <select
               value={progress}
               onChange={(event) => setProgress(event.target.value)}
+              required
               className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
-            >
+              >
+              <option value="" disabled>
+                Select progress
+              </option>
               <option>Queen accepted</option>
               <option>Queen released</option>
               <option>Emergency Queen cells started</option>
