@@ -507,7 +507,43 @@ export default function HiveHealth() {
         <p className="mt-4 rounded-xl border bg-gray-50 p-4 text-sm text-gray-700">
           {assessment.overall?.status || "No assessment available yet."}
         </p>
-      </section>
+            </section>
+
+      {assessment.hasAssessment && assessment.seasonalContext && (
+        <section className="rounded-2xl border border-blue-200 bg-blue-50 p-5 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wide text-blue-800">
+                Seasonal Guidance
+              </p>
+              <h2 className="mt-1 text-xl font-bold text-gray-900">
+                {assessment.seasonalContext.season}
+              </h2>
+            </div>
+
+            <span className="w-fit rounded-full border border-blue-200 bg-white px-3 py-1 text-sm font-semibold text-blue-900">
+              Seasonal advisory: {assessment.seasonalContext.level || "Information"}
+            </span>
+          </div>
+
+          <p className="mt-3 text-sm text-gray-700">
+            {assessment.seasonalContext.message}
+          </p>
+
+          {assessment.seasonalContext.prompts?.length > 0 && (
+            <ul className="mt-4 list-disc space-y-1 pl-6 text-sm text-gray-700">
+              {assessment.seasonalContext.prompts.map((prompt) => (
+                <li key={prompt}>{prompt}</li>
+              ))}
+            </ul>
+          )}
+
+          <p className="mt-4 border-t border-blue-200 pt-3 text-xs text-blue-900">
+            Seasonal guidance is advisory only. It does not change the Hive Health score or Overall
+            Risk, which are based on the recorded inspection evidence.
+          </p>
+        </section>
+      )}
 
       <ScoreBreakdownPanel
         breakdown={assessment.baseAnalysis?.summary?.scoreBreakdown}

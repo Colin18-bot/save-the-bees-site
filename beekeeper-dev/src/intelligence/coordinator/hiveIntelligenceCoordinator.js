@@ -166,7 +166,6 @@ function buildCoordinatorSummary({
   highestRisk,
   priorityItems,
   recommendedActions,
-  seasonalContext,
 }) {
   if (highestRisk.rank >= 4) {
     return "This hive has high-priority items that should be reviewed before relying on routine management.";
@@ -180,12 +179,8 @@ function buildCoordinatorSummary({
     return "This hive appears strong from the available inspection evidence.";
   }
 
-  if (seasonalContext?.level === "Important") {
-    return "This hive appears stable, but the current season adds management context that should be considered.";
+  return "No major concerns were identified from the current inspection evidence.";
   }
-
-  return "No major concerns were identified from the current intelligence data.";
-}
 
 export function coordinateHiveIntelligence({ history = [], inspection = null } = {}) {
   const safeHistory = Array.isArray(history) ? history.filter(Boolean) : [];
@@ -251,10 +246,9 @@ export function coordinateHiveIntelligence({ history = [], inspection = null } =
   const queenPerformance = analyseQueenPerformance(latestInspection);
 
   const riskItems = [
-    { source: "Disease", label: "Disease", ...diseaseRisk },
-    { source: "Swarm", label: "Swarm", ...swarmRisk },
-    { source: "Varroa", label: "Varroa", ...varroaRisk },
-    { source: "Seasonal", label: "Seasonal", level: seasonalContext.level, message: seasonalContext.message },
+  { source: "Disease", label: "Disease", ...diseaseRisk },
+  { source: "Swarm", label: "Swarm", ...swarmRisk },
+  { source: "Varroa", label: "Varroa", ...varroaRisk },
   ];
 
   const highestRisk = getHighestRisk(riskItems);
@@ -280,14 +274,16 @@ export function coordinateHiveIntelligence({ history = [], inspection = null } =
       healthScore: baseAnalysis.summary.healthScore,
       healthBand: baseAnalysis.summary.healthBand,
       riskLevel: highestRisk.level,
-      riskSource: highestRisk.source || highestRisk.label,
+      riskSource:
+      ["None", "Unknown"].includes(highestRisk.level)
+        ? "No identified risk"
+        : highestRisk.source || highestRisk.label,
       status: buildCoordinatorSummary({
-        baseAnalysis,
-        highestRisk,
-        priorityItems,
-        recommendedActions,
-        seasonalContext,
-      }),
+      baseAnalysis,
+      highestRisk,
+      priorityItems,
+      recommendedActions,
+    }),
       confidence:
         safeHistory.length >= 3
           ? "High"
