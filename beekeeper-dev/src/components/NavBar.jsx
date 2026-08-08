@@ -1,10 +1,34 @@
 // src/components/NavBar.jsx
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.svg";
 
 const NavBar = ({ isMobileMenuOpen, setIsMobileMenuOpen, displayName, avatarUrl }) => {
-  const subscriptionLevel = localStorage.getItem("subscription_level") || "free";
+  const [subscriptionLevel, setSubscriptionLevel] = useState(
+    () => localStorage.getItem("subscription_level") || "free"
+  );
+
+  useEffect(() => {
+    const onSubscriptionUpdated = (event) => {
+      const level = event?.detail?.level || localStorage.getItem("subscription_level") || "free";
+
+      setSubscriptionLevel(String(level).toLowerCase());
+    };
+
+    const onStorage = (event) => {
+      if (event.key === "subscription_level" && event.newValue) {
+        setSubscriptionLevel(String(event.newValue).toLowerCase());
+      }
+    };
+
+    window.addEventListener("subscription:updated", onSubscriptionUpdated);
+    window.addEventListener("storage", onStorage);
+
+    return () => {
+      window.removeEventListener("subscription:updated", onSubscriptionUpdated);
+      window.removeEventListener("storage", onStorage);
+    };
+  }, []);
 
   const planTooltip = {
     free: "You're on the Free plan. Upgrade to unlock full features.",
@@ -12,8 +36,7 @@ const NavBar = ({ isMobileMenuOpen, setIsMobileMenuOpen, displayName, avatarUrl 
     premium: "You're on the Premium plan. All features unlocked.",
   };
 
-  const planLabel =
-    subscriptionLevel.charAt(0).toUpperCase() + subscriptionLevel.slice(1);
+  const planLabel = subscriptionLevel.charAt(0).toUpperCase() + subscriptionLevel.slice(1);
 
   const PlanBadge = () => (
     <span className="relative">
@@ -48,11 +71,7 @@ const NavBar = ({ isMobileMenuOpen, setIsMobileMenuOpen, displayName, avatarUrl 
             rel="noopener noreferrer"
             className="flex items-center space-x-2"
           >
-            <img
-              src={logo}
-              alt="HiveTag Logo"
-              className="h-12 w-12 md:h-14 md:w-14"
-            />
+            <img src={logo} alt="HiveTag Logo" className="h-12 w-12 md:h-14 md:w-14" />
             <span className="text-green-800 text-xl font-bold">HiveTag by Beezknees</span>
           </a>
 
@@ -69,19 +88,17 @@ const NavBar = ({ isMobileMenuOpen, setIsMobileMenuOpen, displayName, avatarUrl 
             </a>
 
             {/* Welcome text and subscription badge */}
-            {displayName && (
+            {displayName ? (
               <span className="text-green-900 font-semibold flex items-center gap-2">
                 Welcome, {displayName}
                 <PlanBadge />
               </span>
+            ) : (
+              <PlanBadge />
             )}
 
             {/* Avatar */}
-            <Link
-              to="/settings"
-              aria-label="Open Settings"
-              className="flex items-center"
-            >
+            <Link to="/settings" aria-label="Open Settings" className="flex items-center">
               {avatarUrl ? (
                 <img
                   src={avatarUrl}
