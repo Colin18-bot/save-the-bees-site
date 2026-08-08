@@ -595,10 +595,15 @@ const Dashboard = () => {
 
         let detail = "Queen history recorded";
         if (queen) {
+          const actualColour = String(queen.actualColour || "").trim();
+
           const marking =
-            queen.actualColour && queen.actualColour !== "Not recorded"
-              ? `${String(queen.actualColour).toLowerCase()}-marked`
-              : "marking not recorded";
+            String(queen.marked || "").toLowerCase() === "no" ||
+            actualColour.toLowerCase() === "unmarked"
+              ? "unmarked"
+              : actualColour && actualColour !== "Not recorded"
+                ? `${actualColour.toLowerCase()}-marked`
+                : "marking not recorded";
           detail = `${queen.reference} • ${queen.year} ${marking}`;
         } else if (transition) {
           detail = transition.method || "Queen transition in progress";
@@ -700,9 +705,7 @@ const Dashboard = () => {
           intelligence?.hasAssessment === true &&
           typeof intelligence?.overall?.healthScore === "number";
         const healthScore = assessed ? intelligence.overall.healthScore : null;
-        const riskLevel = assessed
-          ? intelligence?.overall?.riskLevel || "Unknown"
-          : "Unassessed";
+        const riskLevel = assessed ? intelligence?.overall?.riskLevel || "Unknown" : "Unassessed";
 
         return {
           hive,
@@ -732,15 +735,13 @@ const Dashboard = () => {
 
       const summary = {
         total: items.length,
-        healthy: assessedItems.filter(
-          (item) => item.healthScore >= 85 && item.riskRank <= 1
-        ).length,
+        healthy: assessedItems.filter((item) => item.healthScore >= 85 && item.riskRank <= 1)
+          .length,
         monitor: assessedItems.filter(
           (item) => item.riskRank === 2 || (item.healthScore >= 55 && item.healthScore < 85)
         ).length,
-        attention: assessedItems.filter(
-          (item) => item.riskRank >= 3 || item.healthScore < 55
-        ).length,
+        attention: assessedItems.filter((item) => item.riskRank >= 3 || item.healthScore < 55)
+          .length,
         critical: assessedItems.filter((item) => item.riskRank >= 4).length,
         unassessed: items.filter((item) => !item.assessed).length,
       };
