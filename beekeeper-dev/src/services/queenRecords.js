@@ -11,9 +11,7 @@ const asDate = (value) => {
   if (value instanceof Date) return value;
 
   const text = String(value);
-  const date = /^\d{4}-\d{2}-\d{2}$/.test(text)
-    ? new Date(`${text}T12:00:00`)
-    : new Date(text);
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(text) ? new Date(`${text}T12:00:00`) : new Date(text);
 
   return Number.isNaN(date.getTime()) ? null : date;
 };
@@ -69,25 +67,31 @@ const throwIfError = (result, label) => {
 };
 
 const currentAssignmentForQueen = (assignments, queenId) =>
-  assignments.find(
-    (assignment) => assignment.queen_id === queenId && !assignment.ended_on
-  );
+  assignments.find((assignment) => assignment.queen_id === queenId && !assignment.ended_on);
 
-const buildCurrentQueen = ({ queen, assignment, inspections }) => {
+const buildCurrentQueen = ({ queen, assignment, inspections, events }) => {
   if (!queen || !assignment) return null;
 
   const expectedColour = getQueenColourForYear(queen.queen_year);
-  const actualColour =
-    queen.actual_colour || (queen.marked ? expectedColour : "Unmarked");
+  const actualColour = queen.actual_colour || (queen.marked ? expectedColour : "Unmarked");
 
   const lastSeenInspection = inspections
-  .filter(
-    (inspection) =>
-      inspection.queen_id === queen.id &&
-      queenWasSeen(inspection)
-  )
-  .sort((a, b) => dateSortDescending(a, b, "date"))[0];
+    .filter((inspection) => inspection.queen_id === queen.id && queenWasSeen(inspection))
+    .sort((a, b) => dateSortDescending(a, b, "date"))[0];
 
+  const lastSeenEvent = (events || [])
+    .filter(
+      (event) =>
+        event.queen_id === queen.id &&
+        String(event.title || "")
+          .trim()
+          .toLowerCase() === "virgin queen seen"
+    )
+    .sort((a, b) => dateSortDescending(a, b, "event_date"))[0];
+
+  const lastSeenDate = [lastSeenInspection?.date, lastSeenEvent?.event_date]
+    .filter(Boolean)
+    .sort((a, b) => (asDate(b)?.getTime() ?? 0) - (asDate(a)?.getTime() ?? 0))[0];
   return {
     id: queen.id,
     reference: queen.reference || "Queen record",
@@ -104,39 +108,27 @@ const buildCurrentQueen = ({ queen, assignment, inspections }) => {
     introducedOnRaw: queen.introduced_on || "",
     currentSince: formatQueenDate(assignment.started_on),
     currentSinceRaw: assignment.started_on || "",
-    lastSeen: formatQueenDate(lastSeenInspection?.date, "Not yet recorded"),
+    lastSeen: formatQueenDate(lastSeenDate, "Not yet recorded"),
     status: titleCase(queen.status, "Present"),
     statusRaw: queen.status || "active",
     notes: queen.notes || "No Queen notes recorded.",
   };
 };
 
-const buildPreviousQueen = ({
-  assignment,
-  queen,
-  assignments,
-  hivesById,
-}) => {
+const buildPreviousQueen = ({ assignment, queen, assignments, hivesById }) => {
   const expectedColour = getQueenColourForYear(queen?.queen_year);
-  const actualColour =
-    queen?.actual_colour || (queen?.marked ? expectedColour : "Unmarked");
+  const actualColour = queen?.actual_colour || (queen?.marked ? expectedColour : "Unmarked");
   const markedSummary =
-    actualColour === "Unmarked"
-      ? "unmarked"
-      : `${String(actualColour).toLowerCase()}-marked`;
+    actualColour === "Unmarked" ? "unmarked" : `${String(actualColour).toLowerCase()}-marked`;
 
   const activeLocation = currentAssignmentForQueen(assignments, assignment.queen_id);
-  const currentHiveName = activeLocation
-    ? hivesById.get(activeLocation.hive_id)?.name
-    : null;
+  const currentHiveName = activeLocation ? hivesById.get(activeLocation.hive_id)?.name : null;
 
   return {
     id: assignment.id,
     queenId: assignment.queen_id,
     reference: queen?.reference || "Previous Queen",
-    period: `${formatQueenDate(assignment.started_on)} – ${formatQueenDate(
-      assignment.ended_on
-    )}`,
+    period: `${formatQueenDate(assignment.started_on)} – ${formatQueenDate(assignment.ended_on)}`,
     summary: `${queen?.queen_year || "Unknown year"} ${markedSummary} queen`,
     outcome: titleCase(assignment.end_reason || queen?.status, "Ended"),
     currentLocation: currentHiveName
@@ -221,11 +213,7 @@ const needsAttention = (currentQueen, transition) => {
   if (!currentQueen) return true;
 
   const status = String(currentQueen.status || "").toLowerCase();
-  if (
-    ["pending", "lost", "queenless", "unknown", "failed"].some((word) =>
-      status.includes(word)
-    )
-  ) {
+  if (["pending", "lost", "queenless", "unknown", "failed"].some((word) => status.includes(word))) {
     return true;
   }
 
@@ -258,21 +246,9 @@ export async function getQueenRecordsOverview() {
     eventsResult,
     inspectionsResult,
   ] = await Promise.all([
-    supabase
-      .from("profiles")
-      .select("subscription_level")
-      .eq("user_id", user.id)
-      .maybeSingle(),
-    supabase
-      .from("apiaries")
-      .select("id, name")
-      .is("archived_at", null)
-      .order("name"),
-    supabase
-      .from("hives")
-      .select("id, name, apiary_id")
-      .is("archived_at", null)
-      .order("name"),
+    supabase.from("profiles").select("subscription_level").eq("user_id", user.id).maybeSingle(),
+    supabase.from("apiaries").select("id, name").is("archived_at", null).order("name"),
+    supabase.from("hives").select("id, name, apiary_id").is("archived_at", null).order("name"),
     supabase.from("queens").select("*"),
     supabase.from("queen_assignments").select("*"),
     supabase.from("queen_processes").select("*"),
@@ -310,16 +286,13 @@ export async function getQueenRecordsOverview() {
       .filter((assignment) => assignment.hive_id === hive.id)
       .sort((a, b) => dateSortDescending(a, b, "started_on"));
 
-    const currentAssignment = hiveAssignments.find(
-      (assignment) => !assignment.ended_on
-    );
-    const currentQueenRow = currentAssignment
-      ? queensById.get(currentAssignment.queen_id)
-      : null;
+    const currentAssignment = hiveAssignments.find((assignment) => !assignment.ended_on);
+    const currentQueenRow = currentAssignment ? queensById.get(currentAssignment.queen_id) : null;
     const currentQueen = buildCurrentQueen({
       queen: currentQueenRow,
       assignment: currentAssignment,
       inspections,
+      events,
     });
 
     const previousQueens = hiveAssignments
@@ -344,8 +317,8 @@ export async function getQueenRecordsOverview() {
     const status = currentQueen
       ? currentQueen.status
       : transition
-      ? transition.status
-      : "No Queen record";
+        ? transition.status
+        : "No Queen record";
 
     return {
       id: hive.id,
@@ -354,12 +327,9 @@ export async function getQueenRecordsOverview() {
       name: hive.name,
       status,
       attention:
-      currentQueen ||
-      transition ||
-      previousQueens.length > 0 ||
-        normalisedEvents.length > 0
-      ? needsAttention(currentQueen, transition)
-      : false,
+        currentQueen || transition || previousQueens.length > 0 || normalisedEvents.length > 0
+          ? needsAttention(currentQueen, transition)
+          : false,
       currentQueen,
       previousQueens,
       transition,
@@ -371,14 +341,9 @@ export async function getQueenRecordsOverview() {
 
   return {
     userId: user.id,
-    subscriptionLevel: String(
-      profileResult.data?.subscription_level || "free"
-    ).toLowerCase(),
+    subscriptionLevel: String(profileResult.data?.subscription_level || "free").toLowerCase(),
     hasQueenData:
-      queens.length > 0 ||
-      assignments.length > 0 ||
-      processes.length > 0 ||
-      events.length > 0,
+      queens.length > 0 || assignments.length > 0 || processes.length > 0 || events.length > 0,
     apiaries,
     hives: normalisedHives,
   };
@@ -446,13 +411,7 @@ export const updateQueenDetails = ({
     p_notes: notes || null,
   });
 
-export const recordQueenProgress = ({
-  hiveId,
-  eventDate,
-  progress,
-  notes,
-  expectedCheckOn,
-}) =>
+export const recordQueenProgress = ({ hiveId, eventDate, progress, notes, expectedCheckOn }) =>
   callQueenRpc("queen_record_progress", {
     p_hive_id: hiveId,
     p_event_date: eventDate || null,
@@ -461,12 +420,7 @@ export const recordQueenProgress = ({
     p_expected_check_on: expectedCheckOn || null,
   });
 
-export const transferQueen = ({
-  sourceHiveId,
-  destinationHiveId,
-  eventDate,
-  notes,
-}) =>
+export const transferQueen = ({ sourceHiveId, destinationHiveId, eventDate, notes }) =>
   callQueenRpc("queen_transfer", {
     p_source_hive_id: sourceHiveId,
     p_destination_hive_id: destinationHiveId,
