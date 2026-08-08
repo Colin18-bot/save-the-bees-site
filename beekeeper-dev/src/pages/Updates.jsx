@@ -10,6 +10,69 @@ dayjs.locale("en-gb");
 const NOTES = [
 
 {
+  version: "1.4.1",
+  released_at: "2026-08-08T23:00:00Z",
+
+  summary:
+    "Refined Queen lifecycle tracking, Hive Health assessment and subscription-state handling following the HiveTag 1.4.0 release. This update improves Queen history accuracy, separates seasonal guidance from colony risk, introduces a clear unassessed state for new hives, and fixes Premium access indicators on initial application load.",
+
+  added: [
+    "Added an **Unassessed** Hive Health state for hives that do not yet have any inspections, preventing a health score from being inferred where no inspection evidence exists.",
+    "Added a separate **Seasonal Guidance** section within Hive Health so seasonal considerations can be shown without being treated as evidence of colony risk.",
+    "Added support for explicit Queen sightings recorded through the **Virgin queen seen** lifecycle event when calculating a Queen's Last Seen date."
+  ],
+
+  changed: [
+    "Hive Health now distinguishes between assessed and unassessed colonies rather than assigning a default score to hives with no inspection history.",
+    "Seasonal context is now advisory only and no longer contributes to the Overall Risk level or risk source shown in Hive Health.",
+    "Dashboard Hive Health totals now include an **Unassessed** count so new hives are not incorrectly classified as Healthy, Monitor or Attention.",
+    "Queen Last Seen information now follows the individual Queen when she is transferred between hives rather than being restricted to sightings recorded in her current hive.",
+    "The **Record Queen Progress** form now requires the member to explicitly select a progress event instead of preselecting a Queen outcome.",
+    "Queen descriptions now correctly distinguish an **unmarked queen** from a colour-marked Queen throughout Queen Records and the Dashboard.",
+    "Subscription indicators now react to subscription updates during the current session instead of depending solely on the value present when the navigation first renders.",
+    "The Sidebar now waits for the member's subscription level to be confirmed during initial application loading rather than temporarily presenting unresolved Premium accounts as Free."
+  ],
+
+  fixed: [
+    "Fixed new hives with no inspections incorrectly receiving a calculated Hive Health score and being shown as Monitor.",
+    "Fixed brand-new hives with no Queen history being incorrectly counted as requiring Queen attention.",
+    "Fixed seasonal context causing otherwise healthy colonies to display an Overall Risk of Monitor.",
+    "Fixed a transferred Queen losing her previous Last Seen date when moved to another hive.",
+    "Fixed a **Virgin queen seen** lifecycle event not updating the Queen's Last Seen date.",
+    "Fixed unmarked queens being displayed as **unmarked-marked queen** in Queen Records.",
+    "Fixed unmarked queens being displayed as **unmarked-marked** in Dashboard Queen summaries.",
+    "Fixed Premium members briefly seeing Free-plan navigation, locked Premium features and the Upgrade Plan button when HiveTag was first loaded.",
+    "Fixed the top navigation subscription badge remaining on **Free** after the member's Premium subscription had been confirmed.",
+    "Fixed the Premium badge being hidden when a member did not have a display name configured."
+  ],
+
+  removed: [
+    "Removed the use of seasonal context as a source of colony risk.",
+    "Removed the automatic default Queen progress selection from the Record Queen Progress form."
+  ],
+
+  security: [
+    "Premium route protection continues to verify subscription access directly against the member's Supabase profile.",
+    "Subscription-state display changes do not alter Premium access rules or the retained read-only Queen-data permissions introduced in version 1.4.0."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Queen Records", to: "/queens" },
+    { label: "Hive Health", to: "/hives" },
+    { label: "Reports Centre", to: "/reports/print" },
+    { label: "Help", to: "/help" }
+  ],
+
+  known_issues: [
+    "The Free-plan path for an account that has never held any Queen Records has been code-reviewed but has not been tested with a dedicated staging account.",
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
+
+{
   version: "1.4.0",
   released_at: "2026-08-06T18:00:00Z",
 
