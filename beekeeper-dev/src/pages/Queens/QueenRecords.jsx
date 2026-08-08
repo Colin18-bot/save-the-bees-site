@@ -88,12 +88,10 @@ const EVENT_ACTIONS = [
   {
     id: "rearing",
     label: "Set Queenless Colony Plan",
-    description:
-      "Record or update how a queenless colony will obtain its next Queen.",
+    description: "Record or update how a queenless colony will obtain its next Queen.",
     icon: Egg,
   },
 ];
-
 
 const statusClass = (status = "") => {
   const value = status.toLowerCase();
@@ -162,7 +160,8 @@ const ReadOnlyNotice = () => (
       <div>
         <p className="font-bold text-amber-950">Queen Records are read-only</p>
         <p className="mt-1 text-sm text-amber-900">
-          Existing records have been retained. Restore Premium to add, edit or progress Queen information.
+          Existing records have been retained. Restore Premium to add, edit or progress Queen
+          information.
         </p>
       </div>
     </div>
@@ -184,8 +183,8 @@ const PremiumOnlyLanding = () => (
         </div>
         <h2 className="mt-5 text-3xl font-extrabold">Queen Records</h2>
         <p className="mx-auto mt-3 max-w-2xl text-green-50">
-          Build a permanent history of every queen, including marking details, introductions, splits,
-          transfers, mating progress, supersedure and previous queens.
+          Build a permanent history of every queen, including marking details, introductions,
+          splits, transfers, mating progress, supersedure and previous queens.
         </p>
       </div>
       <div className="grid gap-4 p-6 sm:grid-cols-2">
@@ -214,6 +213,20 @@ const PremiumOnlyLanding = () => (
     </Card>
   </div>
 );
+
+const queenDisplayName = (queen) => {
+  if (!queen) return "No confirmed current queen";
+
+  const colour = String(queen.actualColour || "").trim();
+  const isUnmarked =
+    String(queen.marked || "").toLowerCase() === "no" || colour.toLowerCase() === "unmarked";
+
+  if (isUnmarked) {
+    return `${queen.year} unmarked queen`;
+  }
+
+  return `${queen.year} ${colour.toLowerCase()}-marked queen`;
+};
 
 const AllHivesOverview = ({ hives, onOpenHive }) => {
   const withCurrentQueen = hives.filter((hive) => hive.currentQueen).length;
@@ -264,18 +277,16 @@ const AllHivesOverview = ({ hives, onOpenHive }) => {
             >
               <div>
                 <p className="font-bold text-[#1a3329]">{hive.name}</p>
-                <p className="text-xs text-gray-500">
-                  {hive.apiaryName}
-                </p>
+                <p className="text-xs text-gray-500">{hive.apiaryName}</p>
               </div>
               <div>
                 <p className="text-sm font-semibold text-gray-900">
-                  {hive.currentQueen
-                    ? `${hive.currentQueen.year} ${hive.currentQueen.actualColour.toLowerCase()}-marked queen`
-                    : "No confirmed current queen"}
+                  {queenDisplayName(hive.currentQueen)}
                 </p>
                 <p className="mt-1 text-xs text-gray-500">
-                  {hive.currentQueen?.origin || hive.transition?.method || "No Queen process recorded"}
+                  {hive.currentQueen?.origin ||
+                    hive.transition?.method ||
+                    "No Queen process recorded"}
                 </p>
               </div>
               <div>
@@ -318,9 +329,11 @@ const QueenOverview = ({ hive, canEdit, onAction }) => (
                   <Crown className="h-7 w-7" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-500">{hive.currentQueen.reference}</p>
+                  <p className="text-sm font-semibold text-gray-500">
+                    {hive.currentQueen.reference}
+                  </p>
                   <h3 className="mt-1 text-2xl font-extrabold text-[#1a3329]">
-                    {hive.currentQueen.year} {hive.currentQueen.actualColour.toLowerCase()}-marked queen
+                    {queenDisplayName(hive.currentQueen)}
                   </h3>
                   <p className="mt-2 text-sm text-gray-700">{hive.currentQueen.origin}</p>
                 </div>
@@ -338,7 +351,9 @@ const QueenOverview = ({ hive, canEdit, onAction }) => (
             <div className="flex gap-3">
               <AlertTriangle className="mt-1 h-6 w-6 shrink-0 text-amber-800" />
               <div>
-                <h3 className="text-xl font-extrabold text-amber-950">No confirmed current queen</h3>
+                <h3 className="text-xl font-extrabold text-amber-950">
+                  No confirmed current queen
+                </h3>
                 <p className="mt-2 text-sm text-amber-900">
                   {hive.transition?.method || "No replacement method has been recorded."}
                 </p>
@@ -368,7 +383,10 @@ const QueenOverview = ({ hive, canEdit, onAction }) => (
     </Card>
 
     <Card className="xl:col-span-2">
-      <CardHeader title="Latest Queen activity" subtitle="Important Queen and colony events only." />
+      <CardHeader
+        title="Latest Queen activity"
+        subtitle="Important Queen and colony events only."
+      />
       <div className="divide-y divide-gray-100">
         {hive.events.slice(0, 3).map((event) => (
           <div key={`${event.date}-${event.type}`} className="flex gap-4 px-5 py-4">
@@ -389,8 +407,8 @@ const QueenOverview = ({ hive, canEdit, onAction }) => (
         <div className="flex gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4">
           <ShieldCheck className="h-6 w-6 shrink-0 text-blue-700" />
           <p className="text-sm text-blue-950">
-            Changes recorded here apply from the event date forward. Queen information already saved in
-            previous inspections will remain unchanged.
+            Changes recorded here apply from the event date forward. Queen information already saved
+            in previous inspections will remain unchanged.
           </p>
         </div>
       </div>
@@ -405,7 +423,8 @@ const CurrentQueenTab = ({ hive, canEdit, onAction }) => {
         <AlertTriangle className="mx-auto h-10 w-10 text-amber-600" />
         <h2 className="mt-3 text-xl font-bold text-[#1a3329]">No current Queen record</h2>
         <p className="mx-auto mt-2 max-w-xl text-sm text-gray-600">
-          {hive.transition?.note || "Record how this colony will obtain or establish its next queen."}
+          {hive.transition?.note ||
+            "Record how this colony will obtain or establish its next queen."}
         </p>
         {canEdit ? (
           <button
@@ -444,7 +463,7 @@ const CurrentQueenTab = ({ hive, canEdit, onAction }) => {
             <div>
               <p className="text-sm font-semibold text-gray-500">{queen.reference}</p>
               <h3 className="mt-1 text-2xl font-extrabold text-[#1a3329]">
-                {queen.year} {queen.actualColour.toLowerCase()}-marked queen
+                {queenDisplayName(queen)}
               </h3>
             </div>
             <StatusPill>{queen.status}</StatusPill>
@@ -464,7 +483,9 @@ const CurrentQueenTab = ({ hive, canEdit, onAction }) => {
             <Detail label="Current status" value={queen.status} />
           </dl>
           <div className="mt-4 rounded-xl border border-gray-200 bg-white p-4">
-            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">Queen notes</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              Queen notes
+            </p>
             <p className="mt-2 text-sm text-gray-700">{queen.notes}</p>
           </div>
         </div>
@@ -500,8 +521,8 @@ const CurrentQueenTab = ({ hive, canEdit, onAction }) => {
           <div className="mt-4 flex gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4">
             <Info className="h-5 w-5 shrink-0 text-blue-700" />
             <p className="text-sm text-blue-950">
-              Queen year and actual marking colour remain separate. HiveTag suggests the recognised colour but
-              does not assume that the queen is marked.
+              Queen year and actual marking colour remain separate. HiveTag suggests the recognised
+              colour but does not assume that the queen is marked.
             </p>
           </div>
         </div>
@@ -535,14 +556,19 @@ const ProgressTab = ({ hive, canEdit, onAction }) => (
           </div>
         ) : (
           <div className="relative ml-3 border-l-2 border-amber-200 pl-7">
-          {hive.progress.map((item, index) => (
-            <div key={`${item.date}-${item.title}`} className={index === hive.progress.length - 1 ? "pb-0" : "pb-7"}>
-              <span className="absolute -left-[9px] mt-1 h-4 w-4 rounded-full border-4 border-white bg-yellow-400" />
-              <p className="text-xs font-bold uppercase tracking-wide text-gray-500">{item.date}</p>
-              <h3 className="mt-1 font-bold text-[#1a3329]">{item.title}</h3>
-              <p className="mt-1 text-sm text-gray-600">{item.detail}</p>
-            </div>
-          ))}
+            {hive.progress.map((item, index) => (
+              <div
+                key={`${item.date}-${item.title}`}
+                className={index === hive.progress.length - 1 ? "pb-0" : "pb-7"}
+              >
+                <span className="absolute -left-[9px] mt-1 h-4 w-4 rounded-full border-4 border-white bg-yellow-400" />
+                <p className="text-xs font-bold uppercase tracking-wide text-gray-500">
+                  {item.date}
+                </p>
+                <h3 className="mt-1 font-bold text-[#1a3329]">{item.title}</h3>
+                <p className="mt-1 text-sm text-gray-600">{item.detail}</p>
+              </div>
+            ))}
           </div>
         )}
       </div>
@@ -583,9 +609,11 @@ const HistoryTab = ({ hive }) => (
           <div>
             <p className="text-sm font-semibold text-gray-500">{hive.currentQueen.reference}</p>
             <p className="mt-1 text-lg font-extrabold text-[#1a3329]">
-              {hive.currentQueen.year} {hive.currentQueen.actualColour.toLowerCase()}-marked queen
+              {queenDisplayName(hive.currentQueen)}
             </p>
-            <p className="mt-1 text-sm text-gray-600">Current since {hive.currentQueen.currentSince}</p>
+            <p className="mt-1 text-sm text-gray-600">
+              Current since {hive.currentQueen.currentSince}
+            </p>
           </div>
           <StatusPill>{hive.currentQueen.status}</StatusPill>
         </div>
@@ -600,7 +628,10 @@ const HistoryTab = ({ hive }) => (
       {hive.previousQueens.length ? (
         <div className="divide-y divide-gray-100">
           {hive.previousQueens.map((queen) => (
-            <div key={queen.id} className="grid gap-3 px-5 py-5 sm:grid-cols-[1fr_1.6fr_1fr] sm:items-center">
+            <div
+              key={queen.id}
+              className="grid gap-3 px-5 py-5 sm:grid-cols-[1fr_1.6fr_1fr] sm:items-center"
+            >
               <div>
                 <p className="font-bold text-[#1a3329]">{queen.reference}</p>
                 <p className="mt-1 text-xs font-semibold text-gray-500">{queen.period}</p>
@@ -616,7 +647,9 @@ const HistoryTab = ({ hive }) => (
           ))}
         </div>
       ) : (
-        <div className="p-8 text-center text-sm text-gray-600">No previous Queen records for this hive.</div>
+        <div className="p-8 text-center text-sm text-gray-600">
+          No previous Queen records for this hive.
+        </div>
       )}
     </Card>
   </div>
@@ -639,17 +672,12 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
   const action = EVENT_ACTIONS.find((item) => item.id === actionId);
   const currentQueen = hive.currentQueen;
   const destinationHives = allHives.filter(
-    (item) =>
-      item.id !== hive.id &&
-      !item.currentQueen &&
-      !item.transition
+    (item) => item.id !== hive.id && !item.currentQueen && !item.transition
   );
 
   const [eventDate, setEventDate] = useState(localToday());
   const [reference, setReference] = useState(currentQueen?.reference || "");
-  const [origin, setOrigin] = useState(
-    currentQueen?.origin || "Purchased mated queen"
-  );
+  const [origin, setOrigin] = useState(currentQueen?.origin || "Purchased mated queen");
   const [queenYear, setQueenYear] = useState(
     String(currentQueen?.year || new Date().getFullYear())
   );
@@ -657,33 +685,19 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
     currentQueen?.actualColour || getQueenColourForYear(new Date().getFullYear())
   );
   const [clipped, setClipped] = useState(
-    currentQueen?.clipped === "Yes"
-      ? "yes"
-      : currentQueen?.clipped === "No"
-      ? "no"
-      : "unknown"
+    currentQueen?.clipped === "Yes" ? "yes" : currentQueen?.clipped === "No" ? "no" : "unknown"
   );
   const [supplier, setSupplier] = useState(
     currentQueen?.supplier === "Not recorded" ? "" : currentQueen?.supplier || ""
   );
   const [emergedOn, setEmergedOn] = useState(currentQueen?.emergedOnRaw || "");
-  const [introducedOn, setIntroducedOn] = useState(
-    currentQueen?.introducedOnRaw || ""
-  );
-  const [queenStatus, setQueenStatus] = useState(
-    currentQueen?.statusRaw || "active"
-  );
-  const [destinationId, setDestinationId] = useState(
-    destinationHives[0]?.id || ""
-  );
+  const [introducedOn, setIntroducedOn] = useState(currentQueen?.introducedOnRaw || "");
+  const [queenStatus, setQueenStatus] = useState(currentQueen?.statusRaw || "active");
+  const [destinationId, setDestinationId] = useState(destinationHives[0]?.id || "");
   const [queenLocation, setQueenLocation] = useState("destination");
   const [splitReason, setSplitReason] = useState("");
-  const [queenCellPosition, setQueenCellPosition] = useState(
-    "Queen-cell position not recorded"
-  );
-  const [replacement, setReplacement] = useState(
-    hive.transition?.method || "Not yet decided"
-  );
+  const [queenCellPosition, setQueenCellPosition] = useState("Queen-cell position not recorded");
+  const [replacement, setReplacement] = useState(hive.transition?.method || "Not yet decided");
   const [broodSourceHiveId, setBroodSourceHiveId] = useState("");
   const [progress, setProgress] = useState("");
   const [expectedCheckOn, setExpectedCheckOn] = useState(dateAfterDays(7));
@@ -712,16 +726,15 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
   if (!action) return null;
 
   const destinationName =
-    destinationHives.find((item) => item.id === destinationId)?.name ||
-    "the destination hive";
+    destinationHives.find((item) => item.id === destinationId)?.name || "the destination hive";
 
   const queenlessHiveId =
     actionId === "split"
       ? queenLocation === "destination"
         ? hive.id
         : queenLocation === "source"
-        ? destinationId
-        : null
+          ? destinationId
+          : null
       : hive.id;
 
   const broodSourceHives = allHives.filter(
@@ -733,13 +746,11 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
       ? queenLocation === "destination"
         ? hive.name
         : queenLocation === "source"
-        ? destinationName
-        : "the queenless colony"
+          ? destinationName
+          : "the queenless colony"
       : hive.name;
 
-  const replacementUsesBroodFrame = replacement
-    .toLowerCase()
-    .includes("frame of eggs");
+  const replacementUsesBroodFrame = replacement.toLowerCase().includes("frame of eggs");
 
   const submit = async (event) => {
     event.preventDefault();
@@ -748,9 +759,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
 
     try {
       if (["transfer", "split"].includes(actionId) && !destinationId) {
-        throw new Error(
-          "Create or select an empty destination hive before recording this change."
-        );
+        throw new Error("Create or select an empty destination hive before recording this change.");
       }
 
       if (["edit", "swarm", "transfer", "split"].includes(actionId) && !currentQueen) {
@@ -817,9 +826,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
           splitReason,
           queenCellPosition,
           replacementMethod: replacement,
-          broodSourceHiveId: replacementUsesBroodFrame
-            ? broodSourceHiveId || null
-            : null,
+          broodSourceHiveId: replacementUsesBroodFrame ? broodSourceHiveId || null : null,
           expectedCheckOn,
           notes,
         });
@@ -837,9 +844,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
           eventDate,
           method: replacement,
           queenCellPosition,
-          sourceHiveId: replacementUsesBroodFrame
-            ? broodSourceHiveId || null
-            : null,
+          sourceHiveId: replacementUsesBroodFrame ? broodSourceHiveId || null : null,
           expectedCheckOn,
           notes,
         });
@@ -857,12 +862,8 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
     <Card className="overflow-hidden border-amber-300 ring-2 ring-amber-100">
       <div className="flex items-start justify-between bg-amber-50 px-5 py-4">
         <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-amber-800">
-            Queen Records
-          </p>
-          <h2 className="mt-1 text-xl font-extrabold text-[#1a3329]">
-            {action.label}
-          </h2>
+          <p className="text-xs font-bold uppercase tracking-wide text-amber-800">Queen Records</p>
+          <h2 className="mt-1 text-xl font-extrabold text-[#1a3329]">{action.label}</h2>
           <p className="mt-1 text-sm text-gray-600">{action.description}</p>
         </div>
         <button
@@ -907,7 +908,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
           ) : null}
         </div>
 
-        {(actionId === "add" || actionId === "edit" || actionId === "introduce") ? (
+        {actionId === "add" || actionId === "edit" || actionId === "introduce" ? (
           <div className="space-y-4 rounded-2xl border border-gray-200 bg-gray-50 p-4">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <label className="text-sm font-semibold text-gray-700">
@@ -1024,7 +1025,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
           </div>
         ) : null}
 
-        {(actionId === "split" || actionId === "transfer") ? (
+        {actionId === "split" || actionId === "transfer" ? (
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="text-sm font-semibold text-gray-700">
               Destination hive or nucleus
@@ -1121,7 +1122,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
           </label>
         ) : null}
 
-        {(actionId === "split" || actionId === "swarm" || actionId === "rearing") ? (
+        {actionId === "split" || actionId === "swarm" || actionId === "rearing" ? (
           <label className="block text-sm font-semibold text-gray-700">
             {actionId === "rearing"
               ? `How will ${hive.name} obtain its next Queen?`
@@ -1148,8 +1149,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
           </label>
         ) : null}
 
-        {replacementUsesBroodFrame &&
-        (actionId === "split" || actionId === "rearing") ? (
+        {replacementUsesBroodFrame && (actionId === "split" || actionId === "rearing") ? (
           <label className="block text-sm font-semibold text-gray-700">
             Source hive for the brood frame
             <select
@@ -1175,7 +1175,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
               onChange={(event) => setProgress(event.target.value)}
               required
               className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
-              >
+            >
               <option value="" disabled>
                 Select progress
               </option>
@@ -1235,11 +1235,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
             disabled={saving}
             className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#1a3329] px-5 py-2 text-sm font-bold text-white hover:bg-[#28513f] disabled:cursor-wait disabled:opacity-60"
           >
-            {saving ? (
-              <RefreshCw className="h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="h-4 w-4" />
-            )}
+            {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
             {saving ? "Saving..." : "Save"}
           </button>
         </div>
@@ -1274,15 +1270,7 @@ const actionDisabled = (actionId, hive, allHives) => {
   return false;
 };
 
-const EventsTab = ({
-  hive,
-  allHives,
-  canEdit,
-  activeAction,
-  onAction,
-  onClose,
-  onSaved,
-}) => (
+const EventsTab = ({ hive, allHives, canEdit, activeAction, onAction, onClose, onSaved }) => (
   <div className="space-y-5">
     <Card>
       <CardHeader
@@ -1342,9 +1330,7 @@ const EventsTab = ({
             key={event.id || `${event.date}-${event.type}`}
             className="grid gap-2 px-5 py-4 sm:grid-cols-[150px_1fr]"
           >
-            <p className="text-xs font-bold uppercase tracking-wide text-gray-500">
-              {event.date}
-            </p>
+            <p className="text-xs font-bold uppercase tracking-wide text-gray-500">{event.date}</p>
             <div>
               <p className="font-bold text-[#1a3329]">{event.type}</p>
               <p className="mt-1 text-sm text-gray-600">{event.detail}</p>
@@ -1404,10 +1390,7 @@ const QueenRecords = () => {
   }, [records.apiaries, selectedApiaryId]);
 
   useEffect(() => {
-    if (
-      selectedHiveId !== "all" &&
-      !records.hives.some((hive) => hive.id === selectedHiveId)
-    ) {
+    if (selectedHiveId !== "all" && !records.hives.some((hive) => hive.id === selectedHiveId)) {
       setSelectedHiveId("all");
       setActiveTab("overview");
       setActiveAction(null);
@@ -1430,8 +1413,7 @@ const QueenRecords = () => {
   const selectedApiaryName =
     selectedApiaryId === "all"
       ? "All apiaries"
-      : records.apiaries.find((apiary) => apiary.id === selectedApiaryId)?.name ||
-        "Unknown apiary";
+      : records.apiaries.find((apiary) => apiary.id === selectedApiaryId)?.name || "Unknown apiary";
 
   const canEdit = records.subscriptionLevel === "premium";
   const isReadOnly = !canEdit && records.hasQueenData;
@@ -1475,9 +1457,7 @@ const QueenRecords = () => {
       <div className="mx-auto flex max-w-7xl items-center justify-center py-24">
         <div className="text-center">
           <RefreshCw className="mx-auto h-8 w-8 animate-spin text-green-800" />
-          <p className="mt-3 text-sm font-semibold text-gray-600">
-            Loading Queen Records...
-          </p>
+          <p className="mt-3 text-sm font-semibold text-gray-600">Loading Queen Records...</p>
         </div>
       </div>
     );
@@ -1501,8 +1481,8 @@ const QueenRecords = () => {
             </div>
           </div>
           <p className="mt-3 max-w-3xl text-sm text-gray-600">
-            Review the current Queen position, preserve Queen history and record dated changes without altering
-            the Queen information stored in previous inspections.
+            Review the current Queen position, preserve Queen history and record dated changes
+            without altering the Queen information stored in previous inspections.
           </p>
         </div>
 
@@ -1616,8 +1596,8 @@ const QueenRecords = () => {
                       activeTab === tab.id
                         ? "border-yellow-400 bg-amber-50 text-[#1a3329]"
                         : disabled
-                        ? "cursor-not-allowed border-transparent text-gray-300"
-                        : "border-transparent text-gray-600 hover:bg-gray-50 hover:text-[#1a3329]"
+                          ? "cursor-not-allowed border-transparent text-gray-300"
+                          : "border-transparent text-gray-600 hover:bg-gray-50 hover:text-[#1a3329]"
                     }`}
                   >
                     <Icon className="h-4 w-4" />
