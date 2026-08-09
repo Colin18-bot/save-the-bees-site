@@ -59,7 +59,7 @@ function buildPriorityItems({
 }) {
   const items = [];
 
-    if (Array.isArray(diseaseRisk?.findings) && diseaseRisk.findings.length > 0) {
+  if (Array.isArray(diseaseRisk?.findings) && diseaseRisk.findings.length > 0) {
     diseaseRisk.findings.forEach((finding) => {
       items.push({
         source: finding.disease || "Disease",
@@ -166,7 +166,6 @@ function buildCoordinatorSummary({
   highestRisk,
   priorityItems,
   recommendedActions,
-  seasonalContext,
 }) {
   if (highestRisk.rank >= 4) {
     return "This hive has high-priority items that should be reviewed before relying on routine management.";
@@ -180,16 +179,49 @@ function buildCoordinatorSummary({
     return "This hive appears strong from the available inspection evidence.";
   }
 
-  if (seasonalContext?.level === "Important") {
-    return "This hive appears stable, but the current season adds management context that should be considered.";
+  return "No major concerns were identified from the current inspection evidence.";
   }
 
-  return "No major concerns were identified from the current intelligence data.";
-}
-
 export function coordinateHiveIntelligence({ history = [], inspection = null } = {}) {
-  const latestInspection = inspection || getLatestInspection(history) || {};
-  const previousInspection = getPreviousInspection(history);
+  const safeHistory = Array.isArray(history) ? history.filter(Boolean) : [];
+  const latestInspection = inspection || getLatestInspection(safeHistory) || null;
+
+  // A hive with no inspection evidence is not unhealthy; it is simply unassessed.
+  // Do not pass an empty object into the intelligence engines because missing
+  // fields would otherwise be interpreted as negative inspection evidence.
+  if (!latestInspection) {
+    return {
+      inspectionId: null,
+      generatedAt: new Date().toISOString(),
+      hasAssessment: false,
+      overall: {
+        healthScore: null,
+        healthBand: "Unassessed",
+        riskLevel: "Unassessed",
+        riskSource: "No inspection",
+        status:
+          "No health assessment yet. Complete the first inspection to generate Hive Health intelligence.",
+        confidence: "None",
+      },
+      priorityItems: [],
+      recommendedActions: [],
+      baseAnalysis: null,
+      change: {
+        scoreChange: null,
+        detectedChanges: [],
+        changeMessages: [],
+        changeSummary: null,
+      },
+      trends: analyseHiveTrends(safeHistory),
+      swarmRisk: null,
+      varroaRisk: null,
+      seasonalContext: null,
+      diseaseRisk: null,
+      queenPerformance: null,
+    };
+  }
+
+  const previousInspection = getPreviousInspection(safeHistory);
 
   const baseAnalysis = analyseInspection(latestInspection);
   const previousAnalysis = previousInspection ? analyseInspection(previousInspection) : null;
@@ -206,7 +238,7 @@ export function coordinateHiveIntelligence({ history = [], inspection = null } =
 
   const changeMessages = buildChangeMessages(detectedChanges);
   const changeSummary = buildChangeSummary(detectedChanges, scoreChange);
-  const trendResult = analyseHiveTrends(history);
+  const trendResult = analyseHiveTrends(safeHistory);
   const swarmRisk = analyseSwarmRisk(latestInspection);
   const varroaRisk = analyseVarroaRisk(latestInspection);
   const seasonalContext = analyseSeasonalContext(latestInspection);
@@ -214,10 +246,9 @@ export function coordinateHiveIntelligence({ history = [], inspection = null } =
   const queenPerformance = analyseQueenPerformance(latestInspection);
 
   const riskItems = [
-    { source: "Disease", label: "Disease", ...diseaseRisk },
-    { source: "Swarm", label: "Swarm", ...swarmRisk },
-    { source: "Varroa", label: "Varroa", ...varroaRisk },
-    { source: "Seasonal", label: "Seasonal", level: seasonalContext.level, message: seasonalContext.message },
+  { source: "Disease", label: "Disease", ...diseaseRisk },
+  { source: "Swarm", label: "Swarm", ...swarmRisk },
+  { source: "Varroa", label: "Varroa", ...varroaRisk },
   ];
 
   const highestRisk = getHighestRisk(riskItems);
@@ -238,22 +269,25 @@ export function coordinateHiveIntelligence({ history = [], inspection = null } =
   return {
     inspectionId: latestInspection?.id || null,
     generatedAt: new Date().toISOString(),
+    hasAssessment: true,
     overall: {
       healthScore: baseAnalysis.summary.healthScore,
       healthBand: baseAnalysis.summary.healthBand,
       riskLevel: highestRisk.level,
-      riskSource: highestRisk.source || highestRisk.label,
+      riskSource:
+      ["None", "Unknown"].includes(highestRisk.level)
+        ? "No identified risk"
+        : highestRisk.source || highestRisk.label,
       status: buildCoordinatorSummary({
-        baseAnalysis,
-        highestRisk,
-        priorityItems,
-        recommendedActions,
-        seasonalContext,
-      }),
+      baseAnalysis,
+      highestRisk,
+      priorityItems,
+      recommendedActions,
+    }),
       confidence:
-        history.length >= 3
+        safeHistory.length >= 3
           ? "High"
-          : history.length >= 2
+          : safeHistory.length >= 2
             ? "Medium"
             : "Low",
     },

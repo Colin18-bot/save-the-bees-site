@@ -2,12 +2,17 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabase";
+import {
+  formatQueenRecordDate,
+  getQueenSnapshotSummary,
+} from "../../services/inspectionQueen";
 import { reverseGeocode } from "../../utils/geocode";
 import {
-  archiveItem,
+  archiveInspectionLifecycle,
+  getInspectionDeleteSummary,
   humaniseSupabaseError,
   removeOneInspectionPhoto,
-  smartDeleteInspection,
+  serverDeleteRowWithPhotos,
 } from "../../services/actions";
 
 import {
@@ -153,6 +158,11 @@ const EditInspection = () => {
   const [derivedWeatherDisplay, setDerivedWeatherDisplay] = useState("");
 
   const [originalPhotos, setOriginalPhotos] = useState([]);
+  const [queenSnapshot, setQueenSnapshot] = useState(null);
+  const [originalInspectionContext, setOriginalInspectionContext] = useState({
+    hive_id: "",
+    date: "",
+  });
   const fileInputRef = useRef(null);
 
   const [newFiles, setNewFiles] = useState([]);
@@ -301,6 +311,7 @@ const EditInspection = () => {
 
       const data = inspRes.data || {};
       const loadedPhotos = Array.isArray(data.photos) ? data.photos : [];
+      setQueenSnapshot(data.queen_snapshot || null);
 
       let dateStr = data.date || "";
       if (dateStr) {
@@ -330,6 +341,11 @@ const EditInspection = () => {
       const cleanedDiseaseTypes = loadedDiseaseTypes.filter(
         (type) => type !== "Varroa"
       );
+
+      setOriginalInspectionContext({
+        hive_id: data.hive_id || "",
+        date: dateStr || "",
+      });
 
       setFormData({
         apiary_id: data.apiary_id || "",
@@ -758,136 +774,138 @@ const EditInspection = () => {
     navigate("/inspections");
   };
 
-const getLinkedInspectionCounts = async () => {
-  const [{ count: logs = 0, error: logErr }, { count: todos = 0, error: todoErr }] =
-    await Promise.all([
-      supabase
-        .from("logbook")
-        .select("id", { count: "exact", head: true })
-        .eq("inspection_id", id)
-        .is("archived_at", null),
+const getInspectionLifecycleSummary = async () => {
+  const { data, error } = await getInspectionDeleteSummary(id);
+  const summary = Array.isArray(data) ? data[0] : data || {};
 
-      supabase
-        .from("todos")
-        .select("id", { count: "exact", head: true })
-        .eq("inspection_id", id)
-        .is("archived_at", null),
-    ]);
-
-  return { logs, todos, error: logErr || todoErr };
-};
-
-const archiveInspectionAndLinkedItems = async () => {
-  const now = new Date().toISOString();
-
-  const [inspectionRes, logbookRes, todoRes] = await Promise.all([
-    supabase.from("inspections").update({ archived_at: now }).eq("id", id),
-    supabase
-      .from("logbook")
-      .update({ archived_at: now })
-      .eq("inspection_id", id)
-      .is("archived_at", null),
-    supabase
-      .from("todos")
-      .update({ archived_at: now })
-      .eq("inspection_id", id)
-      .is("archived_at", null),
-  ]);
-
-  return inspectionRes.error || logbookRes.error || todoRes.error;
+  return {
+    logs: Number(summary.logs || 0),
+    todos: Number(summary.todos || 0),
+    error,
+  };
 };
 
 const handleArchive = async () => {
-  const { logs, todos, error } = await getLinkedInspectionCounts();
+  setSaving(true);
 
-  if (error) {
-    console.error("Linked item check failed:", error);
+  try {
+    const { logs, todos, error: summaryError } =
+      await getInspectionLifecycleSummary();
+
+    if (summaryError) {
+      throw summaryError;
+    }
+
+    const linkedParts = [];
+    if (logs > 0) {
+      linkedParts.push(
+        `${logs} linked logbook entr${logs === 1 ? "y" : "ies"}`
+      );
+    }
+    if (todos > 0) {
+      linkedParts.push(`${todos} linked task${todos === 1 ? "" : "s"}`);
+    }
+
+    const message =
+      linkedParts.length > 0
+        ? `This inspection has ${linkedParts.join(
+            " and "
+          )}.\n\nArchive the inspection and the currently active linked items? Items that were already archived separately will remain archived.`
+        : "Archive this inspection?";
+
+    if (!window.confirm(message)) return;
+
+    const { error: archiveError } = await archiveInspectionLifecycle(id);
+
+    if (archiveError) {
+      throw archiveError;
+    }
+
     alert(
-      "HiveTag could not check all linked records safely.\n\n" +
-        "Nothing has been archived. Please refresh and try again."
+      linkedParts.length > 0
+        ? "Inspection and its active linked items were archived."
+        : "Inspection archived."
     );
-    return;
+    navigate("/inspections");
+  } catch (error) {
+    console.error("Inspection archive failed:", error);
+    alert(
+      humaniseSupabaseError(error, { table: "inspections" }) ||
+        "Failed to archive inspection and linked items."
+    );
+  } finally {
+    setSaving(false);
   }
-
-  const linkedParts = [];
-  if (logs > 0) linkedParts.push(`${logs} linked logbook entr${logs === 1 ? "y" : "ies"}`);
-  if (todos > 0) linkedParts.push(`${todos} linked task${todos === 1 ? "" : "s"}`);
-
-  const message =
-    linkedParts.length > 0
-      ? `This inspection has ${linkedParts.join(" and ")}.\n\nArchive the inspection and linked items?`
-      : "Archive this inspection?";
-
-  if (!window.confirm(message)) return;
-
-  const archiveErr = await archiveInspectionAndLinkedItems();
-
-  if (archiveErr) {
-    console.error("Archive failed:", archiveErr);
-    alert(humaniseSupabaseError(archiveErr) || "Failed to archive inspection and linked items.");
-    return;
-  }
-
-  alert("Inspection and linked items archived.");
-  navigate("/inspections");
 };
 
 const handleDelete = async () => {
-  const { logs, todos, error } = await getLinkedInspectionCounts();
+  setSaving(true);
 
-  if (error) {
-    console.error("Linked item check failed:", error);
-    alert(
-      "HiveTag could not safely check whether this inspection has linked records.\n\n" +
-        "To protect your records, the inspection has not been deleted."
+  try {
+    const { logs, todos, error: summaryError } =
+      await getInspectionLifecycleSummary();
+
+    if (summaryError) {
+      throw summaryError;
+    }
+
+    const typedConfirmation = window.prompt(
+      `PERMANENT INSPECTION DELETION\n\n` +
+        `This will permanently delete the inspection dated ${
+          formData.date || "date not recorded"
+        }.\n\n` +
+        `The following linked records will be kept but will no longer be linked to this inspection:\n` +
+        `• ${todos} task${todos === 1 ? "" : "s"}\n` +
+        `• ${logs} logbook entr${logs === 1 ? "y" : "ies"}\n\n` +
+        `The inspection's saved Queen snapshot and photographs will be removed. ` +
+        `The main Queen record, Queen assignments and Queen history will not be changed.\n\n` +
+        `This cannot be undone. Type DELETE to continue:`
     );
-    return;
-  }
 
-  const linkedParts = [];
-  if (logs > 0) linkedParts.push(`${logs} linked logbook entr${logs === 1 ? "y" : "ies"}`);
-  if (todos > 0) linkedParts.push(`${todos} linked task${todos === 1 ? "" : "s"}`);
+    if (typedConfirmation === null) return;
 
-  if (linkedParts.length > 0) {
-    const ok = window.confirm(
-      `This inspection has ${linkedParts.join(" and ")}.\n\nArchive the inspection and linked items instead?`
-    );
-
-    if (!ok) return;
-
-    const archiveErr = await archiveInspectionAndLinkedItems();
-
-    if (archiveErr) {
-      console.error("Archive failed:", archiveErr);
-      alert(humaniseSupabaseError(archiveErr) || "Failed to archive inspection and linked items.");
+    if (typedConfirmation.trim().toUpperCase() !== "DELETE") {
+      alert("DELETE was not entered. Nothing was deleted.");
       return;
     }
 
-    alert("Inspection and linked items archived.");
+    const finalConfirmation = window.confirm(
+      "Permanently delete this inspection now? Linked tasks and logbook entries will be preserved and unlinked."
+    );
+
+    if (!finalConfirmation) return;
+
+    const { error: deleteError } = await serverDeleteRowWithPhotos({
+      table: "inspections",
+      id,
+      mode: "delete_row",
+    });
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
+    alert("Inspection deleted. Linked tasks and logbook entries were preserved.");
     navigate("/inspections");
-    return;
-  }
-
-  if (!window.confirm("Delete this inspection permanently? This cannot be undone.")) return;
-
-  const { error: deleteErr } = await smartDeleteInspection(id);
-
-  if (deleteErr) {
-    console.error("Inspection delete failed:", deleteErr);
+  } catch (error) {
+    console.error("Inspection delete failed:", error);
     alert(
-      humaniseSupabaseError(deleteErr, { table: "inspections" }) ||
-        deleteErr.message ||
+      humaniseSupabaseError(error, { table: "inspections" }) ||
+        error?.message ||
         "Failed to delete inspection."
     );
-    return;
+  } finally {
+    setSaving(false);
   }
-
-  alert("Inspection deleted.");
-  navigate("/inspections");
 };
 
   const totalPhotos = (formData.photos?.length || 0) + (newFiles?.length || 0);
   const canAddMorePhotos = totalPhotos < 3;
+
+  const savedQueen = getQueenSnapshotSummary(queenSnapshot);
+  const queenContextChanged =
+    formData.hive_id !== originalInspectionContext.hive_id ||
+    formData.date !== originalInspectionContext.date;
 
   const selectedHive = hiveById.get(formData.hive_id);
   const selectedHiveNfc = selectedHive?.nfc_uid || "";
@@ -1023,6 +1041,71 @@ const handleDelete = async () => {
               placeholder="What did you actually observe? (e.g. sunny, warm, light breeze)"
             />
           </div>
+        </div>
+
+        {/* Queen snapshot saved with this inspection */}
+        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+          <p className="font-semibold text-blue-950">
+            Queen record saved with this inspection
+          </p>
+
+          {queenContextChanged ? (
+            <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3">
+              <p className="font-semibold text-amber-950">
+                Hive or inspection date changed
+              </p>
+              <p className="mt-1 text-sm text-amber-900">
+                When you save, HiveTag will resolve the Queen that applies to the
+                revised hive and date and create a new historical snapshot.
+              </p>
+            </div>
+          ) : savedQueen ? (
+            <div className="mt-3 rounded-lg border border-blue-200 bg-white p-3">
+              <p className="font-semibold text-[#1a3329]">
+                {savedQueen.reference}
+              </p>
+              <p className="mt-1 text-sm text-gray-700">
+                {savedQueen.year}{" "}
+                {String(savedQueen.actualColour || "unmarked").toLowerCase()}
+                {String(savedQueen.actualColour || "").toLowerCase() ===
+                "unmarked"
+                  ? " queen"
+                  : "-marked queen"}
+              </p>
+              <div className="mt-2 grid gap-1 text-xs text-gray-600 sm:grid-cols-2">
+                <p>Status: {savedQueen.status}</p>
+                <p>
+                  Assigned from:{" "}
+                  {formatQueenRecordDate(
+                    savedQueen.assignmentStartedOn,
+                    "Not recorded"
+                  )}
+                </p>
+                <p>Origin: {savedQueen.origin}</p>
+                <p>
+                  Clipped:{" "}
+                  {savedQueen.clipped === true
+                    ? "Yes"
+                    : savedQueen.clipped === false
+                    ? "No"
+                    : "Not recorded"}
+                </p>
+              </div>
+              <p className="mt-3 text-xs text-blue-900">
+                This is the historical Queen information stored when the
+                inspection was saved. Later edits to the live Queen record do not
+                change it.
+              </p>
+            </div>
+          ) : (
+            <div className="mt-3 rounded-lg border border-gray-200 bg-white p-3">
+              <p className="text-sm text-gray-700">
+                No Queen snapshot is currently attached. Saving this inspection
+                will link the Queen that applies to its hive and date, where one
+                is recorded.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Colony Behaviour */}
@@ -1394,7 +1477,8 @@ const handleDelete = async () => {
           <button
             type="button"
             onClick={handleArchive}
-            className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-3 py-2 rounded"
+            disabled={saving}
+            className="w-full sm:w-auto bg-yellow-500 hover:bg-yellow-600 text-white text-sm px-3 py-2 rounded disabled:opacity-50"
           >
             Archive
           </button>
@@ -1402,9 +1486,10 @@ const handleDelete = async () => {
           <button
             type="button"
             onClick={handleDelete}
-            className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-2 rounded"
+            disabled={saving}
+            className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-2 rounded disabled:opacity-50"
           >
-            Delete
+            Delete Permanently
           </button>
 
           <button

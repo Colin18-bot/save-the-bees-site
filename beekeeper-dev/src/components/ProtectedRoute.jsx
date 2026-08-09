@@ -8,36 +8,54 @@ import { supabase } from "../services/supabase";
  * <ProtectedRoute>...free route...</ProtectedRoute>
  * <ProtectedRoute requireVerified>...verified email only...</ProtectedRoute>
  * <ProtectedRoute minPlan="premium">...premium only...</ProtectedRoute>
+ * <ProtectedRoute minPlan="premium" allowRetainedQueenData>
+ *   ...premium route also available to Free users who retain Queen data...
+ * </ProtectedRoute>
  */
-const ProtectedRoute = ({ children, requireVerified = false, minPlan = "free" }) => {
+const ProtectedRoute = ({
+  children,
+  requireVerified = false,
+  minPlan = "free",
+  allowRetainedQueenData = false,
+}) => {
   const location = useLocation();
 
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [user, setUser] = useState(null);
 
-  // Only used if minPlan === "premium"
+  // Used only when minPlan === "premium".
   const [checkingPlan, setCheckingPlan] = useState(false);
-  const [planOK, setPlanOK] = useState(true); // default true so free routes don't block
+  const [planOK, setPlanOK] = useState(true);
 
   const redirectTo = `${location.pathname}${location.search}${location.hash}`;
 
-  // Best-effort email verification detection (covers password + social)
-  const isVerified = (u) =>
-    Boolean(u?.email_confirmed_at) ||
-    Boolean(u?.confirmed_at) ||
-    Boolean(u?.user_metadata?.email_verified) ||
-    Boolean(u?.identities?.some?.((id) => id?.identity_data?.email_verified));
+  // Best-effort email verification detection covering password and social sign-in.
+  const isVerified = (currentUser) =>
+    Boolean(currentUser?.email_confirmed_at) ||
+    Boolean(currentUser?.confirmed_at) ||
+    Boolean(currentUser?.user_metadata?.email_verified) ||
+    Boolean(
+      currentUser?.identities?.some?.(
+        (identity) => identity?.identity_data?.email_verified
+      )
+    );
 
-  // Initial session + subscribe to changes
+  // Initial session and authentication-state subscription.
   useEffect(() => {
     let mounted = true;
 
-    (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+    const loadSession = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
       if (!mounted) return;
+
       setUser(session?.user || null);
       setCheckingAuth(false);
-    })();
+    };
+
+    loadSession();
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!mounted) return;
@@ -50,7 +68,7 @@ const ProtectedRoute = ({ children, requireVerified = false, minPlan = "free" })
     };
   }, []);
 
-  // Premium gate: only query profile if needed and user present
+  // Premium access check, with an optional retained-Queen-data fallback.
   useEffect(() => {
     let cancelled = false;
 
@@ -60,31 +78,73 @@ const ProtectedRoute = ({ children, requireVerified = false, minPlan = "free" })
         setCheckingPlan(false);
         return;
       }
+
       setCheckingPlan(true);
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("subscription_level, subscription_status")
-        .eq("user_id", user.id)
-        .maybeSingle();
+      setPlanOK(false);
 
-      if (cancelled) return;
+      try {
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("subscription_level, subscription_status")
+          .eq("user_id", user.id)
+          .maybeSingle();
 
-      if (error) {
-        // Fail open to avoid locking users out due to a transient error.
-        console.warn("Plan check failed:", error);
-        setPlanOK(true);
-      } else {
-        const level = (data?.subscription_level || "free").toLowerCase();
-        setPlanOK(level === "premium");
+        if (cancelled) return;
+
+        if (profileError) {
+          console.warn("Plan check failed:", profileError);
+          setPlanOK(false);
+          return;
+        }
+
+        const level = String(profile?.subscription_level || "free").toLowerCase();
+
+        if (level === "premium") {
+          setPlanOK(true);
+          return;
+        }
+
+        if (!allowRetainedQueenData) {
+          setPlanOK(false);
+          return;
+        }
+
+        const queenCounts = await Promise.all([
+          supabase.from("queens").select("id", { count: "exact", head: true }),
+          supabase
+            .from("queen_assignments")
+            .select("id", { count: "exact", head: true }),
+          supabase
+            .from("queen_processes")
+            .select("id", { count: "exact", head: true }),
+          supabase.from("queen_events").select("id", { count: "exact", head: true }),
+        ]);
+
+        if (cancelled) return;
+
+        const hasRetainedQueenData = queenCounts.some(
+          (result) => !result.error && Number(result.count || 0) > 0
+        );
+
+        setPlanOK(hasRetainedQueenData);
+      } catch (error) {
+        if (!cancelled) {
+          console.warn("Access check failed:", error);
+          setPlanOK(false);
+        }
+      } finally {
+        if (!cancelled) setCheckingPlan(false);
       }
-      setCheckingPlan(false);
     };
 
     checkPlan();
-    return () => { cancelled = true; };
-  }, [minPlan, user]);
 
-  // 1) Still checking auth?
+    return () => {
+      cancelled = true;
+    };
+  }, [allowRetainedQueenData, minPlan, user]);
+
+  // 1) Still checking authentication.
   if (checkingAuth) {
     return (
       <div className="flex items-center justify-center mt-10 text-gray-700">
@@ -94,7 +154,7 @@ const ProtectedRoute = ({ children, requireVerified = false, minPlan = "free" })
     );
   }
 
-  // 2) Not signed in → go to login
+  // 2) Not signed in — go to login.
   if (!user) {
     return (
       <Navigate
@@ -105,7 +165,7 @@ const ProtectedRoute = ({ children, requireVerified = false, minPlan = "free" })
     );
   }
 
-  // 3) Email verification gate (optional) — simplified (no resend button)
+  // 3) Optional email-verification gate.
   if (requireVerified && !isVerified(user)) {
     return (
       <div className="max-w-md mx-auto p-6 mt-10 border rounded bg-yellow-50 text-yellow-900">
@@ -116,6 +176,7 @@ const ProtectedRoute = ({ children, requireVerified = false, minPlan = "free" })
         </p>
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={() => window.location.reload()}
             className="px-3 py-2 border rounded"
           >
@@ -126,7 +187,7 @@ const ProtectedRoute = ({ children, requireVerified = false, minPlan = "free" })
     );
   }
 
-  // 4) Premium gate (optional)
+  // 4) Optional Premium gate.
   if (minPlan === "premium") {
     if (checkingPlan) {
       return (
@@ -136,6 +197,7 @@ const ProtectedRoute = ({ children, requireVerified = false, minPlan = "free" })
         </div>
       );
     }
+
     if (!planOK) {
       return (
         <Navigate
@@ -147,7 +209,7 @@ const ProtectedRoute = ({ children, requireVerified = false, minPlan = "free" })
     }
   }
 
-  // 5) All good
+  // 5) All checks passed.
   return children;
 };
 

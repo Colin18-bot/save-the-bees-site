@@ -15,7 +15,8 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { forwardGeocode } from "../../utils/geocode";
 import {
-  archiveItem,
+  archiveApiaryLifecycle,
+  getApiaryDeleteSummary,
   serverDeleteRowWithPhotos,
   humaniseSupabaseError,
 } from "../../services/actions";
@@ -216,7 +217,7 @@ const EditApiary = () => {
     return { url: data?.publicUrl || null, path };
   };
 
-  // Delete current stored photo via server pipeline (storage FIRST, then DB clears)
+  // Delete current stored photo via server pipeline (database first, then storage cleanup)
   const deletePhoto = async () => {
     if (!window.confirm("Remove this photo?")) return;
 
@@ -355,64 +356,98 @@ const EditApiary = () => {
   };
 
   const handleDelete = async () => {
-    const { data, error: checkErr } = await supabase.rpc("check_apiary_children", {
-      apiary_id: id,
-    });
+    setSaving(true);
 
-    if (checkErr) {
-      console.error(checkErr);
-      alert("Could not delete, linked items. Please try again.");
-      return;
-    }
+    try {
+      const { data, error: summaryError } = await getApiaryDeleteSummary(id);
 
-    const row = Array.isArray(data) ? data[0] : data;
-    const { hives = 0, inspections = 0, todos = 0, logs = 0 } = row || {};
-    const hasChildren = hives + inspections + todos + logs > 0;
+      if (summaryError) {
+        throw summaryError;
+      }
 
-    if (hasChildren) {
-      const ok = window.confirm(
-        `This apiary has:\n• ${hives} hives\n• ${inspections} inspections\n• ${todos} to-dos\n• ${logs} log entries\n\nArchive instead?`
+      const summary = Array.isArray(data) ? data[0] : data || {};
+      const hives = Number(summary.hives || 0);
+      const inspections = Number(summary.inspections || 0);
+      const todos = Number(summary.todos || 0);
+      const logs = Number(summary.logs || 0);
+
+      const typedName = window.prompt(
+        `PERMANENT APIARY DELETION\n\n` +
+          `This will permanently delete "${formData.name}" and everything contained within it:\n` +
+          `• ${hives} hive${hives === 1 ? "" : "s"}\n` +
+          `• ${inspections} inspection${inspections === 1 ? "" : "s"}\n` +
+          `• ${todos} task${todos === 1 ? "" : "s"}\n` +
+          `• ${logs} logbook entr${logs === 1 ? "y" : "ies"}\n\n` +
+          `Associated photographs and hive-specific Queen lifecycle records will also be removed. ` +
+          `Queen records that have been transferred to another apiary are preserved.\n\n` +
+          `This cannot be undone. Type the apiary name exactly to continue:`
       );
-      if (!ok) return;
 
-      const { error: archErr } = await archiveItem("apiaries", id);
-      if (archErr) {
-        console.error(archErr);
-        alert("Failed to archive apiary.");
+      if (typedName === null) return;
+
+      if (typedName.trim() !== formData.name.trim()) {
+        alert("The apiary name did not match. Nothing was deleted.");
         return;
       }
-      alert("Apiary archived.");
+
+      const finalConfirmation = window.confirm(
+        `Permanently delete "${formData.name}" and all contained records now?`
+      );
+
+      if (!finalConfirmation) return;
+
+      const { error: deleteError } = await serverDeleteRowWithPhotos({
+        table: "apiaries",
+        id,
+        mode: "delete_row",
+      });
+
+      if (deleteError) {
+        throw deleteError;
+      }
+
+      alert("Apiary and all contained records were permanently deleted.");
       navigate("/apiaries");
-      return;
+    } catch (error) {
+      console.error("Apiary delete error:", error);
+      alert(
+        humaniseSupabaseError(error, { table: "apiaries" }) ||
+          "Failed to delete apiary."
+      );
+    } finally {
+      setSaving(false);
     }
-
-    if (!window.confirm("Delete this apiary permanently? This cannot be undone.")) return;
-
-    // Server-side delete: deletes storage first, then row
-    const { error: delErr } = await serverDeleteRowWithPhotos({
-      table: "apiaries",
-      id,
-      mode: "delete_row",
-    });
-
-    if (delErr) {
-      alert(humaniseSupabaseError(delErr, { table: "apiaries" }) || "Failed to delete apiary.");
-      return;
-    }
-
-    alert("Apiary deleted.");
-    navigate("/apiaries");
   };
 
   const handleArchive = async () => {
-    if (!window.confirm("Are you sure you want to archive this apiary?")) return;
-    const { error } = await archiveItem("apiaries", id);
-    if (error) {
-      console.error("Archive error:", error);
-      alert("Failed to archive apiary.");
-    } else {
-      alert("Apiary archived.");
+    const confirmed = window.confirm(
+      `Archive "${formData.name}"?\n\n` +
+        `Its active hives, inspections, tasks and logbook entries will move to the archive. ` +
+        `Existing individually archived records will remain archived. Current Queen assignments ` +
+        `and Queen processes are preserved because the apiary itself is being archived.`
+    );
+
+    if (!confirmed) return;
+
+    setSaving(true);
+
+    try {
+      const { error } = await archiveApiaryLifecycle(id);
+
+      if (error) {
+        throw error;
+      }
+
+      alert("Apiary and its active contents were archived.");
       navigate("/apiaries");
+    } catch (error) {
+      console.error("Archive error:", error);
+      alert(
+        humaniseSupabaseError(error, { table: "apiaries" }) ||
+          "Failed to archive apiary."
+      );
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -625,7 +660,8 @@ const EditApiary = () => {
             <button
               type="button"
               onClick={handleArchive}
-              className="w-full sm:w-auto bg-yellow-500 text-white text-sm px-3 py-2 rounded hover:bg-yellow-600"
+              disabled={saving}
+              className="w-full sm:w-auto bg-yellow-500 text-white text-sm px-3 py-2 rounded hover:bg-yellow-600 disabled:opacity-50"
             >
               Archive
             </button>
@@ -633,9 +669,10 @@ const EditApiary = () => {
             <button
               type="button"
               onClick={handleDelete}
-              className="w-full sm:w-auto bg-red-600 text-white text-sm px-3 py-2 rounded hover:bg-red-700"
+              disabled={saving}
+              className="w-full sm:w-auto bg-red-600 text-white text-sm px-3 py-2 rounded hover:bg-red-700 disabled:opacity-50"
             >
-              Delete
+              Delete Permanently
             </button>
 
             <button

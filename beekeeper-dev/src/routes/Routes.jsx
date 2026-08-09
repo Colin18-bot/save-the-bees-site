@@ -29,6 +29,8 @@ import InspectionList from "../pages/Inspections/InspectionList.jsx";
 import NewInspection from "../pages/Inspections/NewInspection.jsx";
 import EditInspection from "../pages/Inspections/EditInspection.jsx";
 
+import QueenRecords from "../pages/Queens/QueenRecords.jsx";
+
 import Logbook from "../pages/Logbook/LogEntryList.jsx";
 import NewLogEntry from "../pages/Logbook/NewLogEntry.jsx";
 import EditLogEntry from "../pages/Logbook/EditLogEntry.jsx";
@@ -110,6 +112,12 @@ const PremiumGuarded = ({ children }) => (
   </ProtectedRoute>
 );
 
+const QueenReportsGuarded = ({ children }) => (
+  <ProtectedRoute minPlan="premium" allowRetainedQueenData>
+    <Layout>{children}</Layout>
+  </ProtectedRoute>
+);
+
 function AppRoutes() {
   const location = useLocation();
 
@@ -166,6 +174,7 @@ function AppRoutes() {
       <Route path="/hives/:id" element={<PremiumGuarded><HiveHealth /></PremiumGuarded>} />
       <Route path="/hives/:id/edit" element={<Guarded><EditHive /></Guarded>} />
       <Route path="/inspections" element={<Guarded><InspectionList /></Guarded>} />
+      <Route path="/queens" element={<Guarded><QueenRecords /></Guarded>} />
       <Route path="/inspections/new" element={<Guarded><NewInspection /></Guarded>} />
       <Route path="/inspections/:id/edit" element={<Guarded><EditInspection /></Guarded>} />
       <Route path="/inspections/step-by-step" element={<Guarded><StepByStepInspections /></Guarded>} />
@@ -211,7 +220,7 @@ function AppRoutes() {
 
       {/* Reports */}
       <Route path="/reports/pnl" element={<PremiumGuarded><ProfitLoss /></PremiumGuarded>} />
-      <Route path="/reports/print" element={<PremiumGuarded><PrintReport /></PremiumGuarded>} />
+      <Route path="/reports/print" element={<QueenReportsGuarded><PrintReport /></QueenReportsGuarded>} />
 
       {/* Release Notes */}
       <Route path="/updates" element={<Guarded><Updates /></Guarded>} />

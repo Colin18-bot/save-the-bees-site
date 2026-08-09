@@ -2,6 +2,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { supabase } from "../../services/supabase";
+import {
+  formatQueenRecordDate,
+  getInspectionQueenContext,
+} from "../../services/inspectionQueen";
 import dayjs from "dayjs";
 // ✅ GA custom events (respects consent)
 import { trackEvent } from "../Legal/gaEvents";
@@ -108,6 +112,12 @@ const NewInspection = () => {
 
   const [apiaries, setApiaries] = useState([]);
   const [hives, setHives] = useState([]);
+  const [queenContext, setQueenContext] = useState({
+    currentQueen: null,
+    transition: null,
+  });
+  const [queenContextLoading, setQueenContextLoading] = useState(false);
+  const [queenContextError, setQueenContextError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [saving, setSaving] = useState(false);
@@ -296,6 +306,52 @@ const NewInspection = () => {
     if ("NDEFReader" in window) setNfcSupported(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadQueenContext = async () => {
+      if (!formData.hive_id) {
+        setQueenContext({ currentQueen: null, transition: null });
+        setQueenContextError("");
+        setQueenContextLoading(false);
+        return;
+      }
+
+      setQueenContextLoading(true);
+      setQueenContextError("");
+
+      try {
+        const context = await getInspectionQueenContext(
+          formData.hive_id,
+          formData.date
+        );
+
+        if (!cancelled) {
+          setQueenContext(context);
+        }
+      } catch (error) {
+        console.error("Queen context load failed:", error);
+
+        if (!cancelled) {
+          setQueenContext({ currentQueen: null, transition: null });
+          setQueenContextError(
+            "HiveTag could not load the Queen record for this inspection."
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setQueenContextLoading(false);
+        }
+      }
+    };
+
+    loadQueenContext();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [formData.hive_id, formData.date]);
 
   const handleChange = (e) => {
     const { name, value, type, checked, files: picked } = e.target;
@@ -511,7 +567,7 @@ const NewInspection = () => {
     const { data: inserted, error: insertErr } = await supabase
       .from("inspections")
       .insert(insertPayload)
-      .select("id, apiary_id, hive_id, weather_code")
+      .select("id, apiary_id, hive_id, weather_code, queen_id, queen_snapshot")
       .single();
 
     if (insertErr) {
@@ -828,6 +884,79 @@ const NewInspection = () => {
             placeholder="What did you actually observe at the hive? (e.g. sunny, warm, light breeze)"
           />
         </div>
+
+        {/* Queen record linked to this inspection */}
+        {formData.hive_id && (
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+              <div>
+                <p className="font-semibold text-amber-950">
+                  Queen record for this inspection
+                </p>
+                <p className="mt-1 text-xs text-amber-900">
+                  HiveTag will save an immutable Queen snapshot with this inspection.
+                  Later changes to Queen Records will not alter it.
+                </p>
+              </div>
+
+            </div>
+
+            {queenContextLoading ? (
+              <p className="mt-3 text-sm text-gray-600">Loading Queen record…</p>
+            ) : queenContextError ? (
+              <p className="mt-3 text-sm text-red-700">{queenContextError}</p>
+            ) : queenContext.currentQueen ? (
+              <div className="mt-3 rounded-lg border border-green-200 bg-white p-3">
+                <p className="font-semibold text-[#1a3329]">
+                  {queenContext.currentQueen.reference}
+                </p>
+                <p className="mt-1 text-sm text-gray-700">
+                  {queenContext.currentQueen.year || "Unknown year"}{" "}
+                  {String(
+                    queenContext.currentQueen.actualColour || "unmarked"
+                  ).toLowerCase()}
+                  {String(
+                    queenContext.currentQueen.actualColour || ""
+                  ).toLowerCase() === "unmarked"
+                    ? " queen"
+                    : "-marked queen"}
+                </p>
+                <p className="mt-1 text-xs text-gray-600">
+                  Current since{" "}
+                  {formatQueenRecordDate(
+                    queenContext.currentQueen.currentSince
+                  )}{" "}
+                  • {queenContext.currentQueen.status}
+                </p>
+              </div>
+            ) : queenContext.transition ? (
+              <div className="mt-3 rounded-lg border border-amber-300 bg-white p-3">
+                <p className="font-semibold text-amber-950">
+                  No confirmed current Queen
+                </p>
+                <p className="mt-1 text-sm text-gray-700">
+                  {queenContext.transition.method}
+                </p>
+                <p className="mt-1 text-xs text-gray-600">
+                  {queenContext.transition.status}
+                  {queenContext.transition.expectedCheckOn
+                    ? ` • Check due ${formatQueenRecordDate(
+                        queenContext.transition.expectedCheckOn
+                      )}`
+                    : ""}
+                </p>
+              </div>
+            ) : (
+              <div className="mt-3 rounded-lg border border-gray-200 bg-white p-3">
+                <p className="text-sm text-gray-700">
+                  No Queen record or active Queen transition applies to this hive
+                  on the selected inspection date.
+                </p>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Colony Behaviour */}
         <div>
           <label className="block font-semibold">Colony Behaviour</label>

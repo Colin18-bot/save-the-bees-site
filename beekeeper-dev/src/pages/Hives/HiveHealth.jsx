@@ -126,7 +126,7 @@ function ScoreBreakdownPanel({ breakdown, assessment }) {
         </p>
         <h2 className="mt-1 text-xl font-bold text-gray-900">Health Score Breakdown</h2>
         <p className="mt-3 rounded-xl border bg-gray-50 p-3 text-sm text-gray-600">
-          Add more inspection evidence to explain how the health score was calculated.
+          Complete the first inspection to generate and explain a Hive Health score.
         </p>
       </section>
     );
@@ -329,6 +329,9 @@ export default function HiveHealth() {
 
   const latestInspection = inspections[inspections.length - 1] || null;
   const healthTrend = scoreChangeFromHistory(inspections);
+  const hasAssessment =
+    assessment?.hasAssessment === true &&
+    typeof assessment?.overall?.healthScore === "number";
 
   if (loading) {
     return <div className="p-6 text-gray-600">Loading hive health…</div>;
@@ -417,15 +420,17 @@ export default function HiveHealth() {
               Latest Health Score
             </p>
             <p className="mt-1 text-4xl font-bold text-gray-900">
-              {assessment.overall?.healthScore ?? "—"}/100
+              {hasAssessment ? `${assessment.overall.healthScore}/100` : "—"}
             </p>
             <p className="font-semibold text-green-900">
-              {assessment.overall?.healthBand || "Unknown"}
+              {hasAssessment ? assessment.overall?.healthBand || "Unknown" : "Unassessed"}
             </p>
             <p className="mt-1 text-xs text-gray-500">
-              Calculated from the most recent inspection.
+              {hasAssessment
+                ? "Calculated from the most recent inspection."
+                : "Complete the first inspection to generate a Hive Health score."}
             </p>
-            {healthTrend !== null && (
+            {hasAssessment && healthTrend !== null && (
               <p
                 className={`mt-2 text-sm font-semibold ${healthTrend >= 0 ? "text-green-800" : "text-red-800"}`}
               >
@@ -438,10 +443,20 @@ export default function HiveHealth() {
             )}
           </div>
 
-          <div className={`rounded-xl border p-4 ${riskClass(assessment.overall?.riskLevel)}`}>
+          <div
+            className={`rounded-xl border p-4 ${riskClass(
+              hasAssessment ? assessment.overall?.riskLevel : "Unassessed"
+            )}`}
+          >
             <p className="text-xs font-semibold uppercase tracking-wide">Overall Risk</p>
-            <p className="mt-1 text-3xl font-bold">{assessment.overall?.riskLevel || "Unknown"}</p>
-            <p className="text-sm">Source: {assessment.overall?.riskSource || "Unknown"}</p>
+            <p className="mt-1 text-3xl font-bold">
+              {hasAssessment ? assessment.overall?.riskLevel || "Unknown" : "Unassessed"}
+            </p>
+            <p className="text-sm">
+              {hasAssessment
+                ? `Source: ${assessment.overall?.riskSource || "Unknown"}`
+                : "No inspection evidence available yet."}
+            </p>
           </div>
 
           <div className="rounded-xl border bg-gray-50 p-4">
@@ -462,28 +477,73 @@ export default function HiveHealth() {
         <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
           <p className="font-semibold">How this assessment works</p>
 
-          <p className="mt-2">
-            Your <strong>Latest Health Score</strong> is calculated from the information recorded
-            during your most recent inspection.
-          </p>
+          {hasAssessment ? (
+            <>
+              <p className="mt-2">
+                Your <strong>Latest Health Score</strong> is calculated from the information recorded
+                during your most recent inspection.
+              </p>
 
-          <p className="mt-2">
-            Previous inspections are <strong>not averaged into this score.</strong> They are used to
-            compare changes over time, identify longer-term trends, increase confidence in the
-            assessment and build your Hive Health Timeline.
-          </p>
-          <p className="mt-2">
-            <strong>
-              You can see exactly how the latest score was calculated in the Explainable
-              Intelligence section below.
-            </strong>
-          </p>
+              <p className="mt-2">
+                Previous inspections are <strong>not averaged into this score.</strong> They are used to
+                compare changes over time, identify longer-term trends, increase confidence in the
+                assessment and build your Hive Health Timeline.
+              </p>
+              <p className="mt-2">
+                <strong>
+                  You can see exactly how the latest score was calculated in the Explainable
+                  Intelligence section below.
+                </strong>
+              </p>
+            </>
+          ) : (
+            <p className="mt-2">
+              Hive Health does not create a score or risk classification until at least one inspection
+              has been recorded. Complete the first inspection to activate colony health intelligence.
+            </p>
+          )}
         </div>
 
         <p className="mt-4 rounded-xl border bg-gray-50 p-4 text-sm text-gray-700">
           {assessment.overall?.status || "No assessment available yet."}
         </p>
-      </section>
+            </section>
+
+      {assessment.hasAssessment && assessment.seasonalContext && (
+        <section className="rounded-2xl border border-blue-200 bg-blue-50 p-5 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wide text-blue-800">
+                Seasonal Guidance
+              </p>
+              <h2 className="mt-1 text-xl font-bold text-gray-900">
+                {assessment.seasonalContext.season}
+              </h2>
+            </div>
+
+            <span className="w-fit rounded-full border border-blue-200 bg-white px-3 py-1 text-sm font-semibold text-blue-900">
+              Seasonal advisory: {assessment.seasonalContext.level || "Information"}
+            </span>
+          </div>
+
+          <p className="mt-3 text-sm text-gray-700">
+            {assessment.seasonalContext.message}
+          </p>
+
+          {assessment.seasonalContext.prompts?.length > 0 && (
+            <ul className="mt-4 list-disc space-y-1 pl-6 text-sm text-gray-700">
+              {assessment.seasonalContext.prompts.map((prompt) => (
+                <li key={prompt}>{prompt}</li>
+              ))}
+            </ul>
+          )}
+
+          <p className="mt-4 border-t border-blue-200 pt-3 text-xs text-blue-900">
+            Seasonal guidance is advisory only. It does not change the Hive Health score or Overall
+            Risk, which are based on the recorded inspection evidence.
+          </p>
+        </section>
+      )}
 
       <ScoreBreakdownPanel
         breakdown={assessment.baseAnalysis?.summary?.scoreBreakdown}
@@ -508,9 +568,16 @@ export default function HiveHealth() {
               ))}
             </div>
           ) : (
-            <p className="mt-3 rounded-xl border bg-green-50 p-3 text-sm text-green-900">
-              No significant colony health concerns have been identified from recent inspection
-              history.
+            <p
+              className={`mt-3 rounded-xl border p-3 text-sm ${
+                hasAssessment
+                  ? "bg-green-50 text-green-900"
+                  : "bg-gray-50 text-gray-600"
+              }`}
+            >
+              {hasAssessment
+                ? "No significant colony health concerns have been identified from recent inspection history."
+                : "No priority items are available yet. Complete the first inspection to assess this colony."}
             </p>
           )}
         </div>
@@ -525,7 +592,9 @@ export default function HiveHealth() {
             </ul>
           ) : (
             <p className="mt-3 rounded-xl border bg-gray-50 p-3 text-sm text-gray-600">
-              Add more inspection evidence to generate recommendations.
+              {hasAssessment
+                ? "Add more inspection evidence to generate recommendations."
+                : "Complete the first inspection to generate recommendations."}
             </p>
           )}
         </div>

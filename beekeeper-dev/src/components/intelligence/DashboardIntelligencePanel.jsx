@@ -11,6 +11,7 @@ const riskStyles = {
   Low: "border-green-200 bg-green-50 text-green-900",
   "Very Low": "border-green-200 bg-green-50 text-green-900",
   None: "border-green-200 bg-green-50 text-green-900",
+  Unassessed: "border-gray-200 bg-gray-50 text-gray-800",
   Unknown: "border-gray-200 bg-gray-50 text-gray-800",
 };
 
@@ -81,14 +82,14 @@ export default function DashboardIntelligencePanel({ data, apiaryNameById = {} }
           <p className="text-sm font-semibold uppercase tracking-wide text-green-800">
             Hive Health Overview
           </p>
-          <h2 className="mt-1 text-xl font-bold text-gray-900">Colonies requiring attention</h2>
+          <h2 className="mt-1 text-xl font-bold text-gray-900">Colony health status</h2>
           <p className="mt-1 text-sm text-gray-600">
-            Colonies are ranked using their latest health score, current risk level and recent
-            inspection activity.
+            Assessed colonies are ranked using their latest health score and current risk level.
+            New hives remain Unassessed until their first inspection is recorded.
           </p>
         </div>
 
-        <div className="grid grid-cols-4 gap-2 text-center text-xs">
+        <div className="grid grid-cols-2 gap-2 text-center text-xs sm:grid-cols-5">
           <div className="rounded-lg border bg-gray-50 p-2">
             <p className="text-lg font-bold">{summary.total || 0}</p>
             <p>Hives</p>
@@ -105,19 +106,24 @@ export default function DashboardIntelligencePanel({ data, apiaryNameById = {} }
             <p className="text-lg font-bold">{summary.attention || 0}</p>
             <p>Attention</p>
           </div>
+          <div className="rounded-lg border bg-gray-50 p-2 text-gray-800">
+            <p className="text-lg font-bold">{summary.unassessed || 0}</p>
+            <p>Unassessed</p>
+          </div>
         </div>
       </div>
 
       {items.length === 0 ? (
         <p className="mt-4 rounded-lg border bg-gray-50 p-3 text-sm text-gray-600">
-          No hive health overview is available yet. Add inspection records to activate this panel.
+          No hives are available for the current dashboard filter.
         </p>
       ) : (
         <div className="mt-4 grid gap-3 lg:grid-cols-2">
           {items.map((item) => {
             const hive = item.hive || {};
             const intelligence = item.intelligence || {};
-            const firstPriority = intelligence.priorityItems?.[0];
+            const assessed = item.assessed === true;
+            const firstPriority = assessed ? intelligence.priorityItems?.[0] : null;
             const apiaryName = apiaryNameById[hive.apiary_id] || "Apiary not set";
 
             return (
@@ -127,12 +133,18 @@ export default function DashboardIntelligencePanel({ data, apiaryNameById = {} }
                     <h3 className="font-bold text-gray-900">{hive.name || "Unnamed hive"}</h3>
                     <p className="text-xs text-gray-500">{apiaryName}</p>
                   </div>
-                  <RiskBadge level={item.riskLevel} />
+                  <RiskBadge level={assessed ? item.riskLevel : "Unassessed"} />
                 </div>
 
-                <div className="mt-3 flex items-center gap-3 text-sm">
-                  <span className="rounded-lg bg-green-50 px-2 py-1 font-semibold text-green-900">
-                    Latest score {item.healthScore || 0}/100
+                <div className="mt-3 flex flex-wrap items-center gap-3 text-sm">
+                  <span
+                    className={`rounded-lg px-2 py-1 font-semibold ${
+                      assessed
+                        ? "bg-green-50 text-green-900"
+                        : "bg-gray-50 text-gray-700"
+                    }`}
+                  >
+                    {assessed ? `Latest score ${item.healthScore}/100` : "Not assessed"}
                   </span>
                   <span className="text-gray-500">
                     {item.historyCount || 0} inspection{item.historyCount === 1 ? "" : "s"} on
@@ -141,9 +153,11 @@ export default function DashboardIntelligencePanel({ data, apiaryNameById = {} }
                 </div>
 
                 <p className="mt-3 text-sm text-gray-700">
-                  {firstPriority?.message ||
-                    intelligence?.overall?.status ||
-                    "No immediate priority identified."}
+                  {assessed
+                    ? firstPriority?.message ||
+                      intelligence?.overall?.status ||
+                      "No immediate priority identified."
+                    : "No health assessment yet. Complete the first inspection to generate a Hive Health score and risk assessment."}
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
