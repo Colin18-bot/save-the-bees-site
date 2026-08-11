@@ -131,6 +131,30 @@ function stripeId(
   return typeof value === "string" ? value : value.id;
 }
 
+function invoiceSubscriptionId(invoice: any) {
+  /*
+   * Older Stripe API versions exposed the subscription directly
+   * as invoice.subscription.
+   */
+  const legacySubscription = stripeId(invoice?.subscription);
+
+  if (legacySubscription) {
+    return legacySubscription;
+  }
+
+  /*
+   * Stripe Basil exposes the subscription through
+   * invoice.parent.subscription_details.subscription.
+   */
+  if (invoice?.parent?.type !== "subscription_details") {
+    return null;
+  }
+
+  return stripeId(
+    invoice?.parent?.subscription_details?.subscription
+  );
+}
+
 async function safeSendTemplate(
   label: string,
   options: {
@@ -256,8 +280,9 @@ async function claimStripeEvent(event: Stripe.Event) {
   let customerId = stripeId(eventObject.customer) ?? stripeId(eventObject.customer_id) ?? null;
 
   let subscriptionId =
-    stripeId(eventObject.subscription) ??
-    (eventObject.object === "subscription" ? stripeId(eventObject.id) : null);
+  stripeId(eventObject.subscription) ??
+  (eventObject.object === "subscription" ? stripeId(eventObject.id) : null) ??
+  (eventObject.object === "invoice" ? invoiceSubscriptionId(eventObject) : null);
 
   let customerEmail = normaliseEmail(
     eventObject.customer_email,
@@ -719,7 +744,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 async function handleInvoicePaid(invoice: Stripe.Invoice) {
   const customerId = stripeId(invoice.customer);
 
-  const subscriptionId = stripeId(invoice.subscription);
+  const subscriptionId = invoiceSubscriptionId(invoice);
 
   if (!customerId || !subscriptionId) {
     console.log("ℹ️ Paid invoice is not linked to a subscription.");
@@ -800,7 +825,14 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
 async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
   const customerId = stripeId(invoice.customer);
 
-  const subscriptionId = stripeId(invoice.subscription);
+  const subscriptionId = invoiceSubscriptionId(invoice);
+
+  if ((invoice.attempt_count ?? 1) > 1) {
+  console.log(
+    `ℹ️ Payment failure email skipped for retry attempt ${invoice.attempt_count} on invoice ${invoice.id}.`
+  );
+  return;
+  }
 
   if (!customerId) {
     console.warn(`⚠️ Failed invoice ${invoice.id} has no customer ID.`);
