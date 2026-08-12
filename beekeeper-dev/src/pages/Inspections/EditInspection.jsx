@@ -727,6 +727,42 @@ const EditInspection = () => {
       // merged list, max 3
       photos: [...(formData.photos || []), ...uploadedUrls].slice(0, 3),
     };
+    // Remove saved photos while they are still linked to the inspection.
+    // The Edge Function verifies ownership, updates the photo arrays,
+    // and removes the underlying Storage object.
+    if (removed.length) {
+      for (const url of removed) {
+        const { error: removeError } = await removeOneInspectionPhoto(id, { url });
+
+        if (removeError) {
+          // Roll back any newly uploaded files before aborting the save.
+          if (uploaded.length) {
+            const byBucket = new Map();
+
+            for (const u of uploaded) {
+              if (!u?.bucket || !u?.path) continue;
+              if (!byBucket.has(u.bucket)) byBucket.set(u.bucket, []);
+              byBucket.get(u.bucket).push(u.path);
+            }
+
+            for (const [bucket, paths] of byBucket.entries()) {
+              try {
+                await supabase.storage.from(bucket).remove(paths);
+              } catch {
+                // Ignore rollback errors.
+              }
+            }
+          }
+
+          setSaving(false);
+          setSaveError(
+            "Failed to remove inspection photo. " +
+              (removeError.message || "")
+          );
+          return;
+        }
+      }
+    }
 
     const { error } = await supabase.from("inspections").update(payload).eq("id", id);
 
@@ -746,18 +782,6 @@ const EditInspection = () => {
         }
       }
     }
-
-    // If update succeeded, delete removed old photos via EDGE FUNCTION (no orphans)
-    if (!error && removed.length) {
-      for (const url of removed) {
-        try {
-          await removeOneInspectionPhoto(id, { url });
-        } catch {
-          // ignore; edge function already handles idempotently, and we don't block save UX
-        }
-      }
-    }
-
     // cleanup new previews (blob URLs)
     newPreviews.forEach((u) => u?.startsWith("blob:") && URL.revokeObjectURL(u));
     setNewPreviews([]);
