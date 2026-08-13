@@ -266,7 +266,7 @@ export default function Pricing() {
           Keep your bees organised, healthy, and happy
         </h2>
         <p className="mt-3 text-gray-600">
-          BeezKnees helps you record inspections, understand colony health, plan seasonal management and keep complete beekeeping records wherever you are.
+          BeezKnees helps you record inspections, manage your queens, understand colony health, plan seasonal management and keep complete beekeeping records wherever you are.
         </p>
       </header>
 
@@ -289,13 +289,13 @@ export default function Pricing() {
 
       <div className="mb-8 rounded-xl border border-green-200 bg-green-50 p-5 text-center">
         <h3 className="text-lg font-bold text-green-900">
-          Complete beekeeping records with intelligent Hive Health
+          Complete beekeeping records, Queen management and intelligent Hive Health
         </h3>
 
         <p className="mt-2 text-sm text-green-800">
-          Record inspections, monitor colony health, identify trends over time,
-          generate professional reports and plan seasonal management—all from a
-          single application.
+          Record inspections, manage complete queen histories, monitor colony health,
+          identify trends and risks over time, generate professional reports and plan
+          seasonal management—all from a single application.
         </p>
       </div>
 
@@ -329,13 +329,15 @@ export default function Pricing() {
         <PlanCard
           title="Premium"
           price={PREMIUM_PRICE_TEXT}
-         description="Unlock unlimited apiaries and hives, advanced Hive Health, premium beekeeping guides, professional reports, finance tools, NFC hive tags and additional colony management tools."
+          description="Unlock unlimited apiaries and hives, advanced Hive Health intelligence, complete Queen Records, premium beekeeping guides, professional reports, finance tools, NFC hive tags and additional colony management tools."
           features={[
           "Unlimited apiaries",
           "Unlimited hives",
-          "Hive Health with explainable health scores, trends, risks and recommended actions",
+          "Hive Health with explainable health scores, trends, risks, confidence and recommended actions",
           "Dashboard Hive Health Overview and Timeline",
           "Colony Health Check",
+          "Queen Records with complete queen histories and colony assignments",
+          "Record queen introductions, splits, transfers, requeening and queen status changes",
           "Year in the Apiary seasonal guide with monthly actions",
           "Apiary and Hive Siting Guides",
           "Step-by-step Inspection Guide",
@@ -378,6 +380,18 @@ export default function Pricing() {
               <CheckIcon />
             </span>
             Inspection history and logbook
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-600 mt-0.5">
+              <CheckIcon />
+            </span>
+            Hive Health trends, risks and recommended actions
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-600 mt-0.5">
+              <CheckIcon />
+            </span>
+            Queen records and complete queen histories
           </li>
           <li className="flex items-start gap-2">
             <span className="text-green-600 mt-0.5">
