@@ -7,10 +7,13 @@ const PremiumRequired = () => {
 
   const params = new URLSearchParams(location.search);
   const from = params.get("from") || "";
+
   const contextMessage =
-  from === "hive-health"
-    ? "Hive Health is available with HiveTag Premium. Review explainable health scores, trends, priority actions, recommendations and your colony timeline."
-    : "";
+    from === "hive-health"
+      ? "Hive Health is available with HiveTag Premium. Review explainable health scores, trends, risks, priority actions, recommendations and your colony timeline."
+      : from === "queens" || from === "queen"
+      ? "Queen Records are available with HiveTag Premium. Keep complete queen histories, record introductions, splits, transfers, requeening and status changes, and follow each queen throughout the colony's history."
+      : "";
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -25,8 +28,9 @@ const PremiumRequired = () => {
 
         <p className="text-gray-700 mb-2">
           Upgrade to HiveTag Premium to unlock intelligent Hive Health,
-          professional reporting, business tools, NFC hive tags, premium
-          beekeeping guides and advanced colony management features.
+          complete Queen Records, professional reporting, business tools,
+          NFC hive tags, premium beekeeping guides and advanced colony
+          management features.
         </p>
 
         {contextMessage && (
@@ -37,9 +41,16 @@ const PremiumRequired = () => {
 
         <ul className="list-disc pl-5 text-sm text-gray-700 space-y-1 mb-6">
           <li>Unlimited apiaries and hives</li>
-          <li>Advanced Hive Health with explainable health scores, trends and recommendations</li>
-          <li>Dashboard Hive Health overview and timeline</li>
+          <li>
+            Advanced Hive Health with explainable health scores, trends,
+            risks and recommended actions
+          </li>
+          <li>Dashboard Hive Health overview and colony timeline</li>
           <li>Colony Health Check</li>
+          <li>
+            Complete Queen Records with queen histories, introductions,
+            splits, transfers, requeening and status changes
+          </li>
           <li>Seasonal Guide and premium beekeeping guides</li>
           <li>Professional reports and CSV exports</li>
           <li>Inventory, sales, expenses and Profit &amp; Loss</li>
@@ -47,7 +58,8 @@ const PremiumRequired = () => {
         </ul>
 
         <p className="text-sm text-gray-600 mb-4">
-          Your existing data will be preserved. Upgrading simply unlocks the additional Premium features immediately.
+          Your existing data will be preserved. Upgrading simply unlocks the
+          additional Premium features immediately.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3">
