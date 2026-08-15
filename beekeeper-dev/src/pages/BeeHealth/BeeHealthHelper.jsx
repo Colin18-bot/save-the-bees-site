@@ -16,7 +16,8 @@ import { BEE_HEALTH_RULES } from "../../utils/BeeHealthRules";
  */
 
 export default function BeeHealthHelper() {
-  const { questions, outcomes, redFlags, urgentReporting, confidence, safety, routes } = BEE_HEALTH_RULES;
+  const { questions, outcomes, redFlags, urgentReporting, confidence, safety, routes } =
+    BEE_HEALTH_RULES;
 
   const initialState = useMemo(
     () => ({
@@ -104,7 +105,9 @@ export default function BeeHealthHelper() {
       answers.inspection_level === "opened_quick" || answers.inspection_level === "full_inspection";
 
     // Helper used by normalizeWhen()
-    f.season_winter_or_early_spring = ["season_winter", "season_early_spring"].some((k) => f[k] === true);
+    f.season_winter_or_early_spring = ["season_winter", "season_early_spring"].some(
+      (k) => f[k] === true
+    );
 
     return f;
   }, [answers]);
@@ -141,9 +144,9 @@ export default function BeeHealthHelper() {
   }, [routeKey, questions, flags]);
 
   const selectedRouteInfo = useMemo(() => {
-  if (!answers.primary_route) return null;
-  return (routes || []).find((r) => r.id === answers.primary_route) || null;
-}, [answers.primary_route, routes]);
+    if (!answers.primary_route) return null;
+    return (routes || []).find((r) => r.id === answers.primary_route) || null;
+  }, [answers.primary_route, routes]);
 
   const allQuestionsInOrder = useMemo(() => {
     return [...foundation, ...routeQuestions].filter(Boolean);
@@ -434,36 +437,35 @@ export default function BeeHealthHelper() {
     // Hard red-flag override
     const redHit = (redFlags || []).find((k) => flags[k] === true);
     if (redHit) {
-  const overrideOutcome = outcomes?.disease_foulbrood_red_flag || null;
+      const overrideOutcome = outcomes?.disease_foulbrood_red_flag || null;
 
- setResults({ 
-  type: "override",
-  redHit,
-  urgentHit,
-  top: [],
-  nextChecks: [],
-  learnMore: Array.isArray(overrideOutcome?.learnMore)
-    ? overrideOutcome.learnMore
-    : [],
-  images: Array.isArray(overrideOutcome?.images)
-    ? overrideOutcome.images
-    : [],
-  whatToLookFor: Array.isArray(overrideOutcome?.whatToLookFor)
-    ? overrideOutcome.whatToLookFor
-    : [],
-  confidenceWhy: Array.isArray(overrideOutcome?.confidenceWhy)
-    ? overrideOutcome.confidenceWhy
-    : [],
-});
-return;
-        }
+      setResults({
+        type: "override",
+        redHit,
+        urgentHit,
+        top: [],
+        nextChecks: [],
+        learnMore: Array.isArray(overrideOutcome?.learnMore) ? overrideOutcome.learnMore : [],
+        images: Array.isArray(overrideOutcome?.images) ? overrideOutcome.images : [],
+        whatToLookFor: Array.isArray(overrideOutcome?.whatToLookFor)
+          ? overrideOutcome.whatToLookFor
+          : [],
+        confidenceWhy: Array.isArray(overrideOutcome?.confidenceWhy)
+          ? overrideOutcome.confidenceWhy
+          : [],
+      });
+      return;
+    }
 
     const matched = [];
 
     for (const [key, def] of Object.entries(outcomes || {})) {
       if (key === "disease_foulbrood_red_flag") continue;
       const when = normalizeWhen(def.when || {});
-      const ok = evalClause({ all: when.all || [], any: when.any || [], not: when.not || [] }, flags);
+      const ok = evalClause(
+        { all: when.all || [], any: when.any || [], not: when.not || [] },
+        flags
+      );
       if (!ok) continue;
 
       // excludeIf: if it matches => skip
@@ -494,7 +496,11 @@ return;
 
     const sevRank = (s) => (s === "alert" ? 3 : s === "warning" ? 2 : 1);
     const confRank = (c) =>
-      String(c).toLowerCase().includes("very") ? 3 : String(c).toLowerCase().includes("likely") ? 2 : 1;
+      String(c).toLowerCase().includes("very")
+        ? 3
+        : String(c).toLowerCase().includes("likely")
+          ? 2
+          : 1;
 
     matched.sort((a, b) => {
       const d1 = sevRank(b.severity) - sevRank(a.severity);
@@ -551,11 +557,13 @@ return;
       <div className="mb-4 rounded border border-yellow-200 bg-yellow-50 p-4 text-sm text-gray-800 no-print">
         <div className="font-semibold">Important</div>
         <ul className="list-disc pl-5 mt-1 space-y-1">
-          {(safety?.topBanner || [
-           "This tool provides educational inspection-support guidance only. It does not diagnose disease, confirm colony health or replace a physical hive inspection.",
-          "Use Not sure whenever you have not opened the hive or cannot observe something reliably.",
-          "If you suspect a notifiable disease or pest, do not move bees, colonies, frames, comb, honey or equipment. Follow current official UK bee-health guidance and reporting requirements.",
-          ]).map((item, index) => (
+          {(
+            safety?.topBanner || [
+              "This tool provides educational inspection-support guidance only. It does not diagnose disease, confirm colony health or replace a physical hive inspection.",
+              "Use Not sure whenever you have not opened the hive or cannot observe something reliably.",
+              "If you suspect a notifiable disease or pest, do not move bees, colonies, frames, comb, honey or equipment. Follow current official UK bee-health guidance and reporting requirements.",
+            ]
+          ).map((item, index) => (
             <li key={index}>{item}</li>
           ))}
         </ul>
@@ -564,11 +572,15 @@ return;
       {/* HOW IT WORKS (public explainer) */}
       <div className="mb-5 rounded border bg-white p-4 text-sm text-gray-800 no-print">
         <details>
-          <summary className="cursor-pointer font-semibold">How this checker works (read first)</summary>
+          <summary className="cursor-pointer font-semibold">
+            How this checker works (read first)
+          </summary>
 
           <div className="mt-3 space-y-3 text-gray-700">
             <p>
-              This tool is an educational <b>inspection-support helper</b>. It does not diagnose disease or confirm colony conditions — it helps you consider possible explanations and decide what to check next.
+              This tool is an educational <b>inspection-support helper</b>. It does not diagnose
+              disease or confirm colony conditions — it helps you consider possible explanations and
+              decide what to check next.
             </p>
 
             <ul className="list-disc pl-5 space-y-1">
@@ -579,17 +591,20 @@ return;
                 <b>Step 2:</b> Answer what you can. Use <b>Not sure</b> whenever you can’t confirm.
               </li>
               <li>
-                <b>Step 3:</b> You’ll get <b>most likely</b> outcomes with “What to do now” + “When to worry”.
+                <b>Step 3:</b> You’ll get <b>most likely</b> outcomes with “What to do now” + “When
+                to worry”.
               </li>
             </ul>
 
             <p>
               Some signs overlap. That’s why you may see more than one possible outcome. If a{" "}
-              <b>notifiable disease/pest</b> is suspected, the checker will tell you to stop and follow official guidance.
+              <b>notifiable disease/pest</b> is suspected, the checker will tell you to stop and
+              follow official guidance.
             </p>
 
             <p className="text-xs text-gray-600">
-              Tip: If you haven’t opened the hive, choose “Entrance only” — the checker will avoid brood-frame questions.
+              Tip: If you haven’t opened the hive, choose “Entrance only” — the checker will avoid
+              brood-frame questions.
             </p>
           </div>
         </details>
@@ -648,10 +663,9 @@ return;
         <div className="mb-3">
           <div className="text-2xl font-bold">HiveTag — Colony Health Check</div>
           <div className="text-sm text-gray-700">
-            Educational inspection-support guidance only — not a diagnosis. If a
-            notifiable disease or pest is suspected, do not move bees, colonies,
-            frames, comb, honey or equipment. Follow current official UK bee-health
-            guidance and reporting requirements.
+            Educational inspection-support guidance only — not a diagnosis. If a notifiable disease
+            or pest is suspected, do not move bees, colonies, frames, comb, honey or equipment.
+            Follow current official UK bee-health guidance and reporting requirements.
           </div>
         </div>
       </div>
@@ -669,11 +683,15 @@ return;
           <div className="grid md:grid-cols-2 gap-3">
             <div>
               <div className="font-semibold">answers</div>
-              <pre className="overflow-auto whitespace-pre-wrap">{JSON.stringify(answers, null, 2)}</pre>
+              <pre className="overflow-auto whitespace-pre-wrap">
+                {JSON.stringify(answers, null, 2)}
+              </pre>
             </div>
             <div>
               <div className="font-semibold">flags</div>
-              <pre className="overflow-auto whitespace-pre-wrap">{JSON.stringify(flags, null, 2)}</pre>
+              <pre className="overflow-auto whitespace-pre-wrap">
+                {JSON.stringify(flags, null, 2)}
+              </pre>
             </div>
           </div>
         </div>
@@ -758,52 +776,55 @@ return;
                   </div>
 
                   <div className="flex gap-2">
-                      {!isMultiEmpty(currentQuestion) ? (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (!isMultiDone(currentQuestion.id)) {
-                              const key = `__done_${currentQuestion.id}`;
-                              pushHistory(key, answers[key]);
-                              markMultiDone(currentQuestion.id);
-                            }
-                            runAssessment(); // 👈 ADD THIS
-                          }}
-                          className="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-black font-medium text-sm"
-                        >
-                          Get results →
-                        </button>
-                      ) : null}
-
+                    {isMultiEmpty(currentQuestion) ? (
                       <button
                         type="button"
                         onClick={() => {
                           skipMultiInGuided(currentQuestion.id);
-                          runAssessment(); // 👈 ADD THIS
+                          runAssessment();
                         }}
                         className="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-black font-medium text-sm"
                       >
                         Skip & get results →
                       </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!isMultiDone(currentQuestion.id)) {
+                            const key = `__done_${currentQuestion.id}`;
+                            pushHistory(key, answers[key]);
+                            markMultiDone(currentQuestion.id);
+                          }
+
+                          runAssessment();
+                        }}
+                        className="px-4 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-black font-medium text-sm"
+                      >
+                        Get results →
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
             ) : null}
 
-            {allAnswered && !results ? (
+            {allAnswered && !results && currentQuestion?.kind !== "multi" ? (
               <div className="mt-4">
                 <CompletionBanner hasResults={false} onGetResults={runAssessment} />
               </div>
             ) : null}
           </div>
 
-          <ResultsPanel
+          {results ? (
+            <ResultsPanel
               results={results}
               onPrint={() => window.print()}
               onJump={jumpToQuestion}
               qLabelById={qLabelById}
               safety={safety}
             />
+          ) : null}
         </div>
       ) : (
         <div className="space-y-4">
@@ -881,13 +902,13 @@ return;
             </div>
           </div>
 
-        <ResultsPanel
-              results={results}
-              onPrint={() => window.print()}
-              onJump={jumpToQuestion}
-              qLabelById={qLabelById}
-              safety={safety}
-            />
+          <ResultsPanel
+            results={results}
+            onPrint={() => window.print()}
+            onJump={jumpToQuestion}
+            qLabelById={qLabelById}
+            safety={safety}
+          />
         </div>
       )}
     </div>
@@ -929,7 +950,11 @@ function SelectCard({ id, label, help, value, options, onChange, highlight }) {
       <div className="font-semibold">{label}</div>
       {help ? <div className="text-xs text-gray-600 mt-1">{help}</div> : null}
 
-      <select className="mt-3 w-full border rounded px-3 py-2" value={value || ""} onChange={(e) => onChange(e.target.value)}>
+      <select
+        className="mt-3 w-full border rounded px-3 py-2"
+        value={value || ""}
+        onChange={(e) => onChange(e.target.value)}
+      >
         <option value="">Select…</option>
         {options?.map((o) => (
           <option key={o.value} value={o.value}>
@@ -988,7 +1013,12 @@ function MultiCard({ label, help, options, answers, onToggle }) {
       <div className="mt-3 grid sm:grid-cols-2 gap-2">
         {options?.map((opt) => (
           <label key={opt.id} className="flex items-start gap-2 text-sm">
-            <input type="checkbox" className="mt-1" checked={!!answers[opt.id]} onChange={() => onToggle(opt.id)} />
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={!!answers[opt.id]}
+              onChange={() => onToggle(opt.id)}
+            />
             <span>{opt.label}</span>
           </label>
         ))}
@@ -1005,9 +1035,7 @@ function OutcomeImages({ images }) {
   return (
     <div className="mt-4 grid gap-3 sm:grid-cols-2">
       {images.map((img, i) => {
-        const src = img.fileName
-  ? `/images/bee-health/outcomes/${img.fileName}`
-  : img.src || "";
+        const src = img.fileName ? `/images/bee-health/outcomes/${img.fileName}` : img.src || "";
 
         if (!src) return null;
 
@@ -1035,38 +1063,35 @@ function OutcomeImages({ images }) {
 /* ---------------- Results ---------------- */
 
 function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
-  
   const InspectorSafeDisclaimer = () => (
-  <div className="p-4 rounded border bg-white print-card">
-    <div className="font-semibold">Important safety guidance</div>
+    <div className="p-4 rounded border bg-white print-card">
+      <div className="font-semibold">Important safety guidance</div>
 
-    <ul className="list-disc pl-5 text-sm mt-2 space-y-1 text-gray-800">
-      <li>
-        These results provide educational inspection-support guidance only.
-        They do not diagnose disease, confirm infection or replace a physical
-        hive inspection, laboratory testing, a bee inspector or other
-        qualified professional advice.
-      </li>
+      <ul className="list-disc pl-5 text-sm mt-2 space-y-1 text-gray-800">
+        <li>
+          These results provide educational inspection-support guidance only. They do not diagnose
+          disease, confirm infection or replace a physical hive inspection, laboratory testing, a
+          bee inspector or other qualified professional advice.
+        </li>
 
-      <li>
-        If a notifiable disease or pest is suspected, do not move bees,
-        colonies, frames, comb, honey or equipment. Follow current official UK
-        bee-health guidance and reporting requirements.
-      </li>
+        <li>
+          If a notifiable disease or pest is suspected, do not move bees, colonies, frames, comb,
+          honey or equipment. Follow current official UK bee-health guidance and reporting
+          requirements.
+        </li>
 
-      <li>
-        Avoid combining colonies or exchanging frames until the cause of the
-        concern is better understood.
-      </li>
+        <li>
+          Avoid combining colonies or exchanging frames until the cause of the concern is better
+          understood.
+        </li>
 
-      <li>
-        Where signs are severe, uncertain or worsening, seek help from a bee
-        inspector, your beekeeping association, an experienced mentor or
-        another appropriate professional.
-      </li>
-    </ul>
-  </div>
-);
+        <li>
+          Where signs are severe, uncertain or worsening, seek help from a bee inspector, your
+          beekeeping association, an experienced mentor or another appropriate professional.
+        </li>
+      </ul>
+    </div>
+  );
 
   if (!results) {
     return (
@@ -1085,16 +1110,17 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
         <div className="p-5 rounded border border-red-400 bg-red-50 print-card">
           <h3 className="font-bold text-red-800 text-lg">Important — immediate action required</h3>
           <p className="mt-2 text-sm text-red-900">
-            A red-flag sign was selected. This can be consistent with a <b>notifiable</b> brood disease.
+            A red-flag sign was selected. This can be consistent with a <b>notifiable</b> brood
+            disease.
             <b> Do not move</b> colonies or equipment off site.
           </p>
         </div>
 
         <InspectorSafeDisclaimer />
-           
+
         <OutcomeImages images={results.images} />
 
-                {results.urgentHit ? (
+        {results.urgentHit ? (
           <div className="p-5 rounded border border-red-300 bg-red-50 print-card">
             <div className="font-bold text-red-800">Urgent reporting note</div>
             <p className="text-sm text-red-900 mt-1">{results.urgentHit.label}</p>
@@ -1102,9 +1128,9 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
         ) : null}
 
         <div className="p-5 rounded border bg-white print-card">
-        <div className="font-semibold">Recommended reading</div>
-        <div className="mt-3 flex flex-wrap gap-2">
-         {results.learnMore?.map((link, i) => (
+          <div className="font-semibold">Recommended reading</div>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {results.learnMore?.map((link, i) => (
               <a
                 key={i}
                 href={link.url}
@@ -1115,35 +1141,46 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
                 {link.label}
               </a>
             ))}
+          </div>
         </div>
-      </div>
 
         <div className="no-print">
-          <button type="button" onClick={onPrint} className="px-4 py-2 rounded border bg-white hover:bg-gray-50 text-sm">
+          <button
+            type="button"
+            onClick={onPrint}
+            className="px-4 py-2 rounded border bg-white hover:bg-gray-50 text-sm"
+          >
             Print results
           </button>
         </div>
-              {safety?.printFooter?.length ? (
-        <div className="hidden print-only text-xs text-gray-700 mt-4 border-t pt-3">
-          {safety.printFooter.map((item, index) => (
-            <div key={index}>{item}</div>
-          ))}
-        </div>
-      ) : null}
+        {safety?.printFooter?.length ? (
+          <div className="hidden print-only text-xs text-gray-700 mt-4 border-t pt-3">
+            {safety.printFooter.map((item, index) => (
+              <div key={index}>{item}</div>
+            ))}
+          </div>
+        ) : null}
       </div>
     );
   }
 
-    return (
+  return (
     <div className="space-y-3">
       <div className="p-4 rounded border bg-white no-print print-card">
         <div className="flex items-start justify-between gap-3">
           <div>
             <div className="font-semibold">Results</div>
-            <p className="text-sm text-gray-600 mt-1">These are possible guidance suggestions based on your answers, not confirmed diagnoses.</p>
+            <p className="text-sm text-gray-600 mt-1">
+              These are possible guidance suggestions based on your answers, not confirmed
+              diagnoses.
+            </p>
           </div>
 
-          <button type="button" onClick={onPrint} className="px-4 py-2 rounded border bg-white hover:bg-gray-50 text-sm">
+          <button
+            type="button"
+            onClick={onPrint}
+            className="px-4 py-2 rounded border bg-white hover:bg-gray-50 text-sm"
+          >
             Print results
           </button>
         </div>
@@ -1180,44 +1217,42 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
       {results.top?.length ? (
         results.top.map((r) => {
           const severityStyle =
-  r.severity === "alert"
-    ? {
-        card: "border-red-400 bg-red-50 border-l-8 border-l-red-600",
-        badge: "bg-red-100 text-red-800 border-red-300",
-        label: "Critical",
-      }
-    : r.severity === "warning"
-    ? {
-        card: "border-amber-400 bg-amber-50 border-l-8 border-l-amber-500",
-        badge: "bg-amber-100 text-amber-900 border-amber-300",
-        label: "Needs attention",
-      }
-    : {
-        card: "border-blue-200 bg-blue-50 border-l-8 border-l-blue-500",
-        badge: "bg-blue-100 text-blue-800 border-blue-300",
-        label: "Information",
-      };
+            r.severity === "alert"
+              ? {
+                  card: "border-red-400 bg-red-50 border-l-8 border-l-red-600",
+                  badge: "bg-red-100 text-red-800 border-red-300",
+                  label: "Critical",
+                }
+              : r.severity === "warning"
+                ? {
+                    card: "border-amber-400 bg-amber-50 border-l-8 border-l-amber-500",
+                    badge: "bg-amber-100 text-amber-900 border-amber-300",
+                    label: "Needs attention",
+                  }
+                : {
+                    card: "border-blue-200 bg-blue-50 border-l-8 border-l-blue-500",
+                    badge: "bg-blue-100 text-blue-800 border-blue-300",
+                    label: "Information",
+                  };
 
           return (
             <div key={r.key} className={`p-5 rounded border ${severityStyle.card} print-card`}>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-              <h3 className="text-lg font-bold break-words">{r.title}</h3>
-              <div className="flex flex-wrap items-center gap-2 text-xs sm:flex-col sm:items-end sm:gap-1">
-                <span className={`rounded-full border px-2 py-1 font-semibold ${severityStyle.badge}`}>
-                  {severityStyle.label}
-                </span>
-                <span className="text-gray-600 capitalize">
-                  {r.urgency}
-                </span>
-                <span className="text-gray-600">
-                  {r.confidence}
-                </span>
-              </div>
+                <h3 className="text-lg font-bold break-words">{r.title}</h3>
+                <div className="flex flex-wrap items-center gap-2 text-xs sm:flex-col sm:items-end sm:gap-1">
+                  <span
+                    className={`rounded-full border px-2 py-1 font-semibold ${severityStyle.badge}`}
+                  >
+                    {severityStyle.label}
+                  </span>
+                  <span className="text-gray-600 capitalize">{r.urgency}</span>
+                  <span className="text-gray-600">{r.confidence}</span>
+                </div>
               </div>
 
               <OutcomeImages images={r.images} />
-            
-                  {r.actions?.length ? (
+
+              {r.actions?.length ? (
                 <>
                   <div className="mt-3 font-semibold text-sm">What to do next</div>
                   <ul className="list-disc pl-5 text-sm mt-1 space-y-1">
@@ -1239,31 +1274,32 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
                 </>
               ) : null}
               {r.learnMore?.length ? (
-              <>
-                <div className="mt-3 font-semibold text-sm">Recommended reading</div>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {r.learnMore.map((link, i) => (
-                    <a
-                      key={i}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      
-                      className="rounded border bg-white px-3 py-1.5 text-sm hover:bg-gray-50"
-                    >
-                      {link.label}
-                    </a>
-                  ))}
-                </div>
-              </>
-            ) : null}
+                <>
+                  <div className="mt-3 font-semibold text-sm">Recommended reading</div>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {r.learnMore.map((link, i) => (
+                      <a
+                        key={i}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded border bg-white px-3 py-1.5 text-sm hover:bg-gray-50"
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                </>
+              ) : null}
             </div>
           );
         })
-            ) : (
+      ) : (
         <div className="p-5 rounded border bg-green-50 border-green-300 print-card">
           <h3 className="font-semibold">No clear issue identified</h3>
-          <p className="text-sm mt-1">Try switching your route at the top or adding more observations.</p>
+          <p className="text-sm mt-1">
+            Try switching your route at the top or adding more observations.
+          </p>
         </div>
       )}
 
