@@ -556,55 +556,40 @@ export default function BeeHealthHelper() {
       {/* TOP DISCLAIMER */}
       <div className="mb-4 rounded border border-yellow-200 bg-yellow-50 p-4 text-sm text-gray-800 no-print">
         <div className="font-semibold">Important</div>
-        <ul className="list-disc pl-5 mt-1 space-y-1">
-          {(
-            safety?.topBanner || [
-              "This tool provides educational inspection-support guidance only. It does not diagnose disease, confirm colony health or replace a physical hive inspection.",
-              "Use Not sure whenever you have not opened the hive or cannot observe something reliably.",
-              "If you suspect a notifiable disease or pest, do not move bees, colonies, frames, comb, honey or equipment. Follow current official UK bee-health guidance and reporting requirements.",
-            ]
-          ).map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
+
+        <p className="mt-1">
+          This checker provides educational inspection-support guidance only. It does
+          not diagnose disease or confirm colony health.
+        </p>
+
+        <p className="mt-2">
+          If you suspect a notifiable disease or pest, follow current official UK
+          bee-health guidance and reporting requirements.
+        </p>
       </div>
 
-      {/* HOW IT WORKS (public explainer) */}
+      {/* HOW IT WORKS */}
       <div className="mb-5 rounded border bg-white p-4 text-sm text-gray-800 no-print">
         <details>
           <summary className="cursor-pointer font-semibold">
-            How this checker works (read first)
+            How this checker works
           </summary>
 
           <div className="mt-3 space-y-3 text-gray-700">
-            <p>
-              This tool is an educational <b>inspection-support helper</b>. It does not diagnose
-              disease or confirm colony conditions — it helps you consider possible explanations and
-              decide what to check next.
-            </p>
-
             <ul className="list-disc pl-5 space-y-1">
               <li>
-                <b>Step 1:</b> Pick what you’re mainly seeing (this chooses the best question path).
+                <b>Step 1:</b> Choose what you’re mainly seeing.
               </li>
               <li>
-                <b>Step 2:</b> Answer what you can. Use <b>Not sure</b> whenever you can’t confirm.
+                <b>Step 2:</b> Answer what you can. Use <b>Not sure</b> if you cannot confirm something.
               </li>
               <li>
-                <b>Step 3:</b> You’ll get <b>most likely</b> outcomes with “What to do now” + “When
-                to worry”.
+                <b>Step 3:</b> HiveTag will suggest possible explanations and what to check next.
               </li>
             </ul>
 
-            <p>
-              Some signs overlap. That’s why you may see more than one possible outcome. If a{" "}
-              <b>notifiable disease/pest</b> is suspected, the checker will tell you to stop and
-              follow official guidance.
-            </p>
-
             <p className="text-xs text-gray-600">
-              Tip: If you haven’t opened the hive, choose “Entrance only” — the checker will avoid
-              brood-frame questions.
+              Tip: If you haven’t opened the hive, choose “Entrance only” so the checker avoids brood-frame questions.
             </p>
           </div>
         </details>
@@ -1185,8 +1170,6 @@ function ResultsPanel({ results, onPrint, onJump, qLabelById, safety }) {
           </button>
         </div>
       </div>
-
-      <InspectorSafeDisclaimer />
 
       {results.urgentHit ? (
         <div className="p-5 rounded border border-red-300 bg-red-50 print-card">
