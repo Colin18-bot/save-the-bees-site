@@ -2,6 +2,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { supabase } from "../services/supabase";
+import { coordinateHiveIntelligence } from "../intelligence";
 
 /** ----------------------------------------------------------------
  *  DATE HELPERS
@@ -105,6 +106,7 @@ const TYPE = {
   INSPECTION: "INSPECTION",
   TODO: "TODO",
   LOGBOOK: "LOGBOOK",
+  QUEEN: "QUEEN",
 };
 const TYPE_LABEL = {
   [TYPE.APIARY]: "Apiary",
@@ -112,6 +114,7 @@ const TYPE_LABEL = {
   [TYPE.INSPECTION]: "Inspection",
   [TYPE.TODO]: "Task",
   [TYPE.LOGBOOK]: "Logbook",
+  [TYPE.QUEEN]: "Queens",
 };
 
 const ROUTES_EDIT = {
@@ -128,6 +131,7 @@ const ROUTES_VIEW = {
     `/inspections?highlight=${encodeURIComponent(id)}&type=INSPECTION`,
   todo: (id) => `/todos?highlight=${encodeURIComponent(id)}&type=TODO`,
   log: (id) => `/logbook?highlight=${encodeURIComponent(id)}&type=LOGBOOK`,
+  queen: () => "/queens",
 };
 const safeLink = (fn, id) => (id ? fn(id) : null);
 
@@ -159,16 +163,57 @@ const Calendar = () => {
   const [inspections, setInspections] = useState([]);
   const [todos, setTodos] = useState([]);
   const [logbook, setLogbook] = useState([]);
+  const [queenEvents, setQueenEvents] = useState([]);
+  const [queenProcesses, setQueenProcesses] = useState([]);
+  const [isPremium, setIsPremium] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const checkPlan = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        if (!cancelled) setIsPremium(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+      .from("profiles")
+      .select("subscription_level")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+      if (cancelled) return;
+
+      if (error) {
+        setIsPremium(false);
+        return;
+      }
+
+      const level = String(data?.subscription_level || "free").toLowerCase();
+      setIsPremium(level === "premium");
+    };
+
+    checkPlan();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Filters
   const [apiaryId, setApiaryId] = useState("all");
   const [hiveId, setHiveId] = useState("all");
   const [typeFilter, setTypeFilter] = useState({
-    [TYPE.APIARY]: true,
-    [TYPE.HIVE]: true,
-    [TYPE.INSPECTION]: true,
-    [TYPE.TODO]: true,
-    [TYPE.LOGBOOK]: true,
+  [TYPE.APIARY]: true,
+  [TYPE.HIVE]: true,
+  [TYPE.INSPECTION]: true,
+  [TYPE.TODO]: true,
+  [TYPE.LOGBOOK]: true,
+  [TYPE.QUEEN]: true,
   });
 
   // UI
@@ -228,11 +273,14 @@ const Calendar = () => {
       setLoading(true);
       setErr("");
       try {
-        const [apiRes, hiveRes, inspRes, todoRes] = await Promise.all([
+        const [apiRes, hiveRes, inspRes, todoRes, queenEventRes, queenProcessRes] =
+        await Promise.all([
           getTable("apiaries", "name"),
           getTable("hives", "name"),
           getTable("inspections", "created_at"),
           getTable("todos", "created_at"),
+          getTable("queen_events", "event_date"),
+          getTable("queen_processes", "expected_check_on"),
         ]);
 
         // Logbook: try several likely table names
@@ -250,6 +298,8 @@ const Calendar = () => {
         setInspections(inspRes);
         setTodos(todoRes);
         setLogbook(logbookRows);
+        setQueenEvents(queenEventRes);
+        setQueenProcesses(queenProcessRes);
       } catch {
         if (!alive) return;
         setErr("Failed to load calendar data.");
@@ -335,25 +385,65 @@ const Calendar = () => {
       })
       .filter(Boolean);
 
+    // Build Hive Health assessments as they stood at each inspection date
+    // Premium only
+    const healthByInspectionId = new Map();
+
+    if (isPremium) {
+      const inspectionsByHive = new Map();
+
+      (inspections || []).forEach((inspection) => {
+        if (!inspection?.hive_id) return;
+
+        const hiveKey = String(inspection.hive_id);
+
+        if (!inspectionsByHive.has(hiveKey)) {
+          inspectionsByHive.set(hiveKey, []);
+        }
+
+        inspectionsByHive.get(hiveKey).push(inspection);
+      });
+
+      inspectionsByHive.forEach((hiveInspections) => {
+        hiveInspections.sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
+
+        const history = [];
+
+        hiveInspections.forEach((inspection) => {
+          history.push(inspection);
+
+          const assessment = coordinateHiveIntelligence({
+            history,
+            inspection,
+          });
+
+          healthByInspectionId.set(String(inspection.id), assessment);
+        });
+      });
+    }
+
     // Inspections → date
     const inspEvents = (inspections || [])
       .map((i) => {
-        const date = pickDate(i, ["date", "inspected_on", "created_at"]);
-        if (!date) return null;
-        return {
-          key: `${TYPE.INSPECTION}:${i.id}`,
-          type: TYPE.INSPECTION,
-          date,
-          title: "Inspection",
-          subtitle: TYPE_LABEL[TYPE.INSPECTION],
-          link: safeLink(ROUTES_EDIT.inspection, i.id),
-          apiary_id: i.apiary_id || null,
-          hive_id: i.hive_id || null,
-          status: archivedState(i),
-          completed: false,
-        };
-      })
-      .filter(Boolean);
+            const date = pickDate(i, ["date", "inspected_on", "created_at"]);
+            if (!date) return null;
+            return {
+            key: `${TYPE.INSPECTION}:${i.id}`,
+            type: TYPE.INSPECTION,
+            date,
+            title: "Inspection",
+            subtitle: TYPE_LABEL[TYPE.INSPECTION],
+            link: safeLink(ROUTES_EDIT.inspection, i.id),
+            apiary_id: i.apiary_id || null,
+            hive_id: i.hive_id || null,
+            status: archivedState(i),
+            completed: false,
+            health: healthByInspectionId.get(String(i.id)) || null,
+          };
+          })
+          .filter(Boolean);
 
     // Todos → due_date (or created_at fallback)
     const todoEvents = (todos || [])
@@ -395,15 +485,94 @@ const Calendar = () => {
       })
       .filter(Boolean);
 
+    // Queen lifecycle events
+  const queenCalendarEvents = (queenEvents || [])
+    .filter((q) => {
+      const eventType = String(q.event_type || "").toLowerCase();
+      const title = String(q.title || "").toLowerCase();
+
+      // Administrative record creation is not useful as a Calendar event.
+      return eventType !== "queen_added" && title !== "queen record added";
+    })
+    .map((q) => {
+      const date = pickDate(q, ["event_date", "created_at"]);
+      if (!date) return null;
+
+      return {
+        key: `${TYPE.QUEEN}:${q.id}`,
+        type: TYPE.QUEEN,
+        date,
+        title: q.title || "Queen event",
+        subtitle: TYPE_LABEL[TYPE.QUEEN],
+        link: "/queens",
+        apiary_id: q.apiary_id || null,
+        hive_id: q.hive_id || null,
+        status: "active",
+        completed: false,
+        detail: q.detail || null,
+      };
+        })
+    .filter(Boolean);
+
+    // Scheduled Queen follow-ups
+    const queenFollowUpEvents = (queenProcesses || [])
+      .filter((process) => process.expected_check_on && !process.ended_on)
+      .map((process) => {
+        const date = pickDate(process, ["expected_check_on"]);
+        if (!date) return null;
+
+        const processType = String(process.process_type || "").toLowerCase();
+
+        const titleByType = {
+          introduction: "Follow-up: Queen introduction",
+          replacement_after_split: "Follow-up: Queen replacement",
+          queen_location_check: "Follow-up: Queen location check",
+          queenless_plan: "Follow-up: Queenless colony",
+          queen_rearing: "Follow-up: Queen rearing",
+        };
+
+        const fallbackTitle = processType
+          ? `Follow-up: ${processType.replace(/_/g, " ")}`
+          : "Follow-up: Queen check";
+
+        return {
+          key: `${TYPE.QUEEN}:${process.id}`,
+          type: TYPE.QUEEN,
+          date,
+          title: titleByType[processType] || fallbackTitle,
+          subtitle: "Queen follow-up",
+          link: "/queens",
+          apiary_id: process.apiary_id || null,
+          hive_id: process.hive_id || null,
+          status: "active",
+          completed: false,
+          detail: process.notes || null,
+        };
+      })
+      .filter(Boolean);
+
     const all = [
       ...apiaryEvents,
       ...hiveEvents,
       ...inspEvents,
       ...todoEvents,
       ...logEvents,
+      ...queenCalendarEvents,
+      ...queenFollowUpEvents,
     ];
     return all.filter((e) => inRange(e.date));
-  }, [year, month, apiaries, hives, inspections, todos, logbook]);
+    }, [
+    year,
+    month,
+    apiaries,
+    hives,
+    inspections,
+    todos,
+    logbook,
+    queenEvents,
+    queenProcesses,
+    isPremium,
+    ]);
 
   // Filters → build visible map keyed by date
   const filteredEvents = useMemo(() => {
@@ -457,6 +626,8 @@ const Calendar = () => {
         return base + " bg-rose-500";
       case TYPE.TODO:
         return base + " bg-violet-500";
+      case TYPE.QUEEN:
+        return base + " bg-fuchsia-500";
       default:
         return base + " bg-zinc-400";
     }
@@ -495,10 +666,12 @@ const Calendar = () => {
           (futureTodo ? " ring-1 ring-violet-400" : "") +
           strike
         );
+      case TYPE.QUEEN:
+        return base + " bg-fuchsia-100 border-fuchsia-300 text-fuchsia-900" + strike;
       default:
         return base + " bg-zinc-100 border-zinc-300 text-zinc-900" + strike;
-    }
-  };
+          }
+        };
 
   const eventsTitle = (y, m) =>
     `${new Date(y, m, 1).toLocaleString("en-GB", {
@@ -563,7 +736,14 @@ const Calendar = () => {
 
           {/* Type checkboxes – wrap nicely on mobile */}
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 w-full md:w-auto md:ml-2">
-            {[TYPE.APIARY, TYPE.HIVE, TYPE.INSPECTION, TYPE.LOGBOOK, TYPE.TODO].map(
+            {[
+              TYPE.APIARY,
+              TYPE.HIVE,
+              TYPE.INSPECTION,
+              TYPE.LOGBOOK,
+              TYPE.TODO,
+              TYPE.QUEEN,
+            ].map(
               (t) => (
                 <label
                   key={t}
@@ -677,6 +857,9 @@ const Calendar = () => {
         </span>
         <span className="px-2 py-0.5 rounded border bg-violet-100 border-violet-300 text-violet-900">
           Task
+        </span>
+        <span className="px-2 py-0.5 rounded border bg-fuchsia-100 border-fuchsia-300 text-fuchsia-900">
+          Queens
         </span>
         <span className="ml-3 text-zinc-600">✅ completed</span>
         <span className="ml-3 text-zinc-600">⊘ archived/deleted</span>
@@ -846,7 +1029,9 @@ const Calendar = () => {
           >
             <div className="flex items-start justify-between mb-2">
               <h3 className="text-lg font-semibold">
-                {TYPE_LABEL[selected.type]} • {selected.title}
+                {selected.type === TYPE.INSPECTION
+                  ? "Inspection"
+                  : `${TYPE_LABEL[selected.type]} • ${selected.title}`}
               </h3>
               <button
                 className="text-zinc-500 hover:text-zinc-800"
@@ -870,13 +1055,53 @@ const Calendar = () => {
                 </p>
               )}
               {selected.hive_id && (
-                <p>
-                  <span className="font-medium">Hive:</span>{" "}
-                  {getHiveName(selected.hive_id)}
-                </p>
-              )}
+  <p>
+    <span className="font-medium">Hive:</span>{" "}
+    {getHiveName(selected.hive_id)}
+  </p>
+)}
 
-              {selected.completed && <p>✅ Completed</p>}
+{isPremium &&
+  selected.type === TYPE.INSPECTION &&
+  selected.health?.hasAssessment && (
+    <div className="mt-3 rounded-lg border border-green-200 bg-green-50 p-3">
+      <p className="font-semibold text-green-900">
+        Hive Health at this inspection
+      </p>
+
+      <p className="mt-1">
+        <span className="font-medium">Health Score:</span>{" "}
+        {selected.health.overall?.healthScore ?? "—"}/100
+        {selected.health.overall?.healthBand
+          ? ` – ${selected.health.overall.healthBand}`
+          : ""}
+      </p>
+
+      <p>
+        <span className="font-medium">Overall Risk:</span>{" "}
+        {selected.health.overall?.riskLevel || "Unknown"}
+      </p>
+
+      {selected.health.priorityItems?.length > 0 && (
+        <p>
+          <span className="font-medium">Top concern:</span>{" "}
+          {selected.health.priorityItems[0].source || "Hive Health"}
+          {selected.health.priorityItems[0].level
+            ? ` – ${selected.health.priorityItems[0].level}`
+            : ""}
+        </p>
+      )}
+    </div>
+  )}
+
+{selected.detail && (
+  <p>
+    <span className="font-medium">Details:</span>{" "}
+    {selected.detail}
+  </p>
+)}
+
+{selected.completed && <p>✅ Completed</p>}
               {(selected.status === "archived" ||
                 selected.status === "deleted") && (
                 <p className="text-red-700">
@@ -886,19 +1111,31 @@ const Calendar = () => {
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
-              {/* VIEW -> go to list, with highlight */}
+            {isPremium && selected.type === TYPE.INSPECTION && selected.hive_id && (
+            <Link
+              to={`/hives/${selected.hive_id}`}
+              className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
+              onClick={() => setModalOpen(false)}
+            >
+              View Hive Health
+            </Link>
+          )}
+
+  {/* VIEW -> go to list, with highlight */}
               {selected.link && (
                 <Link
                   to={ROUTES_VIEW[
-                    selected.type === TYPE.APIARY
-                      ? "apiary"
-                      : selected.type === TYPE.HIVE
-                      ? "hive"
-                      : selected.type === TYPE.INSPECTION
-                      ? "inspection"
-                      : selected.type === TYPE.TODO
-                      ? "todo"
-                      : "log"
+                   selected.type === TYPE.APIARY
+                    ? "apiary"
+                    : selected.type === TYPE.HIVE
+                    ? "hive"
+                    : selected.type === TYPE.INSPECTION
+                    ? "inspection"
+                    : selected.type === TYPE.TODO
+                    ? "todo"
+                    : selected.type === TYPE.QUEEN
+                    ? "queen"
+                    : "log"
                   ](getIdFromKey(selected.key))}
                   className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-2 rounded"
                   onClick={() => setModalOpen(false)}
@@ -906,7 +1143,7 @@ const Calendar = () => {
                   Open in list
                 </Link>
               )}
-              {selected.link && (
+              {selected.link && selected.type !== TYPE.QUEEN && (
                 <Link
                   to={selected.link}
                   className="bg-green-700 hover:bg-green-800 text-white text-sm px-3 py-2 rounded"
