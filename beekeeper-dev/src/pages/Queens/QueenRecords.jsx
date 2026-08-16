@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   Activity,
   AlertTriangle,
@@ -416,7 +416,7 @@ const QueenOverview = ({ hive, canEdit, onAction }) => (
   </div>
 );
 
-const CurrentQueenTab = ({ hive, canEdit, onAction }) => {
+const CurrentQueenTab = ({ hive, canEdit, onAction, highlightQueenId }) => {
   if (!hive.currentQueen) {
     return (
       <Card className="p-8 text-center">
@@ -459,7 +459,14 @@ const CurrentQueenTab = ({ hive, canEdit, onAction }) => {
           }
         />
         <div className="p-5">
-          <div className="mb-5 flex flex-col gap-4 rounded-2xl border border-green-200 bg-green-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+          <div
+            className={`mb-5 flex flex-col gap-4 rounded-2xl border bg-green-50 p-5 sm:flex-row sm:items-center sm:justify-between ${
+              highlightQueenId &&
+              String(queen.id) === String(highlightQueenId)
+                ? "border-yellow-400 ring-4 ring-yellow-200"
+                : "border-green-200"
+            }`}
+          >
             <div>
               <p className="text-sm font-semibold text-gray-500">{queen.reference}</p>
               <h3 className="mt-1 text-2xl font-extrabold text-[#1a3329]">
@@ -531,7 +538,7 @@ const CurrentQueenTab = ({ hive, canEdit, onAction }) => {
   );
 };
 
-const ProgressTab = ({ hive, canEdit, onAction }) => (
+const ProgressTab = ({ hive, canEdit, onAction, highlightProgressId }) => (
   <div className="grid gap-5 xl:grid-cols-[1.5fr_1fr]">
     <Card>
       <CardHeader
@@ -558,8 +565,13 @@ const ProgressTab = ({ hive, canEdit, onAction }) => (
           <div className="relative ml-3 border-l-2 border-amber-200 pl-7">
             {hive.progress.map((item, index) => (
               <div
-                key={`${item.date}-${item.title}`}
-                className={index === hive.progress.length - 1 ? "pb-0" : "pb-7"}
+                key={item.id || `${item.date}-${item.title}`}
+                className={`${index === hive.progress.length - 1 ? "pb-0" : "pb-7"} ${
+                  highlightProgressId &&
+                  String(item.id) === String(highlightProgressId)
+                    ? "rounded-xl bg-yellow-50 px-3 pt-3 ring-4 ring-yellow-200"
+                    : ""
+                }`}
               >
                 <span className="absolute -left-[9px] mt-1 h-4 w-4 rounded-full border-4 border-white bg-yellow-400" />
                 <p className="text-xs font-bold uppercase tracking-wide text-gray-500">
@@ -600,7 +612,7 @@ const ProgressTab = ({ hive, canEdit, onAction }) => (
   </div>
 );
 
-const HistoryTab = ({ hive }) => (
+const HistoryTab = ({ hive, highlightQueenId }) => (
   <div className="space-y-5">
     {hive.currentQueen ? (
       <Card>
@@ -628,10 +640,15 @@ const HistoryTab = ({ hive }) => (
       {hive.previousQueens.length ? (
         <div className="divide-y divide-gray-100">
           {hive.previousQueens.map((queen) => (
-            <div
-              key={queen.id}
-              className="grid gap-3 px-5 py-5 sm:grid-cols-[1fr_1.6fr_1fr] sm:items-center"
-            >
+        <div
+          key={queen.id}
+          className={`grid gap-3 px-5 py-5 sm:grid-cols-[1fr_1.6fr_1fr] sm:items-center ${
+            highlightQueenId &&
+            String(queen.id) === String(highlightQueenId)
+              ? "bg-yellow-50 ring-4 ring-inset ring-yellow-200"
+              : ""
+          }`}
+        >
               <div>
                 <p className="font-bold text-[#1a3329]">{queen.reference}</p>
                 <p className="mt-1 text-xs font-semibold text-gray-500">{queen.period}</p>
@@ -1343,6 +1360,7 @@ const EventsTab = ({ hive, allHives, canEdit, activeAction, onAction, onClose, o
 );
 
 const QueenRecords = () => {
+  const location = useLocation();
   const [records, setRecords] = useState({
     subscriptionLevel: "free",
     hasQueenData: false,
@@ -1380,6 +1398,44 @@ const QueenRecords = () => {
   }, [loadRecords]);
 
   useEffect(() => {
+    const params = new URLSearchParams(location.search || "");
+    const requestedHiveId = params.get("hive");
+    const requestedQueenId = params.get("queen");
+    const requestedEventId = params.get("event");
+    const requestedProcessId = params.get("process");
+
+    if (!requestedHiveId || !records.hives.length) return;
+
+    const hive = records.hives.find(
+      (item) => String(item.id) === String(requestedHiveId)
+    );
+
+    if (!hive) return;
+
+    setSelectedApiaryId(hive.apiaryId);
+    setSelectedHiveId(hive.id);
+    setActiveAction(null);
+
+    if (
+      requestedQueenId &&
+      String(hive.currentQueen?.id) === String(requestedQueenId)
+    ) {
+      setActiveTab("current");
+    } else if (
+      requestedQueenId &&
+      hive.previousQueens.some(
+        (queen) => String(queen.id) === String(requestedQueenId)
+      )
+    ) {
+      setActiveTab("history");
+    } else if (requestedEventId || requestedProcessId) {
+      setActiveTab("progress");
+    } else {
+      setActiveTab("overview");
+    }
+  }, [location.search, records.hives]);
+
+  useEffect(() => {
     if (
       selectedApiaryId !== "all" &&
       !records.apiaries.some((apiary) => apiary.id === selectedApiaryId)
@@ -1390,7 +1446,10 @@ const QueenRecords = () => {
   }, [records.apiaries, selectedApiaryId]);
 
   useEffect(() => {
-    if (selectedHiveId !== "all" && !records.hives.some((hive) => hive.id === selectedHiveId)) {
+    if (
+      selectedHiveId !== "all" &&
+      !records.hives.some((hive) => hive.id === selectedHiveId)
+    ) {
       setSelectedHiveId("all");
       setActiveTab("overview");
       setActiveAction(null);
@@ -1400,10 +1459,27 @@ const QueenRecords = () => {
   const filteredHives = useMemo(
     () =>
       records.hives.filter(
-        (hive) => selectedApiaryId === "all" || hive.apiaryId === selectedApiaryId
+        (hive) =>
+          selectedApiaryId === "all" || hive.apiaryId === selectedApiaryId
       ),
     [records.hives, selectedApiaryId]
   );
+
+  const requestedQueenId = useMemo(() => {
+    const params = new URLSearchParams(location.search || "");
+    return params.get("queen");
+  }, [location.search]);
+
+  const requestedProgressId = useMemo(() => {
+    const params = new URLSearchParams(location.search || "");
+    const eventId = params.get("event");
+    const processId = params.get("process");
+
+    if (eventId) return eventId;
+    if (processId) return `expected-${processId}`;
+
+    return null;
+  }, [location.search]);
 
   const selectedHive = useMemo(
     () => records.hives.find((hive) => hive.id === selectedHiveId) || null,
@@ -1615,11 +1691,24 @@ const QueenRecords = () => {
           ) : activeTab === "overview" ? (
             <QueenOverview hive={selectedHive} canEdit={canEdit} onAction={openAction} />
           ) : activeTab === "current" ? (
-            <CurrentQueenTab hive={selectedHive} canEdit={canEdit} onAction={openAction} />
+            <CurrentQueenTab
+              hive={selectedHive}
+              canEdit={canEdit}
+              onAction={openAction}
+              highlightQueenId={requestedQueenId}
+            />
           ) : activeTab === "progress" ? (
-            <ProgressTab hive={selectedHive} canEdit={canEdit} onAction={openAction} />
+           <ProgressTab
+              hive={selectedHive}
+              canEdit={canEdit}
+              onAction={openAction}
+              highlightProgressId={requestedProgressId}
+            />
           ) : activeTab === "history" ? (
-            <HistoryTab hive={selectedHive} />
+            <HistoryTab
+              hive={selectedHive}
+              highlightQueenId={requestedQueenId}
+            />
           ) : (
             <EventsTab
               hive={selectedHive}

@@ -507,6 +507,8 @@ const Calendar = () => {
         link: "/queens",
         apiary_id: q.apiary_id || null,
         hive_id: q.hive_id || null,
+        queen_id: q.queen_id || null,
+        queen_event_id: q.id,
         status: "active",
         completed: false,
         detail: q.detail || null,
@@ -544,6 +546,8 @@ const Calendar = () => {
           link: "/queens",
           apiary_id: process.apiary_id || null,
           hive_id: process.hive_id || null,
+          queen_id: process.queen_id || null,
+          queen_process_id: process.id,
           status: "active",
           completed: false,
           detail: process.notes || null,
@@ -1124,19 +1128,29 @@ const Calendar = () => {
   {/* VIEW -> go to list, with highlight */}
               {selected.link && (
                 <Link
-                  to={ROUTES_VIEW[
-                   selected.type === TYPE.APIARY
-                    ? "apiary"
-                    : selected.type === TYPE.HIVE
-                    ? "hive"
-                    : selected.type === TYPE.INSPECTION
-                    ? "inspection"
-                    : selected.type === TYPE.TODO
-                    ? "todo"
-                    : selected.type === TYPE.QUEEN
-                    ? "queen"
-                    : "log"
-                  ](getIdFromKey(selected.key))}
+                  to={
+                    selected.type === TYPE.QUEEN
+                    ? `/queens?hive=${encodeURIComponent(
+                        selected.hive_id || ""
+                      )}&queen=${encodeURIComponent(
+                        selected.queen_id || ""
+                      )}&event=${encodeURIComponent(
+                        selected.queen_event_id || ""
+                      )}&process=${encodeURIComponent(
+                        selected.queen_process_id || ""
+                      )}`
+                      : ROUTES_VIEW[
+                          selected.type === TYPE.APIARY
+                            ? "apiary"
+                            : selected.type === TYPE.HIVE
+                            ? "hive"
+                            : selected.type === TYPE.INSPECTION
+                            ? "inspection"
+                            : selected.type === TYPE.TODO
+                            ? "todo"
+                            : "log"
+                        ](getIdFromKey(selected.key))
+                  }
                   className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 py-2 rounded"
                   onClick={() => setModalOpen(false)}
                 >
