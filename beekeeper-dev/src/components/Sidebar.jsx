@@ -6,8 +6,8 @@ import { supabase } from "../services/supabase";
 const APP_VERSION = "1.4.1";
 
 const Sidebar = ({ setIsMobileMenuOpen }) => {
-  const [quickCreateOpen, setQuickCreateOpen] = useState(true);
-  const [bizQuickCreateOpen, setBizQuickCreateOpen] = useState(true);
+  const [quickCreateOpen, setQuickCreateOpen] = useState(false);
+  const [bizQuickCreateOpen, setBizQuickCreateOpen] = useState(false);
   const [subscriptionLevel, setSubscriptionLevel] = useState(
     () => localStorage.getItem("subscription_level") || "free"
   );
@@ -283,59 +283,76 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
         {/* Dashboard as a normal nav item (original styling) */}
         <LinkItem item={{ to: "/dashboard", label: "Dashboard" }} />
 
-        {/* Beekeeping Quick Create directly under Dashboard */}
+        {/* NFC Scan stays permanently visible above Quick Create */}
+        {coreQuickCreate
+          .filter((item) => item.premiumNfc)
+          .map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              onClick={handleLinkClick}
+              className={({ isActive }) =>
+                `flex mt-2 px-4 py-2 rounded text-sm font-medium transition-colors duration-150 items-center justify-between gap-2
+                bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300
+                text-[#1a3329] border border-white shadow-md shadow-amber-500/40
+                hover:from-yellow-300 hover:via-amber-300 hover:to-yellow-300
+                ${isActive ? "bg-yellow-300 text-[#1a3329]" : ""}`
+              }
+            >
+              <span>{item.label}</span>
+              <span className="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-[#1a3329] text-amber-200 border border-amber-500">
+                NFC • Premium
+              </span>
+            </NavLink>
+          ))}
+
+        {/* Beekeeping Quick Create */}
         <button
           onClick={() => setQuickCreateOpen(!quickCreateOpen)}
           className="w-full text-left mt-2 mb-1 px-2 py-1 text-xs font-semibold text-yellow-300 uppercase tracking-wider hover:text-yellow-400"
         >
           Quick Create {quickCreateOpen ? "▼" : "▶"}
         </button>
+
         {quickCreateOpen && (
           <div className="flex flex-col gap-1 bg-[#1a3329]">
-            {coreQuickCreate.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                onClick={handleLinkClick}
-                className={({ isActive }) => {
-                  const basePremiumClasses =
-                    "bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300 text-[#1a3329] border border-white shadow-md shadow-amber-500/40";
-                  const hoverPremiumClasses =
-                    "hover:from-yellow-300 hover:via-amber-300 hover:to-yellow-300";
-                  const baseNormalClasses = "text-white hover:bg-yellow-400 hover:text-[#1a3329]";
-
-                  const activePremiumClasses = "bg-yellow-300 text-[#1a3329]";
-                  const activeNormalClasses = "bg-yellow-400 text-[#1a3329]";
-
-                  const isPremiumNfc = item.premiumNfc;
-
-                  const baseClasses = isPremiumNfc ? basePremiumClasses : baseNormalClasses;
-                  const activeClasses = isPremiumNfc ? activePremiumClasses : activeNormalClasses;
-
-                  return `flex px-4 py-2 rounded text-sm font-medium transition-colors duration-150 items-center justify-between gap-2 ${
-                    isActive ? activeClasses : baseClasses
-                  } ${isPremiumNfc ? hoverPremiumClasses : ""}`;
-                }}
-              >
-                <span>{item.label}</span>
-                {item.premiumNfc && (
-                  <span className="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-[#1a3329] text-amber-200 border border-amber-500">
-                    NFC • Premium
-                  </span>
-                )}
-              </NavLink>
-            ))}
+            {coreQuickCreate
+              .filter((item) => !item.premiumNfc)
+              .map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={handleLinkClick}
+                  className={({ isActive }) =>
+                    `block px-4 py-2 rounded text-sm font-medium transition-colors duration-150 ${
+                      isActive
+                        ? "bg-yellow-400 text-[#1a3329]"
+                        : "text-white hover:bg-yellow-400 hover:text-[#1a3329]"
+                    }`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
           </div>
         )}
 
         {/* Divider between quick create and the rest of the beekeeping links */}
         <div className="my-4 border-t border-white/20" />
 
-        {/* Remaining beekeeping links: Apiaries, Hives, Inspections, etc. */}
-        {coreSecondaryNavItems.map((item) => (
-          <LinkItem key={item.to} item={item} />
-        ))}
+        {/* Primary beekeeping links */}
+        <div className="mt-1 rounded-lg border border-white/10 border-l-[3px] border-l-yellow-400/70 bg-white/5 p-1">
+          {coreSecondaryNavItems.slice(0, 6).map((item) => (
+            <LinkItem key={item.to} item={item} />
+          ))}
+        </div>
 
+        {/* Secondary beekeeping links */}
+        <div className="mt-3 rounded-lg border border-white/10 border-l-[3px] border-l-yellow-400/70 bg-white/5 p-1">
+          {coreSecondaryNavItems.slice(6).map((item) => (
+            <LinkItem key={item.to} item={item} />
+          ))}
+        </div>
         <div className="my-4 border-t border-white/20" />
 
         {/* Business Quick Create ABOVE Inventory & Finance heading */}
