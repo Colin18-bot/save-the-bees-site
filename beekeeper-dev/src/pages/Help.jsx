@@ -792,12 +792,32 @@ export default function Help() {
                       <strong>Task List</strong> or from the <strong>Edit Task</strong> page.
                     </li>
                     <li>
-                      From the calendar, open an item and choose <strong>View in list</strong> to
-                      jump to the Task List with the task briefly highlighted.
+                      The Calendar brings together dated records across your apiaries and hives,
+                      including inspections, tasks, logbook entries and Queen lifecycle activity.{" "}
+                      <Badge>Free</Badge>
                     </li>
                     <li>
-                      The calendar surfaces dated items across apiaries and hives.{" "}
-                      <Badge>Free</Badge>
+                      <strong>Queen lifecycle events:</strong> Queen events and active Queen-process
+                      follow-up dates appear under the dedicated <strong>Queen</strong> Calendar
+                      category. Members with retained Queen data can continue to review their
+                      existing Queen history after downgrade.
+                    </li>
+                    <li>
+                      Open a Queen Calendar entry and choose <strong>Open in list</strong> to jump
+                      directly to the relevant Apiary and Hive in Queen Records. HiveTag opens the
+                      appropriate <strong>Current Queen</strong>, <strong>Progress</strong> or{" "}
+                      <strong>History</strong> view and highlights the relevant record.
+                    </li>
+                    <li>
+                      <strong>Inspection Hive Health</strong>{" "}
+                      <Badge tone="blue">Premium</Badge>: opening an Inspection in the Calendar
+                      shows the Hive Health assessment calculated from the inspection history that
+                      existed at that point in time. This allows you to review how the colony was
+                      assessed at an earlier inspection rather than only seeing its latest status.
+                    </li>
+                    <li>
+                      From a task Calendar entry, choose <strong>View in list</strong> to jump to
+                      the Task List with the task briefly highlighted.
                     </li>
                     <li>
                       Tasks created from the <strong>Year in the Apiary Seasonal Guide</strong>{" "}
@@ -1001,6 +1021,13 @@ export default function Help() {
                   <li>
                     Queen history includes assignments, lifecycle events and managed processes in
                     date order.
+                  </li>
+                  <li>
+                    Queen lifecycle events shown in the <strong>Calendar</strong> can be opened
+                    directly in Queen Records. HiveTag automatically selects the relevant Apiary
+                    and Hive, opens the appropriate <strong>Current Queen</strong>,{" "}
+                    <strong>Progress</strong> or <strong>History</strong> view, and highlights the
+                    Queen or lifecycle entry linked to that Calendar event.
                   </li>
                   <li>
                     Inspection snapshots preserve the Queen information associated with an inspection
@@ -1314,6 +1341,13 @@ export default function Help() {
                   <li>Read any priority items highlighted.</li>
                   <li>Review the recommended actions before your next visit.</li>
                   <li>Compare how the colony has changed over time using the health timeline.</li>
+                  <li>
+                    <strong>Calendar history:</strong> when you open a saved Inspection from the{" "}
+                    <strong>Calendar</strong>, Premium members can also review the Hive Health
+                    assessment as it stood at that inspection. This is based only on inspection
+                    history available up to that date, so later inspections do not alter the earlier
+                    assessment.
+                  </li>
                 </ol>
               </div>
 

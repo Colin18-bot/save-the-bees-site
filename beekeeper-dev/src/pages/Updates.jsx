@@ -8,7 +8,59 @@ dayjs.locale("en-gb");
 
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
+{
+  version: "1.4.2",
+  released_at: "2026-08-17T18:00:00Z",
 
+  summary:
+    "Expanded the Calendar with Queen lifecycle information and historical Hive Health assessments, added direct navigation from Calendar events into the relevant Queen Records, and refined the Sidebar navigation and Quick Create area.",
+
+  added: [
+    "Added **Queen** as a dedicated Calendar category with its own filter and colour.",
+    "Added Queen lifecycle events and active Queen-process follow-up dates to the Calendar.",
+    "Added historical **Hive Health** assessments to Inspection Calendar entries for Premium members, showing the colony assessment as it stood at that inspection.",
+    "Added direct links from Queen Calendar events to the relevant Apiary, Hive and Queen Records view.",
+    "Added automatic selection of the correct **Current Queen**, **Progress** or **History** view when opening a Queen event from the Calendar.",
+    "Added visual highlighting of the exact Queen or Queen Progress record referenced by a Calendar event."
+  ],
+
+  changed: [
+    "Refined the Sidebar navigation and Quick Create area to reduce duplication and make frequently used actions easier to reach.",
+    "Queen lifecycle activity is now presented through the existing Calendar rather than requiring members to review Queen Records separately for every dated event.",
+    "Hive Health information is shown inside the existing Inspection Calendar entry rather than creating additional Calendar events.",
+    "Historical Hive Health assessments are calculated using only the inspection history available up to the selected inspection date, so later inspections do not alter the earlier assessment.",
+    "Queen Calendar links now preserve the relevant Hive, Queen, lifecycle event or active Queen process so the correct record can be opened directly.",
+    "Updated Help guidance to explain Queen Calendar events, Queen deep-links and historical Hive Health assessments."
+  ],
+
+  fixed: [
+    "Fixed Premium Hive Health information not appearing in Calendar Inspection entries because the subscription profile was being checked against the wrong profile field.",
+    "Fixed Queen Calendar events opening the general Queen Records page without identifying the relevant Queen or lifecycle record.",
+    "Fixed Queen progress events such as **Emergency Queen cells started** and **Queen cells sealed** not opening and highlighting the relevant Progress entry.",
+    "Fixed previous-Queen Calendar events not opening and highlighting the relevant Queen History record.",
+    "Fixed the Inspection Calendar popup displaying **Inspection** twice in its heading."
+  ],
+
+  removed: [],
+
+  security: [
+    "Hive Health information shown through the Calendar remains restricted to Premium members.",
+    "Existing retained read-only Queen Records access for downgraded members is unchanged."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Calendar", to: "/calendar" },
+    { label: "Queen Records", to: "/queens" },
+    { label: "Hive Health", to: "/hives" },
+    { label: "Help", to: "/help" }
+  ],
+
+  known_issues: [
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
 {
   version: "1.4.1",
   released_at: "2026-08-08T23:00:00Z",
