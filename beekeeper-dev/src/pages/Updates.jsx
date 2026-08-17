@@ -621,7 +621,6 @@ const NOTES = [
     "Temperature display relies on stored canonical Celsius values and converts for display only."
   ]
   },
-  
   {
   version: "1.1.1",
   released_at: "2026-01-26T18:00:00Z",
@@ -929,8 +928,7 @@ const NOTES = [
     "Dashboard preview shows only the first 3 notes by design — full context always requires visiting the Weather page."
   ]
 },
-  
-   {
+{
     version: "1.0.4",
     released_at: "2025-12-03T18:00:00Z",
     summary:
@@ -1244,9 +1242,8 @@ export default function Updates() {
         </div>
       )}
 
-     
     </div>
-  );
+);
 }
 
 function NoteSection({ title, items, highlight = false, muted = false }) {

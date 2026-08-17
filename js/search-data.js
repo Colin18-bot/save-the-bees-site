@@ -360,13 +360,19 @@ window.searchData = [
     "keywords": "hive problems UK, beekeeping problems, dead bees outside hive, why did my hive die, queenless colony, weak colony bees, robbing behaviour bees, wasps beehives UK"
   },
   {
-    "title": "Beekeeping App UK | HiveTag Records App | BeezKnees",
-    "url": "/hivetag-app",
-    "description": "HiveTag is a UK beekeeping records app for inspections, apiaries, hives, tasks and logbook records, with Premium tools for seasonal guides, health checks, reports, finance and NFC tags.",
-    "keywords": "beekeeping records app, beekeeping app UK, hive inspection app, hive inspection log, digital hive records, apiary management, beekeeping logbook, bee disease symptoms, colony health check, bee disease helper, varroa symptoms, foulbrood signs, chalkbrood, nosema, NFC hive tags, Cardiff beekeeping, Vale of Glamorgan beekeeper, South Wales beekeeping, HiveTag"
-  },
-  {
-    "title": "Honey Extraction UK | Harvest & Bottle Honey | BeezKnees",
+  "title": "Beekeeping App UK | HiveTag Records App | BeezKnees",
+  "url": "/hivetag-app",
+  "description": "HiveTag is a UK beekeeping records app for inspections, apiaries, hives, tasks and logbook records, with Premium tools for seasonal guides, health checks, reports, finance and NFC tags.",
+  "keywords": "beekeeping records app, beekeeping app UK, hive inspection app, hive inspection log, digital hive records, apiary management, beekeeping logbook, bee disease symptoms, colony health check, bee disease helper, varroa symptoms, foulbrood signs, chalkbrood, nosema, NFC hive tags, Cardiff beekeeping, Vale of Glamorgan beekeeper, South Wales beekeeping, HiveTag"
+},
+{
+  "title": "HiveTag Association Partner Programme | UK Beekeeping Associations",
+  "url": "/hivetag-association-partner-program",
+  "description": "HiveTag Association Partner Programme for UK beekeeping associations, offering members 20% off Premium, complimentary association accounts and early feature input.",
+  "keywords": "HiveTag association partner programme, HiveTag partners, beekeeping association, beekeeping associations UK, beekeeping clubs UK, beekeeper member benefits, association member discount, HiveTag discount, HiveTag Premium discount, beekeeping app discount, beekeeping records app, hive records, apiary records, inspection records, queen records, digital beekeeping records, complimentary Premium accounts, association partnership, UK beekeepers"
+},
+{
+  "title": "Honey Extraction UK | Harvest & Bottle Honey | BeezKnees",
     "url": "/honey-extraction",
     "description": "Step-by-step UK honey extraction guide covering ripe honey, removing supers, uncapping, extracting, filtering, settling and bottling safely.",
     "keywords": "honey extraction, how to extract honey, honey harvesting, uncapping frames, honey extractor, bottling honey, when to remove supers, beekeeping UK, capped honey, honey moisture content"

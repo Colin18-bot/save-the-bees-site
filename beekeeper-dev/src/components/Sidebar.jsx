@@ -13,7 +13,6 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
   );
   const [hasRetainedQueenData, setHasRetainedQueenData] = useState(false);
   const [subscriptionLoading, setSubscriptionLoading] = useState(true);
-  
   const navigate = useNavigate();
 
   const handleLinkClick = () => {
