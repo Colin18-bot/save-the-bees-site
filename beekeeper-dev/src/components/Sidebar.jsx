@@ -340,7 +340,7 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
         <div className="my-4 border-t border-white/20" />
 
         {/* Primary beekeeping links */}
-        <div className="mt-1 rounded-lg border border-white/10 border-l-[3px] border-l-yellow-400/70 bg-white/5 p-1">
+        <div className="mt-1 space-y-1.5 rounded-lg border border-white/10 border-l-[3px] border-l-yellow-400/70 bg-white/5 p-1">
           {coreSecondaryNavItems.slice(0, 6).map((item) => (
             <LinkItem key={item.to} item={item} />
           ))}
