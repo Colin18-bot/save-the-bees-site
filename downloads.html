@@ -974,6 +974,60 @@
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
     <i class="fa-solid fa-arrow-up"></i>
     </button>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector(
+          'form[name="beekeeper-resource-pack"]'
+        );
+
+        if (!form) return;
+
+        form.addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const submitButton = form.querySelector('button[type="submit"]');
+
+          if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.innerHTML =
+              '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+          }
+
+          try {
+            const formData = new FormData(form);
+
+            const response = await fetch("/", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+              },
+              body: new URLSearchParams(formData).toString()
+            });
+
+            if (!response.ok) {
+              throw new Error("Form submission failed");
+            }
+
+            window.location.href =
+              "https://beezknees.co.uk/resource-pack-thank-you";
+          } catch (error) {
+            console.error(error);
+
+            alert(
+              "Sorry, there was a problem submitting the form. Please try again."
+            );
+
+            if (submitButton) {
+              submitButton.disabled = false;
+              submitButton.innerHTML =
+                '<i class="fa-solid fa-envelope"></i> Email Me The Free Pack';
+            }
+          }
+        });
+      });
+    </script>
+
     <script src="js/search-data.js" defer></script>
     <script src="js/script.js" defer></script>
   </body>
