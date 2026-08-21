@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { supabase } from "../services/supabase";
+import MarketingConsentGate from "./MarketingConsentGate";
 
 /**
  * Usage:
@@ -210,7 +211,11 @@ const ProtectedRoute = ({
   }
 
   // 5) All checks passed.
-  return children;
+return (
+  <MarketingConsentGate user={user}>
+    {children}
+  </MarketingConsentGate>
+);
 };
 
 export default ProtectedRoute;
