@@ -9,6 +9,51 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.5.0",
+  released_at: "2026-08-23T18:58:00Z",
+
+  summary:
+    "Added optional email preference controls throughout HiveTag, allowing members to record their choice during registration, respond to a one-time prompt where no preference has previously been recorded, and change their preference later in Settings. This release also strengthens the server-side protection and auditability of marketing consent records.",
+
+  added: [
+    "Added an optional **Keep me updated by email** choice during registration. The checkbox is not selected by default.",
+    "Added a one-time email preference prompt for existing members where no previous marketing email choice has been recorded.",
+    "Added an **Email communications** section in Settings where members can change their optional marketing email preference at any time.",
+    "Added recorded consent information including the member's current choice, the source of that choice, the consent version and the date and time it was updated.",
+    "Added Help guidance explaining optional marketing emails, registration choices, existing-member prompts, Settings controls and the distinction between optional and essential account communications."
+  ],
+
+  changed: [
+    "Registration now securely carries an explicit marketing email preference into the member's HiveTag profile when the registration form has been used.",
+    "Members who choose either Yes or No during registration will not subsequently be shown the existing-member email preference prompt.",
+    "Changing an email preference in Settings now updates the protected consent record through server-side application logic rather than a direct browser profile update.",
+    "Optional marketing email preferences are kept separate from essential account and service communications.",
+    "Choosing not to receive optional marketing emails does not affect membership level, account access or HiveTag features."
+  ],
+
+  fixed: [],
+
+  removed: [],
+
+  security: [
+    "Marketing email consent fields are now protected against direct modification by normal browser/client profile updates.",
+    "Consent changes are processed through authenticated server-side logic and are associated with the signed-in member.",
+    "New-registration consent is recorded through trusted database handling rather than relying on a later client-side profile update.",
+    "Strengthened execution permissions on sensitive internal database functions so they cannot be called directly by anonymous or normal authenticated browser sessions."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Settings", to: "/settings" },
+    { label: "Help", to: "/help" }
+  ],
+
+  known_issues: [
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
+{
   version: "1.4.2",
   released_at: "2026-08-17T18:00:00Z",
 

@@ -24,6 +24,7 @@ const toc = [
   { id: "tips", title: "Tips for Smooth Record-Keeping" },
   { id: "faqs", title: "FAQs" },
   { id: "troubleshooting", title: "Troubleshooting" },
+  { id: "email-preferences", title: "Email Preferences" },
   { id: "privacy", title: "Privacy & Data" },
   { id: "power-users", title: "Power-User Notes" },
   { id: "glossary", title: "Glossary" },
@@ -2432,7 +2433,54 @@ export default function Help() {
                 </li>
               </ul>
             </section>
+            {/* Email Preferences */}
+            <section id="email-preferences">
+              <h2 className="text-2xl font-bold mb-3">Email Preferences</h2>
 
+              <div className="rounded-xl border bg-white p-4">
+                <p className="text-gray-700">
+                  HiveTag separates optional marketing emails from essential account and
+                  service communications.
+                </p>
+
+                <ul className="mt-3 list-disc pl-6 space-y-2 text-gray-700">
+                  <li>
+                    <strong>When registering:</strong> you can choose whether you would like
+                    to receive occasional emails about HiveTag news, new features and useful
+                    beekeeping resources. The checkbox is optional and is not selected by
+                    default.
+                  </li>
+
+                  <li>
+                    <strong>Existing members:</strong> if no email preference has previously
+                    been recorded, HiveTag will ask you once whether you would like to receive
+                    these optional emails.
+                  </li>
+
+                  <li>
+                    <strong>Changing your preference:</strong> go to{" "}
+                    <em>Settings → Email communications</em> at any time to choose{" "}
+                    <strong>Yes, keep me updated</strong> or <strong>No thanks</strong>.
+                  </li>
+
+                  <li>
+                    <strong>Declining optional emails:</strong> choosing No does not affect
+                    your HiveTag account, membership level or access to features.
+                  </li>
+
+                  <li>
+                    <strong>Essential emails:</strong> important account and service messages,
+                    such as authentication, password, billing and other necessary account
+                    communications, are separate from your optional marketing preference.
+                  </li>
+                </ul>
+
+                <p className="mt-3 text-sm text-gray-600">
+                  Your current marketing email preference is stored with your HiveTag account
+                  so it can be respected across future sessions.
+                </p>
+              </div>
+            </section>
             {/* Privacy */}
             <section id="privacy">
               <h2 className="text-2xl font-bold mb-3">Privacy &amp; Data</h2>
