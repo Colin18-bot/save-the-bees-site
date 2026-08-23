@@ -24,6 +24,7 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
+  const [marketingEmailConsent, setMarketingEmailConsent] = useState(false);
 
   // NEW: show/hide password toggles
   const [showPassword, setShowPassword] = useState(false);
@@ -55,7 +56,11 @@ const Register = () => {
     }
 
     try {
-      const signUpData = await registerUser(email, password);
+      const signUpData = await registerUser(
+        email,
+        password,
+        marketingEmailConsent
+      );
 
       let session = signUpData?.session || null;
       let userId = signUpData?.user?.id || null;
@@ -230,12 +235,34 @@ const Register = () => {
           </button>
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition duration-200 shadow"
-        >
-          Register
-        </button>
+          {/* MARKETING EMAIL CONSENT */}
+          <label className="flex items-start gap-3 rounded-lg border border-gray-200 bg-gray-50 p-4 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={marketingEmailConsent}
+              onChange={(e) => setMarketingEmailConsent(e.target.checked)}
+              className="mt-1 h-4 w-4"
+            />
+
+            <span>
+              <span className="block font-medium text-gray-800">
+                Keep me updated by email
+              </span>
+
+              <span className="block mt-1 text-sm leading-5 text-gray-600">
+                I&apos;d like to receive occasional emails about HiveTag news,
+                new features and useful beekeeping resources. This is optional
+                and you can change your preference at any time in Settings.
+              </span>
+            </span>
+          </label>
+
+          <button
+            type="submit"
+            className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition duration-200 shadow"
+          >
+            Register
+          </button>
 
         <p className="text-sm text-center mt-2">
           Already have an account?{" "}

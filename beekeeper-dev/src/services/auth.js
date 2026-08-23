@@ -20,15 +20,39 @@ export async function loginUser(email, password) {
 }
 
 // Register new user
-export async function registerUser(email, password) {
+export async function registerUser(
+  email,
+  password,
+  marketingEmailConsent = null
+) {
   // IMPORTANT: do NOT signOut here.
   // Let the caller (Register.jsx) decide when to sign out,
   // so it can read the session and upsert the profile first.
+
+  const options = {};
+
+  /*
+   * Only send the marketing preference when Register.jsx
+   * has explicitly supplied a boolean value.
+   *
+   * true  = opted in
+   * false = did not opt in
+   * null  = no registration preference supplied
+   */
+  if (typeof marketingEmailConsent === "boolean") {
+    options.data = {
+      marketing_email_consent: marketingEmailConsent,
+    };
+  }
+
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
+    options,
   });
+
   if (error) throw error;
+
   return data; // { user, session } (session present if Confirm Email = OFF)
 }
 
