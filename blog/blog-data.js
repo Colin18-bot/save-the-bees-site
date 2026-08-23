@@ -1,4 +1,15 @@
 window.beezKneesBlogPosts = [
+    {
+    title: "Best Beekeeping Apps for UK Beekeepers in 2026",
+    slug: "best-beekeeping-apps-uk",
+    category: "Beekeeping Technology",
+    date: "19 August 2026",
+    isoDate: "2026-08-19",
+    isoModified: "2026-08-19",
+    image: "assets/images/hivetag.webp",
+    alt: "Beekeeper using a smartphone in an apiary to record hive inspections",
+    excerpt: "Compare nine beekeeping apps for UK beekeepers in 2026, including HiveTag, HiveKeeper, HiveTracks, ApiNote, HiveSense and more, with free plans, colony health tools, queen records, NFC, voice inspections and offline use."
+  },
   {
     title: "Inspection Diary #1: Nine Colonies, Nine Different Stories",
     slug: "inspection-diary-1-nine-colonies-nine-different-stories",
