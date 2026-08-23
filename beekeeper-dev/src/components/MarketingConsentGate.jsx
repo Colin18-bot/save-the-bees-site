@@ -79,15 +79,28 @@ const MarketingConsentGate = ({ user, children }) => {
 
       if (!data?.success) {
         throw new Error(
-          data?.error || "Unable to save your email preference."
+            data?.error || "Unable to save your email preference."
         );
-      }
+        }
 
-      /*
-       * Once either YES or NO has been successfully recorded,
-       * this one-time prompt closes.
-       */
-      setShowPrompt(false);
+        /*
+        * Tell any open page (such as Settings) that the
+        * marketing preference has just changed.
+        */
+        window.dispatchEvent(
+        new CustomEvent("marketing-consent:updated", {
+            detail: {
+            consent: data.consent.marketingEmailConsent,
+            updatedAt: data.consent.updatedAt || null,
+            },
+        })
+        );
+
+        /*
+        * Once either YES or NO has been successfully recorded,
+        * this one-time prompt closes.
+        */
+        setShowPrompt(false);
     } catch (error) {
       console.error("Unable to save marketing preference:", error);
 

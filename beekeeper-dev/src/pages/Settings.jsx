@@ -147,7 +147,11 @@ const Settings = () => {
   const [plan, setPlan] = useState("free");
   const [subscriptionStatus, setSubscriptionStatus] = useState("");
   const [currentPeriodEnd, setCurrentPeriodEnd] = useState(null);
-
+  // Email communications
+  const [marketingEmailConsent, setMarketingEmailConsent] = useState(null);
+  const [marketingEmailConsentUpdatedAt, setMarketingEmailConsentUpdatedAt] =
+    useState(null);
+  const [marketingConsentSaving, setMarketingConsentSaving] = useState(false);
   // Personalisation
   const [timezone, setTimezone] = useState(
     localStorage.getItem("prefs.timezone") || "Europe/London"
@@ -235,7 +239,7 @@ const Settings = () => {
     const { data: profile } = await supabase
       .from("profiles")
       .select(
-        "display_name, avatar_url, subscription_level, subscription_status, current_period_end, email"
+        "display_name, avatar_url, subscription_level, subscription_status, current_period_end, email, marketing_email_consent, marketing_email_consent_updated_at"
       )
       .eq("user_id", uid)
       .maybeSingle();
@@ -247,6 +251,17 @@ const Settings = () => {
       setSubscriptionStatus(profile.subscription_status || "");
       setCurrentPeriodEnd(profile.current_period_end || null);
       setEmail(profile.email || "");
+      setMarketingEmailConsent(
+        profile.marketing_email_consent === true
+          ? true
+          : profile.marketing_email_consent === false
+            ? false
+            : null
+      );
+
+      setMarketingEmailConsentUpdatedAt(
+        profile.marketing_email_consent_updated_at || null
+      );
 
       const level = profile.subscription_level || "free";
       localStorage.setItem("subscription_level", level);
@@ -317,6 +332,34 @@ const Settings = () => {
       cancelled = true;
     };
   }, [location.search, loadProfile, showStatus]);
+
+useEffect(() => {
+  const onMarketingConsentUpdated = (event) => {
+    const detail = event?.detail || {};
+
+    if (typeof detail.consent === "boolean") {
+      setMarketingEmailConsent(detail.consent);
+    }
+
+    if ("updatedAt" in detail) {
+      setMarketingEmailConsentUpdatedAt(
+        detail.updatedAt || null
+      );
+    }
+  };
+
+  window.addEventListener(
+    "marketing-consent:updated",
+    onMarketingConsentUpdated
+  );
+
+  return () => {
+    window.removeEventListener(
+      "marketing-consent:updated",
+      onMarketingConsentUpdated
+    );
+  };
+}, []);
 
   const saveProfile = async () => {
     setStatus(null);
@@ -560,7 +603,59 @@ const Settings = () => {
     localStorage.setItem("prefs.currency", val);
     window.dispatchEvent(new CustomEvent("prefs:currency", { detail: { currency: val } }));
   };
+  const handleMarketingPreferenceChange = async (consent) => {
+  if (marketingConsentSaving) return;
 
+  setMarketingConsentSaving(true);
+  setStatus(null);
+
+  try {
+    const { data, error } = await supabase.functions.invoke(
+      "update-marketing-consent",
+      {
+        body: {
+          consent,
+          source: "settings",
+        },
+      }
+    );
+
+    if (error) {
+      console.error("Marketing preference update failed:", error);
+      throw error;
+    }
+
+    if (!data?.success) {
+      throw new Error(
+        data?.error || "Unable to save your email preference."
+      );
+    }
+
+    setMarketingEmailConsent(
+      data.consent.marketingEmailConsent
+    );
+
+    setMarketingEmailConsentUpdatedAt(
+      data.consent.updatedAt || null
+    );
+
+    showStatus(
+      consent
+        ? "Email updates have been turned on."
+        : "Email updates have been turned off.",
+      "success"
+    );
+  } catch (error) {
+    console.error("Unable to update marketing preference:", error);
+
+    showStatus(
+      "We couldn't save your email preference. Please try again.",
+      "error"
+    );
+  } finally {
+    setMarketingConsentSaving(false);
+  }
+};
   return (
     <div className="p-6 w-full max-w-2xl">
       <h2 className="text-2xl font-bold mb-6">Settings</h2>
@@ -677,7 +772,89 @@ const Settings = () => {
           </button>
         </div>
       </section>
+      {/* ===== Email Communications ===== */}
+      <section
+        className="mb-10 border rounded-xl p-4 bg-white shadow-sm"
+        aria-labelledby="email-communications-settings"
+      >
+        <h2
+          id="email-communications-settings"
+          className="text-xl font-semibold"
+        >
+          Email communications
+        </h2>
 
+        <p className="mt-2 text-sm text-gray-600">
+          Choose whether you would like to receive occasional emails about
+          HiveTag news, new features and useful beekeeping resources.
+        </p>
+
+        <p className="mt-2 text-xs text-gray-500">
+          This preference does not affect essential account, security,
+          subscription or service emails.
+        </p>
+
+        <div className="mt-4 space-y-3">
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="radio"
+              name="marketing-email-consent"
+              checked={marketingEmailConsent === true}
+              disabled={marketingConsentSaving}
+              onChange={() => handleMarketingPreferenceChange(true)}
+              className="mt-1"
+            />
+
+            <span>
+              <span className="block font-medium text-gray-800">
+                Yes, keep me updated
+              </span>
+              <span className="block text-xs text-gray-500">
+                Receive occasional HiveTag emails.
+              </span>
+            </span>
+          </label>
+
+          <label className="flex items-start gap-3 cursor-pointer">
+            <input
+              type="radio"
+              name="marketing-email-consent"
+              checked={marketingEmailConsent === false}
+              disabled={marketingConsentSaving}
+              onChange={() => handleMarketingPreferenceChange(false)}
+              className="mt-1"
+            />
+
+            <span>
+              <span className="block font-medium text-gray-800">
+                No thanks
+              </span>
+              <span className="block text-xs text-gray-500">
+                Do not send me HiveTag marketing emails.
+              </span>
+            </span>
+          </label>
+        </div>
+
+        {marketingEmailConsent === null && (
+          <p className="mt-4 text-sm text-amber-700">
+            No email preference has been recorded yet.
+          </p>
+        )}
+
+        {marketingEmailConsentUpdatedAt && (
+          <p className="mt-4 text-xs text-gray-500">
+            Preference last updated:{" "}
+            {formatDate(marketingEmailConsentUpdatedAt)}
+          </p>
+        )}
+
+        {marketingConsentSaving && (
+          <p className="mt-3 text-sm text-gray-500">
+            Saving preference...
+          </p>
+        )}
+      </section>
       {/* ===== Account Security ===== */}
       <section className="mb-8 space-y-4">
         <h2 className="text-xl font-semibold">Account Security</h2>
