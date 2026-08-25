@@ -1,5 +1,16 @@
 window.beezKneesBlogPosts = [
-    {
+  {
+    title: "How I Use Apivar Strips After the Honey Harvest",
+    slug: "how-i-use-apivar-strips-after-honey-harvest",
+    category: "Varroa Management",
+    date: "25 August 2026",
+    isoDate: "2026-08-25",
+    isoModified: "2026-08-25",
+    image: "assets/images/apivar-strips-after-honey-harvest.webp",
+    alt: "Apivar strips being used to treat a honey bee colony for Varroa after the summer honey harvest",
+    excerpt: "How I manage Varroa treatment in my own apiary after the honey harvest, from removing and extracting the supers to returning them for cleaning before starting my Apivar treatment."
+  },
+  {
     title: "Best Beekeeping Apps for UK Beekeepers in 2026",
     slug: "best-beekeeping-apps-uk",
     category: "Beekeeping Technology",
