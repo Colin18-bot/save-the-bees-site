@@ -12,6 +12,7 @@ const toc = [
   { id: "queens", title: "Queen Records & Colony Lifecycle" },
   { id: "apiary-map-markers", title: "Apiary Map Markers (Map Notes)" },
   { id: "bee-health-helper", title: "Colony Health Check (Bee Health Helper)" },
+  { id: "asian-hornet", title: "Asian Hornet Centre" },
   { id: "hive-health", title: "Hive Health" },
   { id: "seasonal-guide", title: "Year in the Apiary Seasonal Guide" },
   { id: "business-inventory", title: "Inventory, Sales & Expenses" },
@@ -59,7 +60,7 @@ export default function Help() {
           <h2 className="text-3xl font-bold">HiveTag Help &amp; How-To</h2>
           <p className="mt-2 text-gray-600">
             Clear, practical guidance for every part of HiveTag—from your first apiary and inspection
-            to Queen lifecycle records, reports and NFC tag setup.
+            to Asian Hornet reporting, Queen lifecycle records, reports and NFC tag setup.
           </p>
           <p className="mt-2 text-sm text-gray-600">
             Features labelled <Badge tone="blue">Premium</Badge> require a Premium plan. If you
@@ -72,8 +73,9 @@ export default function Help() {
           <h2 className="text-xl font-bold text-blue-950">Which HiveTag feature should I use?</h2>
 
           <p className="mt-2 text-sm text-blue-900">
-            Start by recording an inspection. Then choose the tool that best matches what you want
-            to do next.
+            For normal colony work, start by recording an inspection. If you think you have seen a
+            Yellow-legged Asian Hornet, use the Asian Hornet Centre immediately to photograph, record
+            and prepare the suspected sighting for official reporting.
           </p>
 
           <div className="mt-4 overflow-hidden rounded-lg border border-blue-200 bg-white">
@@ -118,6 +120,18 @@ export default function Help() {
                     <dd className="text-gray-700">
                       Use guided questions when something does not look right and you want help
                       deciding what to check next.
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt className="font-medium text-gray-900">
+                      Asian Hornet Centre <Badge tone="green">Included</Badge>
+                    </dt>
+                    <dd className="text-gray-700">
+                      Use the field-first identification and reporting workflow when you see a
+                      suspected Yellow-legged Asian Hornet. Take photographs, record the location and
+                      details, keep a private HiveTag observation, and then submit the sighting through
+                      the official reporting service.
                     </dd>
                   </div>
                 </dl>
@@ -295,6 +309,11 @@ export default function Help() {
                         <strong>Tasks</strong> &amp; <strong>Logbook</strong>
                       </li>
                       <li>
+                        <strong>Asian Hornet Centre</strong>: identification, lookalike comparison,
+                        private observation records, reporting preparation, reminders and guidance.
+                        The full Asian Hornet feature is available on Free and Premium.
+                      </li>
+                      <li>
                         <strong>Export my data (CSV)</strong> via <em>Settings → Export</em>
                       </li>
                       <li>
@@ -319,6 +338,11 @@ export default function Help() {
                     <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
                       <li>
                         <strong>Unlimited apiaries &amp; hives</strong>
+                      </li>
+                      <li>
+                        <strong>Asian Hornet Centre</strong>: the same complete identification,
+                        observation and reporting workflow provided to Free members, with no
+                        Asian-Hornet-specific paywall.
                       </li>
                       <li>
                         <strong>Hive Health</strong>: explainable health scores, colony health
@@ -740,6 +764,45 @@ export default function Help() {
                     <li>
                       You can switch between <strong>Guided mode</strong> and{" "}
                       <strong>Expand all</strong> at any time.
+                    </li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold">
+                    Asian Hornet Centre <Badge tone="green">Included</Badge>
+                  </h3>
+                  <ul className="list-disc pl-6">
+                    <li>
+                      Available to <strong>Free and Premium members</strong> with the same Asian Hornet
+                      functionality.
+                    </li>
+                    <li>
+                      Use <strong>Take Photo &amp; Report</strong> when you see a suspected
+                      Yellow-legged Asian Hornet. HiveTag can capture photographs, sighting time and
+                      GPS location before you complete the observation details.
+                    </li>
+                    <li>
+                      Use <strong>Identify It</strong> to review the four main identification features
+                      and <strong>Compare Lookalikes</strong> to compare the insect with common UK
+                      lookalikes, especially the native European Hornet.
+                    </li>
+                    <li>
+                      <strong>European Hornets are native.</strong> Do not harm or report a European
+                      Hornet simply because it is a hornet.
+                    </li>
+                    <li>
+                      <strong>My Observations</strong> stores your private sighting records and lets
+                      you filter by reporting status or apiary.
+                    </li>
+                    <li>
+                      A saved HiveTag observation is <strong>not an official report</strong>. The
+                      reporting screen clearly shows whether the sighting still needs to be submitted
+                      through the official service.
+                    </li>
+                    <li>
+                      The Centre also includes guidance on behaviour at hives, nests, lifecycle,
+                      monitoring, what happens after reporting and official resources.
                     </li>
                   </ul>
                 </div>
@@ -1298,6 +1361,200 @@ export default function Help() {
                 Quick link:{" "}
                 <Link to="/bee-health" className="text-blue-700 underline">
                   Open Colony Health Check
+                </Link>
+              </div>
+            </section>
+
+
+            {/* Asian Hornet Centre */}
+            <section id="asian-hornet">
+              <h2 className="text-2xl font-bold mb-3">
+                Asian Hornet Centre <Badge tone="green">Included</Badge>
+              </h2>
+
+              <div className="mb-4 rounded border border-amber-200 bg-amber-50 p-4 text-sm text-gray-800">
+                <div className="font-semibold">See it. Snap it. Report it.</div>
+                <p className="mt-1">
+                  If you think you have seen a Yellow-legged Asian Hornet (<em>Vespa velutina</em>),
+                  keep a safe distance, take clear photographs if it is safe to do so, record the
+                  location and report the suspected sighting through the official UK reporting
+                  service. You do not need to be certain before reporting.
+                </p>
+              </div>
+
+              <p className="text-gray-700">
+                The Asian Hornet Centre is a field-first tool designed to help you move quickly from a
+                suspicious insect to identification, photographs, a private HiveTag observation and
+                official reporting. The complete feature is available to both Free and Premium
+                members.
+              </p>
+
+              <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Quick identification</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                    <li>Predominantly dark body and thorax.</li>
+                    <li>Distinctive yellow lower leg sections.</li>
+                    <li>Orange/yellow face when viewed from the front.</li>
+                    <li>One conspicuous broad orange/yellow abdominal band.</li>
+                    <li>
+                      Size can help with context, but size alone must not be used to identify a
+                      suspected Asian Hornet.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Identification confidence</h3>
+                  <p className="mt-2 text-gray-700">
+                    HiveTag deliberately does not calculate a probability and does not let members
+                    mark an observation as a confirmed Asian Hornet. Observation confidence is kept
+                    to <strong>Unsure</strong>, <strong>Possible</strong> or{" "}
+                    <strong>Suspected</strong>. Official confirmation belongs to the appropriate
+                    experts and reporting authorities.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">Take Photo &amp; Report workflow</h3>
+                <ol className="mt-2 list-decimal pl-6 space-y-1 text-gray-700">
+                  <li>
+                    Open <strong>Asian Hornet → Take Photo &amp; Report</strong>.
+                  </li>
+                  <li>
+                    Take a photograph from a safe distance or choose an existing photograph. You can
+                    keep up to <strong>6 photographs</strong> with an observation.
+                  </li>
+                  <li>
+                    Where available, HiveTag records the sighting time and GPS location. If GPS is not
+                    available, you can continue using an apiary location or a manual location.
+                  </li>
+                  <li>
+                    Review the photographs, then complete the sighting details: location, number seen,
+                    behaviour, optional flight direction, whether a nest is suspected, identification
+                    confidence and notes.
+                  </li>
+                  <li>
+                    Select <strong>Save Observation &amp; Continue</strong>. This saves the private
+                    HiveTag record and opens the official-report preparation screen.
+                  </li>
+                  <li>
+                    Use <strong>Copy GPS</strong>, <strong>Copy Sighting Details</strong> and the
+                    prepared reporting photographs where useful.
+                  </li>
+                  <li>
+                    Select <strong>Report Sighting Now</strong> to open the official Biological
+                    Records Centre reporting service.
+                  </li>
+                  <li>
+                    Opening the official service does <strong>not</strong> automatically mark the
+                    HiveTag observation as reported.
+                  </li>
+                  <li>
+                    After you have actually submitted the official report, return to HiveTag and use{" "}
+                    <strong>I HAVE REPORTED THIS</strong>. Add the official reference if one was
+                    provided.
+                  </li>
+                </ol>
+              </div>
+
+              <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">My Observations</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                    <li>
+                      Observation records are private to your signed-in HiveTag account.
+                    </li>
+                    <li>
+                      Filter records by <strong>All</strong>, <strong>Needs Reporting</strong>,{" "}
+                      <strong>Reported</strong> or Apiary.
+                    </li>
+                    <li>
+                      Possible or Suspected observations that have not been marked as officially
+                      reported can appear as <strong>Needs Reporting</strong>.
+                    </li>
+                    <li>
+                      Completed observations can be edited and additional photographs can be added,
+                      up to the six-photo limit.
+                    </li>
+                    <li>
+                      Deleting a private HiveTag observation removes its HiveTag photographs and
+                      record, but it does <strong>not</strong> withdraw an official report already
+                      submitted elsewhere.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Unfinished and offline sightings</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                    <li>
+                      Unfinished Supabase observations can be continued from the Centre or permanently
+                      discarded.
+                    </li>
+                    <li>
+                      If connectivity drops while the photo page is already available, selected
+                      photographs can be preserved locally on that device using browser storage.
+                    </li>
+                    <li>
+                      Reopen the photo page on the same device/browser to recover the locally saved
+                      sighting photographs.
+                    </li>
+                    <li>
+                      You must reconnect before HiveTag can upload the photographs and continue to
+                      the full observation-details step.
+                    </li>
+                    <li>
+                      This local recovery does not currently guarantee a fully closed browser can
+                      cold-start the whole HiveTag application with no internet connection.
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded border border-red-300 bg-red-50 p-4 text-sm text-red-900">
+                <div className="font-semibold">Suspected nest?</div>
+                <p className="mt-1">
+                  Do not approach, disturb or attempt to remove a suspected Yellow-legged Asian Hornet
+                  nest. Take photographs only from a safe distance and report the suspected nest
+                  immediately.
+                </p>
+              </div>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">Lookalikes and learning guides</h3>
+                <p className="mt-2 text-gray-700">
+                  The Centre includes a swipe-friendly comparison tool and practical guides covering
+                  behaviour at hives, nest identification, lifecycle, monitoring, what happens after
+                  reporting and trusted reporting resources.
+                </p>
+                <p className="mt-2 text-gray-700">
+                  <strong>European Hornets are native.</strong> They should not be harmed or reported
+                  simply because they are hornets.
+                </p>
+              </div>
+
+              <div className="mt-4 text-sm text-gray-600">
+                Quick links:{" "}
+                <Link to="/asian-hornet" className="text-blue-700 underline">
+                  Asian Hornet Centre
+                </Link>
+                {" · "}
+                <Link to="/asian-hornet/identify" className="text-blue-700 underline">
+                  Identify
+                </Link>
+                {" · "}
+                <Link to="/asian-hornet/compare" className="text-blue-700 underline">
+                  Compare Lookalikes
+                </Link>
+                {" · "}
+                <Link to="/asian-hornet/observations" className="text-blue-700 underline">
+                  My Observations
+                </Link>
+                {" · "}
+                <Link to="/asian-hornet/resources" className="text-blue-700 underline">
+                  Official Resources
                 </Link>
               </div>
             </section>
@@ -1868,6 +2125,37 @@ export default function Help() {
                     </li>
                   </ol>
                 </div>
+
+                <div>
+                  <h3 className="font-semibold">
+                    F) Suspected Asian Hornet sighting <Badge tone="green">Included</Badge>
+                  </h3>
+
+                  <ol className="list-decimal pl-6 space-y-1 text-gray-700">
+                    <li>
+                      Open <strong>Asian Hornet → Take Photo &amp; Report</strong>.
+                    </li>
+                    <li>
+                      Photograph the insect from a safe distance and allow HiveTag to capture the
+                      sighting time and location where available.
+                    </li>
+                    <li>
+                      Complete the observation details and save the private HiveTag record.
+                    </li>
+                    <li>
+                      Use the report-preparation screen to copy the GPS/details and save a prepared
+                      reporting photograph if needed.
+                    </li>
+                    <li>
+                      Open the official reporting service using <strong>Report Sighting Now</strong>
+                      and submit the suspected sighting.
+                    </li>
+                    <li>
+                      Return to HiveTag and select <strong>I HAVE REPORTED THIS</strong> only after the
+                      official submission has actually been completed.
+                    </li>
+                  </ol>
+                </div>
               </div>
             </section>
 
@@ -2123,6 +2411,48 @@ export default function Help() {
               <h2 className="text-2xl font-bold mb-3">FAQs</h2>
               <div className="space-y-4">
                 <div>
+                  <p className="font-medium">Is the Asian Hornet Centre a Premium feature?</p>
+                  <p className="text-gray-700">
+                    No. The complete Asian Hornet Centre is available to both Free and Premium
+                    members. Identification, photography, private observations, reporting preparation,
+                    reminders and learning guidance are not restricted by membership level.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">
+                    Does saving an Asian Hornet observation officially report it?
+                  </p>
+                  <p className="text-gray-700">
+                    No. Saving creates a private HiveTag observation only. You must still use the
+                    official reporting service. HiveTag does not mark the record as officially
+                    reported merely because the reporting website was opened.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">
+                    Can I mark an Asian Hornet observation as confirmed?
+                  </p>
+                  <p className="text-gray-700">
+                    No. HiveTag uses <strong>Unsure</strong>, <strong>Possible</strong> and{" "}
+                    <strong>Suspected</strong>. Confirmation should come through the appropriate
+                    official identification and investigation process.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">
+                    What happens if I lose internet while taking Asian Hornet photographs?
+                  </p>
+                  <p className="text-gray-700">
+                    If the photo page is already available, HiveTag can preserve selected photographs
+                    locally on that device/browser so they can be recovered. Reconnect before
+                    uploading the photographs and continuing to the full sighting-details step.
+                  </p>
+                </div>
+
+                <div>
                   <p className="font-medium">
                     Is the Colony Health Check a diagnosis? <Badge tone="blue">Premium</Badge>
                   </p>
@@ -2325,6 +2655,23 @@ export default function Help() {
               <h2 className="text-2xl font-bold mb-3">Troubleshooting</h2>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
+                  <strong>Asian Hornet observation says “Not reported” after I saved it:</strong> this
+                  is expected. Saving the HiveTag observation does not submit the official report.
+                  Open the reporting screen and use the official service, then mark it as reported in
+                  HiveTag after submission.
+                </li>
+                <li>
+                  <strong>Asian Hornet GPS could not be captured:</strong> you can still continue using
+                  a saved apiary location or a manual location. GPS failure does not block the
+                  sighting workflow.
+                </li>
+                <li>
+                  <strong>I selected Asian Hornet photos while offline but cannot continue:</strong>{" "}
+                  HiveTag can preserve the unfinished photos locally when the page is available, but
+                  you must reconnect before the photos can be uploaded and the observation details
+                  completed.
+                </li>
+                <li>
                   <strong>Colony Health Check seems stuck</strong>{" "}
                   <Badge tone="blue">Premium</Badge>
                   <strong>:</strong> switch to <strong>Expand all</strong> to see everything
@@ -2487,8 +2834,27 @@ export default function Help() {
               <ul className="list-disc pl-6 space-y-1">
                 <li>Your data is stored securely in your BeezKnees account.</li>
                 <li>
-                  <strong>Photos are public URLs</strong> for fast loading; your CSV export includes
-                  links to these files.
+                  <strong>Standard HiveTag photographs:</strong> some existing photo areas use public
+                  file URLs for fast loading and those links may appear in CSV exports.
+                </li>
+                <li>
+                  <strong>Asian Hornet photographs are different:</strong> they are stored in a
+                  private storage bucket and viewed or downloaded using temporary signed URLs.
+                </li>
+                <li>
+                  <strong>Asian Hornet observations:</strong> these are private HiveTag records and do
+                  not become public incident records or automatically submit data to the official
+                  reporting service.
+                </li>
+                <li>
+                  <strong>Location data:</strong> an Asian Hornet observation may store GPS
+                  coordinates, GPS accuracy, an apiary association or a manually entered location
+                  when you provide or allow that information.
+                </li>
+                <li>
+                  <strong>Deleting an Asian Hornet observation:</strong> removes the private HiveTag
+                  record and associated HiveTag photographs, but cannot withdraw an official report
+                  that you submitted separately.
                 </li>
                 <li>
                   <strong>Android NFC tag IDs:</strong> HiveTag stores the scanned Android tag ID
@@ -2519,6 +2885,12 @@ export default function Help() {
                 wizard.
               </p>
               <ul className="list-disc pl-6 space-y-1">
+                <li>
+                  <strong>Asian Hornet reporting state:</strong> the private observation and official
+                  report status are intentionally separate. A Possible/Suspected record remains in
+                  <strong>Needs Reporting</strong> until you explicitly mark the official submission
+                  as completed.
+                </li>
                 <li>
                   <strong>Colony Health Check</strong> <Badge tone="blue">Premium</Badge>
                   <strong>:</strong> use <strong>Expand all</strong> to answer in any order. Use{" "}

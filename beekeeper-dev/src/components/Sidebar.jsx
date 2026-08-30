@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
-const APP_VERSION = "1.5.0";
+const APP_VERSION = "1.5.1";
 
 const Sidebar = ({ setIsMobileMenuOpen }) => {
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
@@ -151,7 +151,7 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     { to: "/todos", label: "Tasks" },
     { to: "/calendar", label: "Calendar" },
     { to: "/weather", label: "Weather" },
-
+    { to: "/asian-hornet", label: "Asian Hornet" },
     { to: "/settings", label: "Settings" },
     { to: "/archive", label: "Archive" },
     { to: "/help", label: "Help" },

@@ -9,6 +9,85 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.5.1",
+  released_at: "2026-08-30T23:05:00Z",
+
+  summary:
+    "Introduced the new Asian Hornet Centre, giving all HiveTag members a dedicated field-first tool for identifying, photographing, recording and officially reporting suspected Yellow-legged Asian Hornet sightings. This release also adds private observation records, reporting reminders, lookalike comparisons, practical guidance, offline photo recovery and comprehensive mobile and accessibility improvements.",
+
+  added: [
+    "Added a dedicated **Asian Hornet Centre** for identifying, recording and reporting suspected Yellow-legged Asian Hornet sightings.",
+    "Made the complete Asian Hornet feature available to **both Free and Premium members** with no feature restrictions.",
+    "Added the field-first **See it. Snap it. Report it.** workflow with direct access to **Take Photo & Report**, identification and official reporting.",
+    "Added guided Yellow-legged Asian Hornet identification covering the dark body, yellow-ended legs, orange face and broad orange/yellow abdominal band.",
+    "Added an interactive identification checklist that provides cautious guidance without attempting to calculate a diagnostic probability or confirmation.",
+    "Added **Compare Lookalikes**, including comparisons with the native European Hornet and other commonly confused UK insects.",
+    "Added clear guidance that **European Hornets are native and should not be harmed or reported simply because they are hornets**.",
+    "Added private Asian Hornet observation records containing photographs, date and time, GPS location, apiary association, number seen, behaviour, flight direction, suspected nest status, identification confidence and notes.",
+    "Added support for up to **6 photographs per observation**, including separate compressed reporting copies suitable for uploading to the official reporting service.",
+    "Added automatic GPS capture where available, with apiary and manual-location fallbacks where GPS cannot be obtained.",
+    "Added an official reporting preparation screen with **Copy GPS**, **Copy Sighting Details** and downloadable reporting photographs.",
+    "Added direct access to the official **Biological Records Centre Asian Hornet reporting service** while keeping the HiveTag observation record separate from the official report.",
+    "Added manual **I HAVE REPORTED THIS** tracking so members can record when an observation has been officially submitted without HiveTag falsely assuming that opening the reporting service means a report was completed.",
+    "Added optional storage of the official report reference after submission.",
+    "Added **My Observations** with All, Needs Reporting, Reported and Apiary filtering plus paginated observation records.",
+    "Added reporting reminders for completed observations marked **Possible** or **Suspected** that have not yet been recorded as officially reported.",
+    "Added support for editing completed observations and adding additional photographs after the initial record has been created.",
+    "Added safe permanent deletion of private observations and associated HiveTag photographs, with clear warning that deleting a HiveTag record does not withdraw an official report already submitted.",
+    "Added recovery of unfinished Asian Hornet observation drafts so partially completed sightings can be continued or discarded.",
+    "Added local device recovery of selected photographs using IndexedDB if connectivity is lost before the photographs have been uploaded to HiveTag.",
+    "Added dedicated guidance covering **Behaviour at Hives**, **Identifying a Nest**, **Lifecycle**, **Monitoring**, **What Happens After Reporting**, and **Official Resources**.",
+    "Added prominent nest-safety guidance warning members not to approach, disturb or attempt to remove a suspected Asian Hornet nest."
+  ],
+
+  changed: [
+    "Asian Hornet reporting has been designed as an **emergency field workflow first and information library second**, prioritising rapid photography and official reporting.",
+    "The Asian Hornet Centre now keeps private HiveTag observations clearly separate from official UK Asian Hornet reports.",
+    "Identification terminology uses **Yellow-legged Asian Hornet** and **Vespa velutina** while retaining the familiar **Asian Hornet** name in navigation.",
+    "Observation confidence is deliberately limited to **Unsure**, **Possible** and **Suspected**; members cannot mark their own observation as a confirmed Asian Hornet.",
+    "The Asian Hornet Centre, identification workflow, observation forms, reporting screens, observation records and information pages have been extensively refined for mobile use.",
+    "Keyboard navigation, visible focus indicators, touch-target sizing, screen-reader labelling, status announcements and warning semantics have been strengthened throughout the Asian Hornet Centre.",
+    "Lookalike comparison controls are horizontally swipeable on smaller screens while keeping the visible scrollbar hidden.",
+    "Offline photo recovery preserves the original sighting time when the photographs are later uploaded after reconnection."
+  ],
+
+  fixed: [
+    "Improved mobile layout behaviour to prevent horizontal overflow across the Asian Hornet Centre and reporting workflow.",
+    "Improved long GPS coordinates, location names, observation details and comparison text so they wrap correctly on narrow screens.",
+    "Improved keyboard focus visibility across identification controls, reporting actions, observation cards, filters, guide links and destructive actions.",
+    "Improved touch usability by providing appropriate mobile touch targets throughout the Asian Hornet workflow.",
+    "Improved reporting photograph handling so prepared upload copies remain separate from the original private photographs.",
+    "Improved unfinished-observation handling so resumed drafts continue the existing record rather than creating duplicate observations.",
+    "Improved local photo recovery so successfully uploaded offline photographs are cleared from the device after the Supabase observation has been created."
+  ],
+
+  removed: [],
+
+  security: [
+    "Asian Hornet observations and photographs remain private to the signed-in member through owner-only Supabase Row Level Security and private storage policies.",
+    "Photographs are stored in a private Asian Hornet storage bucket and displayed or downloaded using temporary signed URLs.",
+    "Asian Hornet observation records do not become public incident records and are not automatically shared with the official reporting service.",
+    "No Premium subscription check is applied to the Asian Hornet Centre so safety-critical identification and reporting functionality remains available to all members."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Asian Hornet Centre", to: "/asian-hornet" },
+    { label: "Identify Asian Hornet", to: "/asian-hornet/identify" },
+    { label: "Compare Lookalikes", to: "/asian-hornet/compare" },
+    { label: "My Observations", to: "/asian-hornet/observations" },
+    { label: "Official Resources", to: "/asian-hornet/resources" }
+  ],
+
+  known_issues: [
+    "Final real-device testing of camera capture, mobile GPS and HTTPS behaviour will be completed on the deployed HiveTag environment.",
+    "Offline photo recovery supports sightings where the Asian Hornet page is already available on the device; guaranteed cold-start operation from a fully closed browser while offline is not currently supported.",
+    "Asian Hornet incident mapping, official UK incident data and apiary proximity alerts are planned for a future release and are not included in version 1.5.1.",
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
+{
   version: "1.5.0",
   released_at: "2026-08-23T18:58:00Z",
 

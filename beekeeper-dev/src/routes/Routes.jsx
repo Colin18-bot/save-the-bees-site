@@ -15,6 +15,16 @@ import NotFound from "../pages/NotFound.jsx";
 // App (eager)
 import Dashboard from "../pages/Dashboard.jsx";
 
+import AsianHornetCentre from "../pages/AsianHornet/AsianHornetCentre.jsx";
+import AsianHornetIdentify from "../pages/AsianHornet/AsianHornetIdentify.jsx";
+import AsianHornetCompare from "../pages/AsianHornet/AsianHornetCompare.jsx";
+import AsianHornetPhoto from "../pages/AsianHornet/AsianHornetPhoto.jsx";
+import AsianHornetObservationDetails from "../pages/AsianHornet/AsianHornetObservationDetails.jsx";
+import AsianHornetReport from "../pages/AsianHornet/AsianHornetReport.jsx";
+import AsianHornetObservations from "../pages/AsianHornet/AsianHornetObservations.jsx";
+import AsianHornetObservation from "../pages/AsianHornet/AsianHornetObservation.jsx";
+import AsianHornetLearnPage from "../pages/AsianHornet/AsianHornetLearnPage.jsx";
+
 import ApiaryList from "../pages/Apiaries/ApiaryList.jsx";
 import NewApiary from "../pages/Apiaries/NewApiary.jsx";
 import EditApiary from "../pages/Apiaries/EditApiary.jsx";
@@ -163,6 +173,119 @@ function AppRoutes() {
           </Layout>
         }
       />
+      <Route
+        path="/asian-hornet"
+        element={
+          <Guarded>
+            <AsianHornetCentre />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/identify"
+        element={
+          <Guarded>
+            <AsianHornetIdentify />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/compare"
+        element={
+          <Guarded>
+            <AsianHornetCompare />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/photo"
+        element={
+          <Guarded>
+            <AsianHornetPhoto />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/observation/:id/details"
+        element={
+          <Guarded>
+            <AsianHornetObservationDetails />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/report/:id"
+        element={
+          <Guarded>
+            <AsianHornetReport />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/observations"
+        element={
+          <Guarded>
+            <AsianHornetObservations />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/observations/:id"
+        element={
+          <Guarded>
+            <AsianHornetObservation />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/behaviour"
+        element={
+          <Guarded>
+            <AsianHornetLearnPage pageKey="behaviour" />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/nests"
+        element={
+          <Guarded>
+            <AsianHornetLearnPage pageKey="nests" />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/lifecycle"
+        element={
+          <Guarded>
+            <AsianHornetLearnPage pageKey="lifecycle" />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/monitoring"
+        element={
+          <Guarded>
+            <AsianHornetLearnPage pageKey="monitoring" />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/after-reporting"
+        element={
+          <Guarded>
+            <AsianHornetLearnPage pageKey="afterReporting" />
+          </Guarded>
+        }
+      />
+      <Route
+        path="/asian-hornet/resources"
+        element={
+          <Guarded>
+            <AsianHornetLearnPage pageKey="resources" />
+          </Guarded>
+        }
+      />
+
       {/* Protected */}
       <Route path="/dashboard" element={<Guarded><Dashboard /></Guarded>} />
       <Route path="/apiaries" element={<Guarded><ApiaryList /></Guarded>} />
