@@ -1,0 +1,58 @@
+﻿
+  src\services\actions.js:228:
+  src\services\actions.js:229:/**
+  src\services\actions.js:230: * Edge Function name (must match deployed folder name)
+  src\services\actions.js:231: * supabase/functions/delete-row-with-photos
+  src\services\actions.js:232: */
+> src\services\actions.js:233:const DELETE_FN = "delete-row-with-photos";
+  src\services\actions.js:234:
+  src\services\actions.js:235:/**
+  src\services\actions.js:236: * IMPORTANT:
+  src\services\actions.js:237: * Supabase Edge preflight can fail if apikey header is missing.
+  src\services\actions.js:238: * We force headers via a direct fetch fallback if invoke() fails.
+  src\services\actions.js:239: */
+  src\services\actions.js:240:
+  src\services\actions.js:241:function getEnv(key) {
+  src\services\actions.js:242:  // Vite exposes envs via import.meta.env
+  src\services\actions.js:243:  // We keep this tiny helper for safety.
+  src\services\actions.js:321: */
+  src\services\actions.js:322:export async function serverDeleteRowWithPhotos({ table, id, mode = "delete_row", 
+removeOne }) {
+  src\services\actions.js:323:  const payload = { table, id, mode, ...(removeOne ? { removeOne } : {}) };
+  src\services\actions.js:324:
+  src\services\actions.js:325:  // 1) Try official invoke() first
+> src\services\actions.js:326:  const inv = await supabase.functions.invoke(DELETE_FN, { body: payload });
+  src\services\actions.js:327:
+  src\services\actions.js:328:  // If invoke returns a transport/gateway error, fallback to direct fetch (forces 
+apikey header)
+  src\services\actions.js:329:  if (inv?.error) {
+> src\services\actions.js:330:    const fallback = await fetchEdgeFunction(DELETE_FN, payload);
+  src\services\actions.js:331:    if (fallback.error) {
+  src\services\actions.js:332:      // Return whichever has more useful info; fallback usually does.
+  src\services\actions.js:333:      return { data: null, error: fallback.error };
+  src\services\actions.js:334:    }
+  src\services\actions.js:335:    // Some functions return { error: "..." } with 200
+  src\services\actions.js:336:    if (fallback.data && typeof fallback.data === "object" && fallback.data.error) {
+  src\services\actions.js:337:      return { data: null, error: { message: fallback.data.error } };
+  src\services\actions.js:338:    }
+  src\services\actions.js:339:    return { data: fallback.data, error: null };
+  src\services\actions.js:340:  }
+  src\services\queenRecords.js:347:    apiaries,
+  src\services\queenRecords.js:348:    hives: normalisedHives,
+  src\services\queenRecords.js:349:  };
+  src\services\queenRecords.js:350:}
+  src\services\queenRecords.js:351:
+> src\services\queenRecords.js:352:const callQueenRpc = async (functionName, parameters) => {
+> src\services\queenRecords.js:353:  const { data, error } = await supabase.rpc(functionName, parameters);
+  src\services\queenRecords.js:354:  if (error) throw new Error(error.message);
+  src\services\queenRecords.js:355:  return data;
+  src\services\queenRecords.js:356:};
+  src\services\queenRecords.js:357:
+  src\services\queenRecords.js:358:export const createQueenForHive = ({
+  src\services\queenRecords.js:359:  hiveId,
+  src\services\queenRecords.js:360:  eventDate,
+  src\services\queenRecords.js:361:  mode,
+  src\services\queenRecords.js:362:  reference,
+  src\services\queenRecords.js:363:  queenYear,
+
+
