@@ -315,6 +315,7 @@ export default function Pricing() {
           "Photo uploads",
           "Logbook & archive",
           "Basic hive, apiary and inspection management",
+          "Asian Hornet Centre — identification, lookalike comparisons, observations and reporting guidance",
         ]}
           disabled={subscriptionLevel === "free" && !!user}
           busy={false}
@@ -341,6 +342,7 @@ export default function Pricing() {
           "Year in the Apiary seasonal guide with monthly actions",
           "Apiary and Hive Siting Guides",
           "Step-by-step Inspection Guide",
+          "Asian Hornet Centre — identification, lookalike comparisons, observations and reporting guidance",
           "Professional reports and CSV exports",
           "Inventory, sales, expenses and Profit & Loss",
           "Apiary map markers",
