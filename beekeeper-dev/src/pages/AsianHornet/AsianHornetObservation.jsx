@@ -99,7 +99,10 @@ export default function AsianHornetObservation() {
     useState(false);
 
   const [uploading, setUploading] =
-    useState(false);
+      useState(false);
+
+  const [deletingPhotoId, setDeletingPhotoId] =
+      useState(null);
 
   const [photoError, setPhotoError] =
     useState("");
@@ -313,6 +316,16 @@ export default function AsianHornetObservation() {
     const accepted =
       incoming.slice(0, remaining);
 
+    const nextSortOrder =
+      photos.reduce(
+        (highest, photo) =>
+          Math.max(
+            highest,
+            Number(photo.sort_order) || 0
+          ),
+        -1
+      ) + 1;
+
     setUploading(true);
 
     try {
@@ -412,7 +425,7 @@ export default function AsianHornetObservation() {
               original_path: originalPath,
               report_path: reportPath,
               sort_order:
-                photos.length + index,
+              nextSortOrder + index,
             });
 
           if (photoRecordError) {
@@ -464,11 +477,110 @@ export default function AsianHornetObservation() {
   }
 
   // ----------------------------------------------------------
+// Delete one photograph from an existing observation.
+// A completed observation must retain at least one photo.
+// ----------------------------------------------------------
+
+async function deletePhoto(photo) {
+  setPhotoError("");
+
+  if (photos.length <= 1) {
+    setPhotoError(
+      "A completed observation must keep at least one photograph."
+    );
+    return;
+  }
+
+  const reported =
+    observation?.report_status === "reported";
+
+  const message = reported
+    ? "Delete this photograph from your private HiveTag observation? This will not change or withdraw anything already submitted to the official reporting service."
+    : "Delete this photograph from the observation?";
+
+  if (!window.confirm(message)) {
+    return;
+  }
+
+  setDeletingPhotoId(photo.id);
+
+  try {
+    /*
+     * Remove the database record first.
+     *
+     * This keeps the observation valid even if storage
+     * cleanup subsequently encounters a problem.
+     */
+    const { error: deletePhotoError } =
+      await supabase
+        .from(
+          "asian_hornet_observation_photos"
+        )
+        .delete()
+        .eq("id", photo.id)
+        .eq("observation_id", id);
+
+    if (deletePhotoError) {
+      throw deletePhotoError;
+    }
+
+    const paths = [];
+
+    if (photo.original_path) {
+      paths.push(photo.original_path);
+    }
+
+    if (
+      photo.report_path &&
+      photo.report_path !==
+        photo.original_path
+    ) {
+      paths.push(photo.report_path);
+    }
+
+    if (paths.length) {
+      const { error: storageError } =
+        await supabase.storage
+          .from("asian-hornet")
+          .remove(paths);
+
+      if (storageError) {
+        console.error(
+          "Delete Asian Hornet photo storage:",
+          storageError
+        );
+
+        setPhotoError(
+          "The photograph was removed from the observation, but its stored file could not be cleaned up automatically."
+        );
+      }
+    }
+
+    await loadObservation();
+  } catch (error) {
+    console.error(
+      "Delete Asian Hornet photograph:",
+      error
+    );
+
+    setPhotoError(
+      error?.message ||
+        "The photograph could not be deleted. Please try again."
+    );
+  } finally {
+    setDeletingPhotoId(null);
+  }
+}
+
+  // ----------------------------------------------------------
   // Delete private HiveTag record.
   // Storage files MUST be removed separately.
   // ----------------------------------------------------------
 
   async function deleteObservation() {
+        if (uploading || deletingPhotoId !== null) {
+      return;
+    }
     const reported =
       observation.report_status ===
       "reported";
@@ -709,7 +821,8 @@ export default function AsianHornetObservation() {
         disabled={
           photos.length >=
             MAX_ASIAN_HORNET_PHOTOS ||
-          uploading
+          uploading ||
+          deletingPhotoId !== null
         }
         onClick={() =>
           cameraInputRef.current?.click()
@@ -727,7 +840,8 @@ export default function AsianHornetObservation() {
         disabled={
           photos.length >=
             MAX_ASIAN_HORNET_PHOTOS ||
-          uploading
+          uploading ||
+          deletingPhotoId !== null
         }
         onClick={() =>
           galleryInputRef.current?.click()
@@ -803,17 +917,41 @@ export default function AsianHornetObservation() {
                   )}
                 </div>
 
-                {photo.reportDownloadUrl && (
-                  <a
-                    href={
-                      photo.reportDownloadUrl
-                    }
-                    aria-label={`Save reporting photograph ${index + 1}`}
-                    className="flex min-h-[44px] items-center justify-center border-t px-3 py-2 text-center text-xs font-semibold text-[#1a3329] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#1a3329] focus:ring-inset"
-                  >
-                    Save Reporting Photo
-                  </a>
-                )}
+                <div className="border-t">
+          {photo.reportDownloadUrl && (
+            <a
+              href={
+                photo.reportDownloadUrl
+              }
+              aria-label={`Save reporting photograph ${index + 1}`}
+              className="flex min-h-[44px] items-center justify-center px-3 py-2 text-center text-xs font-semibold text-[#1a3329] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#1a3329] focus:ring-inset"
+            >
+              Save Reporting Photo
+            </a>
+          )}
+
+          <button
+            type="button"
+            disabled={
+            photos.length <= 1 ||
+            deletingPhotoId !== null ||
+            uploading
+          }
+            onClick={() =>
+              deletePhoto(photo)
+            }
+            aria-label={`Delete photograph ${index + 1}`}
+            className={`flex min-h-[44px] w-full items-center justify-center px-3 py-2 text-center text-xs font-semibold text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-inset disabled:cursor-not-allowed disabled:text-gray-400 disabled:hover:bg-transparent ${
+              photo.reportDownloadUrl
+                ? "border-t"
+                : ""
+            }`}
+          >
+            {deletingPhotoId === photo.id
+              ? "Deleting…"
+              : "Delete Photo"}
+          </button>
+        </div>
               </div>
             )
           )}
@@ -1065,7 +1203,11 @@ export default function AsianHornetObservation() {
 
         <button
           type="button"
-          disabled={deleting}
+          disabled={
+            deleting ||
+            uploading ||
+            deletingPhotoId !== null
+          }
           onClick={deleteObservation}
           className="mt-4 min-h-[44px] rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-semibold text-red-800 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
