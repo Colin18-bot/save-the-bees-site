@@ -700,7 +700,6 @@ export default function AsianHornetPhoto() {
         <input
           ref={galleryInputRef}
           type="file"
-          accept="image/*"
           multiple
           className="hidden"
           onChange={(event) => handleFiles(event.target.files)}
