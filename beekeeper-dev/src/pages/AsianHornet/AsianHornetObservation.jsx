@@ -316,15 +316,21 @@ export default function AsianHornetObservation() {
     const accepted =
       incoming.slice(0, remaining);
 
-    const nextSortOrder =
-      photos.reduce(
-        (highest, photo) =>
-          Math.max(
-            highest,
-            Number(photo.sort_order) || 0
-          ),
-        -1
-      ) + 1;
+    const usedSortOrders = new Set(
+  photos.map((photo) =>
+    Number(photo.sort_order)
+  )
+);
+
+    const availableSortOrders = Array.from(
+      {
+        length: MAX_ASIAN_HORNET_PHOTOS,
+      },
+      (_, index) => index
+    ).filter(
+      (sortOrder) =>
+        !usedSortOrders.has(sortOrder)
+    );
 
     setUploading(true);
 
@@ -425,7 +431,7 @@ export default function AsianHornetObservation() {
               original_path: originalPath,
               report_path: reportPath,
               sort_order:
-              nextSortOrder + index,
+              availableSortOrders[index],
             });
 
           if (photoRecordError) {
