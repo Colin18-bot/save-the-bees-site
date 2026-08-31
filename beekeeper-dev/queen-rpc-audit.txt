@@ -1,0 +1,301 @@
+﻿
+  src\services\queenRecords.js:46:  if (value === false) return "No";
+  src\services\queenRecords.js:47:  return "Not recorded";
+  src\services\queenRecords.js:48:};
+  src\services\queenRecords.js:49:
+  src\services\queenRecords.js:50:const queenWasSeen = (inspection) => {
+> src\services\queenRecords.js:51:  const raw = inspection?.queen_status;
+  src\services\queenRecords.js:52:  const values = Array.isArray(raw) ? raw : raw ? [raw] : [];
+  src\services\queenRecords.js:53:  return values.some((value) => String(value).trim().toLowerCase() === "seen");
+  src\services\queenRecords.js:54:};
+  src\services\queenRecords.js:55:
+  src\services\queenRecords.js:56:const dateSortDescending = (a, b, field) => {
+  src\services\queenRecords.js:57:  const left = asDate(a?.[field])?.getTime() ?? 0;
+  src\services\queenRecords.js:58:  const right = asDate(b?.[field])?.getTime() ?? 0;
+  src\services\queenRecords.js:59:  return right - left;
+  src\services\queenRecords.js:60:};
+  src\services\queenRecords.js:61:
+  src\services\queenRecords.js:62:const throwIfError = (result, label) => {
+  src\services\queenRecords.js:63:  if (result.error) {
+  src\services\queenRecords.js:65:  }
+  src\services\queenRecords.js:66:  return result.data ?? [];
+  src\services\queenRecords.js:67:};
+  src\services\queenRecords.js:68:
+  src\services\queenRecords.js:69:const currentAssignmentForQueen = (assignments, queenId) =>
+> src\services\queenRecords.js:70:  assignments.find((assignment) => assignment.queen_id === queenId && 
+!assignment.ended_on);
+  src\services\queenRecords.js:71:
+  src\services\queenRecords.js:72:const buildCurrentQueen = ({ queen, assignment, inspections, events }) => {
+  src\services\queenRecords.js:73:  if (!queen || !assignment) return null;
+  src\services\queenRecords.js:74:
+> src\services\queenRecords.js:75:  const expectedColour = getQueenColourForYear(queen.queen_year);
+  src\services\queenRecords.js:76:  const actualColour = queen.actual_colour || (queen.marked ? expectedColour : 
+"Unmarked");
+  src\services\queenRecords.js:77:
+  src\services\queenRecords.js:78:  const lastSeenInspection = inspections
+> src\services\queenRecords.js:79:    .filter((inspection) => inspection.queen_id === queen.id && 
+queenWasSeen(inspection))
+  src\services\queenRecords.js:80:    .sort((a, b) => dateSortDescending(a, b, "date"))[0];
+  src\services\queenRecords.js:81:
+  src\services\queenRecords.js:82:  const lastSeenEvent = (events || [])
+  src\services\queenRecords.js:83:    .filter(
+  src\services\queenRecords.js:84:      (event) =>
+> src\services\queenRecords.js:85:        event.queen_id === queen.id &&
+  src\services\queenRecords.js:86:        String(event.title || "")
+  src\services\queenRecords.js:87:          .trim()
+  src\services\queenRecords.js:88:          .toLowerCase() === "virgin queen seen"
+  src\services\queenRecords.js:89:    )
+  src\services\queenRecords.js:90:    .sort((a, b) => dateSortDescending(a, b, "event_date"))[0];
+  src\services\queenRecords.js:91:
+  src\services\queenRecords.js:92:  const lastSeenDate = [lastSeenInspection?.date, lastSeenEvent?.event_date]
+  src\services\queenRecords.js:93:    .filter(Boolean)
+  src\services\queenRecords.js:94:    .sort((a, b) => (asDate(b)?.getTime() ?? 0) - (asDate(a)?.getTime() ?? 0))[0];
+  src\services\queenRecords.js:95:  return {
+  src\services\queenRecords.js:96:    id: queen.id,
+  src\services\queenRecords.js:97:    reference: queen.reference || "Queen record",
+> src\services\queenRecords.js:98:    year: queen.queen_year || "Unknown",
+  src\services\queenRecords.js:99:    expectedColour,
+  src\services\queenRecords.js:100:    actualColour,
+  src\services\queenRecords.js:101:    marked: yesNo(queen.marked),
+  src\services\queenRecords.js:102:    clipped: yesNo(queen.clipped),
+  src\services\queenRecords.js:103:    origin: queen.origin || "Not recorded",
+  src\services\queenRecords.js:104:    supplier: queen.supplier || "Not recorded",
+  src\services\queenRecords.js:105:    emergedOn: formatQueenDate(queen.emerged_on, "Unknown"),
+  src\services\queenRecords.js:106:    emergedOnRaw: queen.emerged_on || "",
+  src\services\queenRecords.js:107:    introducedOn: formatQueenDate(queen.introduced_on, "Not applicable"),
+  src\services\queenRecords.js:108:    introducedOnRaw: queen.introduced_on || "",
+  src\services\queenRecords.js:109:    currentSince: formatQueenDate(assignment.started_on),
+  src\services\queenRecords.js:110:    currentSinceRaw: assignment.started_on || "",
+  src\services\queenRecords.js:114:    notes: queen.notes || "No Queen notes recorded.",
+  src\services\queenRecords.js:115:  };
+  src\services\queenRecords.js:116:};
+  src\services\queenRecords.js:117:
+  src\services\queenRecords.js:118:const buildPreviousQueen = ({ assignment, queen, assignments, hivesById }) => {
+> src\services\queenRecords.js:119:  const expectedColour = getQueenColourForYear(queen?.queen_year);
+  src\services\queenRecords.js:120:  const actualColour = queen?.actual_colour || (queen?.marked ? expectedColour : 
+"Unmarked");
+  src\services\queenRecords.js:121:  const markedSummary =
+  src\services\queenRecords.js:122:    actualColour === "Unmarked" ? "unmarked" : 
+`${String(actualColour).toLowerCase()}-marked`;
+  src\services\queenRecords.js:123:
+> src\services\queenRecords.js:124:  const activeLocation = currentAssignmentForQueen(assignments, 
+assignment.queen_id);
+  src\services\queenRecords.js:125:  const currentHiveName = activeLocation ? 
+hivesById.get(activeLocation.hive_id)?.name : null;
+  src\services\queenRecords.js:126:
+  src\services\queenRecords.js:127:  return {
+  src\services\queenRecords.js:128:    id: assignment.id,
+> src\services\queenRecords.js:129:    queenId: assignment.queen_id,
+  src\services\queenRecords.js:130:    reference: queen?.reference || "Previous Queen",
+  src\services\queenRecords.js:131:    period: `${formatQueenDate(assignment.started_on)} – 
+${formatQueenDate(assignment.ended_on)}`,
+> src\services\queenRecords.js:132:    summary: `${queen?.queen_year || "Unknown year"} ${markedSummary} queen`,
+  src\services\queenRecords.js:133:    outcome: titleCase(assignment.end_reason || queen?.status, "Ended"),
+  src\services\queenRecords.js:134:    currentLocation: currentHiveName
+  src\services\queenRecords.js:135:      ? `Currently assigned to ${currentHiveName}`
+  src\services\queenRecords.js:136:      : "No longer assigned",
+  src\services\queenRecords.js:137:  };
+  src\services\queenRecords.js:138:};
+  src\services\queenRecords.js:139:
+  src\services\queenRecords.js:140:const buildTransition = (process) => {
+  src\services\queenRecords.js:141:  if (!process) return null;
+  src\services\queenRecords.js:142:
+  src\services\queenRecords.js:143:  return {
+  src\services\queenRecords.js:144:    id: process.id,
+> src\services\queenRecords.js:145:    queenId: process.queen_id,
+  src\services\queenRecords.js:146:    method: process.method || titleCase(process.process_type, "Queen process"),
+  src\services\queenRecords.js:147:    startedOn: formatQueenDate(process.started_on),
+  src\services\queenRecords.js:148:    status: titleCase(process.status, "Active"),
+  src\services\queenRecords.js:149:    expectedCheck: formatQueenDate(process.expected_check_on, "Not scheduled"),
+  src\services\queenRecords.js:150:    expectedCheckRaw: process.expected_check_on || "",
+  src\services\queenRecords.js:151:    note: process.notes || "No additional notes recorded.",
+  src\services\queenRecords.js:152:  };
+  src\services\queenRecords.js:153:};
+  src\services\queenRecords.js:154:
+  src\services\queenRecords.js:155:const buildEvents = (events) =>
+  src\services\queenRecords.js:156:  [...events]
+  src\services\queenRecords.js:157:    .sort((a, b) => {
+  src\services\queenRecords.js:248:  ] = await Promise.all([
+  src\services\queenRecords.js:249:    supabase.from("profiles").select("subscription_level").eq("user_id", 
+user.id).maybeSingle(),
+  src\services\queenRecords.js:250:    supabase.from("apiaries").select("id, name").is("archived_at", 
+null).order("name"),
+  src\services\queenRecords.js:251:    supabase.from("hives").select("id, name, apiary_id").is("archived_at", 
+null).order("name"),
+  src\services\queenRecords.js:252:    supabase.from("queens").select("*"),
+> src\services\queenRecords.js:253:    supabase.from("queen_assignments").select("*"),
+> src\services\queenRecords.js:254:    supabase.from("queen_processes").select("*"),
+  src\services\queenRecords.js:255:    supabase
+> src\services\queenRecords.js:256:      .from("queen_events")
+  src\services\queenRecords.js:257:      .select("*")
+  src\services\queenRecords.js:258:      .order("event_date", { ascending: false })
+  src\services\queenRecords.js:259:      .order("created_at", { ascending: false }),
+  src\services\queenRecords.js:260:    supabase
+  src\services\queenRecords.js:261:      .from("inspections")
+> src\services\queenRecords.js:262:      .select("id, hive_id, queen_id, date, queen_status")
+> src\services\queenRecords.js:263:      .not("queen_id", "is", null)
+  src\services\queenRecords.js:264:      .order("date", { ascending: false })
+  src\services\queenRecords.js:265:      .limit(1000),
+  src\services\queenRecords.js:266:  ]);
+  src\services\queenRecords.js:267:
+  src\services\queenRecords.js:268:  if (profileResult.error) {
+  src\services\queenRecords.js:269:    throw new Error(`Profile: ${profileResult.error.message}`);
+  src\services\queenRecords.js:270:  }
+  src\services\queenRecords.js:271:
+  src\services\queenRecords.js:272:  const apiaries = throwIfError(apiariesResult, "Apiaries");
+  src\services\queenRecords.js:273:  const hives = throwIfError(hivesResult, "Hives");
+  src\services\queenRecords.js:274:  const queens = throwIfError(queensResult, "Queens");
+  src\services\queenRecords.js:275:  const assignments = throwIfError(assignmentsResult, "Queen assignments");
+  src\services\queenRecords.js:285:    const hiveAssignments = assignments
+  src\services\queenRecords.js:286:      .filter((assignment) => assignment.hive_id === hive.id)
+  src\services\queenRecords.js:287:      .sort((a, b) => dateSortDescending(a, b, "started_on"));
+  src\services\queenRecords.js:288:
+  src\services\queenRecords.js:289:    const currentAssignment = hiveAssignments.find((assignment) => 
+!assignment.ended_on);
+> src\services\queenRecords.js:290:    const currentQueenRow = currentAssignment ? 
+queensById.get(currentAssignment.queen_id) : null;
+  src\services\queenRecords.js:291:    const currentQueen = buildCurrentQueen({
+  src\services\queenRecords.js:292:      queen: currentQueenRow,
+  src\services\queenRecords.js:293:      assignment: currentAssignment,
+  src\services\queenRecords.js:294:      inspections,
+  src\services\queenRecords.js:295:      events,
+  src\services\queenRecords.js:296:    });
+  src\services\queenRecords.js:297:
+  src\services\queenRecords.js:298:    const previousQueens = hiveAssignments
+  src\services\queenRecords.js:299:      .filter((assignment) => assignment.ended_on)
+  src\services\queenRecords.js:300:      .map((assignment) =>
+  src\services\queenRecords.js:301:        buildPreviousQueen({
+  src\services\queenRecords.js:302:          assignment,
+> src\services\queenRecords.js:303:          queen: queensById.get(assignment.queen_id),
+  src\services\queenRecords.js:304:          assignments,
+  src\services\queenRecords.js:305:          hivesById,
+  src\services\queenRecords.js:306:        })
+  src\services\queenRecords.js:307:      );
+  src\services\queenRecords.js:308:
+  src\services\queenRecords.js:309:    const activeProcessRow = processes
+  src\services\queenRecords.js:310:      .filter((process) => process.hive_id === hive.id && !process.ended_on)
+  src\services\queenRecords.js:311:      .sort((a, b) => dateSortDescending(a, b, "started_on"))[0];
+  src\services\queenRecords.js:312:    const transition = buildTransition(activeProcessRow);
+  src\services\queenRecords.js:313:
+  src\services\queenRecords.js:314:    const hiveEvents = events.filter((event) => event.hive_id === hive.id);
+  src\services\queenRecords.js:315:    const normalisedEvents = buildEvents(hiveEvents);
+  src\services\queenRecords.js:366:  origin,
+  src\services\queenRecords.js:367:  supplier,
+  src\services\queenRecords.js:368:  notes,
+  src\services\queenRecords.js:369:  expectedCheckOn,
+  src\services\queenRecords.js:370:}) =>
+> src\services\queenRecords.js:371:  callQueenRpc("queen_create_for_hive", {
+  src\services\queenRecords.js:372:    p_hive_id: hiveId,
+  src\services\queenRecords.js:373:    p_event_date: eventDate || null,
+  src\services\queenRecords.js:374:    p_mode: mode,
+  src\services\queenRecords.js:375:    p_reference: reference || null,
+> src\services\queenRecords.js:376:    p_queen_year: queenYear ? Number(queenYear) : null,
+  src\services\queenRecords.js:377:    p_marked: markingColour !== "Unmarked",
+  src\services\queenRecords.js:378:    p_actual_colour: markingColour || "Unmarked",
+  src\services\queenRecords.js:379:    p_clipped: clipped === "yes" ? true : clipped === "no" ? false : null,
+  src\services\queenRecords.js:380:    p_origin: origin || null,
+  src\services\queenRecords.js:381:    p_supplier: supplier || null,
+  src\services\queenRecords.js:382:    p_notes: notes || null,
+  src\services\queenRecords.js:383:    p_expected_check_on: expectedCheckOn || null,
+  src\services\queenRecords.js:384:  });
+  src\services\queenRecords.js:385:
+  src\services\queenRecords.js:386:export const updateQueenDetails = ({
+  src\services\queenRecords.js:387:  queenId,
+  src\services\queenRecords.js:388:  reference,
+  src\services\queenRecords.js:394:  emergedOn,
+  src\services\queenRecords.js:395:  introducedOn,
+  src\services\queenRecords.js:396:  status,
+  src\services\queenRecords.js:397:  notes,
+  src\services\queenRecords.js:398:}) =>
+> src\services\queenRecords.js:399:  callQueenRpc("queen_update_details", {
+> src\services\queenRecords.js:400:    p_queen_id: queenId,
+  src\services\queenRecords.js:401:    p_reference: reference || null,
+> src\services\queenRecords.js:402:    p_queen_year: queenYear ? Number(queenYear) : null,
+  src\services\queenRecords.js:403:    p_marked: markingColour !== "Unmarked",
+  src\services\queenRecords.js:404:    p_actual_colour: markingColour || "Unmarked",
+  src\services\queenRecords.js:405:    p_clipped: clipped === "yes" ? true : clipped === "no" ? false : null,
+  src\services\queenRecords.js:406:    p_origin: origin || null,
+  src\services\queenRecords.js:407:    p_supplier: supplier || null,
+  src\services\queenRecords.js:408:    p_emerged_on: emergedOn || null,
+  src\services\queenRecords.js:409:    p_introduced_on: introducedOn || null,
+  src\services\queenRecords.js:410:    p_status: status || "active",
+  src\services\queenRecords.js:411:    p_notes: notes || null,
+  src\services\queenRecords.js:412:  });
+  src\services\queenRecords.js:413:
+  src\services\queenRecords.js:414:export const recordQueenProgress = ({ hiveId, eventDate, progress, notes, 
+expectedCheckOn }) =>
+> src\services\queenRecords.js:415:  callQueenRpc("queen_record_progress", {
+  src\services\queenRecords.js:416:    p_hive_id: hiveId,
+  src\services\queenRecords.js:417:    p_event_date: eventDate || null,
+  src\services\queenRecords.js:418:    p_progress: progress,
+  src\services\queenRecords.js:419:    p_notes: notes || null,
+  src\services\queenRecords.js:420:    p_expected_check_on: expectedCheckOn || null,
+  src\services\queenRecords.js:421:  });
+  src\services\queenRecords.js:422:
+  src\services\queenRecords.js:423:export const transferQueen = ({ sourceHiveId, destinationHiveId, eventDate, 
+notes }) =>
+> src\services\queenRecords.js:424:  callQueenRpc("queen_transfer", {
+  src\services\queenRecords.js:425:    p_source_hive_id: sourceHiveId,
+  src\services\queenRecords.js:426:    p_destination_hive_id: destinationHiveId,
+  src\services\queenRecords.js:427:    p_event_date: eventDate || null,
+  src\services\queenRecords.js:428:    p_notes: notes || null,
+  src\services\queenRecords.js:429:  });
+  src\services\queenRecords.js:430:
+  src\services\queenRecords.js:431:export const recordQueenSwarm = ({
+  src\services\queenRecords.js:432:  hiveId,
+  src\services\queenRecords.js:433:  eventDate,
+  src\services\queenRecords.js:434:  replacementMethod,
+  src\services\queenRecords.js:435:  expectedCheckOn,
+  src\services\queenRecords.js:436:  notes,
+  src\services\queenRecords.js:437:}) =>
+> src\services\queenRecords.js:438:  callQueenRpc("queen_record_swarm", {
+  src\services\queenRecords.js:439:    p_hive_id: hiveId,
+  src\services\queenRecords.js:440:    p_event_date: eventDate || null,
+  src\services\queenRecords.js:441:    p_replacement_method: replacementMethod || null,
+  src\services\queenRecords.js:442:    p_expected_check_on: expectedCheckOn || null,
+  src\services\queenRecords.js:443:    p_notes: notes || null,
+  src\services\queenRecords.js:444:  });
+  src\services\queenRecords.js:445:
+  src\services\queenRecords.js:446:export const recordQueenSplit = ({
+  src\services\queenRecords.js:447:  sourceHiveId,
+  src\services\queenRecords.js:448:  destinationHiveId,
+  src\services\queenRecords.js:449:  eventDate,
+  src\services\queenRecords.js:450:  queenLocation,
+  src\services\queenRecords.js:453:  replacementMethod,
+  src\services\queenRecords.js:454:  broodSourceHiveId,
+  src\services\queenRecords.js:455:  expectedCheckOn,
+  src\services\queenRecords.js:456:  notes,
+  src\services\queenRecords.js:457:}) =>
+> src\services\queenRecords.js:458:  callQueenRpc("queen_record_split_v2", {
+  src\services\queenRecords.js:459:    p_source_hive_id: sourceHiveId,
+  src\services\queenRecords.js:460:    p_destination_hive_id: destinationHiveId,
+  src\services\queenRecords.js:461:    p_event_date: eventDate || null,
+> src\services\queenRecords.js:462:    p_queen_location: queenLocation,
+  src\services\queenRecords.js:463:    p_split_reason: splitReason || null,
+> src\services\queenRecords.js:464:    p_queen_cell_position: queenCellPosition || null,
+  src\services\queenRecords.js:465:    p_replacement_method: replacementMethod || null,
+  src\services\queenRecords.js:466:    p_brood_source_hive_id: broodSourceHiveId || null,
+  src\services\queenRecords.js:467:    p_expected_check_on: expectedCheckOn || null,
+  src\services\queenRecords.js:468:    p_notes: notes || null,
+  src\services\queenRecords.js:469:  });
+  src\services\queenRecords.js:470:
+  src\services\queenRecords.js:471:export const setQueenlessColonyPlan = ({
+  src\services\queenRecords.js:472:  hiveId,
+  src\services\queenRecords.js:473:  eventDate,
+  src\services\queenRecords.js:474:  method,
+  src\services\queenRecords.js:475:  queenCellPosition,
+  src\services\queenRecords.js:476:  sourceHiveId,
+  src\services\queenRecords.js:477:  expectedCheckOn,
+  src\services\queenRecords.js:478:  notes,
+  src\services\queenRecords.js:479:}) =>
+> src\services\queenRecords.js:480:  callQueenRpc("queen_set_queenless_plan", {
+  src\services\queenRecords.js:481:    p_hive_id: hiveId,
+  src\services\queenRecords.js:482:    p_event_date: eventDate || null,
+  src\services\queenRecords.js:483:    p_method: method || null,
+> src\services\queenRecords.js:484:    p_queen_cell_position: queenCellPosition || null,
+  src\services\queenRecords.js:485:    p_source_hive_id: sourceHiveId || null,
+  src\services\queenRecords.js:486:    p_expected_check_on: expectedCheckOn || null,
+  src\services\queenRecords.js:487:    p_notes: notes || null,
+  src\services\queenRecords.js:488:  });
+
+
