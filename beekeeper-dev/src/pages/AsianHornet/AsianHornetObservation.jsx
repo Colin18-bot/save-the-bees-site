@@ -81,7 +81,8 @@ function formatTime(value) {
 export default function AsianHornetObservation() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const photoInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
+  const galleryInputRef = useRef(null);
 
   const [observation, setObservation] =
     useState(null);
@@ -452,8 +453,12 @@ export default function AsianHornetObservation() {
     } finally {
       setUploading(false);
 
-      if (photoInputRef.current) {
-        photoInputRef.current.value = "";
+      if (cameraInputRef.current) {
+        cameraInputRef.current.value = "";
+      }
+
+      if (galleryInputRef.current) {
+        galleryInputRef.current.value = "";
       }
     }
   }
@@ -698,36 +703,67 @@ export default function AsianHornetObservation() {
             </p>
           </div>
 
-          <button
-            type="button"
-            disabled={
-              photos.length >=
-                MAX_ASIAN_HORNET_PHOTOS ||
-              uploading
-            }
-            onClick={() =>
-              photoInputRef.current?.click()
-            }
-            aria-label="Add photographs to this Asian Hornet observation"
-            className="min-h-[44px] rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#1a3329] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {uploading
-              ? "Adding…"
-              : "+ Add Photo"}
-          </button>
+          <div className="flex flex-wrap gap-2">
+      <button
+        type="button"
+        disabled={
+          photos.length >=
+            MAX_ASIAN_HORNET_PHOTOS ||
+          uploading
+        }
+        onClick={() =>
+          cameraInputRef.current?.click()
+        }
+        aria-label="Take another photograph for this Asian Hornet observation"
+        className="min-h-[44px] rounded-lg bg-amber-500 px-4 py-2 text-sm font-bold text-gray-950 hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {uploading
+          ? "Adding…"
+          : "📷 Take Photo"}
+      </button>
 
-          <input
-            ref={photoInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            className="hidden"
-            onChange={(event) =>
-              addPhotos(
-                event.target.files
-              )
-            }
-          />
+      <button
+        type="button"
+        disabled={
+          photos.length >=
+            MAX_ASIAN_HORNET_PHOTOS ||
+          uploading
+        }
+        onClick={() =>
+          galleryInputRef.current?.click()
+        }
+        aria-label="Choose existing photographs for this Asian Hornet observation"
+        className="min-h-[44px] rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#1a3329] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        Choose Existing Photo
+      </button>
+    </div>
+
+    <input
+      ref={cameraInputRef}
+      type="file"
+      accept="image/*"
+      capture="environment"
+      className="hidden"
+      onChange={(event) =>
+        addPhotos(
+          event.target.files
+        )
+      }
+    />
+
+    <input
+      ref={galleryInputRef}
+      type="file"
+      accept="image/*"
+      multiple
+      className="hidden"
+      onChange={(event) =>
+        addPhotos(
+          event.target.files
+        )
+      }
+    />
         </div>
 
         {photoError && (
