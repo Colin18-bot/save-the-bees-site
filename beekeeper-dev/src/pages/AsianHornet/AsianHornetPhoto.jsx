@@ -14,6 +14,19 @@ import {
   supportsAsianHornetOfflineDrafts,
 } from "./asianHornetOffline";
 
+function describeGeolocationError(error) {
+  switch (error?.code) {
+    case 1:
+      return "Location permission was denied by the browser.";
+    case 2:
+      return "Your phone could not determine a location. Try moving outdoors or closer to a window, then retry.";
+    case 3:
+      return "The location request timed out before your phone returned a position.";
+    default:
+      return "Your phone could not provide a location.";
+  }
+}
+
 export default function AsianHornetPhoto() {
   const navigate = useNavigate();
 
@@ -24,6 +37,8 @@ export default function AsianHornetPhoto() {
   const [photos, setPhotos] = useState([]);
   const [location, setLocation] = useState(null);
   const [locationState, setLocationState] = useState("waiting");
+  const [locationError, setLocationError] = useState("");
+  const [locationRequestKey, setLocationRequestKey] = useState(0);
 
   const [saving, setSaving] = useState(false);
   const [processing, setProcessing] = useState(false);
@@ -229,10 +244,12 @@ export default function AsianHornetPhoto() {
     }
 
     if (!navigator.geolocation) {
+      setLocationError("This browser does not support automatic location capture.");
       setLocationState("unavailable");
       return;
     }
 
+    setLocationError("");
     setLocationState("requesting");
 
     navigator.geolocation.getCurrentPosition(
@@ -243,18 +260,25 @@ export default function AsianHornetPhoto() {
           accuracy: position.coords.accuracy,
         });
 
+        setLocationError("");
         setLocationState("available");
       },
-      () => {
+      (error) => {
+        console.warn("Asian Hornet geolocation:", {
+          code: error?.code,
+          message: error?.message,
+        });
+
+        setLocationError(describeGeolocationError(error));
         setLocationState("unavailable");
       },
       {
         enableHighAccuracy: true,
-        timeout: 10000,
+        timeout: 30000,
         maximumAge: 30000,
       }
     );
-  }, [offlineDraftLoaded, restoredOfflineDraft]);
+  }, [offlineDraftLoaded, restoredOfflineDraft, locationRequestKey]);
 
   // ----------------------------------------------------------
   // Keep a current reference to photos so preview URLs are only
@@ -488,7 +512,7 @@ export default function AsianHornetPhoto() {
         <button
           type="button"
           onClick={() => navigate("/asian-hornet")}
-          className="mb-3 min-h-[44px] rounded-lg px-2 text-sm font-semibold text-[#1a3329] hover:underline focus:outline-none focus:ring-2 focus:ring-[#1a3329] focus:ring-offset-2"
+          className="mb-3 text-sm font-semibold text-[#1a3329] hover:underline"
         >
           ← Asian Hornet Centre
         </button>
@@ -622,10 +646,22 @@ export default function AsianHornetPhoto() {
             )}
 
             {locationState === "unavailable" && (
-              <p role="status" aria-live="polite" className="text-sm text-gray-600">
-                Location could not be captured. You can choose an apiary or enter the location on
-                the next screen.
-              </p>
+              <div role="status" aria-live="polite" className="text-sm text-gray-600">
+                <p>
+                  {locationError ||
+                    "Location could not be captured. You can choose an apiary or enter the location on the next screen."}
+                </p>
+
+                {navigator.geolocation && (
+                  <button
+                    type="button"
+                    onClick={() => setLocationRequestKey((current) => current + 1)}
+                    className="mt-2 min-h-[44px] rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#1a3329] focus:ring-offset-2"
+                  >
+                    Retry location
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -673,7 +709,7 @@ export default function AsianHornetPhoto() {
                   aria-label={`Remove photograph ${index + 1}`}
                   disabled={processing}
                   onClick={() => removePhoto(photo.id)}
-                  className="min-h-[44px] w-full border-t px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-inset disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full border-t px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-inset disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Remove
                 </button>
