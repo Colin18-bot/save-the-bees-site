@@ -33,6 +33,7 @@ export default function AsianHornetPhoto() {
   const cameraInputRef = useRef(null);
   const galleryInputRef = useRef(null);
   const photosRef = useRef([]);
+  const submissionInProgressRef = useRef(false);
 
   const [photos, setPhotos] = useState([]);
   const [location, setLocation] = useState(null);
@@ -367,11 +368,21 @@ export default function AsianHornetPhoto() {
 
       return;
     }
+
+    // Prevent a rapid second tap from creating a duplicate draft before
+    // React has had time to disable the button.
+    if (submissionInProgressRef.current) {
+      return;
+    }
+
+    submissionInProgressRef.current = true;
+
     setSaving(true);
     setProcessing(true);
     setErrorMessage("");
 
     let createdObservationId = null;
+    let savedPhotoCount = 0;
 
     try {
       const {
@@ -437,40 +448,78 @@ export default function AsianHornetPhoto() {
         // Smaller copy suitable for reporting
         const reportingBlob = await createReportingCopy(photo.file);
 
-        const { error: originalUploadError } = await supabase.storage
-          .from("asian-hornet")
-          .upload(originalPath, originalBlob, {
-            contentType: "image/jpeg",
-            upsert: false,
-          });
+        let originalUploaded = false;
+        let reportUploaded = false;
 
-        if (originalUploadError) {
-          throw originalUploadError;
-        }
+        try {
+          const { error: originalUploadError } = await supabase.storage
+            .from("asian-hornet")
+            .upload(originalPath, originalBlob, {
+              contentType: "image/jpeg",
+              upsert: false,
+            });
 
-        const { error: reportUploadError } = await supabase.storage
-          .from("asian-hornet")
-          .upload(reportPath, reportingBlob, {
-            contentType: "image/jpeg",
-            upsert: false,
-          });
+          if (originalUploadError) {
+            throw originalUploadError;
+          }
 
-        if (reportUploadError) {
-          throw reportUploadError;
-        }
+          originalUploaded = true;
 
-        const { error: photoRecordError } = await supabase
-          .from("asian_hornet_observation_photos")
-          .insert({
-            observation_id: observation.id,
-            user_id: user.id,
-            original_path: originalPath,
-            report_path: reportPath,
-            sort_order: index,
-          });
+          const { error: reportUploadError } = await supabase.storage
+            .from("asian-hornet")
+            .upload(reportPath, reportingBlob, {
+              contentType: "image/jpeg",
+              upsert: false,
+            });
 
-        if (photoRecordError) {
-          throw photoRecordError;
+          if (reportUploadError) {
+            throw reportUploadError;
+          }
+
+          reportUploaded = true;
+
+          const { error: photoRecordError } = await supabase
+            .from("asian_hornet_observation_photos")
+            .insert({
+              observation_id: observation.id,
+              user_id: user.id,
+              original_path: originalPath,
+              report_path: reportPath,
+              sort_order: index,
+            });
+
+          if (photoRecordError) {
+            throw photoRecordError;
+          }
+
+          savedPhotoCount += 1;
+        } catch (photoError) {
+          // Remove any files uploaded for this individual photograph if the
+          // upload or metadata insert fails part-way through.
+          const cleanupPaths = [];
+
+          if (originalUploaded) {
+            cleanupPaths.push(originalPath);
+          }
+
+          if (reportUploaded) {
+            cleanupPaths.push(reportPath);
+          }
+
+          if (cleanupPaths.length) {
+            const { error: storageCleanupError } = await supabase.storage
+              .from("asian-hornet")
+              .remove(cleanupPaths);
+
+            if (storageCleanupError) {
+              console.error(
+                "Clean up failed Asian Hornet photo upload:",
+                storageCleanupError
+              );
+            }
+          }
+
+          throw photoError;
         }
       }
 
@@ -489,15 +538,40 @@ export default function AsianHornetPhoto() {
     } catch (error) {
       console.error("Asian Hornet photo workflow:", error);
 
+      // A draft containing zero successfully saved photographs cannot be
+      // usefully resumed. Remove only the empty draft from this attempt.
+      // Drafts with one or more saved photographs are retained for recovery.
+      if (createdObservationId && savedPhotoCount === 0) {
+        try {
+          const { error: emptyDraftDeleteError } = await supabase
+            .from("asian_hornet_observations")
+            .delete()
+            .eq("id", createdObservationId);
+
+          if (emptyDraftDeleteError) {
+            console.error(
+              "Remove empty Asian Hornet draft:",
+              emptyDraftDeleteError
+            );
+          }
+        } catch (cleanupError) {
+          console.error(
+            "Remove empty Asian Hornet draft:",
+            cleanupError
+          );
+        }
+      }
+
       setErrorMessage(error?.message || "The observation could not be saved. Please try again.");
 
       /*
-       * Do not delete the draft automatically here.
+       * Do not delete a draft containing successfully saved photographs.
        *
-       * If some photographs successfully uploaded before an error,
-       * keeping the draft gives us a recovery path.
+       * If some photographs uploaded before an error, keeping the draft
+       * gives us the existing recovery path.
        */
     } finally {
+      submissionInProgressRef.current = false;
       setProcessing(false);
       setSaving(false);
     }
