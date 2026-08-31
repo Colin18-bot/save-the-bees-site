@@ -395,7 +395,25 @@ export default function AsianHornetPhoto() {
       }
 
       // ------------------------------------------------------
-      // Create draft observation first.
+      // Prepare the first photograph before creating a server
+      // draft. If Android/browser decoding fails, no empty
+      // Supabase observation can be created.
+      // ------------------------------------------------------
+
+      const firstPhoto = photos[0];
+
+      const preparedFirstPhoto = {
+        originalBlob: await compressHornetImage(firstPhoto.file, {
+          maxWidth: 2400,
+          maxHeight: 2400,
+          quality: 0.9,
+        }),
+        reportingBlob: await createReportingCopy(firstPhoto.file),
+      };
+
+      // ------------------------------------------------------
+      // Create draft observation only after the first photo has
+      // been successfully decoded and prepared.
       // ------------------------------------------------------
 
       const observationPayload = {
@@ -438,15 +456,21 @@ export default function AsianHornetPhoto() {
         const originalPath = `${basePath}/original.jpg`;
         const reportPath = `${basePath}/report.jpg`;
 
-        // HiveTag original
-        const originalBlob = await compressHornetImage(photo.file, {
-          maxWidth: 2400,
-          maxHeight: 2400,
-          quality: 0.9,
-        });
+        // The first photograph was prepared before the draft was created.
+        // Later photographs remain sequential to keep mobile memory use low.
+        const originalBlob =
+          index === 0
+            ? preparedFirstPhoto.originalBlob
+            : await compressHornetImage(photo.file, {
+                maxWidth: 2400,
+                maxHeight: 2400,
+                quality: 0.9,
+              });
 
-        // Smaller copy suitable for reporting
-        const reportingBlob = await createReportingCopy(photo.file);
+        const reportingBlob =
+          index === 0
+            ? preparedFirstPhoto.reportingBlob
+            : await createReportingCopy(photo.file);
 
         let originalUploaded = false;
         let reportUploaded = false;
