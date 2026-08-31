@@ -3828,3 +3828,13 @@ PRINT STYLES
     page-break-inside: avoid;
   }
 }
+
+/* HiveTag Asian Hornet mobile screenshots */
+#asian-hornet-centre .hivetag-phone-shot {
+  display: block;
+  width: 280px;
+  max-width: 100%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
