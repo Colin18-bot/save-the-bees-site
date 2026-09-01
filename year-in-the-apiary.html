@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en-GB">
    <head>
@@ -34,6 +35,7 @@
       <link rel="manifest" href="/site.webmanifest">
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer">
       <link rel="stylesheet" href="css/style.css">
+      <link rel="stylesheet" href="css/beekeeping-news.css">
       <script type="application/ld+json">
          {
            "@context": "https://schema.org",
@@ -876,7 +878,7 @@
                      </div>
                      <div class="card">
                         <figure class="image-info-card">
-                           <img src="images/autumn_2.webp" alt="Autumn UK apiary scene with beehives surrounded by trees with golden and brown leaves" width="1840" height="854" loading="lazy" decoding="async">
+                           <img src="images/Autumn_2.webp" alt="Autumn UK apiary scene with beehives surrounded by trees with golden and brown leaves" width="1840" height="854" loading="lazy" decoding="async">
                            <figcaption>Autumn is a time for feeding and preparing colonies for winter.</figcaption>
                         </figure>
                         <h3>Autumn – Feeding and Winter Preparation</h3>
@@ -964,6 +966,18 @@
                   </ul>
                   <p>For detailed advice, jump directly to the current month's guide using the monthly calendar above.</p>
                </div>
+               <section class="content-card bee-news bee-news-panel" data-bee-news data-topic="seasonal" data-limit="3" aria-labelledby="seasonal-news-heading">
+                  <div class="bee-news-panel__heading">
+                     <h2 id="seasonal-news-heading">Current UK seasonal beekeeping updates</h2>
+                     <a href="/uk-beekeeping-news">View all UK beekeeping updates</a>
+                  </div>
+                  <p>Recent seasonal information from established UK beekeeping organisations. Each item opens on the original publisher's website.</p>
+                  <div class="bee-news-grid" data-bee-news-list></div>
+                  <div class="bee-news-footer">
+                     <span data-bee-news-updated>Updates are checked automatically.</span>
+                     <span>Source: British Beekeepers Association</span>
+                  </div>
+               </section>
                <div class="content-card" id="common-mistakes">
                   <h2>Common Seasonal Beekeeping Mistakes (and How to Avoid Them)</h2>
                   <p>New and experienced beekeepers alike can struggle to keep up with the <strong>monthly beekeeping calendar</strong>, especially in years with unusual weather. Some of the most frequent issues include:</p>
@@ -1135,6 +1149,7 @@
             <div>
                <h3>Beekeeping Resources</h3>
                <ul class="footer-links">
+                  <li><a href="/uk-beekeeping-news">UK Beekeeping News</a></li>
                   <li><a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer">British Beekeepers Association</a></li>
                   <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer">Cardiff, Vale and Valleys Beekeepers Association</a></li>
                   <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank" rel="noopener noreferrer">The Honey (Wales) Regulations 2015</a></li>
@@ -1238,6 +1253,7 @@
       <button class="back-to-top" id="backToTop" aria-label="Back to top">
       <i class="fa-solid fa-arrow-up"></i>
       </button>
+      <script src="js/beekeeping-news.js" defer></script>
       <script src="js/search-data.js" defer></script>
       <script src="js/script.js" defer></script>
    </body>

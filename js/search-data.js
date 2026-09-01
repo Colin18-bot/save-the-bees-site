@@ -720,6 +720,12 @@ window.searchData = [
     "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Swarm Season UK | When Bees Swarm & What to Do"
   },
   {
+    "title": "UK Beekeeping News, Alerts & Updates | BeezKnees",
+    "url": "/uk-beekeeping-news",
+    "description": "Latest UK beekeeping news, seasonal alerts, bee health, Varroa, Asian hornet and research updates from trusted beekeeping organisations.",
+    "keywords": "UK beekeeping news, beekeeping updates UK, bee health alerts, Varroa news UK, Asian hornet alerts, BBKA news, seasonal beekeeping updates"
+  },
+  {
     "title": "Varroa Chemical Treatments UK: Types & Timing | BeezKnees",
     "url": "/varroa-chemical-treatments",
     "description": "UK guide to varroa chemical treatments covering types, seasonal timing, temperature limits, resistance management and safe use with PPE and record keeping.",

@@ -34,6 +34,7 @@
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/beekeeping-news.css">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -753,6 +754,18 @@
             <p>Alongside disease control, you can support pollinators by planting for nectar and pollen, reducing pesticide use and sharing reliable information with friends and neighbours. The <em><a href="/pollination" title="Honeybee role in pollination">pollination</a></em> and <em><a href="/help-the-bees" title="How you can help save the bees">help the bees</a></em> sections on this site offer more ideas for making a positive difference beyond your own hives.</p>
             <p>Use this diseases and pests overview as a starting point, or begin with the <a href="/colony-health-triage" title="Use the colony health triage tool to narrow down likely hive problems">colony health triage tool</a> if you want to narrow down symptoms first. You can then explore the more detailed pages on <em><a href="/bacterial-diseases" title="Read more about bacterial bee diseases">bacterial diseases</a></em>, <em><a href="/viral-diseases" title="Read more about viral bee diseases">viral diseases</a></em>, <em><a href="/bee-pests" title="Common pests affecting bees">bee pests</a></em>, <em><a href="/parasitic-mites" title="Parasitic mites in bee colonies">parasitic mites</a></em> and <em><a href="/other-conditions" title="Other conditions affecting honey bee health">other conditions</a></em> to build a rounded picture of honey bee health in the UK. For a month-by-month view of when risks tend to show up, follow the <a href="/year-in-the-apiary" title="Month-by-month beekeeping guidance for the UK">year in the apiary</a>, and for focused mite control planning go straight to the <a href="/varroa-management" title="Varroa management guide for UK beekeepers">varroa management guide</a>.</p>
           </div>
+          <section class="content-card bee-news bee-news-panel" data-bee-news data-topic="health" data-limit="3" aria-labelledby="bee-health-news-heading">
+            <div class="bee-news-panel__heading">
+              <h2 id="bee-health-news-heading">Latest UK bee health updates</h2>
+              <a href="/uk-beekeeping-news">View all UK beekeeping updates</a>
+            </div>
+            <p>Recent bee health information from established UK beekeeping organisations. Always follow current official guidance where a notifiable disease is suspected.</p>
+            <div class="bee-news-grid" data-bee-news-list></div>
+            <div class="bee-news-footer">
+              <span data-bee-news-updated>Updates are checked automatically.</span>
+              <span>Source: British Beekeepers Association</span>
+            </div>
+          </section>
           <section id="related-guides" class="related-guides" aria-label="Wider related guides">
             <h2>Related guides</h2>
             <div class="related-grid">
@@ -936,6 +949,7 @@
         <div>
           <h3>Beekeeping Resources</h3>
           <ul class="footer-links">
+            <li><a href="/uk-beekeeping-news">UK Beekeeping News</a></li>
             <li><a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer">British Beekeepers Association</a></li>
             <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer">Cardiff, Vale and Valleys Beekeepers Association</a></li>
             <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank" rel="noopener noreferrer">The Honey (Wales) Regulations 2015</a></li>
@@ -1039,6 +1053,7 @@
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
     <i class="fa-solid fa-arrow-up"></i>
     </button>
+    <script src="js/beekeeping-news.js" defer></script>
     <script src="js/search-data.js" defer></script>
     <script src="js/script.js" defer></script>
   </body>

@@ -34,6 +34,7 @@
     <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/beekeeping-news.css">
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -799,6 +800,18 @@
               </div>
             </div>
           </div>
+          <section class="content-card bee-news bee-news-panel" data-bee-news data-topic="varroa" data-limit="3" aria-labelledby="varroa-news-heading">
+            <div class="bee-news-panel__heading">
+              <h2 id="varroa-news-heading">Latest UK Varroa updates</h2>
+              <a href="/uk-beekeeping-news">View all UK beekeeping updates</a>
+            </div>
+            <p>Recent Varroa information from established UK beekeeping organisations. Check product labels and current official guidance before treating colonies.</p>
+            <div class="bee-news-grid" data-bee-news-list></div>
+            <div class="bee-news-footer">
+              <span data-bee-news-updated>Updates are checked automatically.</span>
+              <span>Source: British Beekeepers Association</span>
+            </div>
+          </section>
           <section id="related-guides" class="related-guides" aria-label="Wider related guides">
             <h2>Related varroa and bee health guides</h2>
             <div class="related-grid">
@@ -881,6 +894,7 @@
         <div>
           <h3>Beekeeping Resources</h3>
           <ul class="footer-links">
+            <li><a href="/uk-beekeeping-news">UK Beekeeping News</a></li>
             <li><a href="https://www.bbka.org.uk/" target="_blank" rel="noopener noreferrer">British Beekeepers Association</a></li>
             <li><a href="https://www.cardiffbeekeepers.co.uk/" target="_blank" rel="noopener noreferrer">Cardiff, Vale and Valleys Beekeepers Association</a></li>
             <li><a href="https://www.legislation.gov.uk/wsi/2015/1507/data.xht?view=snippet&amp;wrap=true" target="_blank" rel="noopener noreferrer">The Honey (Wales) Regulations 2015</a></li>
@@ -984,6 +998,7 @@
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
     <i class="fa-solid fa-arrow-up"></i>
     </button>
+    <script src="js/beekeeping-news.js" defer></script>
     <script src="js/search-data.js" defer></script>
     <script src="js/script.js" defer></script>
   </body>
