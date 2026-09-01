@@ -148,7 +148,7 @@
 }
 
 .bee-news-panel {
-  margin: 0 0 var(--spacing-lg);
+  margin: 0;
   padding: clamp(1.1rem, 3vw, 1.7rem);
   border: 1px solid var(--news-border);
   border-radius: 16px;
