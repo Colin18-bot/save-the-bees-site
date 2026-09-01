@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -77,7 +78,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/bee-diseases</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-08-15</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -112,7 +113,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/beekeeping-guides</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-08-15</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -572,7 +573,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/site-map</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-08-15</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -661,11 +662,6 @@
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://beezknees.co.uk/uk-beekeeping-news</loc>
-    <lastmod>2026-09-01</lastmod>
-    <priority>0.5</priority>
-  </url>
-  <url>
     <loc>https://beezknees.co.uk/varroa-chemical-treatments</loc>
     <lastmod>2026-08-15</lastmod>
     <priority>0.5</priority>
@@ -677,7 +673,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/varroa-management</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-08-15</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -787,7 +783,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/year-in-the-apiary</loc>
-    <lastmod>2026-09-01</lastmod>
+    <lastmod>2026-08-15</lastmod>
     <priority>0.5</priority>
   </url>
 </urlset>
