@@ -138,6 +138,12 @@ window.searchData = [
     "keywords": "beekeeping UK, beekeeping guides UK, beginner beekeeping UK, apiculture UK, beehive inspections, hive management, swarm control, varroa management, hive hygiene, beekeeping equipment, honey extraction, BeezKnees"
   },
   {
+  "title": "UK Beekeeping Associations Directory | BeezKnees",
+  "url": "/uk-beekeeping-associations",
+  "description": "Find local beekeeping associations and societies across England, Wales, Scotland and Northern Ireland using the BeezKnees UK directory.",
+  "keywords": "UK beekeeping associations, beekeeping association near me, local beekeeping association, beekeeping clubs UK, beekeeper associations England, beekeeping associations Wales, beekeeping associations Scotland, beekeeping associations Northern Ireland, find a beekeeping association"
+  },
+  {
     "title": "Beekeeping Insurance UK | Liability & Cover | BeezKnees",
     "url": "/beekeeping-insurance-uk",
     "description": "UK beekeeping insurance guide covering public liability, association cover, landowner apiaries, policy checks and common gaps to watch for.",
