@@ -626,9 +626,9 @@ if (ids.length > 0) {
     pushIf("Approx. frames of brood", insp.frames_of_brood);
     pushIf("Brood pattern", insp.brood_pattern);
     pushIf("Brood box congestion", insp.brood_box_congestion);
-    pushIf("Queen cells", insp.queen_cells);
     pushIf("Approx. frames of stores", insp.frames_of_stores);
     pushIf("Food stores", insp.food_stores);
+    pushIf("Queen cells", insp.queen_cells);
     if (insp.varroa_seen) pushIf("Varroa seen", "Yes");
     pushIf("Queen", insp.queen_status);
     if (insp.queen_status?.includes("Other"))
