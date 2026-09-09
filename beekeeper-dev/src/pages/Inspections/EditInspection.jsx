@@ -138,6 +138,8 @@ const EditInspection = () => {
     brood_pattern: "",
     food_stores: "",
     frames_of_bees: "",
+    frames_of_brood: "",
+    frames_of_stores: "",
     queen_cells: "",
     varroa_seen: false,
     brood_box_congestion: "",
@@ -364,6 +366,8 @@ const EditInspection = () => {
         brood_pattern: data.brood_pattern || "",
         food_stores: data.food_stores || "",
         frames_of_bees: data.frames_of_bees || "",
+        frames_of_brood: data.frames_of_brood ?? "",
+        frames_of_stores: data.frames_of_stores ?? "",
         queen_cells: data.queen_cells || "",
         varroa_seen: Boolean(data.varroa_seen) || legacyVarroaSelected,
         brood_box_congestion: data.brood_box_congestion || "",
@@ -693,6 +697,14 @@ const EditInspection = () => {
       brood_pattern: formData.brood_pattern || null,
       food_stores: formData.food_stores || null,
       frames_of_bees: formData.frames_of_bees || null,
+      frames_of_brood:
+        formData.frames_of_brood === ""
+          ? null
+          : Number(formData.frames_of_brood),
+      frames_of_stores:
+        formData.frames_of_stores === ""
+          ? null
+          : Number(formData.frames_of_stores),
       queen_cells: formData.queen_cells || null,
       varroa_seen: Boolean(formData.varroa_seen),
       brood_box_congestion: formData.brood_box_congestion || null,
@@ -1224,6 +1236,27 @@ const handleDelete = async () => {
               ))}
             </select>
           </div>
+          
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Approx. Frames of Brood
+            </label>
+            <p className="text-xs text-gray-600 mb-1">
+              Optional — enter an approximate whole number of frames containing brood.
+            </p>
+            <input
+              type="number"
+              name="frames_of_brood"
+              value={formData.frames_of_brood}
+              onChange={onChange}
+              min="0"
+              max="30"
+              step="1"
+              inputMode="numeric"
+              className="w-full border rounded px-3 py-2"
+              placeholder="e.g. 6"
+            />
+          </div>
 
           <div>
             <label className="block text-sm font-medium mb-1">Brood Pattern</label>
@@ -1260,6 +1293,27 @@ const handleDelete = async () => {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Approx. Frames of Stores
+            </label>
+            <p className="text-xs text-gray-600 mb-1">
+              Optional — enter an approximate whole number of frames containing stores.
+            </p>
+            <input
+              type="number"
+              name="frames_of_stores"
+              value={formData.frames_of_stores}
+              onChange={onChange}
+              min="0"
+              max="30"
+              step="1"
+              inputMode="numeric"
+              className="w-full border rounded px-3 py-2"
+              placeholder="e.g. 4"
+            />
           </div>
 
           <div>
