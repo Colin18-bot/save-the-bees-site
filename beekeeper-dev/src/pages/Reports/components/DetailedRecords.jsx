@@ -125,25 +125,27 @@ export default function DetailedRecords({
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-                  <h4 className="font-bold text-gray-900">Queen & Brood Assessment</h4>
-                  <div className="mt-3 grid grid-cols-1 gap-3">
-                    <Field label="Queen status" value={valueWithOther(x.queen_status, x.queen_status_other)} />
-                    <Field label="Queen cells" value={x.queen_cells} />
-                    <Field label="Brood pattern" value={x.brood_pattern} />
-                    <Field label="Brood box congestion" value={x.brood_box_congestion} />
-                  </div>
+               <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                <h4 className="font-bold text-gray-900">Queen & Brood Assessment</h4>
+                <div className="mt-3 grid grid-cols-1 gap-3">
+                  <Field label="Queen status" value={valueWithOther(x.queen_status, x.queen_status_other)} />
+                  <Field label="Queen cells" value={x.queen_cells} />
+                  <Field label="Approx. frames of brood" value={x.frames_of_brood} />
+                  <Field label="Brood pattern" value={x.brood_pattern} />
+                  <Field label="Brood box congestion" value={x.brood_box_congestion} />
                 </div>
+              </div>
 
-                <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
-                  <h4 className="font-bold text-gray-900">Colony Health</h4>
-                  <div className="mt-3 grid grid-cols-1 gap-3">
-                    <Field label="Food stores" value={x.food_stores} />
-                    <Field label="Varroa seen" value={boolYesNo(x.varroa_seen)} />
-                    <Field label="Disease" value={x.signs_disease ? valueWithOther(x.disease_types, x.disease_other) : "No"} />
-                    <Field label="Pests" value={x.signs_pests ? valueWithOther(x.pest_types, x.pest_other) : "No"} />
-                  </div>
+               <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
+                <h4 className="font-bold text-gray-900">Colony Health</h4>
+                <div className="mt-3 grid grid-cols-1 gap-3">
+                  <Field label="Approx. frames of stores" value={x.frames_of_stores} />
+                  <Field label="Food stores" value={x.food_stores} />
+                  <Field label="Varroa seen" value={boolYesNo(x.varroa_seen)} />
+                  <Field label="Disease" value={x.signs_disease ? valueWithOther(x.disease_types, x.disease_other) : "No"} />
+                  <Field label="Pests" value={x.signs_pests ? valueWithOther(x.pest_types, x.pest_other) : "No"} />
                 </div>
+              </div>
               </div>
 
               <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
