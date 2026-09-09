@@ -142,8 +142,10 @@ export function buildInspectionRows({
       environmental_signs: valueWithOther(inspection.environmental_signs, inspection.environmental_signs_other),
       hive_population: inspection.hive_population || "",
       frames_of_bees: excelText(inspection.frames_of_bees),
+      frames_of_brood: inspection.frames_of_brood ?? "",
       brood_pattern: inspection.brood_pattern || "",
       brood_box_congestion: inspection.brood_box_congestion || "",
+      frames_of_stores: inspection.frames_of_stores ?? "",
       food_stores: inspection.food_stores || "",
       queen_cells: inspection.queen_cells || "",
       queen_status: valueWithOther(inspection.queen_status, inspection.queen_status_other),
@@ -166,12 +168,13 @@ export function buildInspectionRows({
 
 export function downloadInspectionsCSV({ inspectionRows }) {
   const headers = [
-    "date", "apiary", "hive", "inspection_type", "weather", "weather_observed",
-    "colony_behavior", "environmental_signs", "hive_population", "frames_of_bees",
-    "brood_pattern", "brood_box_congestion", "food_stores", "queen_cells", "queen_status",
-    "varroa_seen", "signs_disease", "disease_types", "signs_pests", "pest_types", "notes",
-    "photos", "photo_paths", "health_score", "health_band", "insights", "recommendations", "archived",
-  ];
+  "date", "apiary", "hive", "inspection_type", "weather", "weather_observed",
+  "colony_behavior", "environmental_signs", "hive_population", "frames_of_bees",
+  "frames_of_brood", "brood_pattern", "brood_box_congestion", "frames_of_stores",
+  "food_stores", "queen_cells", "queen_status", "varroa_seen", "signs_disease",
+  "disease_types", "signs_pests", "pest_types", "notes", "photos", "photo_paths",
+  "health_score", "health_band", "insights", "recommendations", "archived",
+];
   downloadCSV(`inspections-${ukStamp()}.csv`, inspectionRows, headers);
 }
 
