@@ -92,6 +92,8 @@ const NewInspection = () => {
     brood_pattern: "",
     food_stores: "",
     frames_of_bees: "",
+    frames_of_brood: "",
+    frames_of_stores: "",
     queen_cells: "",
     varroa_seen: "no",
     brood_box_congestion: "",
@@ -526,8 +528,16 @@ const NewInspection = () => {
     const { data: userWrap } = await supabase.auth.getUser();
 
     // normalize booleans + empty strings/arrays
-    const base = {
+   const base = {
     ...formData,
+    frames_of_brood:
+      formData.frames_of_brood === ""
+        ? null
+        : Number(formData.frames_of_brood),
+    frames_of_stores:
+      formData.frames_of_stores === ""
+        ? null
+        : Number(formData.frames_of_stores),
     signs_disease: formData.signs_disease === "yes",
     signs_pests: formData.signs_pests === "yes",
     varroa_seen: formData.varroa_seen === "yes",
@@ -1047,6 +1057,26 @@ const NewInspection = () => {
           </select>
         </div>
 
+        {/* Frames of Brood */}
+        <div>
+          <label className="block font-semibold">Approx. Frames of Brood</label>
+          <p className="text-xs text-gray-600 mb-1">
+            Optional — enter an approximate whole number of frames containing brood.
+          </p>
+          <input
+            type="number"
+            name="frames_of_brood"
+            value={formData.frames_of_brood}
+            onChange={handleChange}
+            min="0"
+            max="30"
+            step="1"
+            inputMode="numeric"
+            className="w-full border px-3 py-2 rounded"
+            placeholder="e.g. 6"
+          />
+        </div>
+
         {/* Brood Pattern */}
         <div>
           <label className="block font-semibold">Brood Pattern</label>
@@ -1079,6 +1109,26 @@ const NewInspection = () => {
             <option value="Medium">Medium</option>
             <option value="High">High</option>
           </select>
+        </div>
+
+        {/* Frames of Stores */}
+        <div>
+          <label className="block font-semibold">Approx. Frames of Stores</label>
+          <p className="text-xs text-gray-600 mb-1">
+            Optional — enter an approximate whole number of frames containing stores.
+          </p>
+          <input
+            type="number"
+            name="frames_of_stores"
+            value={formData.frames_of_stores}
+            onChange={handleChange}
+            min="0"
+            max="30"
+            step="1"
+            inputMode="numeric"
+            className="w-full border px-3 py-2 rounded"
+            placeholder="e.g. 4"
+          />
         </div>
 
         {/* Food Stores */}
