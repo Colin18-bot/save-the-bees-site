@@ -403,7 +403,7 @@ useEffect(() => {
       let dataQuery = supabase
         .from("inspections")
         .select(
-          "id, apiary_id, hive_id, inspection_type, date, created_at, weather, weather_observed, weather_code, colony_behavior, colony_behavior_other, environmental_signs, environmental_signs_other, hive_population, brood_pattern, food_stores, frames_of_bees, queen_cells, varroa_seen, brood_box_congestion, queen_id, queen_snapshot, queen_status, queen_status_other, signs_disease, disease_types, disease_other, signs_pests, pest_types, pest_other, notes, photos"
+          "id, apiary_id, hive_id, inspection_type, date, created_at, weather, weather_observed, weather_code, colony_behavior, colony_behavior_other, environmental_signs, environmental_signs_other, hive_population, brood_pattern, food_stores, frames_of_bees, frames_of_brood, frames_of_stores, queen_cells, varroa_seen, brood_box_congestion, queen_id, queen_snapshot, queen_status, queen_status_other, signs_disease, disease_types, disease_other, signs_pests, pest_types, pest_other, notes, photos"
         )
         .is("archived_at", null)
         .order("date", { ascending: false })
@@ -623,10 +623,12 @@ if (ids.length > 0) {
     pushIf("Env. other", insp.environmental_signs_other);
     pushIf("Population", insp.hive_population);
     pushIf("Frames of bees", insp.frames_of_bees);
-    pushIf("Brood", insp.brood_pattern);
+    pushIf("Approx. frames of brood", insp.frames_of_brood);
+    pushIf("Brood pattern", insp.brood_pattern);
     pushIf("Brood box congestion", insp.brood_box_congestion);
     pushIf("Queen cells", insp.queen_cells);
-    pushIf("Stores", insp.food_stores);
+    pushIf("Approx. frames of stores", insp.frames_of_stores);
+    pushIf("Food stores", insp.food_stores);
     if (insp.varroa_seen) pushIf("Varroa seen", "Yes");
     pushIf("Queen", insp.queen_status);
     if (insp.queen_status?.includes("Other"))
