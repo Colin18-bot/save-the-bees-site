@@ -293,19 +293,50 @@ export const compareInspections = (current = {}, previous = {}) => {
 
   const changes = [];
 
-  const compareField = (label, key) => {
-    const now = clean(current[key]);
-    const before = clean(previous[key]);
-    if (now && before && now !== before) {
-      changes.push(`${label} changed from ${before} to ${now}.`);
-    }
-  };
+ const compareField = (label, key) => {
+  const now = clean(current[key]);
+  const before = clean(previous[key]);
+  if (now && before && now !== before) {
+    changes.push(`${label} changed from ${before} to ${now}.`);
+  }
+};
 
-  compareField("Population", "hive_population");
-  compareField("Brood pattern", "brood_pattern");
-  compareField("Food stores", "food_stores");
-  compareField("Colony behaviour", "colony_behavior");
-  compareField("Queen cells", "queen_cells");
+const compareFrameCount = (label, key) => {
+  const nowRaw = current[key];
+  const beforeRaw = previous[key];
+
+  if (
+    nowRaw == null ||
+    nowRaw === "" ||
+    beforeRaw == null ||
+    beforeRaw === ""
+  ) {
+    return;
+  }
+
+  const now = Number(nowRaw);
+  const before = Number(beforeRaw);
+
+  if (!Number.isFinite(now) || !Number.isFinite(before) || now === before) {
+    return;
+  }
+
+  const direction = now > before ? "increased" : "decreased";
+  const beforeUnit = before === 1 ? "frame" : "frames";
+  const nowUnit = now === 1 ? "frame" : "frames";
+
+  changes.push(
+    `${label} ${direction} from approximately ${before} ${beforeUnit} to ${now} ${nowUnit}.`
+  );
+};
+
+compareField("Population", "hive_population");
+compareFrameCount("Brood", "frames_of_brood");
+compareField("Brood pattern", "brood_pattern");
+compareFrameCount("Stores", "frames_of_stores");
+compareField("Food stores", "food_stores");
+compareField("Colony behaviour", "colony_behavior");
+compareField("Queen cells", "queen_cells");
 
   const currentQueen = asArray(current.queen_status).join(", ");
   const previousQueen = asArray(previous.queen_status).join(", ");
@@ -335,9 +366,17 @@ export const analyzeInspectionSet = (inspections = []) => {
   let totalHealthScore = 0;
   let analysedCount = 0;
 
-  orderedInspections.forEach((inspection, index) => {
-    const previousInspection = orderedInspections[index + 1] || null;
-    const analysis = analyzeInspection(inspection);
+ orderedInspections.forEach((inspection, index) => {
+  const previousInspection =
+    orderedInspections
+      .slice(index + 1)
+      .find(
+        (candidate) =>
+          String(candidate.hive_id || "") ===
+          String(inspection.hive_id || "")
+      ) || null;
+
+  const analysis = analyzeInspection(inspection);
 
     const rawChanges = previousInspection
       ? compareInspections(inspection, previousInspection)
