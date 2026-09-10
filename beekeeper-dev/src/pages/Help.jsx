@@ -85,10 +85,12 @@ export default function Help() {
 
                 <dl className="mt-3 space-y-3 text-sm">
                   <div>
-                    <dt className="font-medium text-gray-900">Inspections</dt>
+                   <dt className="font-medium text-gray-900">Inspections</dt>
                     <dd className="text-gray-700">
-                      Record what you observed during a hive visit, including queen evidence, brood,
-                      stores, varroa, disease signs, notes and photos.
+                      Record what you observed during a hive visit, including queen evidence, colony
+                      strength, brood, food stores, varroa, disease signs, notes and photos. You can
+                      also optionally record approximate numbers of frames containing brood and food
+                      stores to help track changes between inspections.
                     </dd>
                   </div>
 
@@ -241,8 +243,17 @@ export default function Help() {
                   optional NFC tag).
                 </li>
                 <li>
-                  <strong>Inspection</strong> — a dated record about a hive (weather, behaviour,
-                  brood, stores, disease/pests, notes, photos).
+                  <strong>Inspection</strong> — a dated record about a hive covering weather,
+                  behaviour, colony strength, brood, food stores, queen observations,
+                  disease/pests, notes and photos. Optional frame counts can be used to record
+                  the approximate amount of brood and stores alongside the existing qualitative
+                  assessments.
+                </li>
+                <li>
+                  <strong>Brood and stores frame counts</strong> — optional estimates used to
+                  track quantity over time. <em>Brood pattern</em> still describes the quality
+                  or consistency of the brood pattern, while <em>Food stores</em> remains the
+                  beekeeper&apos;s overall assessment of available stores.
                 </li>
                 <li>
                   <strong>Queen Record</strong> — the identity and details of a Queen, including her
