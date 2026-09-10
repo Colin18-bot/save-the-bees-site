@@ -9,6 +9,53 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.5.2",
+  released_at: "2026-09-10T19:36:00Z",
+
+  summary:
+    "Added optional brood and food-store frame counts to HiveTag inspections, allowing beekeepers to record the approximate quantity of brood and stores alongside the existing qualitative assessments. The new values are carried through inspection history, reports, printing and exports, with Hive Health able to highlight changes between inspections.",
+
+  added: [
+    "Added **Approx. Frames of Brood** to New Inspection and Edit Inspection, allowing an optional whole-number estimate from 0 to 30 frames.",
+    "Added **Approx. Frames of Stores** to New Inspection and Edit Inspection, allowing an optional whole-number estimate from 0 to 30 frames.",
+    "Added brood and stores frame counts to the **Inspection List** so recorded quantities can be reviewed alongside colony population, brood pattern and food-store assessment.",
+    "Added brood and stores frame counts to **Detailed Inspection Records** in the Reports Centre.",
+    "Added **frames_of_brood** and **frames_of_stores** to Inspection CSV exports and the combined Excel workbook.",
+    "Added Hive Health comparison messages showing when approximate brood or stores frame counts have increased or decreased between consecutive inspections of the same hive."
+  ],
+
+  changed: [
+    "Brood quantity and brood quality are now recorded separately: the approximate brood-frame count records quantity while **Brood Pattern** continues to describe brood quality and consistency.",
+    "Food-store quantity and overall store assessment are now recorded separately: the approximate stores-frame count records quantity while **Food Stores** continues to provide the beekeeper's qualitative assessment.",
+    "Inspection List information has been reordered so brood and stores information is grouped more logically before Queen information.",
+    "Historical inspections remain fully compatible with the new fields. Existing records simply remain blank where brood or stores frame counts were not previously recorded.",
+    "Hive Health uses the new frame counts for factual inspection-to-inspection trends only; they do not currently contribute to the calculated Hive Health score.",
+    "Updated Help guidance to explain the purpose of brood and stores frame counts and how they differ from the existing qualitative inspection fields."
+  ],
+
+  fixed: [
+    "Fixed report inspection comparisons so an inspection is compared with the previous inspection for the **same hive**, rather than potentially comparing records from different hives in multi-hive reports.",
+    "Fixed numeric zero values in detailed reports so a genuine recording of **0 frames** is displayed as 0 rather than being treated as an unrecorded value."
+  ],
+
+  removed: [],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+    { label: "Inspections", to: "/inspections" },
+    { label: "Reports Centre", to: "/reports/print" },
+    { label: "Hive Health", to: "/hives" },
+    { label: "Help", to: "/help" }
+  ],
+
+  known_issues: [
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
+{
   version: "1.5.1",
   released_at: "2026-08-30T23:05:00Z",
 
