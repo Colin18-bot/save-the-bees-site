@@ -88,7 +88,8 @@ const valueOrDash = (value) => {
   if (Array.isArray(value)) return value.length ? value.join(", ") : "—";
   if (value === true) return "Yes";
   if (value === false) return "No";
-  return value || "—";
+  if (value == null || value === "") return "—";
+  return value;
 };
 const valueWithOther = (value, other) => {
   const main = Array.isArray(value) ? value.filter(Boolean).join(", ") : value || "";
