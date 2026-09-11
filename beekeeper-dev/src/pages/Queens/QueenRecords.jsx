@@ -71,6 +71,27 @@ export default function QueenRecords() {
     };
   }, [activeTab, baseVersion]);
 
+  useEffect(() => {
+    const root = baseRef.current;
+    if (!root) return undefined;
+
+    const updateSwarmShortcut = () => {
+      Array.from(root.querySelectorAll("button")).forEach((button) => {
+        if (!(button.textContent || "").includes("Record a Swarm")) return;
+        const paragraphs = button.querySelectorAll("p");
+        if (paragraphs.length > 1) {
+          paragraphs[1].textContent =
+            "Record whether the swarm was lost, recovered and returned, or moved to another hive or nucleus.";
+        }
+      });
+    };
+
+    updateSwarmShortcut();
+    const observer = new MutationObserver(updateSwarmShortcut);
+    observer.observe(root, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [baseVersion]);
+
   const refreshBase = () => {
     setBaseVersion((value) => value + 1);
   };
@@ -83,8 +104,7 @@ export default function QueenRecords() {
     const button = event.target.closest("button");
     if (!button || button.disabled) return;
 
-    const text = button.textContent || "";
-    if (text.includes("Record a Swarm")) {
+    if ((button.textContent || "").includes("Record a Swarm")) {
       event.preventDefault();
       event.stopPropagation();
       setTabNotice("");
