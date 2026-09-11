@@ -86,6 +86,33 @@ export default function QueenRecords() {
           }
         });
       }
+
+      if (activeTab === "history") {
+        window.requestAnimationFrame(() => {
+          if (cancelled || !baseRef.current) return;
+
+          const badges = Array.from(baseRef.current.querySelectorAll("span")).filter(
+            (item) => (item.textContent || "").trim() === "Queenless Confirmed"
+          );
+
+          badges.forEach((badge) => {
+            const row = badge.closest("div.grid");
+            const detailColumn = row?.children?.[1];
+
+            badge.textContent = "No longer present";
+            badge.className =
+              "inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold bg-gray-100 text-gray-700 border-gray-200";
+
+            if (detailColumn && !detailColumn.querySelector('[data-queenless-history-reason="true"]')) {
+              const reason = document.createElement("p");
+              reason.dataset.queenlessHistoryReason = "true";
+              reason.className = "mt-1 text-xs text-gray-500";
+              reason.textContent = "Reason: Colony confirmed Queenless";
+              detailColumn.appendChild(reason);
+            }
+          });
+        });
+      }
     };
 
     const frame = window.requestAnimationFrame(syncTab);
