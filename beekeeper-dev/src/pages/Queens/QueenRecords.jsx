@@ -12,6 +12,7 @@ import {
 import QueenRecordsBase from "./QueenRecordsBase.jsx";
 import QueenUnionPanel from "./QueenUnionPanel.jsx";
 import QueenSwarmPanel from "./QueenSwarmPanel.jsx";
+import { getQueenRecordsOverview } from "../../services/queenRecords.js";
 
 const TABS = [
   { id: "overview", label: "Overview", icon: Crown, baseLabel: "Overview" },
@@ -30,11 +31,109 @@ const INLINE_ACTION_LABELS = [
   "Add a Queen",
   "Edit Queen Information",
   "Record Queen Progress",
+  "Record Progress",
   "Record a Split",
   "Transfer a Queen",
   "Introduce a Queen",
   "Set Queenless Colony Plan",
 ];
+
+const LOSS_PROGRESS_OPTIONS = [
+  "Queen not seen — continue monitoring",
+  "Queen presumed lost",
+  "Queenless confirmed",
+];
+
+const getContextualProgressOptions = (hive) => {
+  const currentQueen = hive?.currentQueen;
+  const status = String(currentQueen?.statusRaw || currentQueen?.status || "")
+    .trim()
+    .toLowerCase();
+
+  if (!currentQueen) {
+    return [
+      "Emergency Queen cells started",
+      "Swarm Queen cells retained",
+      "Queen cells charged",
+      "Queen cells sealed",
+      "Queen emerged",
+    ];
+  }
+
+  if (status.includes("acceptance pending") || status === "pending") {
+    return [
+      "Queen released",
+      "Queen accepted",
+      "Eggs observed",
+      "Laying queen confirmed",
+      ...LOSS_PROGRESS_OPTIONS,
+    ];
+  }
+
+  if (status.includes("introduced")) {
+    return [
+      "Queen accepted",
+      "Eggs observed",
+      "Laying queen confirmed",
+      ...LOSS_PROGRESS_OPTIONS,
+    ];
+  }
+
+  if (status.includes("accepted")) {
+    return ["Eggs observed", "Laying queen confirmed", ...LOSS_PROGRESS_OPTIONS];
+  }
+
+  if (status.includes("virgin")) {
+    return [
+      "Mating outcome pending",
+      "Eggs observed",
+      "Laying queen confirmed",
+      ...LOSS_PROGRESS_OPTIONS,
+    ];
+  }
+
+  if (status.includes("mating")) {
+    return ["Eggs observed", "Laying queen confirmed", ...LOSS_PROGRESS_OPTIONS];
+  }
+
+  if (status.includes("laying")) {
+    return [
+      "Supersedure Queen cells confirmed",
+      "Swarm Queen cells retained",
+      ...LOSS_PROGRESS_OPTIONS,
+    ];
+  }
+
+  return [
+    "Supersedure Queen cells confirmed",
+    "Swarm Queen cells retained",
+    "Eggs observed",
+    "Laying queen confirmed",
+    ...LOSS_PROGRESS_OPTIONS,
+  ];
+};
+
+const waitForProgressSelect = (root) =>
+  new Promise((resolve) => {
+    let attempts = 0;
+
+    const findSelect = () => {
+      attempts += 1;
+      const select = Array.from(root?.querySelectorAll("select") || []).find((item) => {
+        const labels = Array.from(item.options).map((option) => (option.textContent || "").trim());
+        return labels.includes("Queen accepted") && labels.includes("Queenless confirmed");
+      });
+
+      if (select || attempts >= 50) {
+        resolve(select || null);
+        return;
+      }
+
+      window.setTimeout(findSelect, 40);
+    };
+
+    findSelect();
+  });
 
 export default function QueenRecords() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -155,6 +254,44 @@ export default function QueenRecords() {
     });
   };
 
+  const applyContextualProgressOptions = async () => {
+    const root = baseRef.current;
+    if (!root) return;
+
+    try {
+      const recordsPromise = getQueenRecordsOverview();
+      const progressSelect = await waitForProgressSelect(root);
+      if (!progressSelect) return;
+
+      const records = await recordsPromise;
+      const hivesById = new Map((records.hives || []).map((hive) => [String(hive.id), hive]));
+      const selectedHiveId = Array.from(root.querySelectorAll("select"))
+        .map((select) => String(select.value || ""))
+        .find((value) => hivesById.has(value));
+      const hive = selectedHiveId ? hivesById.get(selectedHiveId) : null;
+      if (!hive) return;
+
+      const allowedOptions = new Set(getContextualProgressOptions(hive));
+      Array.from(progressSelect.options).forEach((option) => {
+        const label = (option.textContent || "").trim();
+        if (option.value && !allowedOptions.has(label)) option.remove();
+      });
+
+      const form = progressSelect.closest("form");
+      const existingHint = form?.querySelector('[data-contextual-progress-hint="true"]');
+      if (!existingHint) {
+        const hint = document.createElement("p");
+        hint.dataset.contextualProgressHint = "true";
+        hint.className = "mt-2 text-xs text-gray-500";
+        const stage = hive.currentQueen?.status || hive.transition?.status || "current colony state";
+        hint.textContent = `Showing progress options relevant to: ${stage}.`;
+        progressSelect.insertAdjacentElement("afterend", hint);
+      }
+    } catch (error) {
+      console.warn("Could not contextualise Queen progress options", error);
+    }
+  };
+
   const handleBaseClickCapture = (event) => {
     const button = event.target.closest("button");
     if (!button || button.disabled) return;
@@ -167,6 +304,13 @@ export default function QueenRecords() {
       setTabNotice("");
       setActiveTab("swarm");
       return;
+    }
+
+    if (
+      buttonText.includes("Record Queen Progress") ||
+      buttonText.trim() === "Record Progress"
+    ) {
+      applyContextualProgressOptions();
     }
 
     if (INLINE_ACTION_LABELS.some((label) => buttonText.includes(label))) {
