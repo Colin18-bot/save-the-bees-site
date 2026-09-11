@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AlertTriangle, CheckCircle2, GitMerge, RefreshCw, Save } from "lucide-react";
 import { supabase } from "../../services/supabase";
 
@@ -14,12 +14,12 @@ const queenLabel = (queen) => {
   return `${queen.reference || "Queen"}${queen.queen_year ? ` • ${queen.queen_year}` : ""} • ${String(colour).toLowerCase()}`;
 };
 
-export default function QueenUnionPanel() {
+export default function QueenUnionPanel({ onRecorded }) {
   const [hives, setHives] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
+  const [completed, setCompleted] = useState(null);
   const [hiveAId, setHiveAId] = useState("");
   const [hiveBId, setHiveBId] = useState("");
   const [survivingHiveId, setSurvivingHiveId] = useState("");
@@ -27,12 +27,18 @@ export default function QueenUnionPanel() {
   const [otherQueenOutcome, setOtherQueenOutcome] = useState("");
   const [eventDate, setEventDate] = useState(localToday());
   const [notes, setNotes] = useState("");
+  const submitGuard = useRef(false);
 
-  const load = async () => {
+  const load = async ({ resetSelection = false } = {}) => {
     setLoading(true);
     setError("");
     try {
-      const [{ data: apiaries, error: apiaryError }, { data: hiveRows, error: hiveError }, { data: assignments, error: assignmentError }, { data: queens, error: queenError }] = await Promise.all([
+      const [
+        { data: apiaries, error: apiaryError },
+        { data: hiveRows, error: hiveError },
+        { data: assignments, error: assignmentError },
+        { data: queens, error: queenError },
+      ] = await Promise.all([
         supabase.from("apiaries").select("id, name").is("archived_at", null),
         supabase.from("hives").select("id, name, apiary_id").is("archived_at", null).order("name"),
         supabase.from("queen_assignments").select("hive_id, queen_id, started_on").is("ended_on", null),
@@ -58,8 +64,16 @@ export default function QueenUnionPanel() {
       });
 
       setHives(next);
-      setHiveAId((value) => value || next[0]?.id || "");
-      setHiveBId((value) => value || next.find((item) => item.id !== (next[0]?.id || ""))?.id || "");
+
+      if (resetSelection) {
+        const first = next[0] || null;
+        const second = next.find((item) => item.id !== first?.id) || null;
+        setHiveAId(first?.id || "");
+        setHiveBId(second?.id || "");
+        setSurvivingHiveId(first?.id || "");
+        setSurvivingQueenId("");
+        setOtherQueenOutcome("");
+      }
     } catch (loadError) {
       setError(loadError?.message || "Could not load hives for colony union.");
     } finally {
@@ -68,7 +82,7 @@ export default function QueenUnionPanel() {
   };
 
   useEffect(() => {
-    load();
+    load({ resetSelection: true });
   }, []);
 
   useEffect(() => {
@@ -103,8 +117,10 @@ export default function QueenUnionPanel() {
 
   const submit = async (event) => {
     event.preventDefault();
+
+    if (submitGuard.current || completed) return;
+
     setError("");
-    setMessage("");
 
     if (!hiveAId || !hiveBId || hiveAId === hiveBId) {
       setError("Select two different colonies to unite.");
@@ -123,7 +139,12 @@ export default function QueenUnionPanel() {
       return;
     }
 
+    const survivingHive = survivingHiveId === hiveAId ? hiveA : hiveB;
+    const redundantHive = survivingHiveId === hiveAId ? hiveB : hiveA;
+
+    submitGuard.current = true;
     setSaving(true);
+
     try {
       const { error: rpcError } = await supabase.rpc("queen_record_union", {
         p_hive_a_id: hiveAId,
@@ -136,20 +157,32 @@ export default function QueenUnionPanel() {
       });
       if (rpcError) throw rpcError;
 
-      setMessage("Colony union recorded. Queen history has been preserved and the redundant hive has been archived.");
-      setNotes("");
-      await load();
-      window.setTimeout(() => window.location.reload(), 700);
+      setCompleted({
+        survivingHive: survivingHive?.name || "Surviving hive",
+        redundantHive: redundantHive?.name || "Redundant hive",
+        eventDate,
+      });
+      onRecorded?.();
     } catch (saveError) {
+      submitGuard.current = false;
       setError(saveError?.message || "The colony union could not be saved.");
     } finally {
       setSaving(false);
     }
   };
 
-  if (loading) {
+  const recordAnother = async () => {
+    submitGuard.current = false;
+    setCompleted(null);
+    setError("");
+    setNotes("");
+    setEventDate(localToday());
+    await load({ resetSelection: true });
+  };
+
+  if (loading && !completed) {
     return (
-      <div className="mx-auto mb-5 max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mb-5">
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
           Loading colony union options…
         </div>
@@ -158,7 +191,7 @@ export default function QueenUnionPanel() {
   }
 
   return (
-    <div className="mx-auto mb-5 max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div className="mb-5">
       <section className="overflow-hidden rounded-2xl border border-amber-300 bg-white shadow-sm ring-1 ring-amber-100">
         <div className="flex flex-col gap-3 bg-amber-50 px-5 py-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex gap-3">
@@ -166,119 +199,190 @@ export default function QueenUnionPanel() {
               <GitMerge className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-amber-800">Staging Queen Records</p>
-              <h2 className="mt-1 text-xl font-extrabold text-[#1a3329]">Unite Colonies</h2>
+              <h2 className="text-xl font-extrabold text-[#1a3329]">Unite Colonies</h2>
               <p className="mt-1 max-w-3xl text-sm text-gray-700">
                 Record two colonies being united, choose which physical hive remains in use, and preserve or transfer the correct Queen independently.
               </p>
             </div>
           </div>
-          <span className="rounded-full border border-amber-300 bg-white px-3 py-1 text-xs font-bold text-amber-900">Staging only</span>
+          <span className="rounded-full border border-amber-300 bg-white px-3 py-1 text-xs font-bold text-amber-900">
+            Staging only
+          </span>
         </div>
 
-        <form onSubmit={submit} className="space-y-5 p-5">
-          {error ? (
-            <div className="flex gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-800">
-              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
-              <span>{error}</span>
-            </div>
-          ) : null}
-          {message ? (
-            <div className="flex gap-3 rounded-xl border border-green-200 bg-green-50 p-4 text-sm font-semibold text-green-800">
-              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0" />
-              <span>{message}</span>
-            </div>
-          ) : null}
-
-          <div className="grid gap-4 lg:grid-cols-2">
-            <label className="text-sm font-semibold text-gray-700">
-              First colony
-              <select value={hiveAId} onChange={(e) => setHiveAId(e.target.value)} className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2">
-                {hives.map((item) => (
-                  <option key={item.id} value={item.id}>{item.name} — {item.apiaryName} — {queenLabel(item.queen)}</option>
-                ))}
-              </select>
-            </label>
-            <label className="text-sm font-semibold text-gray-700">
-              Second colony
-              <select value={hiveBId} onChange={(e) => setHiveBId(e.target.value)} className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2">
-                {hives.filter((item) => item.id !== hiveAId).map((item) => (
-                  <option key={item.id} value={item.id}>{item.name} — {item.apiaryName} — {queenLabel(item.queen)}</option>
-                ))}
-              </select>
-            </label>
-          </div>
-
-          {hiveA && hiveB ? (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {[hiveA, hiveB].map((item) => (
-                <div key={item.id} className="rounded-xl border border-gray-200 bg-gray-50 p-4">
-                  <p className="font-bold text-[#1a3329]">{item.name}</p>
-                  <p className="mt-1 text-xs font-semibold text-gray-500">{item.apiaryName}</p>
-                  <p className="mt-2 text-sm text-gray-700">{queenLabel(item.queen)}</p>
+        {completed ? (
+          <div className="p-5">
+            <div className="rounded-2xl border border-green-300 bg-green-50 p-5">
+              <div className="flex gap-3">
+                <CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0 text-green-700" />
+                <div>
+                  <h3 className="text-lg font-extrabold text-green-950">Union recorded successfully</h3>
+                  <p className="mt-2 text-sm text-green-900">
+                    <strong>{completed.survivingHive}</strong> remains in use. <strong>{completed.redundantHive}</strong> has been archived as the redundant hive. Queen and colony history have been preserved.
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-green-900">
+                    This form is now locked so the same action cannot be submitted again accidentally.
+                  </p>
                 </div>
-              ))}
+              </div>
             </div>
-          ) : null}
 
-          <div className="grid gap-4 lg:grid-cols-2">
-            <label className="text-sm font-semibold text-gray-700">
-              Which hive will remain in use after the union?
-              <select value={survivingHiveId} onChange={(e) => setSurvivingHiveId(e.target.value)} className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2">
-                {hiveA ? <option value={hiveA.id}>{hiveA.name}</option> : null}
-                {hiveB ? <option value={hiveB.id}>{hiveB.name}</option> : null}
-              </select>
-            </label>
-            <label className="text-sm font-semibold text-gray-700">
-              Union date
-              <input type="date" value={eventDate} max={localToday()} onChange={(e) => setEventDate(e.target.value)} required className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2" />
-            </label>
+            <div className="mt-5 flex justify-end">
+              <button
+                type="button"
+                onClick={recordAnother}
+                className="rounded-lg border border-[#1a3329] bg-white px-5 py-2.5 text-sm font-bold text-[#1a3329] hover:bg-green-50"
+              >
+                Record another union
+              </button>
+            </div>
           </div>
+        ) : (
+          <form onSubmit={submit} className="space-y-5 p-5">
+            {error ? (
+              <div className="flex gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-800">
+                <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
+                <span>{error}</span>
+              </div>
+            ) : null}
 
-          {bothQueenright ? (
-            <div className="grid gap-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 lg:grid-cols-2">
-              <label className="text-sm font-semibold text-gray-800">
-                Both colonies are Queenright — which Queen will remain?
-                <select value={survivingQueenId} onChange={(e) => setSurvivingQueenId(e.target.value)} required className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2">
-                  <option value="">Select surviving Queen</option>
-                  {queens.map((queen) => {
-                    const owner = hiveA?.queen?.id === queen.id ? hiveA : hiveB;
-                    return <option key={queen.id} value={queen.id}>{owner?.name}: {queenLabel(queen)}</option>;
-                  })}
+            <div className="grid gap-4 lg:grid-cols-2">
+              <label className="text-sm font-semibold text-gray-700">
+                First colony
+                <select
+                  value={hiveAId}
+                  onChange={(e) => setHiveAId(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+                >
+                  {hives.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name} — {item.apiaryName} — {queenLabel(item.queen)}
+                    </option>
+                  ))}
                 </select>
               </label>
-              <label className="text-sm font-semibold text-gray-800">
-                What happened to the Queen that did not remain?
-                <select value={otherQueenOutcome} onChange={(e) => setOtherQueenOutcome(e.target.value)} required className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2">
-                  <option value="">Select outcome</option>
-                  <option value="removed_before_union">Removed before union</option>
-                  <option value="lost_or_killed">Lost or killed during union</option>
-                  <option value="outcome_unknown">Outcome unknown after union</option>
+              <label className="text-sm font-semibold text-gray-700">
+                Second colony
+                <select
+                  value={hiveBId}
+                  onChange={(e) => setHiveBId(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+                >
+                  {hives.filter((item) => item.id !== hiveAId).map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name} — {item.apiaryName} — {queenLabel(item.queen)}
+                    </option>
+                  ))}
                 </select>
               </label>
             </div>
-          ) : oneQueenright ? (
-            <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-900">
-              The only current Queen will automatically remain with the united colony. If the other hive is the one kept in use, her Queen assignment will transfer to it.
-            </div>
-          ) : (
-            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
-              Both colonies are Queenless. The resulting colony will remain Queenless and HiveTag will preserve or create an active Queenless plan for the surviving hive.
-            </div>
-          )}
 
-          <label className="block text-sm font-semibold text-gray-700">
-            Notes
-            <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows="3" placeholder="Optional details about the union…" className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2" />
-          </label>
+            {hiveA && hiveB ? (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[hiveA, hiveB].map((item) => (
+                  <div key={item.id} className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                    <p className="font-bold text-[#1a3329]">{item.name}</p>
+                    <p className="mt-1 text-xs font-semibold text-gray-500">{item.apiaryName}</p>
+                    <p className="mt-2 text-sm text-gray-700">{queenLabel(item.queen)}</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
 
-          <div className="flex justify-end border-t border-gray-100 pt-4">
-            <button type="submit" disabled={saving || hives.length < 2} className="inline-flex items-center gap-2 rounded-lg bg-[#1a3329] px-5 py-2 text-sm font-bold text-white hover:bg-[#28513f] disabled:cursor-not-allowed disabled:opacity-60">
-              {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-              {saving ? "Saving…" : "Record Colony Union"}
-            </button>
-          </div>
-        </form>
+            <div className="grid gap-4 lg:grid-cols-2">
+              <label className="text-sm font-semibold text-gray-700">
+                Which hive will remain in use after the union?
+                <select
+                  value={survivingHiveId}
+                  onChange={(e) => setSurvivingHiveId(e.target.value)}
+                  className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+                >
+                  {hiveA ? <option value={hiveA.id}>{hiveA.name}</option> : null}
+                  {hiveB ? <option value={hiveB.id}>{hiveB.name}</option> : null}
+                </select>
+              </label>
+              <label className="text-sm font-semibold text-gray-700">
+                Union date
+                <input
+                  type="date"
+                  value={eventDate}
+                  max={localToday()}
+                  onChange={(e) => setEventDate(e.target.value)}
+                  required
+                  className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+                />
+              </label>
+            </div>
+
+            {bothQueenright ? (
+              <div className="grid gap-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 lg:grid-cols-2">
+                <label className="text-sm font-semibold text-gray-800">
+                  Both colonies are Queenright — which Queen will remain?
+                  <select
+                    value={survivingQueenId}
+                    onChange={(e) => setSurvivingQueenId(e.target.value)}
+                    required
+                    className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+                  >
+                    <option value="">Select surviving Queen</option>
+                    {queens.map((queen) => {
+                      const owner = hiveA?.queen?.id === queen.id ? hiveA : hiveB;
+                      return (
+                        <option key={queen.id} value={queen.id}>
+                          {owner?.name}: {queenLabel(queen)}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </label>
+                <label className="text-sm font-semibold text-gray-800">
+                  What happened to the Queen that did not remain?
+                  <select
+                    value={otherQueenOutcome}
+                    onChange={(e) => setOtherQueenOutcome(e.target.value)}
+                    required
+                    className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+                  >
+                    <option value="">Select outcome</option>
+                    <option value="removed_before_union">Removed before union</option>
+                    <option value="lost_or_killed">Lost or killed during union</option>
+                    <option value="outcome_unknown">Outcome unknown after union</option>
+                  </select>
+                </label>
+              </div>
+            ) : oneQueenright ? (
+              <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-900">
+                The only current Queen will automatically remain with the united colony. If the other hive is the one kept in use, her Queen assignment will transfer to it.
+              </div>
+            ) : (
+              <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+                Both colonies are Queenless. The resulting colony will remain Queenless and HiveTag will preserve or create an active Queenless plan for the surviving hive.
+              </div>
+            )}
+
+            <label className="block text-sm font-semibold text-gray-700">
+              Notes
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                rows="3"
+                placeholder="Optional details about the union…"
+                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2"
+              />
+            </label>
+
+            <div className="flex justify-end border-t border-gray-100 pt-4">
+              <button
+                type="submit"
+                disabled={saving || hives.length < 2}
+                className="inline-flex items-center gap-2 rounded-lg bg-[#1a3329] px-5 py-2 text-sm font-bold text-white hover:bg-[#28513f] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+                {saving ? "Saving…" : "Record Colony Union"}
+              </button>
+            </div>
+          </form>
+        )}
       </section>
     </div>
   );
