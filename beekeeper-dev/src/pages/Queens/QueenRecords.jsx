@@ -71,34 +71,25 @@ export default function QueenRecords() {
     };
   }, [activeTab, baseVersion]);
 
-  useEffect(() => {
-    const root = baseRef.current;
-    if (!root) return undefined;
-
-    const hideLegacySwarmAction = () => {
-      Array.from(root.querySelectorAll("button")).forEach((button) => {
-        const text = button.textContent || "";
-        if (
-          text.includes("Record a Swarm") &&
-          text.includes("End the current assignment")
-        ) {
-          button.style.display = "none";
-        }
-      });
-    };
-
-    hideLegacySwarmAction();
-    const observer = new MutationObserver(hideLegacySwarmAction);
-    observer.observe(root, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, [baseVersion]);
-
   const refreshBase = () => {
     setBaseVersion((value) => value + 1);
   };
 
   const handleLifecycleRecorded = () => {
     refreshBase();
+  };
+
+  const handleBaseClickCapture = (event) => {
+    const button = event.target.closest("button");
+    if (!button || button.disabled) return;
+
+    const text = button.textContent || "";
+    if (text.includes("Record a Swarm")) {
+      event.preventDefault();
+      event.stopPropagation();
+      setTabNotice("");
+      setActiveTab("swarm");
+    }
   };
 
   return (
@@ -178,6 +169,7 @@ export default function QueenRecords() {
 
       <div
         ref={baseRef}
+        onClickCapture={handleBaseClickCapture}
         className="queen-base-integrated"
         style={{ display: BASE_TABS.has(activeTab) ? "block" : "none" }}
       >
