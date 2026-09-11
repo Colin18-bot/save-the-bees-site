@@ -26,12 +26,22 @@ const TABS = [
 const BASE_TABS = new Set(["overview", "current", "progress", "history", "events"]);
 const SWARM_DESCRIPTION =
   "Record whether the swarm was lost, recovered and returned, or moved to another hive or nucleus.";
+const INLINE_ACTION_LABELS = [
+  "Add a Queen",
+  "Edit Queen Information",
+  "Record Queen Progress",
+  "Record a Split",
+  "Transfer a Queen",
+  "Introduce a Queen",
+  "Set Queenless Colony Plan",
+];
 
 export default function QueenRecords() {
   const [activeTab, setActiveTab] = useState("overview");
   const [tabNotice, setTabNotice] = useState("");
   const [baseVersion, setBaseVersion] = useState(0);
   const baseRef = useRef(null);
+  const successPollRef = useRef(null);
 
   useEffect(() => {
     if (!BASE_TABS.has(activeTab)) return undefined;
@@ -86,6 +96,13 @@ export default function QueenRecords() {
     };
   }, [activeTab, baseVersion]);
 
+  useEffect(
+    () => () => {
+      if (successPollRef.current) window.clearTimeout(successPollRef.current);
+    },
+    []
+  );
+
   const refreshBase = () => {
     setBaseVersion((value) => value + 1);
   };
@@ -94,16 +111,65 @@ export default function QueenRecords() {
     refreshBase();
   };
 
+  const scrollToInlineForm = () => {
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const form = baseRef.current?.querySelector("form");
+        const formSection = form?.closest("section");
+        formSection?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+  };
+
   const handleBaseClickCapture = (event) => {
     const button = event.target.closest("button");
     if (!button || button.disabled) return;
 
-    if ((button.textContent || "").includes("Record a Swarm")) {
+    const buttonText = button.textContent || "";
+
+    if (buttonText.includes("Record a Swarm")) {
       event.preventDefault();
       event.stopPropagation();
       setTabNotice("");
       setActiveTab("swarm");
+      return;
     }
+
+    if (INLINE_ACTION_LABELS.some((label) => buttonText.includes(label))) {
+      scrollToInlineForm();
+    }
+  };
+
+  const handleBaseSubmitCapture = () => {
+    if (successPollRef.current) window.clearTimeout(successPollRef.current);
+
+    let attempts = 0;
+    const findCompletedSave = () => {
+      attempts += 1;
+      const root = baseRef.current;
+      if (!root) return;
+
+      const actionForm = root.querySelector("form");
+      if (!actionForm) {
+        const messageParagraph = Array.from(root.querySelectorAll("p")).find((item) =>
+          (item.textContent || "").includes("saved successfully.")
+        );
+        const successBox = messageParagraph?.parentElement?.parentElement;
+        if (successBox) {
+          successBox.scrollIntoView({ behavior: "smooth", block: "start" });
+          successPollRef.current = null;
+          return;
+        }
+      }
+
+      if (attempts < 100) {
+        successPollRef.current = window.setTimeout(findCompletedSave, 100);
+      } else {
+        successPollRef.current = null;
+      }
+    };
+
+    successPollRef.current = window.setTimeout(findCompletedSave, 100);
   };
 
   return (
@@ -184,6 +250,7 @@ export default function QueenRecords() {
       <div
         ref={baseRef}
         onClickCapture={handleBaseClickCapture}
+        onSubmitCapture={handleBaseSubmitCapture}
         className="queen-base-integrated"
         style={{ display: BASE_TABS.has(activeTab) ? "block" : "none" }}
       >
