@@ -24,6 +24,8 @@ const TABS = [
 ];
 
 const BASE_TABS = new Set(["overview", "current", "progress", "history", "events"]);
+const SWARM_DESCRIPTION =
+  "Record whether the swarm was lost, recovered and returned, or moved to another hive or nucleus.";
 
 export default function QueenRecords() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -61,6 +63,19 @@ export default function QueenRecords() {
 
       setTabNotice("");
       button.click();
+
+      if (activeTab === "events") {
+        window.requestAnimationFrame(() => {
+          if (cancelled || !baseRef.current) return;
+          const swarmButton = Array.from(baseRef.current.querySelectorAll("button")).find(
+            (item) => (item.textContent || "").includes("Record a Swarm")
+          );
+          const paragraphs = swarmButton?.querySelectorAll("p");
+          if (paragraphs?.length > 1 && paragraphs[1].textContent !== SWARM_DESCRIPTION) {
+            paragraphs[1].textContent = SWARM_DESCRIPTION;
+          }
+        });
+      }
     };
 
     const frame = window.requestAnimationFrame(syncTab);
@@ -70,27 +85,6 @@ export default function QueenRecords() {
       if (retryTimer) window.clearTimeout(retryTimer);
     };
   }, [activeTab, baseVersion]);
-
-  useEffect(() => {
-    const root = baseRef.current;
-    if (!root) return undefined;
-
-    const updateSwarmShortcut = () => {
-      Array.from(root.querySelectorAll("button")).forEach((button) => {
-        if (!(button.textContent || "").includes("Record a Swarm")) return;
-        const paragraphs = button.querySelectorAll("p");
-        if (paragraphs.length > 1) {
-          paragraphs[1].textContent =
-            "Record whether the swarm was lost, recovered and returned, or moved to another hive or nucleus.";
-        }
-      });
-    };
-
-    updateSwarmShortcut();
-    const observer = new MutationObserver(updateSwarmShortcut);
-    observer.observe(root, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, [baseVersion]);
 
   const refreshBase = () => {
     setBaseVersion((value) => value + 1);
