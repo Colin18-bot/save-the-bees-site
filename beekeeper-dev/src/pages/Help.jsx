@@ -164,13 +164,14 @@ export default function Help() {
                     </dd>
                   </div>
 
-                  <div>
-                    <dt className="font-medium text-gray-900">Tasks</dt>
-                    <dd className="text-gray-700">
-                      Record follow-up jobs, due dates and actions for a specific apiary, hive or
-                      inspection.
-                    </dd>
-                  </div>
+                 <div>
+                  <dt className="font-medium text-gray-900">Tasks</dt>
+                  <dd className="text-gray-700">
+                    Record follow-up jobs, due dates and actions for a specific hive or for{" "}
+                    <strong>All Hives</strong> within an apiary, with an optional related
+                    inspection for individual-hive tasks.
+                  </dd>
+                </div>
                 </dl>
               </div>
             </div>
@@ -269,11 +270,18 @@ export default function Help() {
                   recording a split, waiting for mating or managing a Queenless colony.
                 </li>
                 <li>
-                  <strong>Tasks</strong> — scheduled actions with a due date and status; can
-                  reference an apiary, hive, and related inspection.
+                  <strong>Tasks</strong> — scheduled actions with a due date and status for a
+                  specific hive or for <strong>All Hives</strong> in an apiary. Tasks for an
+                  individual hive can optionally link to a related inspection from that same
+                  hive. Tasks recorded for <strong>All Hives</strong> cannot link to an
+                  inspection because inspections belong to one specific hive.
                 </li>
                 <li>
-                  <strong>Logbook</strong> — free-form notes (can link to an inspection).
+                  <strong>Logbook</strong> — free-form notes for a specific hive or for{" "}
+                  <strong>All Hives</strong> in an apiary. Entries for an individual hive can
+                  optionally link to a related inspection. Entries recorded for{" "}
+                  <strong>All Hives</strong> cannot link to an inspection because inspections
+                  belong to one specific hive.
                 </li>
                 <li>
                   <strong>Archive</strong> — hides items from active lists without deleting them. On
@@ -282,11 +290,14 @@ export default function Help() {
                   content on the dedicated <em>Archive</em> page.
                 </li>
               </ul>
-              <p className="mt-3 text-gray-700">
-                Relationship: <em>Apiary → Hives → Inspections</em>. Queen assignments and lifecycle
-                history belong to hives, while Tasks and Logbook entries can also be linked back to a
-                related inspection.
-              </p>
+            <p className="mt-3 text-gray-700">
+              Relationship: <em>Apiary → Hives → Inspections</em>. Queen assignments and lifecycle
+              history belong to hives. Tasks and Logbook entries can be recorded for a specific hive
+              or for <strong>All Hives</strong> in an apiary. Individual-hive Tasks and Logbook
+              entries can optionally link to a related inspection from that same hive. Records
+              created for <strong>All Hives</strong> apply across every hive in the selected apiary
+              and cannot link to a specific inspection.
+            </p>
             </section>
 
             {/* Membership & Feature Availability */}
@@ -539,21 +550,29 @@ export default function Help() {
                 <div>
                   <h3 className="font-semibold">Dashboard</h3>
                   <ul className="list-disc pl-6">
-                    <li>
-                      <strong>Filter by Apiary and Hive</strong> to scope statistics, Queen status,
-                      recent records and report links. The Hive list follows the selected Apiary, while
-                      the <em>Apiaries</em> count remains global.
-                    </li>
+                 <li>
+                    <strong>Filter by Apiary and Hive</strong> to scope statistics, Queen status,
+                    recent records and report links. The Hive list follows the selected Apiary, while
+                    the <em>Apiaries</em> count remains global. When a specific hive is selected,
+                    Tasks and Logbook results include records created directly for that hive plus any{" "}
+                    <strong>All Hives</strong> records from the same apiary.
+                  </li>
                     <li>
                       <strong>Customise Dashboard:</strong> choose which sections appear. Your choices
                       are saved on the current device and remain after refresh or sign-in. Use{" "}
                       <strong>Restore recommended layout</strong> to return to the default selection.
                     </li>
                     <li>
-                      <strong>Recent sections (Inspections, Tasks, Logbook):</strong> “
+                      <strong>Recent sections (Inspections, Tasks, Logbook):</strong>
                       <em>Open →</em>” takes you to the relevant <em>list</em> page with the item
                       briefly <strong>highlighted</strong>. Use <strong>✎ Edit</strong> to jump to
                       editing.
+                    </li>
+                    <li>
+                      <strong>All Hives Tasks and Logbook entries:</strong> these are shown when
+                      viewing each hive within the selected apiary and are clearly labelled{" "}
+                      <strong>Hive: All Hives</strong> so they are not mistaken for hive-specific
+                      records.
                     </li>
                     <li>
                       <strong>Archived items:</strong> on these recent lists, archived rows show an{" "}
@@ -853,14 +872,23 @@ export default function Help() {
                 <div>
                   <h3 className="font-semibold">Tasks &amp; Calendar</h3>
                   <ul className="list-disc pl-6">
-                    <li>
-                      Create tasks with due dates and statuses; filter by <strong>apiary</strong>,{" "}
-                      <strong>hive</strong>, and a <strong>From/To date range</strong>.
+                   <li>
+                      Create tasks with due dates and statuses for a specific hive or for{" "}
+                      <strong>All Hives</strong> within an apiary. When you filter by an individual
+                      hive, the Task List includes tasks created directly for that hive plus any{" "}
+                      <strong>All Hives</strong> tasks from the same apiary.
+                    </li>
+                   <li>
+                      <strong>Related Inspection:</strong> a task for an individual hive can
+                      optionally link to a saved inspection from that same hive. When{" "}
+                      <strong>All Hives</strong> is selected, Related Inspection is unavailable
+                      because an inspection belongs to one specific hive.
                     </li>
                     <li>
-                      Tasks can optionally be linked to a saved inspection using the{" "}
-                      <strong>Related Inspection</strong> dropdown. Linked tasks appear on the
-                      relevant inspection card.
+                      <strong>Changing the Apiary or Hive:</strong> when creating or editing a task,
+                      changing the Apiary, individual Hive or <strong>All Hives</strong> selection
+                      clears any previously selected Related Inspection where that link would no
+                      longer be valid.
                     </li>
                     <li>
                       <strong>Marking completed:</strong> update the status from the{" "}
@@ -924,32 +952,61 @@ export default function Help() {
                     </li>
                   </ol>
                 </div>
-                <div>
-                  <h3 className="font-semibold">Logbook</h3>
-                  <p className="text-gray-700">
-                    Free-form notes with optional inspection links. Includes list/grid toggle,
-                    per-apiary filter, and photo <strong>lightbox</strong> on click.
-                    <br />
-                    <span className="text-gray-700">
-                      When linking a <em>Related Inspection</em>, the dropdown is grouped by date
-                      and each option shows <strong>Hive (Apiary)</strong> and the{" "}
-                      <strong>time</strong>.
-                    </span>{" "}
-                    <Badge>Free</Badge>
-                  </p>
-                  <ul className="list-disc pl-6 mt-2">
-                    <li>
-                      <strong>Arriving from Inspections:</strong> the Logbook list may be{" "}
-                      <em>filtered to a specific inspection</em>. You’ll see a blue banner plus a
-                      one-click “Clear inspection filter”.
-                    </li>
-                    <li>
-                      <strong>Deep-links &amp; highlights:</strong> when you’re sent to a list by
-                      “Open →” the target item briefly highlights so it’s easy to spot.
-                    </li>
-                  </ul>
-                </div>
+               <div>
+                <h3 className="font-semibold">Logbook</h3>
 
+                <p className="text-gray-700">
+                  Use the Logbook for free-form notes, observations and management records
+                  that do not need to be recorded as a full inspection. Entries can be
+                  recorded for a specific hive or for <strong>All Hives</strong> within an
+                  apiary. The Logbook includes list/grid views, Apiary and Hive filters, and
+                  a photo <strong>lightbox</strong> on click. <Badge>Free</Badge>
+                </p>
+
+                <ul className="list-disc pl-6 mt-2 space-y-1">
+                  <li>
+                    <strong>Specific Hive:</strong> choose an Apiary and individual Hive when
+                    the record only applies to that colony.
+                  </li>
+
+                  <li>
+                    <strong>All Hives:</strong> choose an Apiary and{" "}
+                    <strong>All Hives</strong> when the same record applies across every hive
+                    in that apiary. The entry is stored once but appears when viewing the
+                    history of each individual hive in that apiary.
+                  </li>
+
+                  <li>
+                    <strong>Related Inspection:</strong> an individual-hive Logbook entry can
+                    optionally link to a saved inspection for that same hive. When{" "}
+                    <strong>All Hives</strong> is selected, Related Inspection is unavailable
+                    because an inspection belongs to one specific hive.
+                  </li>
+
+                  <li>
+                    <strong>Changing the Hive:</strong> when editing an entry and changing it
+                    between an individual hive and <strong>All Hives</strong>, any previously
+                    selected Related Inspection is cleared where it would no longer be valid.
+                  </li>
+
+                  <li>
+                    <strong>Filtering by Hive:</strong> an individual hive view includes
+                    entries recorded directly for that hive plus any{" "}
+                    <strong>All Hives</strong> entries from the same apiary.
+                  </li>
+
+                  <li>
+                    <strong>Arriving from Inspections:</strong> the Logbook list may be{" "}
+                    <em>filtered to a specific inspection</em>. You’ll see a blue banner plus
+                    a one-click “Clear inspection filter”.
+                  </li>
+
+                  <li>
+                    <strong>Deep-links &amp; highlights:</strong> when you’re sent to a list
+                    by “Open →” the target item briefly highlights so it’s easy to spot.
+                  </li>
+                </ul>
+              </div>
                 {/* SALES & EXPENSES – concise user guidance only */}
                 <div>
                   <h3 className="font-semibold">Sales</h3>
@@ -1969,9 +2026,11 @@ export default function Help() {
                   <li>Complete as many inspection and Queen fields as possible.</li>
                   <li>Add photographs during inspections.</li>
                   <li>Use date filters for seasonal, annual or lifecycle reviews.</li>
-                  <li>
+                 <li>
                     Use the Apiary and Hive filters to keep a shared or printed report focused on the
-                    intended colony.
+                    intended colony. When a specific hive is selected, the Tasks and Logbook sections
+                    include records created directly for that hive plus any <strong>All Hives</strong>{" "}
+                    records from the same apiary.
                   </li>
                   <li>
                     Generate the report again after changing filters or included sections, then export
@@ -2303,9 +2362,12 @@ export default function Help() {
                   <strong>Date ranges:</strong> some list and export screens let you set{" "}
                   <strong>From</strong> and <strong>To</strong> dates.
                 </li>
-                <li>
+                 <li>
                   <strong>Exports from Reports:</strong> use the same generated dataset shown on
                   screen and respect the selected Apiary, Hive, date, archive and section filters.
+                  For Tasks and Logbook data, a specific-hive report also includes applicable{" "}
+                  <strong>All Hives</strong> records from that hive&apos;s apiary, and these remain
+                  labelled as <strong>All hives</strong> in the report and exports.
                 </li>
                 <li>
                   <strong>List pages show active items</strong>; archived content lives in the{" "}

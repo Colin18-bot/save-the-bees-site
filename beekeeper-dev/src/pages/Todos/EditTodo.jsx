@@ -15,6 +15,7 @@ const EditTodo = () => {
     apiary_id: "",
     hive_id: "",
     hive_name: "",
+    inspection_id: "",
     notes: "",
     category: "",
     priority: "",
@@ -24,6 +25,7 @@ const EditTodo = () => {
 
   const [apiaries, setApiaries] = useState([]);
   const [allHivesForApiary, setAllHivesForApiary] = useState([]);
+  const [inspections, setInspections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -46,8 +48,8 @@ const EditTodo = () => {
       ] = await Promise.all([
         supabase
           .from("todos")
-          .select(
-            "id, title, due_date, status, apiary_id, hive_id, hive_name, notes, archived_at, category, priority, source, seasonal_month"
+         .select(
+            "id, title, due_date, status, apiary_id, hive_id, hive_name, inspection_id, notes, archived_at, category, priority, source, seasonal_month"
           )
           .eq("id", id)
           .single(),
@@ -84,6 +86,7 @@ const EditTodo = () => {
         apiary_id: todo?.apiary_id || "",
         hive_id: todo?.hive_id || "",
         hive_name: todo?.hive_name || "",
+        inspection_id: todo?.inspection_id || "",
         notes: todo?.notes || "",
         category: todo?.category || "",
         priority: todo?.priority || "",
@@ -117,33 +120,71 @@ const EditTodo = () => {
     fetchHives();
   }, [form.apiary_id]);
 
+useEffect(() => {
+  const loadInspections = async () => {
+    if (!form.apiary_id || isAllHives || !form.hive_id) {
+      setInspections([]);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("inspections")
+      .select("id, date, created_at, apiary_id, hive_id")
+      .eq("apiary_id", form.apiary_id)
+      .eq("hive_id", form.hive_id)
+      .is("archived_at", null)
+      .order("date", { ascending: false })
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Failed to load related inspections:", error);
+      setInspections([]);
+      return;
+    }
+
+    setInspections(data || []);
+  };
+
+  loadInspections();
+}, [form.apiary_id, form.hive_id, isAllHives]);
+
   const onChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "apiary_id") {
-      setForm((p) => ({
-        ...p,
-        apiary_id: value,
-        hive_id: "",
-        hive_name: "",
-      }));
-      return;
-    }
+  if (name === "apiary_id") {
+  setForm((p) => ({
+    ...p,
+    apiary_id: value,
+    hive_id: "",
+    hive_name: "",
+    inspection_id: "",
+  }));
+  return;
+}
 
-    if (name === "hive_id") {
-      if (value === "ALL_SPECIAL") {
-        setForm((p) => ({ ...p, hive_id: "", hive_name: "ALL" }));
-        return;
-      }
+  if (name === "hive_id") {
+  if (value === "ALL_SPECIAL") {
+    setForm((p) => ({
+      ...p,
+      hive_id: "",
+      hive_name: "ALL",
+      inspection_id: "",
+    }));
+    return;
+  }
 
-      const hiveName = value
-        ? allHivesForApiary.find((h) => h.id === value)?.name || ""
-        : "";
+  const hiveName = value
+    ? allHivesForApiary.find((h) => h.id === value)?.name || ""
+    : "";
 
-      setForm((p) => ({ ...p, hive_id: value, hive_name: hiveName }));
-      return;
-    }
-
+  setForm((p) => ({
+    ...p,
+    hive_id: value,
+    hive_name: hiveName,
+    inspection_id: "",
+  }));
+  return;
+}
     setForm((p) => ({ ...p, [name]: value }));
   };
 
@@ -212,6 +253,7 @@ const EditTodo = () => {
         apiary_id: form.apiary_id || null,
         hive_id: isAllHives ? null : form.hive_id || null,
         hive_name: isAllHives ? "ALL" : form.hive_name || null,
+        inspection_id: isAllHives ? null : form.inspection_id || null,
         notes: form.notes || null,
         category: form.category || null,
         priority: form.priority || null,
@@ -400,6 +442,52 @@ const EditTodo = () => {
           {isAllHives && (
             <p className="text-xs text-gray-600 mt-1">
               Currently set to <strong>All Hives</strong> for this apiary.
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="inspection_id" className="block text-sm font-medium mb-1">
+            Related Inspection (optional)
+          </label>
+
+          <select
+            id="inspection_id"
+            name="inspection_id"
+            value={isAllHives ? "" : form.inspection_id || ""}
+            onChange={onChange}
+            disabled={isAllHives || !form.hive_id || inspections.length === 0}
+            className={`w-full px-3 py-2 border rounded focus:outline-none ${
+              isAllHives || !form.hive_id || inspections.length === 0
+                ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                : ""
+            }`}
+          >
+            <option value="">None</option>
+
+         {inspections.map((inspection) => {
+          const hiveName =
+            allHivesForApiary.find(
+              (hive) => String(hive.id) === String(inspection.hive_id)
+            )?.name || "Hive";
+
+          return (
+            <option key={inspection.id} value={inspection.id}>
+              {inspection.date
+                ? `${new Date(inspection.date).toLocaleDateString("en-GB")} — ${hiveName}`
+                : `Unknown date — ${hiveName}`}
+            </option>
+          );
+        })}
+          </select>
+
+          {isAllHives ? (
+            <p className="mt-1 text-xs text-gray-500">
+              Related inspections are only available for individual hives.
+            </p>
+          ) : (
+            <p className="mt-1 text-xs text-gray-500">
+              Optional. Link this task to a saved inspection for the selected hive.
             </p>
           )}
         </div>

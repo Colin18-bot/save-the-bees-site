@@ -145,10 +145,10 @@ useEffect(() => {
   const noHives = form.apiary_id && hivesForApiary.length === 0;
     useEffect(() => {
     const loadInspections = async () => {
-      if (!form.apiary_id) {
-        setInspections([]);
-        return;
-      }
+    if (!form.apiary_id || form.all_hives || !form.hive_id) {
+  setInspections([]);
+  return;
+}
 
       let q = supabase
         .from("inspections")
@@ -158,9 +158,7 @@ useEffect(() => {
         .order("date", { ascending: false })
         .order("created_at", { ascending: false });
 
-      if (!form.all_hives && form.hive_id) {
-        q = q.eq("hive_id", form.hive_id);
-      }
+     q = q.eq("hive_id", form.hive_id);
 
       const { data, error } = await q;
 
@@ -281,7 +279,7 @@ useEffect(() => {
       apiary_id: form.apiary_id || null,
       hive_id: form.all_hives ? null : form.hive_id,
       hive_name: form.all_hives ? "ALL" : form.hive_name || null,
-      inspection_id: form.inspection_id || null,
+      inspection_id: form.all_hives ? null : form.inspection_id || null,
       notes: form.notes || null,
       category: isSeasonalTask ? seasonalCategory || "Seasonal guide" : null,
       priority: isSeasonalTask ? seasonalPriority || "Medium" : null,
@@ -501,7 +499,7 @@ useEffect(() => {
                 className="w-full border rounded-lg px-3 py-2 focus:outline-none"
                 value={form.inspection_id}
                 onChange={onChange}
-                disabled={!form.apiary_id || inspections.length === 0}
+                disabled={form.all_hives || !form.hive_id || inspections.length === 0}
               >
                 <option value="">None</option>
                 {inspections.map((inspection) => (
@@ -510,9 +508,15 @@ useEffect(() => {
                   </option>
                 ))}
               </select>
+             {form.all_hives ? (
               <p className="text-xs text-gray-500 mt-1">
-                Optional. Link this task to a saved inspection so it appears on that inspection card.
+                Related inspections are only available for individual hives.
               </p>
+            ) : (
+              <p className="text-xs text-gray-500 mt-1">
+                Optional. Link this task to a saved inspection for the selected hive.
+              </p>
+            )}
             </div>
           </div>
 

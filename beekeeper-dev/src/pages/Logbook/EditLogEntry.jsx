@@ -36,6 +36,7 @@ const EditLogEntry = () => {
     entry: "",
     apiary_id: "",
     hive_id: "",
+    all_hives: false,
     inspection_id: "",
     photo_url: "",
     photo_path: "", // ✅ NEW
@@ -98,18 +99,18 @@ const EditLogEntry = () => {
         parseStoragePublicUrl(entry?.photo_url)?.path ||
         null;
 
-      setFormData({
-        log_type: dropdownValue,
-        custom_log_type: isKnown ? "" : loadedType || "",
-        date: entry?.date || "",
-        entry: entry?.entry || "",
-        apiary_id: entry?.apiary_id || "",
-        hive_id: entry?.hive_id || "",
-        inspection_id: entry?.inspection_id || "",
-        photo_url: entry?.photo_url || "",
-        photo_path: entry?.photo_path || "", // ✅ NEW
-      });
-
+     setFormData({
+      log_type: dropdownValue,
+      custom_log_type: isKnown ? "" : loadedType || "",
+      date: entry?.date || "",
+      entry: entry?.entry || "",
+      apiary_id: entry?.apiary_id || "",
+      hive_id: entry?.all_hives ? "" : entry?.hive_id || "",
+      all_hives: Boolean(entry?.all_hives),
+      inspection_id: entry?.all_hives ? "" : entry?.inspection_id || "",
+      photo_url: entry?.photo_url || "",
+      photo_path: entry?.photo_path || "",
+    });
       setPhotoPreview(entry?.photo_url || null);
       setCurrentPath(fallbackPath);
 
@@ -167,11 +168,30 @@ const EditLogEntry = () => {
         ...prev,
         apiary_id: value,
         hive_id: "",
+        all_hives: false,
         inspection_id: "",
       }));
       return;
-    }
+  }
 
+  if (name === "hive_id") {
+  if (value === "ALL_SPECIAL") {
+    setFormData((prev) => ({
+      ...prev,
+      hive_id: "",
+      all_hives: true,
+      inspection_id: "",
+    }));
+  } else {
+    setFormData((prev) => ({
+      ...prev,
+      hive_id: value,
+      all_hives: false,
+      inspection_id: "",
+    }));
+  }
+  return;
+}
     // If user switches off "Other", clear custom text so we don't accidentally save stale value
     if (name === "log_type") {
       setFormData((prev) => ({
@@ -323,8 +343,9 @@ const EditLogEntry = () => {
         date: formData.date || null,
         entry: formData.entry,
         apiary_id: formData.apiary_id || null,
-        hive_id: formData.hive_id || null,
-        inspection_id: formData.inspection_id || null,
+        hive_id: formData.all_hives ? null : formData.hive_id || null,
+        all_hives: formData.all_hives,
+        inspection_id: formData.all_hives ? null : formData.inspection_id || null,
         photo_url: newUrl || null,
         photo_path: newPath || null,
       })
@@ -376,10 +397,13 @@ const EditLogEntry = () => {
 
   if (loading) return <div className="p-6">Loading…</div>;
 
-  // Filter inspections: if a hive is chosen, show those for the selected hive; otherwise show all in apiary
-  const filteredInspections = (inspections || []).filter((i) =>
-    formData.hive_id ? i.hive_id === formData.hive_id : true
-  );
+// Related inspections are only valid for an individual hive.
+const filteredInspections = (inspections || []).filter(
+  (i) =>
+    !formData.all_hives &&
+    formData.hive_id &&
+    i.hive_id === formData.hive_id
+);
 
   return (
     <div className="p-6 max-w-3xl mx-auto bg-white rounded-xl shadow">
@@ -481,20 +505,25 @@ const EditLogEntry = () => {
                 first.
               </div>
             ) : (
-              <select
-                id="hive_id"
-                name="hive_id"
-                value={formData.hive_id || ""}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border rounded focus:outline-none"
-              >
-                <option value="">Select Hive</option>
-                {hives.map((h) => (
-                  <option key={h.id} value={h.id}>
-                    {h.name}
-                  </option>
-                ))}
-              </select>
+             <select
+            id="hive_id"
+            name="hive_id"
+            value={formData.all_hives ? "ALL_SPECIAL" : formData.hive_id || ""}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border rounded focus:outline-none"
+          >
+            <option value="">Select Hive</option>
+
+            {hives.length > 0 && (
+              <option value="ALL_SPECIAL">All Hives</option>
+            )}
+
+            {hives.map((h) => (
+              <option key={h.id} value={h.id}>
+                {h.name}
+              </option>
+            ))}
+          </select>
             )}
           </div>
         </div>
@@ -504,20 +533,33 @@ const EditLogEntry = () => {
           <label htmlFor="inspection_id" className="block text-sm font-medium">
             Related Inspection (optional)
           </label>
-          <select
-            id="inspection_id"
-            name="inspection_id"
-            value={formData.inspection_id || ""}
-            onChange={handleChange}
-            className="w-full min-w-[260px] border rounded px-3 pr-8 py-2 focus:outline-none"
-          >
-            <option value="">None</option>
-            {filteredInspections.map((i) => (
-              <option key={i.id} value={i.id}>
-                {`Inspection ${formatUKDateLabel(i.date)}`}
-              </option>
-            ))}
-          </select>
+         <select
+          id="inspection_id"
+          name="inspection_id"
+          value={formData.all_hives ? "" : formData.inspection_id || ""}
+          onChange={handleChange}
+          disabled={formData.all_hives || !formData.hive_id}
+          className={`w-full min-w-[260px] border rounded px-3 pr-8 py-2 focus:outline-none ${
+            formData.all_hives || !formData.hive_id
+              ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+              : ""
+          }`}
+        >
+          <option value="">None</option>
+
+          {filteredInspections.map((i) => (
+            <option key={i.id} value={i.id}>
+              {`Inspection ${formatUKDateLabel(i.date)}`}
+            </option>
+          ))}
+        </select>
+
+          {formData.all_hives && (
+            <p className="mt-1 text-xs text-gray-500">
+              Related inspections are only available for individual hives.
+            </p>
+          )}
+
         </div>
 
         {/* Notes */}

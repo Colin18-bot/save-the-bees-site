@@ -123,11 +123,18 @@ const TodoList = () => {
       .is("archived_at", null)
       .order("due_date", { ascending: true });
 
-        if (inspectionIdFromUrl) {
+     if (inspectionIdFromUrl) {
         todoQuery = todoQuery.eq("inspection_id", inspectionIdFromUrl);
       } else {
-        if (selectedApiary) todoQuery = todoQuery.eq("apiary_id", selectedApiary);
-        if (selectedHive) todoQuery = todoQuery.eq("hive_id", selectedHive);
+        if (selectedApiary) {
+          todoQuery = todoQuery.eq("apiary_id", selectedApiary);
+        }
+
+        if (selectedHive) {
+          todoQuery = todoQuery.or(
+            `hive_id.eq.${selectedHive},hive_name.eq.ALL`
+          );
+        }
       }
 
     // Date range filters (todos.due_date is DATE)
@@ -158,7 +165,35 @@ const TodoList = () => {
     if (hiveErr)
       setError((prev) => prev || hiveErr.message || "Failed to load hives");
 
-    setTodos(todoData || []);
+    let safeTodos = todoData || [];
+
+    if (!inspectionIdFromUrl && selectedHive) {
+      const selectedHiveRecord = (hiveData || []).find(
+        (hive) => String(hive.id) === String(selectedHive)
+      );
+
+      const selectedHiveApiaryId =
+        selectedHiveRecord?.apiary_id || selectedApiary || "";
+
+      if (selectedHiveApiaryId) {
+        safeTodos = safeTodos.filter((todo) => {
+          if (String(todo.hive_id || "") === String(selectedHive)) {
+            return true;
+          }
+
+          return (
+            todo.hive_name === "ALL" &&
+            String(todo.apiary_id || "") === String(selectedHiveApiaryId)
+          );
+        });
+      } else {
+        safeTodos = safeTodos.filter(
+          (todo) => String(todo.hive_id || "") === String(selectedHive)
+        );
+      }
+    }
+
+    setTodos(safeTodos);
     setApiaries(apiaryData || []);
     setHives(hiveData || []);
 
@@ -582,7 +617,8 @@ const TodoList = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {pageTodos.map((todo) => {
               const apiaryName = todo.apiary_id ? apiaryNameById.get(todo.apiary_id) : null;
-              const hiveLabel = todo.hive_name || "";
+             const hiveLabel =
+              todo.hive_name === "ALL" ? "All Hives" : todo.hive_name || "";
               const overdue = isOverdueDate(todo.due_date, todo.status);
 
               const isHighlighted =
@@ -715,7 +751,8 @@ const TodoList = () => {
           <div className="divide-y divide-gray-200 bg-white rounded shadow">
             {pageTodos.map((todo) => {
               const apiaryName = todo.apiary_id ? apiaryNameById.get(todo.apiary_id) : "";
-              const hiveLabel = todo.hive_name || "";
+              const hiveLabel =
+                todo.hive_name === "ALL" ? "All Hives" : todo.hive_name || "";
               const overdue = isOverdueDate(todo.due_date, todo.status);
 
               const isHighlighted =

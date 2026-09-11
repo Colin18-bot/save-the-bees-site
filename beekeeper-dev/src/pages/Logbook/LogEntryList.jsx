@@ -177,12 +177,22 @@ const LogEntryList = () => {
         .order("date", { ascending: false })
         .order("created_at", { ascending: false });
 
-      // PRIORITY: If inspection filter is present, use it (and ignore apiary/hive to avoid conflicts)
+      // PRIORITY: If inspection filter is present, use it
+      // (and ignore apiary/hive filters to avoid conflicts)
       if (inspectionIdFromUrl) {
         entriesQuery = entriesQuery.eq("inspection_id", inspectionIdFromUrl);
       } else {
-        if (selectedApiary) entriesQuery = entriesQuery.eq("apiary_id", selectedApiary);
-        if (selectedHive) entriesQuery = entriesQuery.eq("hive_id", selectedHive);
+        if (selectedApiary) {
+          entriesQuery = entriesQuery.eq("apiary_id", selectedApiary);
+        }
+
+        // A hive-specific view should also include entries recorded for
+        // "All Hives" in that hive's apiary.
+        if (selectedHive) {
+          entriesQuery = entriesQuery.or(
+            `hive_id.eq.${selectedHive},all_hives.eq.true`
+          );
+        }
       }
 
       // Date range filters (logbook.date is DATE)
@@ -240,14 +250,59 @@ const LogEntryList = () => {
     return hives.filter((h) => String(h.apiary_id) === String(selectedApiary));
   }, [hives, selectedApiary]);
 
-  // Client-side filter (defensive; server already filters when selected)
-  const filtered = useMemo(() => {
-    if (inspectionIdFromUrl) return entries; // already scoped to inspection
-    let out = entries;
-    if (selectedApiary) out = out.filter((e) => e.apiary_id === selectedApiary);
-    if (selectedHive) out = out.filter((e) => e.hive_id === selectedHive);
-    return out;
-  }, [entries, selectedApiary, selectedHive, inspectionIdFromUrl]);
+ // Client-side filter.
+// When viewing an individual hive, also include records created for
+// "All Hives" in that hive's apiary.
+const filtered = useMemo(() => {
+  if (inspectionIdFromUrl) return entries; // already scoped to inspection
+
+  let out = entries;
+
+  if (selectedApiary) {
+    out = out.filter(
+      (e) => String(e.apiary_id || "") === String(selectedApiary)
+    );
+  }
+
+  if (selectedHive) {
+    const selectedHiveRecord = hives.find(
+      (h) => String(h.id) === String(selectedHive)
+    );
+
+    const selectedHiveApiaryId =
+      selectedHiveRecord?.apiary_id || selectedApiary || "";
+
+    out = out.filter((e) => {
+      // Entry specifically recorded against this hive
+      if (String(e.hive_id || "") === String(selectedHive)) {
+        return true;
+      }
+
+      // Not an All Hives entry
+      if (!e.all_hives) {
+        return false;
+      }
+
+      // We need to know the hive's apiary before including an All Hives entry
+      if (!selectedHiveApiaryId) {
+        return false;
+      }
+
+      // All Hives entries only belong to hives in the same apiary
+      return (
+        String(e.apiary_id || "") === String(selectedHiveApiaryId)
+      );
+    });
+  }
+
+  return out;
+}, [
+  entries,
+  selectedApiary,
+  selectedHive,
+  inspectionIdFromUrl,
+  hives,
+]);
 
   // If a highlight is present, auto-jump to the correct page (once)
   useEffect(() => {

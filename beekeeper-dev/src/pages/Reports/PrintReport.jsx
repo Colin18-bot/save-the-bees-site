@@ -878,6 +878,16 @@ export default function PrintReport() {
             margin: 0 0 5mm 0 !important;
           }
 
+          /*
+          * Keep a report section heading and its introductory text attached
+          * to the content that follows, while still allowing long sections
+          * themselves to continue naturally across pages.
+          */
+          .print-card > h2:first-child + p {
+            page-break-after: avoid !important;
+            break-after: avoid !important;
+          }
+
           section,
           details {
             page-break-inside: auto !important;

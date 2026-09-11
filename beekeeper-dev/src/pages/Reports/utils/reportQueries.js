@@ -249,6 +249,12 @@ export async function loadReportData({
   if (hivesError) throw hivesError;
   hivesData = hivesRows || [];
 
+  const selectedHiveApiaryId = hiveId
+  ? hivesData.find((hive) => String(hive.id) === String(hiveId))?.apiary_id ||
+    apiaryId ||
+    ""
+  : "";
+
   if (includeInspections) {
     let query = supabase.from("inspections").select("*");
 
@@ -292,8 +298,17 @@ export async function loadReportData({
         }
       }
 
-      if (hiveId) query = query.eq("hive_id", hiveId);
-      else if (apiaryId) query = query.eq("apiary_id", apiaryId);
+          if (hiveId) {
+        if (selectedHiveApiaryId) {
+          query = query
+            .eq("apiary_id", selectedHiveApiaryId)
+            .or(`hive_id.eq.${hiveId},hive_name.eq.ALL`);
+        } else {
+          query = query.eq("hive_id", hiveId);
+        }
+      } else if (apiaryId) {
+        query = query.eq("apiary_id", apiaryId);
+      }
 
       return query;
     };
@@ -308,16 +323,28 @@ export async function loadReportData({
     for (const row of first || []) map.set(row.id, row);
     for (const row of second || []) map.set(row.id, row);
 
-    if (inspectionIdsForLinks.length) {
-      const { data: linked, error } = await supabase
-        .from("todos")
-        .select("*")
-        .in("inspection_id", inspectionIdsForLinks);
+   if (inspectionIdsForLinks.length) {
+  let linkedQuery = supabase
+    .from("todos")
+    .select("*")
+    .in("inspection_id", inspectionIdsForLinks);
 
-      if (!error) {
-        for (const row of linked || []) map.set(row.id, row);
-      }
-    }
+  if (!includeArchived) {
+    linkedQuery = linkedQuery.is("archived_at", null);
+  }
+
+  if (hiveId) {
+    linkedQuery = linkedQuery.eq("hive_id", hiveId);
+  } else if (apiaryId) {
+    linkedQuery = linkedQuery.eq("apiary_id", apiaryId);
+  }
+
+  const { data: linked, error } = await linkedQuery;
+
+  if (!error) {
+    for (const row of linked || []) map.set(row.id, row);
+  }
+}
 
     todosData = Array.from(map.values());
   }
@@ -339,8 +366,17 @@ export async function loadReportData({
         }
       }
 
-      if (hiveId) query = query.eq("hive_id", hiveId);
-      else if (apiaryId) query = query.eq("apiary_id", apiaryId);
+      if (hiveId) {
+      if (selectedHiveApiaryId) {
+        query = query
+          .eq("apiary_id", selectedHiveApiaryId)
+          .or(`hive_id.eq.${hiveId},all_hives.eq.true`);
+      } else {
+        query = query.eq("hive_id", hiveId);
+      }
+    } else if (apiaryId) {
+      query = query.eq("apiary_id", apiaryId);
+    }
 
       return query;
     };
@@ -355,17 +391,28 @@ export async function loadReportData({
     for (const row of first || []) map.set(row.id, row);
     for (const row of second || []) map.set(row.id, row);
 
-    if (inspectionIdsForLinks.length) {
-      const { data: linked, error } = await supabase
-        .from("logbook")
-        .select("*")
-        .in("inspection_id", inspectionIdsForLinks);
+  if (inspectionIdsForLinks.length) {
+  let linkedQuery = supabase
+    .from("logbook")
+    .select("*")
+    .in("inspection_id", inspectionIdsForLinks);
 
-      if (!error) {
-        for (const row of linked || []) map.set(row.id, row);
-      }
-    }
+  if (!includeArchived) {
+    linkedQuery = linkedQuery.is("archived_at", null);
+  }
 
+  if (hiveId) {
+    linkedQuery = linkedQuery.eq("hive_id", hiveId);
+  } else if (apiaryId) {
+    linkedQuery = linkedQuery.eq("apiary_id", apiaryId);
+  }
+
+  const { data: linked, error } = await linkedQuery;
+
+  if (!error) {
+    for (const row of linked || []) map.set(row.id, row);
+  }
+}
     logbookData = Array.from(map.values());
   }
 

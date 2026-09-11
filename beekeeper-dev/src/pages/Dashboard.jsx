@@ -325,6 +325,18 @@ const Dashboard = () => {
     return hivesList.filter((hive) => String(hive.apiary_id) === String(selectedApiaryId));
   }, [hivesList, selectedApiaryId]);
 
+  const getHiveApiaryId = (hiveId, apiaryId = "all") => {
+  if (!hiveId || hiveId === "all") {
+    return apiaryId !== "all" ? apiaryId : "";
+  }
+
+  const hive = hivesList.find(
+    (item) => String(item.id) === String(hiveId)
+  );
+
+  return hive?.apiary_id || (apiaryId !== "all" ? apiaryId : "");
+};
+
   useEffect(() => {
     if (selectedHiveId === "all") return;
     const hiveStillAvailable = hivesForSelectedApiary.some(
@@ -476,19 +488,46 @@ const Dashboard = () => {
     else if (apiaryId !== "all") inspQ = inspQ.eq("apiary_id", apiaryId);
     const { count: inspections } = await inspQ;
 
-    let todosQ = supabase.from("todos").select("*", { count: "exact", head: true });
-    if (hiveId !== "all") todosQ = todosQ.eq("hive_id", hiveId);
-    else if (apiaryId !== "all") todosQ = todosQ.eq("apiary_id", apiaryId);
-    const { count: todos } = await todosQ;
+let todosQ = supabase
+  .from("todos")
+  .select("*", { count: "exact", head: true });
 
-    let logsQ = supabase
-      .from("logbook")
-      .select("*", { count: "exact", head: true })
-      .is("archived_at", null);
-    if (hiveId !== "all") logsQ = logsQ.eq("hive_id", hiveId);
-    else if (apiaryId !== "all") logsQ = logsQ.eq("apiary_id", apiaryId);
-    const { count: logbook } = await logsQ;
+if (hiveId !== "all") {
+  const hiveApiaryId = getHiveApiaryId(hiveId, apiaryId);
 
+  if (hiveApiaryId) {
+    todosQ = todosQ
+      .eq("apiary_id", hiveApiaryId)
+      .or(`hive_id.eq.${hiveId},hive_name.eq.ALL`);
+  } else {
+    todosQ = todosQ.eq("hive_id", hiveId);
+  }
+} else if (apiaryId !== "all") {
+  todosQ = todosQ.eq("apiary_id", apiaryId);
+}
+
+const { count: todos } = await todosQ;
+
+   let logsQ = supabase
+  .from("logbook")
+  .select("*", { count: "exact", head: true })
+  .is("archived_at", null);
+
+if (hiveId !== "all") {
+  const hiveApiaryId = getHiveApiaryId(hiveId, apiaryId);
+
+  if (hiveApiaryId) {
+    logsQ = logsQ
+      .eq("apiary_id", hiveApiaryId)
+      .or(`hive_id.eq.${hiveId},all_hives.eq.true`);
+  } else {
+    logsQ = logsQ.eq("hive_id", hiveId);
+  }
+} else if (apiaryId !== "all") {
+  logsQ = logsQ.eq("apiary_id", apiaryId);
+}
+
+const { count: logbook } = await logsQ;
     setStats({
       apiaries: apiaries || 0,
       hives: hives || 0,
@@ -777,19 +816,33 @@ const Dashboard = () => {
     setLoadingInspections(false);
   };
 
-  const fetchRecentTodos = async (apiaryId = "all", hiveId = "all") => {
-    setLoadingTodos(true);
-    let q = supabase
-      .from("todos")
-      .select("id, title, due_date, status, hive_name, apiary_id, archived_at")
-      .order("due_date", { ascending: false })
-      .limit(6);
-    if (hiveId !== "all") q = q.eq("hive_id", hiveId);
-    else if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
-    const { data } = await q;
-    setRecentTodos(data || []);
-    setLoadingTodos(false);
-  };
+ const fetchRecentTodos = async (apiaryId = "all", hiveId = "all") => {
+  setLoadingTodos(true);
+
+  let q = supabase
+    .from("todos")
+    .select("id, title, due_date, status, hive_id, hive_name, apiary_id, archived_at")
+    .order("due_date", { ascending: false })
+    .limit(6);
+
+  if (hiveId !== "all") {
+    const hiveApiaryId = getHiveApiaryId(hiveId, apiaryId);
+
+    if (hiveApiaryId) {
+      q = q
+        .eq("apiary_id", hiveApiaryId)
+        .or(`hive_id.eq.${hiveId},hive_name.eq.ALL`);
+    } else {
+      q = q.eq("hive_id", hiveId);
+    }
+  } else if (apiaryId !== "all") {
+    q = q.eq("apiary_id", apiaryId);
+  }
+
+  const { data } = await q;
+  setRecentTodos(data || []);
+  setLoadingTodos(false);
+};
 
   const fetchRecentLogs = async (apiaryId = "all", hiveId = "all") => {
     setLoadingLogs(true);
@@ -803,6 +856,7 @@ const Dashboard = () => {
         date,
         apiary_id,
         hive_id,
+        all_hives,
         inspection_id,
         photo_url,
         archived_at,
@@ -811,9 +865,21 @@ const Dashboard = () => {
       )
       .order("date", { ascending: false })
       .limit(6);
-    if (hiveId !== "all") q = q.eq("hive_id", hiveId);
-    else if (apiaryId !== "all") q = q.eq("apiary_id", apiaryId);
-    const { data } = await q;
+   if (hiveId !== "all") {
+  const hiveApiaryId = getHiveApiaryId(hiveId, apiaryId);
+
+  if (hiveApiaryId) {
+    q = q
+      .eq("apiary_id", hiveApiaryId)
+      .or(`hive_id.eq.${hiveId},all_hives.eq.true`);
+  } else {
+    q = q.eq("hive_id", hiveId);
+  }
+} else if (apiaryId !== "all") {
+  q = q.eq("apiary_id", apiaryId);
+}
+
+const { data } = await q;
     setRecentLogs(data || []);
     setLoadingLogs(false);
   };
@@ -1609,7 +1675,9 @@ const Dashboard = () => {
                         </div>
                         <div className="truncate">
                           {t.title}
-                          {t.hive_name ? ` • Hive: ${t.hive_name}` : ""}
+                          {t.hive_name
+                            ? ` • Hive: ${t.hive_name === "ALL" ? "All Hives" : t.hive_name}`
+                            : ""}
                           {t.apiary_id && apiaryNameById[t.apiary_id]
                             ? ` • Apiary: ${apiaryNameById[t.apiary_id]}`
                             : ""}
@@ -1672,11 +1740,18 @@ const Dashboard = () => {
                       <div className="flex items-center gap-2 flex-wrap">
                         <strong className="mr-1">{formatUKDate(l.date)}</strong>: {l.log_type}
                       </div>
-                      {l.apiary_id && apiaryNameById[l.apiary_id]
-                        ? ` • Apiary: ${apiaryNameById[l.apiary_id]}`
+                    {l.apiary_id && apiaryNameById[l.apiary_id]
+                      ? ` • Apiary: ${apiaryNameById[l.apiary_id]}`
+                      : ""}
+
+                    {l.all_hives
+                      ? " • Hive: All Hives"
+                      : l.hive_id && hiveNameById[l.hive_id]
+                        ? ` • Hive: ${hiveNameById[l.hive_id]}`
                         : ""}
-                      {l.entry ? ` — ${l.entry.slice(0, 80)}` : ""}
-                      {!l.archived_at && l.inspection?.date && (
+
+                    {l.entry ? ` — ${l.entry.slice(0, 80)}` : ""}
+                                    {!l.archived_at && l.inspection?.date && (
                         <>
                           {" • "}
                           <Link

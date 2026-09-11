@@ -158,26 +158,25 @@ useEffect(() => {
   }));
 }, [inspectionId, prefillApiaryId, prefillHiveId, preset]);
 
-  useEffect(() => {
-    (async () => {
-      if (!form.apiary_id) {
-        setInspections([]);
-        return;
-      }
-      // include created_at to get a time component if `date` is date-only
-      let q = supabase
-        .from("inspections")
-        .select("id, date, created_at, apiary_id, hive_id")
-        .eq("apiary_id", form.apiary_id)
-        .order("date", { ascending: false })
-        .order("created_at", { ascending: false });
+useEffect(() => {
+  (async () => {
+    // Related inspections only make sense for an individual hive.
+    if (!form.apiary_id || form.all_hives || !form.hive_id) {
+      setInspections([]);
+      return;
+    }
 
-      if (!form.all_hives && form.hive_id) q = q.eq("hive_id", form.hive_id);
+    const { data } = await supabase
+      .from("inspections")
+      .select("id, date, created_at, apiary_id, hive_id")
+      .eq("apiary_id", form.apiary_id)
+      .eq("hive_id", form.hive_id)
+      .order("date", { ascending: false })
+      .order("created_at", { ascending: false });
 
-      const { data } = await q;
-      setInspections(data || []);
-    })();
-  }, [form.apiary_id, form.hive_id, form.all_hives]);
+    setInspections(data || []);
+  })();
+}, [form.apiary_id, form.hive_id, form.all_hives]);
 
   const hivesForApiary = useMemo(() => {
     if (!form.apiary_id) return [];
@@ -312,7 +311,7 @@ useEffect(() => {
       apiary_id: form.apiary_id || null,
       hive_id: form.all_hives ? null : form.hive_id || null,
       all_hives: form.all_hives,
-      inspection_id: form.inspection_id || null,
+      inspection_id: form.all_hives ? null : form.inspection_id || null,
       log_type: finalLogType,
       entry: form.entry || "",
       photo_url: photo_url || null,
@@ -455,9 +454,14 @@ useEffect(() => {
             </label>
             <select
               id="inspection_id"
-              value={form.inspection_id}
+              value={form.all_hives ? "" : form.inspection_id}
               onChange={onChange}
-              className="w-full min-w-[260px] border rounded px-3 pr-8 py-2 focus:outline-none"
+              disabled={form.all_hives || !form.hive_id}
+              className={`w-full min-w-[260px] border rounded px-3 pr-8 py-2 focus:outline-none ${
+                form.all_hives || !form.hive_id
+                  ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                  : ""
+              }`}
             >
               <option value="">None</option>
               {inspectionsGroupedByDay.map(([day, list]) => (
@@ -479,11 +483,20 @@ useEffect(() => {
                   })}
                 </optgroup>
               ))}
+
             </select>
-            <p className="mt-1 text-xs text-gray-500">
-              Tip: change the Hive selector above to narrow inspections to that
-              hive only.
-            </p>
+
+            {form.all_hives && (
+              <p className="mt-1 text-xs text-gray-500">
+                Related inspections are only available for individual hives.
+              </p>
+            )}
+           {!form.all_hives && (
+              <p className="mt-1 text-xs text-gray-500">
+                Tip: change the Hive selector above to narrow inspections to that
+                hive only.
+              </p>
+            )}
           </div>
         </div>
 

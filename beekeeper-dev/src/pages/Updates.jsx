@@ -9,6 +9,57 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.5.3",
+  released_at: "2026-09-11T16:30:00Z",
+
+  summary:
+    "Improved Tasks and Hive Logbook records so apiary-wide All Hives entries behave consistently throughout HiveTag. All Hives records now appear alongside each individual hive within the same apiary, while inspection links remain restricted to the correct individual hive. Dashboard summaries, Reports Centre output, printing and exports now follow the same rules.",
+
+  added: [
+    "Added **All Hives** support throughout the Hive Logbook so one apiary-wide entry can be recorded once and displayed alongside every hive in that apiary.",
+    "Added consistent **All Hives** handling to Tasks, including creation, editing, lists, Dashboard summaries and Reports Centre output.",
+    "Added optional **Related Inspection** selection when creating or editing an individual-hive Task.",
+    "Added Related Inspection support when editing existing Tasks, with the available inspections restricted to the selected hive.",
+    "Added clear **All Hives** labelling to Dashboard recent records, Task lists, reports and exports."
+  ],
+
+  changed: [
+    "When an individual hive is selected, Tasks and Logbook views now include records created directly for that hive plus applicable **All Hives** records from the same apiary.",
+    "Tasks and Logbook entries recorded for **All Hives** cannot be linked to an inspection because each inspection belongs to one specific hive.",
+    "Changing the Apiary, Hive or All Hives selection when creating or editing a record now clears a Related Inspection where the existing link would no longer be valid.",
+    "Individual-hive Related Inspection choices are now limited to inspections belonging to that same hive.",
+    "Dashboard Task and Logbook statistics and recent-record panels now follow the same apiary and hive filtering rules as the main lists.",
+    "Reports Centre Task and Logbook sections now include applicable **All Hives** records when a specific hive is selected.",
+    "Task and Logbook CSV exports now retain **All hives** labelling for apiary-wide records and leave Related Inspection blank where no individual-hive inspection applies.",
+    "Updated Help guidance throughout HiveTag to explain All Hives Tasks, All Hives Logbook entries and Related Inspection behaviour."
+  ],
+
+  fixed: [
+    "Fixed individual-hive Task filters excluding applicable **All Hives** tasks from the same apiary.",
+    "Fixed Dashboard Task totals and recent Task lists so same-apiary **All Hives** tasks are included without leaking records between apiaries.",
+    "Fixed Reports Centre filtering so inspection-linked Tasks and Logbook records cannot be pulled into a report for the wrong hive.",
+    "Fixed report printing so a section heading and its introductory text are not left stranded at the bottom of a page while the associated content starts on the next page.",
+    "Fixed inconsistent display of the internal Task hive value **ALL** so members now see the clearer label **All Hives**."
+  ],
+
+  removed: [],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+    { label: "Tasks", to: "/todos" },
+    { label: "Hive Logbook", to: "/logbook" },
+    { label: "Reports Centre", to: "/reports/print" },
+    { label: "Help", to: "/help" }
+  ],
+
+  known_issues: [
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
+{
   version: "1.5.2",
   released_at: "2026-09-10T19:36:00Z",
 
