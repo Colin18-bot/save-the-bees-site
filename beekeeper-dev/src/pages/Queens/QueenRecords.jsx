@@ -74,19 +74,6 @@ export default function QueenRecords() {
       setTabNotice("");
       button.click();
 
-      if (activeTab === "events") {
-        window.requestAnimationFrame(() => {
-          if (cancelled || !baseRef.current) return;
-          const swarmButton = Array.from(baseRef.current.querySelectorAll("button")).find(
-            (item) => (item.textContent || "").includes("Record a Swarm")
-          );
-          const paragraphs = swarmButton?.querySelectorAll("p");
-          if (paragraphs?.length > 1 && paragraphs[1].textContent !== SWARM_DESCRIPTION) {
-            paragraphs[1].textContent = SWARM_DESCRIPTION;
-          }
-        });
-      }
-
       if (activeTab === "history") {
         window.requestAnimationFrame(() => {
           if (cancelled || !baseRef.current) return;
@@ -121,6 +108,26 @@ export default function QueenRecords() {
       window.cancelAnimationFrame(frame);
       if (retryTimer) window.clearTimeout(retryTimer);
     };
+  }, [activeTab, baseVersion]);
+
+  useEffect(() => {
+    if (activeTab !== "events" || !baseRef.current) return undefined;
+
+    const updateSwarmDescription = () => {
+      const swarmButton = Array.from(baseRef.current?.querySelectorAll("button") || []).find(
+        (item) => (item.textContent || "").includes("Record a Swarm")
+      );
+      const paragraphs = swarmButton?.querySelectorAll("p");
+      if (paragraphs?.length > 1 && paragraphs[1].textContent !== SWARM_DESCRIPTION) {
+        paragraphs[1].textContent = SWARM_DESCRIPTION;
+      }
+    };
+
+    updateSwarmDescription();
+    const observer = new MutationObserver(updateSwarmDescription);
+    observer.observe(baseRef.current, { childList: true, subtree: true, characterData: true });
+
+    return () => observer.disconnect();
   }, [activeTab, baseVersion]);
 
   useEffect(
