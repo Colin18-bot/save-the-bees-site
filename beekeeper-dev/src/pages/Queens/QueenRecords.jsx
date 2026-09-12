@@ -49,6 +49,9 @@ const getContextualProgressOptions = (hive) => {
   const status = String(currentQueen?.statusRaw || currentQueen?.status || "")
     .trim()
     .toLowerCase();
+  const transitionStatus = String(hive?.transition?.status || "")
+    .trim()
+    .toLowerCase();
 
   if (!currentQueen) {
     return [
@@ -98,6 +101,7 @@ const getContextualProgressOptions = (hive) => {
 
   if (status.includes("laying")) {
     return [
+      ...(transitionStatus.includes("eggs observed") ? ["Laying queen confirmed"] : []),
       "Supersedure Queen cells confirmed",
       "Swarm Queen cells retained",
       ...LOSS_PROGRESS_OPTIONS,
