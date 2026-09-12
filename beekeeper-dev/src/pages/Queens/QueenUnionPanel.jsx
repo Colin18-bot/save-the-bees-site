@@ -14,6 +14,18 @@ const queenLabel = (queen) => {
   return `${queen.reference || "Queen"}${queen.queen_year ? ` • ${queen.queen_year}` : ""} • ${String(colour).toLowerCase()}`;
 };
 
+const cancelToOverview = () => {
+  const nav = document.querySelector('nav[aria-label="Integrated Queen Records tabs"]');
+  const overviewButton = Array.from(nav?.querySelectorAll("button") || []).find(
+    (button) => (button.textContent || "").trim() === "Overview"
+  );
+
+  overviewButton?.click();
+  window.requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+};
+
 export default function QueenUnionPanel({ onRecorded }) {
   const [hives, setHives] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -401,7 +413,7 @@ export default function QueenUnionPanel({ onRecorded }) {
               </>
             )}
 
-            <div className="flex justify-end border-t border-gray-100 pt-4">
+            <div className="flex flex-col items-center gap-2 border-t border-gray-100 pt-4">
               <button
                 type="submit"
                 disabled={
@@ -411,10 +423,18 @@ export default function QueenUnionPanel({ onRecorded }) {
                   !survivingHiveId ||
                   (bothQueenright && (!survivingQueenId || !otherQueenOutcome))
                 }
-                className="inline-flex items-center gap-2 rounded-lg bg-[#1a3329] px-5 py-2 text-sm font-bold text-white hover:bg-[#28513f] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#1a3329] px-5 py-2 text-sm font-bold text-white hover:bg-[#28513f] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                 {saving ? "Saving…" : "Record Colony Union"}
+              </button>
+              <button
+                type="button"
+                onClick={cancelToOverview}
+                disabled={saving}
+                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-60"
+              >
+                Cancel
               </button>
             </div>
           </form>
