@@ -67,10 +67,9 @@ export default function QueenUnionPanel({ onRecorded }) {
 
       if (resetSelection) {
         const first = next[0] || null;
-        const second = next.find((item) => item.id !== first?.id) || null;
         setHiveAId(first?.id || "");
-        setHiveBId(second?.id || "");
-        setSurvivingHiveId(first?.id || "");
+        setHiveBId("");
+        setSurvivingHiveId("");
         setSurvivingQueenId("");
         setOtherQueenOutcome("");
       }
@@ -86,24 +85,37 @@ export default function QueenUnionPanel({ onRecorded }) {
   }, []);
 
   useEffect(() => {
-    if (!hiveAId || !hiveBId) return;
+    if (!hiveAId || !hiveBId) {
+      if (survivingHiveId) setSurvivingHiveId("");
+      return;
+    }
     if (hiveAId === hiveBId) {
-      const replacement = hives.find((item) => item.id !== hiveAId);
-      setHiveBId(replacement?.id || "");
+      setHiveBId("");
+      setSurvivingHiveId("");
       return;
     }
     if (![hiveAId, hiveBId].includes(survivingHiveId)) {
       setSurvivingHiveId(hiveAId);
     }
-  }, [hiveAId, hiveBId, hives, survivingHiveId]);
+  }, [hiveAId, hiveBId, survivingHiveId]);
 
   const hiveA = hives.find((item) => item.id === hiveAId) || null;
   const hiveB = hives.find((item) => item.id === hiveBId) || null;
-  const queens = useMemo(() => [hiveA?.queen, hiveB?.queen].filter(Boolean), [hiveA, hiveB]);
+  const pairSelected = Boolean(hiveA && hiveB && hiveA.id !== hiveB.id);
+  const queens = useMemo(
+    () => (pairSelected ? [hiveA?.queen, hiveB?.queen].filter(Boolean) : []),
+    [hiveA, hiveB, pairSelected]
+  );
   const bothQueenright = queens.length === 2;
   const oneQueenright = queens.length === 1;
 
   useEffect(() => {
+    if (!pairSelected) {
+      setSurvivingQueenId("");
+      setOtherQueenOutcome("");
+      return;
+    }
+
     if (oneQueenright) {
       setSurvivingQueenId(queens[0]?.id || "");
       setOtherQueenOutcome("");
@@ -113,7 +125,7 @@ export default function QueenUnionPanel({ onRecorded }) {
     } else if (!queens.some((queen) => queen.id === survivingQueenId)) {
       setSurvivingQueenId("");
     }
-  }, [oneQueenright, bothQueenright, queens, survivingQueenId]);
+  }, [pairSelected, oneQueenright, bothQueenright, queens, survivingQueenId]);
 
   const submit = async (event) => {
     event.preventDefault();
@@ -277,104 +289,116 @@ export default function QueenUnionPanel({ onRecorded }) {
               </label>
             </div>
 
-            {hiveA && hiveB ? (
-              <div className="grid gap-3 sm:grid-cols-2">
-                {[hiveA, hiveB].map((item) => (
-                  <div key={item.id} className="rounded-xl border border-gray-200 bg-gray-50 p-4">
-                    <p className="font-bold text-[#1a3329]">{item.name}</p>
-                    <p className="mt-1 text-xs font-semibold text-gray-500">{item.apiaryName}</p>
-                    <p className="mt-2 text-sm text-gray-700">{queenLabel(item.queen)}</p>
-                  </div>
-                ))}
-              </div>
-            ) : null}
-
-            <div className="grid gap-4 lg:grid-cols-2">
-              <label className="text-sm font-semibold text-gray-700">
-                Which hive will remain in use after the union?
-                <select
-                  value={survivingHiveId}
-                  onChange={(e) => setSurvivingHiveId(e.target.value)}
-                  className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
-                >
-                  {hiveA ? <option value={hiveA.id}>{hiveA.name}</option> : null}
-                  {hiveB ? <option value={hiveB.id}>{hiveB.name}</option> : null}
-                </select>
-              </label>
-              <label className="text-sm font-semibold text-gray-700">
-                Union date
-                <input
-                  type="date"
-                  value={eventDate}
-                  max={localToday()}
-                  onChange={(e) => setEventDate(e.target.value)}
-                  required
-                  className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
-                />
-              </label>
-            </div>
-
-            {bothQueenright ? (
-              <div className="grid gap-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 lg:grid-cols-2">
-                <label className="text-sm font-semibold text-gray-800">
-                  Both colonies are Queenright — which Queen will remain?
-                  <select
-                    value={survivingQueenId}
-                    onChange={(e) => setSurvivingQueenId(e.target.value)}
-                    required
-                    className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
-                  >
-                    <option value="">Select surviving Queen</option>
-                    {queens.map((queen) => {
-                      const owner = hiveA?.queen?.id === queen.id ? hiveA : hiveB;
-                      return (
-                        <option key={queen.id} value={queen.id}>
-                          {owner?.name}: {queenLabel(queen)}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </label>
-                <label className="text-sm font-semibold text-gray-800">
-                  What happened to the Queen that did not remain?
-                  <select
-                    value={otherQueenOutcome}
-                    onChange={(e) => setOtherQueenOutcome(e.target.value)}
-                    required
-                    className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
-                  >
-                    <option value="">Select outcome</option>
-                    <option value="removed_before_union">Removed before union</option>
-                    <option value="lost_or_killed">Lost or killed during union</option>
-                    <option value="outcome_unknown">Outcome unknown after union</option>
-                  </select>
-                </label>
-              </div>
-            ) : oneQueenright ? (
-              <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-900">
-                The only current Queen will automatically remain with the united colony. If the other hive is the one kept in use, her Queen assignment will transfer to it.
+            {!pairSelected ? (
+              <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+                Select the second colony to continue with the union details.
               </div>
             ) : (
-              <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
-                Both colonies are Queenless. The resulting colony will remain Queenless and HiveTag will preserve or create an active Queenless plan for the surviving hive.
-              </div>
-            )}
+              <>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {[hiveA, hiveB].map((item) => (
+                    <div key={item.id} className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                      <p className="font-bold text-[#1a3329]">{item.name}</p>
+                      <p className="mt-1 text-xs font-semibold text-gray-500">{item.apiaryName}</p>
+                      <p className="mt-2 text-sm text-gray-700">{queenLabel(item.queen)}</p>
+                    </div>
+                  ))}
+                </div>
 
-            <label className="block text-sm font-semibold text-gray-700">
-              Notes
-              <textarea
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                rows="3"
-                placeholder="Optional details about the union…"
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2"
-              />
-            </label>
+                <div className="grid gap-4 lg:grid-cols-2">
+                  <label className="text-sm font-semibold text-gray-700">
+                    Which hive will remain in use after the union?
+                    <select
+                      value={survivingHiveId}
+                      onChange={(e) => setSurvivingHiveId(e.target.value)}
+                      className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+                    >
+                      <option value={hiveA.id}>{hiveA.name}</option>
+                      <option value={hiveB.id}>{hiveB.name}</option>
+                    </select>
+                  </label>
+                  <label className="text-sm font-semibold text-gray-700">
+                    Union date
+                    <input
+                      type="date"
+                      value={eventDate}
+                      max={localToday()}
+                      onChange={(e) => setEventDate(e.target.value)}
+                      required
+                      className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+                    />
+                  </label>
+                </div>
+
+                {bothQueenright ? (
+                  <div className="grid gap-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 lg:grid-cols-2">
+                    <label className="text-sm font-semibold text-gray-800">
+                      Both colonies are Queenright — which Queen will remain?
+                      <select
+                        value={survivingQueenId}
+                        onChange={(e) => setSurvivingQueenId(e.target.value)}
+                        required
+                        className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+                      >
+                        <option value="">Select surviving Queen</option>
+                        {queens.map((queen) => {
+                          const owner = hiveA?.queen?.id === queen.id ? hiveA : hiveB;
+                          return (
+                            <option key={queen.id} value={queen.id}>
+                              {owner?.name}: {queenLabel(queen)}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </label>
+                    <label className="text-sm font-semibold text-gray-800">
+                      What happened to the Queen that did not remain?
+                      <select
+                        value={otherQueenOutcome}
+                        onChange={(e) => setOtherQueenOutcome(e.target.value)}
+                        required
+                        className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+                      >
+                        <option value="">Select outcome</option>
+                        <option value="removed_before_union">Removed before union</option>
+                        <option value="lost_or_killed">Lost or killed during union</option>
+                        <option value="outcome_unknown">Outcome unknown after union</option>
+                      </select>
+                    </label>
+                  </div>
+                ) : oneQueenright ? (
+                  <div className="rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-900">
+                    The only current Queen will automatically remain with the united colony. If the other hive is the one kept in use, her Queen assignment will transfer to it.
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+                    Both colonies are Queenless. The resulting colony will remain Queenless and HiveTag will preserve or create an active Queenless plan for the surviving hive.
+                  </div>
+                )}
+
+                <label className="block text-sm font-semibold text-gray-700">
+                  Notes
+                  <textarea
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    rows="3"
+                    placeholder="Optional details about the union…"
+                    className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2"
+                  />
+                </label>
+              </>
+            )}
 
             <div className="flex justify-end border-t border-gray-100 pt-4">
               <button
                 type="submit"
-                disabled={saving || hives.length < 2}
+                disabled={
+                  saving ||
+                  hives.length < 2 ||
+                  !pairSelected ||
+                  !survivingHiveId ||
+                  (bothQueenright && (!survivingQueenId || !otherQueenOutcome))
+                }
                 className="inline-flex items-center gap-2 rounded-lg bg-[#1a3329] px-5 py-2 text-sm font-bold text-white hover:bg-[#28513f] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
