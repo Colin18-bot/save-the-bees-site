@@ -192,15 +192,15 @@ const buildProgress = (events, transition) => {
   }
 
   return items.sort((a, b) => {
+    if (a.sortKind !== b.sortKind) return a.sortKind - b.sortKind;
+
     const left = asDate(a.dateRaw)?.getTime() ?? 0;
     const right = asDate(b.dateRaw)?.getTime() ?? 0;
-    if (left !== right) return left - right;
-
-    if (a.sortKind !== b.sortKind) return a.sortKind - b.sortKind;
+    if (left !== right) return right - left;
 
     const leftCreated = asDate(a.createdAtRaw)?.getTime() ?? 0;
     const rightCreated = asDate(b.createdAtRaw)?.getTime() ?? 0;
-    return leftCreated - rightCreated;
+    return rightCreated - leftCreated;
   });
 };
 
