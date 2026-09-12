@@ -345,6 +345,70 @@ export default function QueenRecords() {
   }, [activeTab, baseVersion]);
 
   useEffect(() => {
+    if (!BASE_TABS.has(activeTab) || !baseRef.current) return undefined;
+
+    const root = baseRef.current;
+
+    const updateBackNavigation = () => {
+      const viewingRow = Array.from(root.querySelectorAll("div")).find((item) => {
+        const text = (item.textContent || "").trim();
+        return item.classList.contains("border-t") && text.startsWith("Viewing:");
+      });
+
+      const existingButton = root.querySelector('[data-back-to-queen-register="true"]');
+
+      if (!showBackToRegister) {
+        existingButton?.remove();
+        if (viewingRow) {
+          viewingRow.classList.remove(
+            "flex",
+            "flex-col",
+            "gap-2",
+            "sm:flex-row",
+            "sm:items-center",
+            "sm:justify-between"
+          );
+        }
+        return;
+      }
+
+      if (!viewingRow) return;
+
+      viewingRow.classList.add(
+        "flex",
+        "flex-col",
+        "gap-2",
+        "sm:flex-row",
+        "sm:items-center",
+        "sm:justify-between"
+      );
+
+      if (existingButton && existingButton.parentElement === viewingRow) return;
+      existingButton?.remove();
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.dataset.backToQueenRegister = "true";
+      button.className =
+        "inline-flex w-fit items-center justify-center rounded-lg border border-green-700 bg-white px-3 py-2 text-xs font-bold text-green-900 hover:bg-green-50";
+      button.textContent = "← Back to Queen register";
+      button.addEventListener("click", backToQueenRegister);
+      viewingRow.appendChild(button);
+    };
+
+    updateBackNavigation();
+    const observer = new MutationObserver(updateBackNavigation);
+    observer.observe(root, { childList: true, subtree: true, characterData: true });
+
+    return () => {
+      observer.disconnect();
+      const button = root.querySelector('[data-back-to-queen-register="true"]');
+      button?.removeEventListener("click", backToQueenRegister);
+      button?.remove();
+    };
+  }, [activeTab, baseVersion, showBackToRegister]);
+
+  useEffect(() => {
     if (activeTab !== "events" || !baseRef.current) return undefined;
 
     let cancelled = false;
@@ -525,6 +589,16 @@ export default function QueenRecords() {
     });
   };
 
+  const scrollToViewingRow = () => {
+    window.setTimeout(() => {
+      const viewingRow = Array.from(baseRef.current?.querySelectorAll("div") || []).find((item) => {
+        const text = (item.textContent || "").trim();
+        return item.classList.contains("border-t") && text.startsWith("Viewing:");
+      });
+      viewingRow?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 50);
+  };
+
   const applyContextualProgressOptions = async () => {
     const root = baseRef.current;
     if (!root) return;
@@ -571,6 +645,7 @@ export default function QueenRecords() {
 
     if (buttonText.includes("View hive →") || buttonText.includes("Open →")) {
       setShowBackToRegister(true);
+      scrollToViewingRow();
     }
 
     if (buttonText.includes("Record a Swarm")) {
@@ -671,16 +746,7 @@ export default function QueenRecords() {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          {showBackToRegister ? (
-            <button
-              type="button"
-              onClick={backToQueenRegister}
-              className="inline-flex items-center justify-center rounded-lg border border-green-700 bg-white px-4 py-2 text-sm font-bold text-green-900 hover:bg-green-50"
-            >
-              ← Back to Queen register
-            </button>
-          ) : null}
+        <div className="flex items-center gap-2">
           <span className="rounded-full border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-900">
             Staging layout
           </span>
