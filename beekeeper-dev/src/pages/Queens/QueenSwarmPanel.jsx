@@ -387,7 +387,7 @@ export default function QueenSwarmPanel({ onRecorded }) {
                   <button
                     type="submit"
                     disabled={saving || (outcome === "recovered_to_hive" && !destinationHives.length)}
-                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#1a3329] px-5 py-2 text-sm font-bold text-white hover:bg-[#28513f] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-lg bg-[#1a3329] px-5 py-2 text-sm font-bold text-white hover:bg-[#28513f] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {saving ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
                     {saving ? "Saving…" : "Record Swarm"}
@@ -396,7 +396,7 @@ export default function QueenSwarmPanel({ onRecorded }) {
                     type="button"
                     onClick={cancelToOverview}
                     disabled={saving}
-                    className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-60"
+                    className="w-full max-w-xs rounded-lg border border-gray-300 px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50 disabled:opacity-60"
                   >
                     Cancel
                   </button>
