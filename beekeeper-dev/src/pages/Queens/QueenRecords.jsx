@@ -450,70 +450,6 @@ export default function QueenRecords() {
   }, [activeTab, baseVersion]);
 
   useEffect(() => {
-    if (!BASE_TABS.has(activeTab) || !baseRef.current) return undefined;
-
-    const root = baseRef.current;
-
-    const updateBackNavigation = () => {
-      const viewingRow = Array.from(root.querySelectorAll("div")).find((item) => {
-        const text = (item.textContent || "").trim();
-        return item.classList.contains("border-t") && text.startsWith("Viewing:");
-      });
-
-      const existingButton = root.querySelector('[data-back-to-queen-register="true"]');
-
-      if (!hasHiveContext) {
-        existingButton?.remove();
-        if (viewingRow) {
-          viewingRow.classList.remove(
-            "flex",
-            "flex-col",
-            "gap-2",
-            "sm:flex-row",
-            "sm:items-center",
-            "sm:justify-between"
-          );
-        }
-        return;
-      }
-
-      if (!viewingRow) return;
-
-      viewingRow.classList.add(
-        "flex",
-        "flex-col",
-        "gap-2",
-        "sm:flex-row",
-        "sm:items-center",
-        "sm:justify-between"
-      );
-
-      if (existingButton && existingButton.parentElement === viewingRow) return;
-      existingButton?.remove();
-
-      const button = document.createElement("button");
-      button.type = "button";
-      button.dataset.backToQueenRegister = "true";
-      button.className =
-        "inline-flex w-fit items-center justify-center rounded-lg border border-green-700 bg-white px-3 py-2 text-xs font-bold text-green-900 hover:bg-green-50";
-      button.textContent = "← Back to Queen register";
-      button.addEventListener("click", backToQueenRegister);
-      viewingRow.appendChild(button);
-    };
-
-    updateBackNavigation();
-    const observer = new MutationObserver(updateBackNavigation);
-    observer.observe(root, { childList: true, subtree: true, characterData: true });
-
-    return () => {
-      observer.disconnect();
-      const button = root.querySelector('[data-back-to-queen-register="true"]');
-      button?.removeEventListener("click", backToQueenRegister);
-      button?.remove();
-    };
-  }, [activeTab, baseVersion, hasHiveContext]);
-
-  useEffect(() => {
     if (activeTab !== "events" || !baseRef.current) return undefined;
 
     let cancelled = false;
@@ -705,34 +641,6 @@ export default function QueenRecords() {
   const handleLifecycleRecorded = () => {
     refreshBaseData();
     window.setTimeout(syncSelectionContext, 600);
-  };
-
-  const backToQueenRegister = () => {
-    setTabNotice("");
-    setActiveTab("overview");
-    setSelectedApiaryId("");
-    setSelectedHiveId("");
-    setSelectedHiveHasQueen(false);
-
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        const root = baseRef.current;
-        if (!root) return;
-
-        const apiarySelect = findSelectWithOption(root, "All apiaries");
-        if (apiarySelect && apiarySelect.value !== "all") {
-          setSelectValue(apiarySelect, "all");
-        }
-
-        window.setTimeout(() => {
-          const hiveSelect = findSelectWithOption(root, "All hives");
-          if (hiveSelect && hiveSelect.value !== "all") {
-            setSelectValue(hiveSelect, "all");
-          }
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }, 0);
-      });
-    });
   };
 
   const scrollToInlineForm = () => {
