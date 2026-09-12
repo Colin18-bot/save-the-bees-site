@@ -99,9 +99,9 @@ export default function Help() {
                       Queen Records <Badge tone="blue">Premium</Badge>
                     </dt>
                     <dd className="text-gray-700">
-                      Track current and previous Queens, splits and transfers, introductions,
-                      Queenless periods and requeening history. Retained records remain{" "}
-                      <Badge tone="amber">Read only</Badge> after downgrade.
+                      Track current and previous Queens, splits and transfers, colony unions, swarm
+                      outcomes, introductions, Queenless Colony Plans and home-reared Queen progress.
+                      Retained records remain <Badge tone="amber">Read only</Badge> after downgrade.
                     </dd>
                   </div>
 
@@ -257,8 +257,8 @@ export default function Help() {
                   beekeeper&apos;s overall assessment of available stores.
                 </li>
                 <li>
-                  <strong>Queen Record</strong> — the identity and details of a Queen, including her
-                  reference, year, marking colour, status and notes.
+                  <strong>Queen Record</strong> — the identity and details of an individual Queen,
+                  including her reference, year, marking colour, status, origin and notes.
                 </li>
                 <li>
                   <strong>Queen Assignment</strong> — the period during which a Queen is associated
@@ -266,8 +266,14 @@ export default function Help() {
                   the earlier history.
                 </li>
                 <li>
-                  <strong>Queen Transition</strong> — a managed process such as introducing a Queen,
-                  recording a split, waiting for mating or managing a Queenless colony.
+                  <strong>Queen Process</strong> — a managed colony or Queen lifecycle such as an
+                  introduction, replacement after a swarm, waiting for mating or a Queenless Colony
+                  Plan. Progress events update the process without erasing earlier steps.
+                </li>
+                <li>
+                  <strong>Queenless colony state</strong> — describes the colony, not the former
+                  Queen. A former Queen can be recorded as no longer present or presumed lost while
+                  the colony follows a Queenless Colony Plan.
                 </li>
                 <li>
                   <strong>Tasks</strong> — scheduled actions with a due date and status for a
@@ -386,8 +392,8 @@ export default function Help() {
                       </li>
                       <li>
                         <strong>Queen Records and colony lifecycle management</strong>: current and
-                        previous Queens, assignments, introductions, splits, transfers, Queenless
-                        workflows, events and inspection snapshots
+                        previous Queens, assignments, introductions, splits, transfers, colony
+                        unions, swarm outcomes, Queenless Colony Plans, events and inspection snapshots
                       </li>
                       <li>
                         <strong>Reports &amp; Exports</strong>, including multi-section printable
@@ -458,9 +464,10 @@ export default function Help() {
                 </li>
                 <li>
                   <strong>Add the current Queen:</strong>{" "}
-                  <span className="text-gray-700">Queens → Add Queen</span>. Record the Queen’s
-                  reference, year, colour and current hive so future splits, transfers and changes have
-                  a clear starting point. <Badge tone="blue">Premium</Badge>
+                  <span className="text-gray-700">Queens → Events &amp; Changes → Add a Queen</span>.
+                  Use this to establish the hive&apos;s first known Queen record. Later Queen changes
+                  should be recorded through the relevant introduction or lifecycle action so the
+                  earlier Queen history is preserved. <Badge tone="blue">Premium</Badge>
                 </li>
                 <li>
                   <strong>Review Hive Health:</strong>{" "}
@@ -705,13 +712,20 @@ export default function Help() {
                       review the current Queen and the full colony lifecycle history.
                     </li>
                     <li>
-                      Use the page tabs to review <strong>History</strong>, <strong>Add Queen</strong>,
-                      <strong>Record Split</strong>, <strong>Introduce Queen</strong> and{" "}
-                      <strong>Edit</strong> details where the current record allows it.
+                      The Queen Records workspace uses <strong>Overview</strong>,{" "}
+                      <strong>Current Queen</strong>, <strong>Progress</strong>,{" "}
+                      <strong>Unite Colonies</strong>, <strong>Swarm</strong>,{" "}
+                      <strong>History</strong> and <strong>Events &amp; Changes</strong> tabs.
                     </li>
                     <li>
-                      Recording a split or transfer moves the Queen and her history to the destination
-                      hive, while the source hive becomes Queenless. Earlier records remain unchanged.
+                      <strong>Events &amp; Changes</strong> provides dated actions such as adding the
+                      first known Queen, editing permanent information, recording progress, splits,
+                      transfers, introductions and Queenless Colony Plans. Actions that do not fit
+                      the selected hive&apos;s current state are locked.
+                    </li>
+                    <li>
+                      <strong>Unite Colonies</strong> and <strong>Swarm</strong> handle colony-level
+                      changes while preserving Queen assignments, previous Queens and dated history.
                     </li>
                     <li>
                       Downgraded members with retained Queen data see{" "}
@@ -919,8 +933,8 @@ export default function Help() {
                       assessed at an earlier inspection rather than only seeing its latest status.
                     </li>
                     <li>
-                      From a task Calendar entry, choose <strong>View in list</strong> to jump to
-                      the Task List with the task briefly highlighted.
+                      From a task Calendar entry, choose <strong>View in list</strong> to jump
+                      to the Task List with the task briefly highlighted.
                     </li>
                     <li>
                       Tasks created from the <strong>Year in the Apiary Seasonal Guide</strong>{" "}
@@ -1084,31 +1098,40 @@ export default function Help() {
               </h2>
 
               <p className="text-gray-700">
-                Queen Records provide a dedicated history for each colony rather than relying only on
-                short Queen observations inside inspections. They show who the current Queen is, where
-                she has been assigned, what changed, and which Queen process is still in progress.
+                Queen Records keep the identity of each Queen separate from the state of the colony.
+                HiveTag records dated assignments, processes and events so a split, swarm, colony
+                union, Queen loss or replacement can be followed without rewriting what happened
+                earlier.
               </p>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">Queen Records workspace</h3>
+                <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                  <li><strong>Overview</strong> — a quick summary of the selected colony and its Queen position.</li>
+                  <li><strong>Current Queen</strong> — the Queen currently assigned to the hive, or a clear Queenless state when no Queen is assigned.</li>
+                  <li><strong>Progress</strong> — the active Queen or Queenless process and its dated progress.</li>
+                  <li><strong>Unite Colonies</strong> — record two colonies being combined while preserving both histories.</li>
+                  <li><strong>Swarm</strong> — record whether a swarm was lost, recovered and returned, or recovered into another hive/nucleus.</li>
+                  <li><strong>History</strong> — previous Queens and why their assignments ended.</li>
+                  <li><strong>Events &amp; Changes</strong> — dated actions such as progress, splits, transfers, introductions and Queenless Colony Plans.</li>
+                </ul>
+              </div>
 
               <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="rounded-xl border bg-white p-4">
-                  <h3 className="font-semibold">What you can record</h3>
+                  <h3 className="font-semibold">Queen identity and colony state</h3>
                   <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
-                    <li>Queen reference, year, marking colour, status and notes.</li>
-                    <li>Current and previous Queen assignments for each hive.</li>
-                    <li>Introductions, acceptance checks, mating progress and failed outcomes.</li>
-                    <li>Splits and Queen transfers between hives.</li>
-                    <li>Queenless periods, frames of eggs and requeening activity.</li>
-                    <li>Lifecycle events and actions without altering earlier history.</li>
+                    <li>Queen identity can include reference, year, marking colour, origin, clipped status and notes.</li>
+                    <li>Queen statuses can include stages such as virgin, mating, laying or no longer present.</li>
+                    <li><strong>Queenless is a colony state, not a status of the former Queen.</strong></li>
+                    <li>When a colony is confirmed Queenless, the former Queen assignment ends and the colony can follow a Queenless Colony Plan.</li>
+                    <li>History shows the former Queen&apos;s position separately from the reason the assignment ended, for example <em>Reason: Colony confirmed Queenless</em>.</li>
                   </ul>
                 </div>
 
                 <div className="rounded-xl border bg-white p-4">
-                  <h3 className="font-semibold">Queen status and colour reference</h3>
+                  <h3 className="font-semibold">Queen colour reference</h3>
                   <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
-                    <li>
-                      Statuses can include mated, virgin, introduced with acceptance pending,
-                      Queenless, failed and requeened.
-                    </li>
                     <li>
                       HiveTag shows the standard year-colour cycle: White for years ending 1 or 6,
                       Yellow for 2 or 7, Red for 3 or 8, Green for 4 or 9, and Blue for 5 or 0.
@@ -1117,34 +1140,155 @@ export default function Help() {
                       You can record the actual marking colour separately when it differs or is not
                       known.
                     </li>
+                    <li>
+                      The year/colour information describes the Queen; it does not determine colony
+                      Queenright/Queenless state on its own.
+                    </li>
                   </ul>
                 </div>
               </div>
 
               <div className="mt-4 rounded-xl border bg-white p-4">
-                <h3 className="font-semibold">Common Queen workflows</h3>
+                <h3 className="font-semibold">Add a Queen vs Introduce a Queen</h3>
+                <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                  <li>
+                    <strong>Add a Queen</strong> establishes the <em>first known Queen record</em> for
+                    a hive that has no earlier Queen history.
+                  </li>
+                  <li>
+                    Once a hive already has Queen history, do not replace that history by creating a
+                    new first-Queen record. Use <strong>Introduce a Queen</strong> or the appropriate
+                    lifecycle action instead.
+                  </li>
+                  <li>
+                    HiveTag locks actions that do not fit the selected hive&apos;s current state. This
+                    helps prevent duplicate or contradictory Queen records.
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">Unite Colonies</h3>
                 <ol className="mt-2 list-decimal pl-6 space-y-1 text-gray-700">
+                  <li>Select the two colonies being united.</li>
                   <li>
-                    <strong>Add a known Queen:</strong> create the Queen and assign her to the current
-                    hive.
+                    Choose <strong>which physical hive will remain in use</strong>. The retained-hive
+                    choice is limited to those two selected colonies.
                   </li>
                   <li>
-                    <strong>Record a split:</strong> choose the source and destination hives. The
-                    selected Queen moves with her history and the source colony becomes Queenless.
+                    If only one colony has a current Queen, that Queen automatically remains with the
+                    united colony and is transferred if the other physical hive is retained.
                   </li>
                   <li>
-                    <strong>Introduce a Queen:</strong> record whether she is purchased, mated or
-                    virgin, then follow the acceptance and mating actions shown by HiveTag.
+                    If both colonies are Queenright, separately choose <strong>which Queen will remain</strong>.
+                    The surviving physical hive and surviving Queen do not have to come from the same
+                    original colony.
                   </li>
                   <li>
-                    <strong>Manage a Queenless colony:</strong> record the chosen route, such as
-                    introducing a Queen, adding a frame of eggs or allowing a colony-led transition.
+                    When both colonies are Queenright, record what happened to the Queen that did not
+                    remain: <strong>Removed before union</strong>, <strong>Lost or killed during union</strong>,
+                    or <strong>Outcome unknown after union</strong>.
                   </li>
                   <li>
-                    <strong>Record the outcome:</strong> complete, fail or replace the process without
-                    deleting the history that led to the result.
+                    The redundant physical hive is archived as <strong>Colony combined</strong> while
+                    Queen assignments, events and earlier colony history are preserved.
+                  </li>
+                  <li>
+                    If both colonies are Queenless, the retained colony remains Queenless and can
+                    continue or establish the appropriate Queenless Colony Plan.
                   </li>
                 </ol>
+              </div>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">Record a Swarm</h3>
+                <p className="mt-2 text-gray-700">
+                  Use the dedicated Swarm workflow when the colony has swarmed. Record the outcome
+                  rather than treating every swarm as a lost Queen.
+                </p>
+                <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                  <li>
+                    <strong>Swarm lost / not recovered:</strong> the existing Queen leaves the source
+                    colony and the source starts its replacement-Queen process.
+                  </li>
+                  <li>
+                    <strong>Swarm recovered and returned to this hive:</strong> the same Queen remains
+                    current in the source hive; HiveTag records the swarm and recovery without starting
+                    a replacement-Queen process.
+                  </li>
+                  <li>
+                    <strong>Swarm recovered and placed in another hive or nucleus:</strong> choose an
+                    eligible empty destination. The Queen moves with the recovered swarm and the
+                    original colony starts its replacement-Queen process.
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">Queenless Colony Plans</h3>
+                <p className="mt-2 text-gray-700">
+                  When a colony has no current Queen, use <strong>Set Queenless Colony Plan</strong>
+                  to record what is present and how the colony is expected to obtain its next Queen.
+                </p>
+                <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                  <li>
+                    <strong>Queen-cell position</strong> can record no cells seen, Queen cups only,
+                    emergency Queen cells, supersedure Queen cells, swarm Queen cells, an uncertain
+                    cell type, or that the position was not recorded.
+                  </li>
+                  <li>
+                    The replacement route can record retained existing cells, allowing the colony to
+                    raise its own Queen, adding eggs/young larvae, planning to introduce a Queen cell,
+                    virgin or mated Queen, temporarily remaining Queenless, or not yet deciding.
+                  </li>
+                  <li>
+                    Record a <strong>Next check date</strong> so the active process has a clear
+                    follow-up point.
+                  </li>
+                  <li>
+                    If you later change the plan, update the Queenless Colony Plan rather than
+                    creating unrelated replacement history.
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">Home-reared Queen progression</h3>
+                <p className="mt-2 text-gray-700">
+                  A colony raising its own Queen remains a colony process until an individual Queen
+                  actually exists. HiveTag can follow the sequence without creating a Queen too early.
+                </p>
+                <ol className="mt-2 list-decimal pl-6 space-y-1 text-gray-700">
+                  <li>Record relevant cell progress, such as <strong>Queen cells charged</strong> and <strong>Queen cells sealed</strong>.</li>
+                  <li>
+                    When <strong>Queen emerged</strong> is recorded, HiveTag creates the individual
+                    home-reared Queen record, assigns her to the hive and records her as a virgin Queen.
+                  </li>
+                  <li>Continue with <strong>Mating outcome pending</strong> while mating is awaited.</li>
+                  <li><strong>Eggs observed</strong> advances the Queen to laying while the establishment process remains open.</li>
+                  <li>
+                    <strong>Laying queen confirmed</strong> completes the replacement cycle and closes
+                    the active Queen-rearing process while keeping the Queen&apos;s assignment current.
+                  </li>
+                </ol>
+              </div>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">Context-aware progress</h3>
+                <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                  <li>
+                    <strong>Record Queen Progress</strong> shows options relevant to the Queen or
+                    colony&apos;s current lifecycle position instead of presenting every possible event.
+                  </li>
+                  <li>
+                    This reduces accidental backwards or contradictory progress, but you should still
+                    record what you actually observed rather than selecting the next expected stage.
+                  </li>
+                  <li>
+                    Dated progress and notes remain in history so later events do not overwrite the
+                    earlier sequence.
+                  </li>
+                </ul>
               </div>
 
               <div className="mt-4 rounded-xl border bg-white p-4">
@@ -1185,15 +1329,21 @@ export default function Help() {
               </div>
 
               <div className="mt-4 rounded border bg-white p-4">
-                <h3 className="font-semibold">Archiving and deletion</h3>
+                <h3 className="font-semibold">Archiving, restoring and reusing hives</h3>
                 <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
                   <li>
-                    Archiving an Apiary or Hive coordinates the linked Queen lifecycle records with the
-                    same archive action so active lists remain consistent.
+                    Archiving an Apiary or Hive coordinates the linked active Queen lifecycle records
+                    so active lists remain consistent while historical information is preserved.
                   </li>
                   <li>
-                    Restoring a parent record restores linked lifecycle information where the current
-                    plan allows it.
+                    A redundant physical hive from <strong>Unite Colonies</strong> is archived as
+                    <strong>Colony combined</strong> rather than deleted.
+                  </li>
+                  <li>
+                    <strong>Restoring or reusing an archived physical hive does not automatically
+                    reactivate its former Queen assignment or Queen process.</strong> The restored hive
+                    becomes available for its new/current colony position while the previous Queen
+                    relationship remains historical.
                   </li>
                   <li>
                     Permanent deletion is different from archiving and removes the linked lifecycle
@@ -2174,24 +2324,27 @@ export default function Help() {
 
                 <div>
                   <h3 className="font-semibold">
-                    E) Recording a Queen change <Badge tone="blue">Premium</Badge>
+                    E) Recording a Queen or colony lifecycle change <Badge tone="blue">Premium</Badge>
                   </h3>
 
                   <ol className="list-decimal pl-6 space-y-1 text-gray-700">
                     <li>Open <strong>Queens</strong> and select the relevant Apiary and Hive.</li>
                     <li>
-                      Choose the matching action, such as <strong>Add Queen</strong>,{" "}
-                      <strong>Record Split</strong> or <strong>Introduce Queen</strong>.
-                    </li>
-                    <li>Record the Queen, source/destination hive and date of the change.</li>
-                    <li>
-                      Follow any acceptance, mating or Queenless next action shown by the lifecycle
-                      process.
+                      Use the dedicated tab for <strong>Unite Colonies</strong> or <strong>Swarm</strong>,
+                      or open <strong>Events &amp; Changes</strong> for a dated Queen action.
                     </li>
                     <li>
-                      Record the outcome rather than overwriting the earlier history. The Dashboard
-                      and Queen Reports will then reflect the current position and the historical
-                      sequence.
+                      Choose the matching action, such as adding the first known Queen, recording
+                      Queen progress, a split, transfer, introduction or Queenless Colony Plan.
+                    </li>
+                    <li>
+                      Record what actually happened and use the next-check date where follow-up is
+                      needed. HiveTag will show the progress choices relevant to the current lifecycle state.
+                    </li>
+                    <li>
+                      Record later outcomes as new dated events rather than overwriting the earlier
+                      history. The Dashboard, Calendar and Queen Reports can then reflect both the
+                      current position and the historical sequence.
                     </li>
                   </ol>
                 </div>
@@ -2407,6 +2560,10 @@ export default function Help() {
                     Unarchiving a parent may prompt you to unarchive its children; if limits are
                     exceeded, only allowable items are reactivated.
                   </li>
+                  <li>
+                    Restoring or reusing a hive does <strong>not</strong> automatically reactivate a
+                    former Queen assignment or Queen process. Earlier Queen relationships remain historical.
+                  </li>
                 </ul>
 
                 <h3 className="font-semibold mt-4 mb-2">Permanent deletion rules</h3>
@@ -2443,8 +2600,9 @@ export default function Help() {
               <ul className="list-disc pl-6 space-y-1">
                 <li>Use consistent hive names (e.g., “Hive A2”, “Blue Queen 2024”).</li>
                 <li>
-                  Give each Queen a consistent reference and record splits, transfers and outcomes
-                  when they happen so the assignment history remains clear.
+                  Give each Queen a consistent reference and record splits, transfers, swarm outcomes,
+                  colony unions and Queen replacement progress when they happen so the assignment and
+                  colony history remain clear.
                 </li>
                 <li>
                   Capture next-visit actions in <strong>Tasks</strong> and give them clear due
@@ -2562,9 +2720,38 @@ export default function Help() {
                 <div>
                   <p className="font-medium">What happens when I record a split?</p>
                   <p className="text-gray-700">
-                    The selected Queen and her history move to the destination hive. The source hive
-                    becomes Queenless and can then follow a Queenless or requeening workflow. Earlier
+                    The selected Queen and her history move to the destination hive where appropriate.
+                    The source colony then follows its recorded Queen/Queenless position. Earlier
                     assignments remain unchanged as history.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">What happens when I unite two colonies?</p>
+                  <p className="text-gray-700">
+                    HiveTag asks which of the two physical hives remains in use. If both colonies are
+                    Queenright, it separately asks which Queen remains and what happened to the other
+                    Queen. The redundant physical hive is archived as <strong>Colony combined</strong>
+                    while the Queen and colony histories are preserved.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">What if a swarm is recovered rather than lost?</p>
+                  <p className="text-gray-700">
+                    Record the actual outcome in the Swarm tab. A recovered swarm can be returned to
+                    the same hive, keeping the same Queen current, or placed in another eligible hive
+                    or nucleus, where the Queen moves with the recovered swarm. The original colony
+                    only starts a replacement-Queen process when it is left without that Queen.
+                  </p>
+                </div>
+
+                <div>
+                  <p className="font-medium">Why is a former Queen not labelled Queenless?</p>
+                  <p className="text-gray-700">
+                    Because <strong>Queenless describes the colony</strong>. When the Queen is no
+                    longer present, her assignment ends and her history records that outcome. The
+                    colony can then carry the Queenless state and its replacement plan.
                   </p>
                 </div>
 
@@ -2996,9 +3183,15 @@ export default function Help() {
                   <code>seasonal_month</code>.
                 </li>
                 <li>
-                  <strong>Queen lifecycle:</strong> assignments, events, processes and inspection
-                  snapshots are separate historical layers. Moving a Queen creates a new assignment
-                  rather than rewriting the previous hive history.
+                  <strong>Queen lifecycle:</strong> Queen records, assignments, events, processes and
+                  inspection snapshots are separate historical layers. Moving a Queen creates a new
+                  assignment rather than rewriting the previous hive history. Queenless belongs to
+                  the colony/process state rather than being a status assigned to the former Queen.
+                </li>
+                <li>
+                  <strong>Colony unions:</strong> the surviving physical hive and surviving Queen are
+                  independent lifecycle choices. The redundant hive can be archived while the retained
+                  Queen originates from either colony.
                 </li>
                 <li>
                   <strong>Reports dataset:</strong> Step 1 loads the report data once. Screen tabs,
@@ -3035,8 +3228,8 @@ export default function Help() {
                 <div>
                   <dt className="font-medium">Queen Record</dt>
                   <dd className="text-gray-700">
-                    Dedicated identity and lifecycle record for a Queen, separate from short Queen
-                    observations recorded during inspections.
+                    Dedicated identity and lifecycle record for an individual Queen, separate from
+                    short Queen observations recorded during inspections.
                   </dd>
                 </div>
 
@@ -3045,6 +3238,23 @@ export default function Help() {
                   <dd className="text-gray-700">
                     The dated relationship between a Queen and a hive. Transfers create a new
                     assignment while preserving the previous one.
+                  </dd>
+                </div>
+
+                <div>
+                  <dt className="font-medium">Queen Process</dt>
+                  <dd className="text-gray-700">
+                    A managed lifecycle such as Queen introduction, replacement after a swarm,
+                    mating progress or a Queenless Colony Plan.
+                  </dd>
+                </div>
+
+                <div>
+                  <dt className="font-medium">Queenless Colony Plan</dt>
+                  <dd className="text-gray-700">
+                    The colony-level plan for obtaining its next Queen, including the Queen-cell
+                    position, chosen route and follow-up date. Queenless describes the colony, not
+                    the former Queen.
                   </dd>
                 </div>
 
