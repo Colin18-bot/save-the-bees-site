@@ -450,6 +450,70 @@ export default function QueenRecords() {
   }, [activeTab, baseVersion]);
 
   useEffect(() => {
+    if (activeTab !== "progress" || !selectedHiveId || !baseRef.current) return undefined;
+
+    let cancelled = false;
+    let retryTimer;
+
+    const loadContextualPanel = async () => {
+      try {
+        const records = await getQueenRecordsOverview();
+        if (cancelled) return;
+
+        const hive = (records.hives || []).find(
+          (item) => String(item.id) === String(selectedHiveId)
+        );
+        if (!hive) return;
+
+        const options = getContextualProgressOptions(hive);
+        let attempts = 0;
+
+        const applyPanel = () => {
+          if (cancelled || !baseRef.current) return;
+          attempts += 1;
+
+          const heading = Array.from(baseRef.current.querySelectorAll("h2")).find(
+            (item) => (item.textContent || "").trim() === "What can be recorded?"
+          );
+          const card = heading?.closest("section");
+          const list = Array.from(card?.children || []).find((item) =>
+            item.classList?.contains("space-y-3")
+          );
+
+          if (!list) {
+            if (attempts < 50) retryTimer = window.setTimeout(applyPanel, 40);
+            return;
+          }
+
+          const rows = Array.from(list.children);
+          rows.forEach((row, index) => {
+            if (index < options.length) {
+              row.style.display = "flex";
+              const label = row.querySelector("p");
+              if (label && label.textContent !== options[index]) {
+                label.textContent = options[index];
+              }
+            } else {
+              row.style.display = "none";
+            }
+          });
+        };
+
+        applyPanel();
+      } catch (error) {
+        console.warn("Could not contextualise Queen progress guidance", error);
+      }
+    };
+
+    loadContextualPanel();
+
+    return () => {
+      cancelled = true;
+      if (retryTimer) window.clearTimeout(retryTimer);
+    };
+  }, [activeTab, baseVersion, selectedHiveId]);
+
+  useEffect(() => {
     if (activeTab !== "events" || !baseRef.current) return undefined;
 
     let cancelled = false;
