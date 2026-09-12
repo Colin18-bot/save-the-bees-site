@@ -1,0 +1,95 @@
+/* Final print/PDF refinements for HiveTag reports.
+ * Every rule is print-only. Nothing here changes the normal HiveTag screen UI.
+ */
+@media print {
+  /* Make fragmented inspection cards look deliberate when a long inspection
+     genuinely has to continue onto the next A4 page. */
+  .print-report-shell .print-page article.print-card {
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  /* Detailed inspection photographs were the one remaining block most likely
+     to be stranded at the top of the following page. Keep the print copy useful
+     but compact enough to stay with its inspection whenever space permits. */
+  .print-report-shell .print-page article.print-card > div:has(.print-photo) {
+    margin-top: 4px !important;
+    padding: 4px 6px !important;
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .print-report-shell .print-page article.print-card > div:has(.print-photo) > div {
+    margin-top: 4px !important;
+    gap: 4px !important;
+  }
+
+  .print-report-shell .print-page article.print-card > div:has(.print-photo) .print-photo {
+    height: 60px !important;
+  }
+
+  /* Queen Events can contain many short dated records. Two columns uses the
+     A4 page far better, keeps the event heading with the list, and greatly
+     reduces the chance of a detached continuation page. QueenRecordsReport
+     is the only report component whose direct .space-y-6 child contains six
+     print-card sections; the fourth is Queen Events & Changes. */
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(4) > div.mt-5 > div.space-y-3 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+    align-items: start !important;
+  }
+
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(4) > div.mt-5 > div.space-y-3 > * {
+    margin-top: 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(4) article {
+    padding: 5px !important;
+  }
+
+  /* Give the Queen Processes table predictable column widths so dates and the
+     Next Check heading do not feel squeezed. The fifth Queen section is the
+     Queen Processes section. */
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) table {
+    table-layout: fixed !important;
+    font-size: 7.7pt !important;
+  }
+
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) th:nth-child(1),
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) td:nth-child(1) {
+    width: 9% !important;
+  }
+
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) th:nth-child(2),
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) td:nth-child(2) {
+    width: 30% !important;
+  }
+
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) th:nth-child(3),
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) td:nth-child(3) {
+    width: 18% !important;
+  }
+
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) th:nth-child(4),
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) td:nth-child(4) {
+    width: 14% !important;
+    white-space: nowrap !important;
+  }
+
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) th:nth-child(5),
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) td:nth-child(5) {
+    width: 15% !important;
+    white-space: nowrap !important;
+  }
+
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) th:nth-child(6),
+  .print-report-shell .print-page > .space-y-6 > section.print-card:nth-of-type(5) td:nth-child(6) {
+    width: 14% !important;
+    white-space: nowrap !important;
+  }
+}
