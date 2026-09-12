@@ -1,4 +1,5 @@
 import React from "react";
+import "./reportPrint.css";
 import ExecutiveSummary from "./ExecutiveSummary";
 import ColonyInsights from "./ColonyInsights";
 import InspectionTimeline from "./InspectionTimeline";

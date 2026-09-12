@@ -1,0 +1,287 @@
+/* Print/PDF-only layout for HiveTag reports.
+ * Keep every rule inside @media print so the normal HiveTag screen UI is untouched.
+ */
+@media print {
+  .print-report-shell .print-page {
+    font-size: 9.3pt;
+    line-height: 1.2;
+  }
+
+  /* Use the intended desktop report grids on A4 instead of allowing the
+     responsive screen breakpoints to collapse them to a single column. */
+  .print-report-shell .print-page [class~="sm:grid-cols-2"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .print-report-shell .print-page [class~="sm:grid-cols-3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .print-report-shell .print-page [class~="sm:grid-cols-4"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  .print-report-shell .print-page [class~="md:grid-cols-2"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .print-report-shell .print-page [class~="md:grid-cols-3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .print-report-shell .print-page [class~="lg:grid-cols-2"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .print-report-shell .print-page [class~="lg:grid-cols-3"] {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .print-report-shell .print-page [class~="lg:grid-cols-4"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  .print-report-shell .print-page [class~="sm:flex-row"] {
+    flex-direction: row !important;
+  }
+
+  .print-report-shell .print-page [class~="sm:items-start"] {
+    align-items: flex-start !important;
+  }
+
+  .print-report-shell .print-page [class~="sm:justify-between"] {
+    justify-content: space-between !important;
+  }
+
+  /* Reduce the oversized screen-card spacing for paper without changing
+     the screen presentation. */
+  .print-report-shell .print-page .print-card {
+    padding: 8px !important;
+    margin-bottom: 2.5mm !important;
+    border-radius: 5px !important;
+  }
+
+  .print-report-shell .print-page .print-summary-card {
+    padding: 7px !important;
+    border-radius: 5px !important;
+  }
+
+  .print-report-shell .print-page .print-field {
+    padding: 4px 5px !important;
+    border-radius: 4px !important;
+    line-height: 1.15 !important;
+  }
+
+  .print-report-shell .print-page .p-3 {
+    padding: 5px !important;
+  }
+
+  .print-report-shell .print-page .p-4 {
+    padding: 6px !important;
+  }
+
+  .print-report-shell .print-page .p-5,
+  .print-report-shell .print-page .p-6 {
+    padding: 8px !important;
+  }
+
+  .print-report-shell .print-page .gap-1 {
+    gap: 2px !important;
+  }
+
+  .print-report-shell .print-page .gap-2 {
+    gap: 4px !important;
+  }
+
+  .print-report-shell .print-page .gap-3,
+  .print-report-shell .print-page .gap-4 {
+    gap: 5px !important;
+  }
+
+  .print-report-shell .print-page .space-y-3 > * + *,
+  .print-report-shell .print-page .space-y-4 > * + * {
+    margin-top: 5px !important;
+  }
+
+  .print-report-shell .print-page .space-y-6 > * + * {
+    margin-top: 7px !important;
+  }
+
+  .print-report-shell .print-page .mt-1 {
+    margin-top: 2px !important;
+  }
+
+  .print-report-shell .print-page .mt-2 {
+    margin-top: 3px !important;
+  }
+
+  .print-report-shell .print-page .mt-3,
+  .print-report-shell .print-page .mt-4,
+  .print-report-shell .print-page .mt-5 {
+    margin-top: 5px !important;
+  }
+
+  .print-report-shell .print-page .mt-6,
+  .print-report-shell .print-page .mt-8,
+  .print-report-shell .print-page .mt-10 {
+    margin-top: 7px !important;
+  }
+
+  .print-report-shell .print-page .mb-2 {
+    margin-bottom: 3px !important;
+  }
+
+  .print-report-shell .print-page .pb-3,
+  .print-report-shell .print-page .pb-4,
+  .print-report-shell .print-page .pt-3,
+  .print-report-shell .print-page .pt-4 {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+
+  /* Print typography: compact, but still comfortably readable on A4. */
+  .print-report-shell .print-page .text-4xl {
+    font-size: 20pt !important;
+    line-height: 1 !important;
+  }
+
+  .print-report-shell .print-page .text-3xl {
+    font-size: 16pt !important;
+    line-height: 1.05 !important;
+  }
+
+  .print-report-shell .print-page .text-2xl {
+    font-size: 14pt !important;
+    line-height: 1.05 !important;
+  }
+
+  .print-report-shell .print-page .text-xl {
+    font-size: 12pt !important;
+    line-height: 1.1 !important;
+  }
+
+  .print-report-shell .print-page .text-lg {
+    font-size: 10.5pt !important;
+    line-height: 1.15 !important;
+  }
+
+  .print-report-shell .print-page .text-sm {
+    font-size: 8.8pt !important;
+    line-height: 1.18 !important;
+  }
+
+  .print-report-shell .print-page .text-xs {
+    font-size: 7.4pt !important;
+    line-height: 1.15 !important;
+  }
+
+  .print-report-shell .print-page p,
+  .print-report-shell .print-page li,
+  .print-report-shell .print-page dt,
+  .print-report-shell .print-page dd {
+    line-height: 1.18 !important;
+  }
+
+  .print-report-shell .print-page ul {
+    margin-top: 3px !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* A detailed inspection may span pages, but its individual subject blocks
+     must stay intact. This avoids headings or half a topic being stranded on
+     the next page. */
+  .print-report-shell .print-page article.print-card {
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    padding: 8px !important;
+  }
+
+  .print-report-shell .print-page article.print-card > div:not(.no-print) {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .print-report-shell .print-page article.print-card > div:first-child {
+    padding-bottom: 5px !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  .print-report-shell .print-page article.print-card > div:nth-child(2),
+  .print-report-shell .print-page article.print-card > div:nth-child(3) {
+    margin-top: 5px !important;
+  }
+
+  .print-report-shell .print-page article.print-card > div:nth-child(2) > div,
+  .print-report-shell .print-page article.print-card > div:nth-child(3) > div,
+  .print-report-shell .print-page article.print-card > div:nth-child(n + 4):not(.no-print) {
+    padding: 6px !important;
+    border-radius: 5px !important;
+  }
+
+  /* Health/insight cards and Queen cards are smaller self-contained records.
+     Keep them together and remove the large web-card padding. */
+  .print-report-shell .print-page section.print-card article {
+    padding: 6px !important;
+    border-radius: 5px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .print-report-shell .print-page section.print-card article > .grid {
+    gap: 5px !important;
+  }
+
+  /* Queen current-position lists contain many empty hive records. On paper,
+     show those compact records two across while detailed Queen/process cards
+     continue to use the full width. */
+  .print-report-shell .print-page section.print-card > div.mt-5 > div.space-y-4 {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+  }
+
+  .print-report-shell .print-page section.print-card > div.mt-5 > div.space-y-4 > article:has(dl),
+  .print-report-shell .print-page section.print-card > div.mt-5 > div.space-y-4 > article:has([class*="border-amber-200"]) {
+    grid-column: 1 / -1 !important;
+  }
+
+  /* Table-based timelines/history should be dense enough for print while
+     retaining row integrity and repeating table headings. */
+  .print-report-shell .print-page table {
+    font-size: 8pt !important;
+    line-height: 1.15 !important;
+  }
+
+  .print-report-shell .print-page th,
+  .print-report-shell .print-page td {
+    padding: 3px 4px !important;
+  }
+
+  /* Keep photos useful but stop them dominating the page. */
+  .print-report-shell .print-page .print-photo {
+    height: 82px !important;
+    border-radius: 5px !important;
+  }
+
+  /* Consecutive major report sections should read as one report rather than
+     leaving large artificial gaps between them. */
+  .print-report-shell .print-page + .print-page {
+    margin-top: 3mm !important;
+  }
+
+  /* Keep section introductions attached to their first item where possible. */
+  .print-report-shell .print-page .print-card > h2:first-child,
+  .print-report-shell .print-page .print-card > h2:first-child + p,
+  .print-report-shell .print-page .print-card > h3:first-child,
+  .print-report-shell .print-page .print-card > h3:first-child + p {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  .print-report-shell .print-page section.print-card > .space-y-4 > article:first-child,
+  .print-report-shell .print-page section.print-card > .mt-4.space-y-4 > article:first-child {
+    page-break-before: avoid !important;
+    break-before: avoid !important;
+  }
+}
