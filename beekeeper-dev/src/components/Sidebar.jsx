@@ -347,7 +347,7 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
         </div>
 
         {/* Secondary beekeeping links */}
-        <div className="mt-3 rounded-lg border border-white/10 border-l-[3px] border-l-yellow-400/70 bg-white/5 p-1">
+        <div className="mt-3 space-y-1.5 rounded-lg border border-white/10 border-l-[3px] border-l-yellow-400/70 bg-white/5 p-1">
           {coreSecondaryNavItems.slice(6).map((item) => (
             <LinkItem key={item.to} item={item} />
           ))}
