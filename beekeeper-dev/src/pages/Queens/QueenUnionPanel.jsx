@@ -94,8 +94,8 @@ export default function QueenUnionPanel({ onRecorded }) {
       setSurvivingHiveId("");
       return;
     }
-    if (![hiveAId, hiveBId].includes(survivingHiveId)) {
-      setSurvivingHiveId(hiveAId);
+    if (survivingHiveId && ![hiveAId, hiveBId].includes(survivingHiveId)) {
+      setSurvivingHiveId("");
     }
   }, [hiveAId, hiveBId, survivingHiveId]);
 
@@ -263,7 +263,10 @@ export default function QueenUnionPanel({ onRecorded }) {
                 First colony
                 <select
                   value={hiveAId}
-                  onChange={(e) => setHiveAId(e.target.value)}
+                  onChange={(e) => {
+                    setHiveAId(e.target.value);
+                    setSurvivingHiveId("");
+                  }}
                   className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
                 >
                   {hives.map((item) => (
@@ -277,7 +280,10 @@ export default function QueenUnionPanel({ onRecorded }) {
                 Second colony
                 <select
                   value={hiveBId}
-                  onChange={(e) => setHiveBId(e.target.value)}
+                  onChange={(e) => {
+                    setHiveBId(e.target.value);
+                    setSurvivingHiveId("");
+                  }}
                   className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
                 >
                   {hives.filter((item) => item.id !== hiveAId).map((item) => (
@@ -311,8 +317,10 @@ export default function QueenUnionPanel({ onRecorded }) {
                     <select
                       value={survivingHiveId}
                       onChange={(e) => setSurvivingHiveId(e.target.value)}
+                      required
                       className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
                     >
+                      <option value="">Select surviving hive</option>
                       <option value={hiveA.id}>{hiveA.name}</option>
                       <option value={hiveB.id}>{hiveB.name}</option>
                     </select>
@@ -328,6 +336,10 @@ export default function QueenUnionPanel({ onRecorded }) {
                       className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
                     />
                   </label>
+                </div>
+
+                <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+                  <strong>What happens to the other hive?</strong> The hive you do not choose to keep will be moved to the Archive as the redundant physical hive. It will not be deleted, and its Queen and colony history will remain preserved.
                 </div>
 
                 {bothQueenright ? (
