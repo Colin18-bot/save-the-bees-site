@@ -23,8 +23,6 @@ const queenLabel = (queen) => {
 
 const replacementOptions = [
   "Existing swarm Queen cells retained",
-  "Existing emergency Queen cells retained",
-  "Existing supersedure Queen cells retained",
   "Allow colony to raise its own Queen from existing eggs or young larvae",
   "Frame of eggs or young larvae added",
   "Add a frame of eggs or young larvae later",
