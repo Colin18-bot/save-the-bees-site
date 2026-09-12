@@ -163,6 +163,7 @@ const buildEvents = (events) =>
       id: event.id,
       date: formatQueenDate(event.event_date),
       dateRaw: event.event_date,
+      createdAtRaw: event.created_at || "",
       type: event.title || titleCase(event.event_type, "Queen event"),
       detail: event.detail || "No additional details recorded.",
     }));
@@ -172,6 +173,8 @@ const buildProgress = (events, transition) => {
     id: event.id,
     date: event.date,
     dateRaw: event.dateRaw,
+    createdAtRaw: event.createdAtRaw,
+    sortKind: 0,
     title: event.type,
     detail: event.detail,
   }));
@@ -181,6 +184,8 @@ const buildProgress = (events, transition) => {
       id: `expected-${transition.id}`,
       date: transition.expectedCheck,
       dateRaw: transition.expectedCheckRaw,
+      createdAtRaw: "",
+      sortKind: 1,
       title: "Queen follow-up due",
       detail: transition.note,
     });
@@ -189,7 +194,13 @@ const buildProgress = (events, transition) => {
   return items.sort((a, b) => {
     const left = asDate(a.dateRaw)?.getTime() ?? 0;
     const right = asDate(b.dateRaw)?.getTime() ?? 0;
-    return left - right;
+    if (left !== right) return left - right;
+
+    if (a.sortKind !== b.sortKind) return a.sortKind - b.sortKind;
+
+    const leftCreated = asDate(a.createdAtRaw)?.getTime() ?? 0;
+    const rightCreated = asDate(b.createdAtRaw)?.getTime() ?? 0;
+    return leftCreated - rightCreated;
   });
 };
 
