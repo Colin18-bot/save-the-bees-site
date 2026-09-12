@@ -13,6 +13,7 @@ import QueenRecordsBase from "./QueenRecordsBase.jsx";
 import QueenUnionPanel from "./QueenUnionPanel.jsx";
 import QueenSwarmPanel from "./QueenSwarmPanel.jsx";
 import { getQueenRecordsOverview } from "../../services/queenRecords.js";
+import { supabase } from "../../services/supabase";
 
 const TABS = [
   { id: "overview", label: "Overview", icon: Crown, baseLabel: "Overview" },
@@ -43,6 +44,117 @@ const LOSS_PROGRESS_OPTIONS = [
   "Queen presumed lost",
   "Queenless confirmed",
 ];
+
+const RETAINED_CELL_METHODS = [
+  "Existing emergency Queen cells retained",
+  "Existing supersedure Queen cells retained",
+  "Existing swarm Queen cells retained",
+];
+
+const RETAINED_CELL_METHOD_BY_POSITION = {
+  "Emergency Queen cells": "Existing emergency Queen cells retained",
+  "Supersedure Queen cells": "Existing supersedure Queen cells retained",
+  "Swarm Queen cells": "Existing swarm Queen cells retained",
+};
+
+const queenCellPositionFromMethod = (method = "") => {
+  const value = String(method).trim().toLowerCase();
+  if (value === "existing emergency queen cells retained") return "Emergency Queen cells";
+  if (value === "existing supersedure queen cells retained") return "Supersedure Queen cells";
+  if (value === "existing swarm queen cells retained") return "Swarm Queen cells";
+  return "";
+};
+
+const applyQueenCellReplacementRules = (queenCellSelect, replacementSelect) => {
+  if (!queenCellSelect || !replacementSelect) return;
+
+  const allowedRetainedMethod = RETAINED_CELL_METHOD_BY_POSITION[queenCellSelect.value] || null;
+  let selectedMethodIsNowInvalid = false;
+
+  Array.from(replacementSelect.options).forEach((option) => {
+    const label = (option.textContent || "").trim();
+    if (!RETAINED_CELL_METHODS.includes(label)) return;
+
+    const allowed = label === allowedRetainedMethod;
+    option.hidden = !allowed;
+    option.disabled = !allowed;
+
+    if (option.selected && !allowed) {
+      selectedMethodIsNowInvalid = true;
+    }
+  });
+
+  if (selectedMethodIsNowInvalid) {
+    replacementSelect.value = "Not yet decided";
+    replacementSelect.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+};
+
+const wireQueenCellReplacementRules = (root, selectedHive) => {
+  const selects = Array.from(root?.querySelectorAll("select") || []);
+  const queenCellSelect = selects.find((select) => {
+    const labels = Array.from(select.options).map((option) => (option.textContent || "").trim());
+    return labels.includes("Queen-cell position not recorded") && labels.includes("Emergency Queen cells");
+  });
+  const replacementSelect = selects.find((select) => {
+    const labels = Array.from(select.options).map((option) => (option.textContent || "").trim());
+    return labels.includes("Existing emergency Queen cells retained") && labels.includes("Not yet decided");
+  });
+
+  if (!queenCellSelect || !replacementSelect) return;
+
+  const form = queenCellSelect.closest("form");
+  const formTitle = form?.closest("section")?.querySelector("h2")?.textContent || "";
+  const isQueenlessPlan = formTitle.includes("Set Queenless Colony Plan");
+
+  if (isQueenlessPlan && !selectedHive) return;
+
+  if (!queenCellSelect.dataset.contextualReplacementWired) {
+    queenCellSelect.dataset.contextualReplacementWired = "true";
+    queenCellSelect.addEventListener("change", () => {
+      applyQueenCellReplacementRules(queenCellSelect, replacementSelect);
+    });
+  }
+
+  if (isQueenlessPlan && selectedHive?.transition?.id) {
+    if (!queenCellSelect.dataset.contextualReplacementPrefill) {
+      queenCellSelect.dataset.contextualReplacementPrefill = "loading";
+
+      supabase
+        .from("queen_processes")
+        .select("metadata")
+        .eq("id", selectedHive.transition.id)
+        .maybeSingle()
+        .then(({ data, error }) => {
+          if (error) {
+            console.warn("Could not load Queen-cell position for the active Queen process", error);
+          }
+
+          const savedPosition =
+            data?.metadata?.queen_cell_position ||
+            queenCellPositionFromMethod(selectedHive.transition?.method);
+
+          if (
+            queenCellSelect.value === "Queen-cell position not recorded" &&
+            savedPosition &&
+            Array.from(queenCellSelect.options).some((option) => option.value === savedPosition)
+          ) {
+            queenCellSelect.value = savedPosition;
+            queenCellSelect.dispatchEvent(new Event("change", { bubbles: true }));
+          }
+
+          queenCellSelect.dataset.contextualReplacementPrefill = "done";
+          applyQueenCellReplacementRules(queenCellSelect, replacementSelect);
+        });
+
+      return;
+    }
+
+    if (queenCellSelect.dataset.contextualReplacementPrefill === "loading") return;
+  }
+
+  applyQueenCellReplacementRules(queenCellSelect, replacementSelect);
+};
 
 const getContextualProgressOptions = (hive) => {
   const currentQueen = hive?.currentQueen;
@@ -268,6 +380,8 @@ export default function QueenRecords() {
           header.appendChild(lock);
         }
       }
+
+      wireQueenCellReplacementRules(root, selectedHive);
     };
 
     const loadSelectedHive = async () => {
