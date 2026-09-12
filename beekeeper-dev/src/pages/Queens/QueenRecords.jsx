@@ -245,7 +245,12 @@ export default function QueenRecords() {
         addQueenButton.classList.add("cursor-not-allowed", "bg-gray-100", "opacity-65");
 
         const header = addQueenButton.firstElementChild;
-        if (header && !header.querySelector('[data-history-lock="true"]')) {
+        const historyLock = header?.querySelector('[data-history-lock="true"]');
+        const nativeLock = header?.querySelector('svg.lucide-lock, svg[data-lucide="lock"]');
+
+        if (nativeLock && historyLock) {
+          historyLock.remove();
+        } else if (header && !nativeLock && !historyLock) {
           const lock = document.createElementNS("http://www.w3.org/2000/svg", "svg");
           lock.setAttribute("data-history-lock", "true");
           lock.setAttribute("viewBox", "0 0 24 24");
