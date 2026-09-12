@@ -255,6 +255,7 @@ export default function QueenRecords() {
   const [activeTab, setActiveTab] = useState("overview");
   const [tabNotice, setTabNotice] = useState("");
   const [baseVersion, setBaseVersion] = useState(0);
+  const [showBackToRegister, setShowBackToRegister] = useState(false);
   const baseRef = useRef(null);
   const successPollRef = useRef(null);
 
@@ -323,6 +324,24 @@ export default function QueenRecords() {
       window.cancelAnimationFrame(frame);
       if (retryTimer) window.clearTimeout(retryTimer);
     };
+  }, [activeTab, baseVersion]);
+
+  useEffect(() => {
+    if (activeTab !== "overview" || !baseRef.current) return undefined;
+
+    const updateRegisterLinks = () => {
+      Array.from(baseRef.current?.querySelectorAll("span") || []).forEach((item) => {
+        if ((item.textContent || "").trim() === "Open →") {
+          item.textContent = "View hive →";
+        }
+      });
+    };
+
+    updateRegisterLinks();
+    const observer = new MutationObserver(updateRegisterLinks);
+    observer.observe(baseRef.current, { childList: true, subtree: true, characterData: true });
+
+    return () => observer.disconnect();
   }, [activeTab, baseVersion]);
 
   useEffect(() => {
@@ -420,12 +439,80 @@ export default function QueenRecords() {
     []
   );
 
+  const clickBaseRefresh = () => {
+    const refreshButton = Array.from(baseRef.current?.querySelectorAll("button") || []).find(
+      (item) => (item.textContent || "").trim() === "Refresh"
+    );
+
+    if (refreshButton) {
+      refreshButton.click();
+      return true;
+    }
+
+    return false;
+  };
+
   const refreshBase = () => {
-    setBaseVersion((value) => value + 1);
+    if (!clickBaseRefresh()) {
+      setBaseVersion((value) => value + 1);
+    }
   };
 
   const handleLifecycleRecorded = () => {
     refreshBase();
+  };
+
+  const setSelectValue = (select, value) => {
+    if (!select) return;
+
+    const nativeSetter = Object.getOwnPropertyDescriptor(
+      window.HTMLSelectElement.prototype,
+      "value"
+    )?.set;
+
+    if (nativeSetter) nativeSetter.call(select, value);
+    else select.value = value;
+
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+  };
+
+  const backToQueenRegister = () => {
+    setTabNotice("");
+    setActiveTab("overview");
+    setShowBackToRegister(false);
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        const root = baseRef.current;
+        if (!root) return;
+
+        const selects = Array.from(root.querySelectorAll("select"));
+        const apiarySelect = selects.find((select) =>
+          Array.from(select.options).some(
+            (option) => option.value === "all" && (option.textContent || "").trim() === "All apiaries"
+          )
+        );
+
+        if (apiarySelect && apiarySelect.value !== "all") {
+          setSelectValue(apiarySelect, "all");
+        }
+
+        window.setTimeout(() => {
+          const currentSelects = Array.from(root.querySelectorAll("select"));
+          const hiveSelect = currentSelects.find((select) =>
+            Array.from(select.options).some(
+              (option) => option.value === "all" && (option.textContent || "").trim() === "All hives"
+            )
+          );
+
+          if (hiveSelect && hiveSelect.value !== "all") {
+            setSelectValue(hiveSelect, "all");
+          }
+
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }, 0);
+      });
+    });
   };
 
   const scrollToInlineForm = () => {
@@ -482,6 +569,10 @@ export default function QueenRecords() {
 
     const buttonText = button.textContent || "";
 
+    if (buttonText.includes("View hive →") || buttonText.includes("Open →")) {
+      setShowBackToRegister(true);
+    }
+
     if (buttonText.includes("Record a Swarm")) {
       event.preventDefault();
       event.stopPropagation();
@@ -500,6 +591,21 @@ export default function QueenRecords() {
     if (INLINE_ACTION_LABELS.some((label) => buttonText.includes(label))) {
       scrollToInlineForm();
     }
+  };
+
+  const handleBaseChangeCapture = () => {
+    window.setTimeout(() => {
+      const selects = Array.from(baseRef.current?.querySelectorAll("select") || []);
+      const hiveSelect = selects.find((select) =>
+        Array.from(select.options).some(
+          (option) => option.value === "all" && (option.textContent || "").trim() === "All hives"
+        )
+      );
+
+      if (hiveSelect?.value === "all") {
+        setShowBackToRegister(false);
+      }
+    }, 0);
   };
 
   const handleBaseSubmitCapture = () => {
@@ -565,7 +671,16 @@ export default function QueenRecords() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {showBackToRegister ? (
+            <button
+              type="button"
+              onClick={backToQueenRegister}
+              className="inline-flex items-center justify-center rounded-lg border border-green-700 bg-white px-4 py-2 text-sm font-bold text-green-900 hover:bg-green-50"
+            >
+              ← Back to Queen register
+            </button>
+          ) : null}
           <span className="rounded-full border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-bold text-amber-900">
             Staging layout
           </span>
@@ -612,6 +727,7 @@ export default function QueenRecords() {
       <div
         ref={baseRef}
         onClickCapture={handleBaseClickCapture}
+        onChangeCapture={handleBaseChangeCapture}
         onSubmitCapture={handleBaseSubmitCapture}
         className="queen-base-integrated"
         style={{ display: BASE_TABS.has(activeTab) ? "block" : "none" }}
