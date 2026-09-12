@@ -28,6 +28,8 @@ const TABS = [
 const BASE_TABS = new Set(["overview", "current", "progress", "history", "events"]);
 const SWARM_DESCRIPTION =
   "Record whether the swarm was lost, recovered and returned, or moved to another hive or nucleus.";
+const SPLIT_DESCRIPTION =
+  "Select an empty hive or nucleus and record where the Queen moved.";
 const INLINE_ACTION_LABELS = [
   "Add a Queen",
   "Edit Queen Information",
@@ -514,6 +516,89 @@ export default function QueenRecords() {
   }, [activeTab, baseVersion, selectedHiveId]);
 
   useEffect(() => {
+    if (activeTab !== "history" || !selectedHiveId || !baseRef.current) return undefined;
+
+    let cancelled = false;
+    let retryTimer;
+
+    const orderPreviousQueens = async () => {
+      try {
+        const { data: assignments, error: assignmentError } = await supabase
+          .from("queen_assignments")
+          .select("queen_id, ended_on, created_at")
+          .eq("hive_id", selectedHiveId)
+          .not("ended_on", "is", null)
+          .order("ended_on", { ascending: false })
+          .order("created_at", { ascending: false });
+
+        if (assignmentError) throw assignmentError;
+        if (cancelled || !assignments?.length) return;
+
+        const queenIds = [...new Set(assignments.map((item) => item.queen_id).filter(Boolean))];
+        const { data: queens, error: queenError } = await supabase
+          .from("queens")
+          .select("id, reference")
+          .in("id", queenIds);
+
+        if (queenError) throw queenError;
+        if (cancelled) return;
+
+        const referencesByQueenId = new Map(
+          (queens || []).map((queen) => [String(queen.id), String(queen.reference || "").trim()])
+        );
+        const orderByReference = new Map();
+        assignments.forEach((assignment, index) => {
+          const reference = referencesByQueenId.get(String(assignment.queen_id));
+          if (reference && !orderByReference.has(reference)) {
+            orderByReference.set(reference, index);
+          }
+        });
+
+        let attempts = 0;
+        const applyOrder = () => {
+          if (cancelled || !baseRef.current) return;
+          attempts += 1;
+
+          const heading = Array.from(baseRef.current.querySelectorAll("h2")).find(
+            (item) => (item.textContent || "").trim() === "Previous queens"
+          );
+          const card = heading?.closest("section");
+          const list = Array.from(card?.children || []).find((item) =>
+            item.classList?.contains("divide-y")
+          );
+
+          if (!list) {
+            if (attempts < 50) retryTimer = window.setTimeout(applyOrder, 40);
+            return;
+          }
+
+          const rows = Array.from(list.children);
+          rows
+            .sort((left, right) => {
+              const leftReference = (left.querySelector("p")?.textContent || "").trim();
+              const rightReference = (right.querySelector("p")?.textContent || "").trim();
+              const leftOrder = orderByReference.get(leftReference) ?? Number.MAX_SAFE_INTEGER;
+              const rightOrder = orderByReference.get(rightReference) ?? Number.MAX_SAFE_INTEGER;
+              return leftOrder - rightOrder;
+            })
+            .forEach((row) => list.appendChild(row));
+        };
+
+        applyOrder();
+      } catch (error) {
+        console.warn("Could not order previous Queen history", error);
+      }
+    };
+
+    orderPreviousQueens();
+
+    return () => {
+      cancelled = true;
+      if (retryTimer) window.clearTimeout(retryTimer);
+    };
+  }, [activeTab, baseVersion, selectedHiveId]);
+
+  useEffect(() => {
     if (activeTab !== "events" || !baseRef.current) return undefined;
 
     let cancelled = false;
@@ -526,9 +611,17 @@ export default function QueenRecords() {
       const swarmButton = Array.from(root.querySelectorAll("button")).find(
         (item) => (item.textContent || "").includes("Record a Swarm")
       );
-      const paragraphs = swarmButton?.querySelectorAll("p");
-      if (paragraphs?.length > 1 && paragraphs[1].textContent !== SWARM_DESCRIPTION) {
-        paragraphs[1].textContent = SWARM_DESCRIPTION;
+      const swarmParagraphs = swarmButton?.querySelectorAll("p");
+      if (swarmParagraphs?.length > 1 && swarmParagraphs[1].textContent !== SWARM_DESCRIPTION) {
+        swarmParagraphs[1].textContent = SWARM_DESCRIPTION;
+      }
+
+      const splitButton = Array.from(root.querySelectorAll("button")).find(
+        (item) => (item.textContent || "").includes("Record a Split")
+      );
+      const splitParagraphs = splitButton?.querySelectorAll("p");
+      if (splitParagraphs?.length > 1 && splitParagraphs[1].textContent !== SPLIT_DESCRIPTION) {
+        splitParagraphs[1].textContent = SPLIT_DESCRIPTION;
       }
 
       const addQueenButton = Array.from(root.querySelectorAll("button")).find(
