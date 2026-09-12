@@ -9,6 +9,74 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.5.4",
+  released_at: "2026-09-12T18:00:00Z",
+
+  summary:
+    "Expanded Queen Records into a clearer colony-lifecycle workspace, adding full colony-union and swarm workflows, stronger Queenless-colony management, safer context-aware Queen progress, improved history preservation and a series of usability safeguards around Queen events and changes.",
+
+  added: [
+    "Added the redesigned **Queen Records** workspace with dedicated **Overview**, **Current Queen**, **Progress**, **Unite Colonies**, **Swarm**, **History**, and **Events & Changes** views.",
+    "Added **Unite Colonies**, allowing two colonies to be combined while choosing which physical hive remains in use independently from which Queen remains.",
+    "Added support for Queenright/Queenless, Queenless/Queenright, both-Queenless and both-Queenright colony unions while preserving historical Queen assignments and events.",
+    "Added explicit outcomes for the Queen that does not remain when both colonies are Queenright: **Removed before union**, **Lost or killed during union**, or **Outcome unknown after union**.",
+    "Added the improved **Record a Swarm** workflow with three outcomes: **Swarm lost / not recovered**, **Swarm recovered and returned to this hive**, and **Swarm recovered and placed in another hive or nucleus**.",
+    "Added automatic transfer of a recovered swarm Queen when the swarm is placed into another empty hive or nucleus, while the original colony starts its replacement-Queen process.",
+    "Added **Queen-cell position** to Queenless Colony Plans so beekeepers can record whether no cells, cups, emergency cells, supersedure cells, swarm cells or an uncertain Queen-cell type are present.",
+    "Added a complete home-reared Queen progression from Queen cells through **Queen emerged**, **Mating outcome pending**, **Eggs observed** and **Laying queen confirmed**.",
+    "Added automatic creation of the individual home-reared Queen record when **Queen emerged** is recorded, linking the new Queen to the existing colony process and hive assignment.",
+    "Added context-sensitive Queen progress choices so HiveTag shows progress events relevant to the colony or Queen's current lifecycle position.",
+    "Added clear success confirmations after Queen actions, with completed forms locked after saving to reduce accidental duplicate submissions."
+  ],
+
+  changed: [
+    "Clarified that **Queenless** describes a colony state or managed process rather than the status of the former Queen.",
+    "A Queen who is confirmed absent is now shown as **No longer present**, with the reason preserved separately in Queen History.",
+    "**Queenless confirmed** now closes the former Queen assignment and opens a Queenless Colony Plan rather than assigning the status 'Queenless' to the former Queen.",
+    "Queenless Colony Plans now retain the selected replacement route, Queen-cell position, next check date and lifecycle progress as one continuous managed process.",
+    "When existing emergency, supersedure or swarm Queen cells are recorded, the replacement-route choices are now kept consistent with the Queen-cell position wherever appropriate.",
+    "**Add a Queen** is treated as the first known Queen record for a hive. Once Queen history exists, later Queens are handled through the appropriate introduction or lifecycle workflow rather than silently replacing the earlier Queen.",
+    "Queen event tiles now open their form and scroll directly to the start of it, making the action immediately visible on larger screens.",
+    "Successful Queen event saves now scroll to a clear success message instead of leaving the member lower down the page near Recent changes.",
+    "The surviving-hive selector in **Unite Colonies** is restricted to the two colonies selected for that union.",
+    "The redundant physical hive from a colony union is archived as **Colony combined** while Queen and colony history remain available.",
+    "Restoring or reusing an archived physical hive does not automatically reactivate its former Queen assignment or Queen process.",
+    "Updated Queen History wording to separate a former Queen's status from the reason her assignment ended.",
+    "Updated Help guidance to document the revised Queen Records navigation, union, swarm, Queenless and home-reared Queen workflows."
+  ],
+
+  fixed: [
+    "Fixed **Queenless confirmed** incorrectly setting the former Queen's status to Queenless.",
+    "Fixed **Laying queen confirmed** disappearing after **Eggs observed** even though the active Queen-rearing process still needed its final confirmation.",
+    "Fixed Queen progress options allowing inappropriate backwards or unrelated lifecycle choices for the current Queen state.",
+    "Fixed Queen History wording that could make a former Queen appear Queenless instead of showing that the colony had been confirmed Queenless.",
+    "Fixed duplicate padlock icons appearing on **Add a Queen** when both the normal lifecycle lock and the additional Queen-history safeguard applied.",
+    "Fixed Queen action tiles appearing to do nothing on desktop when their forms opened below the current viewport.",
+    "Fixed post-save Queen actions dropping the member into Recent changes without a clear confirmation at the top of the completed action.",
+    "Fixed colony-union selection paths that could otherwise allow the retained physical hive and retained Queen choices to be confused."
+  ],
+
+  removed: [],
+
+  security: [
+    "Restricted the new colony-union and swarm lifecycle database functions to authenticated members, with Premium entitlement still checked server-side.",
+    "Restricted Queen progress execution so anonymous sessions cannot call the lifecycle function directly.",
+    "Lifecycle functions use controlled server-side execution and ownership checks so members can only change their own colonies and Queen records."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Queen Records", to: "/queens" },
+    { label: "Help", to: "/help" },
+    { label: "Release Notes", to: "/updates" }
+  ],
+
+  known_issues: [
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
+{
   version: "1.5.3",
   released_at: "2026-09-11T16:30:00Z",
 
@@ -484,18 +552,6 @@ const NOTES = [
   ]
 },
 
-
-
-
-
-
-
-
-
-
-
-
-
   {
   version: "1.2.0",
   released_at: "2026-06-25T18:00:00Z",
@@ -532,7 +588,7 @@ const NOTES = [
   "Fixed report filters resetting after refreshing the page or returning from another browser tab.",
   "Fixed image downloads previously opening a new browser tab instead of downloading directly.",
   "Fixed duplicate gallery controls appearing within expanded inspection records.",
-  "Fixed inconsistent sharing behaviour by providing clipboard fallbacks when native sharing is unavailable.",
+  "Fixed inconsistent sharing behaviour by providing clipboard fallbacks when native browser sharing is unavailable.",
   "Improved report stability when returning from gallery or download actions.",
   "Improved desktop report layout consistency and overall presentation."
   ],
