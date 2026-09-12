@@ -212,21 +212,67 @@ export default function QueenRecords() {
   useEffect(() => {
     if (activeTab !== "events" || !baseRef.current) return undefined;
 
-    const updateSwarmDescription = () => {
-      const swarmButton = Array.from(baseRef.current?.querySelectorAll("button") || []).find(
+    let cancelled = false;
+    let selectedHive = null;
+
+    const updateEventTiles = () => {
+      const root = baseRef.current;
+      if (!root) return;
+
+      const swarmButton = Array.from(root.querySelectorAll("button")).find(
         (item) => (item.textContent || "").includes("Record a Swarm")
       );
       const paragraphs = swarmButton?.querySelectorAll("p");
       if (paragraphs?.length > 1 && paragraphs[1].textContent !== SWARM_DESCRIPTION) {
         paragraphs[1].textContent = SWARM_DESCRIPTION;
       }
+
+      const addQueenButton = Array.from(root.querySelectorAll("button")).find(
+        (item) => (item.textContent || "").includes("Add a Queen")
+      );
+      const hasQueenHistory = Boolean(selectedHive?.previousQueens?.length);
+
+      if (addQueenButton && hasQueenHistory) {
+        addQueenButton.disabled = true;
+        addQueenButton.setAttribute("aria-disabled", "true");
+        addQueenButton.title = "This hive already has Queen history. Use Introduce a Queen for a new Queen.";
+        addQueenButton.classList.remove(
+          "bg-white",
+          "hover:border-amber-400",
+          "hover:bg-amber-50",
+          "hover:shadow-sm"
+        );
+        addQueenButton.classList.add("cursor-not-allowed", "bg-gray-100", "opacity-65");
+      }
     };
 
-    updateSwarmDescription();
-    const observer = new MutationObserver(updateSwarmDescription);
+    const loadSelectedHive = async () => {
+      try {
+        const records = await getQueenRecordsOverview();
+        if (cancelled || !baseRef.current) return;
+
+        const hivesById = new Map((records.hives || []).map((hive) => [String(hive.id), hive]));
+        const selectedHiveId = Array.from(baseRef.current.querySelectorAll("select"))
+          .map((select) => String(select.value || ""))
+          .find((value) => hivesById.has(value));
+
+        selectedHive = selectedHiveId ? hivesById.get(selectedHiveId) : null;
+        updateEventTiles();
+      } catch (error) {
+        console.warn("Could not apply Queen event tile rules", error);
+      }
+    };
+
+    updateEventTiles();
+    loadSelectedHive();
+
+    const observer = new MutationObserver(updateEventTiles);
     observer.observe(baseRef.current, { childList: true, subtree: true, characterData: true });
 
-    return () => observer.disconnect();
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+    };
   }, [activeTab, baseVersion]);
 
   useEffect(
