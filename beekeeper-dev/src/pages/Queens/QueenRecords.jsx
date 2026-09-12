@@ -243,6 +243,21 @@ export default function QueenRecords() {
           "hover:shadow-sm"
         );
         addQueenButton.classList.add("cursor-not-allowed", "bg-gray-100", "opacity-65");
+
+        const header = addQueenButton.firstElementChild;
+        if (header && !header.querySelector('[data-history-lock="true"]')) {
+          const lock = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+          lock.setAttribute("data-history-lock", "true");
+          lock.setAttribute("viewBox", "0 0 24 24");
+          lock.setAttribute("fill", "none");
+          lock.setAttribute("stroke", "currentColor");
+          lock.setAttribute("stroke-width", "2");
+          lock.setAttribute("stroke-linecap", "round");
+          lock.setAttribute("stroke-linejoin", "round");
+          lock.setAttribute("class", "h-4 w-4 text-gray-500");
+          lock.innerHTML = '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path>';
+          header.appendChild(lock);
+        }
       }
     };
 
