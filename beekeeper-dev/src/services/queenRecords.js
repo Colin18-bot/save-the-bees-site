@@ -168,41 +168,14 @@ const buildEvents = (events) =>
       detail: event.detail || "No additional details recorded.",
     }));
 
-const buildProgress = (events, transition) => {
-  const items = buildEvents(events).map((event) => ({
+const buildProgress = (events) =>
+  buildEvents(events).map((event) => ({
     id: event.id,
     date: event.date,
     dateRaw: event.dateRaw,
-    createdAtRaw: event.createdAtRaw,
-    sortKind: 0,
     title: event.type,
     detail: event.detail,
   }));
-
-  if (transition?.expectedCheckRaw) {
-    items.push({
-      id: `expected-${transition.id}`,
-      date: transition.expectedCheck,
-      dateRaw: transition.expectedCheckRaw,
-      createdAtRaw: "",
-      sortKind: 1,
-      title: "Queen follow-up due",
-      detail: transition.note,
-    });
-  }
-
-  return items.sort((a, b) => {
-    if (a.sortKind !== b.sortKind) return a.sortKind - b.sortKind;
-
-    const left = asDate(a.dateRaw)?.getTime() ?? 0;
-    const right = asDate(b.dateRaw)?.getTime() ?? 0;
-    if (left !== right) return right - left;
-
-    const leftCreated = asDate(a.createdAtRaw)?.getTime() ?? 0;
-    const rightCreated = asDate(b.createdAtRaw)?.getTime() ?? 0;
-    return rightCreated - leftCreated;
-  });
-};
 
 const buildNextAction = (transition) => {
   if (!transition) {
@@ -345,7 +318,7 @@ export async function getQueenRecordsOverview() {
       previousQueens,
       transition,
       nextAction: buildNextAction(transition),
-      progress: buildProgress(hiveEvents, transition),
+      progress: buildProgress(hiveEvents),
       events: normalisedEvents,
     };
   });
