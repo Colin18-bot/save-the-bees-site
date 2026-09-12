@@ -65,6 +65,45 @@ const queenCellPositionFromMethod = (method = "") => {
   return "";
 };
 
+const setSelectValue = (select, value) => {
+  if (!select) return;
+
+  const nativeSetter = Object.getOwnPropertyDescriptor(
+    window.HTMLSelectElement.prototype,
+    "value"
+  )?.set;
+
+  if (nativeSetter) nativeSetter.call(select, value);
+  else select.value = value;
+
+  select.dispatchEvent(new Event("change", { bubbles: true }));
+};
+
+const findSelectWithOption = (root, optionText) =>
+  Array.from(root?.querySelectorAll("select") || []).find((select) =>
+    Array.from(select.options).some(
+      (option) => (option.textContent || "").trim() === optionText
+    )
+  );
+
+const readBaseContext = (root) => {
+  const apiarySelect = findSelectWithOption(root, "All apiaries");
+  const hiveSelect = findSelectWithOption(root, "All hives");
+
+  return {
+    ready: Boolean(apiarySelect && hiveSelect),
+    apiaryId: apiarySelect && apiarySelect.value !== "all" ? String(apiarySelect.value) : "",
+    hiveId: hiveSelect && hiveSelect.value !== "all" ? String(hiveSelect.value) : "",
+  };
+};
+
+const findSelectByLabel = (root, labelStart) => {
+  const label = Array.from(root?.querySelectorAll("label") || []).find((item) =>
+    (item.textContent || "").trim().startsWith(labelStart)
+  );
+  return label?.querySelector("select") || null;
+};
+
 const applyQueenCellReplacementRules = (queenCellSelect, replacementSelect) => {
   if (!queenCellSelect || !replacementSelect) return;
 
@@ -255,9 +294,75 @@ export default function QueenRecords() {
   const [activeTab, setActiveTab] = useState("overview");
   const [tabNotice, setTabNotice] = useState("");
   const [baseVersion, setBaseVersion] = useState(0);
-  const [showBackToRegister, setShowBackToRegister] = useState(false);
+  const [selectedApiaryId, setSelectedApiaryId] = useState("");
+  const [selectedHiveId, setSelectedHiveId] = useState("");
+  const [selectedHiveHasQueen, setSelectedHiveHasQueen] = useState(false);
+  const [panelRefreshKey, setPanelRefreshKey] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
   const baseRef = useRef(null);
+  const panelRef = useRef(null);
   const successPollRef = useRef(null);
+  const contextSyncRef = useRef(0);
+
+  const hasHiveContext = Boolean(selectedApiaryId && selectedHiveId);
+
+  const syncSelectionContext = async () => {
+    const syncId = contextSyncRef.current + 1;
+    contextSyncRef.current = syncId;
+
+    const context = readBaseContext(baseRef.current);
+    if (!context.ready) return;
+
+    setSelectedApiaryId(context.apiaryId);
+    setSelectedHiveId(context.hiveId);
+
+    if (!context.apiaryId || !context.hiveId) {
+      setSelectedHiveHasQueen(false);
+      if (activeTab !== "overview") {
+        setActiveTab("overview");
+      }
+      return;
+    }
+
+    try {
+      const records = await getQueenRecordsOverview();
+      if (contextSyncRef.current !== syncId) return;
+      const hive = (records.hives || []).find(
+        (item) => String(item.id) === String(context.hiveId)
+      );
+      setSelectedHiveHasQueen(Boolean(hive?.currentQueen));
+    } catch (error) {
+      console.warn("Could not refresh selected Queen Records context", error);
+      if (contextSyncRef.current === syncId) {
+        setSelectedHiveHasQueen(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    let attempts = 0;
+    let timer;
+    let cancelled = false;
+
+    const probe = () => {
+      if (cancelled) return;
+      attempts += 1;
+      const context = readBaseContext(baseRef.current);
+      if (context.ready) {
+        syncSelectionContext();
+        return;
+      }
+      if (attempts < 60) {
+        timer = window.setTimeout(probe, 50);
+      }
+    };
+
+    probe();
+    return () => {
+      cancelled = true;
+      if (timer) window.clearTimeout(timer);
+    };
+  }, [baseVersion]);
 
   useEffect(() => {
     if (!BASE_TABS.has(activeTab)) return undefined;
@@ -282,7 +387,7 @@ export default function QueenRecords() {
       if (!button) return;
 
       if (button.disabled && activeTab !== "overview") {
-        setTabNotice("Select a hive below before opening this Queen Records tab.");
+        setTabNotice("Select a specific apiary and hive before opening this Queen Records tab.");
         setActiveTab("overview");
         return;
       }
@@ -357,7 +462,7 @@ export default function QueenRecords() {
 
       const existingButton = root.querySelector('[data-back-to-queen-register="true"]');
 
-      if (!showBackToRegister) {
+      if (!hasHiveContext) {
         existingButton?.remove();
         if (viewingRow) {
           viewingRow.classList.remove(
@@ -406,7 +511,7 @@ export default function QueenRecords() {
       button?.removeEventListener("click", backToQueenRegister);
       button?.remove();
     };
-  }, [activeTab, baseVersion, showBackToRegister]);
+  }, [activeTab, baseVersion, hasHiveContext]);
 
   useEffect(() => {
     if (activeTab !== "events" || !baseRef.current) return undefined;
@@ -471,13 +576,9 @@ export default function QueenRecords() {
       try {
         const records = await getQueenRecordsOverview();
         if (cancelled || !baseRef.current) return;
-
-        const hivesById = new Map((records.hives || []).map((hive) => [String(hive.id), hive]));
-        const selectedHiveId = Array.from(baseRef.current.querySelectorAll("select"))
-          .map((select) => String(select.value || ""))
-          .find((value) => hivesById.has(value));
-
-        selectedHive = selectedHiveId ? hivesById.get(selectedHiveId) : null;
+        selectedHive = (records.hives || []).find(
+          (hive) => String(hive.id) === String(selectedHiveId)
+        ) || null;
         updateEventTiles();
       } catch (error) {
         console.warn("Could not apply Queen event tile rules", error);
@@ -494,7 +595,68 @@ export default function QueenRecords() {
       cancelled = true;
       observer.disconnect();
     };
-  }, [activeTab, baseVersion]);
+  }, [activeTab, baseVersion, selectedHiveId]);
+
+  useEffect(() => {
+    if (!panelRef.current || !selectedHiveId || !["union", "swarm"].includes(activeTab)) {
+      return undefined;
+    }
+
+    const root = panelRef.current;
+
+    const applyPanelContext = () => {
+      if (activeTab === "union") {
+        const firstSelect = findSelectByLabel(root, "First colony");
+        const secondSelect = findSelectByLabel(root, "Second colony");
+
+        if (firstSelect) {
+          const hasSelectedHive = Array.from(firstSelect.options).some(
+            (option) => String(option.value) === String(selectedHiveId)
+          );
+          if (hasSelectedHive && String(firstSelect.value) !== String(selectedHiveId)) {
+            setSelectValue(firstSelect, selectedHiveId);
+          }
+          firstSelect.disabled = true;
+          firstSelect.classList.add("bg-gray-100", "text-gray-700");
+        }
+
+        if (secondSelect && !secondSelect.dataset.contextInitialised) {
+          let placeholder = Array.from(secondSelect.options).find(
+            (option) => option.dataset?.contextPlaceholder === "true"
+          );
+          if (!placeholder) {
+            placeholder = document.createElement("option");
+            placeholder.value = "";
+            placeholder.textContent = "Select second colony";
+            placeholder.dataset.contextPlaceholder = "true";
+            secondSelect.insertBefore(placeholder, secondSelect.firstChild);
+          }
+          setSelectValue(secondSelect, "");
+          secondSelect.dataset.contextInitialised = "true";
+        }
+      }
+
+      if (activeTab === "swarm") {
+        const sourceSelect = findSelectByLabel(root, "Colony that swarmed");
+        if (sourceSelect) {
+          const hasSelectedHive = Array.from(sourceSelect.options).some(
+            (option) => String(option.value) === String(selectedHiveId)
+          );
+          if (hasSelectedHive && String(sourceSelect.value) !== String(selectedHiveId)) {
+            setSelectValue(sourceSelect, selectedHiveId);
+          }
+          sourceSelect.disabled = true;
+          sourceSelect.classList.add("bg-gray-100", "text-gray-700");
+        }
+      }
+    };
+
+    applyPanelContext();
+    const observer = new MutationObserver(applyPanelContext);
+    observer.observe(root, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
+  }, [activeTab, selectedHiveId, panelRefreshKey]);
 
   useEffect(
     () => () => {
@@ -516,63 +678,57 @@ export default function QueenRecords() {
     return false;
   };
 
-  const refreshBase = () => {
-    if (!clickBaseRefresh()) {
-      setBaseVersion((value) => value + 1);
+  const refreshBaseData = () => {
+    if (clickBaseRefresh()) return;
+    window.setTimeout(() => {
+      if (!clickBaseRefresh()) {
+        setBaseVersion((value) => value + 1);
+      }
+    }, 200);
+  };
+
+  const handleRefresh = () => {
+    if (refreshing) return;
+    setRefreshing(true);
+    refreshBaseData();
+
+    if (["union", "swarm"].includes(activeTab)) {
+      setPanelRefreshKey((value) => value + 1);
     }
+
+    window.setTimeout(() => {
+      syncSelectionContext();
+      setRefreshing(false);
+    }, 700);
   };
 
   const handleLifecycleRecorded = () => {
-    refreshBase();
-  };
-
-  const setSelectValue = (select, value) => {
-    if (!select) return;
-
-    const nativeSetter = Object.getOwnPropertyDescriptor(
-      window.HTMLSelectElement.prototype,
-      "value"
-    )?.set;
-
-    if (nativeSetter) nativeSetter.call(select, value);
-    else select.value = value;
-
-    select.dispatchEvent(new Event("change", { bubbles: true }));
+    refreshBaseData();
+    window.setTimeout(syncSelectionContext, 600);
   };
 
   const backToQueenRegister = () => {
     setTabNotice("");
     setActiveTab("overview");
-    setShowBackToRegister(false);
+    setSelectedApiaryId("");
+    setSelectedHiveId("");
+    setSelectedHiveHasQueen(false);
 
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
         const root = baseRef.current;
         if (!root) return;
 
-        const selects = Array.from(root.querySelectorAll("select"));
-        const apiarySelect = selects.find((select) =>
-          Array.from(select.options).some(
-            (option) => option.value === "all" && (option.textContent || "").trim() === "All apiaries"
-          )
-        );
-
+        const apiarySelect = findSelectWithOption(root, "All apiaries");
         if (apiarySelect && apiarySelect.value !== "all") {
           setSelectValue(apiarySelect, "all");
         }
 
         window.setTimeout(() => {
-          const currentSelects = Array.from(root.querySelectorAll("select"));
-          const hiveSelect = currentSelects.find((select) =>
-            Array.from(select.options).some(
-              (option) => option.value === "all" && (option.textContent || "").trim() === "All hives"
-            )
-          );
-
+          const hiveSelect = findSelectWithOption(root, "All hives");
           if (hiveSelect && hiveSelect.value !== "all") {
             setSelectValue(hiveSelect, "all");
           }
-
           window.scrollTo({ top: 0, behavior: "smooth" });
         }, 0);
       });
@@ -596,7 +752,7 @@ export default function QueenRecords() {
         return item.classList.contains("border-t") && text.startsWith("Viewing:");
       });
       viewingRow?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 50);
+    }, 80);
   };
 
   const applyContextualProgressOptions = async () => {
@@ -609,11 +765,9 @@ export default function QueenRecords() {
       if (!progressSelect) return;
 
       const records = await recordsPromise;
-      const hivesById = new Map((records.hives || []).map((hive) => [String(hive.id), hive]));
-      const selectedHiveId = Array.from(root.querySelectorAll("select"))
-        .map((select) => String(select.value || ""))
-        .find((value) => hivesById.has(value));
-      const hive = selectedHiveId ? hivesById.get(selectedHiveId) : null;
+      const hive = (records.hives || []).find(
+        (item) => String(item.id) === String(selectedHiveId)
+      );
       if (!hive) return;
 
       const allowedOptions = new Set(getContextualProgressOptions(hive));
@@ -644,15 +798,17 @@ export default function QueenRecords() {
     const buttonText = button.textContent || "";
 
     if (buttonText.includes("View hive →") || buttonText.includes("Open →")) {
-      setShowBackToRegister(true);
+      window.setTimeout(syncSelectionContext, 70);
       scrollToViewingRow();
     }
 
     if (buttonText.includes("Record a Swarm")) {
       event.preventDefault();
       event.stopPropagation();
-      setTabNotice("");
-      setActiveTab("swarm");
+      if (hasHiveContext && selectedHiveHasQueen) {
+        setTabNotice("");
+        setActiveTab("swarm");
+      }
       return;
     }
 
@@ -669,18 +825,7 @@ export default function QueenRecords() {
   };
 
   const handleBaseChangeCapture = () => {
-    window.setTimeout(() => {
-      const selects = Array.from(baseRef.current?.querySelectorAll("select") || []);
-      const hiveSelect = selects.find((select) =>
-        Array.from(select.options).some(
-          (option) => option.value === "all" && (option.textContent || "").trim() === "All hives"
-        )
-      );
-
-      if (hiveSelect?.value === "all") {
-        setShowBackToRegister(false);
-      }
-    }, 0);
+    window.setTimeout(syncSelectionContext, 0);
   };
 
   const handleBaseSubmitCapture = () => {
@@ -701,6 +846,7 @@ export default function QueenRecords() {
         if (successBox) {
           successBox.scrollIntoView({ behavior: "smooth", block: "start" });
           successPollRef.current = null;
+          window.setTimeout(syncSelectionContext, 300);
           return;
         }
       }
@@ -713,6 +859,22 @@ export default function QueenRecords() {
     };
 
     successPollRef.current = window.setTimeout(findCompletedSave, 100);
+  };
+
+  const getTabDisabled = (tabId) => {
+    if (tabId === "overview") return false;
+    if (!hasHiveContext) return true;
+    if (tabId === "swarm" && !selectedHiveHasQueen && activeTab !== "swarm") return true;
+    return false;
+  };
+
+  const getTabTitle = (tabId) => {
+    if (tabId === "overview") return "";
+    if (!hasHiveContext) return "Select a specific apiary and hive first.";
+    if (tabId === "swarm" && !selectedHiveHasQueen) {
+      return "The selected hive has no current Queen to record as having swarmed.";
+    }
+    return "";
   };
 
   return (
@@ -752,11 +914,12 @@ export default function QueenRecords() {
           </span>
           <button
             type="button"
-            onClick={refreshBase}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50"
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50 disabled:cursor-wait disabled:opacity-60"
           >
-            <RefreshCw className="h-4 w-4" />
-            Refresh
+            <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
+            {refreshing ? "Refreshing…" : "Refresh"}
           </button>
         </div>
       </div>
@@ -765,15 +928,23 @@ export default function QueenRecords() {
         <nav className="flex min-w-max" aria-label="Integrated Queen Records tabs">
           {TABS.map((tab) => {
             const Icon = tab.icon;
+            const disabled = getTabDisabled(tab.id);
             return (
               <button
                 key={tab.id}
                 type="button"
-                onClick={() => setActiveTab(tab.id)}
+                disabled={disabled}
+                title={getTabTitle(tab.id)}
+                onClick={() => {
+                  setTabNotice("");
+                  setActiveTab(tab.id);
+                }}
                 className={`flex items-center gap-2 border-b-4 px-5 py-4 text-sm font-bold transition ${
                   activeTab === tab.id
                     ? "border-yellow-400 bg-amber-50 text-[#1a3329]"
-                    : "border-transparent text-gray-600 hover:bg-gray-50 hover:text-[#1a3329]"
+                    : disabled
+                      ? "cursor-not-allowed border-transparent bg-gray-50 text-gray-400"
+                      : "border-transparent text-gray-600 hover:bg-gray-50 hover:text-[#1a3329]"
                 }`}
               >
                 <Icon className="h-4 w-4" />
@@ -783,6 +954,12 @@ export default function QueenRecords() {
           })}
         </nav>
       </div>
+
+      {!hasHiveContext ? (
+        <div className="mb-5 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+          Select a specific <strong>Apiary</strong> and <strong>Hive</strong> below to unlock the Queen workflow tabs. The Overview tab remains available for the full Queen register.
+        </div>
+      ) : null}
 
       {tabNotice ? (
         <div className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-900">
@@ -801,13 +978,15 @@ export default function QueenRecords() {
         <QueenRecordsBase key={baseVersion} />
       </div>
 
-      {activeTab === "union" ? (
-        <QueenUnionPanel onRecorded={handleLifecycleRecorded} />
-      ) : null}
+      <div ref={panelRef}>
+        {activeTab === "union" ? (
+          <QueenUnionPanel key={`union-${panelRefreshKey}`} onRecorded={handleLifecycleRecorded} />
+        ) : null}
 
-      {activeTab === "swarm" ? (
-        <QueenSwarmPanel onRecorded={handleLifecycleRecorded} />
-      ) : null}
+        {activeTab === "swarm" ? (
+          <QueenSwarmPanel key={`swarm-${panelRefreshKey}`} onRecorded={handleLifecycleRecorded} />
+        ) : null}
+      </div>
     </div>
   );
 }
