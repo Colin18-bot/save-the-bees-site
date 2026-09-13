@@ -176,7 +176,7 @@ export default function VeterinaryMedicineList() {
   if (loading) return <div className="p-6">Loading veterinary medicines…</div>;
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-6">
+    <div className="max-w-7xl min-w-0 mx-auto p-4 md:p-6">
       <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-[#1a3329]">Veterinary Medicines</h1>
@@ -294,14 +294,15 @@ export default function VeterinaryMedicineList() {
             <div className="md:col-span-2">
               <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">Address</div>
               <div className="mt-1 whitespace-pre-line text-gray-900">
-                {holder?.record_holder_address}\n{holder?.record_holder_postcode}
+                <div>{holder?.record_holder_address}</div>
+                <div>{holder?.record_holder_postcode}</div>
               </div>
             </div>
           </div>
         )}
       </section>
 
-      <section className="rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <section className="min-w-0 rounded-2xl border border-gray-200 bg-white shadow-sm">
         <div className="border-b border-gray-200 p-4 md:p-5">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
@@ -342,7 +343,7 @@ export default function VeterinaryMedicineList() {
               : "No medicine records match the current filter."}
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="max-w-full overflow-x-auto">
             <table className="min-w-[1180px] w-full text-sm">
               <thead className="bg-[#1a3329] text-white">
                 <tr>
