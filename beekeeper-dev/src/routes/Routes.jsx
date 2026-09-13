@@ -39,6 +39,9 @@ import InspectionList from "../pages/Inspections/InspectionList.jsx";
 import NewInspection from "../pages/Inspections/NewInspection.jsx";
 import EditInspection from "../pages/Inspections/EditInspection.jsx";
 
+import VeterinaryMedicineList from "../pages/VeterinaryMedicines/VeterinaryMedicineList.jsx";
+import NewVeterinaryMedicine from "../pages/VeterinaryMedicines/NewVeterinaryMedicine.jsx";
+
 import QueenRecords from "../pages/Queens/QueenRecords.jsx";
 
 import Logbook from "../pages/Logbook/LogEntryList.jsx";
@@ -297,6 +300,8 @@ function AppRoutes() {
       <Route path="/hives/:id" element={<PremiumGuarded><HiveHealth /></PremiumGuarded>} />
       <Route path="/hives/:id/edit" element={<Guarded><EditHive /></Guarded>} />
       <Route path="/inspections" element={<Guarded><InspectionList /></Guarded>} />
+      <Route path="/veterinary-medicines" element={<Guarded><VeterinaryMedicineList /></Guarded>} />
+      <Route path="/veterinary-medicines/new" element={<Guarded><NewVeterinaryMedicine /></Guarded>} />
       <Route path="/queens" element={<Guarded><QueenRecords /></Guarded>} />
       <Route path="/inspections/new" element={<Guarded><NewInspection /></Guarded>} />
       <Route path="/inspections/:id/edit" element={<Guarded><EditInspection /></Guarded>} />
