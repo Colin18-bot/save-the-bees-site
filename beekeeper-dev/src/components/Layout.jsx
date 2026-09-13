@@ -1,8 +1,10 @@
 // src/components/Layout.jsx
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Sidebar from "../components/Sidebar";
 import BackToTop from "../components/BackToTop";
+import ActiveVeterinaryTreatments from "../components/ActiveVeterinaryTreatments";
 import bannerImage from "../assets/banner.webp";
 import { supabase } from "../services/supabase";
 
@@ -12,6 +14,7 @@ import GAReporter from "../pages/Legal/GAReporter";
 import CookieBanner from "../pages/Legal/CookieBanner";
 
 const Layout = ({ children }) => {
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
@@ -82,6 +85,8 @@ const Layout = ({ children }) => {
     return () => window.removeEventListener("profile:updated", onProfileUpdated);
   }, []);
 
+  const showVeterinaryTreatmentStatus = location.pathname === "/inspections";
+
   return (
     <div className="min-h-screen flex flex-col bg-yellow-500">
       {/* ✅ Loads GA only if the user has granted analytics consent */}
@@ -136,6 +141,7 @@ const Layout = ({ children }) => {
             ref={mainScrollRef}
             className="flex-1 min-w-0 p-4 sm:p-6 overflow-auto bg-white z-10 max-w-full"
           >
+            {showVeterinaryTreatmentStatus && <ActiveVeterinaryTreatments />}
             {children}
           </main>
 
