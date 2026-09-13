@@ -41,6 +41,7 @@ import EditInspection from "../pages/Inspections/EditInspection.jsx";
 
 import VeterinaryMedicineList from "../pages/VeterinaryMedicines/VeterinaryMedicineList.jsx";
 import NewVeterinaryMedicine from "../pages/VeterinaryMedicines/NewVeterinaryMedicine.jsx";
+import NewVeterinaryMedicineTreatment from "../pages/VeterinaryMedicines/NewVeterinaryMedicineTreatment.jsx";
 
 import QueenRecords from "../pages/Queens/QueenRecords.jsx";
 
@@ -176,118 +177,20 @@ function AppRoutes() {
           </Layout>
         }
       />
-      <Route
-        path="/asian-hornet"
-        element={
-          <Guarded>
-            <AsianHornetCentre />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/identify"
-        element={
-          <Guarded>
-            <AsianHornetIdentify />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/compare"
-        element={
-          <Guarded>
-            <AsianHornetCompare />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/photo"
-        element={
-          <Guarded>
-            <AsianHornetPhoto />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/observation/:id/details"
-        element={
-          <Guarded>
-            <AsianHornetObservationDetails />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/report/:id"
-        element={
-          <Guarded>
-            <AsianHornetReport />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/observations"
-        element={
-          <Guarded>
-            <AsianHornetObservations />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/observations/:id"
-        element={
-          <Guarded>
-            <AsianHornetObservation />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/behaviour"
-        element={
-          <Guarded>
-            <AsianHornetLearnPage pageKey="behaviour" />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/nests"
-        element={
-          <Guarded>
-            <AsianHornetLearnPage pageKey="nests" />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/lifecycle"
-        element={
-          <Guarded>
-            <AsianHornetLearnPage pageKey="lifecycle" />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/monitoring"
-        element={
-          <Guarded>
-            <AsianHornetLearnPage pageKey="monitoring" />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/after-reporting"
-        element={
-          <Guarded>
-            <AsianHornetLearnPage pageKey="afterReporting" />
-          </Guarded>
-        }
-      />
-      <Route
-        path="/asian-hornet/resources"
-        element={
-          <Guarded>
-            <AsianHornetLearnPage pageKey="resources" />
-          </Guarded>
-        }
-      />
+      <Route path="/asian-hornet" element={<Guarded><AsianHornetCentre /></Guarded>} />
+      <Route path="/asian-hornet/identify" element={<Guarded><AsianHornetIdentify /></Guarded>} />
+      <Route path="/asian-hornet/compare" element={<Guarded><AsianHornetCompare /></Guarded>} />
+      <Route path="/asian-hornet/photo" element={<Guarded><AsianHornetPhoto /></Guarded>} />
+      <Route path="/asian-hornet/observation/:id/details" element={<Guarded><AsianHornetObservationDetails /></Guarded>} />
+      <Route path="/asian-hornet/report/:id" element={<Guarded><AsianHornetReport /></Guarded>} />
+      <Route path="/asian-hornet/observations" element={<Guarded><AsianHornetObservations /></Guarded>} />
+      <Route path="/asian-hornet/observations/:id" element={<Guarded><AsianHornetObservation /></Guarded>} />
+      <Route path="/asian-hornet/behaviour" element={<Guarded><AsianHornetLearnPage pageKey="behaviour" /></Guarded>} />
+      <Route path="/asian-hornet/nests" element={<Guarded><AsianHornetLearnPage pageKey="nests" /></Guarded>} />
+      <Route path="/asian-hornet/lifecycle" element={<Guarded><AsianHornetLearnPage pageKey="lifecycle" /></Guarded>} />
+      <Route path="/asian-hornet/monitoring" element={<Guarded><AsianHornetLearnPage pageKey="monitoring" /></Guarded>} />
+      <Route path="/asian-hornet/after-reporting" element={<Guarded><AsianHornetLearnPage pageKey="afterReporting" /></Guarded>} />
+      <Route path="/asian-hornet/resources" element={<Guarded><AsianHornetLearnPage pageKey="resources" /></Guarded>} />
 
       {/* Protected */}
       <Route path="/dashboard" element={<Guarded><Dashboard /></Guarded>} />
@@ -302,6 +205,7 @@ function AppRoutes() {
       <Route path="/inspections" element={<Guarded><InspectionList /></Guarded>} />
       <Route path="/veterinary-medicines" element={<Guarded><VeterinaryMedicineList /></Guarded>} />
       <Route path="/veterinary-medicines/new" element={<Guarded><NewVeterinaryMedicine /></Guarded>} />
+      <Route path="/veterinary-medicines/treatments/new" element={<Guarded><NewVeterinaryMedicineTreatment /></Guarded>} />
       <Route path="/queens" element={<Guarded><QueenRecords /></Guarded>} />
       <Route path="/inspections/new" element={<Guarded><NewInspection /></Guarded>} />
       <Route path="/inspections/:id/edit" element={<Guarded><EditInspection /></Guarded>} />
@@ -356,11 +260,9 @@ function AppRoutes() {
       {/* Contact */}
       <Route path="/contact" element={<Guarded><Contact /></Guarded>} />
       <Route path="/contact/sent" element={<Guarded><ContactSent /></Guarded>} />
-      
+
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
-
-
     </Routes>
   );
 }
