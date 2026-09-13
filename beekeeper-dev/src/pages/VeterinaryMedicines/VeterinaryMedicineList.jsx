@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 
 const fiveYearsAgoIso = () => {
@@ -20,10 +20,13 @@ const formatDate = (value) => {
 };
 
 export default function VeterinaryMedicineList() {
+  const location = useLocation();
   const [loading, setLoading] = useState(true);
   const [savingHolder, setSavingHolder] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState(
+    location.state?.veterinaryMedicineMessage || ""
+  );
   const [rows, setRows] = useState([]);
   const [usageByMedicine, setUsageByMedicine] = useState({});
   const [disposalByMedicine, setDisposalByMedicine] = useState({});
@@ -46,39 +49,36 @@ export default function VeterinaryMedicineList() {
       } = await supabase.auth.getUser();
       if (userError || !user) throw new Error(userError?.message || "Not authenticated.");
 
-      const [settingsResult, medicinesResult, treatmentsResult, hivesResult, disposalResult] =
-        await Promise.all([
-          supabase
-            .from("veterinary_medicine_settings")
-            .select("record_holder_name,record_holder_address,record_holder_postcode")
-            .eq("user_id", user.id)
-            .maybeSingle(),
-          supabase
-            .from("veterinary_medicines")
-            .select(
-              "id,product_name,supplier_name,supplier_address,purchase_date,batch_number,quantity_purchased,invoice_reference,expiry_date,record_holder_name,record_holder_address,record_holder_postcode,created_at"
-            )
-            .eq("user_id", user.id)
-            .order("purchase_date", { ascending: false }),
-          supabase
-            .from("veterinary_medicine_treatments")
-            .select("id,medicine_id,apiary_name_snapshot,started_on")
-            .eq("user_id", user.id),
-          supabase
-            .from("veterinary_medicine_treatment_hives")
-            .select("treatment_id,hive_name_snapshot,status,completed_on")
-            .eq("user_id", user.id),
-          supabase
-            .from("veterinary_medicine_disposals")
-            .select("medicine_id,disposal_date,disposal_route")
-            .eq("user_id", user.id)
-            .order("disposal_date", { ascending: false }),
-        ]);
+      const [settingsResult, medicinesResult, usageResult, disposalResult] = await Promise.all([
+        supabase
+          .from("veterinary_medicine_settings")
+          .select("record_holder_name,record_holder_address,record_holder_postcode")
+          .eq("user_id", user.id)
+          .maybeSingle(),
+        supabase
+          .from("veterinary_medicines")
+          .select(
+            "id,product_name,supplier_name,supplier_address,purchase_date,batch_number,quantity_purchased,invoice_reference,expiry_date,record_holder_name,record_holder_address,record_holder_postcode,created_at"
+          )
+          .eq("user_id", user.id)
+          .order("purchase_date", { ascending: false }),
+        supabase
+          .from("veterinary_medicine_hive_status")
+          .select(
+            "medicine_id,apiary_name_snapshot,hive_name_snapshot,method,started_on,planned_completion_date,status,completed_on,is_overdue"
+          )
+          .eq("user_id", user.id)
+          .order("started_on", { ascending: false }),
+        supabase
+          .from("veterinary_medicine_disposals")
+          .select("medicine_id,disposal_date,disposal_route")
+          .eq("user_id", user.id)
+          .order("disposal_date", { ascending: false }),
+      ]);
 
       if (settingsResult.error) throw settingsResult.error;
       if (medicinesResult.error) throw medicinesResult.error;
-      if (treatmentsResult.error) throw treatmentsResult.error;
-      if (hivesResult.error) throw hivesResult.error;
+      if (usageResult.error) throw usageResult.error;
       if (disposalResult.error) throw disposalResult.error;
 
       const currentHolder = settingsResult.data || null;
@@ -89,19 +89,10 @@ export default function VeterinaryMedicineList() {
       setEditingHolder(!currentHolder);
       setRows(medicinesResult.data || []);
 
-      const hivesByTreatment = {};
-      (hivesResult.data || []).forEach((item) => {
-        if (!hivesByTreatment[item.treatment_id]) hivesByTreatment[item.treatment_id] = [];
-        hivesByTreatment[item.treatment_id].push(item);
-      });
-
       const nextUsage = {};
-      (treatmentsResult.data || []).forEach((treatment) => {
-        if (!nextUsage[treatment.medicine_id]) nextUsage[treatment.medicine_id] = [];
-        nextUsage[treatment.medicine_id].push({
-          ...treatment,
-          hives: hivesByTreatment[treatment.id] || [],
-        });
+      (usageResult.data || []).forEach((item) => {
+        if (!nextUsage[item.medicine_id]) nextUsage[item.medicine_id] = [];
+        nextUsage[item.medicine_id].push(item);
       });
       setUsageByMedicine(nextUsage);
 
@@ -186,20 +177,29 @@ export default function VeterinaryMedicineList() {
 
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-6">
+      <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-[#1a3329]">Veterinary Medicines</h1>
-          <p className="mt-1 text-sm text-gray-600 max-w-3xl">
-            Record veterinary medicines you purchase and keep the information available for your
-            treatment history and statutory records.
+          <p className="mt-1 max-w-3xl text-sm text-gray-600">
+            Record medicines you purchase, where they were administered and the treatment dates you set.
           </p>
         </div>
-        <Link
-          to="/veterinary-medicines/new"
-          className="inline-flex items-center justify-center rounded-xl bg-[#1a3329] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#24483a]"
-        >
-          + Add Medicine
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          {rows.length > 0 && (
+            <Link
+              to="/veterinary-medicines/treatments/new"
+              className="inline-flex items-center justify-center rounded-xl border border-[#1a3329] bg-white px-4 py-2.5 text-sm font-semibold text-[#1a3329] hover:bg-amber-50"
+            >
+              Record Treatment
+            </Link>
+          )}
+          <Link
+            to="/veterinary-medicines/new"
+            className="inline-flex items-center justify-center rounded-xl bg-[#1a3329] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#24483a]"
+          >
+            + Add Medicine
+          </Link>
+        </div>
       </div>
 
       {errorMsg && (
@@ -218,8 +218,7 @@ export default function VeterinaryMedicineList() {
           <div>
             <h2 className="text-lg font-semibold text-[#1a3329]">Record holder details</h2>
             <p className="mt-1 text-sm text-gray-600">
-              These are the current details used when you create new veterinary medicine records.
-              Historic records keep the details that applied when they were created.
+              These current details are used for new records. Historical records keep the name and address that applied when they were created.
             </p>
           </div>
           {holder && !editingHolder && (
@@ -308,7 +307,7 @@ export default function VeterinaryMedicineList() {
             <div>
               <h2 className="text-lg font-semibold text-[#1a3329]">Medicine records</h2>
               <p className="mt-1 text-sm text-gray-500">
-                No records are deleted when they become more than five years old.
+                Older records remain available; the five-year option is a filter only.
               </p>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row">
@@ -344,7 +343,7 @@ export default function VeterinaryMedicineList() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-[1050px] w-full text-sm">
+            <table className="min-w-[1180px] w-full text-sm">
               <thead className="bg-[#1a3329] text-white">
                 <tr>
                   <TH>Product</TH>
@@ -354,14 +353,19 @@ export default function VeterinaryMedicineList() {
                   <TH>Quantity purchased</TH>
                   <TH>Invoice / reference</TH>
                   <TH>Expiry</TH>
-                  <TH>Used in</TH>
+                  <TH>Treatment history</TH>
                   <TH>Disposal</TH>
+                  <TH>Actions</TH>
                 </tr>
               </thead>
               <tbody>
                 {filteredRows.map((row) => {
                   const usage = usageByMedicine[row.id] || [];
                   const disposals = disposalByMedicine[row.id] || [];
+                  const activeCount = usage.filter((item) => item.status === "active").length;
+                  const overdueCount = usage.filter((item) => item.is_overdue).length;
+                  const hiveNames = [...new Set(usage.map((item) => item.hive_name_snapshot).filter(Boolean))];
+
                   return (
                     <tr key={row.id} className="border-b border-gray-200 align-top hover:bg-amber-50/30">
                       <TD className="font-semibold text-[#1a3329]">{row.product_name}</TD>
@@ -380,31 +384,52 @@ export default function VeterinaryMedicineList() {
                       <TD>{formatDate(row.expiry_date)}</TD>
                       <TD>
                         {usage.length === 0 ? (
-                          <span className="text-gray-400">Not yet recorded</span>
+                          <span className="text-gray-500">Not yet administered</span>
                         ) : (
-                          <div className="space-y-2">
-                            {usage.map((treatment) => (
-                              <div key={treatment.id}>
-                                <div className="font-medium">{treatment.apiary_name_snapshot}</div>
-                                <div className="text-xs text-gray-600">
-                                  {treatment.hives.map((h) => h.hive_name_snapshot).join(", ") || "—"}
-                                </div>
+                          <div className="space-y-1">
+                            <div className="font-medium text-gray-900">
+                              {usage.length} hive treatment record{usage.length === 1 ? "" : "s"}
+                            </div>
+                            {hiveNames.length > 0 && (
+                              <div className="max-w-64 text-xs text-gray-600">
+                                {hiveNames.slice(0, 5).join(", ")}
+                                {hiveNames.length > 5 ? ` +${hiveNames.length - 5} more` : ""}
+                              </div>
+                            )}
+                            {activeCount > 0 && (
+                              <div className="text-xs font-semibold text-amber-700">
+                                {activeCount} active
+                              </div>
+                            )}
+                            {overdueCount > 0 && (
+                              <div className="text-xs font-bold text-red-700">
+                                {overdueCount} removal/completion overdue
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </TD>
+                      <TD>
+                        {disposals.length === 0 ? (
+                          <span className="text-gray-500">—</span>
+                        ) : (
+                          <div className="space-y-1">
+                            {disposals.slice(0, 2).map((item, index) => (
+                              <div key={`${item.disposal_date}-${index}`}>
+                                <div>{formatDate(item.disposal_date)}</div>
+                                <div className="text-xs text-gray-500">{item.disposal_route}</div>
                               </div>
                             ))}
                           </div>
                         )}
                       </TD>
                       <TD>
-                        {disposals.length === 0 ? (
-                          <span className="text-gray-400">—</span>
-                        ) : (
-                          disposals.map((item, index) => (
-                            <div key={`${row.id}-${item.disposal_date}-${index}`} className="mb-1 last:mb-0">
-                              <div>{formatDate(item.disposal_date)}</div>
-                              <div className="text-xs text-gray-500">{item.disposal_route}</div>
-                            </div>
-                          ))
-                        )}
+                        <Link
+                          to={`/veterinary-medicines/treatments/new?medicine=${row.id}`}
+                          className="inline-flex whitespace-nowrap rounded-lg border border-[#1a3329]/30 bg-white px-3 py-2 text-xs font-semibold text-[#1a3329] hover:bg-amber-50"
+                        >
+                          Record treatment
+                        </Link>
                       </TD>
                     </tr>
                   );
@@ -418,8 +443,8 @@ export default function VeterinaryMedicineList() {
   );
 }
 
-function TH({ children }) {
-  return <th className="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide">{children}</th>;
+function TH({ children, className = "" }) {
+  return <th className={`px-3 py-3 text-left font-semibold ${className}`}>{children}</th>;
 }
 
 function TD({ children, className = "" }) {
