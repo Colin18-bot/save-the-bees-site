@@ -141,6 +141,7 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     { to: "/apiaries", label: "Apiaries" },
     { to: "/hives", label: "Hives" },
     { to: "/inspections", label: "Inspections" },
+    { to: "/veterinary-medicines", label: "Veterinary Medicines" },
     canAccessQueenRecords
       ? {
           to: "/queens",
@@ -161,6 +162,7 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     { to: "/apiaries/new", label: "New Apiary" },
     { to: "/hives/new", label: "New Hive" },
     { to: "/inspections/new", label: "New Inspection" },
+    { to: "/veterinary-medicines/new", label: "New Medicine" },
     { to: "/logbook/new", label: "New Log Entry" },
     { to: "/todos/new", label: "New Task" },
     // Premium-only NFC scan (visually highlighted)
@@ -341,14 +343,14 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
 
         {/* Primary beekeeping links */}
         <div className="mt-1 space-y-1.5 rounded-lg border border-white/10 border-l-[3px] border-l-yellow-400/70 bg-white/5 p-1">
-          {coreSecondaryNavItems.slice(0, 6).map((item) => (
+          {coreSecondaryNavItems.slice(0, 7).map((item) => (
             <LinkItem key={item.to} item={item} />
           ))}
         </div>
 
         {/* Secondary beekeeping links */}
         <div className="mt-3 space-y-1.5 rounded-lg border border-white/10 border-l-[3px] border-l-yellow-400/70 bg-white/5 p-1">
-          {coreSecondaryNavItems.slice(6).map((item) => (
+          {coreSecondaryNavItems.slice(7).map((item) => (
             <LinkItem key={item.to} item={item} />
           ))}
         </div>
