@@ -65,13 +65,13 @@ export default function VeterinaryMedicineList() {
         supabase
           .from("veterinary_medicine_hive_status")
           .select(
-            "medicine_id,apiary_name_snapshot,hive_name_snapshot,method,started_on,planned_completion_date,status,completed_on,is_overdue"
+            "treatment_hive_id,treatment_id,medicine_id,apiary_name_snapshot,hive_name_snapshot,treatment_for,method,started_on,treatment_mode,planned_completion_date,completion_action,status,completed_on,person_administering,quantity_used,withdrawal_period,notes,is_overdue"
           )
           .eq("user_id", user.id)
           .order("started_on", { ascending: false }),
         supabase
           .from("veterinary_medicine_disposals")
-          .select("medicine_id,disposal_date,disposal_route")
+          .select("medicine_id,disposal_date,disposal_route,notes")
           .eq("user_id", user.id)
           .order("disposal_date", { ascending: false }),
       ]);
@@ -118,7 +118,21 @@ export default function VeterinaryMedicineList() {
     const q = query.trim().toLowerCase();
 
     return rows.filter((row) => {
-      if (recordRange === "five-years" && row.purchase_date < cutoff) return false;
+      if (recordRange === "five-years") {
+        const usage = usageByMedicine[row.id] || [];
+        const disposals = disposalByMedicine[row.id] || [];
+        const hasRecentActivity =
+          String(row.purchase_date || "") >= cutoff ||
+          usage.some(
+            (item) =>
+              String(item.started_on || "") >= cutoff ||
+              String(item.completed_on || "") >= cutoff
+          ) ||
+          disposals.some((item) => String(item.disposal_date || "") >= cutoff);
+
+        if (!hasRecentActivity) return false;
+      }
+
       if (!q) return true;
       return [
         row.product_name,
@@ -127,7 +141,29 @@ export default function VeterinaryMedicineList() {
         row.invoice_reference,
       ].some((value) => String(value || "").toLowerCase().includes(q));
     });
-  }, [rows, query, recordRange]);
+  }, [rows, query, recordRange, usageByMedicine, disposalByMedicine]);
+
+  const treatmentGroupsForMedicine = (medicineId) => {
+    const usage = usageByMedicine[medicineId] || [];
+    const groups = new Map();
+
+    usage.forEach((item) => {
+      const key = item.treatment_id || item.treatment_hive_id;
+      if (!groups.has(key)) {
+        groups.set(key, {
+          ...item,
+          hives: [],
+        });
+      }
+      groups.get(key).hives.push({
+        name: item.hive_name_snapshot,
+        status: item.status,
+        completed_on: item.completed_on,
+      });
+    });
+
+    return [...groups.values()];
+  };
 
   const saveRecordHolder = async (e) => {
     e.preventDefault();
@@ -177,6 +213,39 @@ export default function VeterinaryMedicineList() {
 
   return (
     <div className="max-w-7xl min-w-0 mx-auto p-4 md:p-6">
+      <style>{`
+        #vm-print-report { display: none; }
+        @media print {
+          @page { size: landscape; margin: 10mm; }
+          body * { visibility: hidden !important; }
+          #vm-print-report, #vm-print-report * { visibility: visible !important; }
+          #vm-print-report {
+            display: block !important;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            color: #000;
+            background: #fff;
+            font-size: 9pt;
+            line-height: 1.25;
+          }
+          #vm-print-report table { width: 100%; border-collapse: collapse; }
+          #vm-print-report th, #vm-print-report td {
+            border: 1px solid #b8b8b8;
+            padding: 4px 5px;
+            vertical-align: top;
+            text-align: left;
+          }
+          #vm-print-report th { background: #f2f2f2 !important; }
+          #vm-print-report .vm-print-record {
+            break-inside: avoid;
+            page-break-inside: avoid;
+            margin-bottom: 8mm;
+          }
+        }
+      `}</style>
+
       <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-[#1a3329]">Veterinary Medicines</h1>
@@ -311,7 +380,7 @@ export default function VeterinaryMedicineList() {
                 Older records remain available; the five-year option is a filter only.
               </p>
             </div>
-            <div className="flex flex-col gap-2 sm:flex-row">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
               <label className="flex flex-col gap-1 text-xs font-semibold text-gray-600">
                 Show
                 <select
@@ -332,6 +401,14 @@ export default function VeterinaryMedicineList() {
                   className="w-full min-w-60 rounded-xl border border-gray-300 px-3 py-2 text-sm font-normal"
                 />
               </label>
+              <button
+                type="button"
+                onClick={() => window.print()}
+                disabled={filteredRows.length === 0}
+                className="rounded-xl border border-[#1a3329] bg-[#1a3329] px-4 py-2 text-sm font-semibold text-white hover:bg-[#24483a] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Print / PDF
+              </button>
             </div>
           </div>
         </div>
@@ -440,6 +517,144 @@ export default function VeterinaryMedicineList() {
           </div>
         )}
       </section>
+
+      <div id="vm-print-report" aria-hidden="true">
+        <div style={{ marginBottom: "6mm" }}>
+          <h1 style={{ fontSize: "18pt", margin: 0 }}>Veterinary Medicine Administration Records</h1>
+          <div style={{ marginTop: "2mm" }}>
+            {recordRange === "five-years" ? "Last 5 years" : "All records"}
+            {query.trim() ? ` • Search filter: ${query.trim()}` : ""}
+          </div>
+        </div>
+
+        {filteredRows.map((row) => {
+          const groups = treatmentGroupsForMedicine(row.id);
+          const disposals = disposalByMedicine[row.id] || [];
+
+          return (
+            <section key={`print-${row.id}`} className="vm-print-record">
+              <h2 style={{ fontSize: "13pt", margin: "0 0 2mm 0" }}>{row.product_name}</h2>
+
+              <table style={{ marginBottom: "3mm" }}>
+                <tbody>
+                  <tr>
+                    <th>Record holder</th>
+                    <td>{row.record_holder_name}</td>
+                    <th>Address</th>
+                    <td>
+                      {row.record_holder_address}
+                      {row.record_holder_postcode ? `, ${row.record_holder_postcode}` : ""}
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>Supplier</th>
+                    <td>
+                      {row.supplier_name}
+                      {row.supplier_address ? `, ${row.supplier_address}` : ""}
+                    </td>
+                    <th>Purchase date</th>
+                    <td>{formatDate(row.purchase_date)}</td>
+                  </tr>
+                  <tr>
+                    <th>Batch number</th>
+                    <td>{row.batch_number}</td>
+                    <th>Quantity purchased</th>
+                    <td>{row.quantity_purchased}</td>
+                  </tr>
+                  <tr>
+                    <th>Invoice / reference</th>
+                    <td>{row.invoice_reference || "—"}</td>
+                    <th>Expiry</th>
+                    <td>{formatDate(row.expiry_date)}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div style={{ fontWeight: 700, marginBottom: "1mm" }}>Administration</div>
+              {groups.length === 0 ? (
+                <div style={{ marginBottom: "3mm" }}>Not yet administered.</div>
+              ) : (
+                <table style={{ marginBottom: "3mm" }}>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Apiary / hives</th>
+                      <th>Used for / method</th>
+                      <th>Quantity used</th>
+                      <th>Withdrawal period</th>
+                      <th>Administered by</th>
+                      <th>Completion / removal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {groups.map((group) => (
+                      <tr key={`print-treatment-${group.treatment_id || group.treatment_hive_id}`}>
+                        <td>{formatDate(group.started_on)}</td>
+                        <td>
+                          <div>{group.apiary_name_snapshot || "—"}</div>
+                          <div>
+                            {group.hives
+                              .map((hive) =>
+                                `${hive.name || "Hive"}${
+                                  hive.status === "completed" && hive.completed_on
+                                    ? ` (completed ${formatDate(hive.completed_on)})`
+                                    : hive.status === "active"
+                                      ? " (active)"
+                                      : ""
+                                }`
+                              )
+                              .join(", ")}
+                          </div>
+                        </td>
+                        <td>
+                          <div>{group.treatment_for || "—"}</div>
+                          <div>{group.method || "—"}</div>
+                        </td>
+                        <td>{group.quantity_used || "—"}</td>
+                        <td>{group.withdrawal_period || "—"}</td>
+                        <td>{group.person_administering || "—"}</td>
+                        <td>
+                          {group.planned_completion_date ? (
+                            <>
+                              {group.completion_action === "remove" ? "Remove" : "Complete"}: {formatDate(group.planned_completion_date)}
+                            </>
+                          ) : (
+                            "Completed on administration date"
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+
+              <div style={{ fontWeight: 700, marginBottom: "1mm" }}>Disposal if not administered</div>
+              {disposals.length === 0 ? (
+                <div>None recorded.</div>
+              ) : (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Route of disposal</th>
+                      <th>Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {disposals.map((item, index) => (
+                      <tr key={`print-disposal-${row.id}-${index}`}>
+                        <td>{formatDate(item.disposal_date)}</td>
+                        <td>{item.disposal_route}</td>
+                        <td>{item.notes || "—"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </section>
+          );
+        })}
+      </div>
     </div>
   );
 }
