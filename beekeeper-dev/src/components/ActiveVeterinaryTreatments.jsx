@@ -46,10 +46,9 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
       let query = supabase
         .from("veterinary_medicine_hive_status")
         .select(
-          "treatment_hive_id,treatment_id,medicine_id,product_name,batch_number,apiary_id,apiary_name_snapshot,hive_id,hive_name_snapshot,method,started_on,planned_completion_date,completion_action,status,is_overdue"
+          "treatment_hive_id,treatment_id,medicine_id,product_name,batch_number,apiary_id,apiary_name_snapshot,hive_id,hive_name_snapshot,method,started_on,treatment_mode,planned_completion_date,completion_action,status,completed_on,is_overdue"
         )
-        .eq("status", "active")
-        .order("planned_completion_date", { ascending: true, nullsFirst: false });
+        .order("started_on", { ascending: false });
 
       if (filters.hiveId) {
         query = query.eq("hive_id", filters.hiveId);
@@ -60,18 +59,31 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
       const { data, error } = await query;
       if (error) throw error;
 
-      const sorted = [...(data || [])].sort((a, b) => {
+      const allRows = [...(data || [])].sort((a, b) => {
+        if ((a.status === "active") !== (b.status === "active")) {
+          return a.status === "active" ? -1 : 1;
+        }
         if (!!a.is_overdue !== !!b.is_overdue) return a.is_overdue ? -1 : 1;
-        return String(a.planned_completion_date || "9999-12-31").localeCompare(
-          String(b.planned_completion_date || "9999-12-31")
-        );
+        return String(b.started_on || "").localeCompare(String(a.started_on || ""));
       });
 
-      setRows(sorted);
+      // On an inspection card, show every currently active treatment. If none are
+      // active, retain the most recent completed treatment so the treatment record
+      // does not disappear from the hive's inspection cards when it is completed.
+      const activeRows = allRows.filter((row) => row.status === "active");
+      const displayRows = compact
+        ? activeRows.length > 0
+          ? activeRows
+          : allRows.slice(0, 1)
+        : activeRows;
+
+      setRows(displayRows);
       setCompletionDates((prev) => {
         const next = { ...prev };
-        sorted.forEach((row) => {
-          if (!next[row.treatment_hive_id]) next[row.treatment_hive_id] = localTodayIso();
+        displayRows.forEach((row) => {
+          if (row.status === "active" && !next[row.treatment_hive_id]) {
+            next[row.treatment_hive_id] = localTodayIso();
+          }
         });
         return next;
       });
@@ -80,7 +92,7 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
     } finally {
       setLoading(false);
     }
-  }, [filters.apiaryId, filters.hiveId]);
+  }, [compact, filters.apiaryId, filters.hiveId]);
 
   useEffect(() => {
     loadTreatments();
@@ -128,6 +140,7 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
         )}
 
         {rows.map((row) => {
+          const isActive = row.status === "active";
           const actionWord = row.completion_action === "remove" ? "Remove" : "Complete";
           const overdueLabel =
             row.completion_action === "remove"
@@ -140,17 +153,23 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
               className={`rounded-lg border p-3 ${
                 row.is_overdue
                   ? "border-red-300 bg-red-50"
-                  : "border-amber-200 bg-amber-50"
+                  : isActive
+                    ? "border-amber-200 bg-amber-50"
+                    : "border-green-200 bg-green-50"
               }`}
             >
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <p
                     className={`text-xs font-semibold uppercase tracking-wide ${
-                      row.is_overdue ? "text-red-700" : "text-amber-800"
+                      row.is_overdue
+                        ? "text-red-700"
+                        : isActive
+                          ? "text-amber-800"
+                          : "text-green-800"
                     }`}
                   >
-                    Current veterinary treatment
+                    {isActive ? "Current veterinary treatment" : "Latest veterinary treatment"}
                   </p>
                   <p className="mt-1 text-sm font-semibold text-[#1a3329]">
                     {row.product_name}
@@ -160,10 +179,12 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
                   className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${
                     row.is_overdue
                       ? "border-red-300 bg-red-100 text-red-800"
-                      : "border-amber-300 bg-amber-100 text-amber-900"
+                      : isActive
+                        ? "border-amber-300 bg-amber-100 text-amber-900"
+                        : "border-green-300 bg-green-100 text-green-800"
                   }`}
                 >
-                  ACTIVE
+                  {isActive ? "ACTIVE" : "COMPLETED"}
                 </span>
               </div>
 
@@ -172,8 +193,13 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
               </p>
               {row.planned_completion_date && (
                 <p className="mt-1 text-xs text-gray-700">
-                  <span className="font-semibold">{actionWord}:</span>{" "}
+                  <span className="font-semibold">Planned {actionWord.toLowerCase()}:</span>{" "}
                   {formatDate(row.planned_completion_date)}
+                </p>
+              )}
+              {!isActive && row.completed_on && (
+                <p className="mt-1 text-xs font-semibold text-green-800">
+                  Completed: {formatDate(row.completed_on)}
                 </p>
               )}
 
@@ -183,39 +209,50 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
                 </p>
               )}
 
-              <div className="mt-3 flex flex-col gap-2">
-                <label className="flex flex-col gap-1 text-[11px] font-semibold text-gray-600">
-                  Actual completion date
-                  <input
-                    type="date"
-                    value={completionDates[row.treatment_hive_id] || localTodayIso()}
-                    min={row.started_on || undefined}
-                    onChange={(e) =>
-                      setCompletionDates((prev) => ({
-                        ...prev,
-                        [row.treatment_hive_id]: e.target.value,
-                      }))
-                    }
-                    className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-xs font-normal text-gray-900"
-                  />
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    disabled={savingId === row.treatment_hive_id}
-                    onClick={() => markCompleted(row)}
-                    className="rounded-lg bg-[#1a3329] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#24483a] disabled:opacity-60"
-                  >
-                    {savingId === row.treatment_hive_id ? "Saving…" : "Mark completed"}
-                  </button>
+              {isActive ? (
+                <div className="mt-3 flex flex-col gap-2">
+                  <label className="flex flex-col gap-1 text-[11px] font-semibold text-gray-600">
+                    Actual completion date
+                    <input
+                      type="date"
+                      value={completionDates[row.treatment_hive_id] || localTodayIso()}
+                      min={row.started_on || undefined}
+                      onChange={(e) =>
+                        setCompletionDates((prev) => ({
+                          ...prev,
+                          [row.treatment_hive_id]: e.target.value,
+                        }))
+                      }
+                      className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-xs font-normal text-gray-900"
+                    />
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      disabled={savingId === row.treatment_hive_id}
+                      onClick={() => markCompleted(row)}
+                      className="rounded-lg bg-[#1a3329] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#24483a] disabled:opacity-60"
+                    >
+                      {savingId === row.treatment_hive_id ? "Saving…" : "Mark completed"}
+                    </button>
+                    <Link
+                      to="/veterinary-medicines"
+                      className="rounded-lg border border-[#1a3329]/30 bg-white px-3 py-1.5 text-xs font-semibold text-[#1a3329] hover:bg-amber-50"
+                    >
+                      Medicine record
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <div className="mt-2">
                   <Link
                     to="/veterinary-medicines"
-                    className="rounded-lg border border-[#1a3329]/30 bg-white px-3 py-1.5 text-xs font-semibold text-[#1a3329] hover:bg-amber-50"
+                    className="inline-flex rounded-lg border border-[#1a3329]/30 bg-white px-3 py-1.5 text-xs font-semibold text-[#1a3329] hover:bg-green-100"
                   >
                     Medicine record
                   </Link>
                 </div>
-              </div>
+              )}
             </div>
           );
         })}
