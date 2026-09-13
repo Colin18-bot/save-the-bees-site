@@ -121,7 +121,7 @@ const Layout = ({ children }) => {
         </div>
 
         {/* Main Content */}
-        <div className="md:flex-1 flex flex-col min-h-0">
+        <div className="md:flex-1 min-w-0 flex flex-col min-h-0">
           {/* Banner */}
           <div className="relative z-0 no-print">
             <img
@@ -131,12 +131,12 @@ const Layout = ({ children }) => {
             />
           </div>
 
-                    {/* Page Content */}
+          {/* Page Content */}
           <main
             ref={mainScrollRef}
-            className="flex-1 p-4 sm:p-6 overflow-auto bg-white z-10 max-w-full"
+            className="flex-1 min-w-0 p-4 sm:p-6 overflow-auto bg-white z-10 max-w-full"
           >
-           {children}
+            {children}
           </main>
 
           {/* ✅ Back to top
