@@ -358,14 +358,17 @@ export default function NewVeterinaryMedicineTreatment() {
             </label>
 
             <label className="flex flex-col gap-1">
-              <span className="text-sm font-medium">Withdrawal period *</span>
+              <span className="text-sm font-medium">Withdrawal period for honey *</span>
               <input
                 className="rounded-xl border border-gray-300 p-2.5"
                 value={withdrawalPeriod}
                 onChange={(e) => setWithdrawalPeriod(e.target.value)}
-                placeholder="Enter the information applicable to this medicine"
+                placeholder="e.g. Honey: zero days"
                 required
               />
+              <span className="text-xs text-gray-500">
+                Enter the withdrawal period shown on the product label or package leaflet. This is the time after treatment before honey or other hive products may be taken for human consumption; it is separate from the treatment removal date.
+              </span>
             </label>
           </div>
         </section>
