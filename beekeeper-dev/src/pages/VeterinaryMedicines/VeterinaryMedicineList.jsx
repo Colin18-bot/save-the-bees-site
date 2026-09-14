@@ -159,6 +159,7 @@ export default function VeterinaryMedicineList() {
         name: item.hive_name_snapshot,
         status: item.status,
         completed_on: item.completed_on,
+        quantity_used: item.quantity_used,
       });
     });
 
@@ -523,7 +524,7 @@ export default function VeterinaryMedicineList() {
                                         {group.method ? ` · ${group.method}` : ""}
                                       </div>
                                       <div className="mt-0.5 font-semibold text-gray-900">
-                                        Quantity used: {group.quantity_used || "—"}
+                                        Quantity used per hive: {group.quantity_used || "—"}
                                       </div>
                                       {group.planned_completion_date && (
                                         <div className="mt-0.5 text-gray-600">
@@ -647,7 +648,7 @@ export default function VeterinaryMedicineList() {
                       <th>Date</th>
                       <th>Apiary / hives</th>
                       <th>Used for / method</th>
-                      <th>Quantity used</th>
+                      <th>Quantity used per hive</th>
                       <th>Withdrawal period</th>
                       <th>Administered by</th>
                       <th>Completion / removal</th>
@@ -662,7 +663,7 @@ export default function VeterinaryMedicineList() {
                           <div>
                             {group.hives
                               .map((hive) =>
-                                `${hive.name || "Hive"}${
+                                `${hive.name || "Hive"} — ${hive.quantity_used || "—"}${
                                   hive.status === "completed" && hive.completed_on
                                     ? ` (completed ${formatDate(hive.completed_on)})`
                                     : hive.status === "active"
