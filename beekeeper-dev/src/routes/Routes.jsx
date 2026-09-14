@@ -41,7 +41,9 @@ import EditInspection from "../pages/Inspections/EditInspection.jsx";
 
 import VeterinaryMedicineList from "../pages/VeterinaryMedicines/VeterinaryMedicineList.jsx";
 import NewVeterinaryMedicine from "../pages/VeterinaryMedicines/NewVeterinaryMedicine.jsx";
+import EditVeterinaryMedicine from "../pages/VeterinaryMedicines/EditVeterinaryMedicine.jsx";
 import NewVeterinaryMedicineTreatment from "../pages/VeterinaryMedicines/NewVeterinaryMedicineTreatment.jsx";
+import EditVeterinaryMedicineTreatment from "../pages/VeterinaryMedicines/EditVeterinaryMedicineTreatment.jsx";
 
 import QueenRecords from "../pages/Queens/QueenRecords.jsx";
 
@@ -205,7 +207,9 @@ function AppRoutes() {
       <Route path="/inspections" element={<Guarded><InspectionList /></Guarded>} />
       <Route path="/veterinary-medicines" element={<Guarded><VeterinaryMedicineList /></Guarded>} />
       <Route path="/veterinary-medicines/new" element={<Guarded><NewVeterinaryMedicine /></Guarded>} />
+      <Route path="/veterinary-medicines/:id/edit" element={<Guarded><EditVeterinaryMedicine /></Guarded>} />
       <Route path="/veterinary-medicines/treatments/new" element={<Guarded><NewVeterinaryMedicineTreatment /></Guarded>} />
+      <Route path="/veterinary-medicines/treatments/:id/edit" element={<Guarded><EditVeterinaryMedicineTreatment /></Guarded>} />
       <Route path="/queens" element={<Guarded><QueenRecords /></Guarded>} />
       <Route path="/inspections/new" element={<Guarded><NewInspection /></Guarded>} />
       <Route path="/inspections/:id/edit" element={<Guarded><EditInspection /></Guarded>} />
