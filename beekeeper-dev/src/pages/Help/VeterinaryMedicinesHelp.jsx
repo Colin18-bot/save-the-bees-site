@@ -1,10 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 function AvailabilityBadge() {
   return (
     <span className="inline-flex items-center rounded border border-green-200 bg-green-100 px-2 py-0.5 text-xs font-medium text-green-900">
       Free &amp; Premium
+    </span>
+  );
+}
+
+function PremiumBadge() {
+  return (
+    <span className="inline-flex items-center rounded border border-blue-200 bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-900">
+      Premium
     </span>
   );
 }
@@ -17,7 +24,8 @@ export default function VeterinaryMedicinesHelp() {
       </h2>
 
       <p className="mb-4 text-gray-700">
-        Veterinary Medicines is available to <strong>both Free and Premium members</strong>.
+        Veterinary medicine <strong>record keeping</strong> is available to both Free and Premium
+        members. The dedicated <strong>Print / PDF medicine register</strong> is a Premium feature.
       </p>
 
       <div className="rounded border border-amber-200 bg-amber-50 p-4 text-sm text-gray-800">
@@ -185,6 +193,19 @@ export default function VeterinaryMedicinesHelp() {
       </div>
 
       <div className="mt-4 rounded-xl border bg-white p-4">
+        <h3 className="font-semibold">Dashboard summary</h3>
+        <p className="mt-2 text-gray-700">
+          The Dashboard includes a Veterinary Medicines summary for both Free and Premium members.
+          It shows the number of medicine purchase records, active hive-treatment records and overdue
+          hive-treatment records, with a direct link back to Veterinary Medicines.
+        </p>
+        <p className="mt-2 text-sm text-gray-600">
+          The Dashboard summary is for quick awareness only. Open Veterinary Medicines or the linked
+          inspection to review the full treatment record and take any required action.
+        </p>
+      </div>
+
+      <div className="mt-4 rounded-xl border bg-white p-4">
         <h3 className="font-semibold">Amending a medicine or treatment</h3>
         <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
           <li>
@@ -223,20 +244,28 @@ export default function VeterinaryMedicinesHelp() {
           <li>Each disposal record can be amended independently.</li>
           <li>
             If all of the purchased medicine was administered and there is nothing unused to dispose
-            of, do not create a disposal record. The printout will simply state that no disposal of
-            unused medicine was recorded.
+            of, do not create a disposal record.
           </li>
         </ul>
       </div>
 
-      <div className="mt-4 rounded-xl border bg-white p-4">
-        <h3 className="font-semibold">Printing and saving records as PDF</h3>
-        <p className="mt-2 text-gray-700">
-          Use <strong>Print / PDF</strong> from Veterinary Medicines. HiveTag opens a dedicated
-          print document designed for the medicine register rather than printing the live app screen.
-          This keeps the document cleaner and makes pagination more reliable as the record grows.
+      <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50 p-4">
+        <h3 className="flex flex-wrap items-center gap-2 font-semibold text-blue-950">
+          Printing and saving records as PDF <PremiumBadge />
+        </h3>
+        <p className="mt-2 text-blue-950">
+          The dedicated Veterinary Medicine <strong>Print / PDF</strong> register is available with
+          HiveTag Premium. Free members can continue to create, view and amend their medicine,
+          treatment, completion and disposal records; the Print / PDF control is locked until
+          Premium is active.
         </p>
-        <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+        <p className="mt-2 text-blue-950">
+          Premium members can use <strong>Print / PDF</strong> from Veterinary Medicines to open a
+          dedicated print document designed for the medicine register rather than printing the live
+          app screen. This keeps the document cleaner and makes pagination more reliable as the
+          record grows.
+        </p>
+        <ul className="mt-2 list-disc pl-6 space-y-1 text-blue-950">
           <li>Medicine purchase details are shown with the relevant administration history.</li>
           <li>Quantity used is shown per hive.</li>
           <li>Planned and actual completion information is preserved.</li>
@@ -245,17 +274,18 @@ export default function VeterinaryMedicinesHelp() {
             Long administration histories can continue across pages with repeated table headings,
             while individual treatment and disposal rows are kept together where the browser allows.
           </li>
-          <li>You can print the document or use your browser&apos;s <strong>Save as PDF</strong> option.</li>
+          <li>The document can be printed or saved as a PDF using the browser print dialog.</li>
         </ul>
       </div>
 
       <div className="mt-4 rounded-xl border bg-white p-4">
         <h3 className="font-semibold">Record retention and deleting your account</h3>
         <p className="mt-2 text-gray-700">
-          HiveTag provides the tools to record, review and print/export your veterinary medicine
-          history, but you remain responsible for keeping whatever records are required for your
-          circumstances and for the required period. If you intend to delete your HiveTag account,
-          save or print any veterinary medicine records you still need before deleting the account.
+          HiveTag provides medicine record-keeping tools to Free and Premium members. Premium also
+          provides the dedicated Print / PDF medicine register. You remain responsible for keeping
+          whatever veterinary medicine records are required for your circumstances and for the
+          required period. Before deleting your HiveTag account, make sure you have retained any
+          records you still need by an appropriate method.
         </p>
       </div>
 
@@ -266,13 +296,6 @@ export default function VeterinaryMedicinesHelp() {
           administered to the hive has reached its actual end/removal date. <strong>Disposal</strong>
           means unused medicine that was never administered has been disposed of or returned.
         </p>
-      </div>
-
-      <div className="mt-4 text-sm text-gray-600">
-        Quick link:{" "}
-        <Link to="/veterinary-medicines" className="text-blue-700 underline">
-          Open Veterinary Medicines
-        </Link>
       </div>
     </section>
   );
