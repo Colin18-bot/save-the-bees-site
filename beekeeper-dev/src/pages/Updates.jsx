@@ -9,6 +9,74 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.5.5",
+  released_at: "2026-09-14T20:15:00Z",
+
+  summary:
+    "Introduced comprehensive Veterinary Medicines record keeping for Free and Premium members, with medicine purchase records, per-hive treatment tracking, inspection and Calendar integration, unused-medicine disposal records, a customisable Dashboard summary and a dedicated professional Print / PDF register for Premium members.",
+
+  added: [
+    "Added a dedicated **Veterinary Medicines** area for both Free and Premium members.",
+    "Added veterinary medicine purchase records covering product, supplier, purchase date, batch, quantity purchased, optional expiry date and optional invoice/reference details.",
+    "Added Record Holder details so the beekeeper or organisation responsible for the veterinary medicine records can be identified, with historical details preserved with the records they relate to.",
+    "Added veterinary treatment recording for one or more hives, including treatment method, administration date, quantity used per hive, administrator, withdrawal information and user-entered product instructions.",
+    "Added separate **One-off administration** and **Remains in hive** treatment modes, with planned removal/completion dates recorded only where the beekeeper enters them.",
+    "Added per-hive treatment quantities so multi-hive treatments retain the quantity actually used in each hive rather than dividing a total across colonies.",
+    "Added treatment cards to the most recent inspection for the hive on or before the treatment start date, keeping the treatment linked to that historical inspection after later inspections are added.",
+    "Added Veterinary Medicine Calendar events for treatment starts, planned removal/completion dates, actual completion dates and overdue active treatments.",
+    "Added recording of **unused medicine disposal**, including date, quantity disposed, route/method and optional notes, with support for multiple disposal events against the same medicine purchase.",
+    "Added a dedicated A4 landscape **Veterinary Medicine Print / PDF register** for Premium members, designed specifically for professional browser printing and PDF saving.",
+    "Added a **Veterinary Medicines** Dashboard panel showing medicine purchases, active hive treatments and overdue hive treatments, with the treatment counts following the selected Apiary and Hive filters.",
+    "Added **Veterinary Medicines** to Customise Dashboard so members can show or hide the Dashboard panel.",
+    "Added comprehensive Veterinary Medicines guidance to Help covering purchases, treatments, completion, inspection links, Calendar behaviour, disposal and record printing."
+  ],
+
+  changed: [
+    "Veterinary medicine record keeping is available on both **Free and Premium** plans; the dedicated Veterinary Medicine Print / PDF register is a **Premium-only** feature.",
+    "Pricing and Premium Required guidance now distinguish clearly between free veterinary medicine record keeping and Premium printing.",
+    "The Veterinary Medicines Dashboard panel now sits directly beneath **Queen status** when both sections are enabled.",
+    "Treatment completion/removal is kept separate from disposal: removing strips, trays or other treatment material that has already been administered is recorded as treatment completion, while the disposal register is for medicine that was not administered.",
+    "Completed veterinary treatments remain visible on their linked inspection with a clear **COMPLETED** status rather than disappearing from the inspection history.",
+    "Medicine register filtering and search are carried into the dedicated Print / PDF document, including the **All** and **Last 5 years** views.",
+    "Veterinary medicine forms deliberately rely on beekeeper-entered product instructions and dates; HiveTag does not calculate or infer dose, treatment duration, withdrawal periods or planned removal dates.",
+    "Sidebar release numbering has been aligned to **HiveTag 1.5.5**."
+  ],
+
+  fixed: [
+    "Fixed veterinary treatment quantities so the value shown on an inspection and in the medicine register is the quantity used in that specific hive.",
+    "Fixed completed treatments disappearing from their linked inspection after completion.",
+    "Fixed treatment Calendar behaviour so busy days can be opened in a full-day view without losing the day context when viewing an individual event.",
+    "Fixed overdue treatment handling so an active treatment is clearly highlighted after its user-entered planned completion date and resolves when completion is recorded.",
+    "Fixed disposal recording so separate unused quantities can be disposed of on different dates instead of incorrectly restricting a medicine purchase to one disposal record.",
+    "Fixed disposal records to require and display the quantity disposed alongside the date and route/method.",
+    "Replaced the fragile live-page veterinary medicine print layout with a dedicated print document so medicine headings, administration sections, disposal sections and table rows paginate cleanly.",
+    "Fixed duplicate Veterinary Medicines summaries on the Dashboard so only the customisable, filter-aware Dashboard panel is shown."
+  ],
+
+  removed: [
+    "Removed the duplicate always-visible Veterinary Medicines panel that had been rendered separately at the bottom of the Dashboard.",
+    "Removed the previous one-disposal-per-medicine restriction so legitimate partial disposal events can be recorded separately."
+  ],
+
+  security: [
+    "Protected the dedicated Veterinary Medicine Print / PDF route so Free members cannot bypass the Premium restriction by opening the print URL directly.",
+    "Veterinary medicine records continue to use the signed-in member's existing HiveTag data-access controls."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Veterinary Medicines", to: "/veterinary-medicines" },
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Help", to: "/help" },
+    { label: "Pricing", to: "/pricing" }
+  ],
+
+  known_issues: [
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
+{
   version: "1.5.4",
   released_at: "2026-09-12T18:00:00Z",
 
@@ -354,7 +422,6 @@ const NOTES = [
 {
   version: "1.4.1",
   released_at: "2026-08-08T23:00:00Z",
-
   summary:
     "Refined Queen lifecycle tracking, Hive Health assessment and subscription-state handling following the HiveTag 1.4.0 release. This update improves Queen history accuracy, separates seasonal guidance from colony risk, introduces a clear unassessed state for new hives, and fixes Premium access indicators on initial application load.",
 
