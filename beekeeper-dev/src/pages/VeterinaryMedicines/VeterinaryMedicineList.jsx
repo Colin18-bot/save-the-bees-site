@@ -42,6 +42,7 @@ export default function VeterinaryMedicineList() {
 
   const [disposalEditor, setDisposalEditor] = useState(null);
   const [disposalDate, setDisposalDate] = useState(todayIso());
+  const [disposalQuantity, setDisposalQuantity] = useState("");
   const [disposalRoute, setDisposalRoute] = useState("");
   const [disposalNotes, setDisposalNotes] = useState("");
   const [savingDisposal, setSavingDisposal] = useState(false);
@@ -79,7 +80,7 @@ export default function VeterinaryMedicineList() {
           .order("started_on", { ascending: false }),
         supabase
           .from("veterinary_medicine_disposals")
-          .select("id,medicine_id,disposal_date,disposal_route,notes")
+          .select("id,medicine_id,disposal_date,quantity_disposed,disposal_route,notes")
           .eq("user_id", user.id)
           .order("disposal_date", { ascending: false }),
       ]);
@@ -227,6 +228,7 @@ export default function VeterinaryMedicineList() {
       disposalId: null,
     });
     setDisposalDate(todayIso());
+    setDisposalQuantity("");
     setDisposalRoute("");
     setDisposalNotes("");
   };
@@ -240,6 +242,7 @@ export default function VeterinaryMedicineList() {
       disposalId: disposal.id,
     });
     setDisposalDate(disposal.disposal_date || todayIso());
+    setDisposalQuantity(disposal.quantity_disposed || "");
     setDisposalRoute(disposal.disposal_route || "");
     setDisposalNotes(disposal.notes || "");
   };
@@ -256,8 +259,8 @@ export default function VeterinaryMedicineList() {
     setErrorMsg("");
     setSuccessMsg("");
 
-    if (!disposalDate || !disposalRoute.trim()) {
-      setErrorMsg("Date disposed and route / method of disposal are required.");
+    if (!disposalDate || !disposalQuantity.trim() || !disposalRoute.trim()) {
+      setErrorMsg("Date disposed, quantity disposed and route / method of disposal are required.");
       return;
     }
 
@@ -271,6 +274,7 @@ export default function VeterinaryMedicineList() {
 
       const payload = {
         disposal_date: disposalDate,
+        quantity_disposed: disposalQuantity.trim(),
         disposal_route: disposalRoute.trim(),
         notes: disposalNotes.trim() || null,
       };
@@ -691,6 +695,9 @@ export default function VeterinaryMedicineList() {
                                     <div className="font-medium text-gray-800">
                                       {formatDate(item.disposal_date)}
                                     </div>
+                                    <div className="mt-0.5 font-semibold text-gray-800">
+                                      Quantity: {item.quantity_disposed || "—"}
+                                    </div>
                                     <div className="mt-0.5 text-gray-600">{item.disposal_route}</div>
                                     {item.notes && (
                                       <div className="mt-0.5 text-gray-500">{item.notes}</div>
@@ -774,7 +781,7 @@ export default function VeterinaryMedicineList() {
             </div>
 
             <p className="mt-4 text-sm text-gray-600">
-              Record the date and route / method actually used to dispose of veterinary medicine that was not administered.
+              Record veterinary medicine that was not administered, such as unused, expired or damaged medicine that you disposed of or returned.
             </p>
             <p className="mt-1 text-xs font-medium text-gray-500">* Required field</p>
 
@@ -788,6 +795,19 @@ export default function VeterinaryMedicineList() {
                   required
                   className="rounded-xl border border-gray-300 bg-white p-2.5"
                 />
+              </label>
+              <label className="flex flex-col gap-1">
+                <span className="text-sm font-medium text-gray-800">Quantity disposed *</span>
+                <input
+                  value={disposalQuantity}
+                  onChange={(e) => setDisposalQuantity(e.target.value)}
+                  required
+                  placeholder="e.g. 2 strips, 20 ml"
+                  className="rounded-xl border border-gray-300 bg-white p-2.5"
+                />
+                <span className="text-xs text-gray-500">
+                  Record the quantity actually disposed of in this disposal event.
+                </span>
               </label>
               <label className="flex flex-col gap-1 sm:col-span-2">
                 <span className="text-sm font-medium text-gray-800">Route / method of disposal *</span>
@@ -963,6 +983,7 @@ export default function VeterinaryMedicineList() {
                     <thead>
                       <tr>
                         <th>Date</th>
+                        <th>Quantity disposed</th>
                         <th>Route of disposal</th>
                         <th>Notes</th>
                       </tr>
@@ -971,6 +992,7 @@ export default function VeterinaryMedicineList() {
                       {disposals.map((item) => (
                         <tr key={`print-disposal-${item.id}`}>
                           <td>{formatDate(item.disposal_date)}</td>
+                          <td>{item.quantity_disposed || "—"}</td>
                           <td>{item.disposal_route}</td>
                           <td>{item.notes || "—"}</td>
                         </tr>
