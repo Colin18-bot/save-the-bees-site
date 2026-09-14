@@ -4,6 +4,15 @@ import { supabase } from "../../services/supabase";
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
 
+const METHOD_OPTIONS = [
+  "Strips",
+  "Drizzle / trickle",
+  "Sublimation / vaporisation",
+  "Tray / gel",
+  "Spray",
+  "Other",
+];
+
 export default function NewVeterinaryMedicineTreatment() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,6 +37,7 @@ export default function NewVeterinaryMedicineTreatment() {
 
   const [treatmentFor, setTreatmentFor] = useState("Varroa");
   const [method, setMethod] = useState("");
+  const [otherMethod, setOtherMethod] = useState("");
   const [startedOn, setStartedOn] = useState(todayIso());
   const [treatmentMode, setTreatmentMode] = useState("remains_in_hive");
   const [plannedCompletionDate, setPlannedCompletionDate] = useState("");
@@ -39,15 +49,20 @@ export default function NewVeterinaryMedicineTreatment() {
 
   useEffect(() => {
     let active = true;
+
     (async () => {
       setLoading(true);
       setErrorMsg("");
+
       try {
         const {
           data: { user },
           error: userError,
         } = await supabase.auth.getUser();
-        if (userError || !user) throw new Error(userError?.message || "Not authenticated.");
+
+        if (userError || !user) {
+          throw new Error(userError?.message || "Not authenticated.");
+        }
 
         const [medicinesResult, apiariesResult, holderResult] = await Promise.all([
           supabase
@@ -79,7 +94,10 @@ export default function NewVeterinaryMedicineTreatment() {
         setRecordHolderName(holderResult.data?.record_holder_name || "");
         setPersonAdministering(holderResult.data?.record_holder_name || "");
 
-        if (requestedMedicineId && medicineRows.some((row) => row.id === requestedMedicineId)) {
+        if (
+          requestedMedicineId &&
+          medicineRows.some((row) => row.id === requestedMedicineId)
+        ) {
           setMedicineId(requestedMedicineId);
         } else if (!medicineId && medicineRows.length === 1) {
           setMedicineId(medicineRows[0].id);
@@ -100,6 +118,7 @@ export default function NewVeterinaryMedicineTreatment() {
 
   useEffect(() => {
     let active = true;
+
     (async () => {
       setHives([]);
       setSelectedHiveIds([]);
@@ -113,10 +132,12 @@ export default function NewVeterinaryMedicineTreatment() {
         .order("name", { ascending: true });
 
       if (!active) return;
+
       if (error) {
         setErrorMsg(error.message);
         return;
       }
+
       setHives(data || []);
     })();
 
@@ -130,9 +151,16 @@ export default function NewVeterinaryMedicineTreatment() {
     return selectedHiveIds;
   }, [hiveSelectionMode, hives, selectedHiveIds]);
 
+  const effectiveMethod = useMemo(() => {
+    if (method === "Other") return otherMethod.trim();
+    return method.trim();
+  }, [method, otherMethod]);
+
   const toggleHive = (hiveId) => {
     setSelectedHiveIds((prev) =>
-      prev.includes(hiveId) ? prev.filter((id) => id !== hiveId) : [...prev, hiveId]
+      prev.includes(hiveId)
+        ? prev.filter((id) => id !== hiveId)
+        : [...prev, hiveId]
     );
   };
 
@@ -145,22 +173,39 @@ export default function NewVeterinaryMedicineTreatment() {
 
     if (!medicineId) return setErrorMsg("Please select a veterinary medicine.");
     if (!apiaryId) return setErrorMsg("Please select an apiary.");
-    if (effectiveHiveIds.length === 0) return setErrorMsg("Please select at least one hive.");
-    if (!treatmentFor.trim()) return setErrorMsg("Please state what the medicine was used for.");
-    if (!method.trim()) return setErrorMsg("Please enter the method used.");
+    if (effectiveHiveIds.length === 0) {
+      return setErrorMsg("Please select at least one hive.");
+    }
+    if (!treatmentFor.trim()) {
+      return setErrorMsg("Please state what the medicine was used for.");
+    }
+    if (!method) return setErrorMsg("Please select the treatment method.");
+    if (method === "Other" && !otherMethod.trim()) {
+      return setErrorMsg("Please enter the treatment method used.");
+    }
     if (!startedOn) return setErrorMsg("Please enter the treatment start date.");
-    if (!personAdministering.trim()) return setErrorMsg("Please enter who administered the medicine.");
-    if (!quantityUsed.trim()) return setErrorMsg("Please enter the total quantity used.");
-    if (!withdrawalPeriod.trim()) return setErrorMsg("Please enter the withdrawal period shown for the medicine.");
+    if (!personAdministering.trim()) {
+      return setErrorMsg("Please enter who administered the medicine.");
+    }
+    if (!quantityUsed.trim()) {
+      return setErrorMsg("Please enter the total quantity used.");
+    }
+    if (!withdrawalPeriod.trim()) {
+      return setErrorMsg("Please enter the withdrawal period shown for the medicine.");
+    }
     if (treatmentMode === "remains_in_hive" && !plannedCompletionDate) {
-      return setErrorMsg("Please enter the removal / completion date you are using for this treatment.");
+      return setErrorMsg(
+        "Please enter the planned removal and/or completion date you are using for this treatment."
+      );
     }
     if (
       treatmentMode === "remains_in_hive" &&
       plannedCompletionDate &&
       plannedCompletionDate < startedOn
     ) {
-      return setErrorMsg("Removal / completion date cannot be before the treatment start date.");
+      return setErrorMsg(
+        "Removal and/or completion date cannot be before the treatment start date."
+      );
     }
 
     setSaving(true);
@@ -171,14 +216,17 @@ export default function NewVeterinaryMedicineTreatment() {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
-      if (userError || !user) throw new Error(userError?.message || "Not authenticated.");
+
+      if (userError || !user) {
+        throw new Error(userError?.message || "Not authenticated.");
+      }
 
       const treatmentPayload = {
         user_id: user.id,
         medicine_id: medicineId,
         apiary_id: apiaryId,
         treatment_for: treatmentFor.trim(),
-        method: method.trim(),
+        method: effectiveMethod,
         started_on: startedOn,
         treatment_mode: treatmentMode,
         planned_completion_date:
@@ -216,13 +264,20 @@ export default function NewVeterinaryMedicineTreatment() {
         state: {
           veterinaryMedicineMessage:
             treatmentMode === "one_off"
-              ? `Treatment recorded as completed for ${effectiveHiveIds.length} hive${effectiveHiveIds.length === 1 ? "" : "s"}.`
-              : `Treatment started for ${effectiveHiveIds.length} hive${effectiveHiveIds.length === 1 ? "" : "s"}.`,
+              ? `Treatment recorded as completed for ${effectiveHiveIds.length} hive${
+                  effectiveHiveIds.length === 1 ? "" : "s"
+                }.`
+              : `Treatment started for ${effectiveHiveIds.length} hive${
+                  effectiveHiveIds.length === 1 ? "" : "s"
+                }.` ,
         },
       });
     } catch (err) {
       if (treatmentId) {
-        await supabase.from("veterinary_medicine_treatments").delete().eq("id", treatmentId);
+        await supabase
+          .from("veterinary_medicine_treatments")
+          .delete()
+          .eq("id", treatmentId);
       }
       setErrorMsg(err.message || String(err));
     } finally {
@@ -235,7 +290,9 @@ export default function NewVeterinaryMedicineTreatment() {
   if (medicines.length === 0) {
     return (
       <div className="max-w-3xl mx-auto p-4 md:p-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-[#1a3329]">Record Treatment</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-[#1a3329]">
+          Record Treatment
+        </h1>
         <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-5 text-sm text-gray-800">
           Add the veterinary medicine to your register before recording its administration.
         </div>
@@ -260,10 +317,15 @@ export default function NewVeterinaryMedicineTreatment() {
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-6">
       <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold text-[#1a3329]">Record Treatment</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-[#1a3329]">
+          Record Treatment
+        </h1>
         <p className="mt-1 max-w-3xl text-sm text-gray-600">
           Record what you actually administered. HiveTag does not calculate treatment durations;
           enter the removal or completion date from the instructions you are following.
+        </p>
+        <p className="mt-2 text-xs font-medium text-gray-500">
+          * Required field
         </p>
       </div>
 
@@ -275,7 +337,10 @@ export default function NewVeterinaryMedicineTreatment() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <section className="rounded-2xl border border-gray-200 bg-white p-4 md:p-5 shadow-sm">
-          <h2 className="text-lg font-semibold text-[#1a3329]">Medicine and administration</h2>
+          <h2 className="text-lg font-semibold text-[#1a3329]">
+            Medicine and administration
+          </h2>
+
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <label className="flex flex-col gap-1 md:col-span-2">
               <span className="text-sm font-medium">Veterinary medicine *</span>
@@ -305,24 +370,40 @@ export default function NewVeterinaryMedicineTreatment() {
               />
             </label>
 
-            <label className="flex flex-col gap-1">
-              <span className="text-sm font-medium">Method *</span>
-              <input
-                list="veterinary-treatment-methods"
-                className="rounded-xl border border-gray-300 p-2.5"
-                value={method}
-                onChange={(e) => setMethod(e.target.value)}
-                placeholder="e.g. Strips, drizzle/trickle, tray/gel"
-                required
-              />
-              <datalist id="veterinary-treatment-methods">
-                <option value="Strips" />
-                <option value="Drizzle / trickle" />
-                <option value="Sublimation / vaporisation" />
-                <option value="Tray / gel" />
-                <option value="Spray" />
-              </datalist>
-            </label>
+            <div className="flex flex-col gap-1">
+              <label className="flex flex-col gap-1">
+                <span className="text-sm font-medium">Method *</span>
+                <select
+                  className="rounded-xl border border-gray-300 bg-white p-2.5"
+                  value={method}
+                  onChange={(e) => {
+                    setMethod(e.target.value);
+                    if (e.target.value !== "Other") setOtherMethod("");
+                  }}
+                  required
+                >
+                  <option value="">Select method…</option>
+                  {METHOD_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              {method === "Other" && (
+                <label className="mt-2 flex flex-col gap-1">
+                  <span className="text-sm font-medium">Other method *</span>
+                  <input
+                    className="rounded-xl border border-gray-300 p-2.5"
+                    value={otherMethod}
+                    onChange={(e) => setOtherMethod(e.target.value)}
+                    placeholder="Enter the method used"
+                    required
+                  />
+                </label>
+              )}
+            </div>
 
             <label className="flex flex-col gap-1">
               <span className="text-sm font-medium">Treatment start date *</span>
@@ -363,11 +444,15 @@ export default function NewVeterinaryMedicineTreatment() {
                 className="rounded-xl border border-gray-300 p-2.5"
                 value={withdrawalPeriod}
                 onChange={(e) => setWithdrawalPeriod(e.target.value)}
-                placeholder="e.g. Honey: zero days"
+                placeholder="Copy from label, e.g. Honey: zero days"
                 required
               />
               <span className="text-xs text-gray-500">
-                Enter the withdrawal period shown on the product label or package leaflet. This is the time after treatment before honey or other hive products may be taken for human consumption; it is separate from the treatment removal date.
+                Copy the withdrawal period from the current product label or package leaflet.
+                “Honey: zero days” means there is no additional waiting period for honey from the
+                withdrawal-period point of view. It does not override separate product instructions
+                such as not using the medicine during honey flow, removing supers, or not harvesting
+                honey while treatment is in place.
               </span>
             </label>
           </div>
@@ -375,6 +460,7 @@ export default function NewVeterinaryMedicineTreatment() {
 
         <section className="rounded-2xl border border-gray-200 bg-white p-4 md:p-5 shadow-sm">
           <h2 className="text-lg font-semibold text-[#1a3329]">Apiary and hives</h2>
+
           <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <label className="flex flex-col gap-1 md:col-span-2">
               <span className="text-sm font-medium">Apiary *</span>
@@ -396,7 +482,10 @@ export default function NewVeterinaryMedicineTreatment() {
 
           {apiaryId && (
             <div className="mt-4">
-              <div className="text-sm font-medium">Which hives were actually treated? *</div>
+              <div className="text-sm font-medium">
+                Which hives were actually treated? *
+              </div>
+
               <div className="mt-2 flex flex-wrap gap-2">
                 <button
                   type="button"
@@ -409,6 +498,7 @@ export default function NewVeterinaryMedicineTreatment() {
                 >
                   All active hives
                 </button>
+
                 <button
                   type="button"
                   onClick={() => setHiveSelectionMode("selected")}
@@ -428,7 +518,8 @@ export default function NewVeterinaryMedicineTreatment() {
                 </div>
               ) : hiveSelectionMode === "all" ? (
                 <div className="mt-3 rounded-xl border border-green-200 bg-green-50 p-3 text-sm text-green-900">
-                  All {hives.length} active hive{hives.length === 1 ? "" : "s"} in this apiary will be recorded as treated.
+                  All {hives.length} active hive{hives.length === 1 ? "" : "s"} in this apiary will
+                  be recorded as treated.
                 </div>
               ) : (
                 <div className="mt-3 rounded-xl border border-gray-200 bg-gray-50 p-3">
@@ -453,6 +544,7 @@ export default function NewVeterinaryMedicineTreatment() {
                       </button>
                     </div>
                   </div>
+
                   <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
                     {hives.map((hive) => (
                       <label
@@ -475,7 +567,9 @@ export default function NewVeterinaryMedicineTreatment() {
         </section>
 
         <section className="rounded-2xl border border-gray-200 bg-white p-4 md:p-5 shadow-sm">
-          <h2 className="text-lg font-semibold text-[#1a3329]">Treatment status and completion</h2>
+          <h2 className="text-lg font-semibold text-[#1a3329]">
+            Treatment status and completion
+          </h2>
           <p className="mt-1 text-sm text-gray-600">
             Choose whether the treatment is completed at administration or remains in the hive.
           </p>
@@ -492,7 +586,8 @@ export default function NewVeterinaryMedicineTreatment() {
             >
               <div className="font-semibold text-[#1a3329]">One-off administration</div>
               <div className="mt-1 text-sm text-gray-600">
-                For treatments such as a drizzle/trickle application that are finished as soon as they are administered.
+                For treatments such as a drizzle/trickle application that are finished as soon as
+                they are administered.
               </div>
             </button>
 
@@ -507,7 +602,8 @@ export default function NewVeterinaryMedicineTreatment() {
             >
               <div className="font-semibold text-[#1a3329]">Treatment remains in hive</div>
               <div className="mt-1 text-sm text-gray-600">
-                For strips, trays or other treatments that remain active until you remove or complete them.
+                For strips, trays or other treatments that remain active until you remove or
+                complete them.
               </div>
             </button>
           </div>
@@ -515,7 +611,9 @@ export default function NewVeterinaryMedicineTreatment() {
           {treatmentMode === "remains_in_hive" && (
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
               <label className="flex flex-col gap-1">
-                <span className="text-sm font-medium">Removal / completion date *</span>
+                <span className="text-sm font-medium">
+                  Planned removal and/or completion date *
+                </span>
                 <input
                   type="date"
                   className="rounded-xl border border-gray-300 p-2.5"
@@ -524,7 +622,10 @@ export default function NewVeterinaryMedicineTreatment() {
                   onChange={(e) => setPlannedCompletionDate(e.target.value)}
                   required
                 />
-                <span className="text-xs text-gray-500">You set this date; HiveTag does not calculate it.</span>
+                <span className="text-xs text-gray-500">
+                  Enter the date you intend to remove the treatment and/or consider it complete,
+                  using the current product instructions. HiveTag does not calculate this date.
+                </span>
               </label>
 
               <label className="flex flex-col gap-1">
@@ -560,8 +661,13 @@ export default function NewVeterinaryMedicineTreatment() {
             disabled={saving || effectiveHiveIds.length === 0}
             className="rounded-xl bg-[#1a3329] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#24483a] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {saving ? "Saving…" : treatmentMode === "one_off" ? "Record Completed Treatment" : "Start Treatment"}
+            {saving
+              ? "Saving…"
+              : treatmentMode === "one_off"
+                ? "Record Completed Treatment"
+                : "Start Treatment"}
           </button>
+
           <Link
             to="/veterinary-medicines"
             className="rounded-xl border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium hover:bg-gray-50"
