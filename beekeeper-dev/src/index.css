@@ -25,13 +25,6 @@
   .screen-only { display: initial; }
 }
 
-/* Veterinary medicine register: once a disposal record exists for the medicine,
-   hide the Record disposal action. The database also enforces one disposal per
-   medicine record, while the existing disposal remains amendable. */
-table.min-w-\[1180px\] > tbody > tr:has(> td:nth-child(9) > div) > td:nth-child(10) button:last-child {
-  display: none;
-}
-
 /* ---------- Print helpers & utilities ---------- */
 @media print {
   /* Hide app chrome */
