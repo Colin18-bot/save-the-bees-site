@@ -115,6 +115,16 @@ const TYPE_LABEL = {
   [TYPE.TREATMENT]: "Treatments",
 };
 
+const DAY_GROUP_ORDER = [
+  TYPE.TREATMENT,
+  TYPE.TODO,
+  TYPE.INSPECTION,
+  TYPE.QUEEN,
+  TYPE.LOGBOOK,
+  TYPE.HIVE,
+  TYPE.APIARY,
+];
+
 const ROUTES_EDIT = {
   apiary: (id) => `/apiaries/${id}/edit`,
   hive: (id) => `/hives/${id}/edit`,
@@ -224,6 +234,7 @@ const Calendar = () => {
 
   const [selected, setSelected] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [dayModalDate, setDayModalDate] = useState("");
 
   const openEvent = (e) => {
     setSelected(e);
@@ -233,6 +244,10 @@ const Calendar = () => {
     setModalOpen(false);
     setSelected(null);
   };
+  const openDay = (date) => {
+    if (date) setDayModalDate(date);
+  };
+  const closeDay = () => setDayModalDate("");
   const getIdFromKey = (key) => (key ? key.split(":")[1] : null);
 
   const apiaryNameById = useMemo(() => {
@@ -666,6 +681,20 @@ const Calendar = () => {
     });
   }, [events, typeFilter, apiaryId, hiveId]);
 
+  const eventPriority = (e) => {
+    if (e.type === TYPE.TREATMENT && e.overdue) return 0;
+    if (e.type === TYPE.TREATMENT && !e.completed) return 1;
+    if (e.type === TYPE.TODO && !e.completed) return 2;
+    if (e.type === TYPE.TREATMENT && e.completed) return 3;
+    if (e.type === TYPE.INSPECTION) return 4;
+    if (e.type === TYPE.QUEEN) return 5;
+    if (e.type === TYPE.LOGBOOK) return 6;
+    if (e.type === TYPE.TODO) return 7;
+    if (e.type === TYPE.HIVE) return 8;
+    if (e.type === TYPE.APIARY) return 9;
+    return 10;
+  };
+
   const eventsByDay = useMemo(() => {
     const map = new Map();
     for (const e of filteredEvents) {
@@ -675,13 +704,28 @@ const Calendar = () => {
     }
     for (const [k, arr] of map.entries()) {
       arr.sort((a, b) => {
-        if (!!a.overdue !== !!b.overdue) return a.overdue ? -1 : 1;
-        return a.type.localeCompare(b.type);
+        const priorityDiff = eventPriority(a) - eventPriority(b);
+        if (priorityDiff !== 0) return priorityDiff;
+        return String(a.title || "").localeCompare(String(b.title || ""));
       });
       map.set(k, arr);
     }
     return map;
   }, [filteredEvents]);
+
+  const selectedDayEvents = useMemo(() => {
+    if (!dayModalDate) return [];
+    return (eventsByDay.get(dayModalDate) || []).filter(
+      (e) => showHidden || !hidden.has(e.key)
+    );
+  }, [dayModalDate, eventsByDay, showHidden, hidden]);
+
+  const selectedDayGroups = useMemo(() => {
+    return DAY_GROUP_ORDER.map((type) => ({
+      type,
+      items: selectedDayEvents.filter((event) => event.type === type),
+    })).filter((group) => group.items.length > 0);
+  }, [selectedDayEvents]);
 
   const unhideAll = () => {
     const next = new Set();
@@ -955,18 +999,30 @@ const Calendar = () => {
                         inMonth ? "" : "bg-zinc-50"
                       } p-1 sm:p-1.5`}
                     >
-                      <div className="flex items-center justify-between mb-0.5 sm:mb-1">
-                        <div
-                          className={`text-[11px] sm:text-xs font-semibold ${
-                            inMonth ? "text-zinc-800" : "text-zinc-400"
-                          } ${isToday ? "px-1 rounded bg-yellow-300 text-white" : ""}`}
-                        >
-                          {cell.date ? fmtDayNum(cell.date) : ""}
-                        </div>
+                      <div className="flex items-center justify-between mb-0.5 sm:mb-1 gap-1">
+                        {cell.date ? (
+                          <button
+                            type="button"
+                            onClick={() => openDay(dateYMD)}
+                            className={`text-[11px] sm:text-xs font-semibold hover:underline ${
+                              inMonth ? "text-zinc-800" : "text-zinc-400"
+                            } ${isToday ? "px-1 rounded bg-yellow-300 text-white" : ""}`}
+                            title={`View all events for ${fmtLong(dateYMD)}`}
+                          >
+                            {fmtDayNum(cell.date)}
+                          </button>
+                        ) : (
+                          <div />
+                        )}
                         {dayEvents.length > 4 && (
-                          <div className="text-[9px] sm:text-[10px] text-zinc-500">
-                            {dayEvents.length} items
-                          </div>
+                          <button
+                            type="button"
+                            onClick={() => openDay(dateYMD)}
+                            className="text-[9px] sm:text-[10px] font-medium text-[#1a3329] hover:underline"
+                            title={`View all ${dayEvents.length} events`}
+                          >
+                            View all {dayEvents.length}
+                          </button>
                         )}
                       </div>
 
@@ -1047,8 +1103,93 @@ const Calendar = () => {
       </div>
 
       <div className="text-xs text-zinc-500">
-        Items are never auto-removed from the calendar. Use the “×” to hide manually (stored on this device). Archived/deleted entries remain visible with a strike-through. Veterinary treatment dates remain part of the medicine history even if the hive or apiary is later removed.
+        The month view shows up to four prioritised items per day. Click the date or “View all” to see every item for that day. Items are never auto-removed from the calendar. Use the “×” to hide manually (stored on this device). Archived/deleted entries remain visible with a strike-through. Veterinary treatment dates remain part of the medicine history even if the hive or apiary is later removed.
       </div>
+
+      {dayModalDate && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          role="dialog"
+          aria-modal="true"
+          onClick={closeDay}
+        >
+          <div
+            className="w-[94vw] max-w-2xl max-h-[86vh] overflow-y-auto rounded-xl bg-white shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sticky top-0 z-10 flex items-start justify-between border-b border-gray-200 bg-white p-4">
+              <div>
+                <h3 className="text-lg font-semibold text-[#1a3329]">{fmtLong(dayModalDate)}</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  {selectedDayEvents.length} item{selectedDayEvents.length === 1 ? "" : "s"} with the current filters
+                </p>
+              </div>
+              <button
+                className="text-xl leading-none text-zinc-500 hover:text-zinc-800"
+                onClick={closeDay}
+                aria-label="Close day view"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="space-y-5 p-4">
+              {selectedDayGroups.length === 0 ? (
+                <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-600">
+                  No visible items for this date with the current filters.
+                </div>
+              ) : (
+                selectedDayGroups.map((group) => (
+                  <section key={group.type}>
+                    <h4 className="mb-2 text-xs font-bold uppercase tracking-wide text-gray-500">
+                      {TYPE_LABEL[group.type]}
+                    </h4>
+                    <div className="space-y-2">
+                      {group.items.map((event) => {
+                        const eventApiary =
+                          event.apiary_name_snapshot || getApiaryName(event.apiary_id);
+                        const eventHive =
+                          event.hive_name_snapshot || getHiveName(event.hive_id);
+                        return (
+                          <button
+                            type="button"
+                            key={event.key}
+                            onClick={() => {
+                              closeDay();
+                              openEvent(event);
+                            }}
+                            className="flex w-full items-start gap-3 rounded-lg border border-gray-200 bg-white p-3 text-left hover:border-amber-300 hover:bg-amber-50/30"
+                          >
+                            <span className={dotClass(event)} />
+                            <span className="min-w-0 flex-1">
+                              <span className="flex flex-wrap items-center gap-2">
+                                <span className="font-semibold text-[#1a3329]">
+                                  {event.completed ? "✅ " : ""}{event.title}
+                                </span>
+                                {event.overdue && (
+                                  <span className="rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-800">
+                                    OVERDUE
+                                  </span>
+                                )}
+                              </span>
+                              <span className="mt-1 block text-xs text-gray-500">
+                                {event.subtitle}
+                                {eventApiary ? ` • ${eventApiary}` : ""}
+                                {eventHive ? ` • ${eventHive}` : ""}
+                              </span>
+                            </span>
+                            <span className="text-xs font-semibold text-[#1a3329]">Details</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </section>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {modalOpen && selected && (
         <div
