@@ -1,0 +1,24 @@
+/* Dashboard section ordering for Veterinary Medicines.
+   The Veterinary Medicines panel itself remains controlled by Dashboard.jsx and
+   Customise Dashboard. This stylesheet only places that existing panel directly
+   after Queen status when both sections are visible. */
+
+@supports selector(:has(*)) {
+  main > div.p-6.space-y-6:has(> div a[href="/queens"]):has(> div a[href="/veterinary-medicines"]) {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  main > div.p-6.space-y-6:has(> div a[href="/queens"]):has(> div a[href="/veterinary-medicines"]) > * {
+    margin-top: 0 !important;
+  }
+
+  main > div.p-6.space-y-6:has(> div a[href="/queens"]):has(> div a[href="/veterinary-medicines"]) > :has(a[href="/veterinary-medicines"]) {
+    order: 1;
+  }
+
+  main > div.p-6.space-y-6:has(> div a[href="/queens"]):has(> div a[href="/veterinary-medicines"]) > :has(a[href="/queens"]) ~ * {
+    order: 2;
+  }
+}
