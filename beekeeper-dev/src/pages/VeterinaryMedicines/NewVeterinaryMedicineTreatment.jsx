@@ -188,7 +188,7 @@ export default function NewVeterinaryMedicineTreatment() {
       return setErrorMsg("Please enter who administered the medicine.");
     }
     if (!quantityUsed.trim()) {
-      return setErrorMsg("Please enter the total quantity used.");
+      return setErrorMsg("Please enter the quantity used per hive.");
     }
     if (!withdrawalPeriod.trim()) {
       return setErrorMsg("Please enter the withdrawal period shown for the medicine.");
@@ -252,6 +252,7 @@ export default function NewVeterinaryMedicineTreatment() {
         user_id: user.id,
         treatment_id: treatment.id,
         hive_id: hiveId,
+        quantity_used: quantityUsed.trim(),
       }));
 
       const { error: hiveError } = await supabase
@@ -428,14 +429,17 @@ export default function NewVeterinaryMedicineTreatment() {
             </label>
 
             <label className="flex flex-col gap-1">
-              <span className="text-sm font-medium">Total quantity used *</span>
+              <span className="text-sm font-medium">Quantity used per hive *</span>
               <input
                 className="rounded-xl border border-gray-300 p-2.5"
                 value={quantityUsed}
                 onChange={(e) => setQuantityUsed(e.target.value)}
-                placeholder="e.g. 6 strips, 15 ml, 3 trays"
+                placeholder="e.g. 2 strips, 5 ml, 1 tray"
                 required
               />
+              <span className="text-xs text-gray-500">
+                This amount is recorded against each selected hive.
+              </span>
             </label>
 
             <label className="flex flex-col gap-1">
