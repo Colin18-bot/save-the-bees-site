@@ -74,7 +74,7 @@ export default function EditVeterinaryMedicineTreatment() {
             .order("name", { ascending: true }),
           supabase
             .from("veterinary_medicine_treatment_hives")
-            .select("hive_id,hive_name_snapshot,status,completed_on,inspection_id")
+            .select("hive_id,hive_name_snapshot,status,completed_on,inspection_id,quantity_used")
             .eq("treatment_id", id)
             .eq("user_id", user.id),
         ]);
@@ -117,7 +117,7 @@ export default function EditVeterinaryMedicineTreatment() {
         setPlannedCompletionDate(treatment.planned_completion_date || "");
         setCompletionAction(treatment.completion_action || "remove");
         setPersonAdministering(treatment.person_administering || "");
-        setQuantityUsed(treatment.quantity_used || "");
+        setQuantityUsed(hiveRows[0]?.quantity_used || treatment.quantity_used || "");
         setWithdrawalPeriod(treatment.withdrawal_period || "");
         setNotes(treatment.notes || "");
       } catch (err) {
@@ -194,7 +194,7 @@ export default function EditVeterinaryMedicineTreatment() {
     if (!effectiveMethod) return setErrorMsg("Please select or enter the treatment method.");
     if (!startedOn) return setErrorMsg("Please enter the treatment start date.");
     if (!personAdministering.trim()) return setErrorMsg("Please enter who administered the medicine.");
-    if (!quantityUsed.trim()) return setErrorMsg("Please enter the total quantity used.");
+    if (!quantityUsed.trim()) return setErrorMsg("Please enter the quantity used per hive.");
     if (!withdrawalPeriod.trim()) return setErrorMsg("Please enter the withdrawal period shown for the medicine.");
     if (treatmentMode === "remains_in_hive" && !plannedCompletionDate) {
       return setErrorMsg("Please enter the planned removal and/or completion date.");
@@ -318,7 +318,7 @@ export default function EditVeterinaryMedicineTreatment() {
             <Field label="Person administering *">
               <input className="input" value={personAdministering} onChange={(e) => setPersonAdministering(e.target.value)} required />
             </Field>
-            <Field label="Total quantity used *">
+            <Field label="Quantity used per hive *" hint="Saving applies this amount to each hive in this treatment.">
               <input className="input" value={quantityUsed} onChange={(e) => setQuantityUsed(e.target.value)} required />
             </Field>
             <Field label="Withdrawal period for honey *" hint="Copy the wording from the current product label or leaflet. 'Honey: zero days' means there is no additional withdrawal waiting period for honey; separate product restrictions still apply.">
@@ -362,7 +362,7 @@ export default function EditVeterinaryMedicineTreatment() {
 
           {historicalHiveRows.length > 0 && (
             <div className="mt-3 text-xs text-gray-500">
-              Current saved status: {historicalHiveRows.map((row) => `${row.hive_name_snapshot} — ${row.status}${row.completed_on ? ` (${row.completed_on})` : ""}`).join("; ")}
+              Current saved status: {historicalHiveRows.map((row) => `${row.hive_name_snapshot} — ${row.status}${row.completed_on ? ` (${row.completed_on})` : ""} — ${row.quantity_used || "quantity not recorded"}`).join("; ")}
             </div>
           )}
         </section>
