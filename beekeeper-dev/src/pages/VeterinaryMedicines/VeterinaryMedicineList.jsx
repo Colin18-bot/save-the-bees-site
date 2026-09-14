@@ -216,7 +216,7 @@ export default function VeterinaryMedicineList() {
       <style>{`
         #vm-print-report { display: none; }
         @media print {
-          @page { size: landscape; margin: 10mm; }
+          @page { size: A4 landscape; margin: 10mm; }
           body * { visibility: hidden !important; }
           #vm-print-report, #vm-print-report * { visibility: visible !important; }
           #vm-print-report {
@@ -230,18 +230,40 @@ export default function VeterinaryMedicineList() {
             font-size: 9pt;
             line-height: 1.25;
           }
-          #vm-print-report table { width: 100%; border-collapse: collapse; }
+          #vm-print-report table {
+            width: 100%;
+            border-collapse: collapse;
+            break-inside: auto;
+            page-break-inside: auto;
+          }
+          #vm-print-report thead { display: table-header-group; }
+          #vm-print-report tfoot { display: table-footer-group; }
+          #vm-print-report tr {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+          }
           #vm-print-report th, #vm-print-report td {
             border: 1px solid #b8b8b8;
             padding: 4px 5px;
             vertical-align: top;
             text-align: left;
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
           }
           #vm-print-report th { background: #f2f2f2 !important; }
           #vm-print-report .vm-print-record {
-            break-inside: avoid;
-            page-break-inside: avoid;
+            break-inside: avoid-page !important;
+            page-break-inside: avoid !important;
             margin-bottom: 8mm;
+          }
+          #vm-print-report .vm-print-record + .vm-print-record {
+            break-before: page !important;
+            page-break-before: always !important;
+          }
+          #vm-print-report .vm-print-record h2,
+          #vm-print-report .vm-print-record > div {
+            break-after: avoid !important;
+            page-break-after: avoid !important;
           }
         }
       `}</style>
