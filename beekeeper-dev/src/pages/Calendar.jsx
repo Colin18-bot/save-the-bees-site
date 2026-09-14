@@ -22,7 +22,7 @@ const endOfMonth = (year, month) => new Date(year, month + 1, 0);
 const daysInMonthGrid = (year, month) => {
   const first = startOfMonth(year, month);
   const last = endOfMonth(year, month);
-  const firstDay = first.getDay(); // 0..6 (Sun..Sat)
+  const firstDay = first.getDay();
   const totalDays = last.getDate();
 
   const cells = [];
@@ -165,7 +165,6 @@ const Calendar = () => {
     }
   }, [location.search]);
 
-  // Data
   const [apiaries, setApiaries] = useState([]);
   const [hives, setHives] = useState([]);
   const [inspections, setInspections] = useState([]);
@@ -196,7 +195,6 @@ const Calendar = () => {
         .maybeSingle();
 
       if (cancelled) return;
-
       if (error) {
         setIsPremium(false);
         return;
@@ -207,13 +205,11 @@ const Calendar = () => {
     };
 
     checkPlan();
-
     return () => {
       cancelled = true;
     };
   }, []);
 
-  // Filters
   const [apiaryId, setApiaryId] = useState("all");
   const [hiveId, setHiveId] = useState("all");
   const [typeFilter, setTypeFilter] = useState({
@@ -226,7 +222,6 @@ const Calendar = () => {
     [TYPE.TREATMENT]: true,
   });
 
-  // UI
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [showHidden, setShowHidden] = useState(false);
@@ -341,7 +336,6 @@ const Calendar = () => {
     );
   }, [hives, apiaryId]);
 
-  /** Build unified events for the selected Month/Year */
   const events = useMemo(() => {
     const monthStart = startOfMonth(year, month);
     const monthEnd = endOfMonth(year, month);
@@ -402,10 +396,8 @@ const Calendar = () => {
       .filter(Boolean);
 
     const healthByInspectionId = new Map();
-
     if (isPremium) {
       const inspectionsByHive = new Map();
-
       (inspections || []).forEach((inspection) => {
         if (!inspection?.hive_id) return;
         const hiveKey = String(inspection.hive_id);
@@ -417,7 +409,6 @@ const Calendar = () => {
         hiveInspections.sort(
           (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
         );
-
         const history = [];
         hiveInspections.forEach((inspection) => {
           history.push(inspection);
@@ -494,7 +485,6 @@ const Calendar = () => {
       .map((q) => {
         const date = pickDate(q, ["event_date", "created_at"]);
         if (!date) return null;
-
         return {
           key: `${TYPE.QUEEN}:${q.id}`,
           type: TYPE.QUEEN,
@@ -518,7 +508,6 @@ const Calendar = () => {
       .map((process) => {
         const date = pickDate(process, ["expected_check_on"]);
         if (!date) return null;
-
         const processType = String(process.process_type || "").toLowerCase();
         const titleByType = {
           introduction: "Follow-up: Queen introduction",
@@ -530,7 +519,6 @@ const Calendar = () => {
         const fallbackTitle = processType
           ? `Follow-up: ${processType.replace(/_/g, " ")}`
           : "Follow-up: Queen check";
-
         return {
           key: `${TYPE.QUEEN}:${process.id}`,
           type: TYPE.QUEEN,
@@ -641,7 +629,6 @@ const Calendar = () => {
           detail: t.notes || null,
         });
       }
-
       return result;
     });
 
@@ -1108,9 +1095,10 @@ const Calendar = () => {
 
       {dayModalDate && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4"
           role="dialog"
-          aria-modal="true"
+          aria-modal={modalOpen ? undefined : true}
+          aria-hidden={modalOpen ? true : undefined}
           onClick={closeDay}
         >
           <div
@@ -1154,10 +1142,7 @@ const Calendar = () => {
                           <button
                             type="button"
                             key={event.key}
-                            onClick={() => {
-                              closeDay();
-                              openEvent(event);
-                            }}
+                            onClick={() => openEvent(event)}
                             className="flex w-full items-start gap-3 rounded-lg border border-gray-200 bg-white p-3 text-left hover:border-amber-300 hover:bg-amber-50/30"
                           >
                             <span className={dotClass(event)} />
@@ -1193,7 +1178,7 @@ const Calendar = () => {
 
       {modalOpen && selected && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40"
           role="dialog"
           aria-modal="true"
           onClick={closeModal}
@@ -1220,9 +1205,7 @@ const Calendar = () => {
             </div>
 
             <div className="text-sm text-zinc-700 space-y-1">
-              <p>
-                <span className="font-medium">Date:</span> {fmtLong(selected.date)}
-              </p>
+              <p><span className="font-medium">Date:</span> {fmtLong(selected.date)}</p>
 
               {(selected.apiary_id || selected.apiary_name_snapshot) && (
                 <p>
@@ -1300,7 +1283,6 @@ const Calendar = () => {
               {selected.detail && (
                 <p><span className="font-medium">Details:</span> {selected.detail}</p>
               )}
-
               {selected.completed && <p>✅ Completed</p>}
               {(selected.status === "archived" || selected.status === "deleted") && (
                 <p className="text-red-700">This item is {selected.status}.</p>
