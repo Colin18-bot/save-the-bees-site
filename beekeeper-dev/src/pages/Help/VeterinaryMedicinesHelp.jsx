@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function IncludedBadge() {
+function AvailabilityBadge() {
   return (
     <span className="inline-flex items-center rounded border border-green-200 bg-green-100 px-2 py-0.5 text-xs font-medium text-green-900">
-      Included
+      Free &amp; Premium
     </span>
   );
 }
@@ -13,8 +13,12 @@ export default function VeterinaryMedicinesHelp() {
   return (
     <section id="veterinary-medicines">
       <h2 className="text-2xl font-bold mb-3">
-        Veterinary Medicines <IncludedBadge />
+        Veterinary Medicines <AvailabilityBadge />
       </h2>
+
+      <p className="mb-4 text-gray-700">
+        Veterinary Medicines is available to <strong>both Free and Premium members</strong>.
+      </p>
 
       <div className="rounded border border-amber-200 bg-amber-50 p-4 text-sm text-gray-800">
         <div className="font-semibold">Important</div>
