@@ -253,18 +253,25 @@ export default function VeterinaryMedicineList() {
           }
           #vm-print-report th { background: #f2f2f2 !important; }
           #vm-print-report .vm-print-record {
-            break-inside: avoid-page !important;
-            page-break-inside: avoid !important;
-            margin-bottom: 8mm;
-          }
-          #vm-print-report .vm-print-record + .vm-print-record {
             break-before: page !important;
             page-break-before: always !important;
+            break-inside: auto !important;
+            page-break-inside: auto !important;
+            margin-bottom: 0;
+          }
+          #vm-print-report .vm-print-record:first-of-type {
+            break-before: auto !important;
+            page-break-before: auto !important;
           }
           #vm-print-report .vm-print-record h2,
-          #vm-print-report .vm-print-record > div {
+          #vm-print-report .vm-print-section-title {
             break-after: avoid !important;
             page-break-after: avoid !important;
+          }
+          #vm-print-report .vm-print-summary-table,
+          #vm-print-report .vm-print-keep-block {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
           }
         }
       `}</style>
@@ -531,6 +538,39 @@ export default function VeterinaryMedicineList() {
                                           Planned {group.completion_action === "remove" ? "removal" : "completion"}: {formatDate(group.planned_completion_date)}
                                         </div>
                                       )}
+                                      <div className="mt-0.5 font-semibold text-gray-800">
+                                        Status: {group.hives.length > 0 && group.hives.every((hive) => hive.status === "completed")
+                                          ? "Completed"
+                                          : `${group.hives.filter((hive) => hive.status === "active").length} active${
+                                              group.hives.some((hive) => hive.status === "completed")
+                                                ? ` · ${group.hives.filter((hive) => hive.status === "completed").length} completed`
+                                                : ""
+                                            }`}
+                                      </div>
+                                      {group.hives.some((hive) => hive.status === "completed" && hive.completed_on) && (
+                                        <div className="mt-0.5 text-gray-600">
+                                          Actual completion: {(() => {
+                                            const completedHives = group.hives.filter(
+                                              (hive) => hive.status === "completed" && hive.completed_on
+                                            );
+                                            const uniqueDates = [
+                                              ...new Set(completedHives.map((hive) => hive.completed_on)),
+                                            ];
+                                            if (
+                                              completedHives.length === group.hives.length &&
+                                              uniqueDates.length === 1
+                                            ) {
+                                              return formatDate(uniqueDates[0]);
+                                            }
+                                            return completedHives
+                                              .map(
+                                                (hive) =>
+                                                  `${hive.name || "Hive"} — ${formatDate(hive.completed_on)}`
+                                              )
+                                              .join(" · ");
+                                          })()}
+                                        </div>
+                                      )}
                                     </div>
                                     {group.treatment_id && (
                                       <Link
@@ -603,7 +643,7 @@ export default function VeterinaryMedicineList() {
             <section key={`print-${row.id}`} className="vm-print-record">
               <h2 style={{ fontSize: "13pt", margin: "0 0 2mm 0" }}>{row.product_name}</h2>
 
-              <table style={{ marginBottom: "3mm" }}>
+              <table className="vm-print-summary-table" style={{ marginBottom: "3mm" }}>
                 <tbody>
                   <tr>
                     <th>Record holder</th>
@@ -638,87 +678,95 @@ export default function VeterinaryMedicineList() {
                 </tbody>
               </table>
 
-              <div style={{ fontWeight: 700, marginBottom: "1mm" }}>Administration</div>
-              {groups.length === 0 ? (
-                <div style={{ marginBottom: "3mm" }}>Not yet administered.</div>
-              ) : (
-                <table style={{ marginBottom: "3mm" }}>
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Apiary / hives</th>
-                      <th>Used for / method</th>
-                      <th>Quantity used per hive</th>
-                      <th>Withdrawal period</th>
-                      <th>Administered by</th>
-                      <th>Completion / removal</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {groups.map((group) => (
-                      <tr key={`print-treatment-${group.treatment_id || group.treatment_hive_id}`}>
-                        <td>{formatDate(group.started_on)}</td>
-                        <td>
-                          <div>{group.apiary_name_snapshot || "—"}</div>
-                          <div>
-                            {group.hives
-                              .map((hive) =>
-                                `${hive.name || "Hive"} — ${hive.quantity_used || "—"}${
-                                  hive.status === "completed" && hive.completed_on
-                                    ? ` (completed ${formatDate(hive.completed_on)})`
-                                    : hive.status === "active"
-                                      ? " (active)"
-                                      : ""
-                                }`
-                              )
-                              .join(", ")}
-                          </div>
-                        </td>
-                        <td>
-                          <div>{group.treatment_for || "—"}</div>
-                          <div>{group.method || "—"}</div>
-                        </td>
-                        <td>{group.quantity_used || "—"}</td>
-                        <td>{group.withdrawal_period || "—"}</td>
-                        <td>{group.person_administering || "—"}</td>
-                        <td>
-                          {group.planned_completion_date ? (
-                            <>
-                              {group.completion_action === "remove" ? "Remove" : "Complete"}: {formatDate(group.planned_completion_date)}
-                            </>
-                          ) : (
-                            "Completed on administration date"
-                          )}
-                        </td>
+              <div className={groups.length <= 3 ? "vm-print-keep-block" : ""}>
+                <div className="vm-print-section-title" style={{ fontWeight: 700, marginBottom: "1mm" }}>
+                  Administration
+                </div>
+                {groups.length === 0 ? (
+                  <div style={{ marginBottom: "3mm" }}>Not yet administered.</div>
+                ) : (
+                  <table style={{ marginBottom: "3mm" }}>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Apiary / hives</th>
+                        <th>Used for / method</th>
+                        <th>Quantity used per hive</th>
+                        <th>Withdrawal period</th>
+                        <th>Administered by</th>
+                        <th>Completion / removal</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
+                    </thead>
+                    <tbody>
+                      {groups.map((group) => (
+                        <tr key={`print-treatment-${group.treatment_id || group.treatment_hive_id}`}>
+                          <td>{formatDate(group.started_on)}</td>
+                          <td>
+                            <div>{group.apiary_name_snapshot || "—"}</div>
+                            <div>
+                              {group.hives
+                                .map((hive) =>
+                                  `${hive.name || "Hive"} — ${hive.quantity_used || "—"}${
+                                    hive.status === "completed" && hive.completed_on
+                                      ? ` (completed ${formatDate(hive.completed_on)})`
+                                      : hive.status === "active"
+                                        ? " (active)"
+                                        : ""
+                                  }`
+                                )
+                                .join(", ")}
+                            </div>
+                          </td>
+                          <td>
+                            <div>{group.treatment_for || "—"}</div>
+                            <div>{group.method || "—"}</div>
+                          </td>
+                          <td>{group.quantity_used || "—"}</td>
+                          <td>{group.withdrawal_period || "—"}</td>
+                          <td>{group.person_administering || "—"}</td>
+                          <td>
+                            {group.planned_completion_date ? (
+                              <>
+                                {group.completion_action === "remove" ? "Remove" : "Complete"}: {formatDate(group.planned_completion_date)}
+                              </>
+                            ) : (
+                              "Completed on administration date"
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
 
-              <div style={{ fontWeight: 700, marginBottom: "1mm" }}>Disposal if not administered</div>
-              {disposals.length === 0 ? (
-                <div>None recorded.</div>
-              ) : (
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Route of disposal</th>
-                      <th>Notes</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {disposals.map((item, index) => (
-                      <tr key={`print-disposal-${row.id}-${index}`}>
-                        <td>{formatDate(item.disposal_date)}</td>
-                        <td>{item.disposal_route}</td>
-                        <td>{item.notes || "—"}</td>
+              <div className="vm-print-keep-block">
+                <div className="vm-print-section-title" style={{ fontWeight: 700, marginBottom: "1mm" }}>
+                  Disposal if not administered
+                </div>
+                {disposals.length === 0 ? (
+                  <div>None recorded.</div>
+                ) : (
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Route of disposal</th>
+                        <th>Notes</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
+                    </thead>
+                    <tbody>
+                      {disposals.map((item, index) => (
+                        <tr key={`print-disposal-${row.id}-${index}`}>
+                          <td>{formatDate(item.disposal_date)}</td>
+                          <td>{item.disposal_route}</td>
+                          <td>{item.notes || "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
             </section>
           );
         })}
