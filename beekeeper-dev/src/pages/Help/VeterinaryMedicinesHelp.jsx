@@ -199,6 +199,12 @@ export default function VeterinaryMedicinesHelp() {
           It shows the number of medicine purchase records, active hive-treatment records and overdue
           hive-treatment records, with a direct link back to Veterinary Medicines.
         </p>
+        <p className="mt-2 text-gray-700">
+          Open <strong>Customise Dashboard</strong> to show or hide the
+          <strong> Veterinary Medicines</strong> section. The active and overdue treatment counts
+          follow the Dashboard&apos;s Apiary and Hive filters; medicine purchase records are shown
+          account-wide.
+        </p>
         <p className="mt-2 text-sm text-gray-600">
           The Dashboard summary is for quick awareness only. Open Veterinary Medicines or the linked
           inspection to review the full treatment record and take any required action.
