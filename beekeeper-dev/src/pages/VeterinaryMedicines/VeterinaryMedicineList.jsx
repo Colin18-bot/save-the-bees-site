@@ -465,6 +465,7 @@ export default function VeterinaryMedicineList() {
                   const activeCount = usage.filter((item) => item.status === "active").length;
                   const overdueCount = usage.filter((item) => item.is_overdue).length;
                   const hiveNames = [...new Set(usage.map((item) => item.hive_name_snapshot).filter(Boolean))];
+                  const treatmentGroups = treatmentGroupsForMedicine(row.id);
 
                   return (
                     <tr key={row.id} className="border-b border-gray-200 align-top hover:bg-amber-50/30">
@@ -506,6 +507,26 @@ export default function VeterinaryMedicineList() {
                                 {overdueCount} removal/completion overdue
                               </div>
                             )}
+                            <div className="mt-2 space-y-1 border-t border-gray-200 pt-2">
+                              {treatmentGroups.map((group) => (
+                                <div
+                                  key={group.treatment_id || group.treatment_hive_id}
+                                  className="flex max-w-72 items-center justify-between gap-2 text-xs"
+                                >
+                                  <span className="min-w-0 text-gray-600">
+                                    {formatDate(group.started_on)} · {group.hives.map((h) => h.name || "Hive").join(", ")}
+                                  </span>
+                                  {group.treatment_id && (
+                                    <Link
+                                      to={`/veterinary-medicines/treatments/${group.treatment_id}/edit`}
+                                      className="shrink-0 font-semibold text-[#1a3329] underline underline-offset-2"
+                                    >
+                                      Amend
+                                    </Link>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         )}
                       </TD>
@@ -524,12 +545,20 @@ export default function VeterinaryMedicineList() {
                         )}
                       </TD>
                       <TD>
-                        <Link
-                          to={`/veterinary-medicines/treatments/new?medicine=${row.id}`}
-                          className="inline-flex whitespace-nowrap rounded-lg border border-[#1a3329]/30 bg-white px-3 py-2 text-xs font-semibold text-[#1a3329] hover:bg-amber-50"
-                        >
-                          Record treatment
-                        </Link>
+                        <div className="flex flex-col items-start gap-2">
+                          <Link
+                            to={`/veterinary-medicines/${row.id}/edit`}
+                            className="inline-flex whitespace-nowrap rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-800 hover:bg-gray-50"
+                          >
+                            Edit medicine
+                          </Link>
+                          <Link
+                            to={`/veterinary-medicines/treatments/new?medicine=${row.id}`}
+                            className="inline-flex whitespace-nowrap rounded-lg border border-[#1a3329]/30 bg-white px-3 py-2 text-xs font-semibold text-[#1a3329] hover:bg-amber-50"
+                          >
+                            Record treatment
+                          </Link>
+                        </div>
                       </TD>
                     </tr>
                   );
