@@ -6,7 +6,7 @@ export default function Terms() {
     <div className="max-w-3xl mx-auto p-6">
       <h2 className="text-2xl font-bold">Terms of Use</h2>
       <p className="text-gray-600">
-        <strong>Effective date:</strong> 1 August 2026
+        <strong>Effective date:</strong> 14 September 2026
       </p>
 
       {/* 1. Who we are */}
@@ -148,15 +148,57 @@ export default function Terms() {
         </p>
       </section>
 
+      {/* 6B. Veterinary medicine records */}
+      <section className="space-y-3 mt-6">
+        <h2 className="text-lg font-semibold">6B. Veterinary medicine records</h2>
+
+        <p>
+          HiveTag includes tools for recording veterinary medicine purchases, administrations,
+          treatment completion or removal, and disposal of unused medicine. These features are
+          record-keeping tools only and do not constitute veterinary advice, prescribing, dispensing
+          advice or confirmation that a medicine is suitable for a particular colony or circumstance.
+        </p>
+
+        <p>
+          HiveTag does not select a medicine for you and does not calculate, infer or prescribe a
+          dose, quantity, treatment duration, treatment method, withdrawal period, treatment start
+          date, planned completion or removal date, or disposal method. Any such information shown
+          in your records is based on information entered by you.
+        </p>
+
+        <p>
+          You are responsible for checking and following the current authorised product information,
+          label and instructions supplied with the medicine, obtaining appropriate professional
+          advice where required, and complying with current veterinary medicine, food-producing
+          animal, honey, withdrawal, disposal and record-keeping requirements that apply to you.
+        </p>
+
+        <p>
+          You are also responsible for the accuracy and completeness of medicine records entered into
+          HiveTag, including record-holder details, supplier and purchase information, batch numbers,
+          quantities, administration details, hive identification, administrator information,
+          withdrawal information, completion or removal details, and disposal of unused medicine.
+          Where a legal record-retention period applies, you are responsible for ensuring that the
+          required records remain available for that period.
+        </p>
+
+        <p>
+          HiveTag&apos;s date filters, reminders, Dashboard summaries and Print / PDF features are
+          provided to help organise your records. They do not certify that your records are legally
+          complete or compliant, and they do not replace your responsibility to check the current
+          requirements that apply to your beekeeping activities.
+        </p>
+      </section>
+
       {/* 7. User content (photos, notes, inspection data) */}
       <section className="space-y-3 mt-6">
         <h2 className="text-lg font-semibold">
-          7. User content (photos, notes and inspection data)
+          7. User content (photos, notes and records)
         </h2>
         <p>
           You may upload or create content within the Service, including but not limited to apiary
-          locations, hive details, inspection records, logbook entries, tasks, and photos
-          (&quot;User Content&quot;).
+          locations, hive details, inspection records, logbook entries, tasks, veterinary medicine
+          records, and photos (&quot;User Content&quot;).
         </p>
         <ul className="list-disc pl-6 space-y-1">
           <li>You retain ownership of your User Content.</li>
@@ -167,6 +209,10 @@ export default function Terms() {
           <li>
             You are responsible for ensuring that your User Content does not infringe the rights of
             any third party and does not contain unlawful or inappropriate material.
+          </li>
+          <li>
+            You are responsible for checking the accuracy of records you create and for correcting
+            them where necessary.
           </li>
         </ul>
         <p>
@@ -281,10 +327,12 @@ export default function Terms() {
           </li>
           <li>
             HiveTag is not liable for any loss, damage, disease spread, colony loss, treatment
-            outcome, missed reporting obligation, business interruption, or other consequence
-            resulting from reliance on data, reminders, inspection records, Colony Health Check
-            outputs, seasonal guidance, weather information, NFC functionality, hive data, alerts,
-            or automated suggestions presented within the Service.
+            outcome, incorrect medicine use, withdrawal issue, incomplete or inaccurate veterinary
+            medicine record, missed retention or reporting obligation, business interruption, or
+            other consequence resulting from reliance on data, reminders, inspection records,
+            veterinary medicine records, Print / PDF output, Colony Health Check outputs, seasonal
+            guidance, weather information, NFC functionality, hive data, alerts, or automated
+            suggestions presented within the Service.
           </li>
           <li>
             If we are found liable for any claim arising out of or in connection with the Service,
@@ -315,6 +363,12 @@ export default function Terms() {
             BeezKnees
           </a>
           .
+        </p>
+        <p>
+          Before deleting your account or permanently deleting records, you are responsible for
+          exporting or otherwise retaining any information that you are required to keep, including
+          veterinary medicine records. Account deletion should not be used as a substitute for any
+          legal record-retention obligation that applies to you.
         </p>
       </section>
 
