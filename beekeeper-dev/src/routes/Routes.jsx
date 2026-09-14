@@ -60,7 +60,7 @@ import Calendar from "../pages/Calendar.jsx";
 import Weather from "../pages/Weather.jsx";
 import Settings from "../pages/Settings.jsx";
 import Archive from "../pages/Archive.jsx";
-import Help from "../pages/Help.jsx";
+import HelpHub from "../pages/Help/HelpHub.jsx";
 
 import GettingStarted from "../pages/Help/GettingStarted.jsx";
 
@@ -228,7 +228,7 @@ function AppRoutes() {
       <Route path="/weather" element={<Guarded><Weather /></Guarded>} />
       <Route path="/settings" element={<Guarded><Settings /></Guarded>} />
       <Route path="/archive" element={<Guarded><Archive /></Guarded>} />
-      <Route path="/help" element={<Guarded><Help /></Guarded>} />
+      <Route path="/help" element={<Guarded><HelpHub /></Guarded>} />
       <Route path="/help/getting-started" element={<Guarded><GettingStarted /></Guarded>} />
       <Route path="/bee-health" element={<Guarded><BeeHealthHelper /></Guarded>} />
       <Route path="/seasonal-guide" element={<PremiumGuarded><SeasonalGuide /></PremiumGuarded>} />
