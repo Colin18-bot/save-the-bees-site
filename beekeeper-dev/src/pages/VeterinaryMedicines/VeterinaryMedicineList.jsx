@@ -507,23 +507,39 @@ export default function VeterinaryMedicineList() {
                                 {overdueCount} removal/completion overdue
                               </div>
                             )}
-                            <div className="mt-2 space-y-1 border-t border-gray-200 pt-2">
+                            <div className="mt-2 space-y-2 border-t border-gray-200 pt-2">
                               {treatmentGroups.map((group) => (
                                 <div
                                   key={group.treatment_id || group.treatment_hive_id}
-                                  className="flex max-w-72 items-center justify-between gap-2 text-xs"
+                                  className="max-w-80 rounded-lg bg-gray-50 p-2 text-xs"
                                 >
-                                  <span className="min-w-0 text-gray-600">
-                                    {formatDate(group.started_on)} · {group.hives.map((h) => h.name || "Hive").join(", ")}
-                                  </span>
-                                  {group.treatment_id && (
-                                    <Link
-                                      to={`/veterinary-medicines/treatments/${group.treatment_id}/edit`}
-                                      className="shrink-0 font-semibold text-[#1a3329] underline underline-offset-2"
-                                    >
-                                      Amend
-                                    </Link>
-                                  )}
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="min-w-0">
+                                      <div className="font-medium text-gray-800">
+                                        {formatDate(group.started_on)} · {group.hives.map((h) => h.name || "Hive").join(", ")}
+                                      </div>
+                                      <div className="mt-0.5 text-gray-600">
+                                        {group.treatment_for || "Treatment"}
+                                        {group.method ? ` · ${group.method}` : ""}
+                                      </div>
+                                      <div className="mt-0.5 font-semibold text-gray-900">
+                                        Quantity used: {group.quantity_used || "—"}
+                                      </div>
+                                      {group.planned_completion_date && (
+                                        <div className="mt-0.5 text-gray-600">
+                                          Planned {group.completion_action === "remove" ? "removal" : "completion"}: {formatDate(group.planned_completion_date)}
+                                        </div>
+                                      )}
+                                    </div>
+                                    {group.treatment_id && (
+                                      <Link
+                                        to={`/veterinary-medicines/treatments/${group.treatment_id}/edit`}
+                                        className="shrink-0 font-semibold text-[#1a3329] underline underline-offset-2"
+                                      >
+                                        Amend
+                                      </Link>
+                                    )}
+                                  </div>
                                 </div>
                               ))}
                             </div>
