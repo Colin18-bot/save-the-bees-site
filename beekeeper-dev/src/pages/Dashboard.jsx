@@ -74,8 +74,8 @@ const WX_ICON = {
 const DASHBOARD_SECTIONS_STORAGE_KEY = "hivetag_dashboard_sections_v1";
 
 const DEFAULT_DASHBOARD_SECTIONS = {
-  quickActions: true,
   stats: true,
+  veterinaryRecords: true,
   queens: true,
   healthOverview: true,
   recentTasks: true,
@@ -89,8 +89,8 @@ const DEFAULT_DASHBOARD_SECTIONS = {
 };
 
 const DASHBOARD_SECTION_OPTIONS = [
-  { id: "quickActions", label: "Quick Actions" },
   { id: "stats", label: "Summary statistics" },
+  { id: "veterinaryRecords", label: "Veterinary Medicines" },
   { id: "queens", label: "Queen Status" },
   { id: "healthOverview", label: "Hive Health Overview", premium: true },
   { id: "recentTasks", label: "Recent Tasks" },
@@ -202,6 +202,15 @@ const Dashboard = () => {
     inspections: 0,
     todos: 0,
     logbook: 0,
+  });
+
+  // Veterinary medicine summary
+  const [veterinarySummary, setVeterinarySummary] = useState({
+    loading: true,
+    error: null,
+    medicines: 0,
+    active: 0,
+    overdue: 0,
   });
 
   // NFC summary (filter-aware)
@@ -326,16 +335,14 @@ const Dashboard = () => {
   }, [hivesList, selectedApiaryId]);
 
   const getHiveApiaryId = (hiveId, apiaryId = "all") => {
-  if (!hiveId || hiveId === "all") {
-    return apiaryId !== "all" ? apiaryId : "";
-  }
+    if (!hiveId || hiveId === "all") {
+      return apiaryId !== "all" ? apiaryId : "";
+    }
 
-  const hive = hivesList.find(
-    (item) => String(item.id) === String(hiveId)
-  );
+    const hive = hivesList.find((item) => String(item.id) === String(hiveId));
 
-  return hive?.apiary_id || (apiaryId !== "all" ? apiaryId : "");
-};
+    return hive?.apiary_id || (apiaryId !== "all" ? apiaryId : "");
+  };
 
   useEffect(() => {
     if (selectedHiveId === "all") return;
@@ -488,46 +495,44 @@ const Dashboard = () => {
     else if (apiaryId !== "all") inspQ = inspQ.eq("apiary_id", apiaryId);
     const { count: inspections } = await inspQ;
 
-let todosQ = supabase
-  .from("todos")
-  .select("*", { count: "exact", head: true });
+    let todosQ = supabase.from("todos").select("*", { count: "exact", head: true });
 
-if (hiveId !== "all") {
-  const hiveApiaryId = getHiveApiaryId(hiveId, apiaryId);
+    if (hiveId !== "all") {
+      const hiveApiaryId = getHiveApiaryId(hiveId, apiaryId);
 
-  if (hiveApiaryId) {
-    todosQ = todosQ
-      .eq("apiary_id", hiveApiaryId)
-      .or(`hive_id.eq.${hiveId},hive_name.eq.ALL`);
-  } else {
-    todosQ = todosQ.eq("hive_id", hiveId);
-  }
-} else if (apiaryId !== "all") {
-  todosQ = todosQ.eq("apiary_id", apiaryId);
-}
+      if (hiveApiaryId) {
+        todosQ = todosQ
+          .eq("apiary_id", hiveApiaryId)
+          .or(`hive_id.eq.${hiveId},hive_name.eq.ALL`);
+      } else {
+        todosQ = todosQ.eq("hive_id", hiveId);
+      }
+    } else if (apiaryId !== "all") {
+      todosQ = todosQ.eq("apiary_id", apiaryId);
+    }
 
-const { count: todos } = await todosQ;
+    const { count: todos } = await todosQ;
 
-   let logsQ = supabase
-  .from("logbook")
-  .select("*", { count: "exact", head: true })
-  .is("archived_at", null);
+    let logsQ = supabase
+      .from("logbook")
+      .select("*", { count: "exact", head: true })
+      .is("archived_at", null);
 
-if (hiveId !== "all") {
-  const hiveApiaryId = getHiveApiaryId(hiveId, apiaryId);
+    if (hiveId !== "all") {
+      const hiveApiaryId = getHiveApiaryId(hiveId, apiaryId);
 
-  if (hiveApiaryId) {
-    logsQ = logsQ
-      .eq("apiary_id", hiveApiaryId)
-      .or(`hive_id.eq.${hiveId},all_hives.eq.true`);
-  } else {
-    logsQ = logsQ.eq("hive_id", hiveId);
-  }
-} else if (apiaryId !== "all") {
-  logsQ = logsQ.eq("apiary_id", apiaryId);
-}
+      if (hiveApiaryId) {
+        logsQ = logsQ
+          .eq("apiary_id", hiveApiaryId)
+          .or(`hive_id.eq.${hiveId},all_hives.eq.true`);
+      } else {
+        logsQ = logsQ.eq("hive_id", hiveId);
+      }
+    } else if (apiaryId !== "all") {
+      logsQ = logsQ.eq("apiary_id", apiaryId);
+    }
 
-const { count: logbook } = await logsQ;
+    const { count: logbook } = await logsQ;
     setStats({
       apiaries: apiaries || 0,
       hives: hives || 0,
@@ -535,6 +540,72 @@ const { count: logbook } = await logsQ;
       todos: todos || 0,
       logbook: logbook || 0,
     });
+  };
+
+  // ---- Veterinary medicine summary (treatment counts are filter-aware) ----
+  const fetchVeterinarySummary = async (apiaryId = "all", hiveId = "all") => {
+    setVeterinarySummary((current) => ({ ...current, loading: true, error: null }));
+
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        setVeterinarySummary({ loading: false, error: null, medicines: 0, active: 0, overdue: 0 });
+        return;
+      }
+
+      const medicinesQ = supabase
+        .from("veterinary_medicines")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id);
+
+      let activeQ = supabase
+        .from("veterinary_medicine_hive_status")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("status", "active");
+
+      let overdueQ = supabase
+        .from("veterinary_medicine_hive_status")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .eq("is_overdue", true);
+
+      if (hiveId !== "all") {
+        activeQ = activeQ.eq("hive_id", hiveId);
+        overdueQ = overdueQ.eq("hive_id", hiveId);
+      } else if (apiaryId !== "all") {
+        activeQ = activeQ.eq("apiary_id", apiaryId);
+        overdueQ = overdueQ.eq("apiary_id", apiaryId);
+      }
+
+      const [medicinesResult, activeResult, overdueResult] = await Promise.all([
+        medicinesQ,
+        activeQ,
+        overdueQ,
+      ]);
+
+      if (medicinesResult.error) throw medicinesResult.error;
+      if (activeResult.error) throw activeResult.error;
+      if (overdueResult.error) throw overdueResult.error;
+
+      setVeterinarySummary({
+        loading: false,
+        error: null,
+        medicines: medicinesResult.count || 0,
+        active: activeResult.count || 0,
+        overdue: overdueResult.count || 0,
+      });
+    } catch (error) {
+      console.error("Failed to load Veterinary Medicines dashboard summary:", error);
+      setVeterinarySummary((current) => ({
+        ...current,
+        loading: false,
+        error: "Veterinary Medicines summary could not be loaded.",
+      }));
+    }
   };
 
   // ---- NFC summary counts (filter-aware) ----
@@ -816,33 +887,33 @@ const { count: logbook } = await logsQ;
     setLoadingInspections(false);
   };
 
- const fetchRecentTodos = async (apiaryId = "all", hiveId = "all") => {
-  setLoadingTodos(true);
+  const fetchRecentTodos = async (apiaryId = "all", hiveId = "all") => {
+    setLoadingTodos(true);
 
-  let q = supabase
-    .from("todos")
-    .select("id, title, due_date, status, hive_id, hive_name, apiary_id, archived_at")
-    .order("due_date", { ascending: false })
-    .limit(6);
+    let q = supabase
+      .from("todos")
+      .select("id, title, due_date, status, hive_id, hive_name, apiary_id, archived_at")
+      .order("due_date", { ascending: false })
+      .limit(6);
 
-  if (hiveId !== "all") {
-    const hiveApiaryId = getHiveApiaryId(hiveId, apiaryId);
+    if (hiveId !== "all") {
+      const hiveApiaryId = getHiveApiaryId(hiveId, apiaryId);
 
-    if (hiveApiaryId) {
-      q = q
-        .eq("apiary_id", hiveApiaryId)
-        .or(`hive_id.eq.${hiveId},hive_name.eq.ALL`);
-    } else {
-      q = q.eq("hive_id", hiveId);
+      if (hiveApiaryId) {
+        q = q
+          .eq("apiary_id", hiveApiaryId)
+          .or(`hive_id.eq.${hiveId},hive_name.eq.ALL`);
+      } else {
+        q = q.eq("hive_id", hiveId);
+      }
+    } else if (apiaryId !== "all") {
+      q = q.eq("apiary_id", apiaryId);
     }
-  } else if (apiaryId !== "all") {
-    q = q.eq("apiary_id", apiaryId);
-  }
 
-  const { data } = await q;
-  setRecentTodos(data || []);
-  setLoadingTodos(false);
-};
+    const { data } = await q;
+    setRecentTodos(data || []);
+    setLoadingTodos(false);
+  };
 
   const fetchRecentLogs = async (apiaryId = "all", hiveId = "all") => {
     setLoadingLogs(true);
@@ -865,21 +936,21 @@ const { count: logbook } = await logsQ;
       )
       .order("date", { ascending: false })
       .limit(6);
-   if (hiveId !== "all") {
-  const hiveApiaryId = getHiveApiaryId(hiveId, apiaryId);
+    if (hiveId !== "all") {
+      const hiveApiaryId = getHiveApiaryId(hiveId, apiaryId);
 
-  if (hiveApiaryId) {
-    q = q
-      .eq("apiary_id", hiveApiaryId)
-      .or(`hive_id.eq.${hiveId},all_hives.eq.true`);
-  } else {
-    q = q.eq("hive_id", hiveId);
-  }
-} else if (apiaryId !== "all") {
-  q = q.eq("apiary_id", apiaryId);
-}
+      if (hiveApiaryId) {
+        q = q
+          .eq("apiary_id", hiveApiaryId)
+          .or(`hive_id.eq.${hiveId},all_hives.eq.true`);
+      } else {
+        q = q.eq("hive_id", hiveId);
+      }
+    } else if (apiaryId !== "all") {
+      q = q.eq("apiary_id", apiaryId);
+    }
 
-const { data } = await q;
+    const { data } = await q;
     setRecentLogs(data || []);
     setLoadingLogs(false);
   };
@@ -974,6 +1045,7 @@ const { data } = await q;
   // Initial + whenever filter changes
   useEffect(() => {
     fetchStats(selectedApiaryId, selectedHiveId);
+    fetchVeterinarySummary(selectedApiaryId, selectedHiveId);
     fetchRecentInspections(selectedApiaryId, selectedHiveId);
     fetchRecentTodos(selectedApiaryId, selectedHiveId);
     fetchRecentLogs(selectedApiaryId, selectedHiveId);
@@ -1298,6 +1370,90 @@ const { data } = await q;
               </Link>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Veterinary Medicines */}
+      {dashboardSections.veterinaryRecords && (
+        <div className="bg-white rounded shadow p-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <span
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-lg"
+                  aria-hidden="true"
+                >
+                  💊
+                </span>
+                <div>
+                  <h2 className="text-lg font-semibold">Veterinary Medicines</h2>
+                  <p className="text-xs text-gray-600">
+                    Medicine purchases and treatment status at a glance.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <Link
+              to="/veterinary-medicines"
+              className="text-sm font-semibold text-blue-600 hover:underline whitespace-nowrap"
+            >
+              Open Veterinary Medicines →
+            </Link>
+          </div>
+
+          {veterinarySummary.loading ? (
+            <p className="mt-4 text-sm text-gray-500">Loading Veterinary Medicines…</p>
+          ) : veterinarySummary.error ? (
+            <p className="mt-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+              {veterinarySummary.error}
+            </p>
+          ) : (
+            <>
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="rounded-lg border border-gray-200 bg-gray-50 p-3 text-center">
+                  <div className="text-2xl font-extrabold text-[#1a3329]">
+                    {veterinarySummary.medicines}
+                  </div>
+                  <div className="text-xs font-semibold text-gray-700">Medicine purchases</div>
+                </div>
+                <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-center">
+                  <div className="text-2xl font-extrabold text-amber-950">
+                    {veterinarySummary.active}
+                  </div>
+                  <div className="text-xs font-semibold text-amber-900">Active hive treatments</div>
+                </div>
+                <div
+                  className={`rounded-lg border p-3 text-center ${
+                    veterinarySummary.overdue > 0
+                      ? "border-red-200 bg-red-50"
+                      : "border-green-200 bg-green-50"
+                  }`}
+                >
+                  <div
+                    className={`text-2xl font-extrabold ${
+                      veterinarySummary.overdue > 0 ? "text-red-900" : "text-green-900"
+                    }`}
+                  >
+                    {veterinarySummary.overdue}
+                  </div>
+                  <div
+                    className={`text-xs font-semibold ${
+                      veterinarySummary.overdue > 0 ? "text-red-800" : "text-green-800"
+                    }`}
+                  >
+                    Overdue hive treatments
+                  </div>
+                </div>
+              </div>
+
+              <p className="mt-3 text-xs text-gray-600">
+                Medicine purchases are account-wide. Active and overdue treatment counts follow the
+                selected Apiary and Hive filters. Veterinary medicine record keeping is available on
+                Free and Premium; the dedicated Print / PDF medicine register is Premium.
+              </p>
+            </>
+          )}
         </div>
       )}
 
@@ -1740,18 +1896,18 @@ const { data } = await q;
                       <div className="flex items-center gap-2 flex-wrap">
                         <strong className="mr-1">{formatUKDate(l.date)}</strong>: {l.log_type}
                       </div>
-                    {l.apiary_id && apiaryNameById[l.apiary_id]
-                      ? ` • Apiary: ${apiaryNameById[l.apiary_id]}`
-                      : ""}
-
-                    {l.all_hives
-                      ? " • Hive: All Hives"
-                      : l.hive_id && hiveNameById[l.hive_id]
-                        ? ` • Hive: ${hiveNameById[l.hive_id]}`
+                      {l.apiary_id && apiaryNameById[l.apiary_id]
+                        ? ` • Apiary: ${apiaryNameById[l.apiary_id]}`
                         : ""}
 
-                    {l.entry ? ` — ${l.entry.slice(0, 80)}` : ""}
-                                    {!l.archived_at && l.inspection?.date && (
+                      {l.all_hives
+                        ? " • Hive: All Hives"
+                        : l.hive_id && hiveNameById[l.hive_id]
+                          ? ` • Hive: ${hiveNameById[l.hive_id]}`
+                          : ""}
+
+                      {l.entry ? ` — ${l.entry.slice(0, 80)}` : ""}
+                      {!l.archived_at && l.inspection?.date && (
                         <>
                           {" • "}
                           <Link
@@ -1904,29 +2060,6 @@ const { data } = await q;
               </div>
             </>
           )}
-        </div>
-      )}
-
-      {/* Quick Actions */}
-      {dashboardSections.quickActions && (
-        <div className="bg-white rounded shadow p-4">
-          <h2 className="text-lg font-semibold mb-2">Quick Actions</h2>
-          <div className="space-x-4">
-            <Link to="/apiaries/new" className="text-blue-600 underline">
-              New Apiary
-            </Link>
-            <Link to="/hives/new" className="text-blue-600 underline">
-              New Hive
-            </Link>
-            <Link to="/inspections/new" className="text-blue-600 underline">
-              New Inspection
-            </Link>
-            {subscriptionLevel === "premium" && (
-              <Link to="/nfc" className="text-blue-600 underline">
-                Scan NFC Tag (Premium)
-              </Link>
-            )}
-          </div>
         </div>
       )}
     </div>

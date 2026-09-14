@@ -293,7 +293,7 @@ export default function Pricing() {
         </h3>
 
         <p className="mt-2 text-sm text-green-800">
-          Record inspections, manage complete queen histories, monitor colony health,
+          Record inspections and veterinary medicines, manage complete queen histories, monitor colony health,
           identify trends and risks over time, generate professional reports and plan
           seasonal management—all from a single application.
         </p>
@@ -310,6 +310,7 @@ export default function Pricing() {
           "1 apiary",
           "Up to 2 hives",
           "Inspection records",
+          "Veterinary Medicines — purchase, treatment, completion and unused-medicine disposal records",
           "To-Dos & calendar",
           "Local weather forecasts",
           "Photo uploads",
@@ -321,7 +322,7 @@ export default function Pricing() {
           busy={false}
           onClick={() => navigate(user ? "/dashboard" : "/register?redirect=/dashboard")}
           cta={user ? "Use Free plan" : "Get started — free"}
-          footnote="No credit card required."
+          footnote="No credit card required. Veterinary medicine record keeping is included; the dedicated Veterinary Medicine Print / PDF register is Premium."
           highlight={false}
           currentLabel="Current Plan"
         />
@@ -343,6 +344,7 @@ export default function Pricing() {
           "Apiary and Hive Siting Guides",
           "Step-by-step Inspection Guide",
           "Asian Hornet Centre — identification, lookalike comparisons, observations and reporting guidance",
+          "Veterinary Medicines record keeping plus dedicated Print / PDF register",
           "Professional reports and CSV exports",
           "Inventory, sales, expenses and Profit & Loss",
           "Apiary map markers",
@@ -382,6 +384,12 @@ export default function Pricing() {
               <CheckIcon />
             </span>
             Inspection history and logbook
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-600 mt-0.5">
+              <CheckIcon />
+            </span>
+            Veterinary medicine purchase and treatment records
           </li>
           <li className="flex items-start gap-2">
             <span className="text-green-600 mt-0.5">

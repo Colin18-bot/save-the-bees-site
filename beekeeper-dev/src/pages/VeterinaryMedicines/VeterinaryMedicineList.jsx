@@ -1,0 +1,845 @@
+import React, { useEffect, useMemo, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { supabase } from "../../services/supabase";
+
+const fiveYearsAgoIso = () => {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - 5);
+  return d.toISOString().slice(0, 10);
+};
+
+const todayIso = () => new Date().toISOString().slice(0, 10);
+
+const formatDate = (value) => {
+  if (!value) return "—";
+  const d = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(d.getTime())) return value;
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(d);
+};
+
+export default function VeterinaryMedicineList() {
+  const location = useLocation();
+  const [loading, setLoading] = useState(true);
+  const [savingHolder, setSavingHolder] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState(
+    location.state?.veterinaryMedicineMessage || ""
+  );
+  const [rows, setRows] = useState([]);
+  const [usageByMedicine, setUsageByMedicine] = useState({});
+  const [disposalByMedicine, setDisposalByMedicine] = useState({});
+  const [recordRange, setRecordRange] = useState("all");
+  const [query, setQuery] = useState("");
+  const [holder, setHolder] = useState(null);
+  const [editingHolder, setEditingHolder] = useState(false);
+  const [holderName, setHolderName] = useState("");
+  const [holderAddress, setHolderAddress] = useState("");
+  const [holderPostcode, setHolderPostcode] = useState("");
+  const [subscriptionLevel, setSubscriptionLevel] = useState(
+    () => localStorage.getItem("subscription_level") || "free"
+  );
+
+  const [disposalEditor, setDisposalEditor] = useState(null);
+  const [disposalDate, setDisposalDate] = useState(todayIso());
+  const [disposalQuantity, setDisposalQuantity] = useState("");
+  const [disposalRoute, setDisposalRoute] = useState("");
+  const [disposalNotes, setDisposalNotes] = useState("");
+  const [savingDisposal, setSavingDisposal] = useState(false);
+
+  const loadData = async () => {
+    setLoading(true);
+    setErrorMsg("");
+
+    try {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+      if (userError || !user) throw new Error(userError?.message || "Not authenticated.");
+
+      const [settingsResult, medicinesResult, usageResult, disposalResult, profileResult] =
+        await Promise.all([
+          supabase
+            .from("veterinary_medicine_settings")
+            .select("record_holder_name,record_holder_address,record_holder_postcode")
+            .eq("user_id", user.id)
+            .maybeSingle(),
+          supabase
+            .from("veterinary_medicines")
+            .select(
+              "id,product_name,supplier_name,supplier_address,purchase_date,batch_number,quantity_purchased,invoice_reference,expiry_date,record_holder_name,record_holder_address,record_holder_postcode,created_at"
+            )
+            .eq("user_id", user.id)
+            .order("purchase_date", { ascending: false }),
+          supabase
+            .from("veterinary_medicine_hive_status")
+            .select(
+              "treatment_hive_id,treatment_id,medicine_id,apiary_name_snapshot,hive_name_snapshot,treatment_for,method,started_on,treatment_mode,planned_completion_date,completion_action,status,completed_on,person_administering,quantity_used,withdrawal_period,notes,is_overdue"
+            )
+            .eq("user_id", user.id)
+            .order("started_on", { ascending: false }),
+          supabase
+            .from("veterinary_medicine_disposals")
+            .select("id,medicine_id,disposal_date,quantity_disposed,disposal_route,notes")
+            .eq("user_id", user.id)
+            .order("disposal_date", { ascending: false }),
+          supabase
+            .from("profiles")
+            .select("subscription_level")
+            .eq("user_id", user.id)
+            .maybeSingle(),
+        ]);
+
+      if (settingsResult.error) throw settingsResult.error;
+      if (medicinesResult.error) throw medicinesResult.error;
+      if (usageResult.error) throw usageResult.error;
+      if (disposalResult.error) throw disposalResult.error;
+      if (profileResult.error) throw profileResult.error;
+
+      const currentHolder = settingsResult.data || null;
+      setHolder(currentHolder);
+      setHolderName(currentHolder?.record_holder_name || "");
+      setHolderAddress(currentHolder?.record_holder_address || "");
+      setHolderPostcode(currentHolder?.record_holder_postcode || "");
+      setEditingHolder(!currentHolder);
+      setRows(medicinesResult.data || []);
+
+      const nextLevel = String(profileResult.data?.subscription_level || "free").toLowerCase();
+      setSubscriptionLevel(nextLevel);
+      localStorage.setItem("subscription_level", nextLevel);
+
+      const nextUsage = {};
+      (usageResult.data || []).forEach((item) => {
+        if (!nextUsage[item.medicine_id]) nextUsage[item.medicine_id] = [];
+        nextUsage[item.medicine_id].push(item);
+      });
+      setUsageByMedicine(nextUsage);
+
+      const nextDisposals = {};
+      (disposalResult.data || []).forEach((item) => {
+        if (!nextDisposals[item.medicine_id]) nextDisposals[item.medicine_id] = [];
+        nextDisposals[item.medicine_id].push(item);
+      });
+      setDisposalByMedicine(nextDisposals);
+    } catch (err) {
+      setErrorMsg(err.message || String(err));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const filteredRows = useMemo(() => {
+    const cutoff = fiveYearsAgoIso();
+    const q = query.trim().toLowerCase();
+
+    return rows.filter((row) => {
+      if (recordRange === "five-years") {
+        const usage = usageByMedicine[row.id] || [];
+        const disposals = disposalByMedicine[row.id] || [];
+        const hasRecentActivity =
+          String(row.purchase_date || "") >= cutoff ||
+          usage.some(
+            (item) =>
+              String(item.started_on || "") >= cutoff ||
+              String(item.completed_on || "") >= cutoff
+          ) ||
+          disposals.some((item) => String(item.disposal_date || "") >= cutoff);
+
+        if (!hasRecentActivity) return false;
+      }
+
+      if (!q) return true;
+      return [
+        row.product_name,
+        row.supplier_name,
+        row.batch_number,
+        row.invoice_reference,
+      ].some((value) => String(value || "").toLowerCase().includes(q));
+    });
+  }, [rows, query, recordRange, usageByMedicine, disposalByMedicine]);
+
+  const treatmentGroupsForMedicine = (medicineId) => {
+    const usage = usageByMedicine[medicineId] || [];
+    const groups = new Map();
+
+    usage.forEach((item) => {
+      const key = item.treatment_id || item.treatment_hive_id;
+      if (!groups.has(key)) {
+        groups.set(key, {
+          ...item,
+          hives: [],
+        });
+      }
+      groups.get(key).hives.push({
+        name: item.hive_name_snapshot,
+        status: item.status,
+        completed_on: item.completed_on,
+        quantity_used: item.quantity_used,
+      });
+    });
+
+    return [...groups.values()];
+  };
+
+  const saveRecordHolder = async (e) => {
+    e.preventDefault();
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    if (!holderName.trim() || !holderAddress.trim() || !holderPostcode.trim()) {
+      setErrorMsg("Name, address and postcode are required for veterinary medicine records.");
+      return;
+    }
+
+    setSavingHolder(true);
+    try {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+      if (userError || !user) throw new Error(userError?.message || "Not authenticated.");
+
+      const payload = {
+        user_id: user.id,
+        record_holder_name: holderName.trim(),
+        record_holder_address: holderAddress.trim(),
+        record_holder_postcode: holderPostcode.trim(),
+      };
+
+      const { data, error } = await supabase
+        .from("veterinary_medicine_settings")
+        .upsert(payload, { onConflict: "user_id" })
+        .select("record_holder_name,record_holder_address,record_holder_postcode")
+        .single();
+
+      if (error) throw error;
+      setHolder(data);
+      setEditingHolder(false);
+      setSuccessMsg(
+        "Record-holder details saved. Existing historical medicine records have not been changed."
+      );
+    } catch (err) {
+      setErrorMsg(err.message || String(err));
+    } finally {
+      setSavingHolder(false);
+    }
+  };
+
+  const openNewDisposal = (medicine) => {
+    setErrorMsg("");
+    setDisposalEditor({
+      mode: "new",
+      medicineId: medicine.id,
+      productName: medicine.product_name,
+      disposalId: null,
+    });
+    setDisposalDate(todayIso());
+    setDisposalQuantity("");
+    setDisposalRoute("");
+    setDisposalNotes("");
+  };
+
+  const openEditDisposal = (medicine, disposal) => {
+    setErrorMsg("");
+    setDisposalEditor({
+      mode: "edit",
+      medicineId: medicine.id,
+      productName: medicine.product_name,
+      disposalId: disposal.id,
+    });
+    setDisposalDate(disposal.disposal_date || todayIso());
+    setDisposalQuantity(disposal.quantity_disposed || "");
+    setDisposalRoute(disposal.disposal_route || "");
+    setDisposalNotes(disposal.notes || "");
+  };
+
+  const closeDisposalEditor = () => {
+    if (savingDisposal) return;
+    setDisposalEditor(null);
+  };
+
+  const saveDisposal = async (e) => {
+    e.preventDefault();
+    if (!disposalEditor) return;
+
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    if (!disposalDate || !disposalQuantity.trim() || !disposalRoute.trim()) {
+      setErrorMsg("Date disposed, quantity disposed and route / method of disposal are required.");
+      return;
+    }
+
+    setSavingDisposal(true);
+    try {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+      if (userError || !user) throw new Error(userError?.message || "Not authenticated.");
+
+      const payload = {
+        disposal_date: disposalDate,
+        quantity_disposed: disposalQuantity.trim(),
+        disposal_route: disposalRoute.trim(),
+        notes: disposalNotes.trim() || null,
+      };
+
+      if (disposalEditor.mode === "edit") {
+        const { error } = await supabase
+          .from("veterinary_medicine_disposals")
+          .update(payload)
+          .eq("id", disposalEditor.disposalId)
+          .eq("user_id", user.id);
+        if (error) throw error;
+        setSuccessMsg("Disposal record corrected successfully.");
+      } else {
+        const { error } = await supabase.from("veterinary_medicine_disposals").insert({
+          ...payload,
+          user_id: user.id,
+          medicine_id: disposalEditor.medicineId,
+        });
+        if (error) throw error;
+        setSuccessMsg("Disposal recorded successfully.");
+      }
+
+      setDisposalEditor(null);
+      await loadData();
+    } catch (err) {
+      setErrorMsg(err.message || String(err));
+    } finally {
+      setSavingDisposal(false);
+    }
+  };
+
+  const openPrintDocument = () => {
+    const params = new URLSearchParams();
+    params.set("range", recordRange);
+    if (query.trim()) params.set("q", query.trim());
+    window.open(
+      `/veterinary-medicines/print?${params.toString()}`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
+
+  const userIsPremium = subscriptionLevel === "premium";
+
+  if (loading) return <div className="p-6">Loading veterinary medicines…</div>;
+
+  return (
+    <div className="max-w-7xl min-w-0 mx-auto p-4 md:p-6">
+      <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-[#1a3329]">Veterinary Medicines</h1>
+          <p className="mt-1 max-w-3xl text-sm text-gray-600">
+            Record medicines you purchase, where they were administered and the treatment dates you set.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {rows.length > 0 && (
+            <Link
+              to="/veterinary-medicines/treatments/new"
+              className="inline-flex items-center justify-center rounded-xl border border-[#1a3329] bg-white px-4 py-2.5 text-sm font-semibold text-[#1a3329] hover:bg-amber-50"
+            >
+              Record Treatment
+            </Link>
+          )}
+          <Link
+            to="/veterinary-medicines/new"
+            className="inline-flex items-center justify-center rounded-xl bg-[#1a3329] px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-[#24483a]"
+          >
+            + Add Medicine
+          </Link>
+        </div>
+      </div>
+
+      {errorMsg && (
+        <div className="mb-4 rounded-xl border border-red-300 bg-red-50 p-3 text-sm text-red-700">
+          {errorMsg}
+        </div>
+      )}
+      {successMsg && (
+        <div className="mb-4 rounded-xl border border-green-300 bg-green-50 p-3 text-sm text-green-800">
+          {successMsg}
+        </div>
+      )}
+
+      <section className="mb-6 rounded-2xl border border-amber-200 bg-amber-50/50 p-4 md:p-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-[#1a3329]">Record holder details</h2>
+            <p className="mt-1 text-sm text-gray-600">
+              These current details are used for new records. Historical records keep the name and address that applied when they were created.
+            </p>
+          </div>
+          {holder && !editingHolder && (
+            <button
+              type="button"
+              onClick={() => setEditingHolder(true)}
+              className="rounded-lg border border-[#1a3329]/30 bg-white px-3 py-2 text-sm font-medium text-[#1a3329] hover:bg-amber-50"
+            >
+              Change details
+            </button>
+          )}
+        </div>
+
+        {editingHolder ? (
+          <form onSubmit={saveRecordHolder} className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <label className="flex flex-col gap-1">
+              <span className="text-sm font-medium text-gray-800">Beekeeper / record holder name *</span>
+              <input
+                className="rounded-xl border border-gray-300 bg-white p-2.5"
+                value={holderName}
+                onChange={(e) => setHolderName(e.target.value)}
+                required
+              />
+            </label>
+            <label className="flex flex-col gap-1">
+              <span className="text-sm font-medium text-gray-800">Postcode *</span>
+              <input
+                className="rounded-xl border border-gray-300 bg-white p-2.5"
+                value={holderPostcode}
+                onChange={(e) => setHolderPostcode(e.target.value)}
+                required
+              />
+            </label>
+            <label className="flex flex-col gap-1 md:col-span-2">
+              <span className="text-sm font-medium text-gray-800">Address *</span>
+              <textarea
+                className="min-h-24 rounded-xl border border-gray-300 bg-white p-2.5"
+                value={holderAddress}
+                onChange={(e) => setHolderAddress(e.target.value)}
+                required
+              />
+            </label>
+            <div className="flex gap-2 md:col-span-2">
+              <button
+                type="submit"
+                disabled={savingHolder}
+                className="rounded-xl bg-[#1a3329] px-4 py-2 text-sm font-semibold text-white hover:bg-[#24483a] disabled:opacity-60"
+              >
+                {savingHolder ? "Saving…" : "Save details"}
+              </button>
+              {holder && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setHolderName(holder.record_holder_name || "");
+                    setHolderAddress(holder.record_holder_address || "");
+                    setHolderPostcode(holder.record_holder_postcode || "");
+                    setEditingHolder(false);
+                  }}
+                  className="rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
+          </form>
+        ) : (
+          <div className="mt-4 grid grid-cols-1 gap-3 text-sm md:grid-cols-3">
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">Name</div>
+              <div className="mt-1 font-medium text-gray-900">{holder?.record_holder_name}</div>
+            </div>
+            <div className="md:col-span-2">
+              <div className="text-xs font-semibold uppercase tracking-wide text-gray-500">Address</div>
+              <div className="mt-1 whitespace-pre-line text-gray-900">
+                <div>{holder?.record_holder_address}</div>
+                <div>{holder?.record_holder_postcode}</div>
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section className="min-w-0 rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <div className="border-b border-gray-200 p-4 md:p-5">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-[#1a3329]">Medicine records</h2>
+              <p className="mt-1 text-sm text-gray-500">
+                Older records remain available; the five-year option is a filter only.
+              </p>
+            </div>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+              <label className="flex flex-col gap-1 text-xs font-semibold text-gray-600">
+                Show
+                <select
+                  value={recordRange}
+                  onChange={(e) => setRecordRange(e.target.value)}
+                  className="min-w-40 rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm font-normal text-gray-900"
+                >
+                  <option value="all">All records</option>
+                  <option value="five-years">Last 5 years</option>
+                </select>
+              </label>
+              <label className="flex flex-col gap-1 text-xs font-semibold text-gray-600">
+                Search
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Product, supplier, batch…"
+                  className="w-full min-w-60 rounded-xl border border-gray-300 px-3 py-2 text-sm font-normal"
+                />
+              </label>
+              {userIsPremium ? (
+                <button
+                  type="button"
+                  onClick={openPrintDocument}
+                  disabled={filteredRows.length === 0}
+                  className="rounded-xl border border-[#1a3329] bg-[#1a3329] px-4 py-2 text-sm font-semibold text-white hover:bg-[#24483a] disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Print / PDF
+                </button>
+              ) : (
+                <Link
+                  to="/premium-required?from=veterinary-medicine-printing"
+                  className="rounded-xl border border-amber-300 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-900 hover:bg-amber-100"
+                  title="Veterinary medicine printing is available with HiveTag Premium"
+                >
+                  🔒 Print / PDF
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {filteredRows.length === 0 ? (
+          <div className="p-8 text-center text-sm text-gray-600">
+            {rows.length === 0
+              ? "No veterinary medicines have been recorded yet."
+              : "No medicine records match the current filter."}
+          </div>
+        ) : (
+          <div className="max-w-full overflow-x-auto">
+            <table className="min-w-[1180px] w-full text-sm">
+              <thead className="bg-[#1a3329] text-white">
+                <tr>
+                  <TH>Product</TH>
+                  <TH>Supplier</TH>
+                  <TH>Purchased</TH>
+                  <TH>Batch</TH>
+                  <TH>Quantity purchased</TH>
+                  <TH>Invoice / reference</TH>
+                  <TH>Expiry</TH>
+                  <TH>Treatment history</TH>
+                  <TH>Disposal</TH>
+                  <TH>Actions</TH>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredRows.map((row) => {
+                  const usage = usageByMedicine[row.id] || [];
+                  const disposals = disposalByMedicine[row.id] || [];
+                  const activeCount = usage.filter((item) => item.status === "active").length;
+                  const overdueCount = usage.filter((item) => item.is_overdue).length;
+                  const hiveNames = [...new Set(usage.map((item) => item.hive_name_snapshot).filter(Boolean))];
+                  const treatmentGroups = treatmentGroupsForMedicine(row.id);
+
+                  return (
+                    <tr key={row.id} className="border-b border-gray-200 align-top hover:bg-amber-50/30">
+                      <TD className="font-semibold text-[#1a3329]">{row.product_name}</TD>
+                      <TD>
+                        <div>{row.supplier_name}</div>
+                        {row.supplier_address && (
+                          <div className="mt-1 max-w-56 whitespace-pre-line text-xs text-gray-500">
+                            {row.supplier_address}
+                          </div>
+                        )}
+                      </TD>
+                      <TD>{formatDate(row.purchase_date)}</TD>
+                      <TD>{row.batch_number}</TD>
+                      <TD>{row.quantity_purchased}</TD>
+                      <TD>{row.invoice_reference || "—"}</TD>
+                      <TD>{formatDate(row.expiry_date)}</TD>
+                      <TD>
+                        {usage.length === 0 ? (
+                          <span className="text-gray-500">Not yet administered</span>
+                        ) : (
+                          <div className="space-y-1">
+                            <div className="font-medium text-gray-900">
+                              {usage.length} hive treatment record{usage.length === 1 ? "" : "s"}
+                            </div>
+                            {hiveNames.length > 0 && (
+                              <div className="max-w-64 text-xs text-gray-600">
+                                {hiveNames.slice(0, 5).join(", ")}
+                                {hiveNames.length > 5 ? ` +${hiveNames.length - 5} more` : ""}
+                              </div>
+                            )}
+                            {activeCount > 0 && (
+                              <div className="text-xs font-semibold text-amber-700">
+                                {activeCount} active
+                              </div>
+                            )}
+                            {overdueCount > 0 && (
+                              <div className="text-xs font-bold text-red-700">
+                                {overdueCount} removal/completion overdue
+                              </div>
+                            )}
+                            <div className="mt-2 space-y-2 border-t border-gray-200 pt-2">
+                              {treatmentGroups.map((group) => (
+                                <div
+                                  key={group.treatment_id || group.treatment_hive_id}
+                                  className="max-w-80 rounded-lg bg-gray-50 p-2 text-xs"
+                                >
+                                  <div className="flex items-start justify-between gap-2">
+                                    <div className="min-w-0">
+                                      <div className="font-medium text-gray-800">
+                                        {formatDate(group.started_on)} · {group.hives.map((h) => h.name || "Hive").join(", ")}
+                                      </div>
+                                      <div className="mt-0.5 text-gray-600">
+                                        {group.treatment_for || "Treatment"}
+                                        {group.method ? ` · ${group.method}` : ""}
+                                      </div>
+                                      <div className="mt-0.5 font-semibold text-gray-900">
+                                        Quantity used per hive: {group.quantity_used || "—"}
+                                      </div>
+                                      {group.planned_completion_date && (
+                                        <div className="mt-0.5 text-gray-600">
+                                          Planned {group.completion_action === "remove" ? "removal" : "completion"}: {formatDate(group.planned_completion_date)}
+                                        </div>
+                                      )}
+                                      <div className="mt-0.5 font-semibold text-gray-800">
+                                        Status: {group.hives.length > 0 && group.hives.every((hive) => hive.status === "completed")
+                                          ? "Completed"
+                                          : `${group.hives.filter((hive) => hive.status === "active").length} active${
+                                              group.hives.some((hive) => hive.status === "completed")
+                                                ? ` · ${group.hives.filter((hive) => hive.status === "completed").length} completed`
+                                                : ""
+                                            }`}
+                                      </div>
+                                      {group.hives.some((hive) => hive.status === "completed" && hive.completed_on) && (
+                                        <div className="mt-0.5 text-gray-600">
+                                          Actual completion: {(() => {
+                                            const completedHives = group.hives.filter(
+                                              (hive) => hive.status === "completed" && hive.completed_on
+                                            );
+                                            const uniqueDates = [
+                                              ...new Set(completedHives.map((hive) => hive.completed_on)),
+                                            ];
+                                            if (
+                                              completedHives.length === group.hives.length &&
+                                              uniqueDates.length === 1
+                                            ) {
+                                              return formatDate(uniqueDates[0]);
+                                            }
+                                            return completedHives
+                                              .map(
+                                                (hive) =>
+                                                  `${hive.name || "Hive"} — ${formatDate(hive.completed_on)}`
+                                              )
+                                              .join(" · ");
+                                          })()}
+                                        </div>
+                                      )}
+                                    </div>
+                                    {group.treatment_id && (
+                                      <Link
+                                        to={`/veterinary-medicines/treatments/${group.treatment_id}/edit`}
+                                        className="shrink-0 font-semibold text-[#1a3329] underline underline-offset-2"
+                                      >
+                                        Amend
+                                      </Link>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </TD>
+                      <TD>
+                        {disposals.length === 0 ? (
+                          <span className="text-gray-500">—</span>
+                        ) : (
+                          <div className="space-y-2">
+                            {disposals.map((item) => (
+                              <div key={item.id} className="rounded-lg bg-gray-50 p-2 text-xs">
+                                <div className="flex items-start justify-between gap-2">
+                                  <div className="min-w-0">
+                                    <div className="font-medium text-gray-800">
+                                      {formatDate(item.disposal_date)}
+                                    </div>
+                                    <div className="mt-0.5 font-semibold text-gray-800">
+                                      Quantity: {item.quantity_disposed || "—"}
+                                    </div>
+                                    <div className="mt-0.5 text-gray-600">{item.disposal_route}</div>
+                                    {item.notes && (
+                                      <div className="mt-0.5 text-gray-500">{item.notes}</div>
+                                    )}
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => openEditDisposal(row, item)}
+                                    className="shrink-0 font-semibold text-[#1a3329] underline underline-offset-2"
+                                  >
+                                    Amend
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </TD>
+                      <TD>
+                        <div className="flex flex-col items-start gap-2">
+                          <Link
+                            to={`/veterinary-medicines/${row.id}/edit`}
+                            className="inline-flex whitespace-nowrap rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-800 hover:bg-gray-50"
+                          >
+                            Edit medicine
+                          </Link>
+                          <Link
+                            to={`/veterinary-medicines/treatments/new?medicine=${row.id}`}
+                            className="inline-flex whitespace-nowrap rounded-lg border border-[#1a3329]/30 bg-white px-3 py-2 text-xs font-semibold text-[#1a3329] hover:bg-amber-50"
+                          >
+                            Record treatment
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => openNewDisposal(row)}
+                            className="inline-flex whitespace-nowrap rounded-lg border border-[#1a3329]/30 bg-white px-3 py-2 text-xs font-semibold text-[#1a3329] hover:bg-amber-50"
+                          >
+                            Record disposal
+                          </button>
+                        </div>
+                      </TD>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
+
+      {disposalEditor && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          role="dialog"
+          aria-modal="true"
+          onClick={closeDisposalEditor}
+        >
+          <form
+            onSubmit={saveDisposal}
+            onClick={(e) => e.stopPropagation()}
+            className="w-[94vw] max-w-xl rounded-2xl bg-white p-5 shadow-xl"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-[#1a3329]">
+                  {disposalEditor.mode === "edit" ? "Amend disposal" : "Record disposal"}
+                </h2>
+                <p className="mt-1 text-sm text-gray-600">
+                  Medicine: <span className="font-semibold">{disposalEditor.productName}</span>
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={closeDisposalEditor}
+                disabled={savingDisposal}
+                className="text-xl leading-none text-gray-500 hover:text-gray-800 disabled:opacity-50"
+                aria-label="Close disposal form"
+              >
+                ×
+              </button>
+            </div>
+
+            <p className="mt-4 text-sm text-gray-600">
+              Record veterinary medicine that was not administered, such as unused, expired or damaged medicine that you disposed of or returned.
+            </p>
+            <p className="mt-1 text-xs font-medium text-gray-500">* Required field</p>
+
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <label className="flex flex-col gap-1">
+                <span className="text-sm font-medium text-gray-800">Date disposed *</span>
+                <input
+                  type="date"
+                  value={disposalDate}
+                  onChange={(e) => setDisposalDate(e.target.value)}
+                  required
+                  className="rounded-xl border border-gray-300 bg-white p-2.5"
+                />
+              </label>
+              <label className="flex flex-col gap-1">
+                <span className="text-sm font-medium text-gray-800">Quantity disposed *</span>
+                <input
+                  value={disposalQuantity}
+                  onChange={(e) => setDisposalQuantity(e.target.value)}
+                  required
+                  placeholder="e.g. 2 strips, 20 ml"
+                  className="rounded-xl border border-gray-300 bg-white p-2.5"
+                />
+                <span className="text-xs text-gray-500">
+                  Record the quantity actually disposed of in this disposal event.
+                </span>
+              </label>
+              <label className="flex flex-col gap-1 sm:col-span-2">
+                <span className="text-sm font-medium text-gray-800">Route / method of disposal *</span>
+                <input
+                  value={disposalRoute}
+                  onChange={(e) => setDisposalRoute(e.target.value)}
+                  required
+                  placeholder="e.g. returned to supplier"
+                  className="rounded-xl border border-gray-300 bg-white p-2.5"
+                />
+                <span className="text-xs text-gray-500">
+                  Enter what actually happened rather than selecting a suggested disposal route.
+                </span>
+              </label>
+              <label className="flex flex-col gap-1 sm:col-span-2">
+                <span className="text-sm font-medium text-gray-800">Notes</span>
+                <textarea
+                  value={disposalNotes}
+                  onChange={(e) => setDisposalNotes(e.target.value)}
+                  className="min-h-24 rounded-xl border border-gray-300 bg-white p-2.5"
+                  placeholder="Optional additional information"
+                />
+              </label>
+            </div>
+
+            <div className="mt-5 flex flex-wrap justify-end gap-2">
+              <button
+                type="button"
+                onClick={closeDisposalEditor}
+                disabled={savingDisposal}
+                className="rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-50 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={savingDisposal}
+                className="rounded-xl bg-[#1a3329] px-4 py-2 text-sm font-semibold text-white hover:bg-[#24483a] disabled:opacity-60"
+              >
+                {savingDisposal
+                  ? "Saving…"
+                  : disposalEditor.mode === "edit"
+                    ? "Save correction"
+                    : "Save disposal"}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function TH({ children, className = "" }) {
+  return <th className={`px-3 py-3 text-left font-semibold ${className}`}>{children}</th>;
+}
+
+function TD({ children, className = "" }) {
+  return <td className={`px-3 py-3 ${className}`}>{children}</td>;
+}

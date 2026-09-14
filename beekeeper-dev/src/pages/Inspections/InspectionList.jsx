@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../../services/supabase";
 import { getQueenSnapshotSummary } from "../../services/inspectionQueen";
+import ActiveVeterinaryTreatments from "../../components/ActiveVeterinaryTreatments";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import {
   formatDerivedWeather,
@@ -951,6 +952,8 @@ if (ids.length > 0) {
                       </p>
                     </div>
                   )}
+
+                  <ActiveVeterinaryTreatments hiveId={insp.hive_id} compact />
 
                   {visibleStatusPills.length > 0 && (
                   <div className="mb-2 flex flex-wrap gap-2">

@@ -5,7 +5,7 @@ export default function PrivacyPolicy() {
     <div id="top" className="max-w-3xl mx-auto p-6">
       <h2 className="text-2xl font-bold">Privacy Policy</h2>
       <p className="text-gray-600">
-        <strong>Effective date:</strong> 1 August 2026
+        <strong>Effective date:</strong> 14 September 2026
       </p>
 
       <section className="space-y-3 mt-6">
@@ -33,6 +33,14 @@ export default function PrivacyPolicy() {
           <li>
             <strong>App data you add</strong> (apiaries including optional lat/lng, hives including
             optional photos &amp; NFC tag IDs, inspections, logbook entries, tasks/to-dos).
+          </li>
+          <li>
+            <strong>Veterinary medicine records you add</strong>, which may include record-holder
+            name or organisation, address and postcode; supplier details; medicine product, batch,
+            purchase date, quantity, expiry date and reference information; administrator names;
+            hive treatment details, dates, treatment method, quantity used, withdrawal information
+            and product instructions you enter; completion/removal information; and records of unused
+            medicine disposal.
           </li>
           <li>
             <strong>Billing &amp; orders</strong> when you upgrade your plan or buy HiveTag NFC
@@ -71,6 +79,15 @@ export default function PrivacyPolicy() {
           <li>
             Provide core features (save and display your apiaries, hives, inspections, logbook
             entries and tasks).
+          </li>
+          <li>
+            Store, display and organise veterinary medicine purchase, treatment, completion/removal
+            and unused-medicine disposal records that you choose to enter, including linking relevant
+            treatments to hives, inspections and Calendar events.
+          </li>
+          <li>
+            For Premium members, generate the dedicated Veterinary Medicine Print / PDF register
+            from the records stored in HiveTag.
           </li>
           <li>Authenticate you and keep your account secure (Supabase Auth).</li>
           <li>Process subscriptions and manage billing (Stripe).</li>
@@ -119,7 +136,7 @@ export default function PrivacyPolicy() {
 
           <li>
             <strong>Legal obligation</strong> — to maintain records and comply with tax, accounting,
-            consumer protection and other legal requirements.
+            consumer protection and other legal requirements that apply to us.
           </li>
         </ul>
       </section>
@@ -260,7 +277,33 @@ export default function PrivacyPolicy() {
       </section>
 
       <section className="space-y-3 mt-6">
-        <h2 className="text-lg font-semibold">7. International Transfers</h2>
+        <h2 className="text-lg font-semibold">7. Veterinary Medicine Records</h2>
+        <p>
+          If you use HiveTag&apos;s Veterinary Medicines feature, the information you enter is stored
+          as part of your HiveTag account. These records may contain personal data such as the name
+          and address of the record holder, supplier details and the names of people who administered
+          a treatment.
+        </p>
+        <p>
+          HiveTag uses this information only to provide the veterinary medicine record-keeping
+          features you request, including treatment history, inspection and Calendar links,
+          completion/removal tracking, unused-medicine disposal records and, for Premium members,
+          generation of the dedicated Print / PDF register.
+        </p>
+        <p>
+          Where you enter information about another person, such as an administrator or an individual
+          supplier, you should only record information that is relevant and necessary for your
+          record-keeping purpose.
+        </p>
+        <p>
+          HiveTag is an electronic record-keeping service. It does not determine which medicine
+          should be used and does not calculate or infer dose, treatment duration, withdrawal period
+          or treatment/removal dates. Those details are entered by you.
+        </p>
+      </section>
+
+      <section className="space-y-3 mt-6">
+        <h2 className="text-lg font-semibold">8. International Transfers</h2>
 
         <p>
           Some of our service providers, including their approved subprocessors, may process
@@ -271,15 +314,16 @@ export default function PrivacyPolicy() {
       </section>
 
       <section className="space-y-3 mt-6">
-        <h2 className="text-lg font-semibold">8. Data Security</h2>
+        <h2 className="text-lg font-semibold">9. Data Security</h2>
         <p>
           Data is stored in Supabase Postgres with Row Level Security (RLS) so each user can only
-          access their own data. Photos are stored in Supabase Storage with access policies.
+          access their own data. Photos are stored in Supabase Storage with access policies. This
+          includes veterinary medicine records stored under the signed-in member&apos;s account.
         </p>
       </section>
 
       <section className="space-y-3 mt-6">
-        <h2 className="text-lg font-semibold">9. Your Rights</h2>
+        <h2 className="text-lg font-semibold">10. Your Rights</h2>
         <p>
           You have rights under UK data protection law, including access, rectification, erasure,
           restriction, data portability, and objection. Where processing is based on consent, you
@@ -313,12 +357,28 @@ export default function PrivacyPolicy() {
       </section>
 
       <section className="space-y-3 mt-6">
-        <h2 className="text-lg font-semibold">10. Data Retention</h2>
+        <h2 className="text-lg font-semibold">11. Data Retention</h2>
 
         <p>
           We retain your account and HiveTag data while your account remains active. Cancelling a
           Premium subscription does not automatically delete your account or the information stored
           within it.
+        </p>
+
+        <p>
+          Veterinary Medicines Directorate guidance requires veterinary medicine records for
+          food-producing animals, including bees, to be kept for at least five years. HiveTag
+          provides tools to help you store and, on Premium, print or save these records, but the
+          responsibility for keeping the records required for your beekeeping activities remains
+          with you.
+        </p>
+
+        <p>
+          Deleting your HiveTag account or deleting veterinary medicine records may remove the
+          HiveTag copy of information that you still need to retain. Before deleting your account or
+          relevant records, you should make sure you have retained any veterinary medicine records
+          you are required to keep, for example by using an appropriate separate copy or, where
+          available to you, HiveTag&apos;s Print / PDF feature.
         </p>
 
         <p>
@@ -336,7 +396,7 @@ export default function PrivacyPolicy() {
       </section>
 
       <section className="space-y-3 mt-6">
-        <h2 className="text-lg font-semibold">11. Children’s Data</h2>
+        <h2 className="text-lg font-semibold">12. Children’s Data</h2>
         <p>
           This Service is intended for users aged 16 years or over. We do not knowingly collect
           personal data from anyone under the age of 16. We do not knowingly collect data from
@@ -345,7 +405,7 @@ export default function PrivacyPolicy() {
       </section>
 
       <section className="space-y-3 mt-6">
-        <h2 className="text-lg font-semibold">12. Changes to This Policy</h2>
+        <h2 className="text-lg font-semibold">13. Changes to This Policy</h2>
         <p>
           We may update this policy from time to time. Changes will be posted here with an updated
           effective date.
@@ -353,7 +413,7 @@ export default function PrivacyPolicy() {
       </section>
 
       <section className="space-y-3 mt-6">
-        <h2 className="text-lg font-semibold">13. Contact</h2>
+        <h2 className="text-lg font-semibold">14. Contact</h2>
         <p>
           Questions or requests:{" "}
           <a

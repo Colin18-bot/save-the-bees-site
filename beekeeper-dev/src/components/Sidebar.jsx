@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
-const APP_VERSION = "1.5.4";
+const APP_VERSION = "1.5.5";
 
 const Sidebar = ({ setIsMobileMenuOpen }) => {
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);
@@ -80,15 +80,12 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
   }, []);
 
   useEffect(() => {
-    // 1) On mount
     refreshPlan();
 
-    // 2) When auth state changes
     const { data: sub } = supabase.auth.onAuthStateChange(() => {
       refreshPlan();
     });
 
-    // 3) If this tab or another tab updates the subscription.
     const onSubscriptionUpdated = () => {
       refreshPlan();
     };
@@ -113,14 +110,10 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
   const userIsPremium = subscriptionLevel === "premium";
   const canAccessQueenRecords = userIsPremium || hasRetainedQueenData;
 
-  // Core (beekeeping) navigation
   const coreTopNavItems = [
-    // Upgrade button (only if not premium)
     ...(!userIsPremium ? [{ to: "/pricing", label: "Upgrade Plan", highlight: true }] : []),
   ];
 
-  // Always-visible "guide" buttons (dark green style)
-  // Order: Getting Started -> Colony Health Check -> Inspection Guide
   const corePinnedGuides = [
     { to: "/help/getting-started", label: "Getting Started" },
 
@@ -137,18 +130,21 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
       : { to: "/premium-required", label: "🔒 Seasonal Guide", lockedPremium: true },
   ];
 
+  // Main beekeeping order: Apiaries, Hives, Inspections, Hive Logbook,
+  // Tasks, Queens, Veterinary Medicines.
   const coreSecondaryNavItems = [
     { to: "/apiaries", label: "Apiaries" },
     { to: "/hives", label: "Hives" },
     { to: "/inspections", label: "Inspections" },
+    { to: "/logbook", label: "Hive Logbook" },
+    { to: "/todos", label: "Tasks" },
     canAccessQueenRecords
       ? {
           to: "/queens",
           label: userIsPremium ? "Queens" : "Queens (Read only)",
         }
       : { to: "/queens", label: "🔒 Queens", lockedPremium: true },
-    { to: "/logbook", label: "Hive Logbook" },
-    { to: "/todos", label: "Tasks" },
+    { to: "/veterinary-medicines", label: "Veterinary Medicines" },
     { to: "/calendar", label: "Calendar" },
     { to: "/weather", label: "Weather" },
     { to: "/asian-hornet", label: "Asian Hornet" },
@@ -163,7 +159,6 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     { to: "/inspections/new", label: "New Inspection" },
     { to: "/logbook/new", label: "New Log Entry" },
     { to: "/todos/new", label: "New Task" },
-    // Premium-only NFC scan (visually highlighted)
     ...(userIsPremium
       ? [
           {
@@ -232,7 +227,6 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     </NavLink>
   );
 
-  // pinned guide button (always dark green, even when active)
   const PinnedGuideItem = ({ item }) => (
     <NavLink
       key={item.to}
@@ -267,22 +261,18 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
       <nav className="flex flex-col gap-1">
         <SectionTitle>Beekeeping</SectionTitle>
 
-        {/* Upgrade Plan stays at the very top */}
         {coreTopNavItems.map((item) => (
           <LinkItem key={item.to} item={item} />
         ))}
 
-        {/* Pinned buttons next (green style) */}
         <div className="mt-2 flex flex-col gap-1">
           {corePinnedGuides.map((item) => (
             <PinnedGuideItem key={item.to} item={item} />
           ))}
         </div>
 
-        {/* Dashboard as a normal nav item (original styling) */}
         <LinkItem item={{ to: "/dashboard", label: "Dashboard" }} />
 
-        {/* NFC Scan stays permanently visible above Quick Create */}
         {coreQuickCreate
           .filter((item) => item.premiumNfc)
           .map((item) => (
@@ -305,7 +295,6 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
             </NavLink>
           ))}
 
-        {/* Beekeeping Quick Create */}
         <button
           onClick={() => setQuickCreateOpen(!quickCreateOpen)}
           className="w-full text-left mt-2 mb-1 px-2 py-1 text-xs font-semibold text-yellow-300 uppercase tracking-wider hover:text-yellow-400"
@@ -336,25 +325,21 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
           </div>
         )}
 
-        {/* Divider between quick create and the rest of the beekeeping links */}
         <div className="my-4 border-t border-white/20" />
 
-        {/* Primary beekeeping links */}
         <div className="mt-1 space-y-1.5 rounded-lg border border-white/10 border-l-[3px] border-l-yellow-400/70 bg-white/5 p-1">
-          {coreSecondaryNavItems.slice(0, 6).map((item) => (
+          {coreSecondaryNavItems.slice(0, 7).map((item) => (
             <LinkItem key={item.to} item={item} />
           ))}
         </div>
 
-        {/* Secondary beekeeping links */}
         <div className="mt-3 space-y-1.5 rounded-lg border border-white/10 border-l-[3px] border-l-yellow-400/70 bg-white/5 p-1">
-          {coreSecondaryNavItems.slice(6).map((item) => (
+          {coreSecondaryNavItems.slice(7).map((item) => (
             <LinkItem key={item.to} item={item} />
           ))}
         </div>
         <div className="my-4 border-t border-white/20" />
 
-        {/* Business Quick Create ABOVE Inventory & Finance heading */}
         <button
           onClick={() => setBizQuickCreateOpen(!bizQuickCreateOpen)}
           className="w-full text-left mt-2 mb-1 px-2 py-1 text-xs font-semibold text-yellow-300 uppercase tracking-wider hover:text-yellow-400"
@@ -384,7 +369,6 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
           </div>
         )}
 
-        {/* Inventory & Finance heading + links */}
         <SectionTitle>Inventory &amp; Finance</SectionTitle>
         {businessListLinks.map((item) => (
           <LinkItem key={item.to} item={item} />

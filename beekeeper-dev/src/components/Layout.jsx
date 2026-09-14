@@ -1,8 +1,10 @@
 // src/components/Layout.jsx
 import React, { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import Sidebar from "../components/Sidebar";
 import BackToTop from "../components/BackToTop";
+import "../dashboard-order.css";
 import bannerImage from "../assets/banner.webp";
 import { supabase } from "../services/supabase";
 
@@ -12,6 +14,7 @@ import GAReporter from "../pages/Legal/GAReporter";
 import CookieBanner from "../pages/Legal/CookieBanner";
 
 const Layout = ({ children }) => {
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
@@ -82,6 +85,38 @@ const Layout = ({ children }) => {
     return () => window.removeEventListener("profile:updated", onProfileUpdated);
   }, []);
 
+  // Veterinary Medicines uses a dedicated print-only document rather than printing
+  // the live app page. Keep the existing button/UI unchanged and redirect only its
+  // window.print() action while the medicine register is open.
+  useEffect(() => {
+    if (location.pathname !== "/veterinary-medicines") return undefined;
+
+    const originalPrint = window.print;
+
+    window.print = () => {
+      const rangeSelect = [...document.querySelectorAll("select")].find((select) =>
+        [...select.options].some((option) => option.value === "five-years")
+      );
+      const searchInput = document.querySelector(
+        'input[placeholder="Product, supplier, batch…"]'
+      );
+
+      const params = new URLSearchParams();
+      params.set("range", rangeSelect?.value === "five-years" ? "five-years" : "all");
+      if (searchInput?.value?.trim()) params.set("q", searchInput.value.trim());
+
+      window.open(
+        `/veterinary-medicines/print?${params.toString()}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    };
+
+    return () => {
+      window.print = originalPrint;
+    };
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen flex flex-col bg-yellow-500">
       {/* ✅ Loads GA only if the user has granted analytics consent */}
@@ -121,7 +156,7 @@ const Layout = ({ children }) => {
         </div>
 
         {/* Main Content */}
-        <div className="md:flex-1 flex flex-col min-h-0">
+        <div className="md:flex-1 min-w-0 flex flex-col min-h-0">
           {/* Banner */}
           <div className="relative z-0 no-print">
             <img
@@ -131,12 +166,12 @@ const Layout = ({ children }) => {
             />
           </div>
 
-                    {/* Page Content */}
+          {/* Page Content */}
           <main
             ref={mainScrollRef}
-            className="flex-1 p-4 sm:p-6 overflow-auto bg-white z-10 max-w-full"
+            className="flex-1 min-w-0 p-4 sm:p-6 overflow-auto bg-white z-10 max-w-full"
           >
-           {children}
+            {children}
           </main>
 
           {/* ✅ Back to top

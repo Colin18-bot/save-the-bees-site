@@ -24,11 +24,13 @@ const ProtectedRoute = ({
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [user, setUser] = useState(null);
 
-  // Used only when minPlan === "premium".
+  // Used only when Premium access is required.
   const [checkingPlan, setCheckingPlan] = useState(false);
   const [planOK, setPlanOK] = useState(true);
 
   const redirectTo = `${location.pathname}${location.search}${location.hash}`;
+  const requiresPremium =
+    minPlan === "premium" || location.pathname === "/veterinary-medicines/print";
 
   // Best-effort email verification detection covering password and social sign-in.
   const isVerified = (currentUser) =>
@@ -74,7 +76,7 @@ const ProtectedRoute = ({
     let cancelled = false;
 
     const checkPlan = async () => {
-      if (minPlan !== "premium" || !user) {
+      if (!requiresPremium || !user) {
         setPlanOK(true);
         setCheckingPlan(false);
         return;
@@ -143,7 +145,7 @@ const ProtectedRoute = ({
     return () => {
       cancelled = true;
     };
-  }, [allowRetainedQueenData, minPlan, user]);
+  }, [allowRetainedQueenData, requiresPremium, user]);
 
   // 1) Still checking authentication.
   if (checkingAuth) {
@@ -189,7 +191,7 @@ const ProtectedRoute = ({
   }
 
   // 4) Optional Premium gate.
-  if (minPlan === "premium") {
+  if (requiresPremium) {
     if (checkingPlan) {
       return (
         <div className="flex items-center justify-center mt-10 text-gray-700">
@@ -211,11 +213,11 @@ const ProtectedRoute = ({
   }
 
   // 5) All checks passed.
-return (
-  <MarketingConsentGate user={user}>
-    {children}
-  </MarketingConsentGate>
-);
+  return (
+    <MarketingConsentGate user={user}>
+      {children}
+    </MarketingConsentGate>
+  );
 };
 
 export default ProtectedRoute;
