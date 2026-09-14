@@ -8,6 +8,8 @@ const fiveYearsAgoIso = () => {
   return d.toISOString().slice(0, 10);
 };
 
+const todayIso = () => new Date().toISOString().slice(0, 10);
+
 const formatDate = (value) => {
   if (!value) return "—";
   const d = new Date(`${value}T00:00:00`);
@@ -37,6 +39,12 @@ export default function VeterinaryMedicineList() {
   const [holderName, setHolderName] = useState("");
   const [holderAddress, setHolderAddress] = useState("");
   const [holderPostcode, setHolderPostcode] = useState("");
+
+  const [disposalEditor, setDisposalEditor] = useState(null);
+  const [disposalDate, setDisposalDate] = useState(todayIso());
+  const [disposalRoute, setDisposalRoute] = useState("");
+  const [disposalNotes, setDisposalNotes] = useState("");
+  const [savingDisposal, setSavingDisposal] = useState(false);
 
   const loadData = async () => {
     setLoading(true);
@@ -71,7 +79,7 @@ export default function VeterinaryMedicineList() {
           .order("started_on", { ascending: false }),
         supabase
           .from("veterinary_medicine_disposals")
-          .select("medicine_id,disposal_date,disposal_route,notes")
+          .select("id,medicine_id,disposal_date,disposal_route,notes")
           .eq("user_id", user.id)
           .order("disposal_date", { ascending: false }),
       ]);
@@ -207,6 +215,90 @@ export default function VeterinaryMedicineList() {
       setErrorMsg(err.message || String(err));
     } finally {
       setSavingHolder(false);
+    }
+  };
+
+  const openNewDisposal = (medicine) => {
+    setErrorMsg("");
+    setDisposalEditor({
+      mode: "new",
+      medicineId: medicine.id,
+      productName: medicine.product_name,
+      disposalId: null,
+    });
+    setDisposalDate(todayIso());
+    setDisposalRoute("");
+    setDisposalNotes("");
+  };
+
+  const openEditDisposal = (medicine, disposal) => {
+    setErrorMsg("");
+    setDisposalEditor({
+      mode: "edit",
+      medicineId: medicine.id,
+      productName: medicine.product_name,
+      disposalId: disposal.id,
+    });
+    setDisposalDate(disposal.disposal_date || todayIso());
+    setDisposalRoute(disposal.disposal_route || "");
+    setDisposalNotes(disposal.notes || "");
+  };
+
+  const closeDisposalEditor = () => {
+    if (savingDisposal) return;
+    setDisposalEditor(null);
+  };
+
+  const saveDisposal = async (e) => {
+    e.preventDefault();
+    if (!disposalEditor) return;
+
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    if (!disposalDate || !disposalRoute.trim()) {
+      setErrorMsg("Date disposed and route / method of disposal are required.");
+      return;
+    }
+
+    setSavingDisposal(true);
+    try {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+      if (userError || !user) throw new Error(userError?.message || "Not authenticated.");
+
+      const payload = {
+        disposal_date: disposalDate,
+        disposal_route: disposalRoute.trim(),
+        notes: disposalNotes.trim() || null,
+      };
+
+      if (disposalEditor.mode === "edit") {
+        const { error } = await supabase
+          .from("veterinary_medicine_disposals")
+          .update(payload)
+          .eq("id", disposalEditor.disposalId)
+          .eq("user_id", user.id);
+        if (error) throw error;
+        setSuccessMsg("Disposal record corrected successfully.");
+      } else {
+        const { error } = await supabase.from("veterinary_medicine_disposals").insert({
+          ...payload,
+          user_id: user.id,
+          medicine_id: disposalEditor.medicineId,
+        });
+        if (error) throw error;
+        setSuccessMsg("Disposal recorded successfully.");
+      }
+
+      setDisposalEditor(null);
+      await loadData();
+    } catch (err) {
+      setErrorMsg(err.message || String(err));
+    } finally {
+      setSavingDisposal(false);
     }
   };
 
@@ -591,11 +683,27 @@ export default function VeterinaryMedicineList() {
                         {disposals.length === 0 ? (
                           <span className="text-gray-500">—</span>
                         ) : (
-                          <div className="space-y-1">
-                            {disposals.slice(0, 2).map((item, index) => (
-                              <div key={`${item.disposal_date}-${index}`}>
-                                <div>{formatDate(item.disposal_date)}</div>
-                                <div className="text-xs text-gray-500">{item.disposal_route}</div>
+                          <div className="space-y-2">
+                            {disposals.map((item) => (
+                              <div key={item.id} className="rounded-lg bg-gray-50 p-2 text-xs">
+                                <div className="flex items-start justify-between gap-2">
+                                  <div className="min-w-0">
+                                    <div className="font-medium text-gray-800">
+                                      {formatDate(item.disposal_date)}
+                                    </div>
+                                    <div className="mt-0.5 text-gray-600">{item.disposal_route}</div>
+                                    {item.notes && (
+                                      <div className="mt-0.5 text-gray-500">{item.notes}</div>
+                                    )}
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => openEditDisposal(row, item)}
+                                    className="shrink-0 font-semibold text-[#1a3329] underline underline-offset-2"
+                                  >
+                                    Amend
+                                  </button>
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -615,6 +723,13 @@ export default function VeterinaryMedicineList() {
                           >
                             Record treatment
                           </Link>
+                          <button
+                            type="button"
+                            onClick={() => openNewDisposal(row)}
+                            className="inline-flex whitespace-nowrap rounded-lg border border-[#1a3329]/30 bg-white px-3 py-2 text-xs font-semibold text-[#1a3329] hover:bg-amber-50"
+                          >
+                            Record disposal
+                          </button>
                         </div>
                       </TD>
                     </tr>
@@ -625,6 +740,103 @@ export default function VeterinaryMedicineList() {
           </div>
         )}
       </section>
+
+      {disposalEditor && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          role="dialog"
+          aria-modal="true"
+          onClick={closeDisposalEditor}
+        >
+          <form
+            onSubmit={saveDisposal}
+            onClick={(e) => e.stopPropagation()}
+            className="w-[94vw] max-w-xl rounded-2xl bg-white p-5 shadow-xl"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-xl font-bold text-[#1a3329]">
+                  {disposalEditor.mode === "edit" ? "Amend disposal" : "Record disposal"}
+                </h2>
+                <p className="mt-1 text-sm text-gray-600">
+                  Medicine: <span className="font-semibold">{disposalEditor.productName}</span>
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={closeDisposalEditor}
+                disabled={savingDisposal}
+                className="text-xl leading-none text-gray-500 hover:text-gray-800 disabled:opacity-50"
+                aria-label="Close disposal form"
+              >
+                ×
+              </button>
+            </div>
+
+            <p className="mt-4 text-sm text-gray-600">
+              Record the date and route / method actually used to dispose of veterinary medicine that was not administered.
+            </p>
+            <p className="mt-1 text-xs font-medium text-gray-500">* Required field</p>
+
+            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <label className="flex flex-col gap-1">
+                <span className="text-sm font-medium text-gray-800">Date disposed *</span>
+                <input
+                  type="date"
+                  value={disposalDate}
+                  onChange={(e) => setDisposalDate(e.target.value)}
+                  required
+                  className="rounded-xl border border-gray-300 bg-white p-2.5"
+                />
+              </label>
+              <label className="flex flex-col gap-1 sm:col-span-2">
+                <span className="text-sm font-medium text-gray-800">Route / method of disposal *</span>
+                <input
+                  value={disposalRoute}
+                  onChange={(e) => setDisposalRoute(e.target.value)}
+                  required
+                  placeholder="e.g. returned to supplier"
+                  className="rounded-xl border border-gray-300 bg-white p-2.5"
+                />
+                <span className="text-xs text-gray-500">
+                  Enter what actually happened rather than selecting a suggested disposal route.
+                </span>
+              </label>
+              <label className="flex flex-col gap-1 sm:col-span-2">
+                <span className="text-sm font-medium text-gray-800">Notes</span>
+                <textarea
+                  value={disposalNotes}
+                  onChange={(e) => setDisposalNotes(e.target.value)}
+                  className="min-h-24 rounded-xl border border-gray-300 bg-white p-2.5"
+                  placeholder="Optional additional information"
+                />
+              </label>
+            </div>
+
+            <div className="mt-5 flex flex-wrap justify-end gap-2">
+              <button
+                type="button"
+                onClick={closeDisposalEditor}
+                disabled={savingDisposal}
+                className="rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-50 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={savingDisposal}
+                className="rounded-xl bg-[#1a3329] px-4 py-2 text-sm font-semibold text-white hover:bg-[#24483a] disabled:opacity-60"
+              >
+                {savingDisposal
+                  ? "Saving…"
+                  : disposalEditor.mode === "edit"
+                    ? "Save correction"
+                    : "Save disposal"}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       <div id="vm-print-report" aria-hidden="true">
         <div style={{ marginBottom: "6mm" }}>
@@ -756,8 +968,8 @@ export default function VeterinaryMedicineList() {
                       </tr>
                     </thead>
                     <tbody>
-                      {disposals.map((item, index) => (
-                        <tr key={`print-disposal-${row.id}-${index}`}>
+                      {disposals.map((item) => (
+                        <tr key={`print-disposal-${item.id}`}>
                           <td>{formatDate(item.disposal_date)}</td>
                           <td>{item.disposal_route}</td>
                           <td>{item.notes || "—"}</td>
