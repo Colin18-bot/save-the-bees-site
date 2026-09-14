@@ -66,7 +66,7 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
       let query = supabase
         .from("veterinary_medicine_hive_status")
         .select(
-          "treatment_hive_id,treatment_id,medicine_id,product_name,batch_number,apiary_id,apiary_name_snapshot,hive_id,hive_name_snapshot,inspection_id,method,started_on,treatment_mode,planned_completion_date,completion_action,status,completed_on,is_overdue"
+          "treatment_hive_id,treatment_id,medicine_id,product_name,batch_number,apiary_id,apiary_name_snapshot,hive_id,hive_name_snapshot,inspection_id,method,quantity_used,started_on,treatment_mode,planned_completion_date,completion_action,status,completed_on,is_overdue"
         )
         .order("started_on", { ascending: false });
 
@@ -188,7 +188,7 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
                             : "text-green-800"
                       }`}
                     >
-                      Veterinary treatment at this inspection
+                      Veterinary treatment linked to this inspection
                     </p>
                     <p className="mt-1 text-sm font-semibold text-[#1a3329]">
                       {row.product_name}
@@ -210,6 +210,11 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
                 <p className="mt-1 text-xs text-gray-700">
                   {row.method || "Method not recorded"} • Started {formatDate(row.started_on)}
                 </p>
+                {row.quantity_used && (
+                  <p className="mt-1 text-xs text-gray-700">
+                    <span className="font-semibold">Quantity used:</span> {row.quantity_used}
+                  </p>
+                )}
                 {row.planned_completion_date && (
                   <p className="mt-1 text-xs text-gray-700">
                     <span className="font-semibold">Planned {actionWord.toLowerCase()}:</span>{" "}
@@ -364,6 +369,12 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
 
                 <div className="mt-2 text-sm text-gray-800">
                   <span className="font-medium">Started:</span> {formatDate(row.started_on)}
+                  {row.quantity_used && (
+                    <>
+                      <span className="mx-2 text-gray-400">•</span>
+                      <span className="font-medium">Quantity used:</span> {row.quantity_used}
+                    </>
+                  )}
                   {row.planned_completion_date && (
                     <>
                       <span className="mx-2 text-gray-400">•</span>
