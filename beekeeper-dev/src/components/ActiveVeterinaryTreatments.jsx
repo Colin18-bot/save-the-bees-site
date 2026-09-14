@@ -212,7 +212,7 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
                 </p>
                 {row.quantity_used && (
                   <p className="mt-1 text-xs text-gray-700">
-                    <span className="font-semibold">Quantity used:</span> {row.quantity_used}
+                    <span className="font-semibold">Quantity used in this hive:</span> {row.quantity_used}
                   </p>
                 )}
                 {row.planned_completion_date && (
@@ -372,7 +372,7 @@ export default function ActiveVeterinaryTreatments({ hiveId: hiveIdProp = "", co
                   {row.quantity_used && (
                     <>
                       <span className="mx-2 text-gray-400">•</span>
-                      <span className="font-medium">Quantity used:</span> {row.quantity_used}
+                      <span className="font-medium">Quantity used in this hive:</span> {row.quantity_used}
                     </>
                   )}
                   {row.planned_completion_date && (
