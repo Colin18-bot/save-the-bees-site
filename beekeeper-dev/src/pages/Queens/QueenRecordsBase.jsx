@@ -872,6 +872,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
           queenId: currentQueen.id,
           reference,
           queenYear,
+          yearEstimated,
           markingColour,
           clipped,
           origin,
