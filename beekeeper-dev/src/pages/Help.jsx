@@ -395,7 +395,7 @@ export default function Help() {
                       <li>
                         <strong>Queen Records and colony lifecycle management</strong>: current and
                         previous Queens, assignments, introductions, splits, transfers, colony
-                        unions, swarm outcomes, Queenless Colony Plans, events and inspection snapshots
+                        unions, swarm outcomes, Queenless Colony Plans, events and protected inspection Queen context
                       </li>
                       <li>
                         <strong>Reports &amp; Exports</strong>, including multi-section printable
@@ -2188,7 +2188,9 @@ export default function Help() {
                     </li>
                     <li>
                       Queen reporting separates the current Queen position from historical
-                      assignments, events, processes and inspection snapshots.
+                      assignments, events, processes and inspection Queen context. Historical
+                      context can include an assigned Queen snapshot, a Queenless/transition process,
+                      or unlinked inspection evidence such as Queen seen or Eggs.
                     </li>
                     <li>
                       Inspection photographs can be opened in the full gallery and downloaded.
@@ -2204,7 +2206,7 @@ export default function Help() {
                       Download a complete Excel workbook. Queen workbooks can contain{" "}
                       <strong>Queens</strong>, <strong>Queen Assignments</strong>,{" "}
                       <strong>Queen Events</strong>, <strong>Queen Processes</strong> and{" "}
-                      <strong>Queen Snapshots</strong> worksheets.
+                      <strong>Inspection Queen Context</strong> worksheets.
                     </li>
                     <li>
                       Print all selected sections as one report or save the browser print output as a
