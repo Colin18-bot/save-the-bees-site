@@ -31,6 +31,7 @@ const SWARM_DESCRIPTION =
 const SPLIT_DESCRIPTION =
   "Select an empty hive or nucleus and record where the Queen moved.";
 const INLINE_ACTION_LABELS = [
+  "Establish Existing Queen",
   "Add a Queen",
   "Edit Queen Information",
   "Record Queen Progress",
