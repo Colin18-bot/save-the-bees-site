@@ -157,6 +157,10 @@ export function buildInspectionRows({
     const { resolvedApiaryId, resolvedHiveId } = effectiveIds(inspection);
     const analysis = getInspectionAnalysis(inspection);
 
+    const queenSnapshot = inspection.queen_snapshot || null;
+    const queenProcess = inspection.queen_process_snapshot || null;
+    const queenSnapshotColour = queenSnapshot ? queenActualColour(queenSnapshot) : "";
+
     return {
       date: fmtUK(inspection.date),
       apiary: apiaryName.get(resolvedApiaryId) || "",
@@ -175,6 +179,20 @@ export function buildInspectionRows({
       food_stores: inspection.food_stores || "",
       queen_cells: inspection.queen_cells || "",
       queen_status: valueWithOther(inspection.queen_status, inspection.queen_status_other),
+      queen_reference: queenSnapshot?.reference || "",
+      queen_record_status: queenSnapshot ? titleCase(queenSnapshot.status, "") : "",
+      queen_year: queenSnapshot
+        ? queenYearText(queenSnapshot.queen_year, queenSnapshot.queen_year_estimated)
+        : "",
+      queen_marking: queenSnapshot
+        ? String(queenSnapshotColour || "Unknown")
+        : "",
+      queen_process: queenProcess
+        ? queenProcess.method || titleCase(queenProcess.process_type, "Queen process")
+        : "",
+      queen_process_status: queenProcess
+        ? titleCase(queenProcess.status, "Active")
+        : "",
       varroa_seen: boolYesNo(inspection.varroa_seen),
       signs_disease: boolYesNo(inspection.signs_disease),
       disease_types: valueWithOther(inspection.disease_types, inspection.disease_other),
@@ -197,7 +215,8 @@ export function downloadInspectionsCSV({ inspectionRows }) {
   "date", "apiary", "hive", "inspection_type", "weather", "weather_observed",
   "colony_behavior", "environmental_signs", "hive_population", "frames_of_bees",
   "frames_of_brood", "brood_pattern", "brood_box_congestion", "frames_of_stores",
-  "food_stores", "queen_cells", "queen_status", "varroa_seen", "signs_disease",
+  "food_stores", "queen_cells", "queen_status", "queen_reference", "queen_record_status",
+  "queen_year", "queen_marking", "queen_process", "queen_process_status", "varroa_seen", "signs_disease",
   "disease_types", "signs_pests", "pest_types", "notes", "photos", "photo_paths",
   "health_score", "health_band", "insights", "recommendations", "archived",
 ];
