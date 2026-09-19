@@ -99,7 +99,7 @@ const buildCurrentQueen = ({ queen, assignment, inspections, events }) => {
     yearEstimated: Boolean(queen.queen_year_estimated),
     expectedColour,
     actualColour,
-    marked: yesNo(queen.marked),
+    marked: actualColour === "Unknown" ? "Not recorded" : yesNo(queen.marked),
     clipped: yesNo(queen.clipped),
     origin: queen.origin || "Not recorded",
     supplier: queen.supplier || "Not recorded",
