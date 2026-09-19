@@ -24,6 +24,7 @@ import {
 import { queenColourReference } from "./queenPreviewData.js";
 import {
   createQueenForHive,
+  establishRetrospectiveQueen,
   getQueenColourForYear,
   getQueenRecordsOverview,
   recordQueenProgress,
@@ -43,6 +44,12 @@ const TABS = [
 ];
 
 const EVENT_ACTIONS = [
+  {
+    id: "retrospective",
+    label: "Establish Existing Queen",
+    description: "Create a baseline Queen record when some historical details are estimated or unknown.",
+    icon: Crown,
+  },
   {
     id: "add",
     label: "Add a Queen",
@@ -311,7 +318,7 @@ const QueenOverview = ({ hive, canEdit, onAction }) => (
           canEdit ? (
             <button
               type="button"
-              onClick={() => onAction(hive.currentQueen ? "progress" : "introduce")}
+              onClick={() => onAction(hive.currentQueen ? "progress" : "retrospective")}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#1a3329] px-4 py-2 text-sm font-bold text-white hover:bg-[#28513f]"
             >
               {hive.currentQueen ? <Activity className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
@@ -429,7 +436,7 @@ const CurrentQueenTab = ({ hive, canEdit, onAction, highlightQueenId }) => {
         {canEdit ? (
           <button
             type="button"
-            onClick={() => onAction("introduce")}
+            onClick={() => onAction("retrospective")}
             className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[#1a3329] px-5 py-2.5 font-bold text-white hover:bg-[#28513f]"
           >
             <Plus className="h-4 w-4" /> Establish a Queen
@@ -476,7 +483,10 @@ const CurrentQueenTab = ({ hive, canEdit, onAction, highlightQueenId }) => {
             <StatusPill>{queen.status}</StatusPill>
           </div>
           <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            <Detail label="Queen year" value={queen.year} />
+            <Detail
+              label="Queen year"
+              value={`${queen.year}${queen.yearEstimated ? " (estimated)" : ""}`}
+            />
             <Detail label="Expected colour" value={queen.expectedColour} />
             <Detail label="Actual marking colour" value={queen.actualColour} />
             <Detail label="Marked" value={queen.marked} />
@@ -694,12 +704,20 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
 
   const [eventDate, setEventDate] = useState(localToday());
   const [reference, setReference] = useState(currentQueen?.reference || "");
-  const [origin, setOrigin] = useState(currentQueen?.origin || "Purchased mated queen");
-  const [queenYear, setQueenYear] = useState(
-    String(currentQueen?.year || new Date().getFullYear())
+  const [origin, setOrigin] = useState(
+    currentQueen?.origin || (actionId === "retrospective" ? "Unknown" : "Purchased mated queen")
   );
+  const [queenYear, setQueenYear] = useState(
+    actionId === "retrospective"
+      ? ""
+      : String(currentQueen?.year || new Date().getFullYear())
+  );
+  const [yearEstimated, setYearEstimated] = useState(false);
+  const [evidence, setEvidence] = useState("Existing records");
   const [markingColour, setMarkingColour] = useState(
-    currentQueen?.actualColour || getQueenColourForYear(new Date().getFullYear())
+    actionId === "retrospective"
+      ? "Unknown"
+      : currentQueen?.actualColour || getQueenColourForYear(new Date().getFullYear())
   );
   const [clipped, setClipped] = useState(
     currentQueen?.clipped === "Yes" ? "yes" : currentQueen?.clipped === "No" ? "no" : "unknown"
@@ -787,7 +805,19 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
         throw new Error("There is no current Queen or active Queen process to progress.");
       }
 
-      if (actionId === "add" || actionId === "introduce") {
+      if (actionId === "retrospective") {
+        await establishRetrospectiveQueen({
+          hiveId: hive.id,
+          eventDate,
+          reference,
+          queenYear,
+          yearEstimated,
+          markingColour,
+          origin,
+          evidence,
+          notes,
+        });
+      } else if (actionId === "add" || actionId === "introduce") {
         await createQueenForHive({
           hiveId: hive.id,
           eventDate,
@@ -913,7 +943,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
 
           {actionId !== "edit" ? (
             <label className="text-sm font-semibold text-gray-700">
-              Event date
+              {actionId === "retrospective" ? "Queen first known in this hive" : "Event date"}
               <input
                 type="date"
                 value={eventDate}
@@ -925,7 +955,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
           ) : null}
         </div>
 
-        {actionId === "add" || actionId === "edit" || actionId === "introduce" ? (
+        {["add", "edit", "introduce", "retrospective"].includes(actionId) ? (
           <div className="space-y-4 rounded-2xl border border-gray-200 bg-gray-50 p-4">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <label className="text-sm font-semibold text-gray-700">
@@ -948,7 +978,11 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
                   value={queenYear}
                   onChange={(event) => {
                     setQueenYear(event.target.value);
-                    if (markingColour !== "Unmarked") {
+                    if (
+                      actionId !== "retrospective" &&
+                      markingColour !== "Unmarked" &&
+                      markingColour !== "Unknown"
+                    ) {
                       setMarkingColour(getQueenColourForYear(event.target.value));
                     }
                   }}
@@ -963,6 +997,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
                   onChange={(event) => setMarkingColour(event.target.value)}
                   className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
                 >
+                  <option>Unknown</option>
                   <option>Unmarked</option>
                   <option>White</option>
                   <option>Yellow</option>
@@ -1007,6 +1042,41 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
                 </select>
               </label>
             </div>
+
+            {actionId === "retrospective" ? (
+              <div className="space-y-4 rounded-xl border border-blue-200 bg-blue-50 p-4">
+                <p className="text-sm text-blue-950">
+                  Use this for an existing Queen where the detailed history was not recorded in HiveTag.
+                  Leave anything genuinely unknown blank or select Unknown rather than estimating it as fact.
+                </p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <label className="text-sm font-semibold text-gray-700">
+                    How was this Queen known to be present?
+                    <select
+                      value={evidence}
+                      onChange={(event) => setEvidence(event.target.value)}
+                      className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
+                    >
+                      <option>Queen seen</option>
+                      <option>Eggs observed</option>
+                      <option>Young brood observed</option>
+                      <option>Existing records</option>
+                      <option>Beekeeper recollection</option>
+                      <option>Other</option>
+                    </select>
+                  </label>
+                  <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm font-semibold text-gray-700">
+                    <input
+                      type="checkbox"
+                      checked={yearEstimated}
+                      disabled={!queenYear}
+                      onChange={(event) => setYearEstimated(event.target.checked)}
+                    />
+                    Queen year is estimated
+                  </label>
+                </div>
+              </div>
+            ) : null}
 
             {actionId === "edit" ? (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
