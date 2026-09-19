@@ -710,9 +710,13 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
   );
 
   const [eventDate, setEventDate] = useState(localToday());
-  const [reference, setReference] = useState(currentQueen?.reference || "");
+  const [reference, setReference] = useState(
+    actionId === "retrospective" ? "" : currentQueen?.reference || ""
+  );
   const [origin, setOrigin] = useState(
-    currentQueen?.origin || (actionId === "retrospective" ? "Unknown" : "Purchased mated queen")
+    actionId === "retrospective"
+      ? "Unknown"
+      : currentQueen?.origin || "Purchased mated queen"
   );
   const currentQueenYear =
     currentQueen?.year && Number.isFinite(Number(currentQueen.year))
@@ -735,10 +739,20 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
       : currentQueen?.actualColour || getQueenColourForYear(new Date().getFullYear())
   );
   const [clipped, setClipped] = useState(
-    currentQueen?.clipped === "Yes" ? "yes" : currentQueen?.clipped === "No" ? "no" : "unknown"
+    actionId === "retrospective"
+      ? "unknown"
+      : currentQueen?.clipped === "Yes"
+        ? "yes"
+        : currentQueen?.clipped === "No"
+          ? "no"
+          : "unknown"
   );
   const [supplier, setSupplier] = useState(
-    currentQueen?.supplier === "Not recorded" ? "" : currentQueen?.supplier || ""
+    actionId === "retrospective"
+      ? ""
+      : currentQueen?.supplier === "Not recorded"
+        ? ""
+        : currentQueen?.supplier || ""
   );
   const [emergedOn, setEmergedOn] = useState(currentQueen?.emergedOnRaw || "");
   const [introducedOn, setIntroducedOn] = useState(currentQueen?.introducedOnRaw || "");
@@ -818,6 +832,12 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
 
       if (actionId === "progress" && !currentQueen && !hive.transition) {
         throw new Error("There is no current Queen or active Queen process to progress.");
+      }
+
+      if (actionId === "retrospective" && currentQueen) {
+        throw new Error(
+          "This hive already has a current Queen record. Use Edit Queen Information for that Queen, or record an earlier Queen separately in the historical workflow."
+        );
       }
 
       if (actionId === "retrospective") {
@@ -1379,6 +1399,9 @@ const actionDisabled = (actionId, hive, allHives) => {
     (item) => item.id !== hive.id && !item.currentQueen && !item.transition
   );
 
+  if (actionId === "retrospective") {
+    return Boolean(hive.currentQueen);
+  }
   if (actionId === "add") {
     return Boolean(hive.currentQueen || hive.transition);
   }
