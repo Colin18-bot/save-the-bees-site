@@ -44,9 +44,9 @@ export default function DetailedRecords({
 
     const process = inspection?.queen_process_snapshot;
     if (process) {
-      return `No confirmed current Queen · ${
-        process.method || process.process_type || "Queen process"
-      } · ${process.status || "active"}`;
+      return `No individual Queen record linked to this inspection · ${
+        process.process_type || "Queen process"
+      } active at this inspection · recorded status: ${process.status || "active"}`;
     }
 
     const evidence = Array.isArray(inspection?.queen_status)
