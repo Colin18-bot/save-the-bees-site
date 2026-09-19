@@ -224,15 +224,22 @@ const PremiumOnlyLanding = () => (
 const queenDisplayName = (queen) => {
   if (!queen) return "No confirmed current queen";
 
+  const yearLabel = `${queen.year}${queen.yearEstimated ? " (estimated)" : ""}`;
   const colour = String(queen.actualColour || "").trim();
-  const isUnmarked =
-    String(queen.marked || "").toLowerCase() === "no" || colour.toLowerCase() === "unmarked";
+  const colourLower = colour.toLowerCase();
 
-  if (isUnmarked) {
-    return `${queen.year} unmarked queen`;
+  if (!colour || colourLower === "unknown") {
+    return `${yearLabel} queen — marking unknown`;
   }
 
-  return `${queen.year} ${colour.toLowerCase()}-marked queen`;
+  const isUnmarked =
+    String(queen.marked || "").toLowerCase() === "no" || colourLower === "unmarked";
+
+  if (isUnmarked) {
+    return `${yearLabel} unmarked queen`;
+  }
+
+  return `${yearLabel} ${colourLower}-marked queen`;
 };
 
 const AllHivesOverview = ({ hives, onOpenHive }) => {
