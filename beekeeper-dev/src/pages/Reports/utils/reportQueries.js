@@ -52,7 +52,7 @@ async function loadQueenReportData({
     assignmentsResult,
     processesResult,
     eventsResult,
-    snapshotsResult,
+    inspectionContextResult,
     sightingsResult,
   ] = await Promise.all([
     supabase.from("queens").select("*"),
@@ -63,10 +63,9 @@ async function loadQueenReportData({
       let query = supabase
         .from("inspections")
         .select(
-          "id, apiary_id, hive_id, date, archived_at, queen_id, queen_snapshot"
+          "id, apiary_id, hive_id, date, archived_at, queen_id, queen_snapshot, queen_process_snapshot, queen_status"
         )
-        .in("hive_id", hiveIds)
-        .not("queen_snapshot", "is", null);
+        .in("hive_id", hiveIds);
 
       if (!includeArchived) query = query.is("archived_at", null);
       if (fromDate) query = query.gte("date", fromDate);
@@ -90,7 +89,7 @@ async function loadQueenReportData({
     ["Queen assignments", assignmentsResult],
     ["Queen processes", processesResult],
     ["Queen events", eventsResult],
-    ["Queen snapshots", snapshotsResult],
+    ["Queen inspection context", inspectionContextResult],
     ["Queen inspection sightings", sightingsResult],
   ]) {
     if (result.error) throw new Error(`${label}: ${result.error.message}`);
@@ -145,7 +144,20 @@ async function loadQueenReportData({
     overlapsRange(row.started_on, row.ended_on, fromDate, toDate)
   );
 
-  const snapshots = snapshotsResult.data || [];
+  const inspectionContext = (inspectionContextResult.data || []).filter((inspection) => {
+    const queenStatus = Array.isArray(inspection.queen_status)
+      ? inspection.queen_status
+      : inspection.queen_status
+        ? [inspection.queen_status]
+        : [];
+
+    return Boolean(
+      inspection.queen_snapshot ||
+        inspection.queen_process_snapshot ||
+        queenStatus.some((value) => ["seen", "eggs"].includes(String(value).trim().toLowerCase()))
+    );
+  });
+  const snapshots = inspectionContext;
   const sightings = sightingsResult.data || [];
   const queensById = new Map(queens.map((queen) => [queen.id, queen]));
 
