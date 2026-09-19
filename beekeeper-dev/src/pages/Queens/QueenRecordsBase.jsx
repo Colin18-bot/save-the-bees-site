@@ -987,19 +987,25 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
 
               <label className="text-sm font-semibold text-gray-700">
                 Queen year
+                <span className="ml-1 text-xs font-normal text-gray-500">
+                  — leave blank if unknown
+                </span>
                 <input
                   type="number"
                   min="1900"
                   max="2200"
                   value={queenYear}
+                  placeholder="e.g. 2025"
                   onChange={(event) => {
-                    setQueenYear(event.target.value);
+                    const value = event.target.value;
+                    setQueenYear(value);
+                    if (!value) setYearEstimated(false);
                     if (
                       actionId !== "retrospective" &&
                       markingColour !== "Unmarked" &&
                       markingColour !== "Unknown"
                     ) {
-                      setMarkingColour(getQueenColourForYear(event.target.value));
+                      setMarkingColour(getQueenColourForYear(value));
                     }
                   }}
                   className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
@@ -1081,30 +1087,40 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
                       <option>Other</option>
                     </select>
                   </label>
-                  <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm font-semibold text-gray-700">
-                    <input
-                      type="checkbox"
-                      checked={yearEstimated}
-                      disabled={!queenYear}
-                      onChange={(event) => setYearEstimated(event.target.checked)}
-                    />
-                    Queen year is estimated
-                  </label>
+                  {queenYear ? (
+                    <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm font-semibold text-gray-700">
+                      <input
+                        type="checkbox"
+                        checked={yearEstimated}
+                        onChange={(event) => setYearEstimated(event.target.checked)}
+                      />
+                      This Queen year is estimated
+                    </label>
+                  ) : (
+                    <div className="rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-600">
+                      No Queen year will be recorded.
+                    </div>
+                  )}
                 </div>
               </div>
             ) : null}
 
             {actionId === "edit" ? (
               <div className="space-y-4">
-                <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm font-semibold text-gray-700">
-                  <input
-                    type="checkbox"
-                    checked={yearEstimated}
-                    disabled={!queenYear}
-                    onChange={(event) => setYearEstimated(event.target.checked)}
-                  />
-                  Queen year is estimated
-                </label>
+                {queenYear ? (
+                  <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm font-semibold text-gray-700">
+                    <input
+                      type="checkbox"
+                      checked={yearEstimated}
+                      onChange={(event) => setYearEstimated(event.target.checked)}
+                    />
+                    This Queen year is estimated
+                  </label>
+                ) : (
+                  <div className="rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm text-gray-600">
+                    No Queen year is recorded.
+                  </div>
+                )}
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <label className="text-sm font-semibold text-gray-700">
                   Emerged
