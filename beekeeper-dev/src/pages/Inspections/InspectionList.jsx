@@ -977,6 +977,25 @@ if (ids.length > 0) {
                     </div>
                   )}
 
+                  {!savedQueen &&
+                    !savedQueenProcess &&
+                    Array.isArray(insp.queen_status) &&
+                    (insp.queen_status.includes("Seen") || insp.queen_status.includes("Eggs")) && (
+                      <div className="mb-2 rounded-lg border border-blue-200 bg-blue-50 p-3">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-blue-800">
+                          Queen evidence at this inspection
+                        </p>
+                        <p className="mt-1 text-sm font-semibold text-blue-950">
+                          {insp.queen_status.includes("Seen")
+                            ? "Queen seen"
+                            : "Eggs recorded"}
+                        </p>
+                        <p className="mt-1 text-xs text-gray-700">
+                          No individual Queen record is linked to this inspection yet.
+                        </p>
+                      </div>
+                    )}
+
                   <ActiveVeterinaryTreatments hiveId={insp.hive_id} compact />
 
                   {visibleStatusPills.length > 0 && (
