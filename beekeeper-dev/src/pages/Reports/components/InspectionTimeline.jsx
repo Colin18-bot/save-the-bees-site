@@ -21,9 +21,9 @@ export default function InspectionTimeline({
 
     const process = inspection?.queen_process_snapshot;
     if (process) {
-      return `No confirmed current Queen · ${
-        process.method || process.process_type || "Queen process"
-      }`;
+      return `No individual Queen record linked · ${
+        process.process_type || "Queen process"
+      } active at this inspection`;
     }
 
     const evidence = Array.isArray(inspection?.queen_status)
