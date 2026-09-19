@@ -326,17 +326,17 @@ export default function QueenRecordsReport({
                   <article key={inspection.id} className="break-inside-avoid rounded-lg border border-amber-200 bg-amber-50 p-4">
                     <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
                       <div>
-                        <p className="font-semibold text-amber-950">No confirmed current Queen</p>
+                        <p className="font-semibold text-amber-950">No individual Queen record linked to this inspection</p>
                         <p className="text-sm text-gray-700">
                           {displayHive(inspection.hive_id, inspection.apiary_id)} ·{" "}
-                          {process.method || titleCase(process.process_type, "Queen process")}
+                          {titleCase(process.process_type, "Queen process")} active at this inspection
                         </p>
                       </div>
                       <p className="text-xs font-semibold text-gray-500">Inspection {fmtUK(inspection.date)}</p>
                     </div>
                     <dl className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                       <Field label="Process" value={titleCase(process.process_type, "Queen process")} />
-                      <Field label="Status" value={titleCase(process.status, "Active")} />
+                      <Field label="Recorded process status" value={titleCase(process.status, "Active")} />
                       <Field label="Evidence" value={evidence || "Not recorded"} />
                       <Field label="Started" value={fmtUK(process.started_on)} />
                       <Field label="Next check" value={fmtUK(process.expected_check_on)} />
