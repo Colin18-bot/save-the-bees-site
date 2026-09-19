@@ -148,12 +148,13 @@ export function getQueenSnapshotSummary(snapshot) {
   const year = snapshot.queen_year || "Unknown year";
   const expectedColour = snapshot.expected_colour || getExpectedQueenColour(snapshot.queen_year);
   const actualColour =
-    snapshot.actual_colour || (snapshot.marked ? expectedColour : "Unmarked");
+    snapshot.actual_colour || (snapshot.marked ? expectedColour : "Unknown");
 
   return {
     queenId: snapshot.queen_id || null,
     reference: snapshot.reference || "Queen record",
     year,
+    yearEstimated: Boolean(snapshot.queen_year_estimated),
     expectedColour: expectedColour || "Not recorded",
     actualColour: actualColour || "Not recorded",
     marked: snapshot.marked,
@@ -180,4 +181,22 @@ export function getQueenSnapshotLabel(snapshot) {
     : `${queen.year} unmarked queen`;
 
   return `${queen.reference} — ${description}`;
+}
+
+
+export function getQueenProcessSnapshotSummary(snapshot) {
+  if (!snapshot || typeof snapshot !== "object") return null;
+
+  return {
+    processId: snapshot.process_id || null,
+    queenId: snapshot.queen_id || null,
+    processType: snapshot.process_type || "queen_process",
+    method: snapshot.method || "Queen transition",
+    status: titleCase(snapshot.status, "Active"),
+    startedOn: snapshot.started_on || null,
+    expectedCheckOn: snapshot.expected_check_on || null,
+    endedOn: snapshot.ended_on || null,
+    notes: snapshot.notes || "",
+    inspectionDate: snapshot.inspection_date || null,
+  };
 }
