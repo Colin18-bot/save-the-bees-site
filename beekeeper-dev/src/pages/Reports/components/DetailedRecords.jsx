@@ -27,6 +27,38 @@ export default function DetailedRecords({
     </div>
   );
 
+  const queenContext = (inspection) => {
+    const snapshot = inspection?.queen_snapshot;
+    if (snapshot) {
+      const year = snapshot.queen_year
+        ? `${snapshot.queen_year}${snapshot.queen_year_estimated ? " (estimated)" : ""}`
+        : "Unknown year";
+      const marking = snapshot.actual_colour
+        ? String(snapshot.actual_colour)
+        : snapshot.marked
+          ? String(snapshot.expected_colour || "marking recorded")
+          : "marking unknown";
+
+      return `${snapshot.reference || "Queen record"} · ${year} · ${marking} · ${snapshot.status || "status not recorded"}`;
+    }
+
+    const process = inspection?.queen_process_snapshot;
+    if (process) {
+      return `No confirmed current Queen · ${
+        process.method || process.process_type || "Queen process"
+      } · ${process.status || "active"}`;
+    }
+
+    const evidence = Array.isArray(inspection?.queen_status)
+      ? inspection.queen_status
+      : [];
+    if (evidence.some((value) => ["Seen", "Eggs"].includes(value))) {
+      return "Queen evidence recorded; individual Queen identity not linked";
+    }
+
+    return "";
+  };
+
   return (
     <section className="space-y-4">
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm print-card">
@@ -128,7 +160,8 @@ export default function DetailedRecords({
                <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
                 <h4 className="font-bold text-gray-900">Queen & Brood Assessment</h4>
                 <div className="mt-3 grid grid-cols-1 gap-3">
-                  <Field label="Queen status" value={valueWithOther(x.queen_status, x.queen_status_other)} />
+                  <Field label="Queen evidence" value={valueWithOther(x.queen_status, x.queen_status_other)} />
+                  <Field label="Queen record at inspection" value={queenContext(x)} />
                   <Field label="Queen cells" value={x.queen_cells} />
                   <Field label="Approx. frames of brood" value={x.frames_of_brood} />
                   <Field label="Brood pattern" value={x.brood_pattern} />
