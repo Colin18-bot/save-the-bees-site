@@ -5,6 +5,7 @@ import { supabase } from "../../services/supabase";
 import {
   formatQueenRecordDate,
   getQueenSnapshotSummary,
+  getQueenProcessSnapshotSummary,
 } from "../../services/inspectionQueen";
 import { reverseGeocode } from "../../utils/geocode";
 import {
@@ -161,6 +162,7 @@ const EditInspection = () => {
 
   const [originalPhotos, setOriginalPhotos] = useState([]);
   const [queenSnapshot, setQueenSnapshot] = useState(null);
+  const [queenProcessSnapshot, setQueenProcessSnapshot] = useState(null);
   const [originalInspectionContext, setOriginalInspectionContext] = useState({
     hive_id: "",
     date: "",
@@ -314,6 +316,7 @@ const EditInspection = () => {
       const data = inspRes.data || {};
       const loadedPhotos = Array.isArray(data.photos) ? data.photos : [];
       setQueenSnapshot(data.queen_snapshot || null);
+      setQueenProcessSnapshot(data.queen_process_snapshot || null);
 
       let dateStr = data.date || "";
       if (dateStr) {
@@ -939,6 +942,7 @@ const handleDelete = async () => {
   const canAddMorePhotos = totalPhotos < 3;
 
   const savedQueen = getQueenSnapshotSummary(queenSnapshot);
+  const savedQueenProcess = getQueenProcessSnapshotSummary(queenProcessSnapshot);
   const queenContextChanged =
     formData.hive_id !== originalInspectionContext.hive_id ||
     formData.date !== originalInspectionContext.date;
@@ -1079,10 +1083,10 @@ const handleDelete = async () => {
           </div>
         </div>
 
-        {/* Queen snapshot saved with this inspection */}
+        {/* Queen context saved with this inspection */}
         <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
           <p className="font-semibold text-blue-950">
-            Queen record saved with this inspection
+            Queen context saved with this inspection
           </p>
 
           {queenContextChanged ? (
@@ -1091,8 +1095,9 @@ const handleDelete = async () => {
                 Hive or inspection date changed
               </p>
               <p className="mt-1 text-sm text-amber-900">
-                When you save, HiveTag will resolve the Queen that applies to the
-                revised hive and date and create a new historical snapshot.
+                When you save, HiveTag will resolve the Queen or Queenless process
+                that applies to the revised hive and date and create the appropriate
+                historical snapshot.
               </p>
             </div>
           ) : savedQueen ? (
@@ -1101,12 +1106,14 @@ const handleDelete = async () => {
                 {savedQueen.reference}
               </p>
               <p className="mt-1 text-sm text-gray-700">
-                {savedQueen.year}{" "}
-                {String(savedQueen.actualColour || "unmarked").toLowerCase()}
-                {String(savedQueen.actualColour || "").toLowerCase() ===
-                "unmarked"
+                {savedQueen.year}
+                {savedQueen.yearEstimated ? " (estimated)" : ""}{" "}
+                {String(savedQueen.actualColour || "unknown").toLowerCase()}
+                {String(savedQueen.actualColour || "").toLowerCase() === "unmarked"
                   ? " queen"
-                  : "-marked queen"}
+                  : String(savedQueen.actualColour || "").toLowerCase() === "unknown"
+                    ? " marking"
+                    : "-marked queen"}
               </p>
               <div className="mt-2 grid gap-1 text-xs text-gray-600 sm:grid-cols-2">
                 <p>Status: {savedQueen.status}</p>
@@ -1128,17 +1135,30 @@ const handleDelete = async () => {
                 </p>
               </div>
               <p className="mt-3 text-xs text-blue-900">
-                This is the historical Queen information stored when the
-                inspection was saved. Later edits to the live Queen record do not
-                change it.
+                This is the historical Queen information saved for this inspection.
+                A later Queen lifecycle change will not overwrite it.
               </p>
+            </div>
+          ) : savedQueenProcess ? (
+            <div className="mt-3 rounded-lg border border-amber-300 bg-amber-50 p-3">
+              <p className="font-semibold text-amber-950">
+                No confirmed current Queen
+              </p>
+              <p className="mt-1 text-sm text-gray-700">
+                {savedQueenProcess.method} • {savedQueenProcess.status}
+              </p>
+              {savedQueenProcess.notes ? (
+                <p className="mt-2 text-xs text-gray-600">
+                  {savedQueenProcess.notes}
+                </p>
+              ) : null}
             </div>
           ) : (
             <div className="mt-3 rounded-lg border border-gray-200 bg-white p-3">
               <p className="text-sm text-gray-700">
-                No Queen snapshot is currently attached. Saving this inspection
-                will link the Queen that applies to its hive and date, where one
-                is recorded.
+                No Queen or Queenless-process snapshot is currently attached. If
+                Queen information is entered later with a date that applies to this
+                inspection, HiveTag can fill the missing context automatically.
               </p>
             </div>
           )}

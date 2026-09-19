@@ -95,7 +95,7 @@ export async function getInspectionQueenContext(hiveId, inspectionDate) {
     const { data: queen, error } = await supabase
       .from("queens")
       .select(
-        "id, reference, queen_year, marked, actual_colour, clipped, origin, supplier, emerged_on, introduced_on, status, notes"
+        "id, reference, queen_year, queen_year_estimated, marked, actual_colour, clipped, origin, supplier, emerged_on, introduced_on, status, notes"
       )
       .eq("id", assignment.queen_id)
       .maybeSingle();
@@ -105,12 +105,13 @@ export async function getInspectionQueenContext(hiveId, inspectionDate) {
     if (queen) {
       const expectedColour = getExpectedQueenColour(queen.queen_year);
       const actualColour =
-        queen.actual_colour || (queen.marked ? expectedColour : "Unmarked");
+        queen.actual_colour || (queen.marked ? expectedColour : "Unknown");
 
       currentQueen = {
         id: queen.id,
         reference: queen.reference || "Queen record",
         year: queen.queen_year,
+        yearEstimated: Boolean(queen.queen_year_estimated),
         expectedColour,
         actualColour: actualColour || "Not recorded",
         marked: Boolean(queen.marked),
@@ -148,12 +149,13 @@ export function getQueenSnapshotSummary(snapshot) {
   const year = snapshot.queen_year || "Unknown year";
   const expectedColour = snapshot.expected_colour || getExpectedQueenColour(snapshot.queen_year);
   const actualColour =
-    snapshot.actual_colour || (snapshot.marked ? expectedColour : "Unmarked");
+    snapshot.actual_colour || (snapshot.marked ? expectedColour : "Unknown");
 
   return {
     queenId: snapshot.queen_id || null,
     reference: snapshot.reference || "Queen record",
     year,
+    yearEstimated: Boolean(snapshot.queen_year_estimated),
     expectedColour: expectedColour || "Not recorded",
     actualColour: actualColour || "Not recorded",
     marked: snapshot.marked,
@@ -180,4 +182,22 @@ export function getQueenSnapshotLabel(snapshot) {
     : `${queen.year} unmarked queen`;
 
   return `${queen.reference} — ${description}`;
+}
+
+
+export function getQueenProcessSnapshotSummary(snapshot) {
+  if (!snapshot || typeof snapshot !== "object") return null;
+
+  return {
+    processId: snapshot.process_id || null,
+    queenId: snapshot.queen_id || null,
+    processType: snapshot.process_type || "queen_process",
+    method: snapshot.method || "Queen transition",
+    status: titleCase(snapshot.status, "Active"),
+    startedOn: snapshot.started_on || null,
+    expectedCheckOn: snapshot.expected_check_on || null,
+    endedOn: snapshot.ended_on || null,
+    notes: snapshot.notes || "",
+    inspectionDate: snapshot.inspection_date || null,
+  };
 }

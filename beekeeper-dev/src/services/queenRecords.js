@@ -73,7 +73,7 @@ const buildCurrentQueen = ({ queen, assignment, inspections, events }) => {
   if (!queen || !assignment) return null;
 
   const expectedColour = getQueenColourForYear(queen.queen_year);
-  const actualColour = queen.actual_colour || (queen.marked ? expectedColour : "Unmarked");
+  const actualColour = queen.actual_colour || (queen.marked ? expectedColour : "Unknown");
 
   const lastSeenInspection = inspections
     .filter((inspection) => inspection.queen_id === queen.id && queenWasSeen(inspection))
@@ -96,9 +96,10 @@ const buildCurrentQueen = ({ queen, assignment, inspections, events }) => {
     id: queen.id,
     reference: queen.reference || "Queen record",
     year: queen.queen_year || "Unknown",
+    yearEstimated: Boolean(queen.queen_year_estimated),
     expectedColour,
     actualColour,
-    marked: yesNo(queen.marked),
+    marked: actualColour === "Unknown" ? "Not recorded" : yesNo(queen.marked),
     clipped: yesNo(queen.clipped),
     origin: queen.origin || "Not recorded",
     supplier: queen.supplier || "Not recorded",
@@ -117,9 +118,13 @@ const buildCurrentQueen = ({ queen, assignment, inspections, events }) => {
 
 const buildPreviousQueen = ({ assignment, queen, assignments, hivesById }) => {
   const expectedColour = getQueenColourForYear(queen?.queen_year);
-  const actualColour = queen?.actual_colour || (queen?.marked ? expectedColour : "Unmarked");
+  const actualColour = queen?.actual_colour || (queen?.marked ? expectedColour : "Unknown");
   const markedSummary =
-    actualColour === "Unmarked" ? "unmarked" : `${String(actualColour).toLowerCase()}-marked`;
+    actualColour === "Unmarked"
+      ? "unmarked"
+      : actualColour === "Unknown"
+        ? "marking unknown"
+        : `${String(actualColour).toLowerCase()}-marked`;
 
   const activeLocation = currentAssignmentForQueen(assignments, assignment.queen_id);
   const currentHiveName = activeLocation ? hivesById.get(activeLocation.hive_id)?.name : null;
@@ -129,7 +134,7 @@ const buildPreviousQueen = ({ assignment, queen, assignments, hivesById }) => {
     queenId: assignment.queen_id,
     reference: queen?.reference || "Previous Queen",
     period: `${formatQueenDate(assignment.started_on)} – ${formatQueenDate(assignment.ended_on)}`,
-    summary: `${queen?.queen_year || "Unknown year"} ${markedSummary} queen`,
+    summary: `${queen?.queen_year || "Unknown year"}${queen?.queen_year_estimated ? " (estimated)" : ""} ${markedSummary} queen`,
     outcome: titleCase(assignment.end_reason || queen?.status, "Ended"),
     currentLocation: currentHiveName
       ? `Currently assigned to ${currentHiveName}`
@@ -358,8 +363,8 @@ export const createQueenForHive = ({
     p_mode: mode,
     p_reference: reference || null,
     p_queen_year: queenYear ? Number(queenYear) : null,
-    p_marked: markingColour !== "Unmarked",
-    p_actual_colour: markingColour || "Unmarked",
+    p_marked: !["Unmarked", "Unknown"].includes(markingColour),
+    p_actual_colour: markingColour === "Unknown" ? null : markingColour || "Unmarked",
     p_clipped: clipped === "yes" ? true : clipped === "no" ? false : null,
     p_origin: origin || null,
     p_supplier: supplier || null,
@@ -367,10 +372,35 @@ export const createQueenForHive = ({
     p_expected_check_on: expectedCheckOn || null,
   });
 
+
+export const establishRetrospectiveQueen = ({
+  hiveId,
+  eventDate,
+  reference,
+  queenYear,
+  yearEstimated,
+  markingColour,
+  origin,
+  evidence,
+  notes,
+}) =>
+  callQueenRpc("queen_establish_retrospective", {
+    p_hive_id: hiveId,
+    p_event_date: eventDate || null,
+    p_reference: reference || null,
+    p_queen_year: queenYear ? Number(queenYear) : null,
+    p_year_estimated: Boolean(yearEstimated),
+    p_marking: markingColour || "Unknown",
+    p_origin: origin || "Unknown",
+    p_evidence: evidence || "Existing records",
+    p_notes: notes || null,
+  });
+
 export const updateQueenDetails = ({
   queenId,
   reference,
   queenYear,
+  yearEstimated,
   markingColour,
   clipped,
   origin,
@@ -384,8 +414,9 @@ export const updateQueenDetails = ({
     p_queen_id: queenId,
     p_reference: reference || null,
     p_queen_year: queenYear ? Number(queenYear) : null,
-    p_marked: markingColour !== "Unmarked",
-    p_actual_colour: markingColour || "Unmarked",
+    p_queen_year_estimated: Boolean(yearEstimated),
+    p_marked: !["Unmarked", "Unknown"].includes(markingColour),
+    p_actual_colour: markingColour === "Unknown" ? null : markingColour || "Unmarked",
     p_clipped: clipped === "yes" ? true : clipped === "no" ? false : null,
     p_origin: origin || null,
     p_supplier: supplier || null,

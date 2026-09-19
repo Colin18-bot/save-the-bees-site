@@ -9,6 +9,68 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.5.6",
+  released_at: "2026-09-19T10:54:00Z",
+
+  summary:
+    "Improved Queen Records so inspections and Queen history now stay aligned when records are entered days later. Existing Queens can be established retrospectively without inventing unknown details, Queenless/transition context is visible against inspections, eggs can complete an active Queen transition, and historical inspection snapshots remain protected from later Queen changes. Queen printing, reports and exports have also been updated to match the new history rules.",
+
+  added: [
+    "Added **Establish Existing Queen** for colonies whose Queen history predates HiveTag Queen Records.",
+    "Added support for an unknown Queen year, an explicitly **estimated** Queen year, unknown marking and unknown origin in retrospective Queen records.",
+    "Added automatic reconciliation so a Queen established later with an earlier effective date can fill a previously missing Queen snapshot on qualifying inspections.",
+    "Added dated **Queenless / transition context** to the Inspection List and Edit Inspection where a Queen process applied on the inspection date.",
+    "Added a clear **Queen evidence at this inspection** state for older inspections containing Queen Seen or Eggs where no individual Queen record is linked.",
+    "Added inspection-driven Queen lifecycle progress: Eggs can confirm an assigned Queen as **Laying** and complete an active introduction/replacement transition on the inspection date.",
+    "Added inspection Queen context to Reports Centre printing and exports, including assigned Queen snapshots, Queenless/transition context and unlinked Queen evidence."
+  ],
+
+  changed: [
+    "Queen lifecycle dates now follow the dated event/first-known date rather than the day the information happened to be entered into HiveTag.",
+    "Queenless Colony Plans can be backdated when an earlier dated Queenless event is entered later.",
+    "A saved historical Queen snapshot is protected from later lifecycle changes; a newer inspection can show Laying while an earlier inspection continues to show the earlier status such as Accepted.",
+    "Queen Seen on its own records physical observation and contributes to Last Seen history but does not automatically prove that the Queen is laying.",
+    "Once an assigned Queen is already established as Laying, later inspections containing Eggs remain normal inspection evidence and do not create repeated lifecycle events.",
+    "Retrospective Queen establishment is disabled when a hive already has a current Queen, preventing duplicate current assignments.",
+    "Queen year forms now say to leave the year blank if it is unknown; the **This Queen year is estimated** option is only relevant when a year has been entered.",
+    "Reports and exports now distinguish **marking unknown** from a Queen known to be unmarked, and show when a Queen year is estimated.",
+    "The combined Excel workbook now uses **Inspection Queen Context** for the historical Queen/Queenless/evidence worksheet.",
+    "Updated Help guidance for retrospective Queens, delayed record entry, inspection evidence, Queenless context, historical snapshot protection and reporting.",
+    "Sidebar release numbering has been updated to **HiveTag 1.5.6**."
+  ],
+
+  fixed: [
+    "Fixed Queen information failing to appear on an existing inspection when the Queen record was added or backdated after the inspection had already been saved.",
+    "Fixed Queenless Colony Plans appearing blank in the Inspection List because only individual Queen snapshots were previously displayed.",
+    "Fixed edited inspection Queen evidence not invoking the Queen lifecycle update when Eggs were added later.",
+    "Fixed an inspection-driven Queen update so the new inspection receives the resulting Laying snapshot without rewriting older inspection snapshots.",
+    "Fixed retrospective Queen forms preloading an existing current Queen and then failing with a duplicate-assignment error.",
+    "Fixed unknown retrospective Queen marking being displayed or exported as Unmarked.",
+    "Fixed report output that omitted Queenless/transition and unlinked Queen-evidence history from inspection Queen context.",
+    "Fixed Queen create/edit client parameters so existing Queen workflows continue to call the correct database functions after estimated-year support was added."
+  ],
+
+  removed: [],
+
+  security: [
+    "Restricted internal Queen reconciliation and historical-state helper functions from direct anonymous/authenticated client execution; they remain available only through the controlled lifecycle and database-trigger paths.",
+    "Retrospective Queen creation continues to require an authenticated Premium member and verifies hive ownership before changing Queen history."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Queen Records", to: "/queens" },
+    { label: "Inspections", to: "/inspections" },
+    { label: "Reports Centre", to: "/reports/print" },
+    { label: "Help", to: "/help" }
+  ],
+
+  known_issues: [
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
+{
   version: "1.5.5",
   released_at: "2026-09-14T20:15:00Z",
 

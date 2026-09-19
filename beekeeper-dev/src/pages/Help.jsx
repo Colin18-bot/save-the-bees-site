@@ -99,9 +99,11 @@ export default function Help() {
                       Queen Records <Badge tone="blue">Premium</Badge>
                     </dt>
                     <dd className="text-gray-700">
-                      Track current and previous Queens, splits and transfers, colony unions, swarm
-                      outcomes, introductions, Queenless Colony Plans and home-reared Queen progress.
-                      Retained records remain <Badge tone="amber">Read only</Badge> after downgrade.
+                      Track current and previous Queens, retrospective/baseline Queen records, splits
+                      and transfers, colony unions, swarm outcomes, introductions, Queenless Colony
+                      Plans and home-reared Queen progress. Inspection evidence can also progress a
+                      linked Queen where appropriate. Retained records remain{" "}
+                      <Badge tone="amber">Read only</Badge> after downgrade.
                     </dd>
                   </div>
 
@@ -393,7 +395,7 @@ export default function Help() {
                       <li>
                         <strong>Queen Records and colony lifecycle management</strong>: current and
                         previous Queens, assignments, introductions, splits, transfers, colony
-                        unions, swarm outcomes, Queenless Colony Plans, events and inspection snapshots
+                        unions, swarm outcomes, Queenless Colony Plans, events and protected inspection Queen context
                       </li>
                       <li>
                         <strong>Reports &amp; Exports</strong>, including multi-section printable
@@ -1149,20 +1151,70 @@ export default function Help() {
               </div>
 
               <div className="mt-4 rounded-xl border bg-white p-4">
-                <h3 className="font-semibold">Add a Queen vs Introduce a Queen</h3>
+                <h3 className="font-semibold">Establish Existing Queen, Add a Queen and Introduce a Queen</h3>
                 <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
                   <li>
-                    <strong>Add a Queen</strong> establishes the <em>first known Queen record</em> for
-                    a hive that has no earlier Queen history.
+                    <strong>Establish Existing Queen</strong> is for an existing colony where Queen
+                    Records were not available when the Queen first became established. Record only
+                    what is genuinely known: the Queen year can be left blank, a known year can be
+                    marked as estimated, and marking/origin can remain unknown.
                   </li>
                   <li>
-                    Once a hive already has Queen history, do not replace that history by creating a
-                    new first-Queen record. Use <strong>Introduce a Queen</strong> or the appropriate
-                    lifecycle action instead.
+                    Use the <strong>Queen first known in this hive</strong> date as the earliest date
+                    you can reasonably support for that individual Queen. HiveTag can then fill a
+                    previously missing Queen snapshot on inspections covered by that assignment.
                   </li>
                   <li>
-                    HiveTag locks actions that do not fit the selected hive&apos;s current state. This
-                    helps prevent duplicate or contradictory Queen records.
+                    <strong>Add a Queen</strong> establishes the first known Queen record through the
+                    normal Queen workflow where the Queen&apos;s details are being recorded directly.
+                  </li>
+                  <li>
+                    <strong>Introduce a Queen</strong> is used when a new Queen is deliberately
+                    introduced and should be followed through acceptance/laying progress.
+                  </li>
+                  <li>
+                    HiveTag locks retrospective establishment where a current Queen already exists,
+                    helping prevent duplicate or contradictory current Queen assignments.
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-4 rounded-xl border bg-white p-4">
+                <h3 className="font-semibold">Inspections and Queen Records work together</h3>
+                <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                  <li>
+                    You can record the inspection first and update Queen Records later. If a Queen is
+                    subsequently established with an effective date that covers an earlier inspection,
+                    HiveTag can automatically fill the missing Queen snapshot for that inspection.
+                  </li>
+                  <li>
+                    A saved historical Queen snapshot is protected. Later Queen changes do not rewrite
+                    the Queen status previously stored against an older inspection.
+                  </li>
+                  <li>
+                    <strong>Queen seen</strong> records evidence that the assigned Queen was physically
+                    seen and contributes to her Last Seen history, but seeing her alone does not prove
+                    that she is laying.
+                  </li>
+                  <li>
+                    <strong>Eggs</strong> on an inspection can confirm a linked Queen as laying. Where
+                    that Queen is still in an active introduction/replacement transition, HiveTag
+                    closes that transition on the inspection date and stores the resulting
+                    <strong>Laying</strong> status on that inspection.
+                  </li>
+                  <li>
+                    Once a Queen is already established as laying, later inspections containing eggs
+                    remain normal inspection evidence and do not create repeated lifecycle events.
+                  </li>
+                  <li>
+                    Where an older inspection records <strong>Queen seen</strong> or
+                    <strong>Eggs</strong> but no individual Queen can be identified, the Inspection
+                    List and reports can show the evidence without inventing a historical Queen.
+                  </li>
+                  <li>
+                    Where a Queenless/transition process applied on the inspection date, the
+                    Inspection List and reports show that dated colony context instead of leaving the
+                    Queen area blank.
                   </li>
                 </ul>
               </div>
@@ -1306,8 +1358,15 @@ export default function Help() {
                     Queen or lifecycle entry linked to that Calendar event.
                   </li>
                   <li>
-                    Inspection snapshots preserve the Queen information associated with an inspection
-                    at the time it was recorded.
+                    Inspection Queen snapshots preserve the Queen information that applies to that
+                    inspection date. If Queen information was missing when the inspection was first
+                    saved, a later backdated Queen record can fill that missing snapshot; once stored,
+                    later lifecycle changes do not rewrite it.
+                  </li>
+                  <li>
+                    Printed Queen reports now include assigned-Queen snapshots, Queenless/transition
+                    context and unlinked Queen evidence such as Queen seen or Eggs, while keeping the
+                    current Queen position separate from historical inspection context.
                   </li>
                   <li>
                     In Queen Reports, the <strong>current Queen position</strong> is shown separately
@@ -2129,7 +2188,9 @@ export default function Help() {
                     </li>
                     <li>
                       Queen reporting separates the current Queen position from historical
-                      assignments, events, processes and inspection snapshots.
+                      assignments, events, processes and inspection Queen context. Historical
+                      context can include an assigned Queen snapshot, a Queenless/transition process,
+                      or unlinked inspection evidence such as Queen seen or Eggs.
                     </li>
                     <li>
                       Inspection photographs can be opened in the full gallery and downloaded.
@@ -2145,7 +2206,7 @@ export default function Help() {
                       Download a complete Excel workbook. Queen workbooks can contain{" "}
                       <strong>Queens</strong>, <strong>Queen Assignments</strong>,{" "}
                       <strong>Queen Events</strong>, <strong>Queen Processes</strong> and{" "}
-                      <strong>Queen Snapshots</strong> worksheets.
+                      <strong>Inspection Queen Context</strong> worksheets.
                     </li>
                     <li>
                       Print all selected sections as one report or save the browser print output as a

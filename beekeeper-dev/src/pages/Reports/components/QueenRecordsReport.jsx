@@ -25,6 +25,33 @@ const expectedColour = (year) => {
   return "Not recorded";
 };
 
+const queenYearText = (record = {}) =>
+  record.queen_year
+    ? `${record.queen_year}${record.queen_year_estimated ? " (estimated)" : ""}`
+    : "Unknown year";
+
+const actualColourText = (record = {}) => {
+  if (record.actual_colour) return record.actual_colour;
+  if (record.marked) return expectedColour(record.queen_year);
+  return "Unknown";
+};
+
+const markedText = (record = {}) => {
+  if (!record.actual_colour && !record.marked) return "Not recorded";
+  return yesNo(record.marked);
+};
+
+const queenEvidenceText = (inspection = {}) => {
+  const values = Array.isArray(inspection.queen_status)
+    ? inspection.queen_status
+    : inspection.queen_status
+      ? [inspection.queen_status]
+      : [];
+  return values
+    .filter((value) => ["seen", "eggs"].includes(String(value).trim().toLowerCase()))
+    .join(", ");
+};
+
 const Field = ({ label, value }) => (
   <div className="print-field">
     <dt className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</dt>
@@ -94,10 +121,7 @@ export default function QueenRecordsReport({
         ) : (
           <div className="space-y-4">
             {currentRows.map(({ hive, currentQueen, currentAssignment, activeProcess, lastSeen }) => {
-              const actual = currentQueen
-                ? currentQueen.actual_colour ||
-                  (currentQueen.marked ? expectedColour(currentQueen.queen_year) : "Unmarked")
-                : "";
+              const actual = currentQueen ? actualColourText(currentQueen) : "";
 
               return (
                 <article key={hive.id} className="break-inside-avoid rounded-xl border border-gray-200 p-4">
@@ -127,8 +151,17 @@ export default function QueenRecordsReport({
                     <>
                       <dl className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <Field label="Queen reference" value={currentQueen.reference || "Queen record"} />
-                        <Field label="Year / colour" value={`${currentQueen.queen_year || "Unknown year"} ${String(actual || "Not recorded").toLowerCase()}${String(actual).toLowerCase() === "unmarked" ? " queen" : "-marked queen"}`} />
-                        <Field label="Marked" value={yesNo(currentQueen.marked)} />
+                        <Field
+                          label="Year / colour"
+                          value={`${queenYearText(currentQueen)} · ${
+                            String(actual).toLowerCase() === "unknown"
+                              ? "marking unknown"
+                              : String(actual).toLowerCase() === "unmarked"
+                                ? "unmarked queen"
+                                : `${String(actual).toLowerCase()}-marked queen`
+                          }`}
+                        />
+                        <Field label="Marked" value={markedText(currentQueen)} />
                         <Field label="Clipped" value={yesNo(currentQueen.clipped)} />
                         <Field label="Origin" value={currentQueen.origin} />
                         <Field label="Supplier" value={currentQueen.supplier} />
@@ -244,31 +277,90 @@ export default function QueenRecordsReport({
         )}
       </Section>
 
-      <Section title="Inspection Queen Snapshots" subtitle="Historical Queen information stored with inspections. Later edits to the live Queen record do not alter these snapshots.">
+      <Section
+        title="Inspection Queen Context"
+        subtitle="Historical Queen, Queenless-process and Queen-evidence information for each inspection. Once a dated Queen snapshot is stored, later lifecycle changes do not rewrite that earlier inspection."
+      >
         {!snapshots.length ? (
-          <Empty>No inspections in this report period contain a saved Queen snapshot.</Empty>
+          <Empty>No inspections in this report period contain Queen context or Queen evidence.</Empty>
         ) : (
           <div className="space-y-3">
             {snapshots.map((inspection) => {
-              const snapshot = inspection.queen_snapshot || {};
-              const expected = snapshot.expected_colour || expectedColour(snapshot.queen_year);
-              const actual = snapshot.actual_colour || (snapshot.marked ? expected : "Unmarked");
+              const snapshot = inspection.queen_snapshot || null;
+              const process = inspection.queen_process_snapshot || null;
+              const evidence = queenEvidenceText(inspection);
+
+              if (snapshot) {
+                const actual = actualColourText(snapshot);
+                return (
+                  <article key={inspection.id} className="break-inside-avoid rounded-lg border border-blue-100 bg-blue-50 p-4">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <p className="font-semibold text-gray-900">{snapshot.reference || "Queen record"}</p>
+                        <p className="text-sm text-gray-700">
+                          {displayHive(inspection.hive_id, inspection.apiary_id)} · {queenYearText(snapshot)} ·{" "}
+                          {String(actual).toLowerCase() === "unknown"
+                            ? "marking unknown"
+                            : String(actual).toLowerCase() === "unmarked"
+                              ? "unmarked queen"
+                              : `${String(actual).toLowerCase()}-marked queen`}
+                        </p>
+                      </div>
+                      <p className="text-xs font-semibold text-gray-500">Inspection {fmtUK(inspection.date)}</p>
+                    </div>
+                    <dl className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                      <Field label="Status" value={titleCase(snapshot.status, "Not recorded")} />
+                      <Field label="Evidence" value={evidence || "Not recorded"} />
+                      <Field label="Origin" value={snapshot.origin} />
+                      <Field label="Marked" value={markedText(snapshot)} />
+                      <Field label="Clipped" value={yesNo(snapshot.clipped)} />
+                      <Field label="Assigned from" value={fmtUK(snapshot.assignment_started_on)} />
+                    </dl>
+                    {snapshot.notes && <p className="mt-3 text-sm text-blue-950">{snapshot.notes}</p>}
+                  </article>
+                );
+              }
+
+              if (process) {
+                return (
+                  <article key={inspection.id} className="break-inside-avoid rounded-lg border border-amber-200 bg-amber-50 p-4">
+                    <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <p className="font-semibold text-amber-950">No individual Queen record linked to this inspection</p>
+                        <p className="text-sm text-gray-700">
+                          {displayHive(inspection.hive_id, inspection.apiary_id)} ·{" "}
+                          {titleCase(process.process_type, "Queen process")} active at this inspection
+                        </p>
+                      </div>
+                      <p className="text-xs font-semibold text-gray-500">Inspection {fmtUK(inspection.date)}</p>
+                    </div>
+                    <dl className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                      <Field label="Process" value={titleCase(process.process_type, "Queen process")} />
+                      <Field label="Recorded process status" value={titleCase(process.status, "Active")} />
+                      <Field label="Evidence" value={evidence || "Not recorded"} />
+                      <Field label="Started" value={fmtUK(process.started_on)} />
+                      <Field label="Next check" value={fmtUK(process.expected_check_on)} />
+                    </dl>
+                    {process.notes && <p className="mt-3 text-sm text-amber-950">{process.notes}</p>}
+                  </article>
+                );
+              }
+
               return (
-                <article key={inspection.id} className="break-inside-avoid rounded-lg border border-blue-100 bg-blue-50 p-4">
+                <article key={inspection.id} className="break-inside-avoid rounded-lg border border-gray-200 bg-gray-50 p-4">
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                      <p className="font-semibold text-gray-900">{snapshot.reference || "Queen record"}</p>
-                      <p className="text-sm text-gray-700">{displayHive(inspection.hive_id, inspection.apiary_id)} · {snapshot.queen_year || "Unknown year"} {String(actual).toLowerCase()}{String(actual).toLowerCase() === "unmarked" ? " queen" : "-marked queen"}</p>
+                      <p className="font-semibold text-gray-900">Queen evidence only</p>
+                      <p className="text-sm text-gray-700">
+                        {displayHive(inspection.hive_id, inspection.apiary_id)} · No individual Queen record linked
+                      </p>
                     </div>
                     <p className="text-xs font-semibold text-gray-500">Inspection {fmtUK(inspection.date)}</p>
                   </div>
-                  <dl className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                    <Field label="Status" value={titleCase(snapshot.status, "Not recorded")} />
-                    <Field label="Origin" value={snapshot.origin} />
-                    <Field label="Clipped" value={yesNo(snapshot.clipped)} />
-                    <Field label="Assigned from" value={fmtUK(snapshot.assignment_started_on)} />
+                  <dl className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <Field label="Evidence" value={evidence || "Not recorded"} />
+                    <Field label="Queen identity" value="Not recorded" />
                   </dl>
-                  {snapshot.notes && <p className="mt-3 text-sm text-blue-950">{snapshot.notes}</p>}
                 </article>
               );
             })}

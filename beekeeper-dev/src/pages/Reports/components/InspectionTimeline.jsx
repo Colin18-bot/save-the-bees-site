@@ -13,6 +13,29 @@ export default function InspectionTimeline({
   insightClasses,
   generatedAt,
 }) {
+  const queenContext = (inspection) => {
+    const snapshot = inspection?.queen_snapshot;
+    if (snapshot) {
+      return `${snapshot.reference || "Queen record"} · ${snapshot.status || "status not recorded"}`;
+    }
+
+    const process = inspection?.queen_process_snapshot;
+    if (process) {
+      return `No individual Queen record linked · ${
+        process.process_type || "Queen process"
+      } active at this inspection`;
+    }
+
+    const evidence = Array.isArray(inspection?.queen_status)
+      ? inspection.queen_status
+      : [];
+    if (evidence.some((value) => ["Seen", "Eggs"].includes(value))) {
+      return "Evidence only · Queen identity not linked";
+    }
+
+    return "";
+  };
+
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm print-card">
       <div>
@@ -85,10 +108,17 @@ export default function InspectionTimeline({
                     </td>
 
                     <td className="px-3 py-4">
-                      {valueWithOther(
-                        inspection.queen_status,
-                        inspection.queen_status_other
-                      )}
+                      <div>
+                        {valueWithOther(
+                          inspection.queen_status,
+                          inspection.queen_status_other
+                        )}
+                      </div>
+                      {queenContext(inspection) ? (
+                        <div className="mt-1 text-xs text-gray-500">
+                          {queenContext(inspection)}
+                        </div>
+                      ) : null}
                     </td>
 
                     <td className="px-3 py-4">
