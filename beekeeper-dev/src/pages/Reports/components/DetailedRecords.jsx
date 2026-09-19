@@ -44,9 +44,11 @@ export default function DetailedRecords({
 
     const process = inspection?.queen_process_snapshot;
     if (process) {
-      return `No individual Queen record linked to this inspection · ${
-        process.process_type || "Queen process"
-      } active at this inspection · recorded status: ${process.status || "active"}`;
+      const processLabel = String(process.process_type || "Queen process")
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (letter) => letter.toUpperCase());
+
+      return `No individual Queen record linked to this inspection · ${processLabel} active at this inspection · recorded status: ${process.status || "active"}`;
     }
 
     const evidence = Array.isArray(inspection?.queen_status)
