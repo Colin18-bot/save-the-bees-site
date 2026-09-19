@@ -46,6 +46,32 @@ const expectedQueenColour = (year) => {
   return "";
 };
 
+const queenYearText = (year, estimated) =>
+  year ? `${year}${estimated ? " (estimated)" : ""}` : "Unknown";
+
+const queenActualColour = (record = {}) => {
+  if (record.actual_colour) return record.actual_colour;
+  if (record.marked) return expectedQueenColour(record.queen_year) || "Unknown";
+  return "Unknown";
+};
+
+const queenMarkedText = (record = {}) => {
+  if (!record.actual_colour && !record.marked) return "Not recorded";
+  return yesNo(record.marked);
+};
+
+const inspectionQueenEvidence = (inspection = {}) => {
+  const values = Array.isArray(inspection.queen_status)
+    ? inspection.queen_status
+    : inspection.queen_status
+      ? [inspection.queen_status]
+      : [];
+
+  return values.filter((value) =>
+    ["seen", "eggs"].includes(String(value).trim().toLowerCase())
+  );
+};
+
 const downloadCSV = (filename, rows, headers) => {
   const headerLine = headers.map(esc).join(",");
   const body = rows.map((row) => headers.map((header) => esc(row[header])).join(",")).join("\n");
@@ -189,14 +215,16 @@ export function buildQueenRows({ queenReport, apiaryName, displayHive }) {
     const hiveRow = queenReport.currentByHive?.find((row) => row.hive?.id === hiveId);
     const apiaryId = hiveRow?.hive?.apiary_id || "";
     const expectedColour = expectedQueenColour(queen.queen_year);
-    const actualColour = queen.actual_colour || (queen.marked ? expectedColour : "Unmarked");
+    const actualColour = queenActualColour(queen);
 
     return {
       reference: queen.reference || "Queen record",
       queen_year: queen.queen_year || "",
+      queen_year_estimated: queen.queen_year_estimated ? "Yes" : "No",
+      queen_year_display: queenYearText(queen.queen_year, queen.queen_year_estimated),
       expected_colour: expectedColour,
       actual_colour: actualColour || "",
-      marked: yesNo(queen.marked),
+      marked: queenMarkedText(queen),
       clipped: yesNo(queen.clipped),
       origin: queen.origin || "",
       supplier: queen.supplier || "",
@@ -285,28 +313,102 @@ export function buildQueenProcessRows({ queenReport, apiaryName, displayHive }) 
 
 export function buildQueenSnapshotRows({ queenReport, apiaryName, displayHive }) {
   return (queenReport.snapshots || []).map((inspection) => {
-    const snapshot = inspection.queen_snapshot || {};
-    const expectedColour = snapshot.expected_colour || expectedQueenColour(snapshot.queen_year);
-    const actualColour = snapshot.actual_colour || (snapshot.marked ? expectedColour : "Unmarked");
+    const snapshot = inspection.queen_snapshot || null;
+    const process = inspection.queen_process_snapshot || null;
+    const evidence = inspectionQueenEvidence(inspection);
+
+    if (snapshot) {
+      const expectedColour =
+        snapshot.expected_colour || expectedQueenColour(snapshot.queen_year);
+      const actualColour = queenActualColour(snapshot);
+
+      return {
+        context_type: "Assigned Queen",
+        inspection_date: fmtDate(inspection.date || snapshot.inspection_date),
+        apiary: apiaryName.get(inspection.apiary_id) || "",
+        hive: displayHive(inspection.hive_id, inspection.apiary_id),
+        evidence: evidence.join("; "),
+        queen_reference: snapshot.reference || "Queen record",
+        queen_year: snapshot.queen_year || "",
+        queen_year_estimated: snapshot.queen_year_estimated ? "Yes" : "No",
+        queen_year_display: queenYearText(
+          snapshot.queen_year,
+          snapshot.queen_year_estimated
+        ),
+        expected_colour: expectedColour || "",
+        actual_colour: actualColour || "",
+        marked: queenMarkedText(snapshot),
+        clipped: yesNo(snapshot.clipped),
+        origin: snapshot.origin || "",
+        supplier: snapshot.supplier || "",
+        status: titleCase(snapshot.status, ""),
+        process_type: "",
+        method: "",
+        process_status: "",
+        process_started_on: "",
+        expected_check_on: "",
+        assignment_started_on: fmtDate(snapshot.assignment_started_on),
+        assignment_start_reason: titleCase(snapshot.assignment_start_reason, ""),
+        notes: snapshot.notes || "",
+        inspection_archived: inspection.archived_at ? "Yes" : "No",
+      };
+    }
+
+    if (process) {
+      return {
+        context_type: "Queenless / transition",
+        inspection_date: fmtDate(inspection.date || process.inspection_date),
+        apiary: apiaryName.get(inspection.apiary_id) || "",
+        hive: displayHive(inspection.hive_id, inspection.apiary_id),
+        evidence: evidence.join("; "),
+        queen_reference: "",
+        queen_year: "",
+        queen_year_estimated: "",
+        queen_year_display: "",
+        expected_colour: "",
+        actual_colour: "",
+        marked: "",
+        clipped: "",
+        origin: "",
+        supplier: "",
+        status: "",
+        process_type: titleCase(process.process_type, "Queen process"),
+        method: process.method || "",
+        process_status: titleCase(process.status, "Active"),
+        process_started_on: fmtDate(process.started_on),
+        expected_check_on: fmtDate(process.expected_check_on),
+        assignment_started_on: "",
+        assignment_start_reason: "",
+        notes: process.notes || "",
+        inspection_archived: inspection.archived_at ? "Yes" : "No",
+      };
+    }
 
     return {
-      inspection_date: fmtDate(inspection.date || snapshot.inspection_date),
+      context_type: "Inspection evidence only",
+      inspection_date: fmtDate(inspection.date),
       apiary: apiaryName.get(inspection.apiary_id) || "",
       hive: displayHive(inspection.hive_id, inspection.apiary_id),
-      queen_reference: snapshot.reference || "Queen record",
-      queen_year: snapshot.queen_year || "",
-      expected_colour: expectedColour || "",
-      actual_colour: actualColour || "",
-      marked: yesNo(snapshot.marked),
-      clipped: yesNo(snapshot.clipped),
-      origin: snapshot.origin || "",
-      supplier: snapshot.supplier || "",
-      emerged_on: fmtDate(snapshot.emerged_on),
-      introduced_on: fmtDate(snapshot.introduced_on),
-      status: titleCase(snapshot.status, ""),
-      assignment_started_on: fmtDate(snapshot.assignment_started_on),
-      assignment_start_reason: titleCase(snapshot.assignment_start_reason, ""),
-      notes: snapshot.notes || "",
+      evidence: evidence.join("; "),
+      queen_reference: "",
+      queen_year: "",
+      queen_year_estimated: "",
+      queen_year_display: "",
+      expected_colour: "",
+      actual_colour: "",
+      marked: "",
+      clipped: "",
+      origin: "",
+      supplier: "",
+      status: "",
+      process_type: "",
+      method: "",
+      process_status: "",
+      process_started_on: "",
+      expected_check_on: "",
+      assignment_started_on: "",
+      assignment_start_reason: "",
+      notes: "",
       inspection_archived: inspection.archived_at ? "Yes" : "No",
     };
   });
@@ -314,7 +416,7 @@ export function buildQueenSnapshotRows({ queenReport, apiaryName, displayHive })
 
 export function downloadQueensCSV({ queenRows }) {
   const headers = [
-    "reference", "queen_year", "expected_colour", "actual_colour", "marked", "clipped",
+    "reference", "queen_year", "queen_year_estimated", "queen_year_display", "expected_colour", "actual_colour", "marked", "clipped",
     "origin", "supplier", "emerged_on", "introduced_on", "status", "current_apiary",
     "current_hive", "current_since", "notes", "archived", "created",
   ];
@@ -405,7 +507,7 @@ export function downloadCombinedCSV({
   addWorksheet("Queen Assignments", queenAssignmentRows);
   addWorksheet("Queen Events", queenEventRows);
   addWorksheet("Queen Processes", queenProcessRows);
-  addWorksheet("Queen Snapshots", queenSnapshotRows);
+  addWorksheet("Inspection Queen Context", queenSnapshotRows);
   addWorksheet("NFC Tags", nfcRows);
 
   if (workbook.SheetNames.length === 0) {
