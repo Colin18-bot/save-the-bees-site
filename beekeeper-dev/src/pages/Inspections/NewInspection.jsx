@@ -904,8 +904,9 @@ const NewInspection = () => {
                   Queen record for this inspection
                 </p>
                 <p className="mt-1 text-xs text-amber-900">
-                  HiveTag will save an immutable Queen snapshot with this inspection.
-                  Later changes to Queen Records will not alter it.
+                  HiveTag saves the Queen context that applies to this inspection date. Once a
+                  Queen snapshot exists it is protected; if no Queen was linked at the time, a
+                  later backdated Queen record can safely fill the missing snapshot.
                 </p>
               </div>
 
@@ -921,15 +922,20 @@ const NewInspection = () => {
                   {queenContext.currentQueen.reference}
                 </p>
                 <p className="mt-1 text-sm text-gray-700">
-                  {queenContext.currentQueen.year || "Unknown year"}{" "}
+                  {queenContext.currentQueen.year || "Unknown year"}
+                  {queenContext.currentQueen.yearEstimated ? " (estimated)" : ""}{" "}
                   {String(
-                    queenContext.currentQueen.actualColour || "unmarked"
+                    queenContext.currentQueen.actualColour || "unknown"
                   ).toLowerCase()}
                   {String(
                     queenContext.currentQueen.actualColour || ""
                   ).toLowerCase() === "unmarked"
                     ? " queen"
-                    : "-marked queen"}
+                    : String(
+                          queenContext.currentQueen.actualColour || ""
+                        ).toLowerCase() === "unknown"
+                      ? " marking"
+                      : "-marked queen"}
                 </p>
                 <p className="mt-1 text-xs text-gray-600">
                   Current since{" "}
