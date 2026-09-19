@@ -967,6 +967,18 @@ const NewInspection = () => {
           </div>
         )}
 
+        {!queenContext.currentQueen &&
+          (formData.queen_status.includes("Seen") || formData.queen_status.includes("Eggs")) && (
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-950">
+              <p className="font-semibold">Queen evidence recorded, but no Queen record is linked yet.</p>
+              <p className="mt-1">
+                Save the inspection normally. You can establish the Queen later using the inspection
+                date or another reliable first-known date, and HiveTag will automatically reconcile
+                any missing inspection Queen snapshot without overwriting an existing historical Queen.
+              </p>
+            </div>
+          )}
+
         {/* Colony Behaviour */}
         <div>
           <label className="block font-semibold">Colony Behaviour</label>
