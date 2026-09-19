@@ -95,7 +95,7 @@ export async function getInspectionQueenContext(hiveId, inspectionDate) {
     const { data: queen, error } = await supabase
       .from("queens")
       .select(
-        "id, reference, queen_year, marked, actual_colour, clipped, origin, supplier, emerged_on, introduced_on, status, notes"
+        "id, reference, queen_year, queen_year_estimated, marked, actual_colour, clipped, origin, supplier, emerged_on, introduced_on, status, notes"
       )
       .eq("id", assignment.queen_id)
       .maybeSingle();
@@ -105,12 +105,13 @@ export async function getInspectionQueenContext(hiveId, inspectionDate) {
     if (queen) {
       const expectedColour = getExpectedQueenColour(queen.queen_year);
       const actualColour =
-        queen.actual_colour || (queen.marked ? expectedColour : "Unmarked");
+        queen.actual_colour || (queen.marked ? expectedColour : "Unknown");
 
       currentQueen = {
         id: queen.id,
         reference: queen.reference || "Queen record",
         year: queen.queen_year,
+        yearEstimated: Boolean(queen.queen_year_estimated),
         expectedColour,
         actualColour: actualColour || "Not recorded",
         marked: Boolean(queen.marked),
