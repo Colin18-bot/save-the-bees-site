@@ -714,12 +714,20 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
   const [origin, setOrigin] = useState(
     currentQueen?.origin || (actionId === "retrospective" ? "Unknown" : "Purchased mated queen")
   );
+  const currentQueenYear =
+    currentQueen?.year && Number.isFinite(Number(currentQueen.year))
+      ? String(currentQueen.year)
+      : "";
   const [queenYear, setQueenYear] = useState(
     actionId === "retrospective"
       ? ""
-      : String(currentQueen?.year || new Date().getFullYear())
+      : actionId === "edit"
+        ? currentQueenYear
+        : String(new Date().getFullYear())
   );
-  const [yearEstimated, setYearEstimated] = useState(false);
+  const [yearEstimated, setYearEstimated] = useState(
+    actionId === "edit" ? Boolean(currentQueen?.yearEstimated) : false
+  );
   const [evidence, setEvidence] = useState("Existing records");
   const [markingColour, setMarkingColour] = useState(
     actionId === "retrospective"
@@ -831,6 +839,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
           mode: actionId,
           reference,
           queenYear,
+          yearEstimated,
           markingColour,
           clipped,
           origin,
@@ -1086,7 +1095,17 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
             ) : null}
 
             {actionId === "edit" ? (
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="space-y-4">
+                <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white px-3 py-3 text-sm font-semibold text-gray-700">
+                  <input
+                    type="checkbox"
+                    checked={yearEstimated}
+                    disabled={!queenYear}
+                    onChange={(event) => setYearEstimated(event.target.checked)}
+                  />
+                  Queen year is estimated
+                </label>
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <label className="text-sm font-semibold text-gray-700">
                   Emerged
                   <input
@@ -1114,6 +1133,7 @@ const ActionForm = ({ actionId, hive, allHives, onClose, onSaved }) => {
                     className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2"
                   />
                 </label>
+                </div>
               </div>
             ) : null}
           </div>
