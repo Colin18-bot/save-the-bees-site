@@ -5,6 +5,7 @@ export default function TasksLogbook({
   todos,
   logbook,
   feedingRows,
+  includeFeeding,
   nfcHives,
   isPremium,
   includeNfc,
@@ -144,6 +145,7 @@ export default function TasksLogbook({
         )}
       </div>
 
+      {includeFeeding && (
       <div className="rounded-2xl border border-purple-200 bg-purple-50 p-5 shadow-sm print-card">
         <h2 className="text-xl font-bold text-purple-950">
           Feeding
@@ -196,6 +198,7 @@ export default function TasksLogbook({
           </div>
         )}
       </div>
+      )}
 
       {isPremium && includeNfc && (
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm print-card">
