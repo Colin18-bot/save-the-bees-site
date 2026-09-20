@@ -108,6 +108,122 @@ export function buildApiaryRows({ apiaries }) {
   }));
 }
 
+const feedingLabel = (value, other = "") => {
+  if (value === "other") return other || "Other";
+  const labels = {
+    sugar_syrup: "Sugar syrup – homemade",
+    invert_syrup: "Prepared / invert bee syrup",
+    fondant: "Fondant / bee candy",
+    pollen_protein: "Pollen / protein feed",
+    frames_of_stores: "Frame(s) of stores",
+    dry_sugar: "Dry sugar / candy board",
+  };
+  return labels[value] || titleCase(value, "Feed");
+};
+
+const feedingSubtypeLabel = (value, other = "") => {
+  if (!value) return "";
+  if (value === "other") return other || "Other";
+  return titleCase(value);
+};
+
+const feedingStrengthLabel = (value) => {
+  const labels = {
+    thin: "Thin / spring",
+    medium: "Medium",
+    thick: "Thick / autumn stores",
+    custom: "Custom recipe",
+    not_recorded: "Not recorded",
+  };
+  return labels[value] || titleCase(value, "");
+};
+
+const feedingUnitLabel = (value, other = "") => {
+  const labels = {
+    litres: "L",
+    millilitres: "ml",
+    kilograms: "kg",
+    grams: "g",
+    patties: "patties",
+    blocks: "blocks",
+    frames: "frames",
+    other: other || "",
+  };
+  return labels[value] || value || "";
+};
+
+const feedingReasonLabel = (value, other = "") => {
+  if (value === "other") return other || "Other";
+  if (value === "not_recorded") return "";
+  return titleCase(value, "");
+};
+
+export function buildFeedingRows({
+  feeding,
+  relatedInspectionLabel,
+  formatWeatherForDisplay = (value) => value || "",
+}) {
+  return (feeding || []).map((row) => {
+    const record = Array.isArray(row.feeding_records)
+      ? row.feeding_records[0]
+      : row.feeding_records || {};
+
+    const numericAmount = Number(row.amount);
+    const amountText = Number.isFinite(numericAmount)
+      ? numericAmount.toLocaleString("en-GB", { maximumFractionDigits: 3 })
+      : row.amount ?? "";
+    const unit = feedingUnitLabel(row.amount_unit, row.amount_unit_other);
+
+    const recipe =
+      record.recipe_sugar_kg && record.recipe_water_litres
+        ? `${record.recipe_sugar_kg} kg sugar + ${record.recipe_water_litres} L water`
+        : record.syrup_strength === "custom" && record.syrup_custom_water_per_kg
+          ? `${record.syrup_custom_water_per_kg} L water per 1 kg sugar`
+          : "";
+
+    return {
+      record_key: row.id,
+      date: fmtDate(record.fed_on || row.created_at),
+      apiary: record.apiary_name_snapshot || "",
+      hive: row.hive_name_snapshot || "",
+      feed_type: feedingLabel(record.feed_type, record.feed_type_other),
+      feed_detail:
+        feedingSubtypeLabel(record.feed_subtype, record.feed_subtype_other) ||
+        record.product_name ||
+        "",
+      product_description: record.product_name || "",
+      syrup_strength: feedingStrengthLabel(record.syrup_strength),
+      recipe,
+      amount: `${amountText} ${unit}`.trim(),
+      amount_value: row.amount ?? "",
+      amount_unit: unit,
+      reason: feedingReasonLabel(record.reason, record.reason_other),
+      weather: formatWeatherForDisplay(record.weather),
+      notes: record.notes || "",
+      related_inspection: relatedInspectionLabel(row),
+    };
+  });
+}
+
+export function downloadFeedingCSV({ feedingRows }) {
+  const headers = [
+    "date",
+    "apiary",
+    "hive",
+    "feed_type",
+    "feed_detail",
+    "product_description",
+    "syrup_strength",
+    "recipe",
+    "amount",
+    "reason",
+    "weather",
+    "notes",
+    "related_inspection",
+  ];
+  downloadCSV(`feeding-${ukStamp()}.csv`, feedingRows, headers);
+}
+
 export function buildHiveRows({ hives, apiaryName }) {
   return hives.map((hive) => ({
     name: hive.name || "",
@@ -448,6 +564,7 @@ export function downloadCombinedCSV({
   inspectionRows,
   todos,
   logbook,
+  feedingRows = [],
   nfcHives,
   queenRows = [],
   queenAssignmentRows = [],
@@ -522,6 +639,7 @@ export function downloadCombinedCSV({
   addWorksheet("Inspections", inspectionRows);
   addWorksheet("Tasks", taskRows);
   addWorksheet("Logbook", logbookRows);
+  addWorksheet("Feeding", feedingRows);
   addWorksheet("Queens", queenRows);
   addWorksheet("Queen Assignments", queenAssignmentRows);
   addWorksheet("Queen Events", queenEventRows);
