@@ -48,6 +48,7 @@ import VeterinaryMedicinePrint from "../pages/VeterinaryMedicines/VeterinaryMedi
 
 import FeedingList from "../pages/Feeding/FeedingList.jsx";
 import NewFeeding from "../pages/Feeding/NewFeeding.jsx";
+import EditFeeding from "../pages/Feeding/EditFeeding.jsx";
 
 import QueenRecords from "../pages/Queens/QueenRecords.jsx";
 
@@ -217,6 +218,7 @@ function AppRoutes() {
       <Route path="/veterinary-medicines/print" element={<ProtectedRoute><VeterinaryMedicinePrint /></ProtectedRoute>} />
       <Route path="/feeding" element={<PremiumGuarded><FeedingList /></PremiumGuarded>} />
       <Route path="/feeding/new" element={<PremiumGuarded><NewFeeding /></PremiumGuarded>} />
+      <Route path="/feeding/:id/edit" element={<PremiumGuarded><EditFeeding /></PremiumGuarded>} />
       <Route path="/queens" element={<Guarded><QueenRecords /></Guarded>} />
       <Route path="/inspections/new" element={<Guarded><NewInspection /></Guarded>} />
       <Route path="/inspections/:id/edit" element={<Guarded><EditInspection /></Guarded>} />
