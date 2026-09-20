@@ -1094,6 +1094,7 @@ export default function PrintReport() {
             todos={todos}
             logbook={logbook}
             feeding={feeding}
+            includeFeeding={effectiveIncludeFeeding}
             nfcHives={nfcHives}
             queenCount={queenRows.length}
             isPremium={isPremium}
@@ -1181,6 +1182,7 @@ export default function PrintReport() {
             todos={todos}
             logbook={logbook}
             feedingRows={feedingRows}
+            includeFeeding={effectiveIncludeFeeding}
             nfcHives={nfcHives}
             queenRows={queenRows}
             isPremium={isPremium}
