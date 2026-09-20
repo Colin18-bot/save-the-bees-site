@@ -224,6 +224,7 @@ export async function loadReportData({
   includeInspections,
   includeTodos,
   includeLogbook,
+  includeFeeding,
   includeQueens,
   includeNfc,
   includeArchived,
@@ -238,6 +239,7 @@ export async function loadReportData({
   let inspectionsData = [];
   let todosData = [];
   let logbookData = [];
+  let feedingData = [];
   let nfcData = [];
 
   let apiaryQuery = supabase.from("apiaries").select("*");
@@ -428,6 +430,35 @@ export async function loadReportData({
     logbookData = Array.from(map.values());
   }
 
+  if (isPremium && includeFeeding) {
+    let query = supabase
+      .from("feeding_record_hives")
+      .select(
+        "id,feeding_record_id,hive_id,hive_name_snapshot,amount,amount_unit,amount_unit_other,inspection_id,created_at,feeding_records!inner(id,apiary_id,apiary_name_snapshot,fed_on,feed_type,feed_type_other,feed_subtype,feed_subtype_other,product_name,syrup_strength,syrup_custom_water_per_kg,recipe_sugar_kg,recipe_water_litres,reason,reason_other,weather,weather_code,notes)"
+      );
+
+    if (hiveId) query = query.eq("hive_id", hiveId);
+    else if (apiaryId) query = query.eq("feeding_records.apiary_id", apiaryId);
+    if (fromDate) query = query.gte("feeding_records.fed_on", fromDate);
+    if (toDate) query = query.lte("feeding_records.fed_on", toDate);
+
+    const { data, error } = await query.order("created_at", { ascending: false });
+    if (error) throw error;
+
+    feedingData = [...(data || [])].sort((left, right) => {
+      const leftRecord = Array.isArray(left.feeding_records)
+        ? left.feeding_records[0]
+        : left.feeding_records;
+      const rightRecord = Array.isArray(right.feeding_records)
+        ? right.feeding_records[0]
+        : right.feeding_records;
+
+      return String(rightRecord?.fed_on || right.created_at || "").localeCompare(
+        String(leftRecord?.fed_on || left.created_at || "")
+      );
+    });
+  }
+
   if (isPremium && includeNfc) {
     let query = supabase
       .from("hives")
@@ -475,6 +506,7 @@ export async function loadReportData({
     inspections: inspectionsData,
     todos: todosData,
     logbook: logbookData,
+    feeding: feedingData,
     nfcHives: nfcData,
     inspectionById: inspectionLookup,
     queenReport,
