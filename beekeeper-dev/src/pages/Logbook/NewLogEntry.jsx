@@ -4,7 +4,6 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 
 const LOG_TYPES = [
-  "Fed Bees",
   "Mite Assessment",
   "Winter Prep.",
   "Dead Hive",
@@ -128,7 +127,6 @@ useEffect(() => {
   if (!inspectionId && !prefillApiaryId && !prefillHiveId && !preset) return;
 
   const presetMap = {
-    feeding: "Fed Bees",
     swarm: "Other",
     colony: "Other",
     disease: "Other",
