@@ -4,16 +4,15 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import { archiveItem, humaniseSupabaseError } from "../../services/actions";
 
-// The choices offered for NEW/retargeted Logbook entries.
-// Treatment and Requeen are retained only when editing an existing legacy entry.
+// The choices offered for current Logbook entries.
+// Historical specialist categories remain available only when editing an existing legacy entry.
 const LOG_TYPES = [
-  "Fed Bees",
   "Mite Assessment",
   "Winter Prep.",
   "Dead Hive",
   "Harvesting",
 ];
-const LEGACY_LOG_TYPES = ["Treatment", "Requeen"];
+const LEGACY_LOG_TYPES = ["Fed Bees", "Treatment", "Requeen"];
 
 // Extract { bucket, path } from a Supabase public URL like:
 // https://.../storage/v1/object/public/<bucket>/<path>
@@ -446,8 +445,8 @@ const filteredInspections = (inspections || []).filter(
 
           {LEGACY_LOG_TYPES.includes(formData.log_type) && (
             <p className="mt-2 text-xs text-amber-800">
-              This historical Logbook category is being preserved. New treatment records belong
-              in Veterinary Medicines and new queen records belong in Queen Records.
+              This historical Logbook category is being preserved. New specialist records should
+              be entered in the relevant HiveTag feature.
             </p>
           )}
 
