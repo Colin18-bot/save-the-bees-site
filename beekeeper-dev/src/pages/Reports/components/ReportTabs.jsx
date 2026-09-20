@@ -7,6 +7,7 @@ export default function ReportTabs({
   includeInspections,
   includeTodos,
   includeLogbook,
+  includeFeeding,
   includeQueens,
 }) {
   const tabs = [
@@ -19,7 +20,7 @@ export default function ReportTabs({
           ["photos", "Photos"],
         ]
       : []),
-    ...(includeTodos || includeLogbook ? [["tasks", "Activity"]] : []),
+    ...(includeTodos || includeLogbook || includeFeeding ? [["tasks", "Activity"]] : []),
     ...(includeQueens ? [["queens", "Queen Records"]] : []),
   ];
 
