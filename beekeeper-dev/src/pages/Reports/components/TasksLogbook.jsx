@@ -4,6 +4,7 @@ import PrintFooter from "./PrintFooter";
 export default function TasksLogbook({
   todos,
   logbook,
+  feedingRows,
   nfcHives,
   isPremium,
   includeNfc,
@@ -139,6 +140,59 @@ export default function TasksLogbook({
                 </div>
               );
             })}
+          </div>
+        )}
+      </div>
+
+      <div className="rounded-2xl border border-purple-200 bg-purple-50 p-5 shadow-sm print-card">
+        <h2 className="text-xl font-bold text-purple-950">
+          Feeding
+        </h2>
+
+        <p className="mt-1 text-sm text-purple-800">
+          Structured Feeding records included within the selected report period.
+        </p>
+
+        {feedingRows.length === 0 ? (
+          <p className="mt-3 text-purple-700">
+            No matching Feeding records.
+          </p>
+        ) : (
+          <div className="mt-4 overflow-x-auto">
+            <table className="min-w-full text-sm">
+              <thead>
+                <tr className="border-b border-purple-200 text-left text-purple-900">
+                  <th className="py-2 pr-3">Date</th>
+                  <th className="py-2 pr-3">Apiary / Hive</th>
+                  <th className="py-2 pr-3">Feed</th>
+                  <th className="py-2 pr-3">Amount</th>
+                  <th className="py-2 pr-3">Reason / notes</th>
+                  <th className="py-2 pr-3">Related inspection</th>
+                </tr>
+              </thead>
+              <tbody>
+                {feedingRows.map((row) => (
+                  <tr key={row.record_key} className="border-b border-purple-100 align-top">
+                    <td className="whitespace-nowrap py-2 pr-3">{row.date}</td>
+                    <td className="py-2 pr-3">
+                      <p className="font-semibold text-gray-900">{row.apiary || "Apiary not set"}</p>
+                      <p className="text-xs text-gray-500">{row.hive || "Hive not set"}</p>
+                    </td>
+                    <td className="py-2 pr-3">
+                      <strong>{row.feed_type || "Feed"}</strong>
+                      {row.feed_detail && <><br /><span className="text-gray-600">{row.feed_detail}</span></>}
+                      {row.syrup_strength && <><br /><span className="text-gray-600">{row.syrup_strength}</span></>}
+                    </td>
+                    <td className="py-2 pr-3">{row.amount}</td>
+                    <td className="py-2 pr-3">
+                      {row.reason || "—"}
+                      {row.notes && <><br /><span className="text-gray-600">{row.notes}</span></>}
+                    </td>
+                    <td className="py-2 pr-3">{row.related_inspection || "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
