@@ -9,6 +9,7 @@ const PremiumRequired = () => {
   const from = params.get("from") || "";
   const isVeterinaryMedicinePrint =
     from === "veterinary-medicine-printing" || from.includes("/veterinary-medicines/print");
+  const isFeeding = from === "feeding" || from.includes("/feeding");
 
   const contextMessage =
     from === "hive-health"
@@ -17,7 +18,9 @@ const PremiumRequired = () => {
         ? "Queen Records are available with HiveTag Premium. Keep complete queen histories, record introductions, splits, transfers, requeening and status changes, and follow each queen throughout the colony's history."
         : isVeterinaryMedicinePrint
           ? "Veterinary medicine record keeping is available on both Free and Premium. The dedicated Veterinary Medicine Print / PDF register is a Premium feature. Your medicine, treatment, completion and disposal records remain available on the Free plan."
-          : "";
+          : isFeeding
+            ? "Structured Feeding is a HiveTag Premium feature. Record feed actually given to one, several or all hives, use per-hive quantities, link Feeding to inspections, use the sugar-syrup recipe helper and include Feeding in your Dashboard and reports."
+            : "";
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -32,9 +35,9 @@ const PremiumRequired = () => {
 
         <p className="text-gray-700 mb-2">
           Upgrade to HiveTag Premium to unlock intelligent Hive Health,
-          complete Queen Records, professional reporting, veterinary medicine
-          Print / PDF, business tools, NFC hive tags, premium beekeeping guides
-          and advanced colony management features.
+          complete Queen Records, structured Feeding records, professional reporting,
+          veterinary medicine Print / PDF, business tools, NFC hive tags, premium
+          beekeeping guides and advanced colony management features.
         </p>
 
         {contextMessage && (
@@ -56,6 +59,11 @@ const PremiumRequired = () => {
             splits, transfers, requeening and status changes
           </li>
           <li>Seasonal Guide and premium beekeeping guides</li>
+          <li>
+            Structured Feeding with per-hive quantities, optional inspection links,
+            contextual guidance and sugar-syrup recipe helper
+          </li>
+          <li>Feeding Dashboard, print report, CSV and complete Excel export support</li>
           <li>Professional reports and CSV exports</li>
           <li>Veterinary Medicine dedicated Print / PDF register</li>
           <li>Inventory, sales, expenses and Profit &amp; Loss</li>
