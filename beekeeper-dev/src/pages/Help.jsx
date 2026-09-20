@@ -169,9 +169,29 @@ export default function Help() {
                  <div>
                   <dt className="font-medium text-gray-900">Tasks</dt>
                   <dd className="text-gray-700">
-                    Record follow-up jobs, due dates and actions for a specific hive or for{" "}
-                    <strong>All Hives</strong> within an apiary, with an optional related
-                    inspection for individual-hive tasks.
+                    Plan work you still need to do, with a due date for a specific hive or for{" "}
+                    <strong>All Hives</strong> within an apiary. Tasks are reminders only: a
+                    Requeen or Treatment task does not update Queen Records or Veterinary Medicines.
+                  </dd>
+                </div>
+
+                <div>
+                  <dt className="font-medium text-gray-900">
+                    Veterinary Medicines <Badge tone="green">Included</Badge>
+                  </dt>
+                  <dd className="text-gray-700">
+                    Record medicines and treatments that were actually administered, including
+                    treatment dates, completion or removal details and medicine history. Use this
+                    rather than a general Logbook entry when recording treatment information.
+                  </dd>
+                </div>
+
+                <div>
+                  <dt className="font-medium text-gray-900">Logbook</dt>
+                  <dd className="text-gray-700">
+                    Keep general notes and observations that do not belong in a structured HiveTag
+                    feature. Logbook notes do not update Queen Records, Veterinary Medicines or
+                    Hive Health.
                   </dd>
                 </div>
                 </dl>
@@ -278,18 +298,18 @@ export default function Help() {
                   the colony follows a Queenless Colony Plan.
                 </li>
                 <li>
-                  <strong>Tasks</strong> — scheduled actions with a due date and status for a
-                  specific hive or for <strong>All Hives</strong> in an apiary. Tasks for an
-                  individual hive can optionally link to a related inspection from that same
-                  hive. Tasks recorded for <strong>All Hives</strong> cannot link to an
-                  inspection because inspections belong to one specific hive.
+                  <strong>Tasks</strong> — things you plan to do in the future, with a due date and
+                  status for a specific hive or for <strong>All Hives</strong> in an apiary. Tasks
+                  are reminders and do not themselves update structured Queen or Veterinary
+                  Medicine records. Individual-hive tasks can optionally link to a related
+                  inspection; <strong>All Hives</strong> tasks cannot.
                 </li>
                 <li>
-                  <strong>Logbook</strong> — free-form notes for a specific hive or for{" "}
-                  <strong>All Hives</strong> in an apiary. Entries for an individual hive can
-                  optionally link to a related inspection. Entries recorded for{" "}
-                  <strong>All Hives</strong> cannot link to an inspection because inspections
-                  belong to one specific hive.
+                  <strong>Logbook</strong> — general notes and observations for a specific hive or
+                  for <strong>All Hives</strong> in an apiary. Logbook entries do not update Queen
+                  Records, Veterinary Medicines, Hive Health or other structured HiveTag records.
+                  Individual-hive entries can optionally link to a related inspection;{" "}
+                  <strong>All Hives</strong> entries cannot.
                 </li>
                 <li>
                   <strong>Archive</strong> — hides items from active lists without deleting them. On
@@ -911,6 +931,18 @@ export default function Help() {
                       <strong>Task List</strong> or from the <strong>Edit Task</strong> page.
                     </li>
                     <li>
+                      <strong>Tasks are reminders:</strong> choosing <strong>Requeen</strong>,{" "}
+                      <strong>Treatment</strong> or another task type records work to be done. When
+                      the work is actually carried out, use the relevant structured feature such as{" "}
+                      <strong>Queen Records</strong> or <strong>Veterinary Medicines</strong> where
+                      applicable.
+                    </li>
+                    <li>
+                      On the <strong>New Task</strong> page, first choose a task type and then enter
+                      the task details. The Queen marking-colour reference is shown only when{" "}
+                      <strong>Requeen</strong> is selected.
+                    </li>
+                    <li>
                       The Calendar brings together dated records across your apiaries and hives,
                       including inspections, tasks, logbook entries and Queen lifecycle activity.{" "}
                       <Badge>Free</Badge>
@@ -972,14 +1004,26 @@ export default function Help() {
                 <h3 className="font-semibold">Logbook</h3>
 
                 <p className="text-gray-700">
-                  Use the Logbook for free-form notes, observations and management records
-                  that do not need to be recorded as a full inspection. Entries can be
-                  recorded for a specific hive or for <strong>All Hives</strong> within an
-                  apiary. The Logbook includes list/grid views, Apiary and Hive filters, and
-                  a photo <strong>lightbox</strong> on click. <Badge>Free</Badge>
+                  Use the Logbook for general notes and observations that do not belong in a
+                  structured HiveTag feature. Entries can be recorded for a specific hive or for{" "}
+                  <strong>All Hives</strong> within an apiary. Logbook entries do not update{" "}
+                  <strong>Queen Records</strong>, <strong>Veterinary Medicines</strong>,{" "}
+                  <strong>Hive Health</strong> or other structured records. The Logbook includes
+                  list/grid views, Apiary and Hive filters, and a photo <strong>lightbox</strong>{" "}
+                  on click. <Badge>Free</Badge>
                 </p>
 
-                <ul className="list-disc pl-6 mt-2 space-y-1">
+                <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
+                  <strong>Where should Queen and treatment information go?</strong>{" "}
+                  New <strong>Requeen</strong> and <strong>Treatment</strong> categories are no
+                  longer offered when creating a Logbook entry. Record treatment information in{" "}
+                  <strong>Veterinary Medicines</strong> and use <strong>Queen Records</strong>{" "}
+                  <Badge tone="blue">Premium</Badge> for structured Queen lifecycle information.
+                  Existing historical Requeen and Treatment Logbook entries are preserved and can
+                  still be edited as legacy entries.
+                </div>
+
+                <ul className="list-disc pl-6 mt-3 space-y-1">
                   <li>
                     <strong>Specific Hive:</strong> choose an Apiary and individual Hive when
                     the record only applies to that colony.
