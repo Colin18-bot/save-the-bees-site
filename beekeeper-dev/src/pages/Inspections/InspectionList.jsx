@@ -14,6 +14,7 @@ import {
 import {
   feedTypeLabel,
   formatAmount,
+  pollenFeedLabel,
   reasonLabel,
   syrupStrengthLabel,
 } from "../Feeding/feedingGuidance";
@@ -384,7 +385,7 @@ useEffect(() => {
       let feedingOnlyQuery = supabase
         .from("feeding_record_hives")
         .select(
-          "id,feeding_record_id,hive_id,hive_name_snapshot,amount,amount_unit,amount_unit_other,inspection_id,created_at,feeding_records!inner(id,apiary_id,apiary_name_snapshot,fed_on,feed_type,feed_type_other,feed_subtype,feed_subtype_other,product_name,syrup_strength,reason,reason_other,weather,weather_code,notes)"
+          "id,feeding_record_id,hive_id,hive_name_snapshot,amount,amount_unit,amount_unit_other,inspection_id,created_at,feeding_records!inner(id,apiary_id,apiary_name_snapshot,fed_on,feed_type,feed_type_other,feed_subtype,feed_subtype_other,product_name,syrup_strength,syrup_custom_water_per_kg,recipe_sugar_kg,recipe_water_litres,reason,reason_other,weather,weather_code,notes)"
         )
         .is("inspection_id", null);
 
@@ -500,7 +501,7 @@ if (ids.length > 0) {
     supabase
       .from("feeding_record_hives")
       .select(
-        "id,inspection_id,feeding_record_id,hive_id,hive_name_snapshot,amount,amount_unit,amount_unit_other,created_at,feeding_records(id,fed_on,feed_type,feed_type_other,syrup_strength,reason,reason_other)"
+        "id,inspection_id,feeding_record_id,hive_id,hive_name_snapshot,amount,amount_unit,amount_unit_other,created_at,feeding_records(id,fed_on,feed_type,feed_type_other,feed_subtype,feed_subtype_other,product_name,syrup_strength,syrup_custom_water_per_kg,recipe_sugar_kg,recipe_water_litres,reason,reason_other,notes)"
       )
       .in("inspection_id", ids)
       .order("created_at", { ascending: false }),
@@ -1007,6 +1008,18 @@ if (ids.length > 0) {
                           · {feedTypeLabel(record.feed_type, record.feed_type_other)}
                         </p>
 
+                        {record.feed_subtype && (
+                          <p className="mt-1 text-xs text-purple-800">
+                            {pollenFeedLabel(record.feed_subtype, record.feed_subtype_other)}
+                          </p>
+                        )}
+
+                        {record.product_name && (
+                          <p className="mt-1 text-xs text-purple-800">
+                            {record.product_name}
+                          </p>
+                        )}
+
                         {record.feed_type === "sugar_syrup" &&
                           record.syrup_strength && (
                             <p className="mt-1 text-xs text-purple-800">
@@ -1019,6 +1032,21 @@ if (ids.length > 0) {
                             {reasonLabel(record.reason, record.reason_other)}
                           </p>
                         )}
+
+                        {record.recipe_sugar_kg && record.recipe_water_litres && (
+                          <p className="mt-1 text-xs text-purple-800">
+                            Recipe: {record.recipe_sugar_kg} kg sugar +{" "}
+                            {record.recipe_water_litres} L water
+                          </p>
+                        )}
+
+                        {record.feed_type === "sugar_syrup" &&
+                          record.syrup_strength === "custom" &&
+                          record.syrup_custom_water_per_kg && (
+                            <p className="mt-1 text-xs text-purple-800">
+                              Custom recipe: {record.syrup_custom_water_per_kg} L water per 1 kg sugar
+                            </p>
+                          )}
 
                         {record.notes && (
                           <p className="mt-2 whitespace-pre-wrap text-sm text-gray-700">
@@ -1204,6 +1232,21 @@ if (ids.length > 0) {
                             )}
                           </p>
 
+                          {latestFeedingRecord.feed_subtype && (
+                            <p className="mt-1 text-xs text-purple-800">
+                              {pollenFeedLabel(
+                                latestFeedingRecord.feed_subtype,
+                                latestFeedingRecord.feed_subtype_other
+                              )}
+                            </p>
+                          )}
+
+                          {latestFeedingRecord.product_name && (
+                            <p className="mt-1 text-xs text-purple-800">
+                              {latestFeedingRecord.product_name}
+                            </p>
+                          )}
+
                           {latestFeedingRecord.syrup_strength &&
                             latestFeedingRecord.feed_type === "sugar_syrup" && (
                               <p className="mt-1 text-xs text-purple-800">
@@ -1220,6 +1263,20 @@ if (ids.length > 0) {
                                 )}
                               </p>
                             )}
+
+                          {latestFeedingRecord.recipe_sugar_kg &&
+                            latestFeedingRecord.recipe_water_litres && (
+                              <p className="mt-1 text-xs text-purple-800">
+                                Recipe: {latestFeedingRecord.recipe_sugar_kg} kg sugar +{" "}
+                                {latestFeedingRecord.recipe_water_litres} L water
+                              </p>
+                            )}
+
+                          {latestFeedingRecord.notes && (
+                            <p className="mt-2 whitespace-pre-wrap text-xs text-gray-700">
+                              <strong>Notes:</strong> {latestFeedingRecord.notes}
+                            </p>
+                          )}
                         </div>
 
                         <div className="flex flex-col items-end gap-1">
