@@ -382,6 +382,12 @@ export default function NewFeeding({ editingId = "" }) {
     return roundWater(Number(recipeSugarKg) * syrupWaterPerKg);
   }, [useRecipeHelper, recipeSugarKg, syrupWaterPerKg]);
 
+  useEffect(() => {
+    if (syrupStrength === "custom") {
+      setUseRecipeHelper(true);
+    }
+  }, [syrupStrength]);
+
   const inspectionsForHive = (hiveId) =>
     inspections.filter((inspection) => String(inspection.hive_id) === String(hiveId));
 
@@ -879,23 +885,36 @@ export default function NewFeeding({ editingId = "" }) {
                   </label>
                 )}
 
-                <label className="mt-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-white p-3">
-                  <input
-                    type="checkbox"
-                    className="mt-1"
-                    checked={useRecipeHelper}
-                    onChange={(e) => setUseRecipeHelper(e.target.checked)}
-                  />
-                  <span>
+                {syrupStrength === "custom" ? (
+                  <div className="mt-5 rounded-xl border border-amber-200 bg-white p-3">
                     <span className="block text-sm font-semibold text-amber-950">
-                      Use recipe helper
+                      Recipe helper
                     </span>
                     <span className="block text-xs text-amber-800">
-                      Move the slider to the number of 1 kg sugar bags you are using and HiveTag
-                      will calculate the water for the selected strength.
+                      The helper is shown automatically for a custom recipe. Enter the litres of
+                      water per 1 kg sugar above, then move the slider to the number of 1 kg sugar
+                      bags you are using.
                     </span>
-                  </span>
-                </label>
+                  </div>
+                ) : (
+                  <label className="mt-5 flex items-start gap-3 rounded-xl border border-amber-200 bg-white p-3">
+                    <input
+                      type="checkbox"
+                      className="mt-1"
+                      checked={useRecipeHelper}
+                      onChange={(e) => setUseRecipeHelper(e.target.checked)}
+                    />
+                    <span>
+                      <span className="block text-sm font-semibold text-amber-950">
+                        Use recipe helper
+                      </span>
+                      <span className="block text-xs text-amber-800">
+                        Move the slider to the number of 1 kg sugar bags you are using and HiveTag
+                        will calculate the water for the selected strength.
+                      </span>
+                    </span>
+                  </label>
+                )}
 
                 {useRecipeHelper && syrupWaterPerKg && (
                   <div className="mt-4 rounded-xl border border-amber-300 bg-white p-4">
