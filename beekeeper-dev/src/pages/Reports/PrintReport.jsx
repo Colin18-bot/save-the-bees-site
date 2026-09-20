@@ -21,12 +21,14 @@ import {
   buildQueenEventRows,
   buildQueenProcessRows,
   buildQueenSnapshotRows,
+  buildFeedingRows,
   downloadApiariesCSV as exportApiariesCSV,
   downloadHivesCSV as exportHivesCSV,
   downloadInspectionsCSV as exportInspectionsCSV,
   downloadCombinedCSV as exportCombinedCSV,
   downloadTodosCSV as exportTodosCSV,
   downloadLogbookCSV as exportLogbookCSV,
+  downloadFeedingCSV as exportFeedingCSV,
   downloadQueensCSV as exportQueensCSV,
   downloadNfcCSV as exportNfcCSV,
 } from "./utils/reportExports";
@@ -148,6 +150,9 @@ export default function PrintReport() {
   const [includeLogbook, setIncludeLogbook] = useState(() =>
     boolFromSaved(savedFiltersRef.current.includeLogbook, true)
   );
+  const [includeFeeding, setIncludeFeeding] = useState(() =>
+    boolFromSaved(savedFiltersRef.current.includeFeeding, true)
+  );
   const [includeQueens, setIncludeQueens] = useState(() =>
     boolFromSaved(savedFiltersRef.current.includeQueens, true)
   );
@@ -164,6 +169,7 @@ export default function PrintReport() {
     inspections: [],
     todos: [],
     logbook: [],
+    feeding: [],
     nfcHives: [],
     inspectionById: new Map(),
     queenReport: {
@@ -183,6 +189,7 @@ export default function PrintReport() {
   const inspections = reportData.inspections;
   const todos = reportData.todos;
   const logbook = reportData.logbook;
+  const feeding = reportData.feeding || [];
   const nfcHives = reportData.nfcHives;
   const inspectionById = reportData.inspectionById;
   const queenReport = reportData.queenReport || {
@@ -205,6 +212,7 @@ export default function PrintReport() {
   const effectiveIncludeInspections = isPremium && includeInspections;
   const effectiveIncludeTodos = isPremium && includeTodos;
   const effectiveIncludeLogbook = isPremium && includeLogbook;
+  const effectiveIncludeFeeding = isPremium && includeFeeding;
   const effectiveIncludeQueens = canUseQueenReports && includeQueens;
   const effectiveIncludeNfc = isPremium && includeNfc;
 
@@ -222,6 +230,7 @@ export default function PrintReport() {
           includeInspections,
           includeTodos,
           includeLogbook,
+          includeFeeding,
           includeQueens,
           includeNfc,
           activeTab,
@@ -239,6 +248,7 @@ export default function PrintReport() {
     includeInspections,
     includeTodos,
     includeLogbook,
+    includeFeeding,
     includeQueens,
     includeNfc,
     activeTab,
@@ -266,6 +276,7 @@ export default function PrintReport() {
           setIncludeInspections(false);
           setIncludeTodos(false);
           setIncludeLogbook(false);
+          setIncludeFeeding(false);
           setIncludeQueens(false);
           setIncludeNfc(false);
           setActiveTab("summary");
@@ -329,6 +340,7 @@ export default function PrintReport() {
           setIncludeInspections(false);
           setIncludeTodos(false);
           setIncludeLogbook(false);
+          setIncludeFeeding(false);
           setIncludeQueens(false);
           setIncludeNfc(false);
           setActiveTab("summary");
@@ -431,6 +443,7 @@ export default function PrintReport() {
         includeInspections: effectiveIncludeInspections,
         includeTodos: effectiveIncludeTodos,
         includeLogbook: effectiveIncludeLogbook,
+        includeFeeding: effectiveIncludeFeeding,
         includeQueens: effectiveIncludeQueens,
         includeNfc: effectiveIncludeNfc,
         includeArchived,
@@ -449,7 +462,9 @@ export default function PrintReport() {
           ...(effectiveIncludeInspections
             ? ["insights", "timeline", "details", "photos"]
             : []),
-          ...(effectiveIncludeTodos || effectiveIncludeLogbook ? ["tasks"] : []),
+          ...(effectiveIncludeTodos || effectiveIncludeLogbook || effectiveIncludeFeeding
+            ? ["tasks"]
+            : []),
           ...(effectiveIncludeQueens ? ["queens"] : []),
         ];
 
@@ -550,6 +565,7 @@ export default function PrintReport() {
     inspections.length +
     todos.length +
     logbook.length +
+    feeding.length +
     nfcHives.length +
     Number(queenReport.totalRecords || 0);
 
@@ -699,6 +715,16 @@ export default function PrintReport() {
     });
   }, [inspections, apiaryName, inspectionById, intelligence]);
 
+  const feedingRows = useMemo(
+    () =>
+      buildFeedingRows({
+        feeding,
+        relatedInspectionLabel,
+        formatWeatherForDisplay,
+      }),
+    [feeding, inspectionById]
+  );
+
   const queenRows = useMemo(
     () => buildQueenRows({ queenReport, apiaryName, displayHive }),
     [queenReport, apiaryName, hiveMap]
@@ -750,6 +776,7 @@ export default function PrintReport() {
       inspectionRows: isPremium ? inspectionRows : [],
       todos: isPremium ? todos : [],
       logbook: isPremium ? logbook : [],
+      feedingRows: isPremium ? feedingRows : [],
       nfcHives: isPremium ? nfcHives : [],
       queenRows,
       queenAssignmentRows,
@@ -786,6 +813,11 @@ export default function PrintReport() {
       relatedInspectionLabel,
       fmtUK,
     });
+  };
+
+  const downloadFeedingCSV = () => {
+    if (!isPremium) return;
+    exportFeedingCSV({ feedingRows });
   };
 
   const downloadQueensCSV = () => {
@@ -1030,6 +1062,8 @@ export default function PrintReport() {
         setIncludeTodos={setIncludeTodos}
         includeLogbook={includeLogbook}
         setIncludeLogbook={setIncludeLogbook}
+        includeFeeding={includeFeeding}
+        setIncludeFeeding={setIncludeFeeding}
         includeQueens={includeQueens}
         setIncludeQueens={setIncludeQueens}
         includeNfc={includeNfc}
@@ -1059,6 +1093,7 @@ export default function PrintReport() {
             inspections={inspections}
             todos={todos}
             logbook={logbook}
+            feeding={feeding}
             nfcHives={nfcHives}
             queenCount={queenRows.length}
             isPremium={isPremium}
@@ -1075,6 +1110,7 @@ export default function PrintReport() {
             includeInspections={effectiveIncludeInspections}
             includeTodos={effectiveIncludeTodos}
             includeLogbook={effectiveIncludeLogbook}
+            includeFeeding={effectiveIncludeFeeding}
             includeQueens={effectiveIncludeQueens}
           />
 
@@ -1106,12 +1142,14 @@ export default function PrintReport() {
             inspections={inspections}
             todos={todos}
             logbook={logbook}
+            feedingRows={feedingRows}
             queenReport={queenReport}
             nfcHives={nfcHives}
             isPremium={isPremium}
             includeInspections={effectiveIncludeInspections}
             includeTodos={effectiveIncludeTodos}
             includeLogbook={effectiveIncludeLogbook}
+            includeFeeding={effectiveIncludeFeeding}
             includeQueens={effectiveIncludeQueens}
             includeNfc={effectiveIncludeNfc}
             apiaryName={apiaryName}
@@ -1142,6 +1180,7 @@ export default function PrintReport() {
             inspections={inspections}
             todos={todos}
             logbook={logbook}
+            feedingRows={feedingRows}
             nfcHives={nfcHives}
             queenRows={queenRows}
             isPremium={isPremium}
@@ -1152,6 +1191,7 @@ export default function PrintReport() {
             downloadInspectionsCSV={downloadInspectionsCSV}
             downloadTodosCSV={downloadTodosCSV}
             downloadLogbookCSV={downloadLogbookCSV}
+            downloadFeedingCSV={downloadFeedingCSV}
             downloadQueensCSV={downloadQueensCSV}
             downloadNfcCSV={downloadNfcCSV}
             downloadCombinedCSV={downloadCombinedCSV}
