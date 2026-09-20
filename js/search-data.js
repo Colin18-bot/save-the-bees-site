@@ -368,8 +368,8 @@ window.searchData = [
   {
   "title": "Beekeeping App UK | HiveTag Records App | BeezKnees",
   "url": "/hivetag-app",
-  "description": "HiveTag is a UK beekeeping records app for inspections, apiaries, hives, tasks and logbook records, with Premium tools for seasonal guides, health checks, reports, finance and NFC tags.",
-  "keywords": "beekeeping records app, beekeeping app UK, hive inspection app, hive inspection log, digital hive records, apiary management, beekeeping logbook, bee disease symptoms, colony health check, bee disease helper, varroa symptoms, foulbrood signs, chalkbrood, nosema, NFC hive tags, Cardiff beekeeping, Vale of Glamorgan beekeeper, South Wales beekeeping, HiveTag"
+  "description": "HiveTag is a UK beekeeping records app for inspections, apiaries, hives, tasks and logbook records, with Premium structured Feeding, Queen Records, Hive Health, reports, finance tools and NFC tags.",
+  "keywords": "beekeeping records app, beekeeping app UK, hive inspection app, hive inspection log, digital hive records, apiary management, beekeeping logbook, hive feeding records, bee feeding records, beekeeping feeding app, sugar syrup calculator, feeding bees app, Queen Records, Hive Health, colony health check, bee disease helper, varroa symptoms, foulbrood signs, chalkbrood, nosema, NFC hive tags, Cardiff beekeeping, Vale of Glamorgan beekeeper, South Wales beekeeping, HiveTag"
 },
 {
   "title": "HiveTag Association Partner Programme | UK Beekeeping Associations",
