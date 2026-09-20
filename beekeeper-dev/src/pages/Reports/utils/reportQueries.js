@@ -477,6 +477,7 @@ export async function loadReportData({
   const referenceIds = new Set([
     ...todosData.map((row) => row.inspection_id).filter(Boolean),
     ...logbookData.map((row) => row.inspection_id).filter(Boolean),
+    ...feedingData.map((row) => row.inspection_id).filter(Boolean),
   ]);
 
   let inspectionLookup = new Map();
