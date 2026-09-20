@@ -6,6 +6,8 @@ import "dayjs/locale/en-gb"; // GB locale
 
 dayjs.locale("en-gb");
 
+// HiveTag production release: 1.5.7
+
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
