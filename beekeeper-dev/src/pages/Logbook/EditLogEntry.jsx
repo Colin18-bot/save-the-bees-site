@@ -4,16 +4,16 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import { archiveItem, humaniseSupabaseError } from "../../services/actions";
 
-// The choices shown in the "Log Entry" dropdown
+// The choices offered for NEW/retargeted Logbook entries.
+// Treatment and Requeen are retained only when editing an existing legacy entry.
 const LOG_TYPES = [
   "Fed Bees",
   "Mite Assessment",
-  "Treatment",
   "Winter Prep.",
   "Dead Hive",
-  "Requeen",
   "Harvesting",
 ];
+const LEGACY_LOG_TYPES = ["Treatment", "Requeen"];
 
 // Extract { bucket, path } from a Supabase public URL like:
 // https://.../storage/v1/object/public/<bucket>/<path>
@@ -91,7 +91,8 @@ const EditLogEntry = () => {
 
       // Decide if log_type is one of our options or a custom value
       const loadedType = entry?.log_type || "";
-      const isKnown = LOG_TYPES.includes(loadedType);
+      const isKnown =
+        LOG_TYPES.includes(loadedType) || LEGACY_LOG_TYPES.includes(loadedType);
       const dropdownValue = isKnown ? loadedType : loadedType ? "Other" : "";
 
       const fallbackPath =
@@ -407,7 +408,13 @@ const filteredInspections = (inspections || []).filter(
 
   return (
     <div className="p-6 max-w-3xl mx-auto bg-white rounded-xl shadow">
-      <h2 className="text-2xl font-bold mb-6">Edit Log Entry</h2>
+      <h2 className="text-2xl font-bold mb-4">Edit Log Entry</h2>
+
+      <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
+        <strong>About the Logbook:</strong> Logbook entries are general notes and observations.
+        They do not update Queen Records, Veterinary Medicines, Hive Health or other structured
+        HiveTag records.
+      </div>
 
       <form onSubmit={saveChanges} className="space-y-6">
         {/* Log Entry (type) */}
@@ -424,6 +431,11 @@ const filteredInspections = (inspections || []).filter(
             required
           >
             <option value="">Select</option>
+            {LEGACY_LOG_TYPES.includes(formData.log_type) && (
+              <option value={formData.log_type}>
+                {formData.log_type} (legacy existing entry)
+              </option>
+            )}
             {LOG_TYPES.map((t) => (
               <option key={t} value={t}>
                 {t}
@@ -431,6 +443,13 @@ const filteredInspections = (inspections || []).filter(
             ))}
             <option value="Other">Other</option>
           </select>
+
+          {LEGACY_LOG_TYPES.includes(formData.log_type) && (
+            <p className="mt-2 text-xs text-amber-800">
+              This historical Logbook category is being preserved. New treatment records belong
+              in Veterinary Medicines and new queen records belong in Queen Records.
+            </p>
+          )}
 
           {formData.log_type === "Other" && (
             <input
