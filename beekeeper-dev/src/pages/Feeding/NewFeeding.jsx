@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import {
@@ -75,6 +75,7 @@ export default function NewFeeding({ editingId = "" }) {
   const [commonUnitOther, setCommonUnitOther] = useState("");
   const [hiveDetails, setHiveDetails] = useState({});
   const [existingHiveRows, setExistingHiveRows] = useState([]);
+  const skipNextUnitResetRef = useRef(false);
 
   useEffect(() => {
     let active = true;
@@ -143,6 +144,7 @@ export default function NewFeeding({ editingId = "" }) {
         );
 
       setFedOn(data.fed_on || todayIso());
+      skipNextUnitResetRef.current = true;
       setFeedType(data.feed_type || "other");
       setFeedTypeOther(data.feed_type_other || "");
       setFeedSubtype(data.feed_subtype || "");
@@ -292,8 +294,11 @@ export default function NewFeeding({ editingId = "" }) {
 
   useEffect(() => {
     const suggested = suggestedUnitForFeed(feedType);
+    const skipUnitReset = isEditing && skipNextUnitResetRef.current;
 
-    if (!isEditing) {
+    if (skipUnitReset) {
+      skipNextUnitResetRef.current = false;
+    } else {
       setCommonUnit(suggested);
       setCommonUnitOther("");
 
@@ -491,7 +496,7 @@ export default function NewFeeding({ editingId = "" }) {
       return setErrorMsg("Please select at least one hive.");
     }
 
-    const useCommonAmount = sameAmountForAll || effectiveHiveIds.length === 1;
+    const useCommonAmount = sameAmountForAll;
 
     if (useCommonAmount) {
       const commonError = validateAmount(commonAmount, commonUnit, commonUnitOther);
@@ -674,7 +679,7 @@ export default function NewFeeding({ editingId = "" }) {
 
   if (loading) return <div className="p-6">Loading feeding form…</div>;
 
-  const useCommonAmount = sameAmountForAll || effectiveHiveIds.length === 1;
+  const useCommonAmount = sameAmountForAll;
 
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-6">
