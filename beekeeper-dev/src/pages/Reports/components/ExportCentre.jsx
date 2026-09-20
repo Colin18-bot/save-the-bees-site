@@ -104,7 +104,7 @@ export default function ExportCentre({
                   <button
                     type="button"
                     onClick={downloadFeedingCSV}
-                    className={`${buttonBase} bg-purple-100 text-purple-900 hover:bg-purple-200`}
+                    className={`${buttonBase} bg-gray-100 text-gray-800 hover:bg-gray-200`}
                     disabled={loading || !feedingRows.length}
                   >
                     Export Feeding CSV
@@ -117,7 +117,7 @@ export default function ExportCentre({
               <button
                 type="button"
                 onClick={downloadQueensCSV}
-                className={`${buttonBase} bg-amber-100 text-amber-900 hover:bg-amber-200`}
+                className={`${buttonBase} bg-gray-100 text-gray-800 hover:bg-gray-200`}
                 disabled={loading || !queenRows.length}
               >
                 Export Queen Records CSV
