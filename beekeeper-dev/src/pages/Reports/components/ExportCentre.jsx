@@ -9,6 +9,7 @@ export default function ExportCentre({
   todos,
   logbook,
   feedingRows,
+  includeFeeding,
   nfcHives,
   queenRows,
   isPremium,
@@ -99,14 +100,16 @@ export default function ExportCentre({
                   Export Logbook CSV
                 </button>
 
-                <button
-                  type="button"
-                  onClick={downloadFeedingCSV}
-                  className={`${buttonBase} bg-purple-100 text-purple-900 hover:bg-purple-200`}
-                  disabled={loading || !feedingRows.length}
-                >
-                  Export Feeding CSV
-                </button>
+                {includeFeeding && (
+                  <button
+                    type="button"
+                    onClick={downloadFeedingCSV}
+                    className={`${buttonBase} bg-purple-100 text-purple-900 hover:bg-purple-200`}
+                    disabled={loading || !feedingRows.length}
+                  >
+                    Export Feeding CSV
+                  </button>
+                )}
               </>
             )}
 
