@@ -1521,94 +1521,6 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Recent Feeding (Premium) */}
-      {dashboardSections.feeding && subscriptionLevel === "premium" && (
-        <div className="rounded border border-purple-200 bg-purple-50 p-4 shadow-sm">
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-purple-950">Recent Feeding</h2>
-              <p className="text-xs text-purple-800">
-                Feeding records for the selected apiary and hive filters.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <Link
-                to="/feeding/new"
-                className="text-sm font-semibold text-purple-700 hover:underline whitespace-nowrap"
-              >
-                Record Feeding
-              </Link>
-              <Link
-                to={feedingHref}
-                className="text-sm font-semibold text-purple-700 hover:underline whitespace-nowrap"
-              >
-                Open Feeding →
-              </Link>
-            </div>
-          </div>
-
-          {feedingSummary.loading ? (
-            <p className="mt-4 text-sm text-purple-700">Loading Feeding…</p>
-          ) : feedingSummary.error ? (
-            <p className="mt-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-800">
-              {feedingSummary.error}
-            </p>
-          ) : feedingSummary.recent.length === 0 ? (
-            <p className="mt-4 text-sm text-purple-800">No feeding records for this filter yet.</p>
-          ) : (
-            <>
-              <div className="mt-4 flex items-baseline gap-2">
-                <span className="text-2xl font-extrabold text-purple-950">
-                  {feedingSummary.total}
-                </span>
-                <span className="text-xs font-semibold text-purple-800">
-                  hive feeding record{feedingSummary.total === 1 ? "" : "s"}
-                </span>
-              </div>
-
-              <ul className="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2">
-                {feedingSummary.recent.map((row) => {
-                  const record = Array.isArray(row.feeding_records)
-                    ? row.feeding_records[0]
-                    : row.feeding_records;
-                  if (!record) return null;
-
-                  return (
-                    <li key={row.id} className="rounded-lg border border-purple-200 bg-white p-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="font-semibold text-[#1a3329]">
-                            {row.hive_name_snapshot || hiveNameById[row.hive_id] || "Hive"}
-                          </p>
-                          <p className="text-xs text-gray-500">
-                            {formatUKDate(record.fed_on)} · {record.apiary_name_snapshot || "Apiary"}
-                          </p>
-                        </div>
-                        <Link
-                          to={`/feeding/${record.id}/edit`}
-                          className="text-xs font-semibold text-purple-700 hover:underline"
-                        >
-                          Edit
-                        </Link>
-                      </div>
-                      <p className="mt-2 text-sm text-purple-950">
-                        {formatAmount(row.amount, row.amount_unit, row.amount_unit_other)} ·{" "}
-                        {feedTypeLabel(record.feed_type, record.feed_type_other)}
-                      </p>
-                      {record.feed_type === "sugar_syrup" && record.syrup_strength && (
-                        <p className="mt-1 text-xs text-purple-800">
-                          {syrupStrengthLabel(record.syrup_strength)}
-                        </p>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            </>
-          )}
-        </div>
-      )}
-
       {/* Stats buttons (centered + nicer theme) */}
       {dashboardSections.stats && (
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -1809,6 +1721,94 @@ const Dashboard = () => {
 
       {dashboardSections.healthOverview && subscriptionLevel === "premium" && (
         <DashboardIntelligencePanel data={dashboardIntelligence} apiaryNameById={apiaryNameById} />
+      )}
+
+      {/* Recent Feeding (Premium) */}
+      {dashboardSections.feeding && subscriptionLevel === "premium" && (
+        <div className="rounded border border-purple-200 bg-purple-50 p-4 shadow-sm">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-purple-950">Recent Feeding</h2>
+              <p className="text-xs text-purple-800">
+                Feeding records for the selected apiary and hive filters.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/feeding/new"
+                className="text-sm font-semibold text-purple-700 hover:underline whitespace-nowrap"
+              >
+                Record Feeding
+              </Link>
+              <Link
+                to={feedingHref}
+                className="text-sm font-semibold text-purple-700 hover:underline whitespace-nowrap"
+              >
+                Open Feeding →
+              </Link>
+            </div>
+          </div>
+
+          {feedingSummary.loading ? (
+            <p className="mt-4 text-sm text-purple-700">Loading Feeding…</p>
+          ) : feedingSummary.error ? (
+            <p className="mt-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+              {feedingSummary.error}
+            </p>
+          ) : feedingSummary.recent.length === 0 ? (
+            <p className="mt-4 text-sm text-purple-800">No feeding records for this filter yet.</p>
+          ) : (
+            <>
+              <div className="mt-4 flex items-baseline gap-2">
+                <span className="text-2xl font-extrabold text-purple-950">
+                  {feedingSummary.total}
+                </span>
+                <span className="text-xs font-semibold text-purple-800">
+                  hive feeding record{feedingSummary.total === 1 ? "" : "s"}
+                </span>
+              </div>
+
+              <ul className="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2">
+                {feedingSummary.recent.map((row) => {
+                  const record = Array.isArray(row.feeding_records)
+                    ? row.feeding_records[0]
+                    : row.feeding_records;
+                  if (!record) return null;
+
+                  return (
+                    <li key={row.id} className="rounded-lg border border-purple-200 bg-white p-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="font-semibold text-[#1a3329]">
+                            {row.hive_name_snapshot || hiveNameById[row.hive_id] || "Hive"}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {formatUKDate(record.fed_on)} · {record.apiary_name_snapshot || "Apiary"}
+                          </p>
+                        </div>
+                        <Link
+                          to={`/feeding/${record.id}/edit`}
+                          className="text-xs font-semibold text-purple-700 hover:underline"
+                        >
+                          Edit
+                        </Link>
+                      </div>
+                      <p className="mt-2 text-sm text-purple-950">
+                        {formatAmount(row.amount, row.amount_unit, row.amount_unit_other)} ·{" "}
+                        {feedTypeLabel(record.feed_type, record.feed_type_other)}
+                      </p>
+                      {record.feed_type === "sugar_syrup" && record.syrup_strength && (
+                        <p className="mt-1 text-xs text-purple-800">
+                          {syrupStrengthLabel(record.syrup_strength)}
+                        </p>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          )}
+        </div>
       )}
 
       {dashboardSections.healthTimeline && subscriptionLevel === "premium" && (
