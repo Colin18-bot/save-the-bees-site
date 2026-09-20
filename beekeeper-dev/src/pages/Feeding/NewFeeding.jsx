@@ -284,9 +284,9 @@ export default function NewFeeding() {
       effectiveHiveIds.forEach((hiveId) => {
         next[hiveId] = {
           ...(next[hiveId] || {}),
-          amount: next[hiveId]?.amount || commonAmount,
-          amountUnit: next[hiveId]?.amountUnit || commonUnit,
-          amountUnitOther: next[hiveId]?.amountUnitOther || commonUnitOther,
+          amount: commonAmount,
+          amountUnit: commonUnit,
+          amountUnitOther: commonUnitOther,
           inspectionId: next[hiveId]?.inspectionId || "",
         };
       });
