@@ -293,9 +293,9 @@ export default function Pricing() {
         </h3>
 
         <p className="mt-2 text-sm text-green-800">
-          Record inspections and veterinary medicines, manage complete queen histories, monitor colony health,
-          identify trends and risks over time, generate professional reports and plan
-          seasonal management—all from a single application.
+          Record inspections and veterinary medicines, manage complete queen histories, record structured
+          colony Feeding, monitor colony health, identify trends and risks over time, generate
+          professional reports and plan seasonal management—all from a single application.
         </p>
       </div>
 
@@ -345,6 +345,8 @@ export default function Pricing() {
           "Step-by-step Inspection Guide",
           "Asian Hornet Centre — identification, lookalike comparisons, observations and reporting guidance",
           "Veterinary Medicines record keeping plus dedicated Print / PDF register",
+          "Structured Feeding records with per-hive quantities, inspection links and sugar-syrup recipe helper",
+          "Feeding history in Dashboard, printable reports, CSV and complete Excel exports",
           "Professional reports and CSV exports",
           "Inventory, sales, expenses and Profit & Loss",
           "Apiary map markers",
@@ -390,6 +392,12 @@ export default function Pricing() {
               <CheckIcon />
             </span>
             Veterinary medicine purchase and treatment records
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-green-600 mt-0.5">
+              <CheckIcon />
+            </span>
+            Premium structured Feeding records and syrup recipe helper
           </li>
           <li className="flex items-start gap-2">
             <span className="text-green-600 mt-0.5">
