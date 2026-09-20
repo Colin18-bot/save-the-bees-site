@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabase";
 import {
-  BBKA_MARCH_GUIDANCE_URL,
   FEED_GUIDANCE,
   FEED_OPTIONS,
   NBU_POLLEN_GUIDANCE_URL,
@@ -752,14 +751,6 @@ export default function NewFeeding() {
                 className="text-blue-700 underline"
               >
                 National Bee Unit sugar-feeding guidance
-              </a>
-              <a
-                href={BBKA_MARCH_GUIDANCE_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="text-blue-700 underline"
-              >
-                BBKA spring feeding example
               </a>
             </div>
           </section>
