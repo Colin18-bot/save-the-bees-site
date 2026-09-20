@@ -8,6 +8,7 @@ import DashboardHiveTimelinePanel from "../components/intelligence/DashboardHive
 import { coordinateHiveIntelligence } from "../intelligence";
 
 import { buildBeekeeperNotes } from "../utils/buildBeekeeperNotes.js";
+import { feedTypeLabel, formatAmount, syrupStrengthLabel } from "./Feeding/feedingGuidance.js";
 
 // Weather label/icon maps (for 5-day forecast)
 const WX_LABEL = {
@@ -76,6 +77,7 @@ const DASHBOARD_SECTIONS_STORAGE_KEY = "hivetag_dashboard_sections_v1";
 const DEFAULT_DASHBOARD_SECTIONS = {
   stats: true,
   veterinaryRecords: true,
+  feeding: true,
   queens: true,
   healthOverview: true,
   recentTasks: true,
@@ -91,6 +93,7 @@ const DEFAULT_DASHBOARD_SECTIONS = {
 const DASHBOARD_SECTION_OPTIONS = [
   { id: "stats", label: "Summary statistics" },
   { id: "veterinaryRecords", label: "Veterinary Medicines" },
+  { id: "feeding", label: "Recent Feeding", premium: true },
   { id: "queens", label: "Queen Status" },
   { id: "healthOverview", label: "Hive Health Overview", premium: true },
   { id: "recentTasks", label: "Recent Tasks" },
@@ -211,6 +214,14 @@ const Dashboard = () => {
     medicines: 0,
     active: 0,
     overdue: 0,
+  });
+
+  // Premium Feeding summary (filter-aware)
+  const [feedingSummary, setFeedingSummary] = useState({
+    loading: true,
+    error: null,
+    total: 0,
+    recent: [],
   });
 
   // NFC summary (filter-aware)
@@ -605,6 +616,57 @@ const Dashboard = () => {
         loading: false,
         error: "Veterinary Medicines summary could not be loaded.",
       }));
+    }
+  };
+
+  // ---- Feeding summary (Premium, filter-aware) ----
+  const fetchFeedingSummary = async (apiaryId = "all", hiveId = "all") => {
+    setFeedingSummary((current) => ({ ...current, loading: true, error: null }));
+
+    try {
+      let query = supabase
+        .from("feeding_record_hives")
+        .select(
+          "id,feeding_record_id,hive_id,hive_name_snapshot,amount,amount_unit,amount_unit_other,created_at,feeding_records!inner(id,apiary_id,apiary_name_snapshot,fed_on,feed_type,feed_type_other,syrup_strength,product_name,notes)"
+        )
+        .order("created_at", { ascending: false });
+
+      if (hiveId !== "all") {
+        query = query.eq("hive_id", hiveId);
+      } else if (apiaryId !== "all") {
+        query = query.eq("feeding_records.apiary_id", apiaryId);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+
+      const rows = [...(data || [])].sort((left, right) => {
+        const leftParent = Array.isArray(left.feeding_records)
+          ? left.feeding_records[0]
+          : left.feeding_records;
+        const rightParent = Array.isArray(right.feeding_records)
+          ? right.feeding_records[0]
+          : right.feeding_records;
+
+        return String(rightParent?.fed_on || right.created_at || "").localeCompare(
+          String(leftParent?.fed_on || left.created_at || "")
+        );
+      });
+
+      setFeedingSummary({
+        loading: false,
+        error: null,
+        total: rows.length,
+        recent: rows.slice(0, 6),
+      });
+    } catch (error) {
+      console.error("Failed to load Feeding dashboard summary:", error);
+      setFeedingSummary({
+        loading: false,
+        error: "Feeding summary could not be loaded.",
+        total: 0,
+        recent: [],
+      });
     }
   };
 
@@ -1052,6 +1114,7 @@ const Dashboard = () => {
     fetchQueenDashboard(selectedApiaryId, selectedHiveId);
 
     if (subscriptionLevel === "premium") {
+      fetchFeedingSummary(selectedApiaryId, selectedHiveId);
       fetchNfcSummary(selectedApiaryId, selectedHiveId);
       fetchRecentNfcHives(selectedApiaryId, selectedHiveId);
       fetchDashboardIntelligence(selectedApiaryId, selectedHiveId);
@@ -1135,6 +1198,7 @@ const Dashboard = () => {
   const inspectionsHref = buildFilteredHref("/inspections");
   const todosHref = buildFilteredHref("/todos");
   const logbookHref = buildFilteredHref("/logbook");
+  const feedingHref = buildFilteredHref("/feeding");
 
   // ✅ your confirmed NFC manager route
   const nfcManagerHref = "/nfc/manage";
@@ -1452,6 +1516,94 @@ const Dashboard = () => {
                 selected Apiary and Hive filters. Veterinary medicine record keeping is available on
                 Free and Premium; the dedicated Print / PDF medicine register is Premium.
               </p>
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Recent Feeding (Premium) */}
+      {dashboardSections.feeding && subscriptionLevel === "premium" && (
+        <div className="rounded border border-purple-200 bg-purple-50 p-4 shadow-sm">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-purple-950">Recent Feeding</h2>
+              <p className="text-xs text-purple-800">
+                Feeding records for the selected apiary and hive filters.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/feeding/new"
+                className="text-sm font-semibold text-purple-700 hover:underline whitespace-nowrap"
+              >
+                Record Feeding
+              </Link>
+              <Link
+                to={feedingHref}
+                className="text-sm font-semibold text-purple-700 hover:underline whitespace-nowrap"
+              >
+                Open Feeding →
+              </Link>
+            </div>
+          </div>
+
+          {feedingSummary.loading ? (
+            <p className="mt-4 text-sm text-purple-700">Loading Feeding…</p>
+          ) : feedingSummary.error ? (
+            <p className="mt-4 rounded border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+              {feedingSummary.error}
+            </p>
+          ) : feedingSummary.recent.length === 0 ? (
+            <p className="mt-4 text-sm text-purple-800">No feeding records for this filter yet.</p>
+          ) : (
+            <>
+              <div className="mt-4 flex items-baseline gap-2">
+                <span className="text-2xl font-extrabold text-purple-950">
+                  {feedingSummary.total}
+                </span>
+                <span className="text-xs font-semibold text-purple-800">
+                  hive feeding record{feedingSummary.total === 1 ? "" : "s"}
+                </span>
+              </div>
+
+              <ul className="mt-3 grid grid-cols-1 gap-2 lg:grid-cols-2">
+                {feedingSummary.recent.map((row) => {
+                  const record = Array.isArray(row.feeding_records)
+                    ? row.feeding_records[0]
+                    : row.feeding_records;
+                  if (!record) return null;
+
+                  return (
+                    <li key={row.id} className="rounded-lg border border-purple-200 bg-white p-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="font-semibold text-[#1a3329]">
+                            {row.hive_name_snapshot || hiveNameById[row.hive_id] || "Hive"}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {formatUKDate(record.fed_on)} · {record.apiary_name_snapshot || "Apiary"}
+                          </p>
+                        </div>
+                        <Link
+                          to={`/feeding/${record.id}/edit`}
+                          className="text-xs font-semibold text-purple-700 hover:underline"
+                        >
+                          Edit
+                        </Link>
+                      </div>
+                      <p className="mt-2 text-sm text-purple-950">
+                        {formatAmount(row.amount, row.amount_unit, row.amount_unit_other)} ·{" "}
+                        {feedTypeLabel(record.feed_type, record.feed_type_other)}
+                      </p>
+                      {record.feed_type === "sugar_syrup" && record.syrup_strength && (
+                        <p className="mt-1 text-xs text-purple-800">
+                          {syrupStrengthLabel(record.syrup_strength)}
+                        </p>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
             </>
           )}
         </div>
