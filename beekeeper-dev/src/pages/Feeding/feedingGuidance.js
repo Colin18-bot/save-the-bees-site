@@ -138,8 +138,6 @@ export const NBU_SUGAR_GUIDANCE_URL =
 export const NBU_POLLEN_GUIDANCE_URL =
   "https://www.nationalbeeunit.com/assets/PDFs/3_Resources_for_beekeepers/articles_reports/BBKA_news/BBKA_21_Feeding_Pollen_and_Substitutes_-_January_2013_p7.pdf";
 
-export const BBKA_MARCH_GUIDANCE_URL =
-  "https://www.bbka.org.uk/blog/march-in-the-apiary";
 
 export const feedTypeLabel = (value, other = "") => {
   if (value === "other") return other || "Other";
