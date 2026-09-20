@@ -599,7 +599,7 @@ export default function NewFeeding({ editingId = "" }) {
 
         return {
           user_id: user.id,
-          feeding_record_id: feedingRecord.id,
+          feeding_record_id: feedingRecordId,
           hive_id: hiveId,
           hive_name_snapshot: hive.name,
           amount: Number(rowAmount),
@@ -680,7 +680,7 @@ export default function NewFeeding({ editingId = "" }) {
     <div className="max-w-5xl mx-auto p-4 md:p-6">
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-bold text-[#1a3329]">
-          Record Feeding
+          {isEditing ? "Edit Feeding" : "Record Feeding"}
         </h1>
         <p className="mt-1 max-w-3xl text-sm text-gray-600">
           {isEditing
