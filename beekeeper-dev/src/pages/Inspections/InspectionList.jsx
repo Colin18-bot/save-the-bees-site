@@ -145,6 +145,7 @@ const InspectionList = () => {
   const [logMap, setLogMap] = useState({});
   const [taskMap, setTaskMap] = useState({});
   const [feedingMap, setFeedingMap] = useState({});
+  const [unlinkedFeedings, setUnlinkedFeedings] = useState([]);
 
   // Lightbox state
   const [lightbox, setLightbox] = useState({
@@ -379,6 +380,50 @@ useEffect(() => {
   useEffect(() => {
     const fetchInspections = async () => {
       setLoading(true);
+
+      let feedingOnlyQuery = supabase
+        .from("feeding_record_hives")
+        .select(
+          "id,feeding_record_id,hive_id,hive_name_snapshot,amount,amount_unit,amount_unit_other,inspection_id,created_at,feeding_records!inner(id,apiary_id,apiary_name_snapshot,fed_on,feed_type,feed_type_other,feed_subtype,feed_subtype_other,product_name,syrup_strength,reason,reason_other,weather,weather_code,notes)"
+        )
+        .is("inspection_id", null);
+
+      if (hiveFromUrl) {
+        feedingOnlyQuery = feedingOnlyQuery.eq("hive_id", hiveFromUrl);
+      }
+      if (apiaryFromUrl) {
+        feedingOnlyQuery = feedingOnlyQuery.eq(
+          "feeding_records.apiary_id",
+          apiaryFromUrl
+        );
+      }
+      if (fromFromUrl) {
+        feedingOnlyQuery = feedingOnlyQuery.gte(
+          "feeding_records.fed_on",
+          fromFromUrl
+        );
+      }
+      if (toFromUrl) {
+        feedingOnlyQuery = feedingOnlyQuery.lte(
+          "feeding_records.fed_on",
+          toFromUrl
+        );
+      }
+
+      const { data: feedingOnlyData, error: feedingOnlyError } =
+        await feedingOnlyQuery;
+
+      if (feedingOnlyError) {
+        console.warn("Unlinked feeding fetch error:", feedingOnlyError);
+        setUnlinkedFeedings([]);
+      } else {
+        const sortedFeedings = (feedingOnlyData || []).sort((a, b) => {
+          const aDate = a.feeding_records?.fed_on || a.created_at || "";
+          const bDate = b.feeding_records?.fed_on || b.created_at || "";
+          return String(bDate).localeCompare(String(aDate));
+        });
+        setUnlinkedFeedings(sortedFeedings);
+      }
 
       // COUNT
       let countQuery = supabase
@@ -889,15 +934,123 @@ if (ids.length > 0) {
 
       {loading ? (
         <p>Loading…</p>
-      ) : total === 0 ? (
+      ) : total === 0 && unlinkedFeedings.length === 0 ? (
         <p>
-          No inspections found,{" "}
+          No inspections or feeding-only records found,{" "}
           <Link to="/inspections/new" className="text-blue-600 underline">
-            Add one now
+            add an inspection
           </Link>
+          .
         </p>
       ) : (
         <>
+          {unlinkedFeedings.length > 0 && (
+            <section className="mb-6">
+              <div className="mb-3 flex items-end justify-between gap-3">
+                <div>
+                  <h2 className="text-lg font-semibold text-[#1a3329]">
+                    Feeding records
+                  </h2>
+                  <p className="text-xs text-gray-500">
+                    Feeding recorded without a related inspection is shown here as a colony record.
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {unlinkedFeedings.map((feeding) => {
+                  const record = Array.isArray(feeding.feeding_records)
+                    ? feeding.feeding_records[0]
+                    : feeding.feeding_records;
+                  if (!record) return null;
+
+                  return (
+                    <article
+                      key={feeding.id}
+                      className="rounded border border-purple-200 bg-purple-50 p-4 shadow-sm"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="text-lg font-semibold">
+                          {feeding.hive_name_snapshot || hiveName(feeding.hive_id)}
+                        </h3>
+                        <span className="rounded bg-white px-2 py-1 text-xs text-gray-700">
+                          {formatDate(record.fed_on, feeding.created_at)}
+                        </span>
+                      </div>
+
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
+                        <p className="text-sm text-gray-600">
+                          {record.apiary_name_snapshot || apiaryName(record.apiary_id)}
+                        </p>
+                        <span className="inline-flex rounded-full border border-purple-200 bg-white px-2 py-0.5 text-[11px] font-medium text-purple-800">
+                          Feeding record
+                        </span>
+                      </div>
+
+                      {record.weather && (
+                        <p className="mt-3 text-sm text-gray-700">
+                          <strong>Weather:</strong>{" "}
+                          {formatDerivedWeather(record.weather, getTempUnit())}
+                        </p>
+                      )}
+
+                      <div className="mt-3 rounded-lg border border-purple-200 bg-white p-3">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-purple-800">
+                          Feeding recorded
+                        </p>
+                        <p className="mt-1 text-sm font-semibold text-purple-950">
+                          {formatAmount(
+                            feeding.amount,
+                            feeding.amount_unit,
+                            feeding.amount_unit_other
+                          )}{" "}
+                          · {feedTypeLabel(record.feed_type, record.feed_type_other)}
+                        </p>
+
+                        {record.feed_type === "sugar_syrup" &&
+                          record.syrup_strength && (
+                            <p className="mt-1 text-xs text-purple-800">
+                              {syrupStrengthLabel(record.syrup_strength)}
+                            </p>
+                          )}
+
+                        {record.reason && record.reason !== "not_recorded" && (
+                          <p className="mt-1 text-xs text-purple-800">
+                            {reasonLabel(record.reason, record.reason_other)}
+                          </p>
+                        )}
+
+                        {record.notes && (
+                          <p className="mt-2 whitespace-pre-wrap text-sm text-gray-700">
+                            <strong>Notes:</strong> {record.notes}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <Link
+                          to={`/feeding/${encodeURIComponent(record.id)}/edit`}
+                          className="inline-flex items-center rounded bg-purple-700 px-3 py-2 text-sm font-medium text-white hover:bg-purple-800"
+                        >
+                          Edit Feeding
+                        </Link>
+                        <Link
+                          to={`/feeding?highlight=${encodeURIComponent(
+                            record.id
+                          )}&hive_id=${encodeURIComponent(feeding.hive_id || "")}`}
+                          className="inline-flex items-center rounded border border-purple-300 bg-white px-3 py-2 text-sm font-medium text-purple-800 hover:bg-purple-100"
+                        >
+                          View Feeding
+                        </Link>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </section>
+          )}
+
+          {inspections.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {inspections.map((insp) => {
               const summary = buildSummary(insp);
@@ -1060,7 +1213,7 @@ if (ids.length > 0) {
 
                           {latestFeedingRecord.reason &&
                             latestFeedingRecord.reason !== "not_recorded" && (
-                              <p className="mt-1 text-xs text-green-800">
+                              <p className="mt-1 text-xs text-purple-800">
                                 {reasonLabel(
                                   latestFeedingRecord.reason,
                                   latestFeedingRecord.reason_other
@@ -1069,14 +1222,24 @@ if (ids.length > 0) {
                             )}
                         </div>
 
-                        <Link
-                          to={`/feeding?highlight=${encodeURIComponent(
-                            latestFeeding.feeding_record_id
-                          )}&hive_id=${encodeURIComponent(insp.hive_id)}`}
-                          className="text-xs font-medium text-purple-700 hover:underline"
-                        >
-                          View feeding →
-                        </Link>
+                        <div className="flex flex-col items-end gap-1">
+                          <Link
+                            to={`/feeding?highlight=${encodeURIComponent(
+                              latestFeeding.feeding_record_id
+                            )}&hive_id=${encodeURIComponent(insp.hive_id)}`}
+                            className="text-xs font-medium text-purple-700 hover:underline"
+                          >
+                            View feeding →
+                          </Link>
+                          <Link
+                            to={`/feeding/${encodeURIComponent(
+                              latestFeeding.feeding_record_id
+                            )}/edit`}
+                            className="text-xs font-medium text-purple-700 hover:underline"
+                          >
+                            Edit feeding →
+                          </Link>
+                        </div>
                       </div>
 
                       {feedings.count > 1 && (
@@ -1291,8 +1454,10 @@ if (ids.length > 0) {
               );
             })}
           </div>
+          )}
 
           {/* Pagination */}
+          {total > 0 && (
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
             <div className="text-sm text-gray-600">
               Showing {Math.min((pageFromUrl - 1) * PAGE_SIZE + 1, total)}–{" "}
@@ -1327,6 +1492,7 @@ if (ids.length > 0) {
               </button>
             </div>
           </div>
+          )}
         </>
       )}
 
