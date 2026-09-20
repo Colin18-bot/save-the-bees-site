@@ -6,10 +6,8 @@ import { supabase } from "../../services/supabase";
 const LOG_TYPES = [
   "Fed Bees",
   "Mite Assessment",
-  "Treatment",
   "Winter Prep.",
   "Dead Hive",
-  "Requeen",
   "Harvesting",
   "Other",
 ];
@@ -131,9 +129,7 @@ useEffect(() => {
 
   const presetMap = {
     feeding: "Fed Bees",
-    treatment: "Treatment",
     swarm: "Other",
-    queen: "Requeen",
     colony: "Other",
     disease: "Other",
   };
@@ -366,6 +362,14 @@ useEffect(() => {
   return (
     <div className="p-6 max-w-4xl mx-auto bg-white rounded-xl shadow-lg">
       <h2 className="text-2xl font-bold mb-4">New Hive Logbook Entry</h2>
+
+      <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
+        <strong>About the Logbook:</strong> Logbook entries are general notes and observations.
+        They do not update Queen Records, Veterinary Medicines, Hive Health or other structured
+        HiveTag records. Use the relevant feature when you want information to form part of those
+        records.
+      </div>
+
       {isPremium && returnTo && (
   <div className="mb-4">
     <Link
