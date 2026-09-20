@@ -9,6 +9,48 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.5.7",
+  released_at: "2026-09-20T15:10:00Z",
+
+  summary:
+    "Refined Tasks and Logbook so the two areas are clearer to use, refreshed the New Task page, preserved historical Logbook data, and updated Help and release information to match the current workflow.",
+
+  added: [],
+
+  changed: [
+    "Redesigned **New Task** into a clearer two-stage layout: choose the task first, then complete the task details.",
+    "Task choices now use cleaner selectable cards, with the selected task clearly highlighted and **Save Task** retained as the main action.",
+    "The Queen marking-colour reference on New Task is now shown only when **Requeen** is selected.",
+    "Removed **Treatment** and **Requeen** from the choices offered when creating a new Logbook entry so the Logbook remains focused on general notes and observations.",
+    "Simplified Help guidance for Tasks and Logbook so it describes the current system without legacy transition instructions.",
+    "Sidebar release numbering has been updated to **HiveTag 1.5.7**."
+  ],
+
+  fixed: [
+    "Existing historical Logbook entries are preserved, including older Treatment and Requeen entries, and remain available when editing legacy records.",
+    "Verified that Tasks remain independent of Logbook categories and continue to export to the **Tasks** CSV and the **Tasks** worksheet in the complete Excel report.",
+    "Verified that historical Logbook entries continue to be included in the **Logbook** report, CSV export and Excel worksheet because reporting loads the stored Logbook records without filtering out legacy entry types."
+  ],
+
+  removed: [],
+
+  security: [],
+
+  breaking: [],
+
+  links: [
+    { label: "New Task", to: "/todos/new" },
+    { label: "Tasks", to: "/todos" },
+    { label: "Logbook", to: "/logbook" },
+    { label: "Reports Centre", to: "/reports/print" },
+    { label: "Help", to: "/help" }
+  ],
+
+  known_issues: [
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
+{
   version: "1.5.6",
   released_at: "2026-09-19T10:54:00Z",
 
