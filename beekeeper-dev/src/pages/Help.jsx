@@ -996,9 +996,11 @@ export default function Help() {
                 <p className="text-gray-700">
                   Use the Logbook for general notes and observations that do not need to be recorded
                   as a full inspection. Entries can be recorded for a specific hive or for{" "}
-                  <strong>All Hives</strong> within an apiary. The Logbook includes list/grid views,
-                  Apiary and Hive filters, and a photo <strong>lightbox</strong> on click.{" "}
-                  <Badge>Free</Badge>
+                  <strong>All Hives</strong> within an apiary. Feed actually given should now be
+                  recorded in the dedicated <strong>Feeding</strong> feature rather than as a new
+                  Logbook entry; historical <strong>Fed Bees</strong> Logbook entries are preserved.
+                  The Logbook includes list/grid views, Apiary and Hive filters, and a photo{" "}
+                  <strong>lightbox</strong> on click. <Badge>Free</Badge>
                 </p>
 
                 <ul className="list-disc pl-6 mt-3 space-y-1">
