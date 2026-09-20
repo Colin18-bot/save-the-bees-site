@@ -131,13 +131,16 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
   ];
 
   // Main beekeeping order: Apiaries, Hives, Inspections, Hive Logbook,
-  // Tasks, Queens, Veterinary Medicines.
+  // Tasks, Feeding, Queens, Veterinary Medicines.
   const coreSecondaryNavItems = [
     { to: "/apiaries", label: "Apiaries" },
     { to: "/hives", label: "Hives" },
     { to: "/inspections", label: "Inspections" },
     { to: "/logbook", label: "Hive Logbook" },
     { to: "/todos", label: "Tasks" },
+    userIsPremium
+      ? { to: "/feeding", label: "Feeding" }
+      : { to: "/premium-required", label: "🔒 Feeding", lockedPremium: true },
     canAccessQueenRecords
       ? {
           to: "/queens",
@@ -159,6 +162,7 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
     { to: "/inspections/new", label: "New Inspection" },
     { to: "/logbook/new", label: "New Log Entry" },
     { to: "/todos/new", label: "New Task" },
+    ...(userIsPremium ? [{ to: "/feeding/new", label: "New Feeding" }] : []),
     ...(userIsPremium
       ? [
           {
@@ -328,13 +332,13 @@ const Sidebar = ({ setIsMobileMenuOpen }) => {
         <div className="my-4 border-t border-white/20" />
 
         <div className="mt-1 space-y-1.5 rounded-lg border border-white/10 border-l-[3px] border-l-yellow-400/70 bg-white/5 p-1">
-          {coreSecondaryNavItems.slice(0, 7).map((item) => (
+          {coreSecondaryNavItems.slice(0, 8).map((item) => (
             <LinkItem key={item.to} item={item} />
           ))}
         </div>
 
         <div className="mt-3 space-y-1.5 rounded-lg border border-white/10 border-l-[3px] border-l-yellow-400/70 bg-white/5 p-1">
-          {coreSecondaryNavItems.slice(7).map((item) => (
+          {coreSecondaryNavItems.slice(8).map((item) => (
             <LinkItem key={item.to} item={item} />
           ))}
         </div>
