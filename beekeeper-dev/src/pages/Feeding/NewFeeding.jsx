@@ -12,6 +12,7 @@ import {
   UNIT_OPTIONS,
   suggestedUnitForFeed,
 } from "./feedingGuidance";
+import { fetchFeedingWeather } from "./feedingWeather";
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
 
@@ -56,6 +57,9 @@ export default function NewFeeding() {
   const [reason, setReason] = useState("not_recorded");
   const [reasonOther, setReasonOther] = useState("");
   const [notes, setNotes] = useState("");
+  const [weather, setWeather] = useState("");
+  const [weatherCode, setWeatherCode] = useState("");
+  const [weatherDisplay, setWeatherDisplay] = useState("");
 
   const [apiaryId, setApiaryId] = useState(prefillApiaryId);
   const [hiveSelectionMode, setHiveSelectionMode] = useState("selected");
@@ -78,7 +82,7 @@ export default function NewFeeding() {
 
       const { data, error } = await supabase
         .from("apiaries")
-        .select("id,name")
+        .select("id,name,latitude,longitude")
         .is("archived_at", null)
         .order("name");
 
@@ -152,6 +156,35 @@ export default function NewFeeding() {
       active = false;
     };
   }, [apiaryId, prefillHiveId]);
+
+  useEffect(() => {
+    let active = true;
+
+    (async () => {
+      if (!apiaryId || !fedOn) {
+        setWeather("");
+        setWeatherCode("");
+        setWeatherDisplay("");
+        return;
+      }
+
+      const apiary = apiaries.find(
+        (row) => String(row.id) === String(apiaryId)
+      );
+      if (!apiary) return;
+
+      const result = await fetchFeedingWeather(apiary, fedOn);
+      if (!active) return;
+
+      setWeather(result.weather || "");
+      setWeatherCode(result.weatherCode || "");
+      setWeatherDisplay(result.display || "");
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [apiaryId, fedOn, apiaries]);
 
   useEffect(() => {
     const suggested = suggestedUnitForFeed(feedType);
@@ -425,6 +458,8 @@ export default function NewFeeding() {
             recipe_water_litres: recipeWater,
             reason,
             reason_other: reason === "other" ? reasonOther.trim() : null,
+            weather: weather || null,
+            weather_code: weatherCode || null,
             notes: notes.trim() || null,
           },
         ])
@@ -793,6 +828,13 @@ export default function NewFeeding() {
               ))}
             </select>
           </label>
+
+          {apiaryId && (
+            <div className="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
+              <strong>Weather:</strong>{" "}
+              {weatherDisplay || "Weather unavailable for this apiary/date."}
+            </div>
+          )}
 
           {apiaryId && (
             <div className="mt-4">
