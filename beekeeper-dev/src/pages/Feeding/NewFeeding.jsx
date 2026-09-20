@@ -707,7 +707,12 @@ export default function NewFeeding({ editingId = "" }) {
                 type="date"
                 className="rounded-xl border border-gray-300 p-2.5"
                 value={fedOn}
-                onChange={(e) => setFedOn(e.target.value)}
+                onChange={(e) => {
+                  setWeather("");
+                  setWeatherCode("");
+                  setWeatherDisplay("");
+                  setFedOn(e.target.value);
+                }}
                 required
               />
             </label>
@@ -970,6 +975,9 @@ export default function NewFeeding({ editingId = "" }) {
               className="rounded-xl border border-gray-300 bg-white p-2.5"
               value={apiaryId}
               onChange={(e) => {
+                setWeather("");
+                setWeatherCode("");
+                setWeatherDisplay("");
                 setApiaryId(e.target.value);
                 setHiveSelectionMode("selected");
                 setSelectedHiveIds([]);
