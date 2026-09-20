@@ -1410,7 +1410,7 @@ const Dashboard = () => {
 
             <p className="text-gray-600 mt-1">
               {subscriptionLevel === "premium"
-                ? "Open Reports or export Inspections, Tasks, Logbook and Queen Records by Apiary, Hive and date range."
+                ? "Open Reports or export Inspections, Tasks, Logbook, Feeding and Queen Records by Apiary, Hive and date range."
                 : queenDashboard.hasQueenData
                   ? "Review and export your retained Queen Records in read-only mode."
                   : "Create printable reports and filtered exports with HiveTag Premium."}
