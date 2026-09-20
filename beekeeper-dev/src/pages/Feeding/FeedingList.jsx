@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../../services/supabase";
+import { formatDerivedWeather } from "../../utils/formatDerivedWeather.js";
 import {
   MAIN_GUIDANCE_CARDS,
   NBU_POLLEN_GUIDANCE_URL,
@@ -58,7 +59,7 @@ export default function FeedingList() {
           supabase
             .from("feeding_records")
             .select(
-              "id,apiary_id,apiary_name_snapshot,fed_on,feed_type,feed_type_other,feed_subtype,feed_subtype_other,product_name,syrup_strength,syrup_custom_water_per_kg,recipe_sugar_kg,recipe_water_litres,reason,reason_other,notes,created_at,feeding_record_hives(id,hive_id,hive_name_snapshot,amount,amount_unit,amount_unit_other,inspection_id)"
+              "id,apiary_id,apiary_name_snapshot,fed_on,feed_type,feed_type_other,feed_subtype,feed_subtype_other,product_name,syrup_strength,syrup_custom_water_per_kg,recipe_sugar_kg,recipe_water_litres,reason,reason_other,weather,weather_code,notes,created_at,feeding_record_hives(id,hive_id,hive_name_snapshot,amount,amount_unit,amount_unit_other,inspection_id)"
             )
             .order("fed_on", { ascending: false })
             .order("created_at", { ascending: false }),
@@ -303,13 +304,28 @@ export default function FeedingList() {
                     {record.product_name && (
                       <p className="text-sm text-gray-600">{record.product_name}</p>
                     )}
+
+                    {record.weather && (
+                      <p className="mt-1 text-xs text-gray-500">
+                        Weather: {formatDerivedWeather(record.weather)}
+                      </p>
+                    )}
                   </div>
 
-                  {record.feed_type === "sugar_syrup" && record.syrup_strength && (
-                    <span className="inline-flex w-fit rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900">
-                      {syrupStrengthLabel(record.syrup_strength)}
-                    </span>
-                  )}
+                  <div className="flex flex-col items-start gap-2 sm:items-end">
+                    {record.feed_type === "sugar_syrup" && record.syrup_strength && (
+                      <span className="inline-flex w-fit rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-900">
+                        {syrupStrengthLabel(record.syrup_strength)}
+                      </span>
+                    )}
+                    <Link
+                      to={`/feeding/${record.id}/edit`}
+                      className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-50"
+                    >
+                      Edit Feeding
+                    </Link>
+                  </div>
+
                 </div>
 
                 {record.feed_type === "sugar_syrup" &&
