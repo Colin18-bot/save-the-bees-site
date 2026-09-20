@@ -1126,6 +1126,8 @@ export default function PrintReport() {
             inspections={inspections}
             todos={todos}
             logbook={logbook}
+            feedingCount={feeding.length}
+            includeFeeding={effectiveIncludeFeeding}
             queenCount={queenRows.length}
             isPremium={isPremium}
             queenOnlyAccess={queenOnlyAccess}
