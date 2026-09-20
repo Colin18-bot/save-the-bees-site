@@ -6,10 +6,67 @@ import "dayjs/locale/en-gb"; // GB locale
 
 dayjs.locale("en-gb");
 
-// HiveTag production release: 1.5.7
+// HiveTag staging release candidate: 1.5.8
 
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
+{
+  version: "1.5.8",
+  released_at: "2026-09-20T19:30:00Z",
+
+  summary:
+    "Introduced Premium Feeding as a structured colony-management record, with multi-hive recording, per-hive quantities, inspection links, contextual feeding guidance, a sugar-syrup recipe helper, inspection-history integration, Dashboard support and full reporting/export support.",
+
+  added: [
+    "Added **Premium Feeding** with dedicated Feeding history, Record Feeding and Edit Feeding screens.",
+    "Added feed types for homemade sugar syrup, prepared/invert syrup, fondant/bee candy, pollen/protein feeds, frames of stores, dry sugar/candy board and Other.",
+    "Added one, several or all-hive selection with either a shared quantity or different quantities for each selected hive.",
+    "Added an optional **Related Inspection** for each hive in a Feeding event; linked Feeding appears inside that inspection while unlinked Feeding remains visible as its own colony record in the Inspection List.",
+    "Added Thin / spring, Medium, Thick / autumn stores and Custom sugar-syrup strengths with an optional recipe helper. Custom recipes automatically display the sugar-bag slider and calculated water quantity.",
+    "Added contextual Feeding guidance on the main Feeding page and within the recording form.",
+    "Added automatic weather snapshot storage for Feeding records where apiary coordinates and weather data are available.",
+    "Added a customisable **Recent Feeding** Dashboard panel for Premium members.",
+    "Added Feeding to the Reports Centre, printable Activity report, dedicated Feeding CSV export and the Feeding worksheet in the complete Excel workbook."
+  ],
+
+  changed: [
+    "Removed **Fed Bees** from new Logbook entry choices so structured Feeding is used for new records; historical Fed Bees Logbook entries remain preserved and editable.",
+    "Feeding records can now be edited directly from Feeding history and Inspection List. Deselecting a hive while editing removes only that hive from the selected Feeding event.",
+    "Dashboard customisation now includes a Premium **Recent Feeding** option.",
+    "Help, Pricing and Premium Required information now describe the Feeding workflow and Premium benefits.",
+    "Sidebar release numbering has been updated to **HiveTag 1.5.8**."
+  ],
+
+  fixed: [
+    "Strengthened Feeding database validation so Custom syrup requires a valid water-per-kilogram value, sugar syrup requires a strength and pollen/protein feed requires its subtype.",
+    "Fixed a multi-hive editing edge case so reducing a Feeding event to one selected hive retains that hive's own quantity instead of incorrectly falling back to the common amount.",
+    "Fixed feed-type changes during Edit Feeding so sensible units update without overwriting the unit data originally loaded into the record.",
+    "Verified Premium-only row-level security for Feeding create, read, update and delete operations, including protection against linking a hive to another hive's inspection."
+  ],
+
+  removed: [
+    "Removed the BBKA spring-feeding example link from Feeding pages."
+  ],
+
+  security: [
+    "Feeding remains protected by Premium-aware RLS and ownership checks at database level, including validation that any linked inspection belongs to the same user and hive."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Feeding", to: "/feeding" },
+    { label: "Record Feeding", to: "/feeding/new" },
+    { label: "Dashboard", to: "/dashboard" },
+    { label: "Reports Centre", to: "/reports/print" },
+    { label: "Help", to: "/help#feeding" },
+    { label: "Premium", to: "/pricing" }
+  ],
+
+  known_issues: [
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
 {
   version: "1.5.7",
   released_at: "2026-09-20T15:10:00Z",
