@@ -615,7 +615,6 @@ useEffect(() => {
       )}
     </div>
   );
-  );
 }
 
 export default NewTodo;
