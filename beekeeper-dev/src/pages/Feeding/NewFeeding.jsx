@@ -13,6 +13,7 @@ import {
   suggestedUnitForFeed,
 } from "./feedingGuidance";
 import { fetchFeedingWeather } from "./feedingWeather";
+import { formatDerivedWeather } from "../../utils/formatDerivedWeather.js";
 
 const todayIso = () => new Date().toISOString().slice(0, 10);
 
@@ -22,8 +23,9 @@ const roundWater = (value) => {
   return Math.round(numeric * 100) / 100;
 };
 
-export default function NewFeeding() {
+export default function NewFeeding({ editingId = "" }) {
   const navigate = useNavigate();
+  const isEditing = Boolean(editingId);
   const location = useLocation();
 
   const queryParams = useMemo(
@@ -72,6 +74,7 @@ export default function NewFeeding() {
   const [commonUnit, setCommonUnit] = useState("litres");
   const [commonUnitOther, setCommonUnitOther] = useState("");
   const [hiveDetails, setHiveDetails] = useState({});
+  const [existingHiveRows, setExistingHiveRows] = useState([]);
 
   useEffect(() => {
     let active = true;
@@ -100,6 +103,99 @@ export default function NewFeeding() {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (!editingId) return undefined;
+
+    let active = true;
+
+    (async () => {
+      setLoading(true);
+      setErrorMsg("");
+
+      const { data, error } = await supabase
+        .from("feeding_records")
+        .select(
+          "id,apiary_id,apiary_name_snapshot,fed_on,feed_type,feed_type_other,feed_subtype,feed_subtype_other,product_name,syrup_strength,syrup_custom_water_per_kg,recipe_sugar_kg,recipe_water_litres,reason,reason_other,weather,weather_code,notes,feeding_record_hives(id,hive_id,hive_name_snapshot,amount,amount_unit,amount_unit_other,inspection_id)"
+        )
+        .eq("id", editingId)
+        .single();
+
+      if (!active) return;
+
+      if (error || !data) {
+        setErrorMsg(error?.message || "Feeding record could not be found.");
+        setLoading(false);
+        return;
+      }
+
+      const childRows = data.feeding_record_hives || [];
+      const selectedIds = childRows.map((row) => row.hive_id).filter(Boolean);
+      const first = childRows[0] || {};
+      const allSame =
+        childRows.length <= 1 ||
+        childRows.every(
+          (row) =>
+            String(row.amount) === String(first.amount) &&
+            row.amount_unit === first.amount_unit &&
+            String(row.amount_unit_other || "") ===
+              String(first.amount_unit_other || "")
+        );
+
+      setFedOn(data.fed_on || todayIso());
+      setFeedType(data.feed_type || "other");
+      setFeedTypeOther(data.feed_type_other || "");
+      setFeedSubtype(data.feed_subtype || "");
+      setFeedSubtypeOther(data.feed_subtype_other || "");
+      setProductName(data.product_name || "");
+      setSyrupStrength(data.syrup_strength || "");
+      setCustomWaterPerKg(
+        data.syrup_custom_water_per_kg != null
+          ? String(data.syrup_custom_water_per_kg)
+          : "1"
+      );
+      setUseRecipeHelper(
+        data.recipe_sugar_kg != null && data.recipe_water_litres != null
+      );
+      setRecipeSugarKg(
+        data.recipe_sugar_kg != null ? Number(data.recipe_sugar_kg) : 4
+      );
+      setReason(data.reason || "not_recorded");
+      setReasonOther(data.reason_other || "");
+      setNotes(data.notes || "");
+      setWeather(data.weather || "");
+      setWeatherCode(data.weather_code || "");
+      setWeatherDisplay(formatDerivedWeather(data.weather || ""));
+      setApiaryId(data.apiary_id || "");
+      setHiveSelectionMode("selected");
+      setSelectedHiveIds(selectedIds);
+      setExistingHiveRows(childRows);
+      setSameAmountForAll(allSame);
+      setCommonAmount(first.amount != null ? String(first.amount) : "");
+      setCommonUnit(first.amount_unit || suggestedUnitForFeed(data.feed_type));
+      setCommonUnitOther(first.amount_unit_other || "");
+      setHiveDetails(
+        Object.fromEntries(
+          childRows
+            .filter((row) => row.hive_id)
+            .map((row) => [
+              row.hive_id,
+              {
+                amount: row.amount != null ? String(row.amount) : "",
+                amountUnit: row.amount_unit || suggestedUnitForFeed(data.feed_type),
+                amountUnitOther: row.amount_unit_other || "",
+                inspectionId: row.inspection_id || "",
+              },
+            ])
+        )
+      );
+      setLoading(false);
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [editingId]);
 
   useEffect(() => {
     let active = true;
@@ -141,21 +237,23 @@ export default function NewFeeding() {
       setHives(loadedHives);
       setInspections(inspectionResult.data || []);
 
-      if (
-        prefillHiveId &&
-        loadedHives.some((hive) => String(hive.id) === String(prefillHiveId))
-      ) {
-        setHiveSelectionMode("selected");
-        setSelectedHiveIds([prefillHiveId]);
-      } else {
-        setSelectedHiveIds([]);
+      if (!isEditing) {
+        if (
+          prefillHiveId &&
+          loadedHives.some((hive) => String(hive.id) === String(prefillHiveId))
+        ) {
+          setHiveSelectionMode("selected");
+          setSelectedHiveIds([prefillHiveId]);
+        } else {
+          setSelectedHiveIds([]);
+        }
       }
     })();
 
     return () => {
       active = false;
     };
-  }, [apiaryId, prefillHiveId]);
+  }, [apiaryId, prefillHiveId, isEditing]);
 
   useEffect(() => {
     let active = true;
@@ -176,32 +274,41 @@ export default function NewFeeding() {
       const result = await fetchFeedingWeather(apiary, fedOn);
       if (!active) return;
 
-      setWeather(result.weather || "");
-      setWeatherCode(result.weatherCode || "");
-      setWeatherDisplay(result.display || "");
+      if (result.weather) {
+        setWeather(result.weather);
+        setWeatherCode(result.weatherCode || "");
+        setWeatherDisplay(result.display || "");
+      } else if (!isEditing) {
+        setWeather("");
+        setWeatherCode("");
+        setWeatherDisplay("");
+      }
     })();
 
     return () => {
       active = false;
     };
-  }, [apiaryId, fedOn, apiaries]);
+  }, [apiaryId, fedOn, apiaries, isEditing]);
 
   useEffect(() => {
     const suggested = suggestedUnitForFeed(feedType);
-    setCommonUnit(suggested);
-    setCommonUnitOther("");
 
-    setHiveDetails((prev) => {
-      const next = { ...prev };
-      Object.keys(next).forEach((hiveId) => {
-        next[hiveId] = {
-          ...next[hiveId],
-          amountUnit: suggested,
-          amountUnitOther: "",
-        };
+    if (!isEditing) {
+      setCommonUnit(suggested);
+      setCommonUnitOther("");
+
+      setHiveDetails((prev) => {
+        const next = { ...prev };
+        Object.keys(next).forEach((hiveId) => {
+          next[hiveId] = {
+            ...next[hiveId],
+            amountUnit: suggested,
+            amountUnitOther: "",
+          };
+        });
+        return next;
       });
-      return next;
-    });
+    }
 
     if (feedType !== "sugar_syrup") {
       setSyrupStrength("");
@@ -212,7 +319,7 @@ export default function NewFeeding() {
       setFeedSubtype("");
       setFeedSubtypeOther("");
     }
-  }, [feedType]);
+  }, [feedType, isEditing]);
 
   const effectiveHiveIds = useMemo(
     () =>
@@ -433,41 +540,51 @@ export default function NewFeeding() {
           ? roundWater(recipeSugar * syrupWaterPerKg)
           : null;
 
-      const { data: feedingRecord, error: feedingError } = await supabase
-        .from("feeding_records")
-        .insert([
-          {
-            user_id: user.id,
-            apiary_id: apiaryId,
-            apiary_name_snapshot: selectedApiary.name,
-            fed_on: fedOn,
-            feed_type: feedType,
-            feed_type_other: feedType === "other" ? feedTypeOther.trim() : null,
-            feed_subtype: feedType === "pollen_protein" ? feedSubtype : null,
-            feed_subtype_other:
-              feedType === "pollen_protein" && feedSubtype === "other"
-                ? feedSubtypeOther.trim()
-                : null,
-            product_name: productName.trim() || null,
-            syrup_strength: feedType === "sugar_syrup" ? syrupStrength : null,
-            syrup_custom_water_per_kg:
-              feedType === "sugar_syrup" && syrupStrength === "custom"
-                ? Number(customWaterPerKg)
-                : null,
-            recipe_sugar_kg: recipeSugar,
-            recipe_water_litres: recipeWater,
-            reason,
-            reason_other: reason === "other" ? reasonOther.trim() : null,
-            weather: weather || null,
-            weather_code: weatherCode || null,
-            notes: notes.trim() || null,
-          },
-        ])
-        .select("id")
-        .single();
+      const parentPayload = {
+        user_id: user.id,
+        apiary_id: apiaryId,
+        apiary_name_snapshot: selectedApiary.name,
+        fed_on: fedOn,
+        feed_type: feedType,
+        feed_type_other: feedType === "other" ? feedTypeOther.trim() : null,
+        feed_subtype: feedType === "pollen_protein" ? feedSubtype : null,
+        feed_subtype_other:
+          feedType === "pollen_protein" && feedSubtype === "other"
+            ? feedSubtypeOther.trim()
+            : null,
+        product_name: productName.trim() || null,
+        syrup_strength: feedType === "sugar_syrup" ? syrupStrength : null,
+        syrup_custom_water_per_kg:
+          feedType === "sugar_syrup" && syrupStrength === "custom"
+            ? Number(customWaterPerKg)
+            : null,
+        recipe_sugar_kg: recipeSugar,
+        recipe_water_litres: recipeWater,
+        reason,
+        reason_other: reason === "other" ? reasonOther.trim() : null,
+        weather: weather || null,
+        weather_code: weatherCode || null,
+        notes: notes.trim() || null,
+      };
 
-      if (feedingError) throw feedingError;
-      feedingRecordId = feedingRecord.id;
+      if (isEditing) {
+        const { error: feedingError } = await supabase
+          .from("feeding_records")
+          .update(parentPayload)
+          .eq("id", editingId);
+
+        if (feedingError) throw feedingError;
+        feedingRecordId = editingId;
+      } else {
+        const { data: feedingRecord, error: feedingError } = await supabase
+          .from("feeding_records")
+          .insert([parentPayload])
+          .select("id")
+          .single();
+
+        if (feedingError) throw feedingError;
+        feedingRecordId = feedingRecord.id;
+      }
 
       const hiveRows = effectiveHiveIds.map((hiveId) => {
         const hive = hives.find((row) => String(row.id) === String(hiveId));
@@ -493,21 +610,57 @@ export default function NewFeeding() {
         };
       });
 
-      const { error: hiveError } = await supabase
-        .from("feeding_record_hives")
-        .insert(hiveRows);
+      if (isEditing) {
+        const selectedSet = new Set(effectiveHiveIds.map(String));
+        const rowsToDelete = existingHiveRows.filter(
+          (row) => row.hive_id && !selectedSet.has(String(row.hive_id))
+        );
 
-      if (hiveError) throw hiveError;
+        for (const row of rowsToDelete) {
+          const { error: deleteError } = await supabase
+            .from("feeding_record_hives")
+            .delete()
+            .eq("id", row.id);
+          if (deleteError) throw deleteError;
+        }
+
+        for (const row of hiveRows) {
+          const existing = existingHiveRows.find(
+            (saved) => String(saved.hive_id) === String(row.hive_id)
+          );
+
+          if (existing) {
+            const { error: updateError } = await supabase
+              .from("feeding_record_hives")
+              .update(row)
+              .eq("id", existing.id);
+            if (updateError) throw updateError;
+          } else {
+            const { error: insertError } = await supabase
+              .from("feeding_record_hives")
+              .insert([row]);
+            if (insertError) throw insertError;
+          }
+        }
+      } else {
+        const { error: hiveError } = await supabase
+          .from("feeding_record_hives")
+          .insert(hiveRows);
+
+        if (hiveError) throw hiveError;
+      }
 
       navigate("/feeding", {
         state: {
-          feedingMessage: `Feeding recorded for ${effectiveHiveIds.length} hive${
-            effectiveHiveIds.length === 1 ? "" : "s"
-          }.`,
+          feedingMessage: isEditing
+            ? "Feeding record updated."
+            : `Feeding recorded for ${effectiveHiveIds.length} hive${
+                effectiveHiveIds.length === 1 ? "" : "s"
+              }.`,
         },
       });
     } catch (err) {
-      if (feedingRecordId) {
+      if (feedingRecordId && !isEditing) {
         await supabase
           .from("feeding_records")
           .delete()
@@ -530,7 +683,9 @@ export default function NewFeeding() {
           Record Feeding
         </h1>
         <p className="mt-1 max-w-3xl text-sm text-gray-600">
-          Record feed actually given to one, several or all active hives in an apiary.
+          {isEditing
+            ? "Correct or update the feeding record. Changes are reflected everywhere this feeding is displayed."
+            : "Record feed actually given to one, several or all active hives in an apiary."}
         </p>
         <p className="mt-2 text-xs font-medium text-gray-500">* Required field</p>
       </div>
@@ -1166,7 +1321,7 @@ export default function NewFeeding() {
             disabled={saving || effectiveHiveIds.length === 0}
             className="rounded-xl bg-[#1a3329] px-5 py-2.5 text-sm font-semibold text-white hover:bg-[#24483a] disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {saving ? "Saving…" : "Record Feeding"}
+            {saving ? "Saving…" : isEditing ? "Save Changes" : "Record Feeding"}
           </button>
         </div>
       </form>
