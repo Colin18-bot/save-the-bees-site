@@ -1033,13 +1033,13 @@ if (ids.length > 0) {
                   <ActiveVeterinaryTreatments hiveId={insp.hive_id} compact />
 
                   {latestFeeding && latestFeedingRecord && (
-                    <div className="mb-2 rounded-lg border border-green-200 bg-green-50 p-3">
+                    <div className="mb-2 rounded-lg border border-purple-200 bg-purple-50 p-3">
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div>
-                          <p className="text-xs font-semibold uppercase tracking-wide text-green-800">
-                            🍯 Feeding recorded
+                          <p className="text-xs font-semibold uppercase tracking-wide text-purple-800">
+                            Feeding recorded
                           </p>
-                          <p className="mt-1 text-sm font-semibold text-green-950">
+                          <p className="mt-1 text-sm font-semibold text-purple-950">
                             {formatAmount(
                               latestFeeding.amount,
                               latestFeeding.amount_unit,
@@ -1053,7 +1053,7 @@ if (ids.length > 0) {
 
                           {latestFeedingRecord.syrup_strength &&
                             latestFeedingRecord.feed_type === "sugar_syrup" && (
-                              <p className="mt-1 text-xs text-green-800">
+                              <p className="mt-1 text-xs text-purple-800">
                                 {syrupStrengthLabel(latestFeedingRecord.syrup_strength)}
                               </p>
                             )}
@@ -1073,14 +1073,14 @@ if (ids.length > 0) {
                           to={`/feeding?highlight=${encodeURIComponent(
                             latestFeeding.feeding_record_id
                           )}&hive_id=${encodeURIComponent(insp.hive_id)}`}
-                          className="text-xs font-medium text-blue-700 hover:underline"
+                          className="text-xs font-medium text-purple-700 hover:underline"
                         >
                           View feeding →
                         </Link>
                       </div>
 
                       {feedings.count > 1 && (
-                        <p className="mt-2 text-xs text-green-800">
+                        <p className="mt-2 text-xs text-purple-800">
                           {feedings.count} feeding records are linked to this inspection.
                         </p>
                       )}
@@ -1135,7 +1135,7 @@ if (ids.length > 0) {
   <span
     className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded border ${
       feedings.count > 0
-        ? "bg-green-50 text-green-800 border-green-200"
+        ? "bg-purple-50 text-purple-800 border-purple-200"
         : "bg-gray-50 text-gray-400 border-gray-100"
     }`}
     title={`${feedings.count} linked feeding record${feedings.count === 1 ? "" : "s"}`}
