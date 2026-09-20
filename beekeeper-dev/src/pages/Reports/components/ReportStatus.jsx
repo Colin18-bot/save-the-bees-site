@@ -4,6 +4,7 @@ export default function ReportStatus({
   inspections,
   todos,
   logbook,
+  feeding,
   nfcHives,
   queenCount,
   isPremium,
@@ -20,6 +21,7 @@ export default function ReportStatus({
           ["Inspections", inspections.length],
           ["Tasks", todos.length],
           ["Logbook", logbook.length],
+          ["Feeding", feeding.length],
         ]
       : []),
     ...(includeQueens ? [["Queens", queenCount]] : []),
