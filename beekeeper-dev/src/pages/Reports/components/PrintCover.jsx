@@ -12,6 +12,8 @@ export default function PrintCover({
   inspections,
   todos,
   logbook,
+  feedingCount,
+  includeFeeding,
   queenCount,
   isPremium,
   queenOnlyAccess,
@@ -26,6 +28,7 @@ export default function PrintCover({
           ["Inspections", inspections.length],
           ["Tasks", todos.length],
           ["Logbook Entries", logbook.length],
+          ...(includeFeeding ? [["Feeding Records", feedingCount]] : []),
         ]
       : []),
     ...(includeQueens ? [["Queen Records", queenCount]] : []),
@@ -75,8 +78,8 @@ export default function PrintCover({
             <>
               <p>
                 This report has been generated automatically by <strong>HiveTag</strong> using the
-                information recorded within your apiaries, hives, inspections, tasks, logbook and
-                selected Queen Records.
+                information recorded within your apiaries, hives, inspections, tasks, logbook,
+                Feeding and selected Queen Records.
               </p>
               <p className="mt-3">
                 Inspection summaries and colony insights are intended to support beekeeper decision
