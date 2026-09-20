@@ -409,6 +409,13 @@ const filtered = useMemo(() => {
       <div className="mb-4">
         <h2 className="text-2xl font-bold mb-3">Logbook Entries</h2>
 
+        <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3 text-sm text-blue-900">
+          <strong>About the Logbook:</strong> Logbook entries are general notes and observations.
+          They do not update Queen Records, Veterinary Medicines, Hive Health or other structured
+          HiveTag records. Use the relevant feature when you want information to form part of those
+          records.
+        </div>
+
         {/* Controls wrapper (LEFT aligned now) */}
         <div className="flex flex-col gap-3 w-full sm:flex-row sm:flex-wrap sm:items-end sm:justify-start">
           {/* Filter by apiary */}
