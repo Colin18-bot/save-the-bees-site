@@ -11,6 +11,12 @@ import {
   formatDerivedWeather,
   getTempUnit,
 } from "../../utils/formatDerivedWeather";
+import {
+  feedTypeLabel,
+  formatAmount,
+  reasonLabel,
+  syrupStrengthLabel,
+} from "../Feeding/feedingGuidance";
 
   const buildInspectionStatusPills = (inspection = {}) => {
   const pills = [];
@@ -135,9 +141,10 @@ const InspectionList = () => {
   const [, setPage] = useState(1);
   const [total, setTotal] = useState(0);
 
-  // related logbook/task maps { [inspection_id]: { count, recent: [] } }
+  // Related records keyed by inspection id.
   const [logMap, setLogMap] = useState({});
   const [taskMap, setTaskMap] = useState({});
+  const [feedingMap, setFeedingMap] = useState({});
 
   // Lightbox state
   const [lightbox, setLightbox] = useState({
@@ -426,11 +433,11 @@ useEffect(() => {
       if (!error) {
         setInspections(data || []);
 
-        // Batch fetch related logbook entries and tasks for these inspections
+        // Batch fetch related Logbook entries, Tasks and Premium Feeding records.
 const ids = (data || []).map((x) => x.id);
 
 if (ids.length > 0) {
-  const [{ data: logs }, { data: tasks }] = await Promise.all([
+  const [{ data: logs }, { data: tasks }, { data: feedings }] = await Promise.all([
     supabase
       .from("logbook")
       .select("id, inspection_id, date, log_type, entry, archived_at")
@@ -444,6 +451,14 @@ if (ids.length > 0) {
       .is("archived_at", null)
       .in("inspection_id", ids)
       .order("due_date", { ascending: true }),
+
+    supabase
+      .from("feeding_record_hives")
+      .select(
+        "id,inspection_id,feeding_record_id,hive_id,hive_name_snapshot,amount,amount_unit,amount_unit_other,created_at,feeding_records(id,fed_on,feed_type,feed_type_other,syrup_strength,reason,reason_other)"
+      )
+      .in("inspection_id", ids)
+      .order("created_at", { ascending: false }),
   ]);
 
       const logM = {};
@@ -462,11 +477,25 @@ if (ids.length > 0) {
         if (taskM[t.inspection_id].recent.length < 2) taskM[t.inspection_id].recent.push(t);
       });
 
+      const feedingM = {};
+      (feedings || []).forEach((feeding) => {
+        if (!feeding.inspection_id) return;
+        if (!feedingM[feeding.inspection_id]) {
+          feedingM[feeding.inspection_id] = { count: 0, recent: [] };
+        }
+        feedingM[feeding.inspection_id].count += 1;
+        if (feedingM[feeding.inspection_id].recent.length < 2) {
+          feedingM[feeding.inspection_id].recent.push(feeding);
+        }
+      });
+
       setLogMap(logM);
       setTaskMap(taskM);
+      setFeedingMap(feedingM);
     } else {
       setLogMap({});
       setTaskMap({});
+      setFeedingMap({});
     }
       } else {
         console.warn("fetchInspections error:", error);
@@ -891,6 +920,11 @@ if (ids.length > 0) {
 
               const logs = logMap[insp.id] || { count: 0, recent: [] };
               const tasks = taskMap[insp.id] || { count: 0, recent: [] };
+              const feedings = feedingMap[insp.id] || { count: 0, recent: [] };
+              const latestFeeding = feedings.recent[0] || null;
+              const latestFeedingRecord = Array.isArray(latestFeeding?.feeding_records)
+                ? latestFeeding.feeding_records[0]
+                : latestFeeding?.feeding_records || null;
 
               const hiveForCard = hives.find((h) => String(h.id) === String(insp.hive_id));
               const showNfcHeaderPill =
@@ -998,6 +1032,61 @@ if (ids.length > 0) {
 
                   <ActiveVeterinaryTreatments hiveId={insp.hive_id} compact />
 
+                  {latestFeeding && latestFeedingRecord && (
+                    <div className="mb-2 rounded-lg border border-green-200 bg-green-50 p-3">
+                      <div className="flex flex-wrap items-start justify-between gap-2">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-wide text-green-800">
+                            🍯 Feeding recorded
+                          </p>
+                          <p className="mt-1 text-sm font-semibold text-green-950">
+                            {formatAmount(
+                              latestFeeding.amount,
+                              latestFeeding.amount_unit,
+                              latestFeeding.amount_unit_other
+                            )}{" "}
+                            · {feedTypeLabel(
+                              latestFeedingRecord.feed_type,
+                              latestFeedingRecord.feed_type_other
+                            )}
+                          </p>
+
+                          {latestFeedingRecord.syrup_strength &&
+                            latestFeedingRecord.feed_type === "sugar_syrup" && (
+                              <p className="mt-1 text-xs text-green-800">
+                                {syrupStrengthLabel(latestFeedingRecord.syrup_strength)}
+                              </p>
+                            )}
+
+                          {latestFeedingRecord.reason &&
+                            latestFeedingRecord.reason !== "not_recorded" && (
+                              <p className="mt-1 text-xs text-green-800">
+                                {reasonLabel(
+                                  latestFeedingRecord.reason,
+                                  latestFeedingRecord.reason_other
+                                )}
+                              </p>
+                            )}
+                        </div>
+
+                        <Link
+                          to={`/feeding?highlight=${encodeURIComponent(
+                            latestFeeding.feeding_record_id
+                          )}&hive_id=${encodeURIComponent(insp.hive_id)}`}
+                          className="text-xs font-medium text-blue-700 hover:underline"
+                        >
+                          View feeding →
+                        </Link>
+                      </div>
+
+                      {feedings.count > 1 && (
+                        <p className="mt-2 text-xs text-green-800">
+                          {feedings.count} feeding records are linked to this inspection.
+                        </p>
+                      )}
+                    </div>
+                  )}
+
                   {visibleStatusPills.length > 0 && (
                   <div className="mb-2 flex flex-wrap gap-2">
                     {visibleStatusPills.map((pill, index) => (
@@ -1041,6 +1130,17 @@ if (ids.length > 0) {
     title={`${tasks.count} linked task${tasks.count === 1 ? "" : "s"}`}
   >
     {tasks.count} task{tasks.count === 1 ? "" : "s"}
+  </span>
+
+  <span
+    className={`inline-flex items-center text-xs font-medium px-2 py-0.5 rounded border ${
+      feedings.count > 0
+        ? "bg-green-50 text-green-800 border-green-200"
+        : "bg-gray-50 text-gray-400 border-gray-100"
+    }`}
+    title={`${feedings.count} linked feeding record${feedings.count === 1 ? "" : "s"}`}
+  >
+    {feedings.count} feed{feedings.count === 1 ? "" : "s"}
   </span>
 
   {logs.count > 0 && (
@@ -1145,6 +1245,24 @@ if (ids.length > 0) {
                   )}
 
                   <div className="mt-auto pt-2 flex flex-wrap gap-2">
+                    {isPremium && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          navigate(
+                            `/feeding/new?apiary_id=${encodeURIComponent(
+                              insp.apiary_id
+                            )}&hive_id=${encodeURIComponent(
+                              insp.hive_id
+                            )}&inspection_id=${encodeURIComponent(insp.id)}`
+                          )
+                        }
+                        className="inline-block bg-amber-600 hover:bg-amber-700 text-white text-sm px-3 py-2 rounded"
+                      >
+                        Record Feeding
+                      </button>
+                    )}
+
                     <button
                       type="button"
                       onClick={() =>
