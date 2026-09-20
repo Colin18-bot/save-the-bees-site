@@ -19,6 +19,7 @@ export default function ReportContent(props) {
     includeInspections,
     includeTodos,
     includeLogbook,
+    includeFeeding,
     includeQueens,
   } = props;
 
@@ -50,7 +51,7 @@ export default function ReportContent(props) {
         </>
       )}
 
-      {isPremium && (includeTodos || includeLogbook) && (
+      {isPremium && (includeTodos || includeLogbook || includeFeeding) && (
         <ScreenSection activeTab={activeTab} id="tasks">
           <TasksLogbook {...props} />
         </ScreenSection>
@@ -86,7 +87,7 @@ export default function ReportContent(props) {
           </>
         )}
 
-        {isPremium && (includeTodos || includeLogbook) && (
+        {isPremium && (includeTodos || includeLogbook || includeFeeding) && (
           <div className="print-page">
             <TasksLogbook {...props} />
           </div>
