@@ -17,6 +17,7 @@ const toc = [
   { id: "seasonal-guide", title: "Year in the Apiary Seasonal Guide" },
   { id: "business-inventory", title: "Inventory, Sales & Expenses" },
   { id: "currency-defaults", title: "Default Currency (How It Works)" },
+  { id: "feeding", title: "Feeding" },
   { id: "reports", title: "Reports Centre" },
   { id: "workflows", title: "Typical Workflows" },
   { id: "nfc", title: "NFC (Premium): How It Works" },
@@ -152,6 +153,17 @@ export default function Help() {
                     <dd className="text-gray-700">
                       Review seasonal priorities and create tasks for the work you want to carry
                       out.
+                    </dd>
+                  </div>
+
+                  <div>
+                    <dt className="font-medium text-gray-900">
+                      Feeding <Badge tone="blue">Premium</Badge>
+                    </dt>
+                    <dd className="text-gray-700">
+                      Record feed actually given to one, several or all hives, including sugar syrup,
+                      fondant, prepared syrup, pollen/protein feed, frames of stores and dry sugar.
+                      Feeding can optionally link back to the inspection that led to the feed.
                     </dd>
                   </div>
 
@@ -2148,6 +2160,74 @@ export default function Help() {
               </div>
             </section>
 
+            {/* Feeding */}
+            <section id="feeding">
+              <h2 className="text-2xl font-bold mb-3">
+                Feeding <Badge tone="blue">Premium</Badge>
+              </h2>
+
+              <p className="text-gray-700">
+                Feeding is a structured colony record for feed that was actually given. Use a{" "}
+                <strong>Task</strong> when you are planning to feed later; use{" "}
+                <strong>Feeding</strong> after the feed has been supplied. Older historical{" "}
+                <strong>Fed Bees</strong> Logbook entries are preserved, but new feeding records belong
+                in the Feeding feature.
+              </p>
+
+              <div className="mt-4 space-y-4">
+                <div className="rounded-xl border bg-white p-4">
+                  <h3 className="font-semibold">Record Feeding</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-gray-700">
+                    <li>Select the date, feed type, apiary and one, several or all active hives.</li>
+                    <li>
+                      Supported feed types include homemade sugar syrup, prepared/invert syrup,
+                      fondant or bee candy, pollen/protein feed, frames of stores, dry sugar/candy
+                      board and Other.
+                    </li>
+                    <li>
+                      Use the same amount for every selected hive or enter different quantities for
+                      individual hives.
+                    </li>
+                    <li>
+                      Each hive can optionally link to a related inspection. Feeding recorded without
+                      an inspection link still remains a complete colony record and is visible in the
+                      Inspection List as a standalone Feeding record.
+                    </li>
+                    <li>
+                      Feeding records can be edited later. If a hive was selected by mistake,
+                      deselecting it during Edit Feeding removes that hive from that feeding event
+                      without deleting the hive itself.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
+                  <h3 className="font-semibold text-amber-950">Sugar syrup recipe helper</h3>
+                  <p className="mt-2 text-sm text-amber-900">
+                    Choose Thin / spring, Medium, Thick / autumn stores or Custom. The optional
+                    recipe helper scales the water quantity to the number of 1 kg sugar bags. For a
+                    Custom recipe, the helper opens automatically after you enter the litres of
+                    water used per 1 kg sugar.
+                  </p>
+                  <p className="mt-2 text-xs text-amber-900">
+                    The recipe helper records how syrup was prepared. The amount actually given to
+                    each hive is recorded separately.
+                  </p>
+                </div>
+
+                <div className="rounded-xl border border-purple-200 bg-purple-50 p-4">
+                  <h3 className="font-semibold text-purple-950">Where Feeding appears</h3>
+                  <ul className="mt-2 list-disc pl-6 space-y-1 text-purple-900">
+                    <li>The Feeding page keeps the full history and provides feed guidance.</li>
+                    <li>Linked Feeding is shown within the related inspection.</li>
+                    <li>Unlinked Feeding is still shown in the Inspection List as a Feeding record.</li>
+                    <li>The Dashboard can show Recent Feeding and the card can be turned on or off in Customise Dashboard.</li>
+                    <li>Reports Centre can print Feeding and export it as CSV or in the complete Excel workbook.</li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
             {/* Reports */}
             <section id="reports">
               <h2 className="text-2xl font-bold mb-3">
@@ -2173,7 +2253,7 @@ export default function Help() {
                       Choose whether archived records should be included.
                     </li>
                     <li>
-                      Premium members can include Inspections, Tasks, Logbook, Queen Records and NFC
+                      Premium members can include Inspections, Tasks, Logbook, Feeding, Queen Records and NFC
                       tags.
                     </li>
                     <li>
@@ -2193,7 +2273,7 @@ export default function Help() {
                     </li>
                     <li>
                       Available content can include the Executive Summary, Hive Intelligence,
-                      Inspection Timeline, detailed records, photographs, Tasks, Logbook and Queen
+                      Inspection Timeline, detailed records, photographs, Tasks, Logbook, Feeding and Queen
                       Records.
                     </li>
                     <li>
@@ -2237,7 +2317,7 @@ export default function Help() {
                   <strong>Queen Reports (Read only)</strong>. Step 1 shows only{" "}
                   <strong>Include archived</strong> and <strong>Queen Records</strong>. The review,
                   Queen CSV, Queen-only Excel workbook and print output contain Queen information
-                  only. Inspections, Tasks, Logbook, NFC and other report exports remain Premium.
+                  only. Inspections, Tasks, Logbook, Feeding, NFC and other report exports remain Premium.
                 </p>
               </div>
 
@@ -2249,9 +2329,10 @@ export default function Help() {
                   <li>Use date filters for seasonal, annual or lifecycle reviews.</li>
                  <li>
                     Use the Apiary and Hive filters to keep a shared or printed report focused on the
-                    intended colony. When a specific hive is selected, the Tasks and Logbook sections
-                    include records created directly for that hive plus any <strong>All Hives</strong>{" "}
-                    records from the same apiary.
+                    intended colony. When a specific hive is selected, Tasks and Logbook include records created directly
+                    for that hive plus any <strong>All Hives</strong> records from the same apiary.
+                    Feeding is always stored against the individual hive or hives that actually
+                    received the feed.
                   </li>
                   <li>
                     Generate the report again after changing filters or included sections, then export
