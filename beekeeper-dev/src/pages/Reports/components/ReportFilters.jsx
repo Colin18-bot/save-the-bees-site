@@ -19,6 +19,8 @@ export default function ReportFilters({
   setIncludeTodos,
   includeLogbook,
   setIncludeLogbook,
+  includeFeeding,
+  setIncludeFeeding,
   includeQueens,
   setIncludeQueens,
   includeNfc,
@@ -147,6 +149,15 @@ export default function ReportFilters({
                 onChange={(event) => setIncludeLogbook(event.target.checked)}
               />
               Logbook
+            </label>
+
+            <label className="inline-flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={includeFeeding}
+                onChange={(event) => setIncludeFeeding(event.target.checked)}
+              />
+              Feeding
             </label>
           </>
         )}
