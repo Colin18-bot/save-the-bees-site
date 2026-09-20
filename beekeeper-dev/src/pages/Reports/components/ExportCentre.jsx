@@ -8,6 +8,7 @@ export default function ExportCentre({
   inspections,
   todos,
   logbook,
+  feedingRows,
   nfcHives,
   queenRows,
   isPremium,
@@ -18,6 +19,7 @@ export default function ExportCentre({
   downloadInspectionsCSV,
   downloadTodosCSV,
   downloadLogbookCSV,
+  downloadFeedingCSV,
   downloadQueensCSV,
   downloadNfcCSV,
   downloadCombinedCSV,
@@ -95,6 +97,15 @@ export default function ExportCentre({
                   disabled={loading || !logbook.length}
                 >
                   Export Logbook CSV
+                </button>
+
+                <button
+                  type="button"
+                  onClick={downloadFeedingCSV}
+                  className={`${buttonBase} bg-purple-100 text-purple-900 hover:bg-purple-200`}
+                  disabled={loading || !feedingRows.length}
+                >
+                  Export Feeding CSV
                 </button>
               </>
             )}
