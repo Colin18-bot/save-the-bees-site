@@ -1,4 +1,15 @@
 window.beezKneesBlogPosts = [
+    {
+    title: "Beehive Frames Explained: A UK Guide to SN1, SN4, DN4, 14×12 and Commercial Frames",
+    slug: "beehive-frames-explained-uk",
+    category: "Beginner Beekeeping",
+    date: "26 September 2026",
+    isoDate: "2026-09-26",
+    isoModified: "2026-09-26",
+    image: "assets/images/parts-of-a-beehive-frame.webp",
+    alt: "Diagram showing the main parts of a British beehive frame including top bar, side bars, lugs and bottom bars",
+    excerpt: "A practical UK guide to beehive frames, including SN1, SN4, DN1, DN4, Hoffman, 14×12, Commercial and Manley frames, frame spacing, timber grades and hive compatibility."
+  },
   {
     title: "How I Use Apivar Strips After the Honey Harvest",
     slug: "how-i-use-apivar-strips-after-honey-harvest",

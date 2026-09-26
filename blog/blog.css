@@ -190,12 +190,13 @@
 }
 
 .blog-main-image {
-  width: 100%;
+  width: auto;
+  max-width: 100%;
+  height: auto;
   border-radius: 18px;
-  margin: 1.4rem 0;
+  margin: 1.4rem auto;
   display: block;
-  max-height: 520px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 /* Sidebar */
@@ -311,7 +312,6 @@
 }
 
 /* Facebook links in Join the Conversation section */
-
 .blog-follow a {
   display: inline-flex;
   align-items: center;
@@ -340,9 +340,62 @@
 }
 
 /* =========================================================
+   BLOG ARTICLE TABLES
+========================================================= */
+.blog-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1.4rem 0 1.8rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.blog-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #dfe6d8;
+  border-radius: 12px;
+  overflow: hidden;
+  font-size: 0.96rem;
+}
+
+.blog-table th,
+.blog-table td {
+  padding: 0.8rem 0.9rem;
+  border: 1px solid #dfe6d8;
+  text-align: left;
+  vertical-align: top;
+}
+
+.blog-table thead th {
+  background: #263b20;
+  color: #fff;
+  font-weight: 700;
+}
+
+.blog-table tbody tr:nth-child(even) {
+  background: #f8faf5;
+}
+
+.blog-table tbody tr:hover {
+  background: #fff8dc;
+}
+
+.blog-table tbody td:first-child {
+  font-weight: 700;
+  color: #263b20;
+}
+
+.blog-table caption {
+  text-align: left;
+  margin-bottom: 0.6rem;
+  color: #263b20;
+  font-weight: 700;
+}
+
+/* =========================================================
    RESPONSIVE
 ========================================================= */
-
 @media (max-width: 900px) {
   .blog-grid {
     grid-template-columns: 1fr;
@@ -359,5 +412,15 @@
 
   .blog-article-card {
     padding: 1.25rem;
+  }
+
+  .blog-table {
+    min-width: 680px;
+  }
+
+  .blog-table th,
+  .blog-table td {
+    padding: 0.7rem 0.8rem;
+    font-size: 0.92rem;
   }
 }
