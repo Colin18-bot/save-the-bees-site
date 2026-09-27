@@ -1,4 +1,26 @@
 window.beezKneesBlogPosts = [
+      {
+    title: "Beehive Foundation Explained: Wired, Unwired, Beeswax, Plastic and Foundationless Frames",
+    slug: "beehive-foundation-explained-uk",
+    category: "Beginner Beekeeping",
+    date: "27 September 2026",
+    isoDate: "2026-09-27",
+    isoModified: "2026-09-27",
+    image: "assets/images/beeswax-foundation-in-frame-apiary.webp",
+    alt: "Wooden beehive frame fitted with fresh beeswax foundation in a UK apiary",
+    excerpt: "A practical UK guide to beehive foundation, including wired and unwired beeswax, frame wiring, plastic foundation, cut comb, drone foundation, small-cell foundation and foundationless frames."
+    },
+    {
+    title: "My Queenless Nuc Disappeared: Wasps, Queen Failure and a Late-Season Lesson",
+    slug: "queenless-nuc-disappeared-wasp-pressure",
+    category: "Hive Problems",
+    date: "27 September 2026",
+    isoDate: "2026-09-27",
+    isoModified: "2026-09-27",
+    image: "assets/images/queenless-nuc-before-disappearance.webp",
+    alt: "Bees on a frame in a six-frame poly nuc before the colony later disappeared",
+    excerpt: "A real late-season apiary lesson from a queenless six-frame poly nuc that appeared normal at the entrance, failed to establish a laying queen, and was completely empty two weeks later, with wasp pressure likely contributing to the loss."
+     },
     {
     title: "Beehive Frames Explained: A UK Guide to SN1, SN4, DN4, 14×12 and Commercial Frames",
     slug: "beehive-frames-explained-uk",
