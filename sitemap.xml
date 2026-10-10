@@ -511,6 +511,11 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://beezknees.co.uk/privacy</loc>
+    <lastmod>2026-10-10</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://beezknees.co.uk/post-mortem-hive-analysis</loc>
     <lastmod>2026-08-15</lastmod>
     <priority>0.5</priority>
