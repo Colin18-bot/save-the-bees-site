@@ -311,16 +311,65 @@
   margin-bottom: 1rem;
 }
 
-/* Facebook links in Join the Conversation section */
-.blog-follow a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+
+/* =========================================================
+   BLOG - JOIN THE CONVERSATION SOCIAL LINKS
+========================================================= */
+
+.blog-social-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 1.25rem;
 }
 
-.blog-follow .fa-facebook-f {
-  color: inherit;
-  font-size: 0.95rem;
+/* Social media link cards */
+.blog-article-card .blog-social-links a,
+.blog-follow .blog-social-links a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1px solid #dfe6d8;
+  border-radius: 10px;
+  color: #263b20;
+  text-decoration: none;
+  font-weight: 700;
+  line-height: 1.4;
+  transition: background 0.2s ease,
+              border-color 0.2s ease;
+}
+
+/* Social media icons */
+.blog-social-links a i {
+  font-size: 1.3rem;
+  width: 25px;
+  text-align: center;
+  flex-shrink: 0;
+  color: #2f6b2f;
+}
+
+/* Hover and keyboard focus */
+.blog-article-card .blog-social-links a:hover,
+.blog-article-card .blog-social-links a:focus-visible,
+.blog-follow .blog-social-links a:hover,
+.blog-follow .blog-social-links a:focus-visible {
+  background: #f5edc6;
+  border-color: #d6a21d;
+  color: #263b20;
+}
+
+.blog-social-links a:focus-visible {
+  outline: 2px solid #263b20;
+  outline-offset: 3px;
+}
+
+/* Mobile layout */
+@media (max-width: 650px) {
+  .blog-social-links {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Section heading pill matching Latest Articles */
