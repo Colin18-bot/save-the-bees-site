@@ -173,3 +173,7 @@ http://www.beezknees.co.uk/*                     https://beezknees.co.uk/:splat 
 # Legacy / corrected old URLs
 /wasps-attacking-beehives-uk.html                /wasps-beehives-uk                               301!
 /wasps-attacking-beehives-uk                     /wasps-beehives-uk                               301
+
+# Corrected blog article URLs
+/beehive-frames-explained-uk       /blog/posts/beehive-frames-explained-uk       301
+/beehive-foundation-explained-uk   /blog/posts/beehive-foundation-explained-uk   301
