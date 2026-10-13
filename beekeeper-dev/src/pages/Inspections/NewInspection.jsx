@@ -603,6 +603,7 @@ const NewInspection = () => {
     // Upload up to 3 photos -> store URLs + PATHS (paths are what the Edge Function prefers)
     const uploadedUrls = [];
     const uploadedPaths = [];
+    let failedUploads = 0;
 
     for (const originalFile of files.slice(0, 3)) {
       try {
@@ -616,6 +617,7 @@ const NewInspection = () => {
 
         if (upErr) {
           console.error("Photo upload error:", upErr);
+          failedUploads += 1;
           continue;
         }
 
@@ -626,17 +628,19 @@ const NewInspection = () => {
         }
       } catch (err) {
         console.error("Photo upload error:", err);
+        failedUploads += 1;
       }
     }
 
     if (uploadedUrls.length) {
-      await supabase
+      const { error: linkError } = await supabase
         .from("inspections")
         .update({
           photos: uploadedUrls,
           photo_paths: uploadedPaths,
         })
         .eq("id", inserted.id);
+      if (linkError) failedUploads += uploadedUrls.length;
 
       // ✅ GA: follow-up event once uploads succeed
       trackEvent("inspection_photos_uploaded", {
@@ -652,6 +656,11 @@ const NewInspection = () => {
     setPreviews([]);
     setFiles([]);
 
+    if (failedUploads > 0) {
+      setSaving(false);
+      setErrorMessage(`Inspection record saved, but ${failedUploads} photograph(s) were NOT saved correctly. Do not press Save again because that could duplicate the inspection. Open the saved inspection and use Edit Inspection to add missing photos.`);
+      return;
+    }
     setSuccessMessage("Inspection saved successfully!");
     setSaving(false);
 
