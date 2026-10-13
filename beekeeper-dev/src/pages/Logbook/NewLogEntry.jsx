@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Logbook/NewLogEntry.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -246,13 +247,14 @@ useEffect(() => {
   const uploadPhotoIfAny = async () => {
     if (!selectedFile) return { url: null, path: null };
 
-    const safeName = selectedFile.name.replace(/\s+/g, "_");
+    const uploadFile = await optimisePhotoUpload(selectedFile);
+    const safeName = uploadFile.name.replace(/\s+/g, "_");
     const filePath = `logbook/${Date.now()}-${safeName}`;
 
     const { error: upErr } = await supabase.storage
       .from("photos")
-      .upload(filePath, selectedFile, {
-        contentType: selectedFile.type,
+      .upload(filePath, uploadFile, {
+        contentType: uploadFile.type,
         upsert: true,
       });
 

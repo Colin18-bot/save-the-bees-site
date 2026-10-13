@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Apiaries/EditApiary.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -194,7 +195,8 @@ const EditApiary = () => {
       throw new Error("Missing user_id on apiary record (cannot upload photo).");
     }
 
-    const safeName = String(selectedFile.name || "photo.jpg")
+    const uploadFile = await optimisePhotoUpload(selectedFile);
+    const safeName = String(uploadFile.name || "photo.jpg")
       .replace(/[^\w.-]+/g, "_")
       .slice(0, 120);
 
@@ -203,9 +205,9 @@ const EditApiary = () => {
 
     const { error: uploadError } = await supabase.storage
       .from("photos")
-      .upload(path, selectedFile, {
+      .upload(path, uploadFile, {
         upsert: true,
-        contentType: selectedFile.type || "image/jpeg",
+        contentType: uploadFile.type || "image/jpeg",
       });
 
     if (uploadError) {

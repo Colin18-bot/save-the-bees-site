@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Hives/EditHive.jsx
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
@@ -146,14 +147,15 @@ const EditHive = () => {
       };
     }
 
-    const safeName = file.name.replace(/\s+/g, "_");
+    const uploadFile = await optimisePhotoUpload(file);
+    const safeName = uploadFile.name.replace(/\s+/g, "_");
     const photo_path = `hives/${id}-${Date.now()}-${safeName}`;
 
     const { error: uploadError } = await supabase.storage
       .from("photos")
-      .upload(photo_path, file, {
+      .upload(photo_path, uploadFile, {
         upsert: true,
-        contentType: file.type || "image/jpeg",
+        contentType: uploadFile.type || "image/jpeg",
       });
 
     if (uploadError) {

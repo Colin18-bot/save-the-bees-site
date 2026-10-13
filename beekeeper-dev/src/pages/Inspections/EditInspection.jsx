@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Inspections/EditInspection.jsx
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -563,7 +564,8 @@ const EditInspection = () => {
     const bucket = "photos";
     const uid = userId;
 
-    for (const file of newFiles) {
+    for (const originalFile of newFiles) {
+      const file = await optimisePhotoUpload(originalFile);
       const safeName = String(file.name || "image").replace(/[^\w.-]+/g, "_");
       const filename = `${Date.now()}-${safeName}`;
       const path = `inspections/${uid || "unknown"}/${id}/${filename}`;
