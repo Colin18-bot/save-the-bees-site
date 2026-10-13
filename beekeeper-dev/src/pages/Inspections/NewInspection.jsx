@@ -626,7 +626,11 @@ const NewInspection = () => {
       inserted = data;
     } catch (err) {
       console.error("Insert inspection error:", err);
-      setErrorMessage("Could not confirm that the inspection was saved. Check your connection and look in the inspection history before trying Save again, to avoid creating a duplicate.");
+      if (err?.code === "23505") {
+        setErrorMessage("An inspection already exists for this hive on the selected date. Please open and edit the existing inspection, or choose a different date. No new inspection was created.");
+      } else {
+        setErrorMessage("Could not confirm that the inspection was saved. Check your connection and look in the inspection history before trying Save again, to avoid creating a duplicate.");
+      }
       setSaving(false);
       return;
     }
