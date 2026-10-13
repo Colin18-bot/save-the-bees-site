@@ -72,10 +72,10 @@ window.searchData = [
     "keywords": "August beekeeping tasks UK, what to do with bees in August, varroa treatment August UK, honey harvest August, feeding bees in August, preparing hives for winter UK, unite weak colonies, wasps in the apiary, wax moth prevention"
   },
   {
-    "title": "Autumn Beekeeping UK | September, October & November Tasks | BeezKnees",
+    "title": "Autumn Beekeeping UK: Tasks & Winter Preparation | BeezKnees",
     "url": "/autumn-beekeeping-uk",
-    "description": "Autumn beekeeping tasks in the UK, covering September, October and November feeding, varroa treatment, hive checks, mouseguards and winter preparation.",
-    "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Autumn Beekeeping UK | September, October & November Tasks"
+    "description": "What should UK beekeepers do in autumn? Follow September, October and November tasks for winter stores, Varroa, hive protection and seasonal checks.",
+    "keywords": "autumn beekeeping UK, autumn beekeeping tasks, September beekeeping, October beekeeping, November beekeeping, winter preparation bees, autumn feeding bees, Varroa autumn, winter stores, mouse guards, hive winter checklist"
   },
   {
     "title": "Bacterial Bee Diseases UK | AFB & EFB Guide | BeezKnees",
