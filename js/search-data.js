@@ -84,9 +84,9 @@ window.searchData = [
     "keywords": "bacterial diseases honey bees UK, American foulbrood AFB UK, European foulbrood EFB UK, foulbrood symptoms, foulbrood inspection, foulbrood treatment UK, bee disease notifiable UK"
   },
   {
-    "title": "Bearding Bees UK | Why Bees Cluster Outside the Hive",
+    "title": "Why Are Bees Bearding Outside the Hive? Causes & What to Do | BeezKnees",
     "url": "/bearding-bees-uk",
-    "description": "UK guide to bearding bees, including why bees cluster outside the hive, when bearding is normal, and how to tell it apart from swarming or overheating.",
+    "description": "Why are bees hanging outside your hive, even at night? Learn when bearding is normal, how to spot crowding or swarming signs, and what to check first.",
     "keywords": "bearding bees UK, bees outside hive cluster, bees hanging on hive, bees on front of hive, hot weather bees hive, why bees beard"
   },
   {
@@ -306,15 +306,15 @@ window.searchData = [
     "keywords": "February beekeeping tasks, winter beekeeping UK, bees in February, late winter hive checks, monitor food stores, spring preparation, UK beekeeping guide"
   },
   {
-    "title": "Feeding Bees UK | Syrup & Fondant",
+    "title": "Feeding Bees UK: When, What & How to Feed | BeezKnees",
     "url": "/feeding-bees",
-    "description": "UK guide to feeding bees, including when to use syrup or fondant, seasonal feeding, feeders, ekes, nucs, swarms and robbing prevention.",
+    "description": "When should you feed honey bees? UK guide to sugar syrup, fondant, seasonal feeding, feeders and avoiding robbing, with practical advice for every colony.",
     "keywords": "feeding bees UK, what to feed bees, when to feed bees UK, fondant feeding bees, sugar syrup recipe bees, 1:1 syrup bees, 2:1 syrup bees, bee feeders UK, eke for fondant, robbing bees feeding, feeding nucs, autumn feeding bees, winter feeding bees"
   },
   {
-    "title": "Feeding Bees for Winter UK | Autumn Stores & Syrup | BeezKnees",
+    "title": "Feeding Bees for Winter UK: When & What to Feed | BeezKnees",
     "url": "/feeding-bees-for-winter-uk",
-    "description": "Feeding bees for winter in the UK, covering autumn syrup, checking stores, hive weight, timing, avoiding robbing and preparing colonies for winter.",
+    "description": "When should you feed bees for winter in the UK? Learn about autumn syrup, winter stores, hive weight and what to do if your colony needs food in cold weather.",
     "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, Feeding Bees for Winter UK | Autumn Stores & Syrup"
   },
   {
@@ -498,9 +498,9 @@ window.searchData = [
     "keywords": "November beekeeping tasks UK, what to do with bees in November, feed bees fondant, winter hive protection UK, hive insulation, entrance reducers, mouse guards, woodpecker protection, beekeeping calendar UK, plan next beekeeping season"
   },
   {
-    "title": "October Beekeeping UK | Fondant, Insulation & Winter Prep | BeezKnees",
+    "title": "October Beekeeping UK: What to Do & Winter Checklist | BeezKnees",
     "url": "/october",
-    "description": "October beekeeping tasks for UK beekeepers, including fondant feeding, hive insulation, condensation control, mouse guards and winter checks.",
+    "description": "What should UK beekeepers do in October? Check winter stores, feeding, Varroa, insulation and mouse guards with a practical October hive checklist.",
     "keywords": "October beekeeping tasks UK, what to do with bees in October, fondant feeding, hive insulation UK, condensation control, mouse guards, woodpecker protection, winter hive preparation, beekeeping equipment cleaning, plant spring bulbs for bees"
   },
   {
@@ -816,9 +816,9 @@ window.searchData = [
     "keywords": "When to Call a Bee Inspector UK | BeezKnees Dead bees outside the hive When to Call a Bee Inspector in the UK Call or seek advice urgently if you suspect foulbrood Other reasons to seek bee inspector advice What to do before moving equipment What to read next You might also need Contact & Social Quick Links Useful Pages"
   },
   {
-    "title": "When to Feed Fondant to Bees UK | Winter & Spring Guide | BeezKnees",
+    "title": "When to Feed Fondant to Bees (UK): Winter & Spring | BeezKnees",
     "url": "/when-to-feed-fondant-to-bees",
-    "description": "When to feed fondant to bees in the UK, including winter feeding, late-winter starvation risk, spring emergencies and when syrup is more suitable.",
+    "description": "Find out when UK honey bees need fondant, how to spot low winter stores, where to place it above the cluster and when syrup is a better choice.",
     "keywords": "UK beekeeping, seasonal beekeeping, apiary management, beekeeping calendar, When to Feed Fondant to Bees UK | Winter & Spring Guide"
   },
   {
