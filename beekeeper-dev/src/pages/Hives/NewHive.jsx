@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Hives/NewHive.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
@@ -186,14 +187,15 @@ const NewHive = () => {
   const uploadPhoto = async (hiveId) => {
     if (!selectedFile) return null;
 
-    const safeName = selectedFile.name.replace(/\s+/g, "_");
+    const uploadFile = await optimisePhotoUpload(selectedFile);
+    const safeName = uploadFile.name.replace(/\s+/g, "_");
     const photo_path = `hives/${hiveId}-${Date.now()}-${safeName}`;
 
     const { error: uploadError } = await supabase.storage
       .from("photos")
-      .upload(photo_path, selectedFile, {
+      .upload(photo_path, uploadFile, {
         upsert: true,
-        contentType: selectedFile.type,
+        contentType: uploadFile.type,
       });
 
     if (uploadError) return null;

@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Inspections/NewInspection.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
@@ -603,8 +604,9 @@ const NewInspection = () => {
     const uploadedUrls = [];
     const uploadedPaths = [];
 
-    for (const f of files.slice(0, 3)) {
+    for (const originalFile of files.slice(0, 3)) {
       try {
+        const f = await optimisePhotoUpload(originalFile);
         const safeName = f.name.replace(/\s+/g, "_");
         const path = `inspections/${inserted.id}-${Date.now()}-${safeName}`;
 

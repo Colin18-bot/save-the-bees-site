@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Logbook/EditLogEntry.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -224,13 +225,14 @@ const EditLogEntry = () => {
       };
     }
 
-    const safeName = String(file.name || "photo.jpg").replace(/\s+/g, "_");
+    const uploadFile = await optimisePhotoUpload(file);
+    const safeName = String(uploadFile.name || "photo.jpg").replace(/\s+/g, "_");
     const filename = `${id}-${Date.now()}-${safeName}`;
     const path = `logbook/${filename}`;
 
     const { error: uploadError } = await supabase.storage
       .from("photos")
-      .upload(path, file, { upsert: true, contentType: file.type });
+      .upload(path, uploadFile, { upsert: true, contentType: uploadFile.type });
 
     if (uploadError) {
       console.error("Upload error", uploadError);
