@@ -223,7 +223,19 @@ const NewInspection = () => {
   // Load lists + defaults + subscription + NFC preselection
   useEffect(() => {
     const fetchDefaults = async () => {
-      const { data: userWrap } = await supabase.auth.getUser();
+      let userWrap;
+    try {
+      const authResult = await supabase.auth.getUser();
+      if (authResult.error || !authResult.data?.user?.id) {
+        throw authResult.error || new Error("User authentication is unavailable");
+      }
+      userWrap = authResult.data;
+    } catch (err) {
+      console.error("Could not verify user before saving inspection:", err);
+      setErrorMessage("Cannot save inspection: HiveTag could not verify your sign-in. Check your connection and try again. No inspection was created by this attempt.");
+      setSaving(false);
+      return;
+    }
       let level = "free";
 
       if (userWrap?.user?.id) {
@@ -509,11 +521,25 @@ const NewInspection = () => {
       return;
     }
 
-    // Guard: parents must be active
-    const [{ data: apiaryRow }, { data: hiveRow }] = await Promise.all([
-      supabase.from("apiaries").select("archived_at").eq("id", formData.apiary_id).single(),
-      supabase.from("hives").select("archived_at").eq("id", formData.hive_id).single(),
-    ]);
+    // Guard: parents must be active. These checks must succeed before we insert anything.
+    let apiaryRow;
+    let hiveRow;
+    try {
+      const [apiaryResult, hiveResult] = await Promise.all([
+        supabase.from("apiaries").select("archived_at").eq("id", formData.apiary_id).single(),
+        supabase.from("hives").select("archived_at").eq("id", formData.hive_id).single(),
+      ]);
+      if (apiaryResult.error || hiveResult.error) {
+        throw apiaryResult.error || hiveResult.error;
+      }
+      apiaryRow = apiaryResult.data;
+      hiveRow = hiveResult.data;
+    } catch (err) {
+      console.error("Could not verify hive/apiary before saving inspection:", err);
+      setErrorMessage("Cannot save inspection: HiveTag could not verify the hive and apiary. Check your connection and try again. No inspection was created by this attempt.");
+      setSaving(false);
+      return;
+    }
 
     if (apiaryRow?.archived_at) {
       setErrorMessage("Selected apiary is archived. Choose an active apiary.");
@@ -526,7 +552,19 @@ const NewInspection = () => {
       return;
     }
 
-    const { data: userWrap } = await supabase.auth.getUser();
+    let userWrap;
+    try {
+      const authResult = await supabase.auth.getUser();
+      if (authResult.error || !authResult.data?.user?.id) {
+        throw authResult.error || new Error("User authentication is unavailable");
+      }
+      userWrap = authResult.data;
+    } catch (err) {
+      console.error("Could not verify user before saving inspection:", err);
+      setErrorMessage("Cannot save inspection: HiveTag could not verify your sign-in. Check your connection and try again. No inspection was created by this attempt.");
+      setSaving(false);
+      return;
+    }
 
     // normalize booleans + empty strings/arrays
    const base = {
@@ -574,16 +612,21 @@ const NewInspection = () => {
       photo_paths: null,
     };
 
-    // Insert row
-    const { data: inserted, error: insertErr } = await supabase
-      .from("inspections")
-      .insert(insertPayload)
-      .select("id, apiary_id, hive_id, weather_code, queen_id, queen_snapshot")
-      .single();
-
-    if (insertErr) {
-      console.error("Insert inspection error:", insertErr);
-      setErrorMessage(insertErr.message || "Failed to save inspection.");
+    // Insert the inspection. A network failure at this point has an uncertain outcome:
+    // the server might have committed a record before the response was lost.
+    let inserted;
+    try {
+      const { data, error: insertErr } = await supabase
+        .from("inspections")
+        .insert(insertPayload)
+        .select("id, apiary_id, hive_id, weather_code, queen_id, queen_snapshot")
+        .single();
+      if (insertErr) throw insertErr;
+      if (!data?.id) throw new Error("Inspection save returned no record ID");
+      inserted = data;
+    } catch (err) {
+      console.error("Insert inspection error:", err);
+      setErrorMessage("Could not confirm that the inspection was saved. Check your connection and look in the inspection history before trying Save again, to avoid creating a duplicate.");
       setSaving(false);
       return;
     }
