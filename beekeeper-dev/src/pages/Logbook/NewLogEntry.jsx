@@ -296,7 +296,18 @@ useEffect(() => {
     }
 
     // ✅ UPDATED: capture both url + path
-    const { url: photo_url, path: photo_path } = await uploadPhotoIfAny();
+    let photo_url, photo_path;
+    try {
+      const uploaded = await uploadPhotoIfAny();
+      if (uploaded.err || (selectedFile && !uploaded.url)) {
+        throw new Error(uploaded.err || "Photograph upload failed.");
+      }
+      ({ url: photo_url, path: photo_path } = uploaded);
+    } catch (photoError) {
+      setSaving(false);
+      setError(`The logbook entry was NOT saved because the photograph could not be uploaded. Please retry. ${photoError.message || ""}`);
+      return;
+    }
     const {
       data: { user },
     } = await supabase.auth.getUser();
