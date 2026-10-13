@@ -125,6 +125,10 @@ const NewInspection = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
+  // STAGING TEST ONLY: deliberately simulate an upload failure without affecting database requests.
+  const isPhotoFailureTestStaging = window.location.hostname === "beezknees-members-staging.netlify.app";
+  const [simulatePhotoFailure, setSimulatePhotoFailure] = useState(false);
+
   // NFC / subscription
   const [subscriptionLevel, setSubscriptionLevel] = useState("free");
   const [nfcSupported, setNfcSupported] = useState(false);
@@ -654,6 +658,9 @@ const NewInspection = () => {
 
     for (const originalFile of files.slice(0, 3)) {
       try {
+        if (isPhotoFailureTestStaging && simulatePhotoFailure) {
+          throw new Error("STAGING TEST: Simulated photograph upload failure");
+        }
         const f = await optimisePhotoUpload(originalFile);
         const safeName = f.name.replace(/\s+/g, "_");
         const path = `inspections/${inserted.id}-${Date.now()}-${safeName}`;
@@ -867,6 +874,21 @@ const NewInspection = () => {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {isPhotoFailureTestStaging && (
+          <div className="rounded border border-amber-400 bg-amber-50 p-3 text-sm text-amber-950">
+            <label className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                checked={simulatePhotoFailure}
+                onChange={(e) => setSimulatePhotoFailure(e.target.checked)}
+                className="mt-1"
+              />
+              <span><strong>STAGING TEST ONLY:</strong> Simulate photograph upload failure after the inspection is saved.
+              Use a test hive and unused date. No photograph will be uploaded when checked.</span>
+            </label>
+          </div>
+        )}
+
         {/* Apiary */}
         <div>
           <label className="block font-semibold">Select Apiary</label>
