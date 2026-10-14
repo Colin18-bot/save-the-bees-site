@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Hives/NewHive.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
@@ -186,17 +187,18 @@ const NewHive = () => {
   const uploadPhoto = async (hiveId) => {
     if (!selectedFile) return null;
 
-    const safeName = selectedFile.name.replace(/\s+/g, "_");
+    const uploadFile = await optimisePhotoUpload(selectedFile);
+    const safeName = uploadFile.name.replace(/\s+/g, "_");
     const photo_path = `hives/${hiveId}-${Date.now()}-${safeName}`;
 
     const { error: uploadError } = await supabase.storage
       .from("photos")
-      .upload(photo_path, selectedFile, {
+      .upload(photo_path, uploadFile, {
         upsert: true,
-        contentType: selectedFile.type,
+        contentType: uploadFile.type,
       });
 
-    if (uploadError) return null;
+    if (uploadError) throw new Error(uploadError.message || "Photograph upload failed.");
 
     const { data: publicUrlData } = supabase.storage
       .from("photos")
@@ -327,12 +329,25 @@ const NewHive = () => {
     });
 
     // Upload photo (optional)
-    const uploaded = await uploadPhoto(inserted.id);
+    let uploaded = null;
+    try {
+      uploaded = await uploadPhoto(inserted.id);
+      if (selectedFile && !uploaded?.photo_url) throw new Error("No photograph URL was returned.");
+    } catch (photoError) {
+      setLoading(false);
+      setErrorMessage(`Hive created, but the photograph was NOT saved. Do not press Save again (this would create a duplicate hive). Open the new hive and add the photograph using Edit Hive. ${photoError.message || ""}`);
+      return;
+    }
     if (uploaded?.photo_url) {
-      await supabase
+      const { error: linkError } = await supabase
         .from("hives")
         .update({ photo_url: uploaded.photo_url, photo_path: uploaded.photo_path })
         .eq("id", inserted.id);
+      if (linkError) {
+        setLoading(false);
+        setErrorMessage("Hive created, but its photograph could not be linked. Do not press Save again. Open the new hive and use Edit Hive to add the photograph.");
+        return;
+      }
 
       // ✅ GA: track a follow-up photo upload event
       trackEvent("hive_photo_uploaded", {

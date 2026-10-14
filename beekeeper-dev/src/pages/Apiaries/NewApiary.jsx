@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Apiaries/NewApiary.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
@@ -402,7 +403,8 @@ const NewApiary = () => {
 
       // 2) Upload photo (after insert)
       if (photo && insertedApiary?.id) {
-        const safeName = String(photo.name || "photo.jpg").replace(
+        const uploadFile = await optimisePhotoUpload(photo);
+        const safeName = String(uploadFile.name || "photo.jpg").replace(
           /[^\w.-]+/g,
           "_"
         );
@@ -410,10 +412,10 @@ const NewApiary = () => {
 
         const { error: upErr } = await supabase.storage.from("photos").upload(
           photo_path,
-          photo,
+          uploadFile,
           {
             upsert: true,
-            contentType: photo.type || "image/jpeg",
+            contentType: uploadFile.type || "image/jpeg",
           }
         );
 

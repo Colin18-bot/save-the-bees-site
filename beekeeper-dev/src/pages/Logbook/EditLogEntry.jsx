@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Logbook/EditLogEntry.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
@@ -224,20 +225,18 @@ const EditLogEntry = () => {
       };
     }
 
-    const safeName = String(file.name || "photo.jpg").replace(/\s+/g, "_");
+    const uploadFile = await optimisePhotoUpload(file);
+    const safeName = String(uploadFile.name || "photo.jpg").replace(/\s+/g, "_");
     const filename = `${id}-${Date.now()}-${safeName}`;
     const path = `logbook/${filename}`;
 
     const { error: uploadError } = await supabase.storage
       .from("photos")
-      .upload(path, file, { upsert: true, contentType: file.type });
+      .upload(path, uploadFile, { upsert: true, contentType: uploadFile.type });
 
     if (uploadError) {
       console.error("Upload error", uploadError);
-      return {
-        url: formData.photo_url || "",
-        path: formData.photo_path || currentPath || null,
-      };
+      throw new Error(uploadError.message || "Photograph upload failed.");
     }
 
     const { data } = supabase.storage.from("photos").getPublicUrl(path);
@@ -333,7 +332,14 @@ const EditLogEntry = () => {
     const oldPath = formData.photo_path || currentPath || null;
     const oldUrl = formData.photo_url || "";
 
-    const { url: newUrl, path: newPath } = await uploadPhoto();
+    let newUrl, newPath;
+    try {
+      ({ url: newUrl, path: newPath } = await uploadPhoto());
+    } catch (photoError) {
+      setSaving(false);
+      setError(`Changes were NOT saved because the new photograph failed to upload. The existing photograph is unchanged. ${photoError.message || ""}`);
+      return;
+    }
 
     // Update row (store BOTH url + path)
     const { error: upErr } = await supabase

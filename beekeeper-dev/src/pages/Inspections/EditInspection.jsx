@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Inspections/EditInspection.jsx
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -563,7 +564,8 @@ const EditInspection = () => {
     const bucket = "photos";
     const uid = userId;
 
-    for (const file of newFiles) {
+    for (const originalFile of newFiles) {
+      const file = await optimisePhotoUpload(originalFile);
       const safeName = String(file.name || "image").replace(/[^\w.-]+/g, "_");
       const filename = `${Date.now()}-${safeName}`;
       const path = `inspections/${uid || "unknown"}/${id}/${filename}`;
@@ -574,7 +576,7 @@ const EditInspection = () => {
 
       if (upErr) {
         console.error("Upload error:", upErr);
-        continue;
+        throw new Error(upErr.message || "Photograph upload failed.");
       }
 
       const { data } = supabase.storage.from(bucket).getPublicUrl(path);
@@ -663,7 +665,14 @@ const EditInspection = () => {
     }
 
     // Upload first; keep paths so we can rollback on DB failure
-    const uploaded = await uploadNewFiles(); // [{url, path, bucket}]
+    let uploaded;
+    try {
+      uploaded = await uploadNewFiles(); // [{url, path, bucket}]
+    } catch (photoError) {
+      setSaving(false);
+      setSaveError(`Inspection changes were NOT saved because a photograph failed to upload. Existing photos were not intentionally changed. ${photoError.message || ""}`);
+      return;
+    }
     const uploadedUrls = uploaded.map((x) => x.url).filter(Boolean);
 
     // URLs the user removed from existing list
