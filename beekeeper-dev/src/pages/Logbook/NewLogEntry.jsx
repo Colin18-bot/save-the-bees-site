@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Logbook/NewLogEntry.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
@@ -246,13 +247,14 @@ useEffect(() => {
   const uploadPhotoIfAny = async () => {
     if (!selectedFile) return { url: null, path: null };
 
-    const safeName = selectedFile.name.replace(/\s+/g, "_");
+    const uploadFile = await optimisePhotoUpload(selectedFile);
+    const safeName = uploadFile.name.replace(/\s+/g, "_");
     const filePath = `logbook/${Date.now()}-${safeName}`;
 
     const { error: upErr } = await supabase.storage
       .from("photos")
-      .upload(filePath, selectedFile, {
-        contentType: selectedFile.type,
+      .upload(filePath, uploadFile, {
+        contentType: uploadFile.type,
         upsert: true,
       });
 
@@ -294,7 +296,18 @@ useEffect(() => {
     }
 
     // ✅ UPDATED: capture both url + path
-    const { url: photo_url, path: photo_path } = await uploadPhotoIfAny();
+    let photo_url, photo_path;
+    try {
+      const uploaded = await uploadPhotoIfAny();
+      if (uploaded.err || (selectedFile && !uploaded.url)) {
+        throw new Error(uploaded.err || "Photograph upload failed.");
+      }
+      ({ url: photo_url, path: photo_path } = uploaded);
+    } catch (photoError) {
+      setSaving(false);
+      setError(`The logbook entry was NOT saved because the photograph could not be uploaded. Please retry. ${photoError.message || ""}`);
+      return;
+    }
     const {
       data: { user },
     } = await supabase.auth.getUser();

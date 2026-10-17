@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Inspections/NewInspection.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
@@ -222,7 +223,19 @@ const NewInspection = () => {
   // Load lists + defaults + subscription + NFC preselection
   useEffect(() => {
     const fetchDefaults = async () => {
-      const { data: userWrap } = await supabase.auth.getUser();
+      let userWrap;
+    try {
+      const authResult = await supabase.auth.getUser();
+      if (authResult.error || !authResult.data?.user?.id) {
+        throw authResult.error || new Error("User authentication is unavailable");
+      }
+      userWrap = authResult.data;
+    } catch (err) {
+      console.error("Could not verify user before saving inspection:", err);
+      setErrorMessage("Cannot save inspection: HiveTag could not verify your sign-in. Check your connection and try again. No inspection was created by this attempt.");
+      setSaving(false);
+      return;
+    }
       let level = "free";
 
       if (userWrap?.user?.id) {
@@ -508,11 +521,25 @@ const NewInspection = () => {
       return;
     }
 
-    // Guard: parents must be active
-    const [{ data: apiaryRow }, { data: hiveRow }] = await Promise.all([
-      supabase.from("apiaries").select("archived_at").eq("id", formData.apiary_id).single(),
-      supabase.from("hives").select("archived_at").eq("id", formData.hive_id).single(),
-    ]);
+    // Guard: parents must be active. These checks must succeed before we insert anything.
+    let apiaryRow;
+    let hiveRow;
+    try {
+      const [apiaryResult, hiveResult] = await Promise.all([
+        supabase.from("apiaries").select("archived_at").eq("id", formData.apiary_id).single(),
+        supabase.from("hives").select("archived_at").eq("id", formData.hive_id).single(),
+      ]);
+      if (apiaryResult.error || hiveResult.error) {
+        throw apiaryResult.error || hiveResult.error;
+      }
+      apiaryRow = apiaryResult.data;
+      hiveRow = hiveResult.data;
+    } catch (err) {
+      console.error("Could not verify hive/apiary before saving inspection:", err);
+      setErrorMessage("Cannot save inspection: HiveTag could not verify the hive and apiary. Check your connection and try again. No inspection was created by this attempt.");
+      setSaving(false);
+      return;
+    }
 
     if (apiaryRow?.archived_at) {
       setErrorMessage("Selected apiary is archived. Choose an active apiary.");
@@ -525,7 +552,19 @@ const NewInspection = () => {
       return;
     }
 
-    const { data: userWrap } = await supabase.auth.getUser();
+    let userWrap;
+    try {
+      const authResult = await supabase.auth.getUser();
+      if (authResult.error || !authResult.data?.user?.id) {
+        throw authResult.error || new Error("User authentication is unavailable");
+      }
+      userWrap = authResult.data;
+    } catch (err) {
+      console.error("Could not verify user before saving inspection:", err);
+      setErrorMessage("Cannot save inspection: HiveTag could not verify your sign-in. Check your connection and try again. No inspection was created by this attempt.");
+      setSaving(false);
+      return;
+    }
 
     // normalize booleans + empty strings/arrays
    const base = {
@@ -573,16 +612,25 @@ const NewInspection = () => {
       photo_paths: null,
     };
 
-    // Insert row
-    const { data: inserted, error: insertErr } = await supabase
-      .from("inspections")
-      .insert(insertPayload)
-      .select("id, apiary_id, hive_id, weather_code, queen_id, queen_snapshot")
-      .single();
-
-    if (insertErr) {
-      console.error("Insert inspection error:", insertErr);
-      setErrorMessage(insertErr.message || "Failed to save inspection.");
+    // Insert the inspection. A network failure at this point has an uncertain outcome:
+    // the server might have committed a record before the response was lost.
+    let inserted;
+    try {
+      const { data, error: insertErr } = await supabase
+        .from("inspections")
+        .insert(insertPayload)
+        .select("id, apiary_id, hive_id, weather_code, queen_id, queen_snapshot")
+        .single();
+      if (insertErr) throw insertErr;
+      if (!data?.id) throw new Error("Inspection save returned no record ID");
+      inserted = data;
+    } catch (err) {
+      console.error("Insert inspection error:", err);
+      if (err?.code === "23505") {
+        setErrorMessage("An inspection already exists for this hive on the selected date. Please open and edit the existing inspection, or choose a different date. No new inspection was created.");
+      } else {
+        setErrorMessage("Could not confirm that the inspection was saved. Check your connection and look in the inspection history before trying Save again, to avoid creating a duplicate.");
+      }
       setSaving(false);
       return;
     }
@@ -602,9 +650,11 @@ const NewInspection = () => {
     // Upload up to 3 photos -> store URLs + PATHS (paths are what the Edge Function prefers)
     const uploadedUrls = [];
     const uploadedPaths = [];
+    let failedUploads = 0;
 
-    for (const f of files.slice(0, 3)) {
+    for (const originalFile of files.slice(0, 3)) {
       try {
+        const f = await optimisePhotoUpload(originalFile);
         const safeName = f.name.replace(/\s+/g, "_");
         const path = `inspections/${inserted.id}-${Date.now()}-${safeName}`;
 
@@ -614,6 +664,7 @@ const NewInspection = () => {
 
         if (upErr) {
           console.error("Photo upload error:", upErr);
+          failedUploads += 1;
           continue;
         }
 
@@ -624,17 +675,19 @@ const NewInspection = () => {
         }
       } catch (err) {
         console.error("Photo upload error:", err);
+        failedUploads += 1;
       }
     }
 
     if (uploadedUrls.length) {
-      await supabase
+      const { error: linkError } = await supabase
         .from("inspections")
         .update({
           photos: uploadedUrls,
           photo_paths: uploadedPaths,
         })
         .eq("id", inserted.id);
+      if (linkError) failedUploads += uploadedUrls.length;
 
       // ✅ GA: follow-up event once uploads succeed
       trackEvent("inspection_photos_uploaded", {
@@ -650,6 +703,11 @@ const NewInspection = () => {
     setPreviews([]);
     setFiles([]);
 
+    if (failedUploads > 0) {
+      setSaving(false);
+      setErrorMessage(`Inspection record saved, but ${failedUploads} photograph(s) were NOT saved correctly. Do not press Save again because that could duplicate the inspection. Open the saved inspection and use Edit Inspection to add missing photos.`);
+      return;
+    }
     setSuccessMessage("Inspection saved successfully!");
     setSaving(false);
 

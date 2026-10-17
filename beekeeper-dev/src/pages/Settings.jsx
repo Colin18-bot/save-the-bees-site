@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../utils/optimisePhotoUpload.js";
 // src/pages/Settings.jsx
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { supabase } from "../services/supabase";
@@ -483,13 +484,14 @@ useEffect(() => {
       return;
     }
 
-    const ext = (avatarFile.name.split(".").pop() || "jpg").toLowerCase();
-    const safeName = avatarFile.name.replace(/[^\w.-]+/g, "_") || `avatar.${ext}`;
+    const uploadFile = await optimisePhotoUpload(avatarFile);
+    const ext = (uploadFile.name.split(".").pop() || "jpg").toLowerCase();
+    const safeName = uploadFile.name.replace(/[^\w.-]+/g, "_") || `avatar.${ext}`;
     const path = `avatar/${uid}/${Date.now()}-${safeName}`;
 
-    const { error: upErr } = await supabase.storage.from(AVATAR_BUCKET).upload(path, avatarFile, {
+    const { error: upErr } = await supabase.storage.from(AVATAR_BUCKET).upload(path, uploadFile, {
       upsert: true,
-      contentType: avatarFile.type || "image/jpeg",
+      contentType: uploadFile.type || "image/jpeg",
     });
 
     if (upErr) {

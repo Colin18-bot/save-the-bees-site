@@ -1,3 +1,4 @@
+import { optimisePhotoUpload } from "../../utils/optimisePhotoUpload.js";
 // src/pages/Hives/EditHive.jsx
 import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
@@ -146,23 +147,20 @@ const EditHive = () => {
       };
     }
 
-    const safeName = file.name.replace(/\s+/g, "_");
+    const uploadFile = await optimisePhotoUpload(file);
+    const safeName = uploadFile.name.replace(/\s+/g, "_");
     const photo_path = `hives/${id}-${Date.now()}-${safeName}`;
 
     const { error: uploadError } = await supabase.storage
       .from("photos")
-      .upload(photo_path, file, {
+      .upload(photo_path, uploadFile, {
         upsert: true,
-        contentType: file.type || "image/jpeg",
+        contentType: uploadFile.type || "image/jpeg",
       });
 
     if (uploadError) {
       console.error("Upload error", uploadError);
-      return {
-        url: formData.photo_url || "",
-        path: formData.photo_path || currentObject?.path || null,
-        bucket: "photos",
-      };
+      throw new Error(uploadError.message || "Photograph upload failed.");
     }
 
     const { data } = supabase.storage.from("photos").getPublicUrl(photo_path);
@@ -243,21 +241,12 @@ const EditHive = () => {
       }
     }
 
-    const { url: newUrl, path: newPath } = await uploadPhoto();
-
-    if (
-      newPath &&
-      (formData.photo_path || currentObject?.path) &&
-      newUrl !== formData.photo_url
-    ) {
-      const oldPath = formData.photo_path || currentObject?.path || null;
-      if (oldPath && oldPath !== newPath) {
-        try {
-          await supabase.storage.from("photos").remove([oldPath]);
-        } catch {
-          /* non-fatal */
-        }
-      }
+    let newUrl, newPath;
+    try {
+      ({ url: newUrl, path: newPath } = await uploadPhoto());
+    } catch (photoError) {
+      setError(`Hive changes were NOT saved because the new photograph failed to upload. The previous photograph is unchanged. ${photoError.message || ""}`);
+      return;
     }
 
     const normalize = (obj) =>
@@ -284,6 +273,12 @@ const EditHive = () => {
       console.error("Update error", updateErr);
       setError("Failed to update hive.");
     } else {
+      const oldPath = formData.photo_path || currentObject?.path || null;
+      if (newPath && oldPath && newPath !== oldPath) {
+        // Only remove old file after database update succeeds.
+        const { error: removeErr } = await supabase.storage.from("photos").remove([oldPath]);
+        if (removeErr) console.warn("Old hive photo cleanup pending:", removeErr);
+      }
       alert("Hive updated successfully.");
       navigate(`/hives?apiary_id=${base.apiary_id || ""}`);
     }
