@@ -1,5 +1,16 @@
 window.beezKneesBlogPosts = [
-      {
+  {
+    title: "How to Tell Whether a Hive Is Queenless",
+    slug: "how-to-tell-if-hive-is-queenless",
+    category: "Queens & Brood",
+    date: "17 October 2026",
+    isoDate: "2026-10-17",
+    isoModified: "2026-10-17",
+    image: "assets/images/queenless-hive-signs-frame-inspection.webp",
+    alt: "Beekeeper examining a brood frame for signs that a honey bee colony is queenless",
+    excerpt: "Learn the signs of a queenless hive, how to distinguish queen loss from a brood break or virgin queen, how to use a test frame and what UK beekeepers should do next."
+  },
+  {
     title: "Beehive Foundation Explained: Wired, Unwired, Beeswax, Plastic and Foundationless Frames",
     slug: "beehive-foundation-explained-uk",
     category: "Beginner Beekeeping",
@@ -9,8 +20,8 @@ window.beezKneesBlogPosts = [
     image: "assets/images/beeswax-foundation-in-frame-apiary.webp",
     alt: "Wooden beehive frame fitted with fresh beeswax foundation in a UK apiary",
     excerpt: "A practical UK guide to beehive foundation, including wired and unwired beeswax, frame wiring, plastic foundation, cut comb, drone foundation, small-cell foundation and foundationless frames."
-    },
-    {
+  },
+  {
     title: "My Queenless Nuc Disappeared: Wasps, Queen Failure and a Late-Season Lesson",
     slug: "queenless-nuc-disappeared-wasp-pressure",
     category: "Hive Problems",
@@ -20,8 +31,8 @@ window.beezKneesBlogPosts = [
     image: "assets/images/queenless-nuc-before-disappearance.webp",
     alt: "Bees on a frame in a six-frame poly nuc before the colony later disappeared",
     excerpt: "A real late-season apiary lesson from a queenless six-frame poly nuc that appeared normal at the entrance, failed to establish a laying queen, and was completely empty two weeks later, with wasp pressure likely contributing to the loss."
-     },
-    {
+  },
+  {
     title: "Beehive Frames Explained: A UK Guide to SN1, SN4, DN4, 14×12 and Commercial Frames",
     slug: "beehive-frames-explained-uk",
     category: "Beginner Beekeeping",
@@ -64,7 +75,7 @@ window.beezKneesBlogPosts = [
     image: "assets/images/july-apiary-inspection-brood-frame.webp",
     alt: "Healthy brood frame during a July inspection of one of my honey bee colonies at Peterston Apiary",
     excerpt: "A real July inspection from my Peterston Apiary, covering nine colonies, honey supers, queen status, defensive bees and the decisions needed after finding a queenless colony."
-  },  
+  },
   {
     title: "I Found a Spotty Brood Pattern During an Inspection — It Turned Out to Be European Foulbrood",
     slug: "spotty-brood-pattern-european-foulbrood",
