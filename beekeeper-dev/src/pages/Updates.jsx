@@ -6,10 +6,59 @@ import "dayjs/locale/en-gb"; // GB locale
 
 dayjs.locale("en-gb");
 
-// HiveTag staging release candidate: 1.5.8
+// HiveTag staging release candidate: 1.5.10
 
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
+  {
+    version: "1.5.10",
+    released_at: "2026-10-18T13:00:00Z",
+
+    summary:
+      "Expanded Weather and Seasonal Beekeeper Notes with four collapsible guidance sections shared by the Weather page and the optional Dashboard weather section. Improved forecast-aware advice, consistent units and default-apiary guidance for Free and Premium members.",
+
+    added: [
+      "Added four expandable Seasonal Beekeeper Notes sections: Important Weather Information, This Month’s Priorities, Practical Jobs Around the Apiary and Seasonal Knowledge.",
+      "Added Expand All and Collapse All controls on both Weather and Dashboard, with significant warnings prioritised.",
+      "Added more practical month-by-month advice, including hefting, mouseguards, apiary tidying, planting and equipment preparation.",
+      "Added notices explaining how to choose a default apiary in Settings and when usable apiary coordinates are missing."
+    ],
+
+    changed: [
+      "Weather and Dashboard now share the same structured seasonal guidance; the Dashboard weather section remains optional under Customise Dashboard.",
+      "Seasonal recommendations can identify relevant forecast days and assess potential inspection opportunities using combined hourly conditions.",
+      "Weather defaults to degrees Celsius and miles per hour; displayed advisory temperatures and winds follow the chosen units.",
+      "Weather guidance refreshes periodically while the Weather page remains open.",
+      "Improved default-apiary weather location selection and removed the automatic London-weather fallback for missing apiary coordinates.",
+      "Restored the Dashboard weather section’s light styling while retaining the Weather page’s dark styling.",
+      "Weather and Seasonal Beekeeper Notes continue to be available to both Free and Premium members.",
+      "Sidebar release numbering updated to HiveTag 1.5.10."
+    ],
+
+    fixed: [
+      "Reduced repetitive seasonal messages and corrected misleading links between airborne pollen counts and available bee forage.",
+      "Improved handling of default-apiary saving failures and clearer instructions in Settings."
+    ],
+
+    removed: [
+      "Removed the previous three-note-only Dashboard seasonal preview in favour of expandable advice within the existing optional weather section."
+    ],
+
+    security: [],
+    breaking: [],
+
+    links: [
+      { label: "Weather", to: "/weather" },
+      { label: "Dashboard", to: "/dashboard" },
+      { label: "Settings", to: "/settings" },
+      { label: "Help", to: "/help#weather-maps-photos" }
+    ],
+
+    known_issues: [
+      "The application's JavaScript bundle remains above Vite's recommended 500 kB chunk size; this is a performance warning rather than a build failure.",
+      "Location-specific warning relevance should be verified against the selected apiary before treating every provider warning as local."
+    ]
+  },
 {
   version: "1.5.9",
   released_at: "2026-10-17T18:00:00Z",

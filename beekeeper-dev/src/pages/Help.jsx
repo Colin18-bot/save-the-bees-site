@@ -346,8 +346,9 @@ export default function Help() {
                         <strong>Unlimited Inspections</strong>
                       </li>
                       <li>
-                        <strong>Weather tools</strong> (Weather page, Dashboard snapshot, inspection
-                        auto-fill, Seasonal Beekeeper Notes preview)
+                        <strong>Weather tools</strong> (Weather page, optional Dashboard weather
+                        section, inspection weather auto-fill, and full expandable Seasonal Beekeeper
+                        Notes on both Weather and Dashboard)
                       </li>
                       <li>
                         <strong>Calendar</strong>
@@ -455,7 +456,7 @@ export default function Help() {
                 <li>
                   <strong>Create an Apiary:</strong>{" "}
                   <span className="text-gray-700">Apiaries → New Apiary.</span> Name it, set a date,
-                  optionally pin on the map or search by address, then save.{" "}
+                  place a location pin on the map (or search by address and confirm the pin), then save.{" "}
                   <span className="ml-2">
                     <Badge>Free</Badge> 1 active apiary
                   </span>
@@ -617,15 +618,20 @@ export default function Help() {
                       <strong>Overdue</strong> label when past the due date.
                     </li>
                     <li>
-                      <strong>Weather Snapshot</strong> uses your <em>default apiary</em> and
-                      displays a banner naming it. If the default has no coordinates, a clear note
-                      explains a temporary London placeholder is shown.
+                      <strong>Weather &amp; Seasonal Notes</strong> uses your default apiary for
+                      the Dashboard weather location. If no default is set, HiveTag can use an
+                      available apiary and shows a notice explaining how to choose a default in
+                      <strong> Settings → Default Apiary</strong>. If usable coordinates are
+                      unavailable, local weather is not replaced with a London forecast.
                     </li>
                     <li>
-                      <strong>Seasonal Beekeeper Notes (preview):</strong> small panel under the
-                      snapshot showing the first few season-aware notes with a{" "}
-                      <strong>“View full notes”</strong> link that takes you to the full Weather
-                      page.
+                      <strong>Seasonal Beekeeper Notes:</strong> the Dashboard and Weather page
+                      share four expandable sections: Important Weather Information, This Month&apos;s
+                      Priorities, Practical Jobs Around the Apiary and Seasonal Knowledge.
+                      Select a heading or use <strong>Expand All / Collapse All</strong> to read
+                      more. Sections start collapsed except for significant weather warnings;
+                      use <strong>Customise Dashboard</strong> to show or hide the whole weather
+                      section.
                     </li>
                     <li>
                       <strong>Hive Health Overview</strong> <Badge tone="blue">Premium</Badge>:
@@ -2626,11 +2632,32 @@ export default function Help() {
                   where available.
                 </li>
                 <li>
-                  <strong>Seasonal Beekeeper Notes (full):</strong> advisory, season-aware guidance.
+                  <strong>Seasonal Beekeeper Notes:</strong> four expandable sections covering
+                  Important Weather Information, This Month&apos;s Priorities, Practical Jobs
+                  Around the Apiary and Seasonal Knowledge. Guidance changes with the season
+                  and relevant forecast conditions, and can highlight forecast days and
+                  potential inspection opportunities. All four sections normally start collapsed;
+                  significant weather warnings can open the weather section automatically.
+                  Use <strong>Expand All</strong> and <strong>Collapse All</strong> as needed.
+                  Available to both Free and Premium members.
                 </li>
                 <li>
-                  <strong>Dashboard snapshot:</strong> summary for your default apiary plus a
-                  preview of notes.
+                  <strong>Dashboard weather:</strong> optional via <strong>Customise Dashboard
+                  → Weather &amp; Seasonal Notes</strong>. It uses the same expandable seasonal
+                  advice as the Weather page, without adding another Dashboard widget.
+                  Your Dashboard normally uses the default apiary, while the Weather page lets
+                  you choose another apiary.
+                </li>
+                <li>
+                  <strong>Default apiary:</strong> open <strong>Settings → Default Apiary</strong>,
+                  select your preferred location and click <strong>Save Profile</strong>. Until
+                  a default is selected, HiveTag explains how to set one. A missing or invalid
+                  apiary location prevents a reliable local forecast.
+                </li>
+                <li>
+                  <strong>Weather units:</strong> temperature defaults to Celsius (°C) and wind
+                  speed to miles per hour (mph). You can change the units on the Weather page;
+                  the advisory descriptions follow the selected units.
                 </li>
                 <li>
                   <strong>Inspections:</strong> weather auto-fills using the apiary’s coordinates
@@ -2662,10 +2689,12 @@ export default function Help() {
                 </li>
               </ul>
               <p className="mt-3 text-xs text-gray-600">
-                Weather, warnings, pollen and notes depend on third-party providers and are for
-                guidance only. Conditions vary by region and micro-climate. Pollen (when available)
-                is shown in panels (e.g. Weather page and the Map Markers header), not as markers on
-                the map.
+                Forecasts, official warnings and notes are advisory and may change. Weather
+                conditions vary by location and micro-climate, and no forecast can establish an
+                individual colony&apos;s needs. Airborne pollen readings are not a measurement of
+                nectar flow or available bee forage. Follow appropriate product instructions
+                and official guidance for feeding and treatments. Pollen (when available) appears
+                in panels, not as markers on the map.
               </p>
             </section>
 

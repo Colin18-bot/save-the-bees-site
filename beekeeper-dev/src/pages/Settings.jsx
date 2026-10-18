@@ -408,7 +408,11 @@ useEffect(() => {
     window.dispatchEvent(new CustomEvent("prefs:timezone", { detail: { timezone } }));
 
     try {
-      await supabase.from("apiaries").update({ is_default: false }).eq("user_id", uid);
+      const { error: clearDefaultError } = await supabase
+        .from("apiaries")
+        .update({ is_default: false })
+        .eq("user_id", uid);
+      if (clearDefaultError) throw clearDefaultError;
 
       if (defaultApiaryId) {
         const { error: setErr } = await supabase
@@ -420,6 +424,9 @@ useEffect(() => {
       }
 
       await refreshApiariesDefault(uid);
+      window.dispatchEvent(new CustomEvent("apiary:default-updated", {
+        detail: { apiaryId: defaultApiaryId || null },
+      }));
 
       showStatus("Profile saved.", "success");
       if (displayName) {
@@ -756,6 +763,11 @@ useEffect(() => {
                 </option>
               ))}
             </select>
+            <p className="text-xs text-gray-500 mt-1">
+              Your default apiary determines the weather and seasonal guidance shown on your
+              Dashboard. You can view other apiaries on the Weather page. Save Profile to confirm
+              your selection.
+            </p>
             {apiaries.length === 0 && (
               <p className="text-xs text-gray-500 mt-1">
                 You don’t have any apiaries yet. Create one to set a default.
