@@ -2646,6 +2646,20 @@ export default function Help() {
                   <strong>Photos:</strong> Apiary/Hive support one optional photo; Inspections allow
                   up to <strong>3</strong>. Click photos to open a <strong>lightbox</strong>.
                 </li>
+                <li>
+                  <strong>Automatic photo optimisation:</strong> when uploading new photos, HiveTag
+                  attempts to reduce the file size of supported JPEG, PNG and WebP images while
+                  retaining a useful image for your records. Large images may be resized to a
+                  maximum dimension of 1920 pixels and saved as JPEG. Some images, including
+                  transparent PNGs and files that would not become smaller, are kept unchanged.
+                  You do not normally need to compress photos yourself.
+                </li>
+                <li>
+                  <strong>Original-quality photographs:</strong> optimisation may reduce resolution
+                  or detail, so keep the original on your own device if you need a full-resolution
+                  image for close examination or another purpose. Previously saved inspection
+                  photographs remain linked to their inspection records.
+                </li>
               </ul>
               <p className="mt-3 text-xs text-gray-600">
                 Weather, warnings, pollen and notes depend on third-party providers and are for
@@ -2795,6 +2809,16 @@ export default function Help() {
             <section id="faqs">
               <h2 className="text-2xl font-bold mb-3">FAQs</h2>
               <div className="space-y-4">
+                <div>
+                  <p className="font-medium">Does HiveTag reduce the quality of my photographs?</p>
+                  <p className="text-gray-700">
+                    HiveTag attempts to reduce upload sizes for supported photographs. It may resize
+                    larger images or use JPEG compression, which can reduce fine detail. If an image
+                    is already small, has transparency that should be preserved, or would not benefit
+                    from optimisation, HiveTag may retain the original file. Keep your original
+                    photograph separately if full resolution is important.
+                  </p>
+                </div>
                 <div>
                   <p className="font-medium">Is the Asian Hornet Centre a Premium feature?</p>
                   <p className="text-gray-700">
@@ -3069,6 +3093,12 @@ export default function Help() {
               <h2 className="text-2xl font-bold mb-3">Troubleshooting</h2>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
+                  <strong>An inspection photograph did not upload or does not appear:</strong> check
+                  your internet connection and try again. Check the saved inspection to confirm the
+                  photograph appears before deleting the original from your phone or computer. If
+                  the problem continues, keep the original file and contact HiveTag support.
+                </li>
+                <li>
                   <strong>Asian Hornet observation says “Not reported” after I saved it:</strong> this
                   is expected. Saving the HiveTag observation does not submit the official report.
                   Open the reporting screen and use the official service, then mark it as reported in
@@ -3249,7 +3279,10 @@ export default function Help() {
                 <li>Your data is stored securely in your BeezKnees account.</li>
                 <li>
                   <strong>Standard HiveTag photographs:</strong> some existing photo areas use public
-                  file URLs for fast loading and those links may appear in CSV exports.
+                  file URLs for fast loading and those links may appear in CSV exports. Automatic
+                  optimisation can reduce the file size of newly uploaded photographs; it does not
+                  make public photo URLs private. Previously saved inspection records are retained
+                  when their linked photographs are optimised.
                 </li>
                 <li>
                   <strong>Asian Hornet photographs are different:</strong> they are stored in a

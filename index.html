@@ -34,139 +34,181 @@
     <link href="/site.webmanifest" rel="manifest">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+   
     <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "Organization",
-            "@id": "https://beezknees.co.uk/#organization",
-            "name": "BeezKnees",
-            "url": "https://beezknees.co.uk",
-            "logo": {
-              "@type": "ImageObject",
-              "@id": "https://beezknees.co.uk/#logo",
-              "url": "https://beezknees.co.uk/images/BeezKnees-Logo.webp",
-              "width": 1024,
-              "height": 1024
-            },
-            "sameAs": [
-              "https://www.facebook.com/beezkneesbeekeeping",
-              "https://www.tiktok.com/@colinchorley"
-            ],
-            "founder": {
-              "@id": "https://beezknees.co.uk/#colin-chorley"
-            }
-          },
-          {
-            "@type": "Person",
-            "@id": "https://beezknees.co.uk/#colin-chorley",
-            "name": "Colin Chorley",
-            "url": "https://beezknees.co.uk/about-us",
-            "affiliation": {
-              "@id": "https://beezknees.co.uk/#organization"
-            },
-            "sameAs": [
-              "https://www.tiktok.com/@colinchorley"
-            ]
-          },
-          {
-            "@type": "WebSite",
-            "@id": "https://beezknees.co.uk/#website",
-            "name": "BeezKnees",
-            "url": "https://beezknees.co.uk",
-            "inLanguage": "en-GB",
-            "publisher": {
-              "@id": "https://beezknees.co.uk/#organization"
-            },
-            "potentialAction": {
-              "@type": "SearchAction",
-              "target": {
-                "@type": "EntryPoint",
-                "urlTemplate": "https://beezknees.co.uk/search?q={search_term_string}"
-              },
-              "query-input": "required name=search_term_string"
-            }
-          },
-          {
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://beezknees.co.uk/#organization",
+          "name": "BeezKnees",
+          "url": "https://beezknees.co.uk",
+          "logo": {
             "@type": "ImageObject",
-            "@id": "https://beezknees.co.uk/#primaryimage",
-            "url": "https://beezknees.co.uk/images/honeybee-on-orange-flower.webp",
-            "width": 1600,
-            "height": 874,
-            "caption": "Honeybee foraging on an orange flower in spring"
+            "@id": "https://beezknees.co.uk/#logo",
+            "url": "https://beezknees.co.uk/images/BeezKnees-Logo.webp",
+            "width": 1024,
+            "height": 1024
           },
-          {
-            "@type": "BreadcrumbList",
-            "@id": "https://beezknees.co.uk/#breadcrumbs",
-            "itemListElement": [
-              {
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Home",
-                "item": "https://beezknees.co.uk"
-              }
-            ]
-          },
-          {
-            "@type": "WebPage",
-            "@id": "https://beezknees.co.uk/#webpage",
-            "url": "https://beezknees.co.uk",
-            "name": "BeezKnees | UK Beekeeping Guides & HiveTag Records",
-            "description": "Practical UK beekeeping guides for beginners, covering seasonal tasks, hive health, bee diseases, equipment, swarm control and HiveTag records.",
-            "inLanguage": "en-GB",
-            "isPartOf": {
-              "@id": "https://beezknees.co.uk/#website"
-            },
-            "author": {
-              "@id": "https://beezknees.co.uk/#colin-chorley"
-            },
-            "publisher": {
-              "@id": "https://beezknees.co.uk/#organization"
-            },
-            "about": {
-              "@id": "https://beezknees.co.uk/#organization"
-            },
-            "primaryImageOfPage": {
-              "@id": "https://beezknees.co.uk/#primaryimage"
-            },
-            "breadcrumb": {
-              "@id": "https://beezknees.co.uk/#breadcrumbs"
-            },
-            "datePublished": "2025-12-10",
-              "dateModified": "2026-08-15",
-            "mainEntity": {
-              "@id": "https://beezknees.co.uk/#faq"
-            }
-          },
-          {
-            "@type": "FAQPage",
-            "@id": "https://beezknees.co.uk/#faq",
-            "isPartOf": {
-              "@id": "https://beezknees.co.uk/#webpage"
-            },
-            "mainEntity": [
-              {
-                "@type": "Question",
-                "name": "Is BeezKnees UK-focused?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Yes — the guides are written for UK seasons, forage patterns and common beginner questions, with links to trusted UK resources where appropriate."
-                }
-              },
-              {
-                "@type": "Question",
-                "name": "What is HiveTag?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "HiveTag is the BeezKnees beekeeping app for recording apiaries, hives, inspections, tasks and notes. There is a free tier, with Premium for unlimited use and NFC hive tags."
-                }
-              }
-            ]
+          "sameAs": [
+            "https://www.facebook.com/beezkneesbeekeeping",
+            "https://www.tiktok.com/@colinchorley"
+          ],
+          "founder": {
+            "@id": "https://beezknees.co.uk/#colin-chorley"
           }
-        ]
-      }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://beezknees.co.uk/#colin-chorley",
+          "name": "Colin Chorley",
+          "url": "https://beezknees.co.uk/about-us",
+          "affiliation": {
+            "@id": "https://beezknees.co.uk/#organization"
+          },
+          "sameAs": [
+            "https://www.tiktok.com/@colinchorley"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://beezknees.co.uk/#website",
+          "name": "BeezKnees",
+          "url": "https://beezknees.co.uk",
+          "inLanguage": "en-GB",
+          "publisher": {
+            "@id": "https://beezknees.co.uk/#organization"
+          }
+        },
+        {
+          "@type": "ImageObject",
+          "@id": "https://beezknees.co.uk/#primaryimage",
+          "url": "https://beezknees.co.uk/images/honeybee-on-orange-flower.webp",
+          "width": 1600,
+          "height": 874,
+          "caption": "Honeybee foraging on an orange flower in spring"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://beezknees.co.uk/#breadcrumbs",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://beezknees.co.uk"
+            }
+          ]
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://beezknees.co.uk/#webpage",
+          "url": "https://beezknees.co.uk",
+          "name": "BeezKnees | UK Beekeeping Guides & HiveTag Records",
+          "description": "Practical UK beekeeping guides for beginners, covering seasonal tasks, hive health, bee diseases, equipment, swarm control and HiveTag records.",
+          "inLanguage": "en-GB",
+          "isPartOf": {
+            "@id": "https://beezknees.co.uk/#website"
+          },
+          "author": {
+            "@id": "https://beezknees.co.uk/#colin-chorley"
+          },
+          "publisher": {
+            "@id": "https://beezknees.co.uk/#organization"
+          },
+          "about": {
+            "@id": "https://beezknees.co.uk/#organization"
+          },
+          "primaryImageOfPage": {
+            "@id": "https://beezknees.co.uk/#primaryimage"
+          },
+          "breadcrumb": {
+            "@id": "https://beezknees.co.uk/#breadcrumbs"
+          },
+          "datePublished": "2025-12-10",
+          "dateModified": "2026-08-15",
+          "mainEntity": {
+            "@id": "https://beezknees.co.uk/#faq"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://beezknees.co.uk/#faq",
+          "isPartOf": {
+            "@id": "https://beezknees.co.uk/#webpage"
+          },
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is BeezKnees UK-focused?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes — the guides are written for UK seasons, forage patterns and common beginner questions, with links to trusted UK resources where appropriate."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "When is the best time to start beekeeping in the UK?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Most beginners start planning in winter and spring. The best time to get bees is usually spring to early summer, once temperatures and forage improve."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do I need a garden to keep bees?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Many beekeepers keep hives in apiaries, farmland margins or shared sites. You do need permission, suitable forage nearby and a safe, sensible placement."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What equipment do I need to begin?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "At minimum you'll need a hive, suit or veil, gloves, smoker, hive tool and a way to feed if needed. Our equipment guide breaks this down into essential versus optional."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How often should I inspect my hive?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "In spring and summer, inspections are often weekly, weather permitting. In colder months, inspections reduce — the monthly calendar explains what's normal."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What should I do if I see a swarm?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Don't panic. Keep people and pets away, and contact a local swarm collector. Our swarm page explains what to do and what not to do."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is HiveTag?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "HiveTag is the BeezKnees beekeeping app for recording apiaries, hives, inspections, tasks and notes. There is a free tier, with Premium for unlimited use and NFC hive tags."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How can I help bees if I don't keep hives?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Plant bee-friendly flowers, avoid pesticides where possible, provide water, and support local conservation. Our Help the Bees page has practical UK ideas."
+              }
+            }
+          ]
+        }
+      ]
+    }
     </script>
+
   </head>
   <body>
     <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -460,10 +502,9 @@
         <div>
           <h3>Contact &amp; Social</h3>
           <ul class="footer-links">
-            <li>Email: <a href="/contact" title="Send us a message">Contact</a></li>
+            <li><i class="fa-solid fa-envelope social-icon" aria-hidden="true"></i> <a href="/contact" title="Send us a message">Contact</a></li>
             <li>
               <i class="fa-brands fa-facebook-f social-icon" aria-hidden="true"></i>
-              Facebook:
               <a href="https://www.facebook.com/beezkneesbeekeeping" target="_blank" rel="noopener noreferrer" aria-label="BeezKnees on Facebook">
                 BeezKnees
               </a>
@@ -474,6 +515,16 @@
                 @HiveTagApp
               </a>
             </li>
+            <li>
+              <i class="fa-brands fa-instagram social-icon" aria-hidden="true"></i>
+              
+              <a href="https://www.instagram.com/beezknees101/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="BeezKnees on Instagram">
+                @beezknees101
+              </a>
+            </li>
           </ul>
         </div>
         <div>
@@ -481,7 +532,7 @@
           <ul class="footer-links">
             <li><a href="/">Home</a></li>
             <li><a href="/about-us">About Us</a></li>
-<li><a href="/blog">Blog</a></li>
+            <li><a href="/blog">Blog</a></li>
             <li><a href="/beekeeping-guides">Beekeeping Guides</a></li>
             <li><a href="/hive-problems">Hive Problems</a></li>
             <li><a href="/year-in-the-apiary">Apiary Calendar</a></li>

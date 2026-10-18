@@ -62,7 +62,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/autumn-beekeeping-uk</loc>
-    <lastmod>2026-08-15</lastmod>
+    <lastmod>2026-10-13</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -72,7 +72,7 @@
   </url>
       <url>
     <loc>https://beezknees.co.uk/bearding-bees-uk</loc>
-    <lastmod>2026-08-15</lastmod>
+    <lastmod>2026-10-10</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -120,6 +120,16 @@
     <lastmod>2026-08-15</lastmod>
     <priority>0.8</priority>
   </url>
+   <url>
+    <loc>https://beezknees.co.uk/blog/posts/beehive-foundation-explained-uk</loc>
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/blog/posts/beehive-frames-explained-uk</loc>
+    <lastmod>2026-09-26</lastmod>
+    <priority>0.8</priority>
+  </url>
     <url>
     <loc>https://beezknees.co.uk/blog/posts/best-beekeeping-apps-uk</loc>
     <lastmod>2026-08-19</lastmod>
@@ -135,6 +145,11 @@
     <lastmod>2026-08-25</lastmod>
     <priority>0.6</priority>
   </url>
+    <url>
+    <loc>https://beezknees.co.uk/blog/posts/how-to-tell-if-hive-is-queenless</loc>
+    <lastmod>2026-10-17</lastmod>
+    <priority>0.6</priority>
+  </url>
   <url>
     <loc>https://beezknees.co.uk/blog/posts/garden-beekeeping-uk</loc>
     <lastmod>2026-08-15</lastmod>
@@ -143,6 +158,11 @@
   <url>
     <loc>https://beezknees.co.uk/blog/posts/inspection-diary-1-nine-colonies-nine-different-stories</loc>
     <lastmod>2026-08-15</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/blog/posts/queenless-nuc-disappeared-wasp-pressure</loc>
+    <lastmod>2026-09-27</lastmod>
     <priority>0.6</priority>
   </url>
   <url>
@@ -312,7 +332,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/feeding-bees-for-winter-uk</loc>
-    <lastmod>2026-08-15</lastmod>
+    <lastmod>2026-10-13</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -322,7 +342,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/feeding-bees</loc>
-    <lastmod>2026-08-15</lastmod>
+    <lastmod>2026-10-13</lastmod>
     <priority>0.5</priority>
   </url>
    <url>
@@ -362,7 +382,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/hivetag-app</loc>
-    <lastmod>2026-09-20</lastmod>
+    <lastmod>2026-09-29</lastmod>
     <priority>0.5</priority>
   </url>
    <url>
@@ -387,7 +407,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/how-bees-make-honey</loc>
-    <lastmod>2026-08-15</lastmod>
+    <lastmod>2026-10-10</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -472,7 +492,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/october</loc>
-    <lastmod>2026-08-15</lastmod>
+    <lastmod>2026-10-12</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -493,6 +513,11 @@
   <url>
     <loc>https://beezknees.co.uk/pollination</loc>
     <lastmod>2026-08-15</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://beezknees.co.uk/privacy</loc>
+    <lastmod>2026-10-10</lastmod>
     <priority>0.5</priority>
   </url>
   <url>
@@ -742,7 +767,7 @@
   </url>
   <url>
     <loc>https://beezknees.co.uk/when-to-feed-fondant-to-bees</loc>
-    <lastmod>2026-08-15</lastmod>
+    <lastmod>2026-10-13</lastmod>
     <priority>0.5</priority>
   </url>
   <url>

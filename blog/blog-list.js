@@ -9,13 +9,9 @@
   const pagination = document.getElementById("blogPagination");
   const searchInput = document.getElementById("blogSearch");
 
-  function normaliseDate(dateText) {
-    return new Date(dateText);
-  }
-
-  const sortedPosts = posts.slice().sort(function (a, b) {
-    return normaliseDate(b.date) - normaliseDate(a.date);
-  });
+ const sortedPosts = posts.slice().sort(function (a, b) {
+  return new Date(b.isoDate) - new Date(a.isoDate);
+});
 
   function postUrl(post) {
   return "posts/" + post.slug;

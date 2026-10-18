@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <meta content="A UK lighting design workspace prototype: guided assessment, design briefs and design risk registers." name="description"/>
+  <title>
+   Lumen — Lighting design workspace
+  </title>
+  <link href="CSS/styles.css?v=02" rel="stylesheet"/>
+ </head>
+ <body>
+  <div class="shell">
+   <aside>
+    <div class="brand">
+     <i>
+     </i>
+     lumen
+     <span style="color:#b7d5be">
+      .
+     </span>
+    </div>
+    <div class="subbrand">
+     LIGHTING DESIGN WORKSPACE
+    </div>
+    <div class="navlabel">
+     Your project
+    </div>
+    <nav aria-label="Assessment sections" id="nav">
+    </nav>
+    <div class="asidefoot">
+     <strong>
+      Built around better decisions.
+     </strong>
+     Assess the site. Explain the requirement. Record the design risks.
+     <br/>
+     <br/>
+     <span class="badge">
+      PROTOTYPE · V0.2
+     </span>
+    </div>
+   </aside>
+   <main>
+    <header class="topbar">
+     <div class="crumb">
+      Workspace
+      <span style="margin:0 10px">
+       /
+      </span>
+      <strong id="projectLabel">
+       New lighting project
+      </strong>
+     </div>
+     <div class="actions">
+      <span class="small muted" id="saveState" role="status">
+       Saved in this browser
+      </span>
+      <button onclick="exportJSON()">
+       Export project
+      </button>
+     </div>
+    </header>
+    <div class="content" id="app">
+     <p class="info">
+      Loading the lighting design workspace… If this message stays visible, check that the extracted folder contains
+      <strong>
+       JS/app.js
+      </strong>
+      and
+      <strong>
+       CSS/styles.css
+      </strong>
+      .
+     </p>
+    </div>
+    <noscript>
+     <p class="info notice">
+      Enable JavaScript to use the lighting assessment questionnaire.
+     </p>
+    </noscript>
+   </main>
+  </div>
+  <input accept=".json,application/json" aria-label="Import saved Lumen project" id="fileInput" type="file"/>
+  <div id="toast" role="status">
+  </div>
+  <script defer="" src="JS/app.js?v=02">
+  </script>
+ </body>
+</html>
