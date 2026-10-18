@@ -11,6 +11,66 @@ dayjs.locale("en-gb");
 // === MANUAL NOTES (edit these by hand) ===
 const NOTES = [
 {
+  version: "1.5.9",
+  released_at: "2026-10-17T18:00:00Z",
+
+  summary:
+    "Introduced automatic photograph optimisation across HiveTag to reduce upload sizes, improve storage efficiency and preserve image quality suitable for everyday beekeeping records. Completed a comprehensive migration of historical inspection photographs, recovered previously inaccessible images and strengthened photograph upload reliability.",
+
+  added: [
+    "Added automatic photograph optimisation for new JPEG, PNG and WebP uploads, reducing file sizes before they are stored.",
+    "Added image resizing with a maximum dimension of 1920 pixels and JPEG compression where appropriate, helping reduce unnecessary storage consumption.",
+    "Extended photograph optimisation across inspections, apiaries, hives, Logbook records and profile photographs.",
+    "Added updated Help guidance explaining automatic photograph optimisation, image quality, original photograph retention and upload troubleshooting."
+  ],
+
+  changed: [
+    "New photographs are optimised automatically where supported, without requiring members to manually resize or compress their images.",
+    "Improved photograph storage efficiency while retaining image quality suitable for normal inspection records.",
+    "Existing inspection photograph galleries and historical records continue to work with optimised photographs.",
+    "Completed the migration of 197 historical inspection photographs to smaller, optimised versions.",
+    "Reduced the historical migration photograph dataset from approximately 891 MB to 118 MB, representing an estimated 87% reduction in file size.",
+    "Reduced Production photograph Storage to approximately 400 MB following the migration and removal of verified redundant originals.",
+    "Updated Help documentation to reflect the new photograph handling process.",
+    "Sidebar release numbering updated to **HiveTag 1.5.9**."
+  ],
+
+  fixed: [
+    "Improved photograph upload failure handling so upload problems are communicated more clearly to members.",
+    "Corrected 19 historical photograph references across 15 inspection records where filenames containing the '#' character had caused photographs to become inaccessible.",
+    "Verified that all 19 recovered historical photographs remain accessible in Storage.",
+    "Verified that the repaired account has no remaining inspection photograph references pointing to missing Storage objects.",
+    "Preserved existing inspection records and photograph associations throughout the historical photograph migration."
+  ],
+
+  removed: [
+    "Removed 193 redundant original inspection photographs after confirming their optimised replacements were accessible and correctly referenced."
+  ],
+
+  security: [
+    "Photograph optimisation retains existing member ownership and Storage access controls.",
+    "Historical photograph migration and cleanup were restricted to verified files and their associated inspection records.",
+    "No unrelated member photographs were intentionally removed during the migration."
+  ],
+
+  breaking: [],
+
+  links: [
+    { label: "Inspections", to: "/inspections" },
+    { label: "New Inspection", to: "/inspections/new" },
+    { label: "Apiaries", to: "/apiaries" },
+    { label: "Hives", to: "/hives" },
+    { label: "Logbook", to: "/logbook" },
+    { label: "Help", to: "/help#weather-maps-photos" }
+  ],
+
+  known_issues: [
+    "Photograph optimisation may reduce image resolution or apply additional compression. Members requiring full-resolution originals for detailed examination should retain copies on their own devices.",
+    "Some image formats outside JPEG, PNG and WebP may not be automatically optimised.",
+    "The application bundle remains larger than Vite's recommended 500 kB chunk size; this produces a build warning but does not prevent the application from building or running."
+  ]
+},
+{
   version: "1.5.8",
   released_at: "2026-09-20T19:30:00Z",
 
