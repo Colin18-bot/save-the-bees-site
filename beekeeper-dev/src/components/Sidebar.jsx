@@ -3,7 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
-const APP_VERSION = "1.5.9";
+const APP_VERSION = "1.5.10";
 
 const Sidebar = ({ setIsMobileMenuOpen }) => {
   const [quickCreateOpen, setQuickCreateOpen] = useState(false);

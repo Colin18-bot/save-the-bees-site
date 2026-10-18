@@ -7,7 +7,8 @@ import DashboardIntelligencePanel from "../components/intelligence/DashboardInte
 import DashboardHiveTimelinePanel from "../components/intelligence/DashboardHiveTimelinePanel.jsx";
 import { coordinateHiveIntelligence } from "../intelligence";
 
-import { buildBeekeeperNotes } from "../utils/buildBeekeeperNotes.js";
+import { buildBeekeeperNotesStructured } from "../utils/buildBeekeeperNotes.js";
+import SeasonalBeekeeperNotes from "../components/weather/SeasonalBeekeeperNotes.jsx";
 import { feedTypeLabel, formatAmount, syrupStrengthLabel } from "./Feeding/feedingGuidance.js";
 
 // Weather label/icon maps (for 5-day forecast)
@@ -254,7 +255,13 @@ const Dashboard = () => {
   // Weather
   const [weather, setWeather] = useState(null);
   const [weatherError, setWeatherError] = useState(null);
+  const [dashboardWarnings, setDashboardWarnings] = useState([]);
+  const [weatherRefresh, setWeatherRefresh] = useState(0);
   const [defaultApiaryName, setDefaultApiaryName] = useState("");
+  const [hasDefaultApiary, setHasDefaultApiary] = useState(false);
+  const [dashboardWindUnit, setDashboardWindUnit] = useState(() =>
+    localStorage.getItem("prefs.wind_unit") === "kmh" ? "kmh" : "mph"
+  );
   const [usedFallback, setUsedFallback] = useState(false);
 
   // ✅ Keep the *real* apiary latitude for season profile even if weather falls back to London
@@ -1026,26 +1033,35 @@ const Dashboard = () => {
       return;
     }
     try {
-      let { data: apiaries } = await supabase
+      let { data: apiaries, error: apiaryError } = await supabase
         .from("apiaries")
         .select("id, name, latitude, longitude, is_default")
         .order("is_default", { ascending: false })
-        .limit(1);
+        .order("name", { ascending: true });
+      if (apiaryError) throw apiaryError;
 
-      const chosen = apiaries?.[0] || null;
+      const validCoords = (a) => a && a.latitude !== null && a.longitude !== null &&
+        a.latitude !== "" && a.longitude !== "" &&
+        Number.isFinite(Number(a.latitude)) && Number.isFinite(Number(a.longitude)) &&
+        Math.abs(Number(a.latitude)) <= 90 && Math.abs(Number(a.longitude)) <= 180;
+      const selectedDefault = (apiaries || []).find((a) => a.is_default === true);
+      setHasDefaultApiary(Boolean(selectedDefault));
+      const chosen = selectedDefault || (apiaries || []).find(validCoords) || apiaries?.[0] || null;
+      setDashboardWarnings([]);
       setDefaultApiaryName(chosen?.name || "");
 
-      let lat = Number(chosen?.latitude);
-      let lon = Number(chosen?.longitude);
+      let lat = chosen?.latitude == null || chosen.latitude === "" ? NaN : Number(chosen.latitude);
+      let lon = chosen?.longitude == null || chosen.longitude === "" ? NaN : Number(chosen.longitude);
       setDefaultApiaryLatitude(Number.isFinite(lat) ? lat : null);
 
       const bad =
         !Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180;
 
       if (bad) {
-        lat = 51.5074;
-        lon = -0.1278;
         setUsedFallback(true);
+        setWeather(null);
+        setWeatherError("Add valid apiary coordinates to view local weather.");
+        return;
       } else {
         setUsedFallback(false);
       }
@@ -1054,6 +1070,7 @@ const Dashboard = () => {
         latitude: String(lat),
         longitude: String(lon),
         current: "temperature_2m,weather_code,wind_speed_10m",
+        hourly: "temperature_2m,wind_speed_10m,precipitation_probability,weather_code",
         daily:
           "temperature_2m_max,temperature_2m_min,weather_code,wind_speed_10m_max,precipitation_sum",
         timezone: "auto",
@@ -1084,6 +1101,7 @@ const Dashboard = () => {
           wind_speed_mph: windMph,
           weather_code: current.weather_code,
         },
+        hourly: json.hourly || {},
         forecast: {
           time: daily.time || [],
           temperature_2m_min: daily.temperature_2m_min || [],
@@ -1094,6 +1112,32 @@ const Dashboard = () => {
         },
       });
 
+      // Dashboard uses the same warnings source as the Weather page.
+      // Keep forecasts useful if warnings are unavailable.
+      setDashboardWarnings([]);
+      const inUK = !bad && lat >= 49 && lat <= 61 && lon >= -8.5 && lon <= 2.5;
+      if (inUK) {
+        try {
+          const { data: warningData, error: warningError } = await supabase.functions.invoke(
+            "metoffice-warnings", { method: "GET" }
+          );
+          if (warningError) throw warningError;
+          const features = Array.isArray(warningData?.features) ? warningData.features : [];
+          setDashboardWarnings(features.slice(0, 8).map((feature) => {
+            const p = feature?.properties || {};
+            return {
+              event: p.event || p.headline || p.type || "Weather warning",
+              severity: String(p.severity || p.awareness_level || p.awarenessLevel || p.level || "").toLowerCase(),
+              severity_text: p.severity || p.awareness_level || p.awarenessLevel,
+              start: p.onset || p.effective,
+              end: p.expires || p.ends,
+            };
+          }));
+        } catch (warningError) {
+          console.warn("Dashboard warnings temporarily unavailable:", warningError);
+          setDashboardWarnings([]);
+        }
+      }
       setWeatherError(null);
       localStorage.removeItem("weather_last_fail");
     } catch (e) {
@@ -1121,9 +1165,27 @@ const Dashboard = () => {
     }
   }, [selectedApiaryId, selectedHiveId, subscriptionLevel]);
 
-  // Weather loads once (default apiary)
+  // Refresh while Dashboard remains open; the section is optional in Customise Dashboard.
   useEffect(() => {
-    fetchWeather();
+    const timer = window.setInterval(() => setWeatherRefresh((v) => v + 1), 30 * 60 * 1000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (dashboardSections.weather) fetchWeather();
+  }, [dashboardSections.weather, weatherRefresh]);
+  useEffect(() => {
+    const refresh = () => {
+      localStorage.removeItem("weather_last_fail");
+      setDashboardWindUnit(localStorage.getItem("prefs.wind_unit") === "kmh" ? "kmh" : "mph");
+      setWeatherRefresh((v) => v + 1);
+    };
+    window.addEventListener("apiary:default-updated", refresh);
+    window.addEventListener("focus", refresh);
+    return () => {
+      window.removeEventListener("apiary:default-updated", refresh);
+      window.removeEventListener("focus", refresh);
+    };
   }, []);
 
   // Subscription level for this user (for NFC visibility)
@@ -1203,33 +1265,20 @@ const Dashboard = () => {
   // ✅ your confirmed NFC manager route
   const nfcManagerHref = "/nfc/manage";
 
-  // --- Beekeeper Notes (Dashboard preview, based on the same rules as Weather page) ---
-  const beekeeperNotes = useMemo(() => {
-    if (!weather?.forecast) return [];
-
-    // Convert Dashboard's "forecast" shape into the "daily" shape the shared helper expects
-    const daily = {
-      time: weather.forecast.time,
-      temperature_2m_min: weather.forecast.temperature_2m_min,
-      temperature_2m_max: weather.forecast.temperature_2m_max,
-      precipitation_sum: weather.forecast.precipitation_sum,
-      wind_speed_10m_max: weather.forecast.wind_speed_10m_max,
-      weather_code: weather.forecast.weather_code,
-    };
-
-    return buildBeekeeperNotes({
-      daily,
+  // Reuse identical seasonal rules on the Dashboard and Weather page.
+  const structuredNotes = useMemo(() => {
+    if (!weather?.forecast) return null;
+    return buildBeekeeperNotesStructured({
+      daily: weather.forecast,
+      hourly: weather.hourly,
       weather,
-      timezone: weather?.timezone || "UTC",
+      timezone: weather.timezone || "UTC",
       unit: "C",
-      windUnit: "kmh",
-      warnings: [],
-      pollen: null,
-
-      // ✅ drives north/south/tropical month profile
-      latitude: defaultApiaryLatitude ?? weather?.latitude,
+      windUnit: dashboardWindUnit,
+      warnings: dashboardWarnings,
+      latitude: defaultApiaryLatitude ?? weather.latitude,
     });
-  }, [weather, defaultApiaryLatitude]);
+  }, [weather, dashboardWarnings, defaultApiaryLatitude, dashboardWindUnit]);
 
   return (
     <div className="p-6 space-y-6">
@@ -2111,7 +2160,7 @@ const Dashboard = () => {
         <div className="bg-white rounded shadow p-4">
           <h2 className="text-lg font-semibold mb-1">Weather Snapshot</h2>
           <p className="text-xs text-gray-600 mb-3">
-            📍 Weather is based on your <strong>default apiary</strong>
+            📍 Weather is based on your <strong>{hasDefaultApiary ? "default apiary" : "selected apiary"}</strong>
             {defaultApiaryName ? `: ${defaultApiaryName}` : ""}.{" "}
             <Link to="/settings" className="text-blue-600 underline">
               Change default in Settings
@@ -2132,6 +2181,12 @@ const Dashboard = () => {
               </>
             )}
           </p>
+          {!hasDefaultApiary && (
+            <div className="mb-3 rounded border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+              Select a <strong>Default Apiary</strong> in <Link to="/settings" className="underline font-semibold">Settings</Link>
+              {" "}to choose which location appears here. This notice disappears once saved.
+            </div>
+          )}
           {weatherError ? (
             <p className="text-gray-500">{weatherError}</p>
           ) : !weather ? (
@@ -2142,9 +2197,9 @@ const Dashboard = () => {
                 <p>
                   <strong>Now:</strong> {weather?.current?.temperature_2m ?? "N/A"}°C, (
                   {Number.isFinite(weather?.current?.wind_speed_10m)
-                    ? Math.round(weather.current.wind_speed_10m)
+                    ? Math.round(weather.current.wind_speed_10m * (dashboardWindUnit === "mph" ? 0.621371 : 1))
                     : "N/A"}{" "}
-                  km/h)
+                  {dashboardWindUnit === "mph" ? "mph" : "km/h"})
                 </p>
                 <p className="mt-2">
                   <strong>Next 5 Days:</strong>
@@ -2171,44 +2226,16 @@ const Dashboard = () => {
               </div>
 
               <div className="mt-4 pt-3 border-t border-gray-200">
-                <h3 className="text-sm font-semibold mb-1">Seasonal Beekeeper Notes</h3>
-                <p className="text-[11px] text-gray-500 mb-2">
-                  Guide only – this panel gives general beekeeping information based on typical
-                  cool–temperate conditions and average colony behaviour. Any comments about
-                  inspections, feeding, Varroa control or other treatments are purely advisory and
-                  are not instructions. Weather, forage, pollen and alert data come from third-party
-                  services and may be inaccurate or change at short notice. Conditions vary by
-                  region, altitude and micro-climate and every colony is different, so always use
-                  your own judgement and follow the product label, official guidance and advice from
-                  your local beekeeping association, Bee Inspectors, vets and experienced mentors.
-                  Do not rely on this panel alone when deciding whether to inspect, feed or treat
-                  your bees.
+                <SeasonalBeekeeperNotes
+                  advisory={structuredNotes}
+                  storageKey="hivetag_seasonal_notes_dashboard_v1"
+                  theme="light"
+                />
+                <p className="mt-2 text-xs text-gray-600">
+                  <Link to="/weather" className="text-blue-600 underline">
+                    Open detailed weather and seasonal guidance →
+                  </Link>
                 </p>
-                {beekeeperNotes.length ? (
-                  <>
-                    <ul className="space-y-1 text-xs text-gray-800">
-                      {beekeeperNotes.slice(0, 3).map((n, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span>{n.icon}</span>
-                          <span>{n.text}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <p className="mt-2 text-[11px] text-gray-600">
-                      This is just a short preview.{" "}
-                      <Link to="/weather" className="text-blue-600 underline">
-                        View full Seasonal Beekeeper Notes and detailed weather →
-                      </Link>
-                    </p>
-                  </>
-                ) : (
-                  <p className="text-xs text-gray-500">
-                    No special notes today.{" "}
-                    <Link to="/weather" className="text-blue-600 underline">
-                      Open the Weather page for full Seasonal Beekeeper Notes →
-                    </Link>
-                  </p>
-                )}
               </div>
             </>
           )}

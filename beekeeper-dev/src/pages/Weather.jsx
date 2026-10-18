@@ -1,8 +1,10 @@
 // src/pages/Weather.jsx
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "../services/supabase.js";
 
-import { buildBeekeeperNotes } from "../utils/buildBeekeeperNotes.js";
+import { buildBeekeeperNotesStructured } from "../utils/buildBeekeeperNotes.js";
+import SeasonalBeekeeperNotes from "../components/weather/SeasonalBeekeeperNotes.jsx";
 
 // === Feature flags (flip to true in production if you want these) ===
 const ENABLE_POLLEN = true;
@@ -94,6 +96,7 @@ const isLikelyUK = (lat, lon) => {
 };
 
 // ✅ Temperature unit preference storage (shared with other pages)
+const WIND_UNIT_KEY = "prefs.wind_unit";
 const TEMP_UNIT_KEY = "prefs.temp_unit"; // "C" | "F"
 const normalizeTempUnit = (u) => ((u || "C").toString().toUpperCase() === "F" ? "F" : "C");
 
@@ -105,6 +108,7 @@ export default function Weather() {
   const [warnings, setWarnings] = useState([]);
   const [warningsNote, setWarningsNote] = useState(""); // ✅ NEW: message shown when warnings are unavailable
   const [loading, setLoading] = useState(true);
+  const [weatherRefresh, setWeatherRefresh] = useState(0);
   const [err, setErr] = useState("");
 
   // ✅ Default Celsius, persist selection in localStorage
@@ -116,8 +120,12 @@ export default function Weather() {
     return u;
   }); // "C" | "F"
 
-  const [windUnit, setWindUnit] = useState("kmh"); // kmh or mph for wind
+  const [windUnit, setWindUnit] = useState(() =>
+    localStorage.getItem(WIND_UNIT_KEY) === "kmh" ? "kmh" : "mph"
+  ); // defaults to mph
   const [usedFallback, setUsedFallback] = useState(false);
+  const [hasDefaultApiary, setHasDefaultApiary] = useState(false);
+  const [apiaryReload, setApiaryReload] = useState(0);
 
   // ✅ NEW: store the *real* apiary latitude (not the fallback lat)
   const [apiaryLatitude, setApiaryLatitude] = useState(null);
@@ -126,6 +134,23 @@ export default function Weather() {
   useEffect(() => {
     localStorage.setItem(TEMP_UNIT_KEY, normalizeTempUnit(unit));
   }, [unit]);
+
+  useEffect(() => { localStorage.setItem(WIND_UNIT_KEY, windUnit); }, [windUnit]);
+  useEffect(() => {
+    const refresh = () => setApiaryReload((v) => v + 1);
+    window.addEventListener("apiary:default-updated", refresh);
+    window.addEventListener("focus", refresh);
+    return () => {
+      window.removeEventListener("apiary:default-updated", refresh);
+      window.removeEventListener("focus", refresh);
+    };
+  }, []);
+
+  // Refresh forecast and advice while this page remains open.
+  useEffect(() => {
+    const timer = window.setInterval(() => setWeatherRefresh((v) => v + 1), 30 * 60 * 1000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   // Load apiaries and pick default
   useEffect(() => {
@@ -148,9 +173,14 @@ export default function Weather() {
       }
 
       const list = data || [];
+      setHasDefaultApiary(list.some((a) => a.is_default === true));
       setApiaries(list);
       if (list.length) {
-        const preferred = list.find((a) => a?.is_default === true) || list[0];
+        const valid = (a) => a.latitude !== null && a.longitude !== null &&
+          a.latitude !== "" && a.longitude !== "" &&
+          Number.isFinite(Number(a.latitude)) && Number.isFinite(Number(a.longitude)) &&
+          Math.abs(Number(a.latitude)) <= 90 && Math.abs(Number(a.longitude)) <= 180;
+        const preferred = list.find((a) => a.is_default === true) || list.find(valid) || list[0];
         setSelectedApiary(String(preferred.id));
       } else {
         setSelectedApiary("");
@@ -159,7 +189,7 @@ export default function Weather() {
     return () => {
       alive = false;
     };
-  }, []);
+  }, [apiaryReload]);
 
   async function fetchJsonOnce(url, signal) {
     try {
@@ -248,8 +278,8 @@ export default function Weather() {
     const a = apiaries.find((x) => String(x.id) === String(selectedApiary));
 
     // ✅ real apiary lat/lon (for season profile)
-    const realLat = Number(a?.latitude);
-    const realLon = Number(a?.longitude);
+    const realLat = a?.latitude === null || a?.latitude === "" ? NaN : Number(a?.latitude);
+    const realLon = a?.longitude === null || a?.longitude === "" ? NaN : Number(a?.longitude);
 
     const realCoordsOk =
       Number.isFinite(realLat) &&
@@ -268,9 +298,13 @@ export default function Weather() {
 
     const good = (v) => Number.isFinite(v) && !(Math.abs(v) === Infinity);
     if (!good(lat) || !good(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) {
-      lat = 51.5074; // London fallback
-      lon = -0.1278;
       setUsedFallback(true);
+      setWeather(null);
+      setPollen(null);
+      setWarnings([]);
+      setLoading(false);
+      setErr("Add valid latitude and longitude to this apiary to view its local weather.");
+      return;
     } else {
       setUsedFallback(false);
     }
@@ -492,7 +526,7 @@ export default function Weather() {
     })();
 
     return () => controller.abort();
-  }, [selectedApiary, apiaries]);
+  }, [selectedApiary, apiaries, weatherRefresh]);
 
   // UI helpers
   const t = (c) =>
@@ -530,9 +564,10 @@ export default function Weather() {
   }, [hourly.time]);
 
   // Beekeeper Notes (including seasonal treatment guidance)
-  const advisories = useMemo(() => {
-    return buildBeekeeperNotes({
+  const structuredNotes = useMemo(() => {
+    return buildBeekeeperNotesStructured({
       daily,
+      hourly,
       weather,
       unit,
       windUnit,
@@ -541,7 +576,7 @@ export default function Weather() {
       timezone: weather?.timezone || "UTC",
       latitude: apiaryLatitude,
     });
-  }, [daily, weather, unit, windUnit, warnings, pollen, apiaryLatitude]);
+  }, [daily, hourly, weather, unit, windUnit, warnings, pollen, apiaryLatitude]);
 
   const pollenHourly = pollen?.hourly || {};
   const scalePollen = (v) => {
@@ -598,12 +633,16 @@ export default function Weather() {
         </div>
       </div>
 
-      {/* Fallback banner */}
+      {!hasDefaultApiary && apiaries.length > 0 && (
+        <div className="text-amber-900 bg-amber-50 border border-amber-200 rounded p-3 text-sm mb-4">
+          Choose a <strong>Default Apiary</strong> in <Link className="underline font-semibold" to="/settings">Settings</Link>
+          {" "}to personalise Dashboard weather. Until then, an available apiary is selected automatically.
+        </div>
+      )}
       {usedFallback && (
-        <div className="text-amber-800 bg-amber-100 border border-amber-200 rounded p-3 text-sm mb-4">
-          This apiary has no coordinates, showing weather for a default location
-          (London). Add latitude/longitude on the apiary for precise local
-          weather.
+        <div className="text-amber-900 bg-amber-50 border border-amber-200 rounded p-3 text-sm mb-4">
+          This apiary needs valid coordinates before local weather can be displayed.
+          <Link className="underline ml-1" to="/apiaries">Manage apiaries</Link>.
         </div>
       )}
 
@@ -770,33 +809,8 @@ export default function Weather() {
 
           {/* ===== Sidebar column ===== */}
           <aside className="space-y-4">
-            {/* Seasonal Beekeeper Notes */}
-            <div className="bg-zinc-900 text-zinc-100 rounded shadow p-4 border border-zinc-800">
-              <h3 className="text-lg font-semibold mb-1">Seasonal Beekeeper Notes</h3>
-              <p className="text-xs text-zinc-400 mb-2">
-                Guide only – this panel gives general beekeeping information based on typical cool–temperate conditions
-                and average colony behaviour. Any comments about inspections, feeding, Varroa control or other
-                treatments are purely advisory and are not instructions. Weather, forage, pollen and alert data come
-                from third-party services and may be inaccurate or change at short notice. Conditions vary by region,
-                altitude and micro-climate and every colony is different, so always use your own judgement and follow
-                the product label, official guidance and advice from your local beekeeping association, Bee Inspectors,
-                vets and experienced mentors. Do not rely on this panel alone when deciding whether to inspect, feed or
-                treat your bees.
-              </p>
-
-              {advisories.length ? (
-                <ul className="space-y-1 text-sm">
-                  {advisories.map((x, i) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <span>{x.icon}</span>
-                      <span className="break-words">{x.text}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <div className="text-sm text-zinc-300">No special notes today.</div>
-              )}
-            </div>
+            {/* Shared expandable Seasonal Beekeeper Notes */}
+            <SeasonalBeekeeperNotes advisory={structuredNotes} storageKey="hivetag_seasonal_notes_weather_v1" />
 
             {/* Warnings (optional) */}
             {ENABLE_WARNINGS && (
