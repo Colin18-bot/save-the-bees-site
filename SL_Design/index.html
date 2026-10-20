@@ -1,89 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width,initial-scale=1" name="viewport"/>
-  <meta content="A UK lighting design workspace prototype: guided assessment, design briefs and design risk registers." name="description"/>
-  <title>
-   Lumen — Lighting design workspace
-  </title>
-  <link href="CSS/styles.css?v=02" rel="stylesheet"/>
- </head>
- <body>
-  <div class="shell">
-   <aside>
-    <div class="brand">
-     <i>
-     </i>
-     lumen
-     <span style="color:#b7d5be">
-      .
-     </span>
-    </div>
-    <div class="subbrand">
-     LIGHTING DESIGN WORKSPACE
-    </div>
-    <div class="navlabel">
-     Your project
-    </div>
-    <nav aria-label="Assessment sections" id="nav">
-    </nav>
-    <div class="asidefoot">
-     <strong>
-      Built around better decisions.
-     </strong>
-     Assess the site. Explain the requirement. Record the design risks.
-     <br/>
-     <br/>
-     <span class="badge">
-      PROTOTYPE · V0.2
-     </span>
-    </div>
-   </aside>
-   <main>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A focused project overview and BS 5489 lighting selector based on BS 5489-1:2020.">
+    <title>Lumen — Annex A lighting-class selection</title>
+    <link rel="stylesheet" href="CSS/styles.css?v=09">
+    <script src="JS/app.js?v=09" defer></script>
+  </head>
+  <body>
     <header class="topbar">
-     <div class="crumb">
-      Workspace
-      <span style="margin:0 10px">
-       /
-      </span>
-      <strong id="projectLabel">
-       New lighting project
-      </strong>
-     </div>
-     <div class="actions">
-      <span class="small muted" id="saveState" role="status">
-       Saved in this browser
-      </span>
-      <button onclick="exportJSON()">
-       Export project
-      </button>
-     </div>
+      <a class="brand" href="#overview" data-page="overview" aria-label="Lumen project overview"><span class="brand-mark"></span>lumen<span class="dot">.</span></a>
+      <span class="edition">BS 5489-1:2020 · Table-led selection</span>
+      <div class="header-actions">
+        <span id="save-status" role="status">Saved in this browser</span>
+        <button type="button" id="export">Export project</button>
+      </div>
     </header>
-    <div class="content" id="app">
-     <p class="info">
-      Loading the lighting design workspace… If this message stays visible, check that the extracted folder contains
-      <strong>
-       JS/app.js
-      </strong>
-      and
-      <strong>
-       CSS/styles.css
-      </strong>
-      .
-     </p>
+    <div class="workspace">
+      <aside class="sidebar">
+        <p class="eyebrow">A clear starting point</p>
+        <nav aria-label="Workspace sections">
+          <a href="#overview" data-page="overview"><span>01</span> Project overview</a>
+          <a href="#selection" data-page="selection"><span>02</span> Tables and class selection</a>
+          <a href="#brief" data-page="brief"><span>03</span> Design brief and risks</a>
+        </nav>
+        <div class="sidebar-note">
+          <strong>Choose the relevant table.</strong>
+          <p>Select the table row, read its notes, confirm the zone and parameters, then review and record the designer’s choice.</p>
+          <span class="badge">ASSESSMENT PROTOTYPE · 0.9</span>
+        </div>
+      </aside>
+      <main id="app"><p class="notice">Loading… If this message remains, check that CSS/styles.css and JS/app.js are in the extracted folder.</p></main>
     </div>
-    <noscript>
-     <p class="info notice">
-      Enable JavaScript to use the lighting assessment questionnaire.
-     </p>
-    </noscript>
-   </main>
-  </div>
-  <input accept=".json,application/json" aria-label="Import saved Lumen project" id="fileInput" type="file"/>
-  <div id="toast" role="status">
-  </div>
-  <script defer="" src="JS/app.js?v=02">
-  </script>
- </body>
+    <input type="file" id="import-file" accept=".json,application/json" hidden aria-label="Import Lumen 0.9 project">
+    <div id="toast" role="status"></div>
+    <noscript><p class="notice">Please enable JavaScript to use the questionnaire.</p></noscript>
+  </body>
 </html>
