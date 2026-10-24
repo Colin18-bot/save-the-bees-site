@@ -311,7 +311,6 @@
   margin-bottom: 1rem;
 }
 
-
 /* =========================================================
    BLOG - JOIN THE CONVERSATION SOCIAL LINKS
 ========================================================= */
@@ -473,3 +472,41 @@
     font-size: 0.92rem;
   }
 }
+
+/* =========================================================
+   BEEHIVE DUMMY, FOLLOWER AND DIVISION BOARDS - ARTICLE LAYOUT
+   Moved from inline <style> in the article HTML
+========================================================= */
+
+/* Article-specific layouts: images remain small, accessible and mobile-friendly */
+.divider-intro-figure{float:right;width:min(43%,330px);margin:.4rem 0 1.2rem 1.5rem}
+.divider-intro-figure img{display:block;width:100%;height:auto;border-radius:14px}
+.divider-intro-figure figcaption{font-size:.82rem;line-height:1.45;color:#5d6a57;margin-top:.45rem}
+.blog-article-card .blog-article>section:first-child{display:flow-root}
+.divider-diagrams{display:grid;gap:1rem;margin:1.3rem 0}
+.divider-diagram{padding:1rem;background:#f8faf5;border:1px solid #e1e8d8;border-radius:12px}
+.divider-diagram h3{margin:0 0 .7rem;color:#263b20;font-size:1.04rem}
+.divider-diagram p{margin:.6rem 0 0}
+.divider-track{display:flex;align-items:stretch;gap:4px;min-height:65px;max-width:100%}
+.divider-track>*{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;font-size:.72rem;text-align:center;border-radius:3px;padding:3px;overflow-wrap:anywhere}
+.divider-track span{background:#b7834b;color:#fff}
+.divider-track b.thin{flex:.65;background:#778c92;color:#fff}
+.divider-track b.thick{flex:1.6;background:#e2bb70;color:#243528}
+.divider-track b.sealed{flex:.55;background:#744e39;color:#fff}
+.divider-track em{background:#edf1e9;color:#52634e;font-style:normal}
+.board-section{margin-top:1.35rem}
+.board-section h3{margin:0 0 .9rem;color:#263b20}
+.board-row{display:grid;grid-template-columns:minmax(220px,290px) minmax(0,1fr);gap:1.45rem;align-items:start}
+.board-row.reverse{grid-template-columns:minmax(0,1fr) minmax(220px,290px)}
+.board-row.reverse .board-copy{order:1}
+.board-row.reverse .board-figure{order:2}
+.board-figure{margin:0}
+.board-figure img{display:block;width:100%;height:auto;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.board-figure figcaption{font-size:.82rem;line-height:1.45;color:#5d6a57;margin-top:.5rem;font-style:italic;text-align:center}
+.board-copy p:first-child{margin-top:0}
+.board-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:0 0 1rem;max-width:620px}
+.board-gallery figure{margin:0}
+.board-gallery img{display:block;width:100%;height:auto;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.board-gallery figcaption{font-size:.8rem;line-height:1.4;color:#5d6a57;margin-top:.45rem;font-style:italic;text-align:center}
+@media(max-width:800px){.board-row,.board-row.reverse{grid-template-columns:1fr}.board-row.reverse .board-copy,.board-row.reverse .board-figure{order:initial}.board-figure{max-width:360px}.board-gallery{grid-template-columns:1fr;max-width:360px}.board-copy,.board-figure,.board-gallery{margin:0 auto}.divider-intro-figure{float:none;width:100%;max-width:360px;margin:1rem auto}}
+@media(max-width:650px){.divider-track>*{font-size:.64rem;padding:2px}}

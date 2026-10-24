@@ -1,5 +1,16 @@
 window.beezKneesBlogPosts = [
   {
+    title: "Beehive Dummy Boards, Follower Boards and Dividers: A Complete UK Guide",
+    slug: "beehive-dummy-boards-followers-dividers-uk",
+    category: "Beginner Beekeeping",
+    date: "24 October 2026",
+    isoDate: "2026-10-24",
+    isoModified: "2026-10-24",
+    image: "assets/images/beehive-dummy-follower-division-boards.webp",
+    alt: "Wooden, plastic and insulated beehive dummy boards and dividers arranged beside a British National hive",
+    excerpt: "A practical UK guide to dummy boards, follower boards, division boards and insulated hive dividers, including alternative names, materials, sizes, thicknesses, advantages and disadvantages."
+  },
+  {
     title: "How to Tell Whether a Hive Is Queenless",
     slug: "how-to-tell-if-hive-is-queenless",
     category: "Queens & Brood",
