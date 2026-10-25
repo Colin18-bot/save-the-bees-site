@@ -510,3 +510,67 @@
 .board-gallery figcaption{font-size:.8rem;line-height:1.4;color:#5d6a57;margin-top:.45rem;font-style:italic;text-align:center}
 @media(max-width:800px){.board-row,.board-row.reverse{grid-template-columns:1fr}.board-row.reverse .board-copy,.board-row.reverse .board-figure{order:initial}.board-figure{max-width:360px}.board-gallery{grid-template-columns:1fr;max-width:360px}.board-copy,.board-figure,.board-gallery{margin:0 auto}.divider-intro-figure{float:none;width:100%;max-width:360px;margin:1rem auto}}
 @media(max-width:650px){.divider-track>*{font-size:.64rem;padding:2px}}
+
+/* =========================================================
+   BEEZKNEES BLOG — MOBILE WIDTH / OVERFLOW FIX
+   Add to the END of /blog/blog.css
+   ========================================================= */
+@media (max-width: 900px) {
+  /* A grid child with a wide table must be allowed to shrink. */
+  .blog-layout {
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    min-width: 0;
+  }
+
+  .blog-layout > *,
+  .blog-article-card,
+  .blog-article,
+  .blog-article > section,
+  .content-card,
+  .blog-table-wrap,
+  .board-row,
+  .board-copy,
+  .board-figure,
+  .board-gallery,
+  .related-guides {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Keep wide comparison tables scrollable INSIDE the article. */
+  .blog-table-wrap {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Stack the image/text layouts used in the newer equipment posts. */
+  .board-row,
+  .board-row.reverse {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .board-row.reverse .board-copy,
+  .board-row.reverse .board-figure {
+    order: initial;
+  }
+
+  .board-figure {
+    width: 100%;
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* The full-width banner must not inherit content overflow. */
+  .blog-hero,
+  .blog-hero .hero-inner,
+  .blog-hero .hero-banner-image {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
