@@ -1,4 +1,15 @@
 window.beezKneesBlogPosts = [
+   {
+    title: "Beehive Crown Boards and Clearer Boards Explained: Types, Holes, Feeders and Bee Escapes – UK Guide",
+    slug: "beehive-crown-boards-clearer-boards-explained-uk",
+    category: "Beginner Beekeeping",
+    date: "25 October 2026",
+    isoDate: "2026-10-25",
+    isoModified: "2026-10-25",
+    image: "assets/images/crown-board-central-hole.webp",
+    alt: "Wooden British National crown board with a central feeder hole on an apiary workbench",
+    excerpt: "A practical UK guide to crown boards, clear boards, feeding holes, Porter escapes, rhombus, circular and Canadian clearer boards, Horsley swarm-control boards, insulation and hive compatibility."
+  },
   {
     title: "How to Light a Bee Smoker: Fuels, Types, Safety and When to Use Smoke",
     slug: "how-to-light-a-bee-smoker-uk",
