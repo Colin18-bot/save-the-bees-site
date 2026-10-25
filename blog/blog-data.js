@@ -1,5 +1,16 @@
 window.beezKneesBlogPosts = [
   {
+    title: "How to Light a Bee Smoker: Fuels, Types, Safety and When to Use Smoke",
+    slug: "how-to-light-a-bee-smoker-uk",
+    category: "Beginner Beekeeping",
+    date: "24 October 2026",
+    isoDate: "2026-10-24",
+    isoModified: "2026-10-24",
+    image: "assets/images/bee-smoker-uk-guide.webp",
+    alt: "Traditional stainless-steel bee smoker with wooden and leather bellows producing gentle smoke",
+    excerpt: "Learn how to light a bee smoker, choose safe fuels, compare stainless-steel, galvanised and copper smokers, and understand when and why beekeepers use smoke."
+  },
+  {
     title: "Beehive Dummy Boards, Follower Boards and Dividers: A Complete UK Guide",
     slug: "beehive-dummy-boards-followers-dividers-uk",
     category: "Beginner Beekeeping",
