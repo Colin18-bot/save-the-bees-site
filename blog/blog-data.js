@@ -1,4 +1,16 @@
 window.beezKneesBlogPosts = [
+  {
+    title: "Should You Insulate a Beehive in Winter? What I've Learned Over the Years",
+    slug: "should-you-insulate-a-beehive-in-winter",
+    category: "Winter Beekeeping",
+    date: "27 October 2026",
+    isoDate: "2026-10-27",
+    isoModified: "2026-10-27",
+    image: "assets/images/beehive-winter-external-wrap.webp",
+    alt: "Two wooden beehives wrapped in black DPC-type material as part of my earlier winter insulation preparations",
+    excerpt: "My personal experience of insulating beehives for winter, from wrapping wooden hives with DPC-type material to using wool-like insulation above the crown board. A practical look at heat loss, condensation and winter preparation."
+  },
+
    {
     title: "Beehive Crown Boards and Clearer Boards Explained: Types, Holes, Feeders and Bee Escapes – UK Guide",
     slug: "beehive-crown-boards-clearer-boards-explained-uk",

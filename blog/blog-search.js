@@ -14,6 +14,43 @@ document.addEventListener('DOMContentLoaded', function () {
    */
   const extraSearchTerms = {
 
+    'should-you-insulate-a-beehive-in-winter': [
+      'should you insulate a beehive in winter',
+      'winter beehive insulation',
+      'insulating a beehive',
+      'insulate hive for winter',
+      'winter hive insulation UK',
+      'wooden hive insulation',
+      'British National hive insulation',
+      'insulation above crown board',
+      'insulating crown board',
+      'wool insulation',
+      'wool-like hive insulation',
+      'hive insulation eke',
+      'insulation in an eke',
+      'thermal hive insulation',
+      'beehive roof insulation',
+      'top insulation',
+      'winter hive wrapping',
+      'wrap beehive for winter',
+      'external hive insulation',
+      'DPC hive wrap',
+      'damp proof course hive wrap',
+      'DPC material',
+      'hive heat loss',
+      'winter cluster',
+      'honeybee winter cluster',
+      'beehive condensation',
+      'moisture in beehive',
+      'winter hive ventilation',
+      'open mesh floor',
+      'wooden vs poly hive',
+      'poly hive insulation',
+      'preparing bees for winter',
+      'winter beekeeping',
+      'UK beekeeping'
+    ],
+
     'beehive-crown-boards-clearer-boards-explained-uk': [
       'crown board',
       'crown boards',
