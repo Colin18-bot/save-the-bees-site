@@ -1,4 +1,16 @@
 window.beezKneesBlogPosts = [
+  
+  {
+    title: "How to Heft a Beehive: Is Your Colony Heavy Enough for Winter?",
+    slug: "how-to-heft-a-beehive-winter-stores",
+    category: "Winter Beekeeping",
+    date: "28 October 2026",
+    isoDate: "2026-10-28",
+    isoModified: "2026-10-28",
+    image: "assets/images/autumn-apiary-winter-hefting-hero.webp",
+    alt: "Wooden beehives in an autumn apiary at golden hour",
+    excerpt: "My personal approach to hefting beehives during autumn and winter, checking colony food stores, recognising a hive becoming lighter and deciding when supplementary feeding may be needed."
+  },
   {
     title: "Should You Insulate a Beehive in Winter? What I've Learned Over the Years",
     slug: "should-you-insulate-a-beehive-in-winter",
@@ -9,8 +21,7 @@ window.beezKneesBlogPosts = [
     image: "assets/images/beehive-winter-external-wrap.webp",
     alt: "Two wooden beehives wrapped in black DPC-type material as part of my earlier winter insulation preparations",
     excerpt: "My personal experience of insulating beehives for winter, from wrapping wooden hives with DPC-type material to using wool-like insulation above the crown board. A practical look at heat loss, condensation and winter preparation."
-  },
-
+   },
    {
     title: "Beehive Crown Boards and Clearer Boards Explained: Types, Holes, Feeders and Bee Escapes – UK Guide",
     slug: "beehive-crown-boards-clearer-boards-explained-uk",

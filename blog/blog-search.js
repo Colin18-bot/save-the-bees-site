@@ -14,6 +14,42 @@ document.addEventListener('DOMContentLoaded', function () {
    */
   const extraSearchTerms = {
 
+    'how-to-heft-a-beehive-winter-stores': [
+      'how to heft a beehive',
+      'hefting a beehive',
+      'hefting hives',
+      'heft hive for winter',
+      'how to heft a hive',
+      'weighing a beehive',
+      'beehive weight in winter',
+      'how heavy should a beehive be',
+      'is my beehive heavy enough',
+      'winter food stores',
+      'honey stores for winter',
+      'checking winter stores',
+      'bees winter feeding',
+      'winter colony starvation',
+      'how to tell if bees need food',
+      'hive getting lighter',
+      'check both sides of hive',
+      'heft from back of hive',
+      'luggage scales beehive',
+      'weigh hive with scales',
+      'hive weight versus food stores',
+      'national hive winter stores',
+      'British National hive',
+      'autumn hive checks',
+      'winter hive checks',
+      'winter beekeeping UK',
+      'winter preparation',
+      'fondant feeding',
+      'emergency winter feeding',
+      'beekeeping in October',
+      'beekeeping in November',
+      'beekeeping in December',
+      'beekeeping in January'
+    ],
+
     'should-you-insulate-a-beehive-in-winter': [
       'should you insulate a beehive in winter',
       'winter beehive insulation',
