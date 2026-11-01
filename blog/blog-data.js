@@ -1,4 +1,16 @@
 window.beezKneesBlogPosts = [
+
+  {
+    title: "Why Are My Bees Flying in November or December? A Winter Visit to My Apiary",
+    slug: "why-are-bees-flying-november-december",
+    category: "Winter Beekeeping",
+    date: "1 November 2026",
+    isoDate: "2026-11-01",
+    isoModified: "2026-11-01",
+    image: "assets/images/winter-apiary-beezknees.webp",
+    alt: "Three wooden beehives secured with blue straps in a British apiary, with bare hedgerows behind them",
+    excerpt: "Why honeybees sometimes fly in November and December, from cleansing flights and mild winter weather to late forage, and what I look for when visiting my apiary."
+  },
   
   {
     title: "How to Heft a Beehive: Is Your Colony Heavy Enough for Winter?",

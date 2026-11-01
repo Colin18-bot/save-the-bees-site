@@ -14,6 +14,39 @@ document.addEventListener('DOMContentLoaded', function () {
    */
   const extraSearchTerms = {
 
+    'why-are-bees-flying-november-december': [
+      'why are my bees flying in november',
+      'why are my bees flying in december',
+      'bees flying in november',
+      'bees flying in december',
+      'bees flying in winter',
+      'winter flying bees',
+      'honeybees flying in cold weather',
+      'bees active in winter',
+      'mild winter weather',
+      'sunny winter afternoon',
+      'winter cleansing flights',
+      'cleansing flight bees',
+      'bees outside hive in winter',
+      'bees collecting pollen in november',
+      'late autumn forage',
+      'ivy pollen',
+      'mahonia flowers',
+      'winter water collection',
+      'one hive flying another quiet',
+      'bees crawling outside hive',
+      'dead bees outside hive in winter',
+      'winter hive entrance activity',
+      'should i inspect bees in winter',
+      'winter hive checks',
+      'hefting winter hive',
+      'winter food stores',
+      'winter beekeeping uk',
+      'november beekeeping',
+      'december beekeeping',
+      'south wales beekeeping'
+    ],
+
     'how-to-heft-a-beehive-winter-stores': [
       'how to heft a beehive',
       'hefting a beehive',
