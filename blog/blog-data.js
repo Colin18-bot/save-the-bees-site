@@ -1,5 +1,4 @@
 window.beezKneesBlogPosts = [
-
   {
     title: "How Can I Tell If My Bees Are Alive in Winter?",
     slug: "how-to-tell-if-bees-are-alive-in-winter",
@@ -11,8 +10,6 @@ window.beezKneesBlogPosts = [
     alt: "Wooden beehives secured for winter in a South Wales apiary",
     excerpt: "My practical approach to checking a silent beehive in winter without unnecessarily disturbing the bees, including listening, entrance clues, stores and when a colony may need help."
   },
-
-
   {
     title: "Why Are My Bees Flying in November or December? A Winter Visit to My Apiary",
     slug: "why-are-bees-flying-november-december",
@@ -24,7 +21,6 @@ window.beezKneesBlogPosts = [
     alt: "Three wooden beehives secured with blue straps in a British apiary, with bare hedgerows behind them",
     excerpt: "Why honeybees sometimes fly in November and December, from cleansing flights and mild winter weather to late forage, and what I look for when visiting my apiary."
   },
-  
   {
     title: "How to Heft a Beehive: Is Your Colony Heavy Enough for Winter?",
     slug: "how-to-heft-a-beehive-winter-stores",
