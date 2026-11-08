@@ -17,12 +17,12 @@
 <meta content="How to Tell If Bees Are Alive in Winter Without Opening the Hive | BeezKnees" property="og:title"/>
 <meta content="My practical approach to a silent beehive in winter: what I look and listen for, what the clues cannot prove, and when a colony may need help." property="og:description"/>
 <meta content="https://beezknees.co.uk/blog/posts/how-to-tell-if-bees-are-alive-in-winter" property="og:url"/>
-<meta content="https://beezknees.co.uk/blog/assets/images/winter-apiary-beezknees.webp" property="og:image"/>
+<meta content="https://beezknees.co.uk/blog/assets/images/winter-apiary.webp" property="og:image"/>
 <meta content="Wooden beehives secured for winter in a South Wales apiary" property="og:image:alt"/>
 <meta content="summary_large_image" name="twitter:card"/>
 <meta content="How to Tell If Bees Are Alive in Winter Without Opening the Hive | BeezKnees" name="twitter:title"/>
 <meta content="My practical approach to a silent beehive in winter: what I look and listen for, what the clues cannot prove, and when a colony may need help." name="twitter:description"/>
-<meta content="https://beezknees.co.uk/blog/assets/images/winter-apiary-beezknees.webp" name="twitter:image"/>
+<meta content="https://beezknees.co.uk/blog/assets/images/winter-apiary.webp" name="twitter:image"/>
 <meta content="Wooden beehives secured for winter in a South Wales apiary" name="twitter:image:alt"/>
 <link href="../../images/favicon.ico" rel="icon" type="image/x-icon"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" referrerpolicy="no-referrer" rel="stylesheet"/>
@@ -99,7 +99,7 @@
         "UK beekeeping"
       ],
       "image": [
-        "https://beezknees.co.uk/blog/assets/images/winter-apiary-beezknees.webp"
+        "https://beezknees.co.uk/blog/assets/images/winter-apiary.webp"
       ]
     },
     {
@@ -157,7 +157,7 @@
 <header class="site-header">
 <div class="topbar">
 <a aria-label="BeezKnees home" class="brand" href="/">
-<img alt="BeezKnees logo" class="brand-logo" decoding="async" height="1024" src="../../images/BeezKnees-Logo.webp" width="1024"/>
+<img alt="BeezKnees logo" class="brand-logo" decoding="async" height="1055" src="../../images/BeezKnees-Logo.webp" width="1491"/>
 <span>BeezKnees</span>
 </a>
 <div class="header-actions">
@@ -209,7 +209,7 @@
 </header>
 <section aria-label="Blog article banner" class="hero blog-hero">
 <div class="hero-banner-image">
-<img alt="Wooden beehives secured for the colder months in a South Wales apiary" decoding="async" fetchpriority="high" height="1024" loading="eager" src="../assets/images/winter-apiary-beezknees.webp" width="768"/>
+<img alt="Wooden beehives secured for the colder months in a South Wales apiary" decoding="async" fetchpriority="high" height="1024" loading="eager" src="../assets/images/winter-apiary.webp" width="768"/>
 </div>
 <div class="hero-inner">
 <div class="hero-card">
@@ -229,7 +229,7 @@
 <article class="blog-article">
 <section class="content-card">
 <h2>When the whole apiary goes quiet</h2>
-<figure class="board-figure" style="float:right;max-width:280px;width:42%;margin:0 0 1rem 1.25rem"><img alt="Wooden beehives secured for winter in a South Wales apiary" decoding="async" height="1024" loading="lazy" src="../assets/images/winter-apiary-beezknees.webp" width="768"/><figcaption>A winter visit is often about observing rather than opening up the hives.</figcaption></figure>
+<figure class="board-figure" style="float:right;max-width:280px;width:42%;margin:0 0 1rem 1.25rem"><img alt="Wooden beehives secured for winter in a South Wales apiary" decoding="async" height="1024" loading="lazy" src="../assets/images/winter-apiary.webp" width="768"/><figcaption>A winter visit is often about observing rather than opening up the hives.</figcaption></figure>
 <p>By December, my apiaries here in South Wales are usually very different from the busy places they were in summer. Regular inspections have finished, the hives are secured against bad weather and I can sometimes stand by an entrance without seeing a single bee.</p>
 <p>I understand why that can be unsettling, especially if it is your first winter keeping bees. You have spent months looking after a colony and naturally want to know whether it is still alive.</p>
 <p>But <strong>an empty-looking entrance doesn't mean an empty hive</strong>. I don't judge a colony's survival from a few minutes of silence on a cold day. Instead, I look at the weather, the signs around the hive and what I already know about that colony.</p>
