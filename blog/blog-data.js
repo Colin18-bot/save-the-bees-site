@@ -7,7 +7,7 @@ window.beezKneesBlogPosts = [
     date: "8 November 2026",
     isoDate: "2026-11-08",
     isoModified: "2026-11-08",
-    image: "assets/images/winter-apiary-beezknees.webp",
+    image: "assets/images/winter-apiary.webp",
     alt: "Wooden beehives secured for winter in a South Wales apiary",
     excerpt: "My practical approach to checking a silent beehive in winter without unnecessarily disturbing the bees, including listening, entrance clues, stores and when a colony may need help."
   },
