@@ -14,6 +14,31 @@ document.addEventListener('DOMContentLoaded', function () {
    */
   const extraSearchTerms = {
 
+    'how-to-tell-if-bees-are-alive-in-winter': [
+      'how can i tell if my bees are alive in winter',
+      'how to tell if bees are alive in winter',
+      'are my bees alive',
+      'is my beehive dead',
+      'silent beehive',
+      'quiet hive in winter',
+      'no bees flying from hive',
+      'no activity at hive entrance',
+      'how to check a hive in winter',
+      'winter hive checks without opening',
+      'listening to bees in winter',
+      'can you hear bees in winter',
+      'winter bee cluster',
+      'bees not buzzing',
+      'signs bees survived winter',
+      'dead colony or winter cluster',
+      'winter colony survival',
+      'hefting winter hives',
+      'winter stores and starvation',
+      'checking food stores',
+      'winter colony warning signs',
+      'South Wales beekeeping'
+    ],
+
     'why-are-bees-flying-november-december': [
       'why are my bees flying in november',
       'why are my bees flying in december',
